@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:mqtt_client/mqtt_client.dart' as mc;
-import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../data/database/tables/connections.dart';
 import 'broker_config.dart';
+import 'client_factory.dart';
 import 'mqtt_status.dart';
 import 'topic_matcher.dart';
 
@@ -154,18 +153,10 @@ class MqttManager {
   }
 
   mc.MqttClient _buildClient() {
-    final isSecure = config.protocol == MqttProtocol.tcpSsl || config.protocol == MqttProtocol.wss;
-    final isWs = config.protocol == MqttProtocol.ws || config.protocol == MqttProtocol.wss;
-
-    final client = MqttServerClient.withPort(config.host, _clientId, config.port);
+    final client = buildMqttClient(config, _clientId);
     client.logging(on: false);
     client.keepAlivePeriod = config.keepAliveSeconds;
     client.autoReconnect = false; // we manage reconnects ourselves
-    client.secure = isSecure;
-    if (isWs) {
-      client.useWebSocket = true;
-      client.websocketProtocols = ['mqtt'];
-    }
     client.onDisconnected = _onDisconnected;
     client.connectionMessage = mc.MqttConnectMessage()
         .withClientIdentifier(_clientId)
