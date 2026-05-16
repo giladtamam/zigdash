@@ -1,0 +1,60 @@
+name: zigdash
+description: "Material 3 MQTT dashboard for Zigbee2MQTT control."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Local database
+  drift: ^2.21.0
+  drift_flutter: ^0.2.0
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # MQTT
+  mqtt_client: ^10.5.1
+
+  # Reactive
+  rxdart: ^0.28.0
+
+  # Models
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # Routing
+  go_router: ^14.6.0
+
+  # Material You system colors (Android 12+)
+  dynamic_color: ^1.7.0
+
+  # Encrypted password storage
+  flutter_secure_storage: ^9.2.4
+
+  # IDs
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+  # Codegen
+  build_runner: ^2.4.13
+  drift_dev: ^2.21.0
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+
+flutter:
+  uses-material-design: true
