@@ -33,6 +33,10 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Drift worker build artifacts (the .js itself is committed)
+web/drift_worker.js.deps
+web/drift_worker.js.map
+
 # Symbolication related
 app.*.symbols
 
