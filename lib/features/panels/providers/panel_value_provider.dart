@@ -4,15 +4,17 @@ import '../../../mqtt/json_path.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 
 /// Compose an absolute MQTT topic from an optional dashboard prefix and a
-/// panel-level suffix. A leading `/` on [suffix] makes it absolute (the
-/// prefix is ignored and the leading `/` stripped). Empty suffix collapses
+/// panel-level suffix. Leading slashes on the suffix are trimmed (they
+/// mean nothing here — MQTT topics aren't paths). Empty suffix collapses
 /// to just the prefix — useful for Z2M state topics where the state lives
 /// at the device's friendly name and commands at `friendlyName/set`.
+/// For an absolute topic that ignores the prefix entirely, clear the
+/// prefix on the dashboard.
 String composeTopic(String? prefix, String suffix) {
-  if (suffix.startsWith('/')) return suffix.substring(1);
-  if (prefix == null || prefix.isEmpty) return suffix;
-  if (suffix.isEmpty) return prefix;
-  return '$prefix/$suffix';
+  final cleanSuffix = suffix.startsWith('/') ? suffix.replaceFirst(RegExp(r'^/+'), '') : suffix;
+  if (prefix == null || prefix.isEmpty) return cleanSuffix;
+  if (cleanSuffix.isEmpty) return prefix;
+  return '$prefix/$cleanSuffix';
 }
 
 /// Key for the panel-value stream. The provider family is keyed on this

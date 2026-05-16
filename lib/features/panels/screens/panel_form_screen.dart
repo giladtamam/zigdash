@@ -236,7 +236,7 @@ class _State extends ConsumerState<PanelFormScreen> {
               decoration: const InputDecoration(
                 labelText: 'Publish topic (suffix)',
                 hintText: 'set',
-                helperText: 'Leave blank to publish at the prefix itself. Prefix `/` for absolute.',
+                helperText: 'Appended to the dashboard prefix. Leave blank to publish at the prefix itself.',
               ),
             ),
             if (_type != PanelType.button) ...[
