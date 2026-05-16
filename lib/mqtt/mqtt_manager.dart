@@ -56,7 +56,19 @@ class MqttManager {
     if (_status.value == MqttStatus.connecting || _status.value == MqttStatus.connected) return;
     _status.add(MqttStatus.connecting);
 
-    final client = _buildClient();
+    final mc.MqttClient client;
+    try {
+      client = _buildClient();
+    } on UnsupportedError {
+      // Configuration mismatch (e.g. TCP requested in a browser) — not
+      // transient. Park at error and stop here; reconnect won't help.
+      _status.add(MqttStatus.error);
+      return;
+    } catch (_) {
+      _status.add(MqttStatus.error);
+      _scheduleReconnect();
+      return;
+    }
     _client = client;
 
     try {
