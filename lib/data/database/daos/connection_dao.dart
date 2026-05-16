@@ -15,8 +15,13 @@ class ConnectionDao extends DatabaseAccessor<AppDatabase> with _$ConnectionDaoMi
   Future<Connection?> getById(String id) =>
       (select(connections)..where((c) => c.id.equals(id))).getSingleOrNull();
 
-  Future<void> upsert(ConnectionsCompanion entry) =>
-      into(connections).insertOnConflictUpdate(entry);
+  Future<void> insertRow(ConnectionsCompanion entry) =>
+      into(connections).insert(entry);
+
+  /// Partial update by id — only the fields set on [patch] are written.
+  /// Returns the number of rows changed.
+  Future<int> updateById(String id, ConnectionsCompanion patch) =>
+      (update(connections)..where((c) => c.id.equals(id))).write(patch);
 
   Future<int> deleteById(String id) =>
       (delete(connections)..where((c) => c.id.equals(id))).go();

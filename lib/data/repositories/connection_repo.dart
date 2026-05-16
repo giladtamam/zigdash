@@ -30,7 +30,7 @@ class ConnectionRepo {
   }) async {
     final id = newId();
     final now = DateTime.now();
-    await _dao.upsert(ConnectionsCompanion.insert(
+    await _dao.insertRow(ConnectionsCompanion.insert(
       id: id,
       name: name,
       host: host,
@@ -61,17 +61,19 @@ class ConnectionRepo {
     int keepAliveSeconds = 60,
     bool autoConnect = false,
   }) async {
-    await _dao.upsert(ConnectionsCompanion(
-      id: Value(id),
-      name: Value(name),
-      host: Value(host),
-      port: Value(port),
-      protocol: Value(protocol),
-      username: Value(username),
-      keepAliveSeconds: Value(keepAliveSeconds),
-      autoConnect: Value(autoConnect),
-      updatedAt: Value(DateTime.now()),
-    ));
+    await _dao.updateById(
+      id,
+      ConnectionsCompanion(
+        name: Value(name),
+        host: Value(host),
+        port: Value(port),
+        protocol: Value(protocol),
+        username: Value(username),
+        keepAliveSeconds: Value(keepAliveSeconds),
+        autoConnect: Value(autoConnect),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
     if (password != null) {
       if (password.isEmpty) {
         await _secure.deletePassword(id);

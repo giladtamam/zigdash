@@ -16,10 +16,10 @@ class ProtocolDropdown extends StatelessWidget {
   };
 
   static int defaultPort(MqttProtocol p) => switch (p) {
-        MqttProtocol.tcp => 1883,
-        MqttProtocol.tcpSsl => 8883,
-        MqttProtocol.ws => 8000,
-        MqttProtocol.wss => 8084,
+        MqttProtocol.tcp => 1883,      // MQTT standard
+        MqttProtocol.tcpSsl => 8883,   // MQTT-over-TLS standard
+        MqttProtocol.ws => 9001,       // Mosquitto WebSocket convention
+        MqttProtocol.wss => 8884,      // Mosquitto WebSocket-over-TLS convention
       };
 
   @override
