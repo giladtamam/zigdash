@@ -30,7 +30,17 @@ class MqttManager {
     required this.config,
     required this.password,
     String? clientIdOverride,
-  }) : _clientId = clientIdOverride ?? 'zigdash-${config.id}';
+  }) : _clientId = clientIdOverride ?? _shortClientId(config.id);
+
+  // MQTT 3.1 caps client identifiers at 23 chars and some broker builds
+  // (notably the Mosquitto shipped on SMLIGHT SMHUB) reject longer IDs with
+  // a "protocol error" disconnect even when negotiated as 3.1.1. Compose a
+  // stable 23-char ID from the connection's UUID without the dashes.
+  static String _shortClientId(String connectionId) {
+    final clean = connectionId.replaceAll('-', '');
+    final tail = clean.length > 15 ? clean.substring(clean.length - 15) : clean;
+    return 'zd-$tail'; // "zd-" (3) + 15 hex = 18 chars, well under 23
+  }
 
   final BrokerConfig config;
   final String password;
@@ -40,6 +50,7 @@ class MqttManager {
   StreamSubscription<List<mc.MqttReceivedMessage<mc.MqttMessage>>>? _updatesSub;
   Timer? _reconnectTimer;
   bool _userInitiatedDisconnect = false;
+  bool _disposed = false;
   int _backoffMs = _initialBackoffMs;
 
   static const _initialBackoffMs = 1000;
@@ -51,10 +62,19 @@ class MqttManager {
 
   final Map<String, _SubEntry> _subs = {};
 
+  // Guarded status emit. After [dispose] every call becomes a no-op so a
+  // late-firing reconnect timer or an async tail of an in-flight connect()
+  // cannot crash with "Cannot add new events after calling close".
+  void _emit(MqttStatus s) {
+    if (_disposed || _status.isClosed) return;
+    _status.add(s);
+  }
+
   Future<void> connect() async {
+    if (_disposed) return;
     _userInitiatedDisconnect = false;
     if (_status.value == MqttStatus.connecting || _status.value == MqttStatus.connected) return;
-    _status.add(MqttStatus.connecting);
+    _emit(MqttStatus.connecting);
 
     final mc.MqttClient client;
     try {
@@ -62,11 +82,15 @@ class MqttManager {
     } on UnsupportedError {
       // Configuration mismatch (e.g. TCP requested in a browser) — not
       // transient. Park at error and stop here; reconnect won't help.
-      _status.add(MqttStatus.error);
+      _emit(MqttStatus.error);
       return;
     } catch (_) {
-      _status.add(MqttStatus.error);
+      _emit(MqttStatus.error);
       _scheduleReconnect();
+      return;
+    }
+    if (_disposed) {
+      client.disconnect();
       return;
     }
     _client = client;
@@ -74,13 +98,17 @@ class MqttManager {
     try {
       await client.connect(config.username, password);
     } on Exception {
-      _status.add(MqttStatus.error);
+      _emit(MqttStatus.error);
       _scheduleReconnect();
+      return;
+    }
+    if (_disposed) {
+      client.disconnect();
       return;
     }
 
     if (client.connectionStatus?.state != mc.MqttConnectionState.connected) {
-      _status.add(MqttStatus.error);
+      _emit(MqttStatus.error);
       _scheduleReconnect();
       return;
     }
@@ -94,7 +122,7 @@ class MqttManager {
       client.subscribe(pattern, mc.MqttQos.atLeastOnce);
     }
 
-    _status.add(MqttStatus.connected);
+    _emit(MqttStatus.connected);
   }
 
   void disconnect() {
@@ -105,10 +133,11 @@ class MqttManager {
     _updatesSub = null;
     _client?.disconnect();
     _client = null;
-    if (!_status.isClosed) _status.add(MqttStatus.disconnected);
+    _emit(MqttStatus.disconnected);
   }
 
   Future<void> dispose() async {
+    _disposed = true;
     disconnect();
     for (final e in _subs.values) {
       await e.subject.close();
@@ -167,7 +196,11 @@ class MqttManager {
   mc.MqttClient _buildClient() {
     final client = buildMqttClient(config, _clientId);
     client.logging(on: false);
+    // Stay on mqtt_client's default protocol (MQTT 3.1, ProtocolName=MQIsdp).
+    // The Mosquitto build on SMLIGHT SMHUB silently disconnects 3.1.1
+    // CONNECT packets with "protocol error" — even though they're spec-valid.
     client.keepAlivePeriod = config.keepAliveSeconds;
+    client.connectTimeoutPeriod = 5000; // ms; default is too short, CONNACK never lands
     client.autoReconnect = false; // we manage reconnects ourselves
     client.onDisconnected = _onDisconnected;
     client.connectionMessage = mc.MqttConnectMessage()
@@ -187,18 +220,18 @@ class MqttManager {
   }
 
   void _onDisconnected() {
-    if (_userInitiatedDisconnect) return;
-    _status.add(MqttStatus.reconnecting);
+    if (_userInitiatedDisconnect || _disposed) return;
+    _emit(MqttStatus.reconnecting);
     _scheduleReconnect();
   }
 
   void _scheduleReconnect() {
-    if (_userInitiatedDisconnect) return;
+    if (_userInitiatedDisconnect || _disposed) return;
     _reconnectTimer?.cancel();
     final delay = _backoffMs;
     _backoffMs = min(_backoffMs * 2, _maxBackoffMs);
     _reconnectTimer = Timer(Duration(milliseconds: delay), () {
-      if (_userInitiatedDisconnect) return;
+      if (_userInitiatedDisconnect || _disposed) return;
       connect();
     });
   }

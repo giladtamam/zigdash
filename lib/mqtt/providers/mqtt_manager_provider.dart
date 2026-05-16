@@ -6,10 +6,12 @@ import '../broker_config.dart';
 import '../mqtt_manager.dart';
 import '../mqtt_status.dart';
 
-/// One manager per Connection ID. Auto-disposed when nothing watches it; on
-/// dispose we tear down the MQTT client cleanly.
+/// One manager per Connection ID. Lives for the session — `autoDispose` here
+/// caused Riverpod to recreate the manager on every status stream restart, so
+/// no connection attempt ever survived long enough to receive CONNACK. The
+/// manager is disposed explicitly when its Connection row is deleted.
 final mqttManagerProvider =
-    FutureProvider.autoDispose.family<MqttManager, String>((ref, connectionId) async {
+    FutureProvider.family<MqttManager, String>((ref, connectionId) async {
   final repo = ref.watch(connectionRepoProvider);
   final conn = await repo.getById(connectionId);
   if (conn == null) {
@@ -41,7 +43,7 @@ final mqttManagerProvider =
 /// Live status stream for a given connection. While the manager future is
 /// resolving, yields `connecting`.
 final connectionStatusProvider =
-    StreamProvider.autoDispose.family<MqttStatus, String>((ref, connectionId) async* {
+    StreamProvider.family<MqttStatus, String>((ref, connectionId) async* {
   final managerAsync = ref.watch(mqttManagerProvider(connectionId));
   yield* managerAsync.when(
     loading: () => Stream.value(MqttStatus.connecting),
