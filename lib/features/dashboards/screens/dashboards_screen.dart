@@ -76,6 +76,19 @@ class _DashboardsTabbed extends StatelessWidget {
           appBar: AppBar(
             title: Text(connectionName),
             actions: [
+              Builder(builder: (innerCtx) {
+                final idx = DefaultTabController.of(innerCtx).index;
+                return IconButton(
+                  icon: const Icon(Icons.edit_outlined),
+                  tooltip: 'Edit dashboard',
+                  onPressed: () {
+                    final d = dashboards[idx];
+                    innerCtx.push(
+                      '/connections/$connectionId/dashboards/${d.id}/edit',
+                    );
+                  },
+                );
+              }),
               IconButton(
                 icon: const Icon(Icons.add),
                 tooltip: 'Add dashboard',
