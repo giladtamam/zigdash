@@ -2,16 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/database/tables/panels.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/connections/screens/connections_list_screen.dart';
+import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
+import '../../features/dashboards/screens/dashboards_screen.dart';
+import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/settings/screens/settings_placeholder.dart';
 import 'routes.dart';
+
+PanelType _parseType(String? s) => switch (s) {
+      'button' => PanelType.button,
+      'slider' => PanelType.slider,
+      _ => PanelType.toggle,
+    };
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: Routes.connections,
     routes: [
+      // Full-screen routes (no bottom nav). Push these from inside the shell
+      // and the shell's NavigationBar gets out of the way.
+      GoRoute(
+        path: '/connections/:id/dashboards',
+        builder: (_, state) => DashboardsScreen(connectionId: state.pathParameters['id']!),
+        routes: [
+          GoRoute(
+            path: 'form',
+            builder: (_, state) => DashboardFormScreen(
+              connectionId: state.pathParameters['id']!,
+            ),
+          ),
+          GoRoute(
+            path: ':dashboardId/edit',
+            builder: (_, state) => DashboardFormScreen(
+              connectionId: state.pathParameters['id']!,
+              dashboardId: state.pathParameters['dashboardId'],
+            ),
+          ),
+          GoRoute(
+            path: ':dashboardId/panels/new',
+            builder: (_, state) => PanelFormScreen(
+              connectionId: state.pathParameters['id']!,
+              dashboardId: state.pathParameters['dashboardId']!,
+              initialType: _parseType(state.uri.queryParameters['type']),
+            ),
+          ),
+          GoRoute(
+            path: ':dashboardId/panels/:panelId/edit',
+            builder: (_, state) => PanelFormScreen(
+              connectionId: state.pathParameters['id']!,
+              dashboardId: state.pathParameters['dashboardId']!,
+              panelId: state.pathParameters['panelId'],
+            ),
+          ),
+        ],
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => _RootShell(shell: navigationShell),
         branches: [

@@ -29,7 +29,8 @@ class ConnectionsListScreen extends ConsumerWidget {
               final c = rows[i];
               return ConnectionTile(
                 connection: c,
-                onTap: () => context.push('/connections/${c.id}/edit'),
+                onOpen: () => context.push('/connections/${c.id}/dashboards'),
+                onEdit: () => context.push('/connections/${c.id}/edit'),
                 onDelete: () => repo.delete(c.id),
               );
             },

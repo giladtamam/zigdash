@@ -10,19 +10,18 @@ class ConnectionTile extends ConsumerWidget {
   const ConnectionTile({
     super.key,
     required this.connection,
-    required this.onTap,
+    required this.onOpen,
+    required this.onEdit,
     required this.onDelete,
   });
 
   final Connection connection;
-  final VoidCallback onTap;
+  final VoidCallback onOpen;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Only autoConnect connections actively maintain a live status; others
-    // show "Disconnected" until the user opens a dashboard (Phase 4) or
-    // a future "connect now" action.
     final status = connection.autoConnect
         ? ref.watch(connectionStatusProvider(connection.id)).maybeWhen(
               data: (s) => s,
@@ -44,7 +43,8 @@ class ConnectionTile extends ConsumerWidget {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Delete connection?'),
-          content: Text('Removes "${connection.name}" and its saved password.'),
+          content: Text(
+              'Removes "${connection.name}", its dashboards/panels, and its saved password.'),
           actions: [
             TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
             FilledButton.tonal(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete')),
@@ -56,8 +56,24 @@ class ConnectionTile extends ConsumerWidget {
         leading: const Icon(Icons.cloud),
         title: Text(connection.name),
         subtitle: Text('${connection.host}:${connection.port}'),
-        trailing: StatusBadge(status: status),
-        onTap: onTap,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            StatusBadge(status: status),
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert),
+              onSelected: (v) {
+                if (v == 'edit') onEdit();
+                if (v == 'delete') onDelete();
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(value: 'edit', child: Text('Edit')),
+                PopupMenuItem(value: 'delete', child: Text('Delete')),
+              ],
+            ),
+          ],
+        ),
+        onTap: onOpen,
       ),
     );
   }

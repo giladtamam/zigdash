@@ -11,7 +11,7 @@ class DashboardsPlaceholder extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(24),
           child: Text(
-            'Dashboards arrive in Phase 4.\nFirst add a Connection to a broker.',
+            'Open a broker from the Brokers tab to see and manage its dashboards.',
             textAlign: TextAlign.center,
           ),
         ),

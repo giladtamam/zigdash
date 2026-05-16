@@ -3,16 +3,29 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'tables/connections.dart';
+import 'tables/dashboards.dart';
+import 'tables/panels.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Connections])
+@DriftDatabase(tables: [Connections, Dashboards, Panels])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_open());
   AppDatabase.test(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(dashboards);
+            await m.createTable(panels);
+          }
+        },
+      );
 
   static QueryExecutor _open() => driftDatabase(
         name: 'zigdash',
