@@ -14,7 +14,13 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  static QueryExecutor _open() => driftDatabase(name: 'zigdash');
+  static QueryExecutor _open() => driftDatabase(
+        name: 'zigdash',
+        web: DriftWebOptions(
+          sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+          driftWorker: Uri.parse('drift_worker.js'),
+        ),
+      );
 }
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
