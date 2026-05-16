@@ -153,7 +153,12 @@ class MqttManager {
       final e = _SubEntry(pattern);
       final client = _client;
       if (client?.connectionStatus?.state == mc.MqttConnectionState.connected) {
-        client!.subscribe(pattern, mc.MqttQos.atLeastOnce);
+        try {
+          client!.subscribe(pattern, mc.MqttQos.atLeastOnce);
+        } catch (e) {
+          // ignore: avoid_print
+          print('[MqttManager] subscribe failed for pattern "$pattern": $e');
+        }
       }
       return e;
     });
@@ -190,7 +195,15 @@ class MqttManager {
     }
     final payload = template.replaceAll('{value}', value.toString());
     final builder = mc.MqttClientPayloadBuilder()..addString(payload);
-    client.publishMessage(topic, qos, builder.payload!, retain: retain);
+    try {
+      client.publishMessage(topic, qos, builder.payload!, retain: retain);
+    } catch (e) {
+      // mqtt_client's MQTT 3.1 encoding rejects extended UTF-8 in topics
+      // with InvalidTopicException. We swallow here so a misconfigured panel
+      // doesn't crash the widget tree; callers should ensure ASCII topics.
+      // ignore: avoid_print
+      print('[MqttManager] publish failed for topic "$topic": $e');
+    }
   }
 
   mc.MqttClient _buildClient() {
