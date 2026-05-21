@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/repositories/backup_service.dart';
 import '../../../data/repositories/connection_repo.dart';
@@ -33,7 +34,7 @@ class DashboardsScreen extends ConsumerWidget {
       ),
       error: (e, _) => Scaffold(
         appBar: AppBar(title: Text(connectionName)),
-        body: Center(child: Text('Failed: $e')),
+        body: Center(child: Text(context.l10n.dashLoadFailed(e.toString()))),
       ),
       data: (dashboards) {
         if (dashboards.isEmpty) {
@@ -47,7 +48,7 @@ class DashboardsScreen extends ConsumerWidget {
               onPressed: () =>
                   context.push('/connections/$connectionId/dashboards/form'),
               icon: const Icon(Icons.add),
-              label: const Text('Add dashboard'),
+              label: Text(context.l10n.dashAddDashboard),
             ),
           );
         }
@@ -85,7 +86,7 @@ class _DashboardsTabbed extends StatelessWidget {
                 final idx = DefaultTabController.of(innerCtx).index;
                 return IconButton(
                   icon: const Icon(Icons.edit_outlined),
-                  tooltip: 'Edit dashboard',
+                  tooltip: context.l10n.dashEditDashboard,
                   onPressed: () {
                     final d = dashboards[idx];
                     innerCtx.push(
@@ -96,7 +97,7 @@ class _DashboardsTabbed extends StatelessWidget {
               }),
               IconButton(
                 icon: const Icon(Icons.add),
-                tooltip: 'Add dashboard',
+                tooltip: context.l10n.dashAddDashboard,
                 onPressed: () =>
                     tabCtx.push('/connections/$connectionId/dashboards/form'),
               ),
@@ -139,7 +140,7 @@ class _DashboardsTabbed extends StatelessWidget {
                 _openPanelPicker(innerCtx, connectionId: connectionId, dashboardId: d.id);
               },
               icon: const Icon(Icons.add),
-              label: const Text('Add panel'),
+              label: Text(innerCtx.l10n.dashAddPanel),
             );
           }),
         );
@@ -153,11 +154,11 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(32),
+        padding: const EdgeInsets.all(32),
         child: Text(
-          'No dashboards yet.\nTap "Add dashboard" to create one for this broker.',
+          context.l10n.dashEmpty,
           textAlign: TextAlign.center,
         ),
       ),
@@ -179,101 +180,101 @@ void _openPanelPicker(BuildContext context,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Add a panel', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(sheetCtx.l10n.panelPickerTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 4),
-              child: Text('Control', style: TextStyle(fontWeight: FontWeight.w600)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+              child: Text(sheetCtx.l10n.panelPickerSectionControl, style: const TextStyle(fontWeight: FontWeight.w600)),
             ),
             ListTile(
               leading: const Icon(Icons.toggle_on),
-              title: const Text('Toggle'),
-              subtitle: const Text('On/off switch for a device state'),
+              title: Text(sheetCtx.l10n.panelPickerToggleTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerToggleSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'toggle'),
             ),
             ListTile(
               leading: const Icon(Icons.tune),
-              title: const Text('Slider — Brightness'),
-              subtitle: const Text('Light dimming (0–254, {"brightness":N})'),
+              title: Text(sheetCtx.l10n.panelPickerSliderBrightnessTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerSliderBrightnessSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'slider'),
             ),
             ListTile(
               leading: const Icon(Icons.blinds),
-              title: const Text('Slider — Position'),
-              subtitle: const Text('Cover / shutter (0–100, {"position":N})'),
+              title: Text(sheetCtx.l10n.panelPickerSliderPositionTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerSliderPositionSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'slider:position'),
             ),
             ListTile(
               leading: const Icon(Icons.blinds_closed),
-              title: const Text('Cover'),
-              subtitle: const Text('Shutter/blind: OPEN·STOP·CLOSE + position slider'),
+              title: Text(sheetCtx.l10n.panelPickerCoverTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerCoverSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'cover'),
             ),
             ListTile(
               leading: const Icon(Icons.schedule),
-              title: const Text('Schedule'),
-              subtitle: const Text('Daily open/close times, run on the hub (Node-RED)'),
+              title: Text(sheetCtx.l10n.panelPickerScheduleTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerScheduleSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'schedule'),
             ),
             ListTile(
               leading: const Icon(Icons.view_week),
-              title: const Text('Multi-State'),
-              subtitle: const Text('Segmented buttons for an enum (e.g. OPEN/STOP/CLOSE)'),
+              title: Text(sheetCtx.l10n.panelPickerMultiStateTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerMultiStateSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'multiState'),
             ),
             ListTile(
               leading: const Icon(Icons.arrow_drop_down_circle_outlined),
-              title: const Text('Combo'),
-              subtitle: const Text('Dropdown selector for an enum'),
+              title: Text(sheetCtx.l10n.panelPickerComboTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerComboSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'combo'),
             ),
             ListTile(
               leading: const Icon(Icons.radio_button_checked),
-              title: const Text('Radio'),
-              subtitle: const Text('Radio-button list for an enum'),
+              title: Text(sheetCtx.l10n.panelPickerRadioTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerRadioSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'radio'),
             ),
             ListTile(
               leading: const Icon(Icons.send),
-              title: const Text('Button'),
-              subtitle: const Text('Fire a one-shot command'),
+              title: Text(sheetCtx.l10n.panelPickerButtonTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerButtonSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'button'),
             ),
             ListTile(
               leading: const Icon(Icons.keyboard),
-              title: const Text('Text Input'),
-              subtitle: const Text('Publish a free-form value or JSON'),
+              title: Text(sheetCtx.l10n.panelPickerTextInputTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerTextInputSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'textInput'),
             ),
             const Divider(),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Text('State', style: TextStyle(fontWeight: FontWeight.w600)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text(sheetCtx.l10n.panelPickerSectionState, style: const TextStyle(fontWeight: FontWeight.w600)),
             ),
             ListTile(
               leading: const Icon(Icons.circle, color: Colors.green),
-              title: const Text('LED'),
-              subtitle: const Text('Colored indicator for a boolean state (contact, leak)'),
+              title: Text(sheetCtx.l10n.panelPickerLedTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerLedSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'led'),
             ),
             ListTile(
               leading: const Icon(Icons.cloud_done),
-              title: const Text('Node Status'),
-              subtitle: const Text('Z2M device availability (online/offline)'),
+              title: Text(sheetCtx.l10n.panelPickerNodeStatusTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerNodeStatusSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'nodeStatus'),
             ),
             ListTile(
               leading: const Icon(Icons.battery_5_bar),
-              title: const Text('Progress'),
-              subtitle: const Text('Numeric bar for battery, link quality, etc.'),
+              title: Text(sheetCtx.l10n.panelPickerProgressTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerProgressSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'progress'),
             ),
             ListTile(
               leading: const Icon(Icons.notes),
-              title: const Text('Text Log'),
-              subtitle: const Text('Scrolling history of messages on a topic'),
+              title: Text(sheetCtx.l10n.panelPickerTextLogTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerTextLogSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'textLog'),
             ),
             const SizedBox(height: 8),
@@ -307,21 +308,22 @@ class _BackupMenu extends ConsumerWidget {
         if (v == 'export') _export(context, ref);
         if (v == 'import') _import(context, ref);
       },
-      itemBuilder: (_) => const [
-        PopupMenuItem(value: 'export', child: Text('Export dashboards')),
-        PopupMenuItem(value: 'import', child: Text('Import dashboards')),
+      itemBuilder: (_) => [
+        PopupMenuItem(value: 'export', child: Text(context.l10n.dashExportMenu)),
+        PopupMenuItem(value: 'import', child: Text(context.l10n.dashImportMenu)),
       ],
     );
   }
 
   Future<void> _export(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     final json = await ref.read(backupServiceProvider).exportConnection(connectionId);
     if (!context.mounted) return;
     await showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Export dashboards'),
+        title: Text(l10n.dashExportTitle),
         content: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -334,16 +336,16 @@ class _BackupMenu extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child: Text(l10n.dashExportClose),
           ),
           FilledButton.icon(
             icon: const Icon(Icons.copy),
-            label: const Text('Copy'),
+            label: Text(l10n.dashExportCopy),
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: json));
               if (ctx.mounted) Navigator.pop(ctx);
               messenger.showSnackBar(
-                const SnackBar(content: Text('Copied to clipboard')),
+                SnackBar(content: Text(l10n.dashExportCopied)),
               );
             },
           ),
@@ -355,26 +357,27 @@ class _BackupMenu extends ConsumerWidget {
   Future<void> _import(BuildContext context, WidgetRef ref) async {
     final controller = TextEditingController();
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Import dashboards'),
+        title: Text(l10n.dashImportTitle),
         content: TextField(
           controller: controller,
           maxLines: 8,
-          decoration: const InputDecoration(
-            hintText: 'Paste exported JSON here',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            hintText: l10n.dashImportHint,
+            border: const OutlineInputBorder(),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Import'),
+            child: Text(l10n.dashImportButton),
           ),
         ],
       ),
@@ -388,10 +391,10 @@ class _BackupMenu extends ConsumerWidget {
           .read(backupServiceProvider)
           .importToConnection(connectionId, controller.text);
       messenger.showSnackBar(
-        SnackBar(content: Text('Imported $n dashboard${n == 1 ? '' : 's'}')),
+        SnackBar(content: Text(l10n.dashImportSuccess(n))),
       );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.dashImportFailed(e.toString()))));
     } finally {
       controller.dispose();
     }

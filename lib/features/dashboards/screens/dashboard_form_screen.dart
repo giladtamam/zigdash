@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 
 const _swatches = <Color>[
@@ -117,13 +118,14 @@ class _State extends ConsumerState<DashboardFormScreen> {
     if (!_loaded) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? 'Edit dashboard' : 'New dashboard'),
+        title: Text(_isEdit ? l10n.dashFormEdit : l10n.dashFormNew),
         actions: [
           TextButton(
             onPressed: _saving ? null : _save,
-            child: Text(_saving ? 'Saving…' : 'Save'),
+            child: Text(_saving ? l10n.saving : l10n.save),
           ),
         ],
       ),
@@ -134,20 +136,20 @@ class _State extends ConsumerState<DashboardFormScreen> {
           children: [
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name', hintText: 'Office'),
-              validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+              decoration: InputDecoration(labelText: l10n.dashFormName, hintText: l10n.dashFormNameHint),
+              validator: (v) => v == null || v.trim().isEmpty ? l10n.fieldRequired : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _topicPrefix,
-              decoration: const InputDecoration(
-                labelText: 'Topic prefix (optional)',
-                hintText: 'zigbee2mqtt/אור חדר עבודה',
-                helperText: 'Prepended to every panel topic in this dashboard',
+              decoration: InputDecoration(
+                labelText: l10n.dashFormTopicPrefix,
+                hintText: l10n.dashFormTopicPrefixHint,
+                helperText: l10n.dashFormTopicPrefixHelper,
               ),
             ),
             const SizedBox(height: 16),
-            Text('Color seed', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.dashFormColorSeed, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -169,7 +171,7 @@ class _State extends ConsumerState<DashboardFormScreen> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-            Text('Icon', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.dashFormIcon, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -193,8 +195,8 @@ class _State extends ConsumerState<DashboardFormScreen> {
             const SizedBox(height: 16),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Lock'),
-              subtitle: const Text('Hide edit affordances while locked'),
+              title: Text(l10n.dashFormLock),
+              subtitle: Text(l10n.dashFormLockSubtitle),
               value: _locked,
               onChanged: (v) => setState(() => _locked = v),
             ),
@@ -202,16 +204,16 @@ class _State extends ConsumerState<DashboardFormScreen> {
               const SizedBox(height: 24),
               FilledButton.tonalIcon(
                 icon: const Icon(Icons.delete_outline),
-                label: const Text('Delete dashboard'),
+                label: Text(l10n.dashFormDelete),
                 onPressed: () async {
                   final ok = await showDialog<bool>(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      title: const Text('Delete this dashboard?'),
-                      content: const Text('All panels under it will also be removed.'),
+                      title: Text(l10n.dashDeleteTitle),
+                      content: Text(l10n.dashDeleteContent),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                        FilledButton.tonal(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete')),
+                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
+                        FilledButton.tonal(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.dashDeleteConfirm)),
                       ],
                     ),
                   );

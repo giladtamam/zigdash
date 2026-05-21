@@ -379,6 +379,384 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get statusError;
+
+  /// No description provided for @dashPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a broker from the Brokers tab to see and manage its dashboards.'**
+  String get dashPlaceholder;
+
+  /// No description provided for @dashAddDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add dashboard'**
+  String get dashAddDashboard;
+
+  /// No description provided for @dashEditDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit dashboard'**
+  String get dashEditDashboard;
+
+  /// No description provided for @dashAddPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add panel'**
+  String get dashAddPanel;
+
+  /// No description provided for @dashEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No dashboards yet.\nTap \"Add dashboard\" to create one for this broker.'**
+  String get dashEmpty;
+
+  /// No description provided for @dashLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed: {error}'**
+  String dashLoadFailed(Object error);
+
+  /// No description provided for @panelPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a panel'**
+  String get panelPickerTitle;
+
+  /// No description provided for @panelPickerSectionControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Control'**
+  String get panelPickerSectionControl;
+
+  /// No description provided for @panelPickerSectionState.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get panelPickerSectionState;
+
+  /// No description provided for @panelPickerToggleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle'**
+  String get panelPickerToggleTitle;
+
+  /// No description provided for @panelPickerToggleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On/off switch for a device state'**
+  String get panelPickerToggleSubtitle;
+
+  /// No description provided for @panelPickerSliderBrightnessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Slider — Brightness'**
+  String get panelPickerSliderBrightnessTitle;
+
+  /// No description provided for @panelPickerSliderBrightnessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Light dimming (0–254, brightness:N)'**
+  String get panelPickerSliderBrightnessSubtitle;
+
+  /// No description provided for @panelPickerSliderPositionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Slider — Position'**
+  String get panelPickerSliderPositionTitle;
+
+  /// No description provided for @panelPickerSliderPositionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover / shutter (0–100, position:N)'**
+  String get panelPickerSliderPositionSubtitle;
+
+  /// No description provided for @panelPickerCoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get panelPickerCoverTitle;
+
+  /// No description provided for @panelPickerCoverSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shutter/blind: OPEN·STOP·CLOSE + position slider'**
+  String get panelPickerCoverSubtitle;
+
+  /// No description provided for @panelPickerScheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get panelPickerScheduleTitle;
+
+  /// No description provided for @panelPickerScheduleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily open/close times, run on the hub (Node-RED)'**
+  String get panelPickerScheduleSubtitle;
+
+  /// No description provided for @panelPickerMultiStateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-State'**
+  String get panelPickerMultiStateTitle;
+
+  /// No description provided for @panelPickerMultiStateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Segmented buttons for an enum (e.g. OPEN/STOP/CLOSE)'**
+  String get panelPickerMultiStateSubtitle;
+
+  /// No description provided for @panelPickerComboTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Combo'**
+  String get panelPickerComboTitle;
+
+  /// No description provided for @panelPickerComboSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropdown selector for an enum'**
+  String get panelPickerComboSubtitle;
+
+  /// No description provided for @panelPickerRadioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get panelPickerRadioTitle;
+
+  /// No description provided for @panelPickerRadioSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio-button list for an enum'**
+  String get panelPickerRadioSubtitle;
+
+  /// No description provided for @panelPickerButtonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Button'**
+  String get panelPickerButtonTitle;
+
+  /// No description provided for @panelPickerButtonSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire a one-shot command'**
+  String get panelPickerButtonSubtitle;
+
+  /// No description provided for @panelPickerTextInputTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Input'**
+  String get panelPickerTextInputTitle;
+
+  /// No description provided for @panelPickerTextInputSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish a free-form value or JSON'**
+  String get panelPickerTextInputSubtitle;
+
+  /// No description provided for @panelPickerLedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LED'**
+  String get panelPickerLedTitle;
+
+  /// No description provided for @panelPickerLedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Colored indicator for a boolean state (contact, leak)'**
+  String get panelPickerLedSubtitle;
+
+  /// No description provided for @panelPickerNodeStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Node Status'**
+  String get panelPickerNodeStatusTitle;
+
+  /// No description provided for @panelPickerNodeStatusSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Z2M device availability (online/offline)'**
+  String get panelPickerNodeStatusSubtitle;
+
+  /// No description provided for @panelPickerProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get panelPickerProgressTitle;
+
+  /// No description provided for @panelPickerProgressSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Numeric bar for battery, link quality, etc.'**
+  String get panelPickerProgressSubtitle;
+
+  /// No description provided for @panelPickerTextLogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Log'**
+  String get panelPickerTextLogTitle;
+
+  /// No description provided for @panelPickerTextLogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scrolling history of messages on a topic'**
+  String get panelPickerTextLogSubtitle;
+
+  /// No description provided for @dashExportMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Export dashboards'**
+  String get dashExportMenu;
+
+  /// No description provided for @dashImportMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Import dashboards'**
+  String get dashImportMenu;
+
+  /// No description provided for @dashExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export dashboards'**
+  String get dashExportTitle;
+
+  /// No description provided for @dashExportClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get dashExportClose;
+
+  /// No description provided for @dashExportCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get dashExportCopy;
+
+  /// No description provided for @dashExportCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get dashExportCopied;
+
+  /// No description provided for @dashImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import dashboards'**
+  String get dashImportTitle;
+
+  /// No description provided for @dashImportHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste exported JSON here'**
+  String get dashImportHint;
+
+  /// No description provided for @dashImportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get dashImportButton;
+
+  /// No description provided for @dashImportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, =1{Imported 1 dashboard} other{Imported {count} dashboards}}'**
+  String dashImportSuccess(int count);
+
+  /// No description provided for @dashImportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed: {error}'**
+  String dashImportFailed(Object error);
+
+  /// No description provided for @dashFormNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New dashboard'**
+  String get dashFormNew;
+
+  /// No description provided for @dashFormEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit dashboard'**
+  String get dashFormEdit;
+
+  /// No description provided for @dashFormName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get dashFormName;
+
+  /// No description provided for @dashFormNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Office'**
+  String get dashFormNameHint;
+
+  /// No description provided for @dashFormTopicPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic prefix (optional)'**
+  String get dashFormTopicPrefix;
+
+  /// No description provided for @dashFormTopicPrefixHint.
+  ///
+  /// In en, this message translates to:
+  /// **'zigbee2mqtt/living-room'**
+  String get dashFormTopicPrefixHint;
+
+  /// No description provided for @dashFormTopicPrefixHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepended to every panel topic in this dashboard'**
+  String get dashFormTopicPrefixHelper;
+
+  /// No description provided for @dashFormColorSeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Color seed'**
+  String get dashFormColorSeed;
+
+  /// No description provided for @dashFormIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get dashFormIcon;
+
+  /// No description provided for @dashFormLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock'**
+  String get dashFormLock;
+
+  /// No description provided for @dashFormLockSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide edit affordances while locked'**
+  String get dashFormLockSubtitle;
+
+  /// No description provided for @dashFormDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete dashboard'**
+  String get dashFormDelete;
+
+  /// No description provided for @dashDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this dashboard?'**
+  String get dashDeleteTitle;
+
+  /// No description provided for @dashDeleteContent.
+  ///
+  /// In en, this message translates to:
+  /// **'All panels under it will also be removed.'**
+  String get dashDeleteContent;
+
+  /// No description provided for @dashDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get dashDeleteConfirm;
 }
 
 class _AppLocalizationsDelegate
