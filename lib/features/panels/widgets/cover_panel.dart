@@ -10,6 +10,17 @@ import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 
+/// Resolves which cover command a [SegmentedButton] selection change maps to.
+///
+/// Material's [SegmentedButton] (with `emptySelectionAllowed: true`) emits an
+/// EMPTY selection when the user re-taps the segment that is already selected.
+/// The selected segment mirrors the device's current [state], so an empty
+/// selection means "re-issue the command for the current state" — not "do
+/// nothing". Otherwise the button matching the live state (e.g. OPEN while the
+/// cover is open) would be dead.
+String? resolveCoverAction(Set<String> selection, String? state) =>
+    selection.isNotEmpty ? selection.first : state;
+
 class CoverPanel extends ConsumerStatefulWidget {
   const CoverPanel({
     super.key,
@@ -134,8 +145,7 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
                 ],
                 selected: {if (state != null) state!},
                 onSelectionChanged: (sel) {
-                  if (sel.isEmpty) return;
-                  switch (sel.first) {
+                  switch (resolveCoverAction(sel, state)) {
                     case 'OPEN':
                       _publishRaw(cfg.openPayload);
                     case 'STOP':

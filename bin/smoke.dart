@@ -58,8 +58,9 @@ void main(List<String> args) async {
     final topic = opts['pub-topic']!;
     final payload = opts['pub-payload'] ?? 'hello-from-zigdash-smoke';
     await Future<void>.delayed(const Duration(milliseconds: 250));
-    stderr.writeln('[smoke] publishing to "$topic": $payload');
-    mgr.publish(topic, '{value}', payload);
+    final retain = opts['retain'] == 'true';
+    stderr.writeln('[smoke] publishing to "$topic" (retain=$retain): $payload');
+    mgr.publish(topic, '{value}', payload, retain: retain);
   }
 
   final seconds = int.parse(opts['seconds']!);
@@ -83,6 +84,7 @@ Map<String, String?> _parse(List<String> args) {
     'sub': 'zigbee2mqtt/#',
     'pub-topic': null,
     'pub-payload': null,
+    'retain': 'false',
     'seconds': '10',
   };
   for (var i = 0; i < args.length; i++) {
