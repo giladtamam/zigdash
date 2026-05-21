@@ -1531,6 +1531,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'close'**
   String get panelScheduleActionClose;
+
+  /// No description provided for @panelGridEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No panels yet.\nTap + to add a Toggle, Slider, or Button.'**
+  String get panelGridEmpty;
 }
 
 class _AppLocalizationsDelegate

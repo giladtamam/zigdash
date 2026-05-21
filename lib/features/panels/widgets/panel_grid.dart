@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/panel_repo.dart';
@@ -25,14 +26,14 @@ class PanelGrid extends ConsumerWidget {
 
     return panelsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Failed: $e')),
+      error: (e, _) => Center(child: Text(context.l10n.dashLoadFailed(e.toString()))),
       data: (rows) {
         if (rows.isEmpty) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(32),
               child: Text(
-                'No panels yet.\nTap + to add a Toggle, Slider, or Button.',
+                context.l10n.panelGridEmpty,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),

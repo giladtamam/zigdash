@@ -784,4 +784,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelScheduleActionClose => 'close';
+
+  @override
+  String get panelGridEmpty =>
+      'No panels yet.\nTap + to add a Toggle, Slider, or Button.';
 }

@@ -779,4 +779,8 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelScheduleActionClose => 'סגירה';
+
+  @override
+  String get panelGridEmpty =>
+      'אין עדיין פאנלים.\nהקש + כדי להוסיף מתג, מחוון או כפתור.';
 }
