@@ -18,6 +18,16 @@ sealed class PanelConfig {
       PanelType.button => ButtonConfig.fromJson(j),
       PanelType.toggle => ToggleConfig.fromJson(j),
       PanelType.slider => SliderConfig.fromJson(j),
+      PanelType.led => LedConfig.fromJson(j),
+      PanelType.nodeStatus => NodeStatusConfig.fromJson(j),
+      PanelType.progress => ProgressConfig.fromJson(j),
+      PanelType.multiState ||
+      PanelType.combo ||
+      PanelType.radio =>
+        OptionsConfig.fromJson(j),
+      PanelType.cover => CoverConfig.fromJson(j),
+      PanelType.textInput => TextInputConfig.fromJson(j),
+      PanelType.textLog => TextLogConfig.fromJson(j),
     };
   }
 
@@ -25,6 +35,16 @@ sealed class PanelConfig {
         PanelType.button => const ButtonConfig(payload: 'PRESS'),
         PanelType.toggle => const ToggleConfig(),
         PanelType.slider => const SliderConfig(),
+        PanelType.led => const LedConfig(),
+        PanelType.nodeStatus => const NodeStatusConfig(),
+        PanelType.progress => const ProgressConfig(),
+        PanelType.multiState ||
+        PanelType.combo ||
+        PanelType.radio =>
+          OptionsConfig.coverDefault(),
+        PanelType.cover => const CoverConfig(),
+        PanelType.textInput => const TextInputConfig(),
+        PanelType.textLog => const TextLogConfig(),
       };
 }
 
@@ -127,6 +147,267 @@ class SliderConfig extends PanelConfig {
         step: (j['step'] as num?)?.toDouble() ?? 1,
         vertical: j['vertical'] as bool? ?? false,
         valueTemplate: j['valueTemplate'] as String? ?? '{"brightness":{value}}',
+        jsonPath: j['jsonPath'] as String?,
+      );
+}
+
+/// Read-only colored indicator. Subscribes to a topic, extracts a value via
+/// [jsonPath], and lights up [onColorArgb] when the extracted value matches
+/// [onMatch]. Useful for contact sensors, occupancy, leak alerts, etc.
+class LedConfig extends PanelConfig {
+  const LedConfig({
+    this.jsonPath,
+    this.onMatch = 'true',
+    this.onColorArgb,
+    this.offColorArgb,
+    this.onLabel,
+    this.offLabel,
+  });
+
+  final String? jsonPath;
+  final String onMatch;
+  final int? onColorArgb;
+  final int? offColorArgb;
+  final String? onLabel;
+  final String? offLabel;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        if (jsonPath != null) 'jsonPath': jsonPath,
+        'onMatch': onMatch,
+        if (onColorArgb != null) 'onColor': onColorArgb,
+        if (offColorArgb != null) 'offColor': offColorArgb,
+        if (onLabel != null) 'onLabel': onLabel,
+        if (offLabel != null) 'offLabel': offLabel,
+      };
+
+  static LedConfig fromJson(Map<String, dynamic> j) => LedConfig(
+        jsonPath: j['jsonPath'] as String?,
+        onMatch: j['onMatch'] as String? ?? 'true',
+        onColorArgb: j['onColor'] as int?,
+        offColorArgb: j['offColor'] as int?,
+        onLabel: j['onLabel'] as String?,
+        offLabel: j['offLabel'] as String?,
+      );
+}
+
+/// Z2M device availability indicator. Subscribes to the availability topic
+/// (typically `<prefix>/availability`, where Z2M publishes raw `online` /
+/// `offline` strings by default).
+class NodeStatusConfig extends PanelConfig {
+  const NodeStatusConfig({
+    this.onlinePayload = 'online',
+    this.jsonPath,
+  });
+
+  final String onlinePayload;
+  final String? jsonPath;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'onlinePayload': onlinePayload,
+        if (jsonPath != null) 'jsonPath': jsonPath,
+      };
+
+  static NodeStatusConfig fromJson(Map<String, dynamic> j) => NodeStatusConfig(
+        onlinePayload: j['onlinePayload'] as String? ?? 'online',
+        jsonPath: j['jsonPath'] as String?,
+      );
+}
+
+/// Read-only progress bar. Useful for battery %, link quality, etc.
+class ProgressConfig extends PanelConfig {
+  const ProgressConfig({
+    this.min = 0,
+    this.max = 100,
+    this.jsonPath,
+    this.unit,
+  });
+
+  final double min;
+  final double max;
+  final String? jsonPath;
+  final String? unit;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'min': min,
+        'max': max,
+        if (jsonPath != null) 'jsonPath': jsonPath,
+        if (unit != null) 'unit': unit,
+      };
+
+  static ProgressConfig fromJson(Map<String, dynamic> j) => ProgressConfig(
+        min: (j['min'] as num?)?.toDouble() ?? 0,
+        max: (j['max'] as num?)?.toDouble() ?? 100,
+        jsonPath: j['jsonPath'] as String?,
+        unit: j['unit'] as String?,
+      );
+}
+
+/// A single choice in a Multi-State / Combo / Radio panel. [payload] is what
+/// gets published when the option is chosen; [match] is the value at the
+/// panel's [OptionsConfig.jsonPath] that marks this option as the current one.
+class SelectOption {
+  const SelectOption({
+    required this.label,
+    required this.payload,
+    required this.match,
+  });
+
+  final String label;
+  final String payload;
+  final String match;
+
+  Map<String, dynamic> toJson() => {
+        'label': label,
+        'payload': payload,
+        'match': match,
+      };
+
+  static SelectOption fromJson(Map<String, dynamic> j) => SelectOption(
+        label: j['label'] as String? ?? '',
+        payload: j['payload'] as String? ?? '',
+        match: j['match'] as String? ?? '',
+      );
+}
+
+/// Shared config for the enum-selection panel types (Multi-State, Combo,
+/// Radio). They differ only in how the same list of [options] is rendered.
+class OptionsConfig extends PanelConfig {
+  const OptionsConfig({
+    this.options = const [],
+    this.jsonPath = 'state',
+  });
+
+  final List<SelectOption> options;
+  final String? jsonPath;
+
+  /// Sensible default for Z2M covers: OPEN / STOP / CLOSE on the `state` field.
+  factory OptionsConfig.coverDefault() => const OptionsConfig(
+        jsonPath: 'state',
+        options: [
+          SelectOption(label: 'Open', payload: '{"state":"OPEN"}', match: 'OPEN'),
+          SelectOption(label: 'Stop', payload: '{"state":"STOP"}', match: 'STOP'),
+          SelectOption(label: 'Close', payload: '{"state":"CLOSE"}', match: 'CLOSE'),
+        ],
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'options': options.map((o) => o.toJson()).toList(),
+        if (jsonPath != null) 'jsonPath': jsonPath,
+      };
+
+  static OptionsConfig fromJson(Map<String, dynamic> j) => OptionsConfig(
+        options: (j['options'] as List?)
+                ?.map((e) => SelectOption.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+        jsonPath: j['jsonPath'] as String?,
+      );
+}
+
+/// Composite Z2M cover control: OPEN/STOP/CLOSE buttons + a 0-100 position
+/// slider with preset chips, mirroring the Zigbee2MQTT device page. Reads the
+/// whole device-state payload and pulls [statePath] and [positionPath] out of
+/// it; publishes `{"state":...}` for the buttons and the [positionTemplate]
+/// for the slider.
+class CoverConfig extends PanelConfig {
+  const CoverConfig({
+    this.statePath = 'state',
+    this.positionPath = 'position',
+    this.openPayload = '{"state":"OPEN"}',
+    this.stopPayload = '{"state":"STOP"}',
+    this.closePayload = '{"state":"CLOSE"}',
+    this.positionTemplate = '{"position":{value}}',
+    this.presets = const [0, 25, 50, 75, 100],
+    this.showSlider = true,
+  });
+
+  final String statePath;
+  final String positionPath;
+  final String openPayload;
+  final String stopPayload;
+  final String closePayload;
+  final String positionTemplate;
+  final List<int> presets;
+  final bool showSlider;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'statePath': statePath,
+        'positionPath': positionPath,
+        'openPayload': openPayload,
+        'stopPayload': stopPayload,
+        'closePayload': closePayload,
+        'positionTemplate': positionTemplate,
+        'presets': presets,
+        'showSlider': showSlider,
+      };
+
+  static CoverConfig fromJson(Map<String, dynamic> j) => CoverConfig(
+        statePath: j['statePath'] as String? ?? 'state',
+        positionPath: j['positionPath'] as String? ?? 'position',
+        openPayload: j['openPayload'] as String? ?? '{"state":"OPEN"}',
+        stopPayload: j['stopPayload'] as String? ?? '{"state":"STOP"}',
+        closePayload: j['closePayload'] as String? ?? '{"state":"CLOSE"}',
+        positionTemplate:
+            j['positionTemplate'] as String? ?? '{"position":{value}}',
+        presets: (j['presets'] as List?)?.map((e) => (e as num).toInt()).toList() ??
+            const [0, 25, 50, 75, 100],
+        showSlider: j['showSlider'] as bool? ?? true,
+      );
+}
+
+/// Free-form publish field. The typed text is substituted into [template]
+/// ({value} placeholder) before publishing — default template is just the raw
+/// text. Write-only (no subscription).
+class TextInputConfig extends PanelConfig {
+  const TextInputConfig({
+    this.hint = '',
+    this.template = '{value}',
+    this.clearOnSend = false,
+  });
+
+  final String hint;
+  final String template;
+  final bool clearOnSend;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'hint': hint,
+        'template': template,
+        'clearOnSend': clearOnSend,
+      };
+
+  static TextInputConfig fromJson(Map<String, dynamic> j) => TextInputConfig(
+        hint: j['hint'] as String? ?? '',
+        template: j['template'] as String? ?? '{value}',
+        clearOnSend: j['clearOnSend'] as bool? ?? false,
+      );
+}
+
+/// Read-only scrolling history of messages on a topic. Keeps the last
+/// [maxLines] messages; optionally extracts a [jsonPath] field instead of
+/// logging the whole payload.
+class TextLogConfig extends PanelConfig {
+  const TextLogConfig({
+    this.maxLines = 50,
+    this.jsonPath,
+  });
+
+  final int maxLines;
+  final String? jsonPath;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'maxLines': maxLines,
+        if (jsonPath != null) 'jsonPath': jsonPath,
+      };
+
+  static TextLogConfig fromJson(Map<String, dynamic> j) => TextLogConfig(
+        maxLines: (j['maxLines'] as num?)?.toInt() ?? 50,
         jsonPath: j['jsonPath'] as String?,
       );
 }

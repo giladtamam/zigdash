@@ -1376,6 +1376,17 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _topicPrefixOverrideMeta =
+      const VerificationMeta('topicPrefixOverride');
+  @override
+  late final GeneratedColumn<String> topicPrefixOverride =
+      GeneratedColumn<String>(
+        'topic_prefix_override',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _qosMeta = const VerificationMeta('qos');
   @override
   late final GeneratedColumn<int> qos = GeneratedColumn<int>(
@@ -1471,6 +1482,7 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
     type,
     topic,
     subscribeTopic,
+    topicPrefixOverride,
     qos,
     retain,
     width,
@@ -1530,6 +1542,15 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
         subscribeTopic.isAcceptableOrUnknown(
           data['subscribe_topic']!,
           _subscribeTopicMeta,
+        ),
+      );
+    }
+    if (data.containsKey('topic_prefix_override')) {
+      context.handle(
+        _topicPrefixOverrideMeta,
+        topicPrefixOverride.isAcceptableOrUnknown(
+          data['topic_prefix_override']!,
+          _topicPrefixOverrideMeta,
         ),
       );
     }
@@ -1616,6 +1637,10 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
         DriftSqlType.string,
         data['${effectivePrefix}subscribe_topic'],
       ),
+      topicPrefixOverride: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}topic_prefix_override'],
+      ),
       qos: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}qos'],
@@ -1671,6 +1696,7 @@ class Panel extends DataClass implements Insertable<Panel> {
   final PanelType type;
   final String topic;
   final String? subscribeTopic;
+  final String? topicPrefixOverride;
   final int qos;
   final bool retain;
   final PanelWidth width;
@@ -1686,6 +1712,7 @@ class Panel extends DataClass implements Insertable<Panel> {
     required this.type,
     required this.topic,
     this.subscribeTopic,
+    this.topicPrefixOverride,
     required this.qos,
     required this.retain,
     required this.width,
@@ -1707,6 +1734,9 @@ class Panel extends DataClass implements Insertable<Panel> {
     map['topic'] = Variable<String>(topic);
     if (!nullToAbsent || subscribeTopic != null) {
       map['subscribe_topic'] = Variable<String>(subscribeTopic);
+    }
+    if (!nullToAbsent || topicPrefixOverride != null) {
+      map['topic_prefix_override'] = Variable<String>(topicPrefixOverride);
     }
     map['qos'] = Variable<int>(qos);
     map['retain'] = Variable<bool>(retain);
@@ -1733,6 +1763,9 @@ class Panel extends DataClass implements Insertable<Panel> {
       subscribeTopic: subscribeTopic == null && nullToAbsent
           ? const Value.absent()
           : Value(subscribeTopic),
+      topicPrefixOverride: topicPrefixOverride == null && nullToAbsent
+          ? const Value.absent()
+          : Value(topicPrefixOverride),
       qos: Value(qos),
       retain: Value(retain),
       width: Value(width),
@@ -1758,6 +1791,9 @@ class Panel extends DataClass implements Insertable<Panel> {
       ),
       topic: serializer.fromJson<String>(json['topic']),
       subscribeTopic: serializer.fromJson<String?>(json['subscribeTopic']),
+      topicPrefixOverride: serializer.fromJson<String?>(
+        json['topicPrefixOverride'],
+      ),
       qos: serializer.fromJson<int>(json['qos']),
       retain: serializer.fromJson<bool>(json['retain']),
       width: $PanelsTable.$converterwidth.fromJson(
@@ -1782,6 +1818,7 @@ class Panel extends DataClass implements Insertable<Panel> {
       ),
       'topic': serializer.toJson<String>(topic),
       'subscribeTopic': serializer.toJson<String?>(subscribeTopic),
+      'topicPrefixOverride': serializer.toJson<String?>(topicPrefixOverride),
       'qos': serializer.toJson<int>(qos),
       'retain': serializer.toJson<bool>(retain),
       'width': serializer.toJson<String>(
@@ -1802,6 +1839,7 @@ class Panel extends DataClass implements Insertable<Panel> {
     PanelType? type,
     String? topic,
     Value<String?> subscribeTopic = const Value.absent(),
+    Value<String?> topicPrefixOverride = const Value.absent(),
     int? qos,
     bool? retain,
     PanelWidth? width,
@@ -1819,6 +1857,9 @@ class Panel extends DataClass implements Insertable<Panel> {
     subscribeTopic: subscribeTopic.present
         ? subscribeTopic.value
         : this.subscribeTopic,
+    topicPrefixOverride: topicPrefixOverride.present
+        ? topicPrefixOverride.value
+        : this.topicPrefixOverride,
     qos: qos ?? this.qos,
     retain: retain ?? this.retain,
     width: width ?? this.width,
@@ -1840,6 +1881,9 @@ class Panel extends DataClass implements Insertable<Panel> {
       subscribeTopic: data.subscribeTopic.present
           ? data.subscribeTopic.value
           : this.subscribeTopic,
+      topicPrefixOverride: data.topicPrefixOverride.present
+          ? data.topicPrefixOverride.value
+          : this.topicPrefixOverride,
       qos: data.qos.present ? data.qos.value : this.qos,
       retain: data.retain.present ? data.retain.value : this.retain,
       width: data.width.present ? data.width.value : this.width,
@@ -1862,6 +1906,7 @@ class Panel extends DataClass implements Insertable<Panel> {
           ..write('type: $type, ')
           ..write('topic: $topic, ')
           ..write('subscribeTopic: $subscribeTopic, ')
+          ..write('topicPrefixOverride: $topicPrefixOverride, ')
           ..write('qos: $qos, ')
           ..write('retain: $retain, ')
           ..write('width: $width, ')
@@ -1882,6 +1927,7 @@ class Panel extends DataClass implements Insertable<Panel> {
     type,
     topic,
     subscribeTopic,
+    topicPrefixOverride,
     qos,
     retain,
     width,
@@ -1901,6 +1947,7 @@ class Panel extends DataClass implements Insertable<Panel> {
           other.type == this.type &&
           other.topic == this.topic &&
           other.subscribeTopic == this.subscribeTopic &&
+          other.topicPrefixOverride == this.topicPrefixOverride &&
           other.qos == this.qos &&
           other.retain == this.retain &&
           other.width == this.width &&
@@ -1918,6 +1965,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
   final Value<PanelType> type;
   final Value<String> topic;
   final Value<String?> subscribeTopic;
+  final Value<String?> topicPrefixOverride;
   final Value<int> qos;
   final Value<bool> retain;
   final Value<PanelWidth> width;
@@ -1934,6 +1982,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     this.type = const Value.absent(),
     this.topic = const Value.absent(),
     this.subscribeTopic = const Value.absent(),
+    this.topicPrefixOverride = const Value.absent(),
     this.qos = const Value.absent(),
     this.retain = const Value.absent(),
     this.width = const Value.absent(),
@@ -1951,6 +2000,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     required PanelType type,
     required String topic,
     this.subscribeTopic = const Value.absent(),
+    this.topicPrefixOverride = const Value.absent(),
     this.qos = const Value.absent(),
     this.retain = const Value.absent(),
     required PanelWidth width,
@@ -1976,6 +2026,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     Expression<String>? type,
     Expression<String>? topic,
     Expression<String>? subscribeTopic,
+    Expression<String>? topicPrefixOverride,
     Expression<int>? qos,
     Expression<bool>? retain,
     Expression<String>? width,
@@ -1993,6 +2044,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
       if (type != null) 'type': type,
       if (topic != null) 'topic': topic,
       if (subscribeTopic != null) 'subscribe_topic': subscribeTopic,
+      if (topicPrefixOverride != null)
+        'topic_prefix_override': topicPrefixOverride,
       if (qos != null) 'qos': qos,
       if (retain != null) 'retain': retain,
       if (width != null) 'width': width,
@@ -2012,6 +2065,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     Value<PanelType>? type,
     Value<String>? topic,
     Value<String?>? subscribeTopic,
+    Value<String?>? topicPrefixOverride,
     Value<int>? qos,
     Value<bool>? retain,
     Value<PanelWidth>? width,
@@ -2029,6 +2083,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
       type: type ?? this.type,
       topic: topic ?? this.topic,
       subscribeTopic: subscribeTopic ?? this.subscribeTopic,
+      topicPrefixOverride: topicPrefixOverride ?? this.topicPrefixOverride,
       qos: qos ?? this.qos,
       retain: retain ?? this.retain,
       width: width ?? this.width,
@@ -2063,6 +2118,11 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     }
     if (subscribeTopic.present) {
       map['subscribe_topic'] = Variable<String>(subscribeTopic.value);
+    }
+    if (topicPrefixOverride.present) {
+      map['topic_prefix_override'] = Variable<String>(
+        topicPrefixOverride.value,
+      );
     }
     if (qos.present) {
       map['qos'] = Variable<int>(qos.value);
@@ -2105,6 +2165,7 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
           ..write('type: $type, ')
           ..write('topic: $topic, ')
           ..write('subscribeTopic: $subscribeTopic, ')
+          ..write('topicPrefixOverride: $topicPrefixOverride, ')
           ..write('qos: $qos, ')
           ..write('retain: $retain, ')
           ..write('width: $width, ')
@@ -3093,6 +3154,7 @@ typedef $$PanelsTableCreateCompanionBuilder =
       required PanelType type,
       required String topic,
       Value<String?> subscribeTopic,
+      Value<String?> topicPrefixOverride,
       Value<int> qos,
       Value<bool> retain,
       required PanelWidth width,
@@ -3111,6 +3173,7 @@ typedef $$PanelsTableUpdateCompanionBuilder =
       Value<PanelType> type,
       Value<String> topic,
       Value<String?> subscribeTopic,
+      Value<String?> topicPrefixOverride,
       Value<int> qos,
       Value<bool> retain,
       Value<PanelWidth> width,
@@ -3178,6 +3241,11 @@ class $$PanelsTableFilterComposer
 
   ColumnFilters<String> get subscribeTopic => $composableBuilder(
     column: $table.subscribeTopic,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get topicPrefixOverride => $composableBuilder(
+    column: $table.topicPrefixOverride,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3280,6 +3348,11 @@ class $$PanelsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get topicPrefixOverride => $composableBuilder(
+    column: $table.topicPrefixOverride,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get qos => $composableBuilder(
     column: $table.qos,
     builder: (column) => ColumnOrderings(column),
@@ -3370,6 +3443,11 @@ class $$PanelsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get topicPrefixOverride => $composableBuilder(
+    column: $table.topicPrefixOverride,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get qos =>
       $composableBuilder(column: $table.qos, builder: (column) => column);
 
@@ -3454,6 +3532,7 @@ class $$PanelsTableTableManager
                 Value<PanelType> type = const Value.absent(),
                 Value<String> topic = const Value.absent(),
                 Value<String?> subscribeTopic = const Value.absent(),
+                Value<String?> topicPrefixOverride = const Value.absent(),
                 Value<int> qos = const Value.absent(),
                 Value<bool> retain = const Value.absent(),
                 Value<PanelWidth> width = const Value.absent(),
@@ -3470,6 +3549,7 @@ class $$PanelsTableTableManager
                 type: type,
                 topic: topic,
                 subscribeTopic: subscribeTopic,
+                topicPrefixOverride: topicPrefixOverride,
                 qos: qos,
                 retain: retain,
                 width: width,
@@ -3488,6 +3568,7 @@ class $$PanelsTableTableManager
                 required PanelType type,
                 required String topic,
                 Value<String?> subscribeTopic = const Value.absent(),
+                Value<String?> topicPrefixOverride = const Value.absent(),
                 Value<int> qos = const Value.absent(),
                 Value<bool> retain = const Value.absent(),
                 required PanelWidth width,
@@ -3504,6 +3585,7 @@ class $$PanelsTableTableManager
                 type: type,
                 topic: topic,
                 subscribeTopic: subscribeTopic,
+                topicPrefixOverride: topicPrefixOverride,
                 qos: qos,
                 retain: retain,
                 width: width,

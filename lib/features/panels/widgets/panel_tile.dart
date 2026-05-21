@@ -8,7 +8,16 @@ import '../../../data/database/tables/panels.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import 'button_panel.dart';
+import 'combo_panel.dart';
+import 'cover_panel.dart';
+import 'led_panel.dart';
+import 'multi_state_panel.dart';
+import 'node_status_panel.dart';
+import 'progress_panel.dart';
+import 'radio_panel.dart';
 import 'slider_panel.dart';
+import 'text_input_panel.dart';
+import 'text_log_panel.dart';
 import 'toggle_panel.dart';
 
 /// Dispatcher that picks the right concrete panel widget based on
@@ -31,6 +40,7 @@ class PanelTile extends ConsumerWidget {
   final bool locked;
 
   void _openOptions(BuildContext context, WidgetRef ref) {
+    final repo = ref.read(panelRepoProvider);
     showModalBottomSheet<void>(
       context: context,
       builder: (sheetCtx) => SafeArea(
@@ -48,11 +58,60 @@ class PanelTile extends ConsumerWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.copy_all_outlined),
+              title: const Text('Duplicate panel'),
+              onTap: () async {
+                Navigator.pop(sheetCtx);
+                await repo.duplicate(panel.id);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.arrow_upward),
+              title: const Text('Move up'),
+              onTap: () async {
+                Navigator.pop(sheetCtx);
+                await repo.move(dashboardId, panel.id, -1);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.arrow_downward),
+              title: const Text('Move down'),
+              onTap: () async {
+                Navigator.pop(sheetCtx);
+                await repo.move(dashboardId, panel.id, 1);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Row(
+                children: [
+                  const Text('Width'),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: SegmentedButton<PanelWidth>(
+                      showSelectedIcon: false,
+                      segments: const [
+                        ButtonSegment(value: PanelWidth.full, label: Text('Full')),
+                        ButtonSegment(value: PanelWidth.half, label: Text('Half')),
+                        ButtonSegment(value: PanelWidth.third, label: Text('⅓')),
+                      ],
+                      selected: {panel.width},
+                      onSelectionChanged: (sel) async {
+                        Navigator.pop(sheetCtx);
+                        await repo.setWidth(panel.id, sel.first);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            ListTile(
               leading: const Icon(Icons.delete_outline),
               title: const Text('Delete panel'),
               onTap: () async {
                 Navigator.pop(sheetCtx);
-                await ref.read(panelRepoProvider).delete(panel.id);
+                await repo.delete(panel.id);
               },
             ),
           ],
@@ -63,9 +122,10 @@ class PanelTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final publishTopic = composeTopic(topicPrefix, panel.topic);
+    final effectivePrefix = panel.topicPrefixOverride ?? topicPrefix;
+    final publishTopic = composeTopic(effectivePrefix, panel.topic);
     final subscribeTopic =
-        composeTopic(topicPrefix, panel.subscribeTopic ?? panel.topic);
+        composeTopic(effectivePrefix, panel.subscribeTopic ?? panel.topic);
     final config = PanelConfig.decode(panel.type, panel.config);
 
     final widget = switch (panel.type) {
@@ -88,6 +148,64 @@ class PanelTile extends ConsumerWidget {
           subscribeTopic: subscribeTopic,
           panel: panel,
           config: config as SliderConfig,
+        ),
+      PanelType.led => LedPanel(
+          connectionId: connectionId,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as LedConfig,
+        ),
+      PanelType.nodeStatus => NodeStatusPanel(
+          connectionId: connectionId,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as NodeStatusConfig,
+        ),
+      PanelType.progress => ProgressPanel(
+          connectionId: connectionId,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as ProgressConfig,
+        ),
+      PanelType.multiState => MultiStatePanel(
+          connectionId: connectionId,
+          publishTopic: publishTopic,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as OptionsConfig,
+        ),
+      PanelType.combo => ComboPanel(
+          connectionId: connectionId,
+          publishTopic: publishTopic,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as OptionsConfig,
+        ),
+      PanelType.radio => RadioPanel(
+          connectionId: connectionId,
+          publishTopic: publishTopic,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as OptionsConfig,
+        ),
+      PanelType.cover => CoverPanel(
+          connectionId: connectionId,
+          publishTopic: publishTopic,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as CoverConfig,
+        ),
+      PanelType.textInput => TextInputPanel(
+          connectionId: connectionId,
+          publishTopic: publishTopic,
+          panel: panel,
+          config: config as TextInputConfig,
+        ),
+      PanelType.textLog => TextLogPanel(
+          connectionId: connectionId,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config as TextLogConfig,
         ),
     };
 

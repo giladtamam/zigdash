@@ -19,6 +19,13 @@ class DashboardDao extends DatabaseAccessor<AppDatabase> with _$DashboardDaoMixi
   Future<Dashboard?> getById(String id) =>
       (select(dashboards)..where((d) => d.id.equals(id))).getSingleOrNull();
 
+  Future<List<Dashboard>> getByConnection(String connectionId) {
+    return (select(dashboards)
+          ..where((d) => d.connectionId.equals(connectionId))
+          ..orderBy([(d) => OrderingTerm(expression: d.sortOrder)]))
+        .get();
+  }
+
   Future<void> insertRow(DashboardsCompanion entry) =>
       into(dashboards).insert(entry);
 

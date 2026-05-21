@@ -14,6 +14,7 @@ class ZigDashApp extends ConsumerWidget {
     return DynamicColorBuilder(
       builder: (light, dark) => MaterialApp.router(
         title: 'ZigDash',
+        debugShowCheckedModeBanner: false,
         theme: AppTheme.light(dynamic: light),
         darkTheme: AppTheme.dark(dynamic: dark),
         themeMode: ThemeMode.system,

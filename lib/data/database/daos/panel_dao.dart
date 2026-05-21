@@ -22,6 +22,16 @@ class PanelDao extends DatabaseAccessor<AppDatabase> with _$PanelDaoMixin {
   Future<Panel?> getById(String id) =>
       (select(panels)..where((p) => p.id.equals(id))).getSingleOrNull();
 
+  Future<List<Panel>> getByDashboard(String dashboardId) {
+    return (select(panels)
+          ..where((p) => p.dashboardId.equals(dashboardId))
+          ..orderBy([
+            (p) => OrderingTerm(expression: p.sortOrder),
+            (p) => OrderingTerm(expression: p.name),
+          ]))
+        .get();
+  }
+
   Future<void> insertRow(PanelsCompanion entry) => into(panels).insert(entry);
 
   Future<int> updateById(String id, PanelsCompanion patch) =>

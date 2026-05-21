@@ -14,7 +14,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.test(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -23,6 +23,9 @@ class AppDatabase extends _$AppDatabase {
           if (from < 2) {
             await m.createTable(dashboards);
             await m.createTable(panels);
+          }
+          if (from < 3) {
+            await m.addColumn(panels, panels.topicPrefixOverride);
           }
         },
       );

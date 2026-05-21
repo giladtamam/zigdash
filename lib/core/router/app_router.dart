@@ -15,7 +15,22 @@ import 'routes.dart';
 PanelType _parseType(String? s) => switch (s) {
       'button' => PanelType.button,
       'slider' => PanelType.slider,
+      'led' => PanelType.led,
+      'nodeStatus' => PanelType.nodeStatus,
+      'progress' => PanelType.progress,
+      'multiState' => PanelType.multiState,
+      'combo' => PanelType.combo,
+      'radio' => PanelType.radio,
+      'cover' => PanelType.cover,
+      'textInput' => PanelType.textInput,
+      'textLog' => PanelType.textLog,
       _ => PanelType.toggle,
+    };
+
+SliderPreset? _parseSliderPreset(String? s) => switch (s) {
+      'brightness' => SliderPreset.brightness,
+      'position' => SliderPreset.position,
+      _ => null,
     };
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -47,6 +62,8 @@ final routerProvider = Provider<GoRouter>((ref) {
               connectionId: state.pathParameters['id']!,
               dashboardId: state.pathParameters['dashboardId']!,
               initialType: _parseType(state.uri.queryParameters['type']),
+              initialSliderPreset:
+                  _parseSliderPreset(state.uri.queryParameters['preset']),
             ),
           ),
           GoRoute(

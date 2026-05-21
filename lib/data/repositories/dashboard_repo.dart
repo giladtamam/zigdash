@@ -14,6 +14,9 @@ class DashboardRepo {
 
   Future<Dashboard?> getById(String id) => _dao.getById(id);
 
+  Future<List<Dashboard>> getByConnection(String connectionId) =>
+      _dao.getByConnection(connectionId);
+
   Future<String> create({
     required String connectionId,
     required String name,

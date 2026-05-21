@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/database/database.dart';
+import '../../../data/repositories/backup_service.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../panels/widgets/panel_grid.dart';
@@ -36,7 +38,10 @@ class DashboardsScreen extends ConsumerWidget {
       data: (dashboards) {
         if (dashboards.isEmpty) {
           return Scaffold(
-            appBar: AppBar(title: Text(connectionName)),
+            appBar: AppBar(
+              title: Text(connectionName),
+              actions: [_BackupMenu(connectionId: connectionId)],
+            ),
             body: const _EmptyState(),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () =>
@@ -95,6 +100,7 @@ class _DashboardsTabbed extends StatelessWidget {
                 onPressed: () =>
                     tabCtx.push('/connections/$connectionId/dashboards/form'),
               ),
+              _BackupMenu(connectionId: connectionId),
             ],
             bottom: TabBar(
               isScrollable: dashboards.length > 3,
@@ -166,40 +172,222 @@ void _openPanelPicker(BuildContext context,
   // Implementation in lib/features/panels/screens/panel_picker_sheet.dart.
   final type = await showModalBottomSheet<String>(
     context: context,
+    isScrollControlled: true,
     builder: (sheetCtx) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Add a panel', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-          ),
-          ListTile(
-            leading: const Icon(Icons.toggle_on),
-            title: const Text('Toggle'),
-            subtitle: const Text('On/off switch for a device state'),
-            onTap: () => Navigator.pop(sheetCtx, 'toggle'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.tune),
-            title: const Text('Slider'),
-            subtitle: const Text('Continuous value (brightness, position)'),
-            onTap: () => Navigator.pop(sheetCtx, 'slider'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.send),
-            title: const Text('Button'),
-            subtitle: const Text('Fire a one-shot command'),
-            onTap: () => Navigator.pop(sheetCtx, 'button'),
-          ),
-          const SizedBox(height: 8),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Add a panel', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 4),
+              child: Text('Control', style: TextStyle(fontWeight: FontWeight.w600)),
+            ),
+            ListTile(
+              leading: const Icon(Icons.toggle_on),
+              title: const Text('Toggle'),
+              subtitle: const Text('On/off switch for a device state'),
+              onTap: () => Navigator.pop(sheetCtx, 'toggle'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.tune),
+              title: const Text('Slider — Brightness'),
+              subtitle: const Text('Light dimming (0–254, {"brightness":N})'),
+              onTap: () => Navigator.pop(sheetCtx, 'slider'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.blinds),
+              title: const Text('Slider — Position'),
+              subtitle: const Text('Cover / shutter (0–100, {"position":N})'),
+              onTap: () => Navigator.pop(sheetCtx, 'slider:position'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.blinds_closed),
+              title: const Text('Cover'),
+              subtitle: const Text('Shutter/blind: OPEN·STOP·CLOSE + position slider'),
+              onTap: () => Navigator.pop(sheetCtx, 'cover'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.view_week),
+              title: const Text('Multi-State'),
+              subtitle: const Text('Segmented buttons for an enum (e.g. OPEN/STOP/CLOSE)'),
+              onTap: () => Navigator.pop(sheetCtx, 'multiState'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.arrow_drop_down_circle_outlined),
+              title: const Text('Combo'),
+              subtitle: const Text('Dropdown selector for an enum'),
+              onTap: () => Navigator.pop(sheetCtx, 'combo'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.radio_button_checked),
+              title: const Text('Radio'),
+              subtitle: const Text('Radio-button list for an enum'),
+              onTap: () => Navigator.pop(sheetCtx, 'radio'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.send),
+              title: const Text('Button'),
+              subtitle: const Text('Fire a one-shot command'),
+              onTap: () => Navigator.pop(sheetCtx, 'button'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.keyboard),
+              title: const Text('Text Input'),
+              subtitle: const Text('Publish a free-form value or JSON'),
+              onTap: () => Navigator.pop(sheetCtx, 'textInput'),
+            ),
+            const Divider(),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text('State', style: TextStyle(fontWeight: FontWeight.w600)),
+            ),
+            ListTile(
+              leading: const Icon(Icons.circle, color: Colors.green),
+              title: const Text('LED'),
+              subtitle: const Text('Colored indicator for a boolean state (contact, leak)'),
+              onTap: () => Navigator.pop(sheetCtx, 'led'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.cloud_done),
+              title: const Text('Node Status'),
+              subtitle: const Text('Z2M device availability (online/offline)'),
+              onTap: () => Navigator.pop(sheetCtx, 'nodeStatus'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.battery_5_bar),
+              title: const Text('Progress'),
+              subtitle: const Text('Numeric bar for battery, link quality, etc.'),
+              onTap: () => Navigator.pop(sheetCtx, 'progress'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.notes),
+              title: const Text('Text Log'),
+              subtitle: const Text('Scrolling history of messages on a topic'),
+              onTap: () => Navigator.pop(sheetCtx, 'textLog'),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     ),
   );
   if (type != null && context.mounted) {
+    // Tokens like "slider:position" carry an additional preset hint; split here.
+    final parts = type.split(':');
+    final t = parts.first;
+    final preset = parts.length > 1 ? '&preset=${parts[1]}' : '';
     context.push(
-      '/connections/$connectionId/dashboards/$dashboardId/panels/new?type=$type',
+      '/connections/$connectionId/dashboards/$dashboardId/panels/new?type=$t$preset',
     );
+  }
+}
+
+/// App-bar overflow menu offering JSON export/import of this connection's
+/// dashboards (backup / copy-to-another-device).
+class _BackupMenu extends ConsumerWidget {
+  const _BackupMenu({required this.connectionId});
+
+  final String connectionId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton<String>(
+      onSelected: (v) {
+        if (v == 'export') _export(context, ref);
+        if (v == 'import') _import(context, ref);
+      },
+      itemBuilder: (_) => const [
+        PopupMenuItem(value: 'export', child: Text('Export dashboards')),
+        PopupMenuItem(value: 'import', child: Text('Import dashboards')),
+      ],
+    );
+  }
+
+  Future<void> _export(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final json = await ref.read(backupServiceProvider).exportConnection(connectionId);
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Export dashboards'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: SelectableText(
+              json,
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Close'),
+          ),
+          FilledButton.icon(
+            icon: const Icon(Icons.copy),
+            label: const Text('Copy'),
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: json));
+              if (ctx.mounted) Navigator.pop(ctx);
+              messenger.showSnackBar(
+                const SnackBar(content: Text('Copied to clipboard')),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _import(BuildContext context, WidgetRef ref) async {
+    final controller = TextEditingController();
+    final messenger = ScaffoldMessenger.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Import dashboards'),
+        content: TextField(
+          controller: controller,
+          maxLines: 8,
+          decoration: const InputDecoration(
+            hintText: 'Paste exported JSON here',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Import'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) {
+      controller.dispose();
+      return;
+    }
+    try {
+      final n = await ref
+          .read(backupServiceProvider)
+          .importToConnection(connectionId, controller.text);
+      messenger.showSnackBar(
+        SnackBar(content: Text('Imported $n dashboard${n == 1 ? '' : 's'}')),
+      );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
+    } finally {
+      controller.dispose();
+    }
   }
 }

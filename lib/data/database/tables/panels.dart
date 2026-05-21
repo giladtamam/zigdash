@@ -2,7 +2,20 @@ import 'package:drift/drift.dart';
 
 import 'dashboards.dart';
 
-enum PanelType { button, toggle, slider }
+enum PanelType {
+  button,
+  toggle,
+  slider,
+  led,
+  nodeStatus,
+  progress,
+  multiState,
+  combo,
+  radio,
+  cover,
+  textInput,
+  textLog,
+}
 
 enum PanelWidth { full, half, third }
 
@@ -14,6 +27,7 @@ class Panels extends Table {
   TextColumn get type => textEnum<PanelType>()();
   TextColumn get topic => text()();
   TextColumn get subscribeTopic => text().nullable()();
+  TextColumn get topicPrefixOverride => text().nullable()();
   IntColumn get qos => integer().withDefault(const Constant(1))();
   BoolColumn get retain => boolean().withDefault(const Constant(false))();
   TextColumn get width => textEnum<PanelWidth>()();

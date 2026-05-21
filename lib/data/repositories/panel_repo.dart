@@ -16,12 +16,16 @@ class PanelRepo {
 
   Future<Panel?> getById(String id) => _dao.getById(id);
 
+  Future<List<Panel>> getByDashboard(String dashboardId) =>
+      _dao.getByDashboard(dashboardId);
+
   Future<String> create({
     required String dashboardId,
     required String name,
     required PanelType type,
     required String topic,
     String? subscribeTopic,
+    String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
     PanelWidth width = PanelWidth.half,
@@ -37,6 +41,7 @@ class PanelRepo {
       type: type,
       topic: topic,
       subscribeTopic: Value(subscribeTopic),
+      topicPrefixOverride: Value(topicPrefixOverride),
       qos: Value(qos),
       retain: Value(retain),
       width: width,
@@ -53,6 +58,7 @@ class PanelRepo {
     required String name,
     required String topic,
     String? subscribeTopic,
+    String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
     PanelWidth width = PanelWidth.half,
@@ -64,6 +70,7 @@ class PanelRepo {
         name: Value(name),
         topic: Value(topic),
         subscribeTopic: Value(subscribeTopic),
+        topicPrefixOverride: Value(topicPrefixOverride),
         qos: Value(qos),
         retain: Value(retain),
         width: Value(width),
@@ -74,6 +81,54 @@ class PanelRepo {
   }
 
   Future<void> delete(String id) => _dao.deleteById(id);
+
+  Future<void> duplicate(String id) async {
+    final p = await _dao.getById(id);
+    if (p == null) return;
+    await create(
+      dashboardId: p.dashboardId,
+      name: '${p.name} copy',
+      type: p.type,
+      topic: p.topic,
+      subscribeTopic: p.subscribeTopic,
+      topicPrefixOverride: p.topicPrefixOverride,
+      qos: p.qos,
+      retain: p.retain,
+      width: p.width,
+      sortOrder: p.sortOrder + 1,
+      config: PanelConfig.decode(p.type, p.config),
+    );
+  }
+
+  Future<void> setWidth(String id, PanelWidth width) => _dao.updateById(
+        id,
+        PanelsCompanion(
+          width: Value(width),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+
+  /// Moves [panelId] by [delta] positions within its dashboard, then rewrites
+  /// every sibling's sortOrder to the new contiguous order.
+  Future<void> move(String dashboardId, String panelId, int delta) async {
+    final list = await _dao.getByDashboard(dashboardId);
+    final idx = list.indexWhere((p) => p.id == panelId);
+    if (idx < 0) return;
+    final target = idx + delta;
+    if (target < 0 || target >= list.length) return;
+    final reordered = [...list];
+    final moved = reordered.removeAt(idx);
+    reordered.insert(target, moved);
+    for (var i = 0; i < reordered.length; i++) {
+      await _dao.updateById(
+        reordered[i].id,
+        PanelsCompanion(
+          sortOrder: Value(i),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+    }
+  }
 }
 
 final panelRepoProvider = Provider<PanelRepo>((ref) {
