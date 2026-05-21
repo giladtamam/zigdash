@@ -58,6 +58,13 @@ class MqttManager {
 
   final _status = BehaviorSubject<MqttStatus>.seeded(MqttStatus.disconnected);
   Stream<MqttStatus> get status$ => _status.stream;
+
+  /// True only when the underlying client has a live connection — used by
+  /// callers (e.g. AutomationConfigPublisher) that need to know whether a
+  /// retained publish will actually reach the broker right now.
+  bool get isConnected =>
+      _client?.connectionStatus?.state == mc.MqttConnectionState.connected;
+
   MqttStatus get status => _status.value;
 
   final Map<String, _SubEntry> _subs = {};
