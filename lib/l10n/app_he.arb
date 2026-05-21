@@ -3,5 +3,16 @@
   "appTitle": "ZigDash",
   "navBrokers": "ברוקרים",
   "navDashboards": "לוחות",
-  "navSettings": "הגדרות"
+  "navSettings": "הגדרות",
+  "settingsAppearance": "מראה",
+  "settingsTheme": "ערכת נושא",
+  "themeSystem": "מערכת",
+  "themeLight": "בהיר",
+  "themeDark": "כהה",
+  "settingsDynamicColor": "צבעי Material You",
+  "settingsDynamicColorSubtitle": "אנדרואיד 12 ומעלה; אחרת נעשה שימוש בצבע האפליקציה",
+  "settingsLanguage": "שפה",
+  "languageSystem": "מערכת",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית"
 }

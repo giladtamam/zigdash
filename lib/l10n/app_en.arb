@@ -3,5 +3,16 @@
   "appTitle": "ZigDash",
   "navBrokers": "Brokers",
   "navDashboards": "Dashboards",
-  "navSettings": "Settings"
+  "navSettings": "Settings",
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsDynamicColor": "Use Material You colors",
+  "settingsDynamicColorSubtitle": "Android 12+; otherwise uses the app color",
+  "settingsLanguage": "Language",
+  "languageSystem": "System",
+  "languageEnglish": "English",
+  "languageHebrew": "עברית"
 }

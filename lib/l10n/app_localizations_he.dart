@@ -19,4 +19,38 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get navSettings => 'הגדרות';
+
+  @override
+  String get settingsAppearance => 'מראה';
+
+  @override
+  String get settingsTheme => 'ערכת נושא';
+
+  @override
+  String get themeSystem => 'מערכת';
+
+  @override
+  String get themeLight => 'בהיר';
+
+  @override
+  String get themeDark => 'כהה';
+
+  @override
+  String get settingsDynamicColor => 'צבעי Material You';
+
+  @override
+  String get settingsDynamicColorSubtitle =>
+      'אנדרואיד 12 ומעלה; אחרת נעשה שימוש בצבע האפליקציה';
+
+  @override
+  String get settingsLanguage => 'שפה';
+
+  @override
+  String get languageSystem => 'מערכת';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageHebrew => 'עברית';
 }

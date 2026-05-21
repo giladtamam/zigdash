@@ -9,7 +9,7 @@ import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
-import '../../features/settings/screens/settings_placeholder.dart';
+import '../../features/settings/screens/settings_screen.dart';
 import 'routes.dart';
 
 PanelType _parseType(String? s) => switch (s) {
@@ -111,7 +111,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.settings,
-                builder: (_, __) => const SettingsPlaceholder(),
+                builder: (_, __) => const SettingsScreen(),
               ),
             ],
           ),

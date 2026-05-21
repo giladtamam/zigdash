@@ -121,6 +121,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsAppearance;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @settingsDynamicColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Material You colors'**
+  String get settingsDynamicColor;
+
+  /// No description provided for @settingsDynamicColorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Android 12+; otherwise uses the app color'**
+  String get settingsDynamicColorSubtitle;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get languageSystem;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageHebrew.
+  ///
+  /// In en, this message translates to:
+  /// **'עברית'**
+  String get languageHebrew;
 }
 
 class _AppLocalizationsDelegate
