@@ -139,4 +139,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String connDeleteContent(Object name) {
     return 'Removes \"$name\", its dashboards/panels, and its saved password.';
   }
+
+  @override
+  String get statusDisconnected => 'Disconnected';
+
+  @override
+  String get statusConnecting => 'Connecting';
+
+  @override
+  String get statusConnected => 'Connected';
+
+  @override
+  String get statusReconnecting => 'Reconnecting';
+
+  @override
+  String get statusError => 'Error';
 }

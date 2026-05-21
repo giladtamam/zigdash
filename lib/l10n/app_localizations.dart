@@ -349,6 +349,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Removes \"{name}\", its dashboards/panels, and its saved password.'**
   String connDeleteContent(Object name);
+
+  /// No description provided for @statusDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get statusDisconnected;
+
+  /// No description provided for @statusConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get statusConnecting;
+
+  /// No description provided for @statusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get statusConnected;
+
+  /// No description provided for @statusReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting'**
+  String get statusReconnecting;
+
+  /// No description provided for @statusError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get statusError;
 }
 
 class _AppLocalizationsDelegate

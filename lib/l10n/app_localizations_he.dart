@@ -139,4 +139,19 @@ class AppLocalizationsHe extends AppLocalizations {
   String connDeleteContent(Object name) {
     return 'מסיר את \"$name\", לוחות המחוונים והפאנלים שלו, והסיסמה השמורה.';
   }
+
+  @override
+  String get statusDisconnected => 'מנותק';
+
+  @override
+  String get statusConnecting => 'מתחבר';
+
+  @override
+  String get statusConnected => 'מחובר';
+
+  @override
+  String get statusReconnecting => 'מתחבר מחדש';
+
+  @override
+  String get statusError => 'שגיאה';
 }

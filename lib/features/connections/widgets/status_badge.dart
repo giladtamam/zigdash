@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../mqtt/mqtt_status.dart';
 
 class StatusBadge extends StatelessWidget {
@@ -14,13 +15,21 @@ class StatusBadge extends StatelessWidget {
     MqttStatus.error: Colors.red,
   };
 
-  static const _labels = {
-    MqttStatus.disconnected: 'Disconnected',
-    MqttStatus.connecting: 'Connecting',
-    MqttStatus.connected: 'Connected',
-    MqttStatus.reconnecting: 'Reconnecting',
-    MqttStatus.error: 'Error',
-  };
+  String _label(BuildContext context) {
+    final l10n = context.l10n;
+    switch (status) {
+      case MqttStatus.disconnected:
+        return l10n.statusDisconnected;
+      case MqttStatus.connecting:
+        return l10n.statusConnecting;
+      case MqttStatus.connected:
+        return l10n.statusConnected;
+      case MqttStatus.reconnecting:
+        return l10n.statusReconnecting;
+      case MqttStatus.error:
+        return l10n.statusError;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class StatusBadge extends StatelessWidget {
           decoration: BoxDecoration(color: _colors[status], shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(_labels[status]!, style: Theme.of(context).textTheme.bodySmall),
+        Text(_label(context), style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }

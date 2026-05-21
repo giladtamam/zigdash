@@ -43,5 +43,10 @@
   "cancel": "Cancel",
   "connDeleteTitle": "Delete connection?",
   "connDeleteContent": "Removes \"{name}\", its dashboards/panels, and its saved password.",
-  "@connDeleteContent": { "placeholders": { "name": {} } }
+  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "statusDisconnected": "Disconnected",
+  "statusConnecting": "Connecting",
+  "statusConnected": "Connected",
+  "statusReconnecting": "Reconnecting",
+  "statusError": "Error"
 }

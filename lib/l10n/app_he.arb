@@ -43,5 +43,10 @@
   "cancel": "ביטול",
   "connDeleteTitle": "מחיקת חיבור?",
   "connDeleteContent": "מסיר את \"{name}\", לוחות המחוונים והפאנלים שלו, והסיסמה השמורה.",
-  "@connDeleteContent": { "placeholders": { "name": {} } }
+  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "statusDisconnected": "מנותק",
+  "statusConnecting": "מתחבר",
+  "statusConnected": "מחובר",
+  "statusReconnecting": "מתחבר מחדש",
+  "statusError": "שגיאה"
 }
