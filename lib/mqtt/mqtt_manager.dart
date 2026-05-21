@@ -201,7 +201,10 @@ class MqttManager {
       return;
     }
     final payload = template.replaceAll('{value}', value.toString());
-    final builder = mc.MqttClientPayloadBuilder()..addString(payload);
+    // addUTF8String, NOT addString: addString delegates to addUTF16String,
+    // which mangles any code unit > 255 (e.g. Hebrew device/panel names),
+    // corrupting the published bytes. addUTF8String encodes proper UTF-8.
+    final builder = mc.MqttClientPayloadBuilder()..addUTF8String(payload);
     try {
       client.publishMessage(topic, qos, builder.payload!, retain: retain);
     } catch (e) {
