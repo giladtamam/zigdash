@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/database/database.dart';
 import '../../../data/repositories/panel_repo.dart';
+import '../../../mqtt/json_path.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import '../services/automation_config_publisher.dart';
@@ -11,7 +12,7 @@ import '../services/automation_config_publisher.dart';
 /// times and an enable switch; reflects the Node-RED flow's reported
 /// next-action and warns when the scheduler is offline. The actual clock
 /// lives in Node-RED — this widget only writes config + reads status.
-class SchedulePanel extends ConsumerWidget {
+class SchedulePanel extends ConsumerStatefulWidget {
   const SchedulePanel({
     super.key,
     required this.connectionId,
@@ -26,34 +27,18 @@ class SchedulePanel extends ConsumerWidget {
   final ScheduleConfig config;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
+  ConsumerState<SchedulePanel> createState() => _SchedulePanelState();
+}
 
-    final nextActionAsync = ref.watch(panelValueProvider(PanelStreamKey(
-      connectionId: connectionId,
-      topic: AutomationConfigPublisher.stateTopic(panel.id),
-      jsonPath: 'nextAction',
-    )));
-    final nextAtAsync = ref.watch(panelValueProvider(PanelStreamKey(
-      connectionId: connectionId,
-      topic: AutomationConfigPublisher.stateTopic(panel.id),
-      jsonPath: 'nextAt',
-    )));
-    final bridgeAsync = ref.watch(panelValueProvider(PanelStreamKey(
-      connectionId: connectionId,
-      topic: AutomationConfigPublisher.bridgeStateTopic,
-      jsonPath: null,
-    )));
+class _SchedulePanelState extends ConsumerState<SchedulePanel> {
+  bool _busy = false;
 
-    final offline = bridgeAsync.maybeWhen(
-      data: (v) => v?.toString() != 'online',
-      orElse: () => true,
-    );
-    final nextAction = nextActionAsync.asData?.value?.toString();
-    final nextAt = nextAtAsync.asData?.value?.toString();
-
-    Future<void> toggleEnabled(bool v) async {
-      final next = config.copyWith(enabled: v);
+  Future<void> _toggleEnabled(bool v) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    final panel = widget.panel;
+    final next = widget.config.copyWith(enabled: v);
+    try {
       await ref.read(panelRepoProvider).update(
             id: panel.id,
             name: panel.name,
@@ -67,18 +52,52 @@ class SchedulePanel extends ConsumerWidget {
           );
       final ok =
           await ref.read(automationConfigPublisherProvider).publishConfig(
-                connectionId: connectionId,
+                connectionId: widget.connectionId,
                 panelId: panel.id,
                 name: panel.name,
-                target: target,
+                target: widget.target,
                 config: next,
               );
-      if (!ok && context.mounted) {
+      if (!ok && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Not connected — saved; will sync when online.'),
         ));
       }
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final panel = widget.panel;
+    final config = widget.config;
+
+    // One subscription to the state topic; pull both fields from the payload.
+    final stateAsync = ref.watch(panelValueProvider(PanelStreamKey(
+      connectionId: widget.connectionId,
+      topic: AutomationConfigPublisher.stateTopic(panel.id),
+      jsonPath: null,
+    )));
+    final bridgeAsync = ref.watch(panelValueProvider(PanelStreamKey(
+      connectionId: widget.connectionId,
+      topic: AutomationConfigPublisher.bridgeStateTopic,
+      jsonPath: null,
+    )));
+
+    String? nextAction;
+    String? nextAt;
+    stateAsync.whenData((raw) {
+      if (raw == null) return;
+      nextAction = extractByPath(raw.toString(), 'nextAction')?.toString();
+      nextAt = extractByPath(raw.toString(), 'nextAt')?.toString();
+    });
+
+    final offline = bridgeAsync.maybeWhen(
+      data: (v) => v?.toString() != 'online',
+      orElse: () => true,
+    );
 
     return Card(
       child: Padding(
@@ -96,7 +115,10 @@ class SchedulePanel extends ConsumerWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),
               ),
-              Switch(value: config.enabled, onChanged: toggleEnabled),
+              Switch(
+                value: config.enabled,
+                onChanged: _busy ? null : _toggleEnabled,
+              ),
             ]),
             const SizedBox(height: 4),
             Row(children: [
