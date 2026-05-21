@@ -105,6 +105,13 @@ class _State extends ConsumerState<PanelFormScreen> {
   final _coverPresets = TextEditingController(text: '0, 25, 50, 75, 100');
   bool _coverShowSlider = true;
 
+  // Schedule fields
+  final _scheduleOpenTime = TextEditingController(text: '07:00');
+  final _scheduleCloseTime = TextEditingController(text: '19:00');
+  final _scheduleOpenPayload = TextEditingController(text: '{"state":"OPEN"}');
+  final _scheduleClosePayload = TextEditingController(text: '{"state":"CLOSE"}');
+  bool _scheduleEnabled = true;
+
   PanelType _type = PanelType.toggle;
   PanelWidth _width = PanelWidth.full;
   bool _retain = false;
@@ -122,7 +129,9 @@ class _State extends ConsumerState<PanelFormScreen> {
       _type == PanelType.textLog;
 
   bool get _isWriteOnly =>
-      _type == PanelType.button || _type == PanelType.textInput;
+      _type == PanelType.button ||
+      _type == PanelType.textInput ||
+      _type == PanelType.schedule;
 
   @override
   void initState() {
@@ -208,6 +217,12 @@ class _State extends ConsumerState<PanelFormScreen> {
     } else if (cfg is CoverConfig) {
       _coverPresets.text = cfg.presets.join(', ');
       _coverShowSlider = cfg.showSlider;
+    } else if (cfg is ScheduleConfig) {
+      _scheduleOpenTime.text = cfg.openTime;
+      _scheduleCloseTime.text = cfg.closeTime;
+      _scheduleOpenPayload.text = cfg.openPayload;
+      _scheduleClosePayload.text = cfg.closePayload;
+      _scheduleEnabled = cfg.enabled;
     }
     setState(() => _loaded = true);
   }
@@ -262,6 +277,9 @@ class _State extends ConsumerState<PanelFormScreen> {
       case PanelType.textLog:
         _topic.text = '';
         _subscribeTopic.text = '';
+        break;
+      case PanelType.schedule:
+        _topic.text = 'set';
         break;
     }
   }
@@ -330,6 +348,13 @@ class _State extends ConsumerState<PanelFormScreen> {
           maxLines: int.tryParse(_textLogMaxLines.text) ?? 50,
           jsonPath: nullIfBlank(_textLogJsonPath.text),
         ),
+      PanelType.schedule => ScheduleConfig(
+          openTime: _scheduleOpenTime.text.trim(),
+          closeTime: _scheduleCloseTime.text.trim(),
+          openPayload: _scheduleOpenPayload.text,
+          closePayload: _scheduleClosePayload.text,
+          enabled: _scheduleEnabled,
+        ),
     };
   }
 
@@ -340,6 +365,19 @@ class _State extends ConsumerState<PanelFormScreen> {
       if (n != null) out.add(n.clamp(0, 100));
     }
     return out;
+  }
+
+  Future<void> _pickTime(TextEditingController c) async {
+    final parts = c.text.split(':');
+    final initial = TimeOfDay(
+      hour: int.tryParse(parts.isNotEmpty ? parts[0] : '7') ?? 7,
+      minute: int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0,
+    );
+    final picked = await showTimePicker(context: context, initialTime: initial);
+    if (picked != null) {
+      setState(() => c.text =
+          '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}');
+    }
   }
 
   Future<void> _save() async {
@@ -399,6 +437,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       _textInputHint, _textInputTemplate,
       _textLogMaxLines, _textLogJsonPath,
       _coverPresets,
+      _scheduleOpenTime, _scheduleCloseTime,
+      _scheduleOpenPayload, _scheduleClosePayload,
     ]) {
       c.dispose();
     }
@@ -426,6 +466,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       PanelType.cover => 'Cover',
       PanelType.textInput => 'Text Input',
       PanelType.textLog => 'Text Log',
+      PanelType.schedule => 'Schedule',
     };
 
     return Scaffold(
@@ -784,6 +825,58 @@ class _State extends ConsumerState<PanelFormScreen> {
               labelText: 'JSON path (optional)',
               helperText: 'Log just this field instead of the whole payload',
             ),
+          ),
+        ];
+      case PanelType.schedule:
+        return [
+          Text(
+            'Runs on the SMHUB via Node-RED — fires even when this phone is '
+            'off. The Publish topic above is the shutter command target.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+          const SizedBox(height: 12),
+          Row(children: [
+            Expanded(
+              child: TextFormField(
+                controller: _scheduleOpenTime,
+                readOnly: true,
+                onTap: () => _pickTime(_scheduleOpenTime),
+                decoration: const InputDecoration(
+                  labelText: 'Open time',
+                  suffixIcon: Icon(Icons.access_time),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                controller: _scheduleCloseTime,
+                readOnly: true,
+                onTap: () => _pickTime(_scheduleCloseTime),
+                decoration: const InputDecoration(
+                  labelText: 'Close time',
+                  suffixIcon: Icon(Icons.access_time),
+                ),
+              ),
+            ),
+          ]),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _scheduleOpenPayload,
+            decoration: const InputDecoration(labelText: 'Open payload'),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _scheduleClosePayload,
+            decoration: const InputDecoration(labelText: 'Close payload'),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Enabled'),
+            value: _scheduleEnabled,
+            onChanged: (v) => setState(() => _scheduleEnabled = v),
           ),
         ];
     }

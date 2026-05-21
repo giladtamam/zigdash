@@ -28,6 +28,7 @@ sealed class PanelConfig {
       PanelType.cover => CoverConfig.fromJson(j),
       PanelType.textInput => TextInputConfig.fromJson(j),
       PanelType.textLog => TextLogConfig.fromJson(j),
+      PanelType.schedule => ScheduleConfig.fromJson(j),
     };
   }
 
@@ -45,6 +46,7 @@ sealed class PanelConfig {
         PanelType.cover => const CoverConfig(),
         PanelType.textInput => const TextInputConfig(),
         PanelType.textLog => const TextLogConfig(),
+        PanelType.schedule => const ScheduleConfig(),
       };
 }
 

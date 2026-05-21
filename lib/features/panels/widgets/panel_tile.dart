@@ -17,6 +17,7 @@ import 'progress_panel.dart';
 import 'radio_panel.dart';
 import 'slider_panel.dart';
 import 'text_input_panel.dart';
+import 'schedule_panel.dart';
 import 'text_log_panel.dart';
 import 'toggle_panel.dart';
 
@@ -206,6 +207,12 @@ class PanelTile extends ConsumerWidget {
           subscribeTopic: subscribeTopic,
           panel: panel,
           config: config as TextLogConfig,
+        ),
+      PanelType.schedule => SchedulePanel(
+          connectionId: connectionId,
+          target: publishTopic,
+          panel: panel,
+          config: config as ScheduleConfig,
         ),
     };
 
