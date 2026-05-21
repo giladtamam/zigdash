@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../mqtt/json_path.dart';
@@ -59,8 +60,8 @@ class _SchedulePanelState extends ConsumerState<SchedulePanel> {
                 config: next,
               );
       if (!ok && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Not connected — saved; will sync when online.'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(context.l10n.panelScheduleNotConnected),
         ));
       }
     } finally {
@@ -124,11 +125,11 @@ class _SchedulePanelState extends ConsumerState<SchedulePanel> {
             Row(children: [
               const Icon(Icons.wb_sunny_outlined, size: 18),
               const SizedBox(width: 6),
-              Text('Opens ${config.openTime}'),
+              Text(context.l10n.panelScheduleOpensAt(config.openTime)),
               const SizedBox(width: 16),
               const Icon(Icons.nightlight_outlined, size: 18),
               const SizedBox(width: 6),
-              Text('Closes ${config.closeTime}'),
+              Text(context.l10n.panelScheduleClosesAt(config.closeTime)),
             ]),
             const SizedBox(height: 8),
             if (offline)
@@ -136,15 +137,15 @@ class _SchedulePanelState extends ConsumerState<SchedulePanel> {
                 Icon(Icons.cloud_off, size: 16, color: scheme.error),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text("Scheduler offline — won't run",
+                  child: Text(context.l10n.panelScheduleOfflineWarning,
                       style: TextStyle(color: scheme.error, fontSize: 12)),
                 ),
               ])
             else if (config.enabled && nextAction != null && nextAt != null)
-              Text('Next: $nextAction at $nextAt',
+              Text(context.l10n.panelScheduleNext(nextAction!, nextAt!),
                   style: TextStyle(color: scheme.outline, fontSize: 12))
             else if (!config.enabled)
-              Text('Disabled',
+              Text(context.l10n.panelScheduleDisabled,
                   style: TextStyle(color: scheme.outline, fontSize: 12)),
           ],
         ),

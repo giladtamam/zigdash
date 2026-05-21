@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../mqtt/json_path.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
@@ -138,10 +139,10 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
               child: SegmentedButton<String>(
                 emptySelectionAllowed: true,
                 showSelectedIcon: false,
-                segments: const [
-                  ButtonSegment(value: 'OPEN', label: Text('Open'), icon: Icon(Icons.keyboard_arrow_up)),
-                  ButtonSegment(value: 'STOP', label: Text('Stop'), icon: Icon(Icons.stop)),
-                  ButtonSegment(value: 'CLOSE', label: Text('Close'), icon: Icon(Icons.keyboard_arrow_down)),
+                segments: [
+                  ButtonSegment(value: 'OPEN', label: Text(context.l10n.panelCoverOpen), icon: const Icon(Icons.keyboard_arrow_up)),
+                  ButtonSegment(value: 'STOP', label: Text(context.l10n.panelCoverStop), icon: const Icon(Icons.stop)),
+                  ButtonSegment(value: 'CLOSE', label: Text(context.l10n.panelCoverClose), icon: const Icon(Icons.keyboard_arrow_down)),
                 ],
                 selected: {if (state != null) state!},
                 onSelectionChanged: (sel) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
@@ -29,14 +30,14 @@ class NodeStatusPanel extends ConsumerWidget {
 
     final scheme = Theme.of(context).colorScheme;
     final (icon, color, label) = valueAsync.when(
-      loading: () => (Icons.help_outline, scheme.outline, 'unknown'),
-      error: (_, __) => (Icons.error_outline, scheme.error, 'error'),
+      loading: () => (Icons.help_outline, scheme.outline, context.l10n.panelNodeStatusUnknown),
+      error: (_, __) => (Icons.error_outline, scheme.error, context.l10n.panelNodeStatusError),
       data: (v) {
-        if (v == null) return (Icons.help_outline, scheme.outline, 'unknown');
+        if (v == null) return (Icons.help_outline, scheme.outline, context.l10n.panelNodeStatusUnknown);
         final online = v.toString() == config.onlinePayload;
         return online
-            ? (Icons.cloud_done, Colors.green.shade600, 'online')
-            : (Icons.cloud_off, scheme.error, 'offline');
+            ? (Icons.cloud_done, Colors.green.shade600, context.l10n.panelNodeStatusOnline)
+            : (Icons.cloud_off, scheme.error, context.l10n.panelNodeStatusOffline);
       },
     );
 

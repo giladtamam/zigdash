@@ -715,4 +715,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelTileDelete => 'Delete panel';
+
+  @override
+  String get panelCoverOpen => 'Open';
+
+  @override
+  String get panelCoverStop => 'Stop';
+
+  @override
+  String get panelCoverClose => 'Close';
+
+  @override
+  String get panelToggleNoState => '(no state)';
+
+  @override
+  String get panelToggleOn => 'ON';
+
+  @override
+  String get panelToggleOff => 'OFF';
+
+  @override
+  String get panelLedOn => 'ON';
+
+  @override
+  String get panelLedOff => 'OFF';
+
+  @override
+  String get panelNodeStatusOnline => 'online';
+
+  @override
+  String get panelNodeStatusOffline => 'offline';
+
+  @override
+  String get panelNodeStatusUnknown => 'unknown';
+
+  @override
+  String get panelNodeStatusError => 'error';
+
+  @override
+  String get panelMultiStateNoOptions => 'No options configured';
+
+  @override
+  String get panelTextInputDefaultHint => 'Type a value…';
+
+  @override
+  String get panelTextLogWaiting => 'Waiting for messages…';
+
+  @override
+  String panelScheduleOpensAt(Object time) {
+    return 'Opens $time';
+  }
+
+  @override
+  String panelScheduleClosesAt(Object time) {
+    return 'Closes $time';
+  }
+
+  @override
+  String get panelScheduleOfflineWarning => 'Scheduler offline — won\'t run';
+
+  @override
+  String get panelScheduleDisabled => 'Disabled';
+
+  @override
+  String panelScheduleNext(Object action, Object at) {
+    return 'Next: $action at $at';
+  }
+
+  @override
+  String get panelScheduleNotConnected =>
+      'Not connected — saved; will sync when online.';
 }

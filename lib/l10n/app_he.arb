@@ -245,5 +245,37 @@
   "panelTileWidthFull": "מלא",
   "panelTileWidthHalf": "חצי",
   "panelTileWidthThird": "⅓",
-  "panelTileDelete": "מחיקת פאנל"
+  "panelTileDelete": "מחיקת פאנל",
+
+  "panelCoverOpen": "פתיחה",
+  "panelCoverStop": "עצירה",
+  "panelCoverClose": "סגירה",
+
+  "panelToggleNoState": "(אין מצב)",
+  "panelToggleOn": "פועל",
+  "panelToggleOff": "כבוי",
+
+  "panelLedOn": "פועל",
+  "panelLedOff": "כבוי",
+
+  "panelNodeStatusOnline": "מקוון",
+  "panelNodeStatusOffline": "לא מקוון",
+  "panelNodeStatusUnknown": "לא ידוע",
+  "panelNodeStatusError": "שגיאה",
+
+  "panelMultiStateNoOptions": "לא הוגדרו אפשרויות",
+
+  "panelTextInputDefaultHint": "הקלד ערך…",
+
+  "panelTextLogWaiting": "ממתין להודעות…",
+
+  "panelScheduleOpensAt": "פותח בשעה {time}",
+  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "panelScheduleClosesAt": "סוגר בשעה {time}",
+  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "panelScheduleOfflineWarning": "המתזמן לא מקוון — לא יפעל",
+  "panelScheduleDisabled": "מושבת",
+  "panelScheduleNext": "הבא: {action} בשעה {at}",
+  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "panelScheduleNotConnected": "לא מחובר — נשמר; יסונכרן בעת החיבור."
 }

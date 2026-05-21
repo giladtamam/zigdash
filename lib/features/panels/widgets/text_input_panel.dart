@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
@@ -68,7 +69,7 @@ class _TextInputPanelState extends ConsumerState<TextInputPanel> {
                       isDense: true,
                       border: const OutlineInputBorder(),
                       hintText: widget.config.hint.isEmpty
-                          ? 'Type a value…'
+                          ? context.l10n.panelTextInputDefaultHint
                           : widget.config.hint,
                     ),
                     onSubmitted: (_) => _send(),

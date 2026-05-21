@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
@@ -73,10 +74,10 @@ class TogglePanel extends ConsumerWidget {
                     Text(
                       valueAsync.when(
                         loading: () => '…',
-                        error: (_, __) => 'err',
+                        error: (_, __) => '…',
                         data: (v) => v == null
-                            ? '(no state)'
-                            : (isOn ? 'ON' : 'OFF'),
+                            ? context.l10n.panelToggleNoState
+                            : (isOn ? context.l10n.panelToggleOn : context.l10n.panelToggleOff),
                       ),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.outline,

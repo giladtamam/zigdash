@@ -1405,6 +1405,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete panel'**
   String get panelTileDelete;
+
+  /// No description provided for @panelCoverOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get panelCoverOpen;
+
+  /// No description provided for @panelCoverStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get panelCoverStop;
+
+  /// No description provided for @panelCoverClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get panelCoverClose;
+
+  /// No description provided for @panelToggleNoState.
+  ///
+  /// In en, this message translates to:
+  /// **'(no state)'**
+  String get panelToggleNoState;
+
+  /// No description provided for @panelToggleOn.
+  ///
+  /// In en, this message translates to:
+  /// **'ON'**
+  String get panelToggleOn;
+
+  /// No description provided for @panelToggleOff.
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get panelToggleOff;
+
+  /// No description provided for @panelLedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'ON'**
+  String get panelLedOn;
+
+  /// No description provided for @panelLedOff.
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get panelLedOff;
+
+  /// No description provided for @panelNodeStatusOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'online'**
+  String get panelNodeStatusOnline;
+
+  /// No description provided for @panelNodeStatusOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'offline'**
+  String get panelNodeStatusOffline;
+
+  /// No description provided for @panelNodeStatusUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get panelNodeStatusUnknown;
+
+  /// No description provided for @panelNodeStatusError.
+  ///
+  /// In en, this message translates to:
+  /// **'error'**
+  String get panelNodeStatusError;
+
+  /// No description provided for @panelMultiStateNoOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'No options configured'**
+  String get panelMultiStateNoOptions;
+
+  /// No description provided for @panelTextInputDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a value…'**
+  String get panelTextInputDefaultHint;
+
+  /// No description provided for @panelTextLogWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for messages…'**
+  String get panelTextLogWaiting;
+
+  /// No description provided for @panelScheduleOpensAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens {time}'**
+  String panelScheduleOpensAt(Object time);
+
+  /// No description provided for @panelScheduleClosesAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Closes {time}'**
+  String panelScheduleClosesAt(Object time);
+
+  /// No description provided for @panelScheduleOfflineWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduler offline — won\'t run'**
+  String get panelScheduleOfflineWarning;
+
+  /// No description provided for @panelScheduleDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get panelScheduleDisabled;
+
+  /// No description provided for @panelScheduleNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {action} at {at}'**
+  String panelScheduleNext(Object action, Object at);
+
+  /// No description provided for @panelScheduleNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected — saved; will sync when online.'**
+  String get panelScheduleNotConnected;
 }
 
 class _AppLocalizationsDelegate

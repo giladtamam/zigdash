@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
@@ -71,7 +72,7 @@ class _TextLogPanelState extends ConsumerState<TextLogPanel> {
               height: 160,
               child: _log.isEmpty
                   ? Center(
-                      child: Text('Waiting for messages…',
+                      child: Text(context.l10n.panelTextLogWaiting,
                           style: Theme.of(context).textTheme.bodySmall),
                     )
                   : ListView.builder(

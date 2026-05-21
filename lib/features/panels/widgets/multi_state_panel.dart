@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
@@ -63,7 +64,7 @@ class MultiStatePanel extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis),
             const SizedBox(height: 8),
             if (config.options.isEmpty)
-              Text('No options configured',
+              Text(context.l10n.panelMultiStateNoOptions,
                   style: Theme.of(context).textTheme.bodySmall)
             else
               SizedBox(

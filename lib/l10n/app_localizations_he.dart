@@ -710,4 +710,74 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelTileDelete => 'מחיקת פאנל';
+
+  @override
+  String get panelCoverOpen => 'פתיחה';
+
+  @override
+  String get panelCoverStop => 'עצירה';
+
+  @override
+  String get panelCoverClose => 'סגירה';
+
+  @override
+  String get panelToggleNoState => '(אין מצב)';
+
+  @override
+  String get panelToggleOn => 'פועל';
+
+  @override
+  String get panelToggleOff => 'כבוי';
+
+  @override
+  String get panelLedOn => 'פועל';
+
+  @override
+  String get panelLedOff => 'כבוי';
+
+  @override
+  String get panelNodeStatusOnline => 'מקוון';
+
+  @override
+  String get panelNodeStatusOffline => 'לא מקוון';
+
+  @override
+  String get panelNodeStatusUnknown => 'לא ידוע';
+
+  @override
+  String get panelNodeStatusError => 'שגיאה';
+
+  @override
+  String get panelMultiStateNoOptions => 'לא הוגדרו אפשרויות';
+
+  @override
+  String get panelTextInputDefaultHint => 'הקלד ערך…';
+
+  @override
+  String get panelTextLogWaiting => 'ממתין להודעות…';
+
+  @override
+  String panelScheduleOpensAt(Object time) {
+    return 'פותח בשעה $time';
+  }
+
+  @override
+  String panelScheduleClosesAt(Object time) {
+    return 'סוגר בשעה $time';
+  }
+
+  @override
+  String get panelScheduleOfflineWarning => 'המתזמן לא מקוון — לא יפעל';
+
+  @override
+  String get panelScheduleDisabled => 'מושבת';
+
+  @override
+  String panelScheduleNext(Object action, Object at) {
+    return 'הבא: $action בשעה $at';
+  }
+
+  @override
+  String get panelScheduleNotConnected =>
+      'לא מחובר — נשמר; יסונכרן בעת החיבור.';
 }

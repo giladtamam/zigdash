@@ -245,5 +245,37 @@
   "panelTileWidthFull": "Full",
   "panelTileWidthHalf": "Half",
   "panelTileWidthThird": "⅓",
-  "panelTileDelete": "Delete panel"
+  "panelTileDelete": "Delete panel",
+
+  "panelCoverOpen": "Open",
+  "panelCoverStop": "Stop",
+  "panelCoverClose": "Close",
+
+  "panelToggleNoState": "(no state)",
+  "panelToggleOn": "ON",
+  "panelToggleOff": "OFF",
+
+  "panelLedOn": "ON",
+  "panelLedOff": "OFF",
+
+  "panelNodeStatusOnline": "online",
+  "panelNodeStatusOffline": "offline",
+  "panelNodeStatusUnknown": "unknown",
+  "panelNodeStatusError": "error",
+
+  "panelMultiStateNoOptions": "No options configured",
+
+  "panelTextInputDefaultHint": "Type a value…",
+
+  "panelTextLogWaiting": "Waiting for messages…",
+
+  "panelScheduleOpensAt": "Opens {time}",
+  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "panelScheduleClosesAt": "Closes {time}",
+  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "panelScheduleOfflineWarning": "Scheduler offline — won't run",
+  "panelScheduleDisabled": "Disabled",
+  "panelScheduleNext": "Next: {action} at {at}",
+  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "panelScheduleNotConnected": "Not connected — saved; will sync when online."
 }

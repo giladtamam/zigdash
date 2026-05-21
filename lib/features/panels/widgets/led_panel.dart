@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
@@ -50,8 +51,8 @@ class LedPanel extends ConsumerWidget {
     final stateLabel = !hasValue
         ? '…'
         : (isOn
-            ? (config.onLabel ?? 'ON')
-            : (config.offLabel ?? 'OFF'));
+            ? (config.onLabel ?? context.l10n.panelLedOn)
+            : (config.offLabel ?? context.l10n.panelLedOff));
 
     return Card(
       child: Padding(
