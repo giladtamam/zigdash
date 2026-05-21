@@ -28,6 +28,7 @@ sealed class PanelConfig {
       PanelType.cover => CoverConfig.fromJson(j),
       PanelType.textInput => TextInputConfig.fromJson(j),
       PanelType.textLog => TextLogConfig.fromJson(j),
+      PanelType.schedule => ScheduleConfig.fromJson(j),
     };
   }
 
@@ -45,6 +46,7 @@ sealed class PanelConfig {
         PanelType.cover => const CoverConfig(),
         PanelType.textInput => const TextInputConfig(),
         PanelType.textLog => const TextLogConfig(),
+        PanelType.schedule => const ScheduleConfig(),
       };
 }
 
@@ -409,5 +411,50 @@ class TextLogConfig extends PanelConfig {
   static TextLogConfig fromJson(Map<String, dynamic> j) => TextLogConfig(
         maxLines: (j['maxLines'] as num?)?.toInt() ?? 50,
         jsonPath: j['jsonPath'] as String?,
+      );
+}
+
+/// Configures a server-side daily open/close schedule executed by the
+/// Node-RED scheduler flow on the SMHUB. ZigDash publishes this (plus the
+/// composed target topic) as retained MQTT config — it never runs the
+/// schedule itself. Times are "HH:mm" in the SMHUB's local time.
+class ScheduleConfig extends PanelConfig {
+  const ScheduleConfig({
+    this.openTime = '07:00',
+    this.closeTime = '19:00',
+    this.openPayload = '{"state":"OPEN"}',
+    this.closePayload = '{"state":"CLOSE"}',
+    this.enabled = true,
+  });
+
+  final String openTime;
+  final String closeTime;
+  final String openPayload;
+  final String closePayload;
+  final bool enabled;
+
+  ScheduleConfig copyWith({bool? enabled}) => ScheduleConfig(
+        openTime: openTime,
+        closeTime: closeTime,
+        openPayload: openPayload,
+        closePayload: closePayload,
+        enabled: enabled ?? this.enabled,
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'openTime': openTime,
+        'closeTime': closeTime,
+        'openPayload': openPayload,
+        'closePayload': closePayload,
+        'enabled': enabled,
+      };
+
+  static ScheduleConfig fromJson(Map<String, dynamic> j) => ScheduleConfig(
+        openTime: j['openTime'] as String? ?? '07:00',
+        closeTime: j['closeTime'] as String? ?? '19:00',
+        openPayload: j['openPayload'] as String? ?? '{"state":"OPEN"}',
+        closePayload: j['closePayload'] as String? ?? '{"state":"CLOSE"}',
+        enabled: j['enabled'] as bool? ?? true,
       );
 }

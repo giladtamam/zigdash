@@ -24,6 +24,7 @@ PanelType _parseType(String? s) => switch (s) {
       'cover' => PanelType.cover,
       'textInput' => PanelType.textInput,
       'textLog' => PanelType.textLog,
+      'schedule' => PanelType.schedule,
       _ => PanelType.toggle,
     };
 

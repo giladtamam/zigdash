@@ -7,6 +7,7 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../services/automation_config_publisher.dart';
 import 'button_panel.dart';
 import 'combo_panel.dart';
 import 'cover_panel.dart';
@@ -17,6 +18,7 @@ import 'progress_panel.dart';
 import 'radio_panel.dart';
 import 'slider_panel.dart';
 import 'text_input_panel.dart';
+import 'schedule_panel.dart';
 import 'text_log_panel.dart';
 import 'toggle_panel.dart';
 
@@ -111,6 +113,11 @@ class PanelTile extends ConsumerWidget {
               title: const Text('Delete panel'),
               onTap: () async {
                 Navigator.pop(sheetCtx);
+                if (panel.type == PanelType.schedule) {
+                  await ref
+                      .read(automationConfigPublisherProvider)
+                      .clearConfig(connectionId: connectionId, panelId: panel.id);
+                }
                 await repo.delete(panel.id);
               },
             ),
@@ -206,6 +213,12 @@ class PanelTile extends ConsumerWidget {
           subscribeTopic: subscribeTopic,
           panel: panel,
           config: config as TextLogConfig,
+        ),
+      PanelType.schedule => SchedulePanel(
+          connectionId: connectionId,
+          target: publishTopic,
+          panel: panel,
+          config: config as ScheduleConfig,
         ),
     };
 

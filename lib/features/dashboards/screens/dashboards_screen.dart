@@ -212,6 +212,12 @@ void _openPanelPicker(BuildContext context,
               onTap: () => Navigator.pop(sheetCtx, 'cover'),
             ),
             ListTile(
+              leading: const Icon(Icons.schedule),
+              title: const Text('Schedule'),
+              subtitle: const Text('Daily open/close times, run on the hub (Node-RED)'),
+              onTap: () => Navigator.pop(sheetCtx, 'schedule'),
+            ),
+            ListTile(
               leading: const Icon(Icons.view_week),
               title: const Text('Multi-State'),
               subtitle: const Text('Segmented buttons for an enum (e.g. OPEN/STOP/CLOSE)'),

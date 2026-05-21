@@ -15,6 +15,7 @@ enum PanelType {
   cover,
   textInput,
   textLog,
+  schedule,
 }
 
 enum PanelWidth { full, half, third }

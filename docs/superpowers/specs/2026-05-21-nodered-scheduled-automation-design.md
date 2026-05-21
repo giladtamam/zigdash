@@ -83,9 +83,9 @@ ZigDash  <-- zigdash/automation/bridge/state  ("online"/"offline" heartbeat)
 {
   "enabled": true,
   "nextAction": "close",
-  "nextAt": "2026-05-21T19:00",
+  "nextAt": "19:00",
   "lastAction": "open",
-  "lastAt": "2026-05-21T07:00"
+  "lastAt": "07:00"
 }
 ```
 
