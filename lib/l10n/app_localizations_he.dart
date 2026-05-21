@@ -50,4 +50,93 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get languageHebrew => 'עברית';
+
+  @override
+  String get connectionsTitle => 'חיבורים';
+
+  @override
+  String connLoadFailed(Object error) {
+    return 'טעינה נכשלה: $error';
+  }
+
+  @override
+  String get connAddBroker => 'הוספת ברוקר';
+
+  @override
+  String get connEmpty =>
+      'אין עדיין חיבורים.\nהקש \"הוספת ברוקר\" כדי לחבר את ZigDash לשרת ה-MQTT שלך.';
+
+  @override
+  String get connNew => 'חיבור חדש';
+
+  @override
+  String get connEdit => 'עריכת חיבור';
+
+  @override
+  String get save => 'שמירה';
+
+  @override
+  String get saving => 'שומר…';
+
+  @override
+  String get fieldRequired => 'שדה חובה';
+
+  @override
+  String get connName => 'שם';
+
+  @override
+  String get connNameHint => 'ברוקר הבית';
+
+  @override
+  String get connHost => 'מארח';
+
+  @override
+  String get connHostHint => '192.168.1.10';
+
+  @override
+  String get connPort => 'פורט';
+
+  @override
+  String get connPortRange => '1–65535';
+
+  @override
+  String get connUsernameOptional => 'שם משתמש (לא חובה)';
+
+  @override
+  String get connPasswordOptional => 'סיסמה (לא חובה)';
+
+  @override
+  String get connPasswordKeepHint => 'השאר ריק כדי לשמור את הקיימת';
+
+  @override
+  String get connAutoConnect => 'התחברות אוטומטית בהפעלה';
+
+  @override
+  String get advanced => 'מתקדם';
+
+  @override
+  String get connKeepAlive => 'Keep-alive (שניות)';
+
+  @override
+  String get connKeepAliveRange => '5–3600';
+
+  @override
+  String get connProtocol => 'פרוטוקול';
+
+  @override
+  String get edit => 'עריכה';
+
+  @override
+  String get delete => 'מחיקה';
+
+  @override
+  String get cancel => 'ביטול';
+
+  @override
+  String get connDeleteTitle => 'מחיקת חיבור?';
+
+  @override
+  String connDeleteContent(Object name) {
+    return 'מסיר את \"$name\", לוחות המחוונים והפאנלים שלו, והסיסמה השמורה.';
+  }
 }

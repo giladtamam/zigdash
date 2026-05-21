@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
@@ -42,12 +43,11 @@ class ConnectionTile extends ConsumerWidget {
       confirmDismiss: (_) => showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Delete connection?'),
-          content: Text(
-              'Removes "${connection.name}", its dashboards/panels, and its saved password.'),
+          title: Text(context.l10n.connDeleteTitle),
+          content: Text(context.l10n.connDeleteContent(connection.name)),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-            FilledButton.tonal(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete')),
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(context.l10n.cancel)),
+            FilledButton.tonal(onPressed: () => Navigator.pop(ctx, true), child: Text(context.l10n.delete)),
           ],
         ),
       ),
@@ -66,9 +66,9 @@ class ConnectionTile extends ConsumerWidget {
                 if (v == 'edit') onEdit();
                 if (v == 'delete') onDelete();
               },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'edit', child: Text('Edit')),
-                PopupMenuItem(value: 'delete', child: Text('Delete')),
+              itemBuilder: (_) => [
+                PopupMenuItem(value: 'edit', child: Text(context.l10n.edit)),
+                PopupMenuItem(value: 'delete', child: Text(context.l10n.delete)),
               ],
             ),
           ],

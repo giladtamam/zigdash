@@ -181,6 +181,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'עברית'**
   String get languageHebrew;
+
+  /// No description provided for @connectionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connections'**
+  String get connectionsTitle;
+
+  /// No description provided for @connLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load: {error}'**
+  String connLoadFailed(Object error);
+
+  /// No description provided for @connAddBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add broker'**
+  String get connAddBroker;
+
+  /// No description provided for @connEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No connections yet.\nTap \"Add broker\" to point ZigDash at your MQTT server.'**
+  String get connEmpty;
+
+  /// No description provided for @connNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New connection'**
+  String get connNew;
+
+  /// No description provided for @connEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit connection'**
+  String get connEdit;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get saving;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get fieldRequired;
+
+  /// No description provided for @connName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get connName;
+
+  /// No description provided for @connNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Home broker'**
+  String get connNameHint;
+
+  /// No description provided for @connHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get connHost;
+
+  /// No description provided for @connHostHint.
+  ///
+  /// In en, this message translates to:
+  /// **'192.168.1.10'**
+  String get connHostHint;
+
+  /// No description provided for @connPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get connPort;
+
+  /// No description provided for @connPortRange.
+  ///
+  /// In en, this message translates to:
+  /// **'1–65535'**
+  String get connPortRange;
+
+  /// No description provided for @connUsernameOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Username (optional)'**
+  String get connUsernameOptional;
+
+  /// No description provided for @connPasswordOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Password (optional)'**
+  String get connPasswordOptional;
+
+  /// No description provided for @connPasswordKeepHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave blank to keep existing'**
+  String get connPasswordKeepHint;
+
+  /// No description provided for @connAutoConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-connect on app start'**
+  String get connAutoConnect;
+
+  /// No description provided for @advanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advanced;
+
+  /// No description provided for @connKeepAlive.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep-alive (seconds)'**
+  String get connKeepAlive;
+
+  /// No description provided for @connKeepAliveRange.
+  ///
+  /// In en, this message translates to:
+  /// **'5–3600'**
+  String get connKeepAliveRange;
+
+  /// No description provided for @connProtocol.
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol'**
+  String get connProtocol;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @connDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete connection?'**
+  String get connDeleteTitle;
+
+  /// No description provided for @connDeleteContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Removes \"{name}\", its dashboards/panels, and its saved password.'**
+  String connDeleteContent(Object name);
 }
 
 class _AppLocalizationsDelegate

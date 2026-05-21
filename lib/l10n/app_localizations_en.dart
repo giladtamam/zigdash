@@ -50,4 +50,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageHebrew => 'עברית';
+
+  @override
+  String get connectionsTitle => 'Connections';
+
+  @override
+  String connLoadFailed(Object error) {
+    return 'Failed to load: $error';
+  }
+
+  @override
+  String get connAddBroker => 'Add broker';
+
+  @override
+  String get connEmpty =>
+      'No connections yet.\nTap \"Add broker\" to point ZigDash at your MQTT server.';
+
+  @override
+  String get connNew => 'New connection';
+
+  @override
+  String get connEdit => 'Edit connection';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get saving => 'Saving…';
+
+  @override
+  String get fieldRequired => 'Required';
+
+  @override
+  String get connName => 'Name';
+
+  @override
+  String get connNameHint => 'Home broker';
+
+  @override
+  String get connHost => 'Host';
+
+  @override
+  String get connHostHint => '192.168.1.10';
+
+  @override
+  String get connPort => 'Port';
+
+  @override
+  String get connPortRange => '1–65535';
+
+  @override
+  String get connUsernameOptional => 'Username (optional)';
+
+  @override
+  String get connPasswordOptional => 'Password (optional)';
+
+  @override
+  String get connPasswordKeepHint => 'Leave blank to keep existing';
+
+  @override
+  String get connAutoConnect => 'Auto-connect on app start';
+
+  @override
+  String get advanced => 'Advanced';
+
+  @override
+  String get connKeepAlive => 'Keep-alive (seconds)';
+
+  @override
+  String get connKeepAliveRange => '5–3600';
+
+  @override
+  String get connProtocol => 'Protocol';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get connDeleteTitle => 'Delete connection?';
+
+  @override
+  String connDeleteContent(Object name) {
+    return 'Removes \"$name\", its dashboards/panels, and its saved password.';
+  }
 }

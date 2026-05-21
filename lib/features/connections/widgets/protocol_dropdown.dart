@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/tables/connections.dart';
 
 class ProtocolDropdown extends StatelessWidget {
@@ -26,7 +27,7 @@ class ProtocolDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<MqttProtocol>(
       value: value,
-      decoration: const InputDecoration(labelText: 'Protocol'),
+      decoration: InputDecoration(labelText: context.l10n.connProtocol),
       items: MqttProtocol.values
           .map((p) => DropdownMenuItem(value: p, child: Text(_labels[p]!)))
           .toList(),

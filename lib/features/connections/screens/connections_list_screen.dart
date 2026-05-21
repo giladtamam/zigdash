@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../widgets/connection_tile.dart';
 
@@ -14,10 +15,10 @@ class ConnectionsListScreen extends ConsumerWidget {
     final repo = ref.watch(connectionRepoProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Connections')),
+      appBar: AppBar(title: Text(context.l10n.connectionsTitle)),
       body: connections.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Failed to load: $e')),
+        error: (e, _) => Center(child: Text(context.l10n.connLoadFailed(e.toString()))),
         data: (rows) {
           if (rows.isEmpty) {
             return const _Empty();
@@ -40,7 +41,7 @@ class ConnectionsListScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/connections/form'),
         icon: const Icon(Icons.add),
-        label: const Text('Add broker'),
+        label: Text(context.l10n.connAddBroker),
       ),
     );
   }
@@ -51,11 +52,11 @@ class _Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Text(
-          'No connections yet.\nTap "Add broker" to point ZigDash at your MQTT server.',
+          context.l10n.connEmpty,
           textAlign: TextAlign.center,
         ),
       ),

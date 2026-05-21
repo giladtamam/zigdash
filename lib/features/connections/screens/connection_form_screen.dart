@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../widgets/protocol_dropdown.dart';
@@ -126,11 +127,11 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? 'Edit connection' : 'New connection'),
+        title: Text(_isEdit ? context.l10n.connEdit : context.l10n.connNew),
         actions: [
           TextButton(
             onPressed: _saving ? null : _save,
-            child: Text(_saving ? 'Saving...' : 'Save'),
+            child: Text(_saving ? context.l10n.saving : context.l10n.save),
           ),
         ],
       ),
@@ -141,8 +142,8 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
           children: [
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name', hintText: 'Home broker'),
-              validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+              decoration: InputDecoration(labelText: context.l10n.connName, hintText: context.l10n.connNameHint),
+              validator: (v) => v == null || v.trim().isEmpty ? context.l10n.fieldRequired : null,
             ),
             const SizedBox(height: 12),
             ProtocolDropdown(value: _protocol, onChanged: _onProtocolChanged),
@@ -153,8 +154,8 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                   flex: 3,
                   child: TextFormField(
                     controller: _host,
-                    decoration: const InputDecoration(labelText: 'Host', hintText: '192.168.1.10'),
-                    validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+                    decoration: InputDecoration(labelText: context.l10n.connHost, hintText: context.l10n.connHostHint),
+                    validator: (v) => v == null || v.trim().isEmpty ? context.l10n.fieldRequired : null,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -162,10 +163,10 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                   child: TextFormField(
                     controller: _port,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Port'),
+                    decoration: InputDecoration(labelText: context.l10n.connPort),
                     validator: (v) {
                       final n = int.tryParse(v ?? '');
-                      if (n == null || n < 1 || n > 65535) return '1–65535';
+                      if (n == null || n < 1 || n > 65535) return context.l10n.connPortRange;
                       return null;
                     },
                   ),
@@ -175,35 +176,35 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _username,
-              decoration: const InputDecoration(labelText: 'Username (optional)'),
+              decoration: InputDecoration(labelText: context.l10n.connUsernameOptional),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _password,
               obscureText: true,
               decoration: InputDecoration(
-                labelText: 'Password (optional)',
-                hintText: _isEdit && _passwordExists ? 'Leave blank to keep existing' : null,
+                labelText: context.l10n.connPasswordOptional,
+                hintText: _isEdit && _passwordExists ? context.l10n.connPasswordKeepHint : null,
               ),
             ),
             const SizedBox(height: 12),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Auto-connect on app start'),
+              title: Text(context.l10n.connAutoConnect),
               value: _autoConnect,
               onChanged: (v) => setState(() => _autoConnect = v),
             ),
             ExpansionTile(
               tilePadding: EdgeInsets.zero,
-              title: const Text('Advanced'),
+              title: Text(context.l10n.advanced),
               children: [
                 TextFormField(
                   controller: _keepAlive,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Keep-alive (seconds)'),
+                  decoration: InputDecoration(labelText: context.l10n.connKeepAlive),
                   validator: (v) {
                     final n = int.tryParse(v ?? '');
-                    if (n == null || n < 5 || n > 3600) return '5–3600';
+                    if (n == null || n < 5 || n > 3600) return context.l10n.connKeepAliveRange;
                     return null;
                   },
                 ),
