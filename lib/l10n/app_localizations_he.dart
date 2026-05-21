@@ -24,9 +24,6 @@ class AppLocalizationsHe extends AppLocalizations {
   String get settingsAppearance => 'מראה';
 
   @override
-  String get settingsTheme => 'ערכת נושא';
-
-  @override
   String get themeSystem => 'מערכת';
 
   @override

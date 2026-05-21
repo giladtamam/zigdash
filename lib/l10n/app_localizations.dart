@@ -128,12 +128,6 @@ abstract class AppLocalizations {
   /// **'Appearance'**
   String get settingsAppearance;
 
-  /// No description provided for @settingsTheme.
-  ///
-  /// In en, this message translates to:
-  /// **'Theme'**
-  String get settingsTheme;
-
   /// No description provided for @themeSystem.
   ///
   /// In en, this message translates to:

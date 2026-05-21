@@ -24,9 +24,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsAppearance => 'Appearance';
 
   @override
-  String get settingsTheme => 'Theme';
-
-  @override
   String get themeSystem => 'System';
 
   @override
