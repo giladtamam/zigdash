@@ -7,6 +7,7 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../services/automation_config_publisher.dart';
 import 'button_panel.dart';
 import 'combo_panel.dart';
 import 'cover_panel.dart';
@@ -112,6 +113,11 @@ class PanelTile extends ConsumerWidget {
               title: const Text('Delete panel'),
               onTap: () async {
                 Navigator.pop(sheetCtx);
+                if (panel.type == PanelType.schedule) {
+                  await ref
+                      .read(automationConfigPublisherProvider)
+                      .clearConfig(connectionId: connectionId, panelId: panel.id);
+                }
                 await repo.delete(panel.id);
               },
             ),

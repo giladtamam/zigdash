@@ -6,6 +6,8 @@ import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../models/panel_config.dart';
+import '../providers/panel_value_provider.dart';
+import '../services/automation_config_publisher.dart';
 
 enum SliderPreset { brightness, position }
 
@@ -390,6 +392,7 @@ class _State extends ConsumerState<PanelFormScreen> {
         ? null
         : _topicPrefixOverride.text.trim();
     try {
+      String panelId;
       if (_isEdit) {
         await repo.update(
           id: widget.panelId!,
@@ -402,8 +405,9 @@ class _State extends ConsumerState<PanelFormScreen> {
           width: _width,
           config: _buildConfig(),
         );
+        panelId = widget.panelId!;
       } else {
-        await repo.create(
+        panelId = await repo.create(
           dashboardId: widget.dashboardId,
           name: _name.text.trim(),
           type: _type,
@@ -415,6 +419,23 @@ class _State extends ConsumerState<PanelFormScreen> {
           width: _width,
           config: _buildConfig(),
         );
+      }
+      if (_type == PanelType.schedule) {
+        final effectivePrefix = prefixOverride ?? _topicPrefixHint;
+        final target = composeTopic(effectivePrefix, _topic.text);
+        final ok =
+            await ref.read(automationConfigPublisherProvider).publishConfig(
+                  connectionId: widget.connectionId,
+                  panelId: panelId,
+                  name: _name.text.trim(),
+                  target: target,
+                  config: _buildConfig() as ScheduleConfig,
+                );
+        if (!ok && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Saved — not connected; schedule will sync when online.'),
+          ));
+        }
       }
       if (mounted) context.pop();
     } finally {
