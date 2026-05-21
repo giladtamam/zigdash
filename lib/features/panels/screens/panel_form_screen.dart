@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
@@ -432,8 +433,8 @@ class _State extends ConsumerState<PanelFormScreen> {
                   config: _buildConfig() as ScheduleConfig,
                 );
         if (!ok && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Saved — not connected; schedule will sync when online.'),
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(context.l10n.panelScheduleSavedOffline),
           ));
         }
       }
@@ -474,29 +475,32 @@ class _State extends ConsumerState<PanelFormScreen> {
     if (!_loaded) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    final l10n = context.l10n;
     final typeLabel = switch (_type) {
-      PanelType.button => 'Button',
-      PanelType.toggle => 'Toggle',
-      PanelType.slider => 'Slider',
-      PanelType.led => 'LED',
-      PanelType.nodeStatus => 'Node Status',
-      PanelType.progress => 'Progress',
-      PanelType.multiState => 'Multi-State',
-      PanelType.combo => 'Combo',
-      PanelType.radio => 'Radio',
-      PanelType.cover => 'Cover',
-      PanelType.textInput => 'Text Input',
-      PanelType.textLog => 'Text Log',
-      PanelType.schedule => 'Schedule',
+      PanelType.button => l10n.panelTypeButton,
+      PanelType.toggle => l10n.panelTypeToggle,
+      PanelType.slider => l10n.panelTypeSlider,
+      PanelType.led => l10n.panelTypeLed,
+      PanelType.nodeStatus => l10n.panelTypeNodeStatus,
+      PanelType.progress => l10n.panelTypeProgress,
+      PanelType.multiState => l10n.panelTypeMultiState,
+      PanelType.combo => l10n.panelTypeCombo,
+      PanelType.radio => l10n.panelTypeRadio,
+      PanelType.cover => l10n.panelTypeCover,
+      PanelType.textInput => l10n.panelTypeTextInput,
+      PanelType.textLog => l10n.panelTypeTextLog,
+      PanelType.schedule => l10n.panelTypeSchedule,
     };
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? 'Edit $typeLabel' : 'New $typeLabel'),
+        title: Text(_isEdit
+            ? l10n.panelFormEdit(typeLabel)
+            : l10n.panelFormNew(typeLabel)),
         actions: [
           TextButton(
             onPressed: _saving ? null : _save,
-            child: Text(_saving ? 'Saving…' : 'Save'),
+            child: Text(_saving ? l10n.saving : l10n.save),
           ),
         ],
       ),
@@ -507,15 +511,16 @@ class _State extends ConsumerState<PanelFormScreen> {
           children: [
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: 'Name'),
-              validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+              decoration: InputDecoration(labelText: l10n.panelFormName),
+              validator: (v) =>
+                  v == null || v.trim().isEmpty ? l10n.fieldRequired : null,
             ),
             const SizedBox(height: 12),
             if (_topicPrefixHint != null && _topicPrefixHint!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  'Dashboard prefix: $_topicPrefixHint/ (used unless overridden below)',
+                  l10n.panelFormDashboardPrefix(_topicPrefixHint!),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.outline,
                       ),
@@ -523,20 +528,20 @@ class _State extends ConsumerState<PanelFormScreen> {
               ),
             TextFormField(
               controller: _topicPrefixOverride,
-              decoration: const InputDecoration(
-                labelText: 'Topic prefix override (optional)',
-                hintText: 'zigbee2mqtt/shutter',
-                helperText: 'Use a different device on this dashboard. Blank = use dashboard prefix.',
+              decoration: InputDecoration(
+                labelText: l10n.panelFormTopicPrefixOverride,
+                hintText: l10n.panelFormTopicPrefixOverrideHint,
+                helperText: l10n.panelFormTopicPrefixOverrideHelper,
               ),
             ),
             const SizedBox(height: 12),
             if (!_isReadOnly)
               TextFormField(
                 controller: _topic,
-                decoration: const InputDecoration(
-                  labelText: 'Publish topic (suffix)',
-                  hintText: 'set',
-                  helperText: 'Appended to the effective prefix. Leave blank to publish at the prefix itself.',
+                decoration: InputDecoration(
+                  labelText: l10n.panelFormPublishTopic,
+                  hintText: l10n.panelFormPublishTopicHint,
+                  helperText: l10n.panelFormPublishTopicHelper,
                 ),
               ),
             if (!_isWriteOnly) ...[
@@ -545,12 +550,12 @@ class _State extends ConsumerState<PanelFormScreen> {
                 controller: _subscribeTopic,
                 decoration: InputDecoration(
                   labelText: _isReadOnly
-                      ? 'Topic (suffix)'
-                      : 'Subscribe topic (suffix, optional)',
+                      ? l10n.panelFormTopicSuffix
+                      : l10n.panelFormSubscribeTopic,
                   hintText: '',
                   helperText: _isReadOnly
-                      ? 'Appended to the dashboard prefix. Blank = subscribe to the prefix itself (Z2M state).'
-                      : 'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.',
+                      ? l10n.panelFormSubscribeTopicHelperReadOnly
+                      : l10n.panelFormSubscribeTopicHelper,
                 ),
               ),
             ],
@@ -559,32 +564,41 @@ class _State extends ConsumerState<PanelFormScreen> {
             const SizedBox(height: 16),
             DropdownButtonFormField<PanelWidth>(
               value: _width,
-              decoration: const InputDecoration(labelText: 'Width'),
-              items: const [
-                DropdownMenuItem(value: PanelWidth.full, child: Text('Full')),
-                DropdownMenuItem(value: PanelWidth.half, child: Text('Half')),
-                DropdownMenuItem(value: PanelWidth.third, child: Text('Third')),
+              decoration: InputDecoration(labelText: l10n.panelFormWidth),
+              items: [
+                DropdownMenuItem(
+                    value: PanelWidth.full,
+                    child: Text(l10n.panelFormWidthFull)),
+                DropdownMenuItem(
+                    value: PanelWidth.half,
+                    child: Text(l10n.panelFormWidthHalf)),
+                DropdownMenuItem(
+                    value: PanelWidth.third,
+                    child: Text(l10n.panelFormWidthThird)),
               ],
               onChanged: (v) => v == null ? null : setState(() => _width = v),
             ),
             const SizedBox(height: 12),
             ExpansionTile(
               tilePadding: EdgeInsets.zero,
-              title: const Text('Advanced'),
+              title: Text(l10n.advanced),
               children: [
                 DropdownButtonFormField<int>(
                   value: _qos,
-                  decoration: const InputDecoration(labelText: 'QoS'),
-                  items: const [
-                    DropdownMenuItem(value: 0, child: Text('0 — at most once')),
-                    DropdownMenuItem(value: 1, child: Text('1 — at least once')),
-                    DropdownMenuItem(value: 2, child: Text('2 — exactly once')),
+                  decoration: InputDecoration(labelText: l10n.panelFormQos),
+                  items: [
+                    DropdownMenuItem(
+                        value: 0, child: Text(l10n.panelFormQos0)),
+                    DropdownMenuItem(
+                        value: 1, child: Text(l10n.panelFormQos1)),
+                    DropdownMenuItem(
+                        value: 2, child: Text(l10n.panelFormQos2)),
                   ],
                   onChanged: (v) => v == null ? null : setState(() => _qos = v),
                 ),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Retain'),
+                  title: Text(l10n.panelFormRetain),
                   value: _retain,
                   onChanged: (v) => setState(() => _retain = v),
                 ),
@@ -597,32 +611,35 @@ class _State extends ConsumerState<PanelFormScreen> {
   }
 
   List<Widget> _typeSpecificFields() {
+    final l10n = context.l10n;
     switch (_type) {
       case PanelType.toggle:
         return [
           TextFormField(
             controller: _onPayload,
-            decoration: const InputDecoration(labelText: 'On payload'),
+            decoration:
+                InputDecoration(labelText: l10n.panelToggleOnPayload),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _offPayload,
-            decoration: const InputDecoration(labelText: 'Off payload'),
+            decoration:
+                InputDecoration(labelText: l10n.panelToggleOffPayload),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _toggleJsonPath,
-            decoration: const InputDecoration(
-              labelText: 'JSON path (optional)',
-              hintText: 'state',
+            decoration: InputDecoration(
+              labelText: l10n.panelToggleJsonPath,
+              hintText: l10n.panelToggleJsonPathHint,
             ),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _onMatch,
-            decoration: const InputDecoration(
-              labelText: 'On match',
-              helperText: 'Value at JSON path that means "on" (e.g. "ON")',
+            decoration: InputDecoration(
+              labelText: l10n.panelToggleOnMatch,
+              helperText: l10n.panelToggleOnMatchHelper,
             ),
           ),
         ];
@@ -633,7 +650,8 @@ class _State extends ConsumerState<PanelFormScreen> {
               child: TextFormField(
                 controller: _sliderMin,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Min'),
+                decoration:
+                    InputDecoration(labelText: l10n.panelSliderMin),
               ),
             ),
             const SizedBox(width: 12),
@@ -641,7 +659,8 @@ class _State extends ConsumerState<PanelFormScreen> {
               child: TextFormField(
                 controller: _sliderMax,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Max'),
+                decoration:
+                    InputDecoration(labelText: l10n.panelSliderMax),
               ),
             ),
             const SizedBox(width: 12),
@@ -649,24 +668,25 @@ class _State extends ConsumerState<PanelFormScreen> {
               child: TextFormField(
                 controller: _sliderStep,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Step'),
+                decoration:
+                    InputDecoration(labelText: l10n.panelSliderStep),
               ),
             ),
           ]),
           const SizedBox(height: 12),
           TextFormField(
             controller: _sliderTemplate,
-            decoration: const InputDecoration(
-              labelText: 'Value template',
-              helperText: '{value} is replaced with the slider value',
+            decoration: InputDecoration(
+              labelText: l10n.panelSliderTemplate,
+              helperText: l10n.panelSliderTemplateHelper,
             ),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _sliderJsonPath,
-            decoration: const InputDecoration(
-              labelText: 'JSON path (optional)',
-              hintText: 'brightness',
+            decoration: InputDecoration(
+              labelText: l10n.panelSliderJsonPath,
+              hintText: l10n.panelSliderJsonPathHint,
             ),
           ),
         ];
@@ -674,25 +694,26 @@ class _State extends ConsumerState<PanelFormScreen> {
         return [
           TextFormField(
             controller: _buttonPayload,
-            decoration: const InputDecoration(labelText: 'Payload'),
+            decoration:
+                InputDecoration(labelText: l10n.panelButtonPayload),
           ),
         ];
       case PanelType.led:
         return [
           TextFormField(
             controller: _ledJsonPath,
-            decoration: const InputDecoration(
-              labelText: 'JSON path (optional)',
-              hintText: 'contact',
-              helperText: 'e.g. "contact", "occupancy", "water_leak"',
+            decoration: InputDecoration(
+              labelText: l10n.panelLedJsonPath,
+              hintText: l10n.panelLedJsonPathHint,
+              helperText: l10n.panelLedJsonPathHelper,
             ),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _ledOnMatch,
-            decoration: const InputDecoration(
-              labelText: 'On match',
-              helperText: 'Value at JSON path that lights the LED (e.g. "true", "ON")',
+            decoration: InputDecoration(
+              labelText: l10n.panelLedOnMatch,
+              helperText: l10n.panelLedOnMatchHelper,
             ),
           ),
           const SizedBox(height: 12),
@@ -700,9 +721,9 @@ class _State extends ConsumerState<PanelFormScreen> {
             Expanded(
               child: TextFormField(
                 controller: _ledOnLabel,
-                decoration: const InputDecoration(
-                  labelText: 'On label (optional)',
-                  hintText: 'ON',
+                decoration: InputDecoration(
+                  labelText: l10n.panelLedOnLabel,
+                  hintText: l10n.panelLedOnLabelHint,
                 ),
               ),
             ),
@@ -710,9 +731,9 @@ class _State extends ConsumerState<PanelFormScreen> {
             Expanded(
               child: TextFormField(
                 controller: _ledOffLabel,
-                decoration: const InputDecoration(
-                  labelText: 'Off label (optional)',
-                  hintText: 'OFF',
+                decoration: InputDecoration(
+                  labelText: l10n.panelLedOffLabel,
+                  hintText: l10n.panelLedOffLabelHint,
                 ),
               ),
             ),
@@ -722,17 +743,17 @@ class _State extends ConsumerState<PanelFormScreen> {
         return [
           TextFormField(
             controller: _nodeOnlinePayload,
-            decoration: const InputDecoration(
-              labelText: 'Online payload',
-              helperText: 'Value that means "online" (Z2M default: "online")',
+            decoration: InputDecoration(
+              labelText: l10n.panelNodeOnlinePayload,
+              helperText: l10n.panelNodeOnlinePayloadHelper,
             ),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _nodeJsonPath,
-            decoration: const InputDecoration(
-              labelText: 'JSON path (optional)',
-              helperText: 'Leave blank for Z2M default (raw "online"/"offline" string)',
+            decoration: InputDecoration(
+              labelText: l10n.panelNodeJsonPath,
+              helperText: l10n.panelNodeJsonPathHelper,
             ),
           ),
         ];
@@ -743,7 +764,8 @@ class _State extends ConsumerState<PanelFormScreen> {
               child: TextFormField(
                 controller: _progressMin,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Min'),
+                decoration:
+                    InputDecoration(labelText: l10n.panelProgressMin),
               ),
             ),
             const SizedBox(width: 12),
@@ -751,16 +773,17 @@ class _State extends ConsumerState<PanelFormScreen> {
               child: TextFormField(
                 controller: _progressMax,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Max'),
+                decoration:
+                    InputDecoration(labelText: l10n.panelProgressMax),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: TextFormField(
                 controller: _progressUnit,
-                decoration: const InputDecoration(
-                  labelText: 'Unit',
-                  hintText: '%',
+                decoration: InputDecoration(
+                  labelText: l10n.panelProgressUnit,
+                  hintText: l10n.panelProgressUnitHint,
                 ),
               ),
             ),
@@ -768,10 +791,10 @@ class _State extends ConsumerState<PanelFormScreen> {
           const SizedBox(height: 12),
           TextFormField(
             controller: _progressJsonPath,
-            decoration: const InputDecoration(
-              labelText: 'JSON path (optional)',
-              hintText: 'battery',
-              helperText: 'e.g. "battery", "linkquality"',
+            decoration: InputDecoration(
+              labelText: l10n.panelProgressJsonPath,
+              hintText: l10n.panelProgressJsonPathHint,
+              helperText: l10n.panelProgressJsonPathHelper,
             ),
           ),
         ];
@@ -782,9 +805,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       case PanelType.cover:
         return [
           Text(
-            'OPEN / STOP / CLOSE buttons plus a row of position presets. '
-            'Uses the standard Z2M cover payloads ({"state":…} and '
-            '{"position":…}).',
+            l10n.panelCoverDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
@@ -792,15 +813,15 @@ class _State extends ConsumerState<PanelFormScreen> {
           const SizedBox(height: 12),
           TextFormField(
             controller: _coverPresets,
-            decoration: const InputDecoration(
-              labelText: 'Position presets',
-              hintText: '0, 25, 50, 100',
-              helperText: 'Comma-separated percentages (0–100). Blank = no preset row.',
+            decoration: InputDecoration(
+              labelText: l10n.panelCoverPresets,
+              hintText: l10n.panelCoverPresetsHint,
+              helperText: l10n.panelCoverPresetsHelper,
             ),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Show position slider'),
+            title: Text(l10n.panelCoverShowSlider),
             value: _coverShowSlider,
             onChanged: (v) => setState(() => _coverShowSlider = v),
           ),
@@ -809,22 +830,22 @@ class _State extends ConsumerState<PanelFormScreen> {
         return [
           TextFormField(
             controller: _textInputHint,
-            decoration: const InputDecoration(
-              labelText: 'Hint (optional)',
-              hintText: 'Type a value…',
+            decoration: InputDecoration(
+              labelText: l10n.panelTextInputHint,
+              hintText: l10n.panelTextInputHintHint,
             ),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _textInputTemplate,
-            decoration: const InputDecoration(
-              labelText: 'Template',
-              helperText: '{value} is replaced with the typed text. Default publishes the raw text.',
+            decoration: InputDecoration(
+              labelText: l10n.panelTextInputTemplate,
+              helperText: l10n.panelTextInputTemplateHelper,
             ),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Clear after send'),
+            title: Text(l10n.panelTextInputClearAfterSend),
             value: _textInputClearOnSend,
             onChanged: (v) => setState(() => _textInputClearOnSend = v),
           ),
@@ -834,25 +855,24 @@ class _State extends ConsumerState<PanelFormScreen> {
           TextFormField(
             controller: _textLogMaxLines,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Max lines',
-              helperText: 'How many recent messages to keep',
+            decoration: InputDecoration(
+              labelText: l10n.panelTextLogMaxLines,
+              helperText: l10n.panelTextLogMaxLinesHelper,
             ),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _textLogJsonPath,
-            decoration: const InputDecoration(
-              labelText: 'JSON path (optional)',
-              helperText: 'Log just this field instead of the whole payload',
+            decoration: InputDecoration(
+              labelText: l10n.panelTextLogJsonPath,
+              helperText: l10n.panelTextLogJsonPathHelper,
             ),
           ),
         ];
       case PanelType.schedule:
         return [
           Text(
-            'Runs on the SMHUB via Node-RED — fires even when this phone is '
-            'off. The Publish topic above is the shutter command target.',
+            l10n.panelScheduleDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
@@ -864,9 +884,9 @@ class _State extends ConsumerState<PanelFormScreen> {
                 controller: _scheduleOpenTime,
                 readOnly: true,
                 onTap: () => _pickTime(_scheduleOpenTime),
-                decoration: const InputDecoration(
-                  labelText: 'Open time',
-                  suffixIcon: Icon(Icons.access_time),
+                decoration: InputDecoration(
+                  labelText: l10n.panelScheduleOpenTime,
+                  suffixIcon: const Icon(Icons.access_time),
                 ),
               ),
             ),
@@ -876,9 +896,9 @@ class _State extends ConsumerState<PanelFormScreen> {
                 controller: _scheduleCloseTime,
                 readOnly: true,
                 onTap: () => _pickTime(_scheduleCloseTime),
-                decoration: const InputDecoration(
-                  labelText: 'Close time',
-                  suffixIcon: Icon(Icons.access_time),
+                decoration: InputDecoration(
+                  labelText: l10n.panelScheduleCloseTime,
+                  suffixIcon: const Icon(Icons.access_time),
                 ),
               ),
             ),
@@ -886,16 +906,18 @@ class _State extends ConsumerState<PanelFormScreen> {
           const SizedBox(height: 12),
           TextFormField(
             controller: _scheduleOpenPayload,
-            decoration: const InputDecoration(labelText: 'Open payload'),
+            decoration:
+                InputDecoration(labelText: l10n.panelScheduleOpenPayload),
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _scheduleClosePayload,
-            decoration: const InputDecoration(labelText: 'Close payload'),
+            decoration:
+                InputDecoration(labelText: l10n.panelScheduleClosePayload),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Enabled'),
+            title: Text(l10n.panelScheduleEnabled),
             value: _scheduleEnabled,
             onChanged: (v) => setState(() => _scheduleEnabled = v),
           ),
@@ -904,17 +926,19 @@ class _State extends ConsumerState<PanelFormScreen> {
   }
 
   List<Widget> _optionsFields() {
+    final l10n = context.l10n;
     return [
       TextFormField(
         controller: _optionsJsonPath,
-        decoration: const InputDecoration(
-          labelText: 'JSON path (optional)',
-          hintText: 'state',
-          helperText: 'Field in the received payload that holds the current value',
+        decoration: InputDecoration(
+          labelText: l10n.panelOptionsJsonPath,
+          hintText: l10n.panelOptionsJsonPathHint,
+          helperText: l10n.panelOptionsJsonPathHelper,
         ),
       ),
       const SizedBox(height: 12),
-      Text('Options', style: Theme.of(context).textTheme.titleSmall),
+      Text(l10n.panelOptionsHeader,
+          style: Theme.of(context).textTheme.titleSmall),
       const SizedBox(height: 4),
       for (var i = 0; i < _optionRows.length; i++)
         Padding(
@@ -927,24 +951,24 @@ class _State extends ConsumerState<PanelFormScreen> {
                   children: [
                     TextFormField(
                       controller: _optionRows[i].label,
-                      decoration: const InputDecoration(
-                        labelText: 'Label',
+                      decoration: InputDecoration(
+                        labelText: l10n.panelOptionsLabel,
                         isDense: true,
                       ),
                     ),
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _optionRows[i].payload,
-                      decoration: const InputDecoration(
-                        labelText: 'Payload',
+                      decoration: InputDecoration(
+                        labelText: l10n.panelOptionsPayload,
                         isDense: true,
                       ),
                     ),
                     const SizedBox(height: 6),
                     TextFormField(
                       controller: _optionRows[i].match,
-                      decoration: const InputDecoration(
-                        labelText: 'Match (current value)',
+                      decoration: InputDecoration(
+                        labelText: l10n.panelOptionsMatch,
                         isDense: true,
                       ),
                     ),
@@ -964,7 +988,7 @@ class _State extends ConsumerState<PanelFormScreen> {
         alignment: Alignment.centerLeft,
         child: TextButton.icon(
           icon: const Icon(Icons.add),
-          label: const Text('Add option'),
+          label: Text(l10n.panelOptionsAdd),
           onPressed: () => setState(() => _optionRows.add(_OptionRow())),
         ),
       ),

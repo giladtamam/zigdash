@@ -757,6 +757,654 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get dashDeleteConfirm;
+
+  /// No description provided for @panelFormNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New {type}'**
+  String panelFormNew(Object type);
+
+  /// No description provided for @panelFormEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {type}'**
+  String panelFormEdit(Object type);
+
+  /// No description provided for @panelTypeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Button'**
+  String get panelTypeButton;
+
+  /// No description provided for @panelTypeToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle'**
+  String get panelTypeToggle;
+
+  /// No description provided for @panelTypeSlider.
+  ///
+  /// In en, this message translates to:
+  /// **'Slider'**
+  String get panelTypeSlider;
+
+  /// No description provided for @panelTypeLed.
+  ///
+  /// In en, this message translates to:
+  /// **'LED'**
+  String get panelTypeLed;
+
+  /// No description provided for @panelTypeNodeStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Node Status'**
+  String get panelTypeNodeStatus;
+
+  /// No description provided for @panelTypeProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get panelTypeProgress;
+
+  /// No description provided for @panelTypeMultiState.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-State'**
+  String get panelTypeMultiState;
+
+  /// No description provided for @panelTypeCombo.
+  ///
+  /// In en, this message translates to:
+  /// **'Combo'**
+  String get panelTypeCombo;
+
+  /// No description provided for @panelTypeRadio.
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get panelTypeRadio;
+
+  /// No description provided for @panelTypeCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get panelTypeCover;
+
+  /// No description provided for @panelTypeTextInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Input'**
+  String get panelTypeTextInput;
+
+  /// No description provided for @panelTypeTextLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Log'**
+  String get panelTypeTextLog;
+
+  /// No description provided for @panelTypeSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get panelTypeSchedule;
+
+  /// No description provided for @panelFormName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get panelFormName;
+
+  /// No description provided for @panelFormDashboardPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard prefix: {prefix}/ (used unless overridden below)'**
+  String panelFormDashboardPrefix(Object prefix);
+
+  /// No description provided for @panelFormTopicPrefixOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic prefix override (optional)'**
+  String get panelFormTopicPrefixOverride;
+
+  /// No description provided for @panelFormTopicPrefixOverrideHint.
+  ///
+  /// In en, this message translates to:
+  /// **'zigbee2mqtt/shutter'**
+  String get panelFormTopicPrefixOverrideHint;
+
+  /// No description provided for @panelFormTopicPrefixOverrideHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a different device on this dashboard. Blank = use dashboard prefix.'**
+  String get panelFormTopicPrefixOverrideHelper;
+
+  /// No description provided for @panelFormPublishTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish topic (suffix)'**
+  String get panelFormPublishTopic;
+
+  /// No description provided for @panelFormPublishTopicHint.
+  ///
+  /// In en, this message translates to:
+  /// **'set'**
+  String get panelFormPublishTopicHint;
+
+  /// No description provided for @panelFormPublishTopicHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Appended to the effective prefix. Leave blank to publish at the prefix itself.'**
+  String get panelFormPublishTopicHelper;
+
+  /// No description provided for @panelFormTopicSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic (suffix)'**
+  String get panelFormTopicSuffix;
+
+  /// No description provided for @panelFormSubscribeTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe topic (suffix, optional)'**
+  String get panelFormSubscribeTopic;
+
+  /// No description provided for @panelFormSubscribeTopicHelperReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Appended to the dashboard prefix. Blank = subscribe to the prefix itself (Z2M state).'**
+  String get panelFormSubscribeTopicHelperReadOnly;
+
+  /// No description provided for @panelFormSubscribeTopicHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.'**
+  String get panelFormSubscribeTopicHelper;
+
+  /// No description provided for @panelFormWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get panelFormWidth;
+
+  /// No description provided for @panelFormWidthFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get panelFormWidthFull;
+
+  /// No description provided for @panelFormWidthHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Half'**
+  String get panelFormWidthHalf;
+
+  /// No description provided for @panelFormWidthThird.
+  ///
+  /// In en, this message translates to:
+  /// **'Third'**
+  String get panelFormWidthThird;
+
+  /// No description provided for @panelFormQos.
+  ///
+  /// In en, this message translates to:
+  /// **'QoS'**
+  String get panelFormQos;
+
+  /// No description provided for @panelFormQos0.
+  ///
+  /// In en, this message translates to:
+  /// **'0 — at most once'**
+  String get panelFormQos0;
+
+  /// No description provided for @panelFormQos1.
+  ///
+  /// In en, this message translates to:
+  /// **'1 — at least once'**
+  String get panelFormQos1;
+
+  /// No description provided for @panelFormQos2.
+  ///
+  /// In en, this message translates to:
+  /// **'2 — exactly once'**
+  String get panelFormQos2;
+
+  /// No description provided for @panelFormRetain.
+  ///
+  /// In en, this message translates to:
+  /// **'Retain'**
+  String get panelFormRetain;
+
+  /// No description provided for @panelToggleOnPayload.
+  ///
+  /// In en, this message translates to:
+  /// **'On payload'**
+  String get panelToggleOnPayload;
+
+  /// No description provided for @panelToggleOffPayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Off payload'**
+  String get panelToggleOffPayload;
+
+  /// No description provided for @panelToggleJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelToggleJsonPath;
+
+  /// No description provided for @panelToggleJsonPathHint.
+  ///
+  /// In en, this message translates to:
+  /// **'state'**
+  String get panelToggleJsonPathHint;
+
+  /// No description provided for @panelToggleOnMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'On match'**
+  String get panelToggleOnMatch;
+
+  /// No description provided for @panelToggleOnMatchHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Value at JSON path that means \"on\" (e.g. \"ON\")'**
+  String get panelToggleOnMatchHelper;
+
+  /// No description provided for @panelSliderMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get panelSliderMin;
+
+  /// No description provided for @panelSliderMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get panelSliderMax;
+
+  /// No description provided for @panelSliderStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get panelSliderStep;
+
+  /// No description provided for @panelSliderTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Value template'**
+  String get panelSliderTemplate;
+
+  /// No description provided for @panelSliderTemplateHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the word value as a placeholder — it is replaced with the slider value'**
+  String get panelSliderTemplateHelper;
+
+  /// No description provided for @panelSliderJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelSliderJsonPath;
+
+  /// No description provided for @panelSliderJsonPathHint.
+  ///
+  /// In en, this message translates to:
+  /// **'brightness'**
+  String get panelSliderJsonPathHint;
+
+  /// No description provided for @panelButtonPayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Payload'**
+  String get panelButtonPayload;
+
+  /// No description provided for @panelLedJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelLedJsonPath;
+
+  /// No description provided for @panelLedJsonPathHint.
+  ///
+  /// In en, this message translates to:
+  /// **'contact'**
+  String get panelLedJsonPathHint;
+
+  /// No description provided for @panelLedJsonPathHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. \"contact\", \"occupancy\", \"water_leak\"'**
+  String get panelLedJsonPathHelper;
+
+  /// No description provided for @panelLedOnMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'On match'**
+  String get panelLedOnMatch;
+
+  /// No description provided for @panelLedOnMatchHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Value at JSON path that lights the LED (e.g. \"true\", \"ON\")'**
+  String get panelLedOnMatchHelper;
+
+  /// No description provided for @panelLedOnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'On label (optional)'**
+  String get panelLedOnLabel;
+
+  /// No description provided for @panelLedOnLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'ON'**
+  String get panelLedOnLabelHint;
+
+  /// No description provided for @panelLedOffLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Off label (optional)'**
+  String get panelLedOffLabel;
+
+  /// No description provided for @panelLedOffLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get panelLedOffLabelHint;
+
+  /// No description provided for @panelNodeOnlinePayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Online payload'**
+  String get panelNodeOnlinePayload;
+
+  /// No description provided for @panelNodeOnlinePayloadHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Value that means \"online\" (Z2M default: \"online\")'**
+  String get panelNodeOnlinePayloadHelper;
+
+  /// No description provided for @panelNodeJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelNodeJsonPath;
+
+  /// No description provided for @panelNodeJsonPathHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave blank for Z2M default (raw \"online\"/\"offline\" string)'**
+  String get panelNodeJsonPathHelper;
+
+  /// No description provided for @panelProgressMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get panelProgressMin;
+
+  /// No description provided for @panelProgressMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get panelProgressMax;
+
+  /// No description provided for @panelProgressUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get panelProgressUnit;
+
+  /// No description provided for @panelProgressUnitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'%'**
+  String get panelProgressUnitHint;
+
+  /// No description provided for @panelProgressJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelProgressJsonPath;
+
+  /// No description provided for @panelProgressJsonPathHint.
+  ///
+  /// In en, this message translates to:
+  /// **'battery'**
+  String get panelProgressJsonPathHint;
+
+  /// No description provided for @panelProgressJsonPathHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. \"battery\", \"linkquality\"'**
+  String get panelProgressJsonPathHelper;
+
+  /// No description provided for @panelOptionsJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelOptionsJsonPath;
+
+  /// No description provided for @panelOptionsJsonPathHint.
+  ///
+  /// In en, this message translates to:
+  /// **'state'**
+  String get panelOptionsJsonPathHint;
+
+  /// No description provided for @panelOptionsJsonPathHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Field in the received payload that holds the current value'**
+  String get panelOptionsJsonPathHelper;
+
+  /// No description provided for @panelOptionsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get panelOptionsHeader;
+
+  /// No description provided for @panelOptionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get panelOptionsLabel;
+
+  /// No description provided for @panelOptionsPayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Payload'**
+  String get panelOptionsPayload;
+
+  /// No description provided for @panelOptionsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Match (current value)'**
+  String get panelOptionsMatch;
+
+  /// No description provided for @panelOptionsAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add option'**
+  String get panelOptionsAdd;
+
+  /// No description provided for @panelCoverDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'OPEN / STOP / CLOSE buttons plus a row of position presets. Uses the standard Z2M cover payloads (state and position).'**
+  String get panelCoverDescription;
+
+  /// No description provided for @panelCoverPresets.
+  ///
+  /// In en, this message translates to:
+  /// **'Position presets'**
+  String get panelCoverPresets;
+
+  /// No description provided for @panelCoverPresetsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0, 25, 50, 100'**
+  String get panelCoverPresetsHint;
+
+  /// No description provided for @panelCoverPresetsHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Comma-separated percentages (0–100). Blank = no preset row.'**
+  String get panelCoverPresetsHelper;
+
+  /// No description provided for @panelCoverShowSlider.
+  ///
+  /// In en, this message translates to:
+  /// **'Show position slider'**
+  String get panelCoverShowSlider;
+
+  /// No description provided for @panelTextInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint (optional)'**
+  String get panelTextInputHint;
+
+  /// No description provided for @panelTextInputHintHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a value…'**
+  String get panelTextInputHintHint;
+
+  /// No description provided for @panelTextInputTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Template'**
+  String get panelTextInputTemplate;
+
+  /// No description provided for @panelTextInputTemplateHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the word value as a placeholder — it is replaced with the typed text. Default publishes the raw text.'**
+  String get panelTextInputTemplateHelper;
+
+  /// No description provided for @panelTextInputClearAfterSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear after send'**
+  String get panelTextInputClearAfterSend;
+
+  /// No description provided for @panelTextLogMaxLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Max lines'**
+  String get panelTextLogMaxLines;
+
+  /// No description provided for @panelTextLogMaxLinesHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'How many recent messages to keep'**
+  String get panelTextLogMaxLinesHelper;
+
+  /// No description provided for @panelTextLogJsonPath.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON path (optional)'**
+  String get panelTextLogJsonPath;
+
+  /// No description provided for @panelTextLogJsonPathHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Log just this field instead of the whole payload'**
+  String get panelTextLogJsonPathHelper;
+
+  /// No description provided for @panelScheduleDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on the SMHUB via Node-RED — fires even when this phone is off. The Publish topic above is the shutter command target.'**
+  String get panelScheduleDescription;
+
+  /// No description provided for @panelScheduleOpenTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Open time'**
+  String get panelScheduleOpenTime;
+
+  /// No description provided for @panelScheduleCloseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Close time'**
+  String get panelScheduleCloseTime;
+
+  /// No description provided for @panelScheduleOpenPayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Open payload'**
+  String get panelScheduleOpenPayload;
+
+  /// No description provided for @panelScheduleClosePayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Close payload'**
+  String get panelScheduleClosePayload;
+
+  /// No description provided for @panelScheduleEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get panelScheduleEnabled;
+
+  /// No description provided for @panelScheduleSavedOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — not connected; schedule will sync when online.'**
+  String get panelScheduleSavedOffline;
+
+  /// No description provided for @panelTileEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit panel'**
+  String get panelTileEdit;
+
+  /// No description provided for @panelTileDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate panel'**
+  String get panelTileDuplicate;
+
+  /// No description provided for @panelTileMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move up'**
+  String get panelTileMoveUp;
+
+  /// No description provided for @panelTileMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move down'**
+  String get panelTileMoveDown;
+
+  /// No description provided for @panelTileWidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Width'**
+  String get panelTileWidth;
+
+  /// No description provided for @panelTileWidthFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get panelTileWidthFull;
+
+  /// No description provided for @panelTileWidthHalf.
+  ///
+  /// In en, this message translates to:
+  /// **'Half'**
+  String get panelTileWidthHalf;
+
+  /// No description provided for @panelTileWidthThird.
+  ///
+  /// In en, this message translates to:
+  /// **'⅓'**
+  String get panelTileWidthThird;
+
+  /// No description provided for @panelTileDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete panel'**
+  String get panelTileDelete;
 }
 
 class _AppLocalizationsDelegate

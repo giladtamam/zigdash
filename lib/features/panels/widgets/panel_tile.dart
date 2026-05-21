@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
@@ -42,6 +43,7 @@ class PanelTile extends ConsumerWidget {
   final bool locked;
 
   void _openOptions(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final repo = ref.read(panelRepoProvider);
     showModalBottomSheet<void>(
       context: context,
@@ -51,7 +53,7 @@ class PanelTile extends ConsumerWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('Edit panel'),
+              title: Text(l10n.panelTileEdit),
               onTap: () {
                 Navigator.pop(sheetCtx);
                 context.push(
@@ -61,7 +63,7 @@ class PanelTile extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.copy_all_outlined),
-              title: const Text('Duplicate panel'),
+              title: Text(l10n.panelTileDuplicate),
               onTap: () async {
                 Navigator.pop(sheetCtx);
                 await repo.duplicate(panel.id);
@@ -69,7 +71,7 @@ class PanelTile extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.arrow_upward),
-              title: const Text('Move up'),
+              title: Text(l10n.panelTileMoveUp),
               onTap: () async {
                 Navigator.pop(sheetCtx);
                 await repo.move(dashboardId, panel.id, -1);
@@ -77,7 +79,7 @@ class PanelTile extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.arrow_downward),
-              title: const Text('Move down'),
+              title: Text(l10n.panelTileMoveDown),
               onTap: () async {
                 Navigator.pop(sheetCtx);
                 await repo.move(dashboardId, panel.id, 1);
@@ -87,15 +89,21 @@ class PanelTile extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: Row(
                 children: [
-                  const Text('Width'),
+                  Text(l10n.panelTileWidth),
                   const SizedBox(width: 16),
                   Expanded(
                     child: SegmentedButton<PanelWidth>(
                       showSelectedIcon: false,
-                      segments: const [
-                        ButtonSegment(value: PanelWidth.full, label: Text('Full')),
-                        ButtonSegment(value: PanelWidth.half, label: Text('Half')),
-                        ButtonSegment(value: PanelWidth.third, label: Text('⅓')),
+                      segments: [
+                        ButtonSegment(
+                            value: PanelWidth.full,
+                            label: Text(l10n.panelTileWidthFull)),
+                        ButtonSegment(
+                            value: PanelWidth.half,
+                            label: Text(l10n.panelTileWidthHalf)),
+                        ButtonSegment(
+                            value: PanelWidth.third,
+                            label: Text(l10n.panelTileWidthThird)),
                       ],
                       selected: {panel.width},
                       onSelectionChanged: (sel) async {
@@ -110,7 +118,7 @@ class PanelTile extends ConsumerWidget {
             const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.delete_outline),
-              title: const Text('Delete panel'),
+              title: Text(l10n.panelTileDelete),
               onTap: () async {
                 Navigator.pop(sheetCtx);
                 if (panel.type == PanelType.schedule) {

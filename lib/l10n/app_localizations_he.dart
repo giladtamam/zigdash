@@ -214,7 +214,7 @@ class AppLocalizationsHe extends AppLocalizations {
       'תריס/וילון: פתח·עצור·סגור + מחוון מיקום';
 
   @override
-  String get panelPickerScheduleTitle => 'לוח זמנים';
+  String get panelPickerScheduleTitle => 'תזמון';
 
   @override
   String get panelPickerScheduleSubtitle =>
@@ -363,4 +363,351 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get dashDeleteConfirm => 'מחיקה';
+
+  @override
+  String panelFormNew(Object type) {
+    return '$type חדש';
+  }
+
+  @override
+  String panelFormEdit(Object type) {
+    return 'עריכת $type';
+  }
+
+  @override
+  String get panelTypeButton => 'כפתור';
+
+  @override
+  String get panelTypeToggle => 'מתג';
+
+  @override
+  String get panelTypeSlider => 'מחוון';
+
+  @override
+  String get panelTypeLed => 'נורית';
+
+  @override
+  String get panelTypeNodeStatus => 'סטטוס צומת';
+
+  @override
+  String get panelTypeProgress => 'מד התקדמות';
+
+  @override
+  String get panelTypeMultiState => 'רב-מצב';
+
+  @override
+  String get panelTypeCombo => 'תפריט נפתח';
+
+  @override
+  String get panelTypeRadio => 'בחירה בודדת';
+
+  @override
+  String get panelTypeCover => 'תריס';
+
+  @override
+  String get panelTypeTextInput => 'שדה טקסט';
+
+  @override
+  String get panelTypeTextLog => 'יומן טקסט';
+
+  @override
+  String get panelTypeSchedule => 'תזמון';
+
+  @override
+  String get panelFormName => 'שם';
+
+  @override
+  String panelFormDashboardPrefix(Object prefix) {
+    return 'קידומת לוח: $prefix/ (בשימוש אלא אם כן עוקפת למטה)';
+  }
+
+  @override
+  String get panelFormTopicPrefixOverride => 'עקיפת קידומת נושא (לא חובה)';
+
+  @override
+  String get panelFormTopicPrefixOverrideHint => 'zigbee2mqtt/shutter';
+
+  @override
+  String get panelFormTopicPrefixOverrideHelper =>
+      'שימוש בהתקן אחר בלוח זה. ריק = השתמש בקידומת הלוח.';
+
+  @override
+  String get panelFormPublishTopic => 'נושא פרסום (סיומת)';
+
+  @override
+  String get panelFormPublishTopicHint => 'set';
+
+  @override
+  String get panelFormPublishTopicHelper =>
+      'מצורף לקידומת הפעילה. השאר ריק לפרסום בקידומת עצמה.';
+
+  @override
+  String get panelFormTopicSuffix => 'נושא (סיומת)';
+
+  @override
+  String get panelFormSubscribeTopic => 'נושא מנוי (סיומת, לא חובה)';
+
+  @override
+  String get panelFormSubscribeTopicHelperReadOnly =>
+      'מצורף לקידומת הלוח. ריק = מנוי לקידומת עצמה (מצב Z2M).';
+
+  @override
+  String get panelFormSubscribeTopicHelper =>
+      'ריק = מנוי לקידומת עצמה (מצב Z2M). זהה לנושא פרסום = שימוש בו.';
+
+  @override
+  String get panelFormWidth => 'רוחב';
+
+  @override
+  String get panelFormWidthFull => 'מלא';
+
+  @override
+  String get panelFormWidthHalf => 'חצי';
+
+  @override
+  String get panelFormWidthThird => 'שליש';
+
+  @override
+  String get panelFormQos => 'QoS';
+
+  @override
+  String get panelFormQos0 => '0 — לכל היותר פעם אחת';
+
+  @override
+  String get panelFormQos1 => '1 — לפחות פעם אחת';
+
+  @override
+  String get panelFormQos2 => '2 — בדיוק פעם אחת';
+
+  @override
+  String get panelFormRetain => 'שמירה בברוקר';
+
+  @override
+  String get panelToggleOnPayload => 'עומס הפעלה';
+
+  @override
+  String get panelToggleOffPayload => 'עומס כיבוי';
+
+  @override
+  String get panelToggleJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelToggleJsonPathHint => 'state';
+
+  @override
+  String get panelToggleOnMatch => 'ערך הפעלה';
+
+  @override
+  String get panelToggleOnMatchHelper =>
+      'ערך בנתיב JSON שמסמן \"מופעל\" (לדוגמה: \"ON\")';
+
+  @override
+  String get panelSliderMin => 'מינימום';
+
+  @override
+  String get panelSliderMax => 'מקסימום';
+
+  @override
+  String get panelSliderStep => 'צעד';
+
+  @override
+  String get panelSliderTemplate => 'תבנית ערך';
+
+  @override
+  String get panelSliderTemplateHelper =>
+      'השתמש במילה value כ-placeholder — היא מוחלפת בערך המחוון';
+
+  @override
+  String get panelSliderJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelSliderJsonPathHint => 'brightness';
+
+  @override
+  String get panelButtonPayload => 'עומס';
+
+  @override
+  String get panelLedJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelLedJsonPathHint => 'contact';
+
+  @override
+  String get panelLedJsonPathHelper =>
+      'לדוגמה: \"contact\", \"occupancy\", \"water_leak\"';
+
+  @override
+  String get panelLedOnMatch => 'ערך הפעלה';
+
+  @override
+  String get panelLedOnMatchHelper =>
+      'ערך בנתיב JSON שמדליק את הנורית (לדוגמה: \"true\", \"ON\")';
+
+  @override
+  String get panelLedOnLabel => 'תווית הפעלה (לא חובה)';
+
+  @override
+  String get panelLedOnLabelHint => 'ON';
+
+  @override
+  String get panelLedOffLabel => 'תווית כיבוי (לא חובה)';
+
+  @override
+  String get panelLedOffLabelHint => 'OFF';
+
+  @override
+  String get panelNodeOnlinePayload => 'עומס מקוון';
+
+  @override
+  String get panelNodeOnlinePayloadHelper =>
+      'ערך שמסמן \"מקוון\" (ברירת מחדל Z2M: \"online\")';
+
+  @override
+  String get panelNodeJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelNodeJsonPathHelper =>
+      'השאר ריק לברירת מחדל Z2M (מחרוזת \"online\"/\"offline\" גולמית)';
+
+  @override
+  String get panelProgressMin => 'מינימום';
+
+  @override
+  String get panelProgressMax => 'מקסימום';
+
+  @override
+  String get panelProgressUnit => 'יחידה';
+
+  @override
+  String get panelProgressUnitHint => '%';
+
+  @override
+  String get panelProgressJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelProgressJsonPathHint => 'battery';
+
+  @override
+  String get panelProgressJsonPathHelper =>
+      'לדוגמה: \"battery\", \"linkquality\"';
+
+  @override
+  String get panelOptionsJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelOptionsJsonPathHint => 'state';
+
+  @override
+  String get panelOptionsJsonPathHelper =>
+      'שדה בעומס המתקבל המכיל את הערך הנוכחי';
+
+  @override
+  String get panelOptionsHeader => 'אפשרויות';
+
+  @override
+  String get panelOptionsLabel => 'תווית';
+
+  @override
+  String get panelOptionsPayload => 'עומס';
+
+  @override
+  String get panelOptionsMatch => 'התאמה (ערך נוכחי)';
+
+  @override
+  String get panelOptionsAdd => 'הוספת אפשרות';
+
+  @override
+  String get panelCoverDescription =>
+      'כפתורי פתיחה / עצירה / סגירה בתוספת שורת גישות מיקום. משתמש בעומסי תריס Z2M סטנדרטיים (state ו-position).';
+
+  @override
+  String get panelCoverPresets => 'גישות מיקום';
+
+  @override
+  String get panelCoverPresetsHint => '0, 25, 50, 100';
+
+  @override
+  String get panelCoverPresetsHelper =>
+      'אחוזים מופרדים בפסיק (0–100). ריק = ללא שורת גישות.';
+
+  @override
+  String get panelCoverShowSlider => 'הצגת מחוון מיקום';
+
+  @override
+  String get panelTextInputHint => 'רמז (לא חובה)';
+
+  @override
+  String get panelTextInputHintHint => 'הקלד ערך…';
+
+  @override
+  String get panelTextInputTemplate => 'תבנית';
+
+  @override
+  String get panelTextInputTemplateHelper =>
+      'השתמש במילה value כ-placeholder — היא מוחלפת בטקסט שהוקלד. ברירת מחדל מפרסמת את הטקסט הגולמי.';
+
+  @override
+  String get panelTextInputClearAfterSend => 'נקה לאחר שליחה';
+
+  @override
+  String get panelTextLogMaxLines => 'מספר שורות מקסימלי';
+
+  @override
+  String get panelTextLogMaxLinesHelper => 'כמה הודעות אחרונות לשמור';
+
+  @override
+  String get panelTextLogJsonPath => 'נתיב JSON (לא חובה)';
+
+  @override
+  String get panelTextLogJsonPathHelper => 'רישום שדה זה בלבד במקום כל העומס';
+
+  @override
+  String get panelScheduleDescription =>
+      'פועל ב-SMHUB דרך Node-RED — מופעל גם כשהטלפון כבוי. נושא הפרסום למעלה הוא יעד פקודת התריס.';
+
+  @override
+  String get panelScheduleOpenTime => 'זמן פתיחה';
+
+  @override
+  String get panelScheduleCloseTime => 'זמן סגירה';
+
+  @override
+  String get panelScheduleOpenPayload => 'עומס פתיחה';
+
+  @override
+  String get panelScheduleClosePayload => 'עומס סגירה';
+
+  @override
+  String get panelScheduleEnabled => 'מופעל';
+
+  @override
+  String get panelScheduleSavedOffline =>
+      'נשמר — אין חיבור; לוח הזמנים יסונכרן בעת החיבור.';
+
+  @override
+  String get panelTileEdit => 'עריכת פאנל';
+
+  @override
+  String get panelTileDuplicate => 'שכפול פאנל';
+
+  @override
+  String get panelTileMoveUp => 'הזזה למעלה';
+
+  @override
+  String get panelTileMoveDown => 'הזזה למטה';
+
+  @override
+  String get panelTileWidth => 'רוחב';
+
+  @override
+  String get panelTileWidthFull => 'מלא';
+
+  @override
+  String get panelTileWidthHalf => 'חצי';
+
+  @override
+  String get panelTileWidthThird => '⅓';
+
+  @override
+  String get panelTileDelete => 'מחיקת פאנל';
 }

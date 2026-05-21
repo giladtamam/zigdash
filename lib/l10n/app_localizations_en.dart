@@ -368,4 +368,351 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashDeleteConfirm => 'Delete';
+
+  @override
+  String panelFormNew(Object type) {
+    return 'New $type';
+  }
+
+  @override
+  String panelFormEdit(Object type) {
+    return 'Edit $type';
+  }
+
+  @override
+  String get panelTypeButton => 'Button';
+
+  @override
+  String get panelTypeToggle => 'Toggle';
+
+  @override
+  String get panelTypeSlider => 'Slider';
+
+  @override
+  String get panelTypeLed => 'LED';
+
+  @override
+  String get panelTypeNodeStatus => 'Node Status';
+
+  @override
+  String get panelTypeProgress => 'Progress';
+
+  @override
+  String get panelTypeMultiState => 'Multi-State';
+
+  @override
+  String get panelTypeCombo => 'Combo';
+
+  @override
+  String get panelTypeRadio => 'Radio';
+
+  @override
+  String get panelTypeCover => 'Cover';
+
+  @override
+  String get panelTypeTextInput => 'Text Input';
+
+  @override
+  String get panelTypeTextLog => 'Text Log';
+
+  @override
+  String get panelTypeSchedule => 'Schedule';
+
+  @override
+  String get panelFormName => 'Name';
+
+  @override
+  String panelFormDashboardPrefix(Object prefix) {
+    return 'Dashboard prefix: $prefix/ (used unless overridden below)';
+  }
+
+  @override
+  String get panelFormTopicPrefixOverride => 'Topic prefix override (optional)';
+
+  @override
+  String get panelFormTopicPrefixOverrideHint => 'zigbee2mqtt/shutter';
+
+  @override
+  String get panelFormTopicPrefixOverrideHelper =>
+      'Use a different device on this dashboard. Blank = use dashboard prefix.';
+
+  @override
+  String get panelFormPublishTopic => 'Publish topic (suffix)';
+
+  @override
+  String get panelFormPublishTopicHint => 'set';
+
+  @override
+  String get panelFormPublishTopicHelper =>
+      'Appended to the effective prefix. Leave blank to publish at the prefix itself.';
+
+  @override
+  String get panelFormTopicSuffix => 'Topic (suffix)';
+
+  @override
+  String get panelFormSubscribeTopic => 'Subscribe topic (suffix, optional)';
+
+  @override
+  String get panelFormSubscribeTopicHelperReadOnly =>
+      'Appended to the dashboard prefix. Blank = subscribe to the prefix itself (Z2M state).';
+
+  @override
+  String get panelFormSubscribeTopicHelper =>
+      'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.';
+
+  @override
+  String get panelFormWidth => 'Width';
+
+  @override
+  String get panelFormWidthFull => 'Full';
+
+  @override
+  String get panelFormWidthHalf => 'Half';
+
+  @override
+  String get panelFormWidthThird => 'Third';
+
+  @override
+  String get panelFormQos => 'QoS';
+
+  @override
+  String get panelFormQos0 => '0 — at most once';
+
+  @override
+  String get panelFormQos1 => '1 — at least once';
+
+  @override
+  String get panelFormQos2 => '2 — exactly once';
+
+  @override
+  String get panelFormRetain => 'Retain';
+
+  @override
+  String get panelToggleOnPayload => 'On payload';
+
+  @override
+  String get panelToggleOffPayload => 'Off payload';
+
+  @override
+  String get panelToggleJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelToggleJsonPathHint => 'state';
+
+  @override
+  String get panelToggleOnMatch => 'On match';
+
+  @override
+  String get panelToggleOnMatchHelper =>
+      'Value at JSON path that means \"on\" (e.g. \"ON\")';
+
+  @override
+  String get panelSliderMin => 'Min';
+
+  @override
+  String get panelSliderMax => 'Max';
+
+  @override
+  String get panelSliderStep => 'Step';
+
+  @override
+  String get panelSliderTemplate => 'Value template';
+
+  @override
+  String get panelSliderTemplateHelper =>
+      'Use the word value as a placeholder — it is replaced with the slider value';
+
+  @override
+  String get panelSliderJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelSliderJsonPathHint => 'brightness';
+
+  @override
+  String get panelButtonPayload => 'Payload';
+
+  @override
+  String get panelLedJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelLedJsonPathHint => 'contact';
+
+  @override
+  String get panelLedJsonPathHelper =>
+      'e.g. \"contact\", \"occupancy\", \"water_leak\"';
+
+  @override
+  String get panelLedOnMatch => 'On match';
+
+  @override
+  String get panelLedOnMatchHelper =>
+      'Value at JSON path that lights the LED (e.g. \"true\", \"ON\")';
+
+  @override
+  String get panelLedOnLabel => 'On label (optional)';
+
+  @override
+  String get panelLedOnLabelHint => 'ON';
+
+  @override
+  String get panelLedOffLabel => 'Off label (optional)';
+
+  @override
+  String get panelLedOffLabelHint => 'OFF';
+
+  @override
+  String get panelNodeOnlinePayload => 'Online payload';
+
+  @override
+  String get panelNodeOnlinePayloadHelper =>
+      'Value that means \"online\" (Z2M default: \"online\")';
+
+  @override
+  String get panelNodeJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelNodeJsonPathHelper =>
+      'Leave blank for Z2M default (raw \"online\"/\"offline\" string)';
+
+  @override
+  String get panelProgressMin => 'Min';
+
+  @override
+  String get panelProgressMax => 'Max';
+
+  @override
+  String get panelProgressUnit => 'Unit';
+
+  @override
+  String get panelProgressUnitHint => '%';
+
+  @override
+  String get panelProgressJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelProgressJsonPathHint => 'battery';
+
+  @override
+  String get panelProgressJsonPathHelper => 'e.g. \"battery\", \"linkquality\"';
+
+  @override
+  String get panelOptionsJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelOptionsJsonPathHint => 'state';
+
+  @override
+  String get panelOptionsJsonPathHelper =>
+      'Field in the received payload that holds the current value';
+
+  @override
+  String get panelOptionsHeader => 'Options';
+
+  @override
+  String get panelOptionsLabel => 'Label';
+
+  @override
+  String get panelOptionsPayload => 'Payload';
+
+  @override
+  String get panelOptionsMatch => 'Match (current value)';
+
+  @override
+  String get panelOptionsAdd => 'Add option';
+
+  @override
+  String get panelCoverDescription =>
+      'OPEN / STOP / CLOSE buttons plus a row of position presets. Uses the standard Z2M cover payloads (state and position).';
+
+  @override
+  String get panelCoverPresets => 'Position presets';
+
+  @override
+  String get panelCoverPresetsHint => '0, 25, 50, 100';
+
+  @override
+  String get panelCoverPresetsHelper =>
+      'Comma-separated percentages (0–100). Blank = no preset row.';
+
+  @override
+  String get panelCoverShowSlider => 'Show position slider';
+
+  @override
+  String get panelTextInputHint => 'Hint (optional)';
+
+  @override
+  String get panelTextInputHintHint => 'Type a value…';
+
+  @override
+  String get panelTextInputTemplate => 'Template';
+
+  @override
+  String get panelTextInputTemplateHelper =>
+      'Use the word value as a placeholder — it is replaced with the typed text. Default publishes the raw text.';
+
+  @override
+  String get panelTextInputClearAfterSend => 'Clear after send';
+
+  @override
+  String get panelTextLogMaxLines => 'Max lines';
+
+  @override
+  String get panelTextLogMaxLinesHelper => 'How many recent messages to keep';
+
+  @override
+  String get panelTextLogJsonPath => 'JSON path (optional)';
+
+  @override
+  String get panelTextLogJsonPathHelper =>
+      'Log just this field instead of the whole payload';
+
+  @override
+  String get panelScheduleDescription =>
+      'Runs on the SMHUB via Node-RED — fires even when this phone is off. The Publish topic above is the shutter command target.';
+
+  @override
+  String get panelScheduleOpenTime => 'Open time';
+
+  @override
+  String get panelScheduleCloseTime => 'Close time';
+
+  @override
+  String get panelScheduleOpenPayload => 'Open payload';
+
+  @override
+  String get panelScheduleClosePayload => 'Close payload';
+
+  @override
+  String get panelScheduleEnabled => 'Enabled';
+
+  @override
+  String get panelScheduleSavedOffline =>
+      'Saved — not connected; schedule will sync when online.';
+
+  @override
+  String get panelTileEdit => 'Edit panel';
+
+  @override
+  String get panelTileDuplicate => 'Duplicate panel';
+
+  @override
+  String get panelTileMoveUp => 'Move up';
+
+  @override
+  String get panelTileMoveDown => 'Move down';
+
+  @override
+  String get panelTileWidth => 'Width';
+
+  @override
+  String get panelTileWidthFull => 'Full';
+
+  @override
+  String get panelTileWidthHalf => 'Half';
+
+  @override
+  String get panelTileWidthThird => '⅓';
+
+  @override
+  String get panelTileDelete => 'Delete panel';
 }
