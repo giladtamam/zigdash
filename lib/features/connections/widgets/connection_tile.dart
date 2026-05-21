@@ -36,7 +36,7 @@ class ConnectionTile extends ConsumerWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         color: Theme.of(context).colorScheme.errorContainer,
-        alignment: Alignment.centerRight,
+        alignment: AlignmentDirectional.centerEnd,
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onErrorContainer),
       ),

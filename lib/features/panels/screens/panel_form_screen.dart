@@ -985,7 +985,7 @@ class _State extends ConsumerState<PanelFormScreen> {
           ),
         ),
       Align(
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: TextButton.icon(
           icon: const Icon(Icons.add),
           label: Text(l10n.panelOptionsAdd),
