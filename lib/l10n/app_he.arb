@@ -252,11 +252,10 @@
   "panelCoverClose": "סגירה",
 
   "panelToggleNoState": "(אין מצב)",
-  "panelToggleOn": "פועל",
-  "panelToggleOff": "כבוי",
+  "panelToggleError": "שגיאה",
 
-  "panelLedOn": "פועל",
-  "panelLedOff": "כבוי",
+  "panelStateOn": "פועל",
+  "panelStateOff": "כבוי",
 
   "panelNodeStatusOnline": "מקוון",
   "panelNodeStatusOffline": "לא מקוון",
@@ -277,5 +276,6 @@
   "panelScheduleDisabled": "מושבת",
   "panelScheduleNext": "הבא: {action} בשעה {at}",
   "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
-  "panelScheduleNotConnected": "לא מחובר — נשמר; יסונכרן בעת החיבור."
+  "panelScheduleActionOpen": "פתיחה",
+  "panelScheduleActionClose": "סגירה"
 }

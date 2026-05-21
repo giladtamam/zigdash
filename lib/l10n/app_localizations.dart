@@ -1430,29 +1430,23 @@ abstract class AppLocalizations {
   /// **'(no state)'**
   String get panelToggleNoState;
 
-  /// No description provided for @panelToggleOn.
+  /// No description provided for @panelToggleError.
+  ///
+  /// In en, this message translates to:
+  /// **'err'**
+  String get panelToggleError;
+
+  /// No description provided for @panelStateOn.
   ///
   /// In en, this message translates to:
   /// **'ON'**
-  String get panelToggleOn;
+  String get panelStateOn;
 
-  /// No description provided for @panelToggleOff.
+  /// No description provided for @panelStateOff.
   ///
   /// In en, this message translates to:
   /// **'OFF'**
-  String get panelToggleOff;
-
-  /// No description provided for @panelLedOn.
-  ///
-  /// In en, this message translates to:
-  /// **'ON'**
-  String get panelLedOn;
-
-  /// No description provided for @panelLedOff.
-  ///
-  /// In en, this message translates to:
-  /// **'OFF'**
-  String get panelLedOff;
+  String get panelStateOff;
 
   /// No description provided for @panelNodeStatusOnline.
   ///
@@ -1526,11 +1520,17 @@ abstract class AppLocalizations {
   /// **'Next: {action} at {at}'**
   String panelScheduleNext(Object action, Object at);
 
-  /// No description provided for @panelScheduleNotConnected.
+  /// No description provided for @panelScheduleActionOpen.
   ///
   /// In en, this message translates to:
-  /// **'Not connected — saved; will sync when online.'**
-  String get panelScheduleNotConnected;
+  /// **'open'**
+  String get panelScheduleActionOpen;
+
+  /// No description provided for @panelScheduleActionClose.
+  ///
+  /// In en, this message translates to:
+  /// **'close'**
+  String get panelScheduleActionClose;
 }
 
 class _AppLocalizationsDelegate

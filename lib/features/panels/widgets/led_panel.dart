@@ -51,8 +51,8 @@ class LedPanel extends ConsumerWidget {
     final stateLabel = !hasValue
         ? '…'
         : (isOn
-            ? (config.onLabel ?? context.l10n.panelLedOn)
-            : (config.offLabel ?? context.l10n.panelLedOff));
+            ? (config.onLabel ?? context.l10n.panelStateOn)
+            : (config.offLabel ?? context.l10n.panelStateOff));
 
     return Card(
       child: Padding(

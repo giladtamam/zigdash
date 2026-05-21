@@ -74,10 +74,10 @@ class TogglePanel extends ConsumerWidget {
                     Text(
                       valueAsync.when(
                         loading: () => '…',
-                        error: (_, __) => '…',
+                        error: (_, __) => context.l10n.panelToggleError,
                         data: (v) => v == null
                             ? context.l10n.panelToggleNoState
-                            : (isOn ? context.l10n.panelToggleOn : context.l10n.panelToggleOff),
+                            : (isOn ? context.l10n.panelStateOn : context.l10n.panelStateOff),
                       ),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.outline,

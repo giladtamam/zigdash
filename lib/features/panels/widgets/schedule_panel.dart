@@ -61,7 +61,7 @@ class _SchedulePanelState extends ConsumerState<SchedulePanel> {
               );
       if (!ok && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(context.l10n.panelScheduleNotConnected),
+          content: Text(context.l10n.panelScheduleSavedOffline),
         ));
       }
     } finally {
@@ -142,7 +142,15 @@ class _SchedulePanelState extends ConsumerState<SchedulePanel> {
                 ),
               ])
             else if (config.enabled && nextAction != null && nextAt != null)
-              Text(context.l10n.panelScheduleNext(nextAction!, nextAt!),
+              Text(
+                  context.l10n.panelScheduleNext(
+                    nextAction == 'open'
+                        ? context.l10n.panelScheduleActionOpen
+                        : nextAction == 'close'
+                            ? context.l10n.panelScheduleActionClose
+                            : nextAction!,
+                    nextAt!,
+                  ),
                   style: TextStyle(color: scheme.outline, fontSize: 12))
             else if (!config.enabled)
               Text(context.l10n.panelScheduleDisabled,

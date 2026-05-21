@@ -724,16 +724,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get panelToggleNoState => '(אין מצב)';
 
   @override
-  String get panelToggleOn => 'פועל';
+  String get panelToggleError => 'שגיאה';
 
   @override
-  String get panelToggleOff => 'כבוי';
+  String get panelStateOn => 'פועל';
 
   @override
-  String get panelLedOn => 'פועל';
-
-  @override
-  String get panelLedOff => 'כבוי';
+  String get panelStateOff => 'כבוי';
 
   @override
   String get panelNodeStatusOnline => 'מקוון';
@@ -778,6 +775,8 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get panelScheduleNotConnected =>
-      'לא מחובר — נשמר; יסונכרן בעת החיבור.';
+  String get panelScheduleActionOpen => 'פתיחה';
+
+  @override
+  String get panelScheduleActionClose => 'סגירה';
 }

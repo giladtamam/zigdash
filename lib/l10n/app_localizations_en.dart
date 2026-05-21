@@ -729,16 +729,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panelToggleNoState => '(no state)';
 
   @override
-  String get panelToggleOn => 'ON';
+  String get panelToggleError => 'err';
 
   @override
-  String get panelToggleOff => 'OFF';
+  String get panelStateOn => 'ON';
 
   @override
-  String get panelLedOn => 'ON';
-
-  @override
-  String get panelLedOff => 'OFF';
+  String get panelStateOff => 'OFF';
 
   @override
   String get panelNodeStatusOnline => 'online';
@@ -783,6 +780,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get panelScheduleNotConnected =>
-      'Not connected — saved; will sync when online.';
+  String get panelScheduleActionOpen => 'open';
+
+  @override
+  String get panelScheduleActionClose => 'close';
 }

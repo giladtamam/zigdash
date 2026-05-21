@@ -252,11 +252,10 @@
   "panelCoverClose": "Close",
 
   "panelToggleNoState": "(no state)",
-  "panelToggleOn": "ON",
-  "panelToggleOff": "OFF",
+  "panelToggleError": "err",
 
-  "panelLedOn": "ON",
-  "panelLedOff": "OFF",
+  "panelStateOn": "ON",
+  "panelStateOff": "OFF",
 
   "panelNodeStatusOnline": "online",
   "panelNodeStatusOffline": "offline",
@@ -277,5 +276,6 @@
   "panelScheduleDisabled": "Disabled",
   "panelScheduleNext": "Next: {action} at {at}",
   "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
-  "panelScheduleNotConnected": "Not connected — saved; will sync when online."
+  "panelScheduleActionOpen": "open",
+  "panelScheduleActionClose": "close"
 }
