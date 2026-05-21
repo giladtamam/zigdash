@@ -47,12 +47,12 @@
     "type": "function",
     "z": "zigdash_sched_tab",
     "name": "ingest config",
-    "func": "// topic: zigdash/automation/schedule/<id>/config\nconst parts = msg.topic.split('/');\nconst id = parts[3];\nconst map = flow.get('schedules') || {};\nconst raw = msg.payload;\nconst empty = raw === undefined || raw === null ||\n    (typeof raw === 'string' && raw.trim() === '') ||\n    (Buffer.isBuffer(raw) && raw.length === 0);\nif (empty) {\n    delete map[id];                       // tombstone -> drop schedule\n} else {\n    const cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw))\n        ? raw\n        : JSON.parse(raw.toString());\n    map[id] = cfg;\n}\nflow.set('schedules', map);\nreturn null;",
+    "func": "// topic: zigdash/automation/schedule/<id>/config\nconst parts = msg.topic.split('/');\nconst id = parts[3];\nconst map = flow.get('schedules') || {};\nconst raw = msg.payload;\nconst empty = raw === undefined || raw === null ||\n    (typeof raw === 'string' && raw.trim() === '') ||\n    (Buffer.isBuffer(raw) && raw.length === 0);\nif (empty) {\n    delete map[id];                       // tombstone -> drop schedule\n} else {\n    const cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw))\n        ? raw\n        : JSON.parse(raw.toString());\n    map[id] = cfg;\n}\nflow.set('schedules', map);\nif (empty) {\n    // clear the retained state topic too, so a deleted schedule leaves no litter\n    return { topic: `zigdash/automation/schedule/${id}/state`, payload: '', retain: true };\n}\nreturn null;",
     "outputs": 1,
     "noerr": 0,
     "x": 400,
     "y": 80,
-    "wires": [[]]
+    "wires": [["zigdash_mqtt_out"]]
   },
   {
     "id": "zigdash_tick",
