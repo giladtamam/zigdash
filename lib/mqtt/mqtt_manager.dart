@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 import 'broker_config.dart';
 import 'client_factory.dart';
+import 'endpoint.dart';
 import 'mqtt_status.dart';
 import 'topic_matcher.dart';
 
@@ -67,6 +68,15 @@ class MqttManager {
 
   MqttStatus get status => _status.value;
 
+  final _endpoint = BehaviorSubject<MqttEndpoint?>.seeded(null);
+  Stream<MqttEndpoint?> get endpoint$ => _endpoint.stream;
+  MqttEndpoint? get activeEndpoint => _endpoint.valueOrNull;
+
+  void _emitEndpoint(MqttEndpoint? e) {
+    if (_disposed || _endpoint.isClosed) return;
+    _endpoint.add(e);
+  }
+
   final Map<String, _SubEntry> _subs = {};
 
   // Guarded status emit. After [dispose] every call becomes a no-op so a
@@ -82,54 +92,57 @@ class MqttManager {
     _userInitiatedDisconnect = false;
     if (_status.value == MqttStatus.connecting || _status.value == MqttStatus.connected) return;
     _emit(MqttStatus.connecting);
+    _emitEndpoint(null);
 
-    final mc.MqttClient client;
-    try {
-      client = _buildClient();
-    } on UnsupportedError {
-      // Configuration mismatch (e.g. TCP requested in a browser) — not
-      // transient. Park at error and stop here; reconnect won't help.
-      _emit(MqttStatus.error);
-      return;
-    } catch (_) {
-      _emit(MqttStatus.error);
-      _scheduleReconnect();
+    for (final cand in endpointCandidates(config)) {
+      final mc.MqttClient client;
+      try {
+        client = _buildClient(cand.host, cand.timeoutMs);
+      } on UnsupportedError {
+        // Configuration mismatch (e.g. TCP requested in a browser) — not
+        // transient, and the fallback host shares the same protocol, so abort
+        // entirely without scheduling a reconnect.
+        _emit(MqttStatus.error);
+        return;
+      } catch (_) {
+        continue; // transient build failure — try the next candidate
+      }
+      if (_disposed) {
+        client.disconnect();
+        return;
+      }
+      _client = client;
+
+      try {
+        await client.connect(config.username, password);
+      } on Exception {
+        client.disconnect();
+        continue; // unreachable / refused — try the next candidate
+      }
+      if (_disposed) {
+        client.disconnect();
+        return;
+      }
+      if (client.connectionStatus?.state != mc.MqttConnectionState.connected) {
+        client.disconnect();
+        continue;
+      }
+
+      // Connected on this candidate.
+      _emitEndpoint(cand.kind);
+      _backoffMs = _initialBackoffMs;
+      await _updatesSub?.cancel();
+      _updatesSub = client.updates?.listen(_onUpdates);
+      for (final pattern in _subs.keys) {
+        client.subscribe(pattern, mc.MqttQos.atLeastOnce);
+      }
+      _emit(MqttStatus.connected);
       return;
     }
-    if (_disposed) {
-      client.disconnect();
-      return;
-    }
-    _client = client;
 
-    try {
-      await client.connect(config.username, password);
-    } on Exception {
-      _emit(MqttStatus.error);
-      _scheduleReconnect();
-      return;
-    }
-    if (_disposed) {
-      client.disconnect();
-      return;
-    }
-
-    if (client.connectionStatus?.state != mc.MqttConnectionState.connected) {
-      _emit(MqttStatus.error);
-      _scheduleReconnect();
-      return;
-    }
-
-    _backoffMs = _initialBackoffMs;
-    await _updatesSub?.cancel();
-    _updatesSub = client.updates?.listen(_onUpdates);
-
-    // Re-subscribe to anything we had before (e.g., after a reconnect).
-    for (final pattern in _subs.keys) {
-      client.subscribe(pattern, mc.MqttQos.atLeastOnce);
-    }
-
-    _emit(MqttStatus.connected);
+    // All candidates failed.
+    _emit(MqttStatus.error);
+    _scheduleReconnect();
   }
 
   void disconnect() {
@@ -140,6 +153,7 @@ class MqttManager {
     _updatesSub = null;
     _client?.disconnect();
     _client = null;
+    _emitEndpoint(null);
     _emit(MqttStatus.disconnected);
   }
 
@@ -150,6 +164,7 @@ class MqttManager {
       await e.subject.close();
     }
     _subs.clear();
+    await _endpoint.close();
     await _status.close();
   }
 
@@ -216,14 +231,14 @@ class MqttManager {
     }
   }
 
-  mc.MqttClient _buildClient() {
-    final client = buildMqttClient(config, _clientId);
+  mc.MqttClient _buildClient(String host, int timeoutMs) {
+    final client = buildMqttClient(config, _clientId, host: host);
     client.logging(on: false);
     // Stay on mqtt_client's default protocol (MQTT 3.1, ProtocolName=MQIsdp).
     // The Mosquitto build on SMLIGHT SMHUB silently disconnects 3.1.1
     // CONNECT packets with "protocol error" — even though they're spec-valid.
     client.keepAlivePeriod = config.keepAliveSeconds;
-    client.connectTimeoutPeriod = 5000; // ms; default is too short, CONNACK never lands
+    client.connectTimeoutPeriod = timeoutMs; // ms; per-candidate (LAN probe vs standard)
     client.autoReconnect = false; // we manage reconnects ourselves
     client.onDisconnected = _onDisconnected;
     client.connectionMessage = mc.MqttConnectMessage()
