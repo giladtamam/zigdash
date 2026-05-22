@@ -113,8 +113,8 @@ By default ZigDash reaches your broker over the LAN, so it only works at home.
 To control your home while away, add a **remote host** using
 [Tailscale](https://tailscale.com) (a free, encrypted mesh VPN):
 
-1. Install Tailscale on your **hub/broker** and on your **phone**, signed into the same account; enable **MagicDNS**.
-2. In ZigDash, edit the connection → **Advanced** → **Remote host (Tailscale)** → enter the hub's Tailscale name (e.g. `smhub.tailnet-xxxx.ts.net`). Leave **Local host** as your LAN address.
+1. Install Tailscale on your **hub/broker** and on your **phone**, signed into the same account. Note the hub's Tailscale IP (`tailscale ip -4`, e.g. `100.x.y.z`).
+2. In ZigDash, edit the connection → **Advanced** → **Remote host (Tailscale)** → enter the hub's **Tailscale IP** (e.g. `100.x.y.z`). Leave **Local host** as your LAN address. (Prefer the `100.x` IP over a `.ts.net` name — it's stable and needs no DNS, which avoids MagicDNS-resolution issues in apps.)
 
 ZigDash is **local‑first**: it tries the LAN first (instant, no VPN overhead at
 home) and automatically falls back to the Tailscale address when you're away. The

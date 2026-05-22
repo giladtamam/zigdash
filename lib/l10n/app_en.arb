@@ -30,7 +30,7 @@
   "connHostHint": "192.168.1.10",
   "connLocalHost": "Local host",
   "connRemoteHost": "Remote host (Tailscale)",
-  "connRemoteHostHint": "Used when the local host can't be reached, e.g. smhub.tailnet.ts.net",
+  "connRemoteHostHint": "Used when the local host can't be reached. Prefer the hub's Tailscale IP, e.g. 100.x.y.z",
   "connPort": "Port",
   "connPortRange": "1–65535",
   "connUsernameOptional": "Username (optional)",

@@ -101,7 +101,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get connRemoteHostHint =>
-      'בשימוש כשהמארח המקומי אינו זמין, למשל smhub.tailnet.ts.net';
+      'בשימוש כשהמארח המקומי אינו זמין. עדיף כתובת ה-Tailscale של הרכזת, למשל 100.x.y.z';
 
   @override
   String get connPort => 'פורט';

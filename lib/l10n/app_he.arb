@@ -30,7 +30,7 @@
   "connHostHint": "192.168.1.10",
   "connLocalHost": "מארח מקומי",
   "connRemoteHost": "מארח מרוחק (Tailscale)",
-  "connRemoteHostHint": "בשימוש כשהמארח המקומי אינו זמין, למשל smhub.tailnet.ts.net",
+  "connRemoteHostHint": "בשימוש כשהמארח המקומי אינו זמין. עדיף כתובת ה-Tailscale של הרכזת, למשל 100.x.y.z",
   "connPort": "פורט",
   "connPortRange": "1–65535",
   "connUsernameOptional": "שם משתמש (לא חובה)",

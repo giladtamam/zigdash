@@ -101,7 +101,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connRemoteHostHint =>
-      'Used when the local host can\'t be reached, e.g. smhub.tailnet.ts.net';
+      'Used when the local host can\'t be reached. Prefer the hub\'s Tailscale IP, e.g. 100.x.y.z';
 
   @override
   String get connPort => 'Port';

@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @connRemoteHostHint.
   ///
   /// In en, this message translates to:
-  /// **'Used when the local host can\'t be reached, e.g. smhub.tailnet.ts.net'**
+  /// **'Used when the local host can\'t be reached. Prefer the hub\'s Tailscale IP, e.g. 100.x.y.z'**
   String get connRemoteHostHint;
 
   /// No description provided for @connPort.

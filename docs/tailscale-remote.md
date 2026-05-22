@@ -9,13 +9,17 @@ uses the LAN address at home and falls back to the Tailscale address when away.
     curl -fsSL https://tailscale.com/install.sh | sh
     sudo tailscale up
 
-Sign in with your account. Then in the Tailscale admin console
-(https://login.tailscale.com/admin/machines):
-- Enable **MagicDNS** (DNS tab) so the host gets a name.
-- Note the machine's name → e.g. `smhub.tailnet-xxxx.ts.net`.
+Sign in with your account. Then note the hub's **Tailscale IP** (recommended —
+it's stable and needs no DNS):
+
+    tailscale ip -4      # e.g. 100.x.y.z
+
+(You can also use a MagicDNS name like `smhub.tailnet-xxxx.ts.net`, but only if
+you **enable MagicDNS** in the admin console DNS tab — and some phones don't
+resolve MagicDNS names inside apps. The `100.x` IP avoids all of that.)
 
 The Mosquitto broker already listens on `0.0.0.0:1883`, so no broker change is
-needed — it's reachable on the Tailscale IP/name automatically.
+needed — it's reachable on the Tailscale IP automatically.
 
 ## 2. Install Tailscale on the phone
 
@@ -25,8 +29,11 @@ running (it sits idle until needed).
 ## 3. Configure ZigDash
 
 Edit the connection → **Advanced** → **Remote host (Tailscale)** → enter the
-MagicDNS name (e.g. `smhub.tailnet-xxxx.ts.net`). Leave Local host as your LAN
-address (e.g. `192.168.7.210`). Port, protocol, and credentials are shared.
+hub's **Tailscale IP** (e.g. `100.x.y.z`). Leave Local host as your LAN address
+(e.g. `192.168.7.210`). Port, protocol, and credentials are shared.
+
+> Tip: prefer the `100.x` IP over a `.ts.net` name — it's stable and needs no
+> DNS, so it works even when MagicDNS isn't resolving inside the app.
 
 Now ZigDash tries the LAN first (instant at home) and falls back to Tailscale
 when you're away. The status chip shows **Connected · Remote** when on the
