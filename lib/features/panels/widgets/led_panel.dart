@@ -59,21 +59,25 @@ class LedPanel extends ConsumerWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: dotColor,
-                shape: BoxShape.circle,
-                boxShadow: isOn && hasValue
-                    ? [
-                        BoxShadow(
-                          color: dotColor.withValues(alpha: 0.6),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        ),
-                      ]
-                    : null,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Container(
+                key: ValueKey(isOn),
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: dotColor,
+                  shape: BoxShape.circle,
+                  boxShadow: isOn && hasValue
+                      ? [
+                          BoxShadow(
+                            color: dotColor.withValues(alpha: 0.6),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                          ),
+                        ]
+                      : null,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -86,11 +90,15 @@ class LedPanel extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
-                  Text(
-                    stateLabel,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Text(
+                      stateLabel,
+                      key: ValueKey(stateLabel),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
+                    ),
                   ),
                 ],
               ),

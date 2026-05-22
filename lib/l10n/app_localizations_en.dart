@@ -803,6 +803,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'No panels yet.\nTap + to add a Toggle, Slider, or Button.';
 
   @override
+  String get panelsOffline => 'Offline — showing last values';
+
+  @override
   String get settingsAbout => 'About';
 
   @override

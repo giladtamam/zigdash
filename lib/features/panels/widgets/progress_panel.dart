@@ -60,19 +60,29 @@ class ProgressPanel extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ),
-                Text(
-                  valueLabel,
-                  style: Theme.of(context).textTheme.titleMedium,
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Text(
+                    valueLabel,
+                    key: ValueKey(valueLabel),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: fraction,
-                minHeight: 8,
-              ),
+            TweenAnimationBuilder<double>(
+              tween: Tween<double>(end: fraction ?? 0.0),
+              duration: const Duration(milliseconds: 200),
+              builder: (context, animatedFraction, _) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: fraction == null ? null : animatedFraction,
+                    minHeight: 8,
+                  ),
+                );
+              },
             ),
           ],
         ),

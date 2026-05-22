@@ -1562,6 +1562,12 @@ abstract class AppLocalizations {
   /// **'No panels yet.\nTap + to add a Toggle, Slider, or Button.'**
   String get panelGridEmpty;
 
+  /// No description provided for @panelsOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline — showing last values'**
+  String get panelsOffline;
+
   /// No description provided for @settingsAbout.
   ///
   /// In en, this message translates to:

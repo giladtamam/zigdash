@@ -798,6 +798,9 @@ class AppLocalizationsHe extends AppLocalizations {
       'אין עדיין פאנלים.\nהקש + כדי להוסיף מתג, מחוון או כפתור.';
 
   @override
+  String get panelsOffline => 'לא מקוון — מוצגים הערכים האחרונים';
+
+  @override
   String get settingsAbout => 'אודות';
 
   @override

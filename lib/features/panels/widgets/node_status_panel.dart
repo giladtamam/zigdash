@@ -46,7 +46,10 @@ class NodeStatusPanel extends ConsumerWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            Icon(icon, color: color, size: 28),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(icon, key: ValueKey(icon), color: color, size: 28),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -57,12 +60,16 @@ class NodeStatusPanel extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
-                  Text(
-                    label,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: color,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Text(
+                      label,
+                      key: ValueKey(label),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: color,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
                   ),
                 ],
               ),

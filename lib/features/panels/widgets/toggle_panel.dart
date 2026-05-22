@@ -70,17 +70,21 @@ class TogglePanel extends ConsumerWidget {
                         style: Theme.of(context).textTheme.bodyMedium,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
-                    Text(
-                      valueAsync.when(
-                        loading: () => '…',
-                        error: (_, __) => context.l10n.panelToggleError,
-                        data: (v) => v == null
-                            ? context.l10n.panelToggleNoState
-                            : (isOn ? context.l10n.panelStateOn : context.l10n.panelStateOff),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: Text(
+                        valueAsync.when(
+                          loading: () => '…',
+                          error: (_, __) => context.l10n.panelToggleError,
+                          data: (v) => v == null
+                              ? context.l10n.panelToggleNoState
+                              : (isOn ? context.l10n.panelStateOn : context.l10n.panelStateOff),
+                        ),
+                        key: ValueKey(isOn),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
                       ),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
                     ),
                   ],
                 ),
