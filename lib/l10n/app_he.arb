@@ -285,5 +285,13 @@
   "panelGridEmpty": "אין עדיין פאנלים.\nהקש + כדי להוסיף מתג, מחוון או כפתור.",
 
   "settingsAbout": "אודות",
-  "settingsHelp": "עזרה ומדריך"
+  "settingsHelp": "עזרה ומדריך",
+
+  "a11yBackupMenu": "גיבוי ושחזור",
+  "a11ySelectColor": "בחירת צבע",
+  "a11ySelectIcon": "בחירת אייקון",
+  "a11yDeleteOption": "מחיקת אפשרות",
+  "a11yPanelOptions": "אפשרויות פאנל",
+  "a11yMoreOptions": "אפשרויות נוספות",
+  "a11yDeleteConnection": "מחיקת חיבור"
 }

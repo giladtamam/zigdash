@@ -802,4 +802,25 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get settingsHelp => 'עזרה ומדריך';
+
+  @override
+  String get a11yBackupMenu => 'גיבוי ושחזור';
+
+  @override
+  String get a11ySelectColor => 'בחירת צבע';
+
+  @override
+  String get a11ySelectIcon => 'בחירת אייקון';
+
+  @override
+  String get a11yDeleteOption => 'מחיקת אפשרות';
+
+  @override
+  String get a11yPanelOptions => 'אפשרויות פאנל';
+
+  @override
+  String get a11yMoreOptions => 'אפשרויות נוספות';
+
+  @override
+  String get a11yDeleteConnection => 'מחיקת חיבור';
 }

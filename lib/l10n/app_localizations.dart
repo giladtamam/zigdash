@@ -1573,6 +1573,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & Guide'**
   String get settingsHelp;
+
+  /// No description provided for @a11yBackupMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & restore'**
+  String get a11yBackupMenu;
+
+  /// No description provided for @a11ySelectColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select color'**
+  String get a11ySelectColor;
+
+  /// No description provided for @a11ySelectIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Select icon'**
+  String get a11ySelectIcon;
+
+  /// No description provided for @a11yDeleteOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete option'**
+  String get a11yDeleteOption;
+
+  /// No description provided for @a11yPanelOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Panel options'**
+  String get a11yPanelOptions;
+
+  /// No description provided for @a11yMoreOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get a11yMoreOptions;
+
+  /// No description provided for @a11yDeleteConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete connection'**
+  String get a11yDeleteConnection;
 }
 
 class _AppLocalizationsDelegate

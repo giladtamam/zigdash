@@ -304,6 +304,7 @@ class _BackupMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<String>(
+      tooltip: context.l10n.a11yBackupMenu,
       onSelected: (v) {
         if (v == 'export') _export(context, ref);
         if (v == 'import') _import(context, ref);

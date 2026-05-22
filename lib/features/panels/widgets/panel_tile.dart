@@ -230,9 +230,13 @@ class PanelTile extends ConsumerWidget {
         ),
     };
 
-    return GestureDetector(
-      onLongPress: locked ? null : () => _openOptions(context, ref),
-      child: widget,
+    return Semantics(
+      label: locked ? null : context.l10n.a11yPanelOptions,
+      button: !locked,
+      child: GestureDetector(
+        onLongPress: locked ? null : () => _openOptions(context, ref),
+        child: widget,
+      ),
     );
   }
 }

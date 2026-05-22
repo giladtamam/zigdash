@@ -40,13 +40,18 @@ class StatusBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(color: _colors[status], shape: BoxShape.circle),
+        Semantics(
+          label: _label(context),
+          child: Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(color: _colors[status], shape: BoxShape.circle),
+          ),
         ),
         const SizedBox(width: 6),
-        Text(_label(context), style: Theme.of(context).textTheme.bodySmall),
+        ExcludeSemantics(
+          child: Text(_label(context), style: Theme.of(context).textTheme.bodySmall),
+        ),
       ],
     );
   }

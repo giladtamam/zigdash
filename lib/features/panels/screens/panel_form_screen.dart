@@ -976,6 +976,7 @@ class _State extends ConsumerState<PanelFormScreen> {
                 ),
               ),
               IconButton(
+                tooltip: l10n.a11yDeleteOption,
                 icon: const Icon(Icons.remove_circle_outline),
                 onPressed: () => setState(() {
                   _optionRows.removeAt(i).dispose();

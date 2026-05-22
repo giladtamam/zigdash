@@ -41,11 +41,14 @@ class ConnectionTile extends ConsumerWidget {
     return Dismissible(
       key: ValueKey(connection.id),
       direction: DismissDirection.endToStart,
-      background: Container(
-        color: Theme.of(context).colorScheme.errorContainer,
-        alignment: AlignmentDirectional.centerEnd,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onErrorContainer),
+      background: Semantics(
+        label: context.l10n.a11yDeleteConnection,
+        child: Container(
+          color: Theme.of(context).colorScheme.errorContainer,
+          alignment: AlignmentDirectional.centerEnd,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onErrorContainer),
+        ),
       ),
       confirmDismiss: (_) => showDialog<bool>(
         context: context,
@@ -69,6 +72,7 @@ class ConnectionTile extends ConsumerWidget {
             StatusBadge(status: status, endpoint: endpoint),
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
+              tooltip: context.l10n.a11yMoreOptions,
               onSelected: (v) {
                 if (v == 'edit') onEdit();
                 if (v == 'delete') onDelete();

@@ -155,16 +155,21 @@ class _State extends ConsumerState<DashboardFormScreen> {
               spacing: 8,
               children: _swatches.map((c) {
                 final selected = c.toARGB32() == _color.toARGB32();
-                return GestureDetector(
-                  onTap: () => setState(() => _color = c),
-                  child: Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(
-                      color: c,
-                      shape: BoxShape.circle,
-                      border: selected
-                          ? Border.all(color: Theme.of(context).colorScheme.outline, width: 3)
-                          : null,
+                return Semantics(
+                  label: context.l10n.a11ySelectColor,
+                  button: true,
+                  selected: selected,
+                  child: GestureDetector(
+                    onTap: () => setState(() => _color = c),
+                    child: Container(
+                      width: 40, height: 40,
+                      decoration: BoxDecoration(
+                        color: c,
+                        shape: BoxShape.circle,
+                        border: selected
+                            ? Border.all(color: Theme.of(context).colorScheme.outline, width: 3)
+                            : null,
+                      ),
                     ),
                   ),
                 );
@@ -177,17 +182,22 @@ class _State extends ConsumerState<DashboardFormScreen> {
               spacing: 8,
               children: _icons.map((i) {
                 final selected = i.codePoint == _icon.codePoint;
-                return GestureDetector(
-                  onTap: () => setState(() => _icon = i),
-                  child: Container(
-                    width: 44, height: 44,
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : Theme.of(context).colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(8),
+                return Semantics(
+                  label: context.l10n.a11ySelectIcon,
+                  button: true,
+                  selected: selected,
+                  child: GestureDetector(
+                    onTap: () => setState(() => _icon = i),
+                    child: Container(
+                      width: 44, height: 44,
+                      decoration: BoxDecoration(
+                        color: selected
+                            ? Theme.of(context).colorScheme.primaryContainer
+                            : Theme.of(context).colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(i),
                     ),
-                    child: Icon(i),
                   ),
                 );
               }).toList(),

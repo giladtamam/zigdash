@@ -807,4 +807,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsHelp => 'Help & Guide';
+
+  @override
+  String get a11yBackupMenu => 'Backup & restore';
+
+  @override
+  String get a11ySelectColor => 'Select color';
+
+  @override
+  String get a11ySelectIcon => 'Select icon';
+
+  @override
+  String get a11yDeleteOption => 'Delete option';
+
+  @override
+  String get a11yPanelOptions => 'Panel options';
+
+  @override
+  String get a11yMoreOptions => 'More options';
+
+  @override
+  String get a11yDeleteConnection => 'Delete connection';
 }

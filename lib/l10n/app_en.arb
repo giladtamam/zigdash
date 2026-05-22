@@ -285,5 +285,13 @@
   "panelGridEmpty": "No panels yet.\nTap + to add a Toggle, Slider, or Button.",
 
   "settingsAbout": "About",
-  "settingsHelp": "Help & Guide"
+  "settingsHelp": "Help & Guide",
+
+  "a11yBackupMenu": "Backup & restore",
+  "a11ySelectColor": "Select color",
+  "a11ySelectIcon": "Select icon",
+  "a11yDeleteOption": "Delete option",
+  "a11yPanelOptions": "Panel options",
+  "a11yMoreOptions": "More options",
+  "a11yDeleteConnection": "Delete connection"
 }
