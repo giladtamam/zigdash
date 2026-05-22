@@ -5,7 +5,7 @@ import '../data/database/tables/connections.dart';
 import 'broker_config.dart';
 import 'client_factory.dart';
 
-mc.MqttClient buildPlatformClient(BrokerConfig config, String clientId) {
+mc.MqttClient buildPlatformClient(BrokerConfig config, String clientId, {String? host}) {
   if (!isWebSocketProtocol(config.protocol)) {
     throw UnsupportedError(
       'Browsers cannot open raw TCP. Choose WS or WSS protocol for web targets. '
@@ -14,7 +14,7 @@ mc.MqttClient buildPlatformClient(BrokerConfig config, String clientId) {
   }
   final scheme = config.protocol == MqttProtocol.wss ? 'wss' : 'ws';
   final client = MqttBrowserClient.withPort(
-    '$scheme://${config.host}',
+    '$scheme://${host ?? config.host}',
     clientId,
     config.port,
   );

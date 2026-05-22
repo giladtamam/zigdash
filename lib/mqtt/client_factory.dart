@@ -21,8 +21,8 @@ import 'client_factory_io.dart'
 ///
 /// On web, protocol must be ws/wss — the browser cannot open raw TCP sockets.
 /// Callers that pass TCP/TCP-SSL on web will get an [UnsupportedError].
-mc.MqttClient buildMqttClient(BrokerConfig config, String clientId) {
-  return impl.buildPlatformClient(config, clientId);
+mc.MqttClient buildMqttClient(BrokerConfig config, String clientId, {String? host}) {
+  return impl.buildPlatformClient(config, clientId, host: host);
 }
 
 bool isWebSocketProtocol(MqttProtocol p) =>
