@@ -25,6 +25,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   final _username = TextEditingController();
   final _password = TextEditingController();
   final _keepAlive = TextEditingController(text: '60');
+  final _remoteHost = TextEditingController();
 
   MqttProtocol _protocol = MqttProtocol.tcp;
   bool _autoConnect = false;
@@ -57,6 +58,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
       _username.text = c.username ?? '';
       _passwordExists = pw != null && pw.isNotEmpty;
       _keepAlive.text = c.keepAliveSeconds.toString();
+      _remoteHost.text = c.remoteHost ?? '';
       _autoConnect = c.autoConnect;
       _loaded = true;
     });
@@ -90,6 +92,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
           password: passwordToWrite,
           keepAliveSeconds: keepAlive,
           autoConnect: _autoConnect,
+          remoteHost: _remoteHost.text.trim().isEmpty ? null : _remoteHost.text.trim(),
         );
       } else {
         await repo.create(
@@ -101,6 +104,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
           password: _password.text.isEmpty ? null : _password.text,
           keepAliveSeconds: keepAlive,
           autoConnect: _autoConnect,
+          remoteHost: _remoteHost.text.trim().isEmpty ? null : _remoteHost.text.trim(),
         );
       }
       if (mounted) context.pop();
@@ -113,6 +117,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   void dispose() {
     _name.dispose();
     _host.dispose();
+    _remoteHost.dispose();
     _port.dispose();
     _username.dispose();
     _password.dispose();
@@ -154,7 +159,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                   flex: 3,
                   child: TextFormField(
                     controller: _host,
-                    decoration: InputDecoration(labelText: context.l10n.connHost, hintText: context.l10n.connHostHint),
+                    decoration: InputDecoration(labelText: context.l10n.connLocalHost, hintText: context.l10n.connHostHint),
                     validator: (v) => v == null || v.trim().isEmpty ? context.l10n.fieldRequired : null,
                   ),
                 ),
@@ -198,6 +203,14 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               tilePadding: EdgeInsets.zero,
               title: Text(context.l10n.advanced),
               children: [
+                TextFormField(
+                  controller: _remoteHost,
+                  decoration: InputDecoration(
+                    labelText: context.l10n.connRemoteHost,
+                    hintText: context.l10n.connRemoteHostHint,
+                  ),
+                ),
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _keepAlive,
                   keyboardType: TextInputType.number,

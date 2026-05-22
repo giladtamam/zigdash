@@ -94,6 +94,16 @@ class AppLocalizationsHe extends AppLocalizations {
   String get connHostHint => '192.168.1.10';
 
   @override
+  String get connLocalHost => 'מארח מקומי';
+
+  @override
+  String get connRemoteHost => 'מארח מרוחק (Tailscale)';
+
+  @override
+  String get connRemoteHostHint =>
+      'בשימוש כשהמארח המקומי אינו זמין, למשל smhub.tailnet.ts.net';
+
+  @override
   String get connPort => 'פורט';
 
   @override

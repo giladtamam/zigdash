@@ -260,6 +260,24 @@ abstract class AppLocalizations {
   /// **'192.168.1.10'**
   String get connHostHint;
 
+  /// No description provided for @connLocalHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Local host'**
+  String get connLocalHost;
+
+  /// No description provided for @connRemoteHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote host (Tailscale)'**
+  String get connRemoteHost;
+
+  /// No description provided for @connRemoteHostHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used when the local host can\'t be reached, e.g. smhub.tailnet.ts.net'**
+  String get connRemoteHostHint;
+
   /// No description provided for @connPort.
   ///
   /// In en, this message translates to:
