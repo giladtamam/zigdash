@@ -65,6 +65,7 @@ dev_dependencies:
   json_serializable: ^6.8.0
   image: ^4.8.0
   flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
 
 flutter:
   uses-material-design: true
@@ -84,3 +85,15 @@ flutter_launcher_icons:
     image_path: "assets/icon/icon.png"
     background_color: "#3B82F6"
     theme_color: "#3B82F6"
+
+# Native splash: `dart run flutter_native_splash:create`.
+# Brand background with the dashboard-tiles logo centered (light + dark same).
+flutter_native_splash:
+  color: "#3B82F6"
+  color_dark: "#3B82F6"
+  image: assets/icon/foreground.png
+  android_12:
+    color: "#3B82F6"
+    color_dark: "#3B82F6"
+    image: assets/icon/foreground.png
+  web: false
