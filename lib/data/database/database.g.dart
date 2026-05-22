@@ -107,6 +107,17 @@ class $ConnectionsTable extends Connections
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _remoteHostMeta = const VerificationMeta(
+    'remoteHost',
+  );
+  @override
+  late final GeneratedColumn<String> remoteHost = GeneratedColumn<String>(
+    'remote_host',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -140,6 +151,7 @@ class $ConnectionsTable extends Connections
     keepAliveSeconds,
     autoConnect,
     homeDashboardId,
+    remoteHost,
     createdAt,
     updatedAt,
   ];
@@ -217,6 +229,12 @@ class $ConnectionsTable extends Connections
         ),
       );
     }
+    if (data.containsKey('remote_host')) {
+      context.handle(
+        _remoteHostMeta,
+        remoteHost.isAcceptableOrUnknown(data['remote_host']!, _remoteHostMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -280,6 +298,10 @@ class $ConnectionsTable extends Connections
         DriftSqlType.string,
         data['${effectivePrefix}home_dashboard_id'],
       ),
+      remoteHost: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_host'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -310,6 +332,7 @@ class Connection extends DataClass implements Insertable<Connection> {
   final int keepAliveSeconds;
   final bool autoConnect;
   final String? homeDashboardId;
+  final String? remoteHost;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Connection({
@@ -322,6 +345,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     required this.keepAliveSeconds,
     required this.autoConnect,
     this.homeDashboardId,
+    this.remoteHost,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -345,6 +369,9 @@ class Connection extends DataClass implements Insertable<Connection> {
     if (!nullToAbsent || homeDashboardId != null) {
       map['home_dashboard_id'] = Variable<String>(homeDashboardId);
     }
+    if (!nullToAbsent || remoteHost != null) {
+      map['remote_host'] = Variable<String>(remoteHost);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -365,6 +392,9 @@ class Connection extends DataClass implements Insertable<Connection> {
       homeDashboardId: homeDashboardId == null && nullToAbsent
           ? const Value.absent()
           : Value(homeDashboardId),
+      remoteHost: remoteHost == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteHost),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -387,6 +417,7 @@ class Connection extends DataClass implements Insertable<Connection> {
       keepAliveSeconds: serializer.fromJson<int>(json['keepAliveSeconds']),
       autoConnect: serializer.fromJson<bool>(json['autoConnect']),
       homeDashboardId: serializer.fromJson<String?>(json['homeDashboardId']),
+      remoteHost: serializer.fromJson<String?>(json['remoteHost']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -406,6 +437,7 @@ class Connection extends DataClass implements Insertable<Connection> {
       'keepAliveSeconds': serializer.toJson<int>(keepAliveSeconds),
       'autoConnect': serializer.toJson<bool>(autoConnect),
       'homeDashboardId': serializer.toJson<String?>(homeDashboardId),
+      'remoteHost': serializer.toJson<String?>(remoteHost),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -421,6 +453,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     int? keepAliveSeconds,
     bool? autoConnect,
     Value<String?> homeDashboardId = const Value.absent(),
+    Value<String?> remoteHost = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Connection(
@@ -435,6 +468,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     homeDashboardId: homeDashboardId.present
         ? homeDashboardId.value
         : this.homeDashboardId,
+    remoteHost: remoteHost.present ? remoteHost.value : this.remoteHost,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -455,6 +489,9 @@ class Connection extends DataClass implements Insertable<Connection> {
       homeDashboardId: data.homeDashboardId.present
           ? data.homeDashboardId.value
           : this.homeDashboardId,
+      remoteHost: data.remoteHost.present
+          ? data.remoteHost.value
+          : this.remoteHost,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -472,6 +509,7 @@ class Connection extends DataClass implements Insertable<Connection> {
           ..write('keepAliveSeconds: $keepAliveSeconds, ')
           ..write('autoConnect: $autoConnect, ')
           ..write('homeDashboardId: $homeDashboardId, ')
+          ..write('remoteHost: $remoteHost, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -489,6 +527,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     keepAliveSeconds,
     autoConnect,
     homeDashboardId,
+    remoteHost,
     createdAt,
     updatedAt,
   );
@@ -505,6 +544,7 @@ class Connection extends DataClass implements Insertable<Connection> {
           other.keepAliveSeconds == this.keepAliveSeconds &&
           other.autoConnect == this.autoConnect &&
           other.homeDashboardId == this.homeDashboardId &&
+          other.remoteHost == this.remoteHost &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -519,6 +559,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
   final Value<int> keepAliveSeconds;
   final Value<bool> autoConnect;
   final Value<String?> homeDashboardId;
+  final Value<String?> remoteHost;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -532,6 +573,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     this.keepAliveSeconds = const Value.absent(),
     this.autoConnect = const Value.absent(),
     this.homeDashboardId = const Value.absent(),
+    this.remoteHost = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -546,6 +588,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     this.keepAliveSeconds = const Value.absent(),
     this.autoConnect = const Value.absent(),
     this.homeDashboardId = const Value.absent(),
+    this.remoteHost = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -566,6 +609,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     Expression<int>? keepAliveSeconds,
     Expression<bool>? autoConnect,
     Expression<String>? homeDashboardId,
+    Expression<String>? remoteHost,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -580,6 +624,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
       if (keepAliveSeconds != null) 'keep_alive_seconds': keepAliveSeconds,
       if (autoConnect != null) 'auto_connect': autoConnect,
       if (homeDashboardId != null) 'home_dashboard_id': homeDashboardId,
+      if (remoteHost != null) 'remote_host': remoteHost,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -596,6 +641,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     Value<int>? keepAliveSeconds,
     Value<bool>? autoConnect,
     Value<String?>? homeDashboardId,
+    Value<String?>? remoteHost,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -610,6 +656,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
       keepAliveSeconds: keepAliveSeconds ?? this.keepAliveSeconds,
       autoConnect: autoConnect ?? this.autoConnect,
       homeDashboardId: homeDashboardId ?? this.homeDashboardId,
+      remoteHost: remoteHost ?? this.remoteHost,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -648,6 +695,9 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     if (homeDashboardId.present) {
       map['home_dashboard_id'] = Variable<String>(homeDashboardId.value);
     }
+    if (remoteHost.present) {
+      map['remote_host'] = Variable<String>(remoteHost.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -672,6 +722,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
           ..write('keepAliveSeconds: $keepAliveSeconds, ')
           ..write('autoConnect: $autoConnect, ')
           ..write('homeDashboardId: $homeDashboardId, ')
+          ..write('remoteHost: $remoteHost, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -2225,6 +2276,7 @@ typedef $$ConnectionsTableCreateCompanionBuilder =
       Value<int> keepAliveSeconds,
       Value<bool> autoConnect,
       Value<String?> homeDashboardId,
+      Value<String?> remoteHost,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -2240,6 +2292,7 @@ typedef $$ConnectionsTableUpdateCompanionBuilder =
       Value<int> keepAliveSeconds,
       Value<bool> autoConnect,
       Value<String?> homeDashboardId,
+      Value<String?> remoteHost,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -2323,6 +2376,11 @@ class $$ConnectionsTableFilterComposer
 
   ColumnFilters<String> get homeDashboardId => $composableBuilder(
     column: $table.homeDashboardId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteHost => $composableBuilder(
+    column: $table.remoteHost,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2416,6 +2474,11 @@ class $$ConnectionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get remoteHost => $composableBuilder(
+    column: $table.remoteHost,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2466,6 +2529,11 @@ class $$ConnectionsTableAnnotationComposer
 
   GeneratedColumn<String> get homeDashboardId => $composableBuilder(
     column: $table.homeDashboardId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get remoteHost => $composableBuilder(
+    column: $table.remoteHost,
     builder: (column) => column,
   );
 
@@ -2538,6 +2606,7 @@ class $$ConnectionsTableTableManager
                 Value<int> keepAliveSeconds = const Value.absent(),
                 Value<bool> autoConnect = const Value.absent(),
                 Value<String?> homeDashboardId = const Value.absent(),
+                Value<String?> remoteHost = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -2551,6 +2620,7 @@ class $$ConnectionsTableTableManager
                 keepAliveSeconds: keepAliveSeconds,
                 autoConnect: autoConnect,
                 homeDashboardId: homeDashboardId,
+                remoteHost: remoteHost,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -2566,6 +2636,7 @@ class $$ConnectionsTableTableManager
                 Value<int> keepAliveSeconds = const Value.absent(),
                 Value<bool> autoConnect = const Value.absent(),
                 Value<String?> homeDashboardId = const Value.absent(),
+                Value<String?> remoteHost = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -2579,6 +2650,7 @@ class $$ConnectionsTableTableManager
                 keepAliveSeconds: keepAliveSeconds,
                 autoConnect: autoConnect,
                 homeDashboardId: homeDashboardId,
+                remoteHost: remoteHost,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

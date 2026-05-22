@@ -12,6 +12,7 @@ class Connections extends Table {
   IntColumn get keepAliveSeconds => integer().withDefault(const Constant(60))();
   BoolColumn get autoConnect => boolean().withDefault(const Constant(false))();
   TextColumn get homeDashboardId => text().nullable()();
+  TextColumn get remoteHost => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 
