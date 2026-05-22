@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/tables/panels.dart';
+import '../../../mqtt/json_path.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../discovery/models/device_panel_suggestion.dart';
@@ -139,9 +140,38 @@ class _State extends ConsumerState<PanelFormScreen> {
       _type == PanelType.textInput ||
       _type == PanelType.schedule;
 
+  /// Returns the json-path text for the current panel type, or '' for types
+  /// without a json-path field (button, textInput, cover, schedule).
+  String get _currentJsonPath => switch (_type) {
+        PanelType.toggle => _toggleJsonPath.text,
+        PanelType.slider => _sliderJsonPath.text,
+        PanelType.led => _ledJsonPath.text,
+        PanelType.nodeStatus => _nodeJsonPath.text,
+        PanelType.progress => _progressJsonPath.text,
+        PanelType.multiState ||
+        PanelType.combo ||
+        PanelType.radio =>
+          _optionsJsonPath.text,
+        PanelType.textLog => _textLogJsonPath.text,
+        _ => '',
+      };
+
+  late final VoidCallback _onTopicChanged;
+
   @override
   void initState() {
     super.initState();
+    _onTopicChanged = () => setState(() {});
+    _topic.addListener(_onTopicChanged);
+    _subscribeTopic.addListener(_onTopicChanged);
+    _topicPrefixOverride.addListener(_onTopicChanged);
+    _toggleJsonPath.addListener(_onTopicChanged);
+    _sliderJsonPath.addListener(_onTopicChanged);
+    _ledJsonPath.addListener(_onTopicChanged);
+    _nodeJsonPath.addListener(_onTopicChanged);
+    _progressJsonPath.addListener(_onTopicChanged);
+    _optionsJsonPath.addListener(_onTopicChanged);
+    _textLogJsonPath.addListener(_onTopicChanged);
     _type = widget.initialType ?? PanelType.toggle;
     _loadDashboardPrefix();
     if (_isEdit) {
@@ -535,7 +565,120 @@ class _State extends ConsumerState<PanelFormScreen> {
     for (final r in _optionRows) {
       r.dispose();
     }
+    _topic.removeListener(_onTopicChanged);
+    _subscribeTopic.removeListener(_onTopicChanged);
+    _topicPrefixOverride.removeListener(_onTopicChanged);
+    _toggleJsonPath.removeListener(_onTopicChanged);
+    _sliderJsonPath.removeListener(_onTopicChanged);
+    _ledJsonPath.removeListener(_onTopicChanged);
+    _nodeJsonPath.removeListener(_onTopicChanged);
+    _progressJsonPath.removeListener(_onTopicChanged);
+    _optionsJsonPath.removeListener(_onTopicChanged);
+    _textLogJsonPath.removeListener(_onTopicChanged);
     super.dispose();
+  }
+
+  Widget _buildLivePreview() {
+    final l10n = context.l10n;
+    final prefix = _topicPrefixHint ?? '';
+    final topic = effectiveSubscribeTopic(
+      dashboardPrefix: prefix,
+      prefixOverride: _topicPrefixOverride.text,
+      subscribeSuffix: _subscribeTopic.text,
+    );
+    if (topic.isEmpty) return const SizedBox.shrink();
+
+    final rawAsync = ref.watch(panelValueProvider(PanelStreamKey(
+      connectionId: widget.connectionId,
+      topic: topic,
+      jsonPath: null,
+    )));
+
+    final jsonPath = _currentJsonPath;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant,
+            width: 0.5,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.previewTitle,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(height: 6),
+              rawAsync.when(
+                data: (raw) {
+                  final rawStr = raw?.toString() ?? '';
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SelectableText(
+                        rawStr,
+                        style: const TextStyle(
+                            fontFamily: 'monospace', fontSize: 12),
+                        maxLines: 6,
+                      ),
+                      if (jsonPath.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Builder(builder: (_) {
+                          final extracted = rawStr.isNotEmpty
+                              ? extractByPath(rawStr, jsonPath)
+                              : null;
+                          return Text(
+                            extracted != null
+                                ? l10n.previewExtracted(
+                                    jsonPath, extracted.toString())
+                                : l10n.previewNoValue,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                  color: extracted != null
+                                      ? Theme.of(context).colorScheme.secondary
+                                      : Theme.of(context).colorScheme.error,
+                                  fontFamily: 'monospace',
+                                ),
+                          );
+                        }),
+                      ],
+                    ],
+                  );
+                },
+                loading: () => Text(
+                  l10n.previewWaiting(topic),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+                error: (_, __) => Text(
+                  l10n.previewWaiting(topic),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                        fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -628,6 +771,7 @@ class _State extends ConsumerState<PanelFormScreen> {
               ),
             ],
             const SizedBox(height: 16),
+            if (_loaded) _buildLivePreview(),
             ..._typeSpecificFields(),
             const SizedBox(height: 16),
             DropdownButtonFormField<PanelWidth>(
