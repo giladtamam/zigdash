@@ -11,6 +11,7 @@ class BrokerConfig {
     required this.protocol,
     this.username,
     this.keepAliveSeconds = 60,
+    this.remoteHost,
   });
 
   final String id;
@@ -19,4 +20,8 @@ class BrokerConfig {
   final MqttProtocol protocol;
   final String? username;
   final int keepAliveSeconds;
+
+  /// Optional fallback address (e.g. a Tailscale MagicDNS name) tried after
+  /// [host] is unreachable. Reuses [port], [protocol], and credentials.
+  final String? remoteHost;
 }
