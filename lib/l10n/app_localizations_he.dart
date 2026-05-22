@@ -823,4 +823,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get a11yDeleteConnection => 'מחיקת חיבור';
+
+  @override
+  String get controlNotConnected => 'לא מחובר — השינוי לא נשלח';
 }

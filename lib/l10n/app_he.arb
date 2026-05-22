@@ -293,5 +293,7 @@
   "a11yDeleteOption": "מחיקת אפשרות",
   "a11yPanelOptions": "אפשרויות פאנל",
   "a11yMoreOptions": "אפשרויות נוספות",
-  "a11yDeleteConnection": "מחיקת חיבור"
+  "a11yDeleteConnection": "מחיקת חיבור",
+
+  "controlNotConnected": "לא מחובר — השינוי לא נשלח"
 }

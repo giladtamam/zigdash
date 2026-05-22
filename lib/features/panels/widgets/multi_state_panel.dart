@@ -4,9 +4,9 @@ import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import 'control_action.dart';
 
 class MultiStatePanel extends ConsumerWidget {
   const MultiStatePanel({
@@ -24,15 +24,14 @@ class MultiStatePanel extends ConsumerWidget {
   final Panel panel;
   final OptionsConfig config;
 
-  Future<void> _publish(WidgetRef ref, SelectOption opt) async {
-    final mgr = await ref.read(mqttManagerProvider(connectionId).future);
-    mgr.publish(
+  Future<void> _publish(BuildContext context, WidgetRef ref, SelectOption opt) async {
+    await runControlAction(context, ref, connectionId, (mgr) => mgr.publish(
       publishTopic,
       opt.payload,
       '',
       qos: mc.MqttQos.values[panel.qos.clamp(0, 2)],
       retain: panel.retain,
-    );
+    ));
   }
 
   @override
@@ -84,7 +83,7 @@ class MultiStatePanel extends ConsumerWidget {
                     if (sel.isEmpty) return;
                     final opt = config.options
                         .firstWhere((o) => o.match == sel.first);
-                    _publish(ref, opt);
+                    _publish(context, ref, opt);
                   },
                 ),
               ),

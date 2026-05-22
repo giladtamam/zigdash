@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../data/database/database.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
+import 'control_action.dart';
 
 class ButtonPanel extends ConsumerWidget {
   const ButtonPanel({
@@ -20,15 +20,14 @@ class ButtonPanel extends ConsumerWidget {
   final Panel panel;
   final ButtonConfig config;
 
-  Future<void> _press(WidgetRef ref) async {
-    final mgr = await ref.read(mqttManagerProvider(connectionId).future);
-    mgr.publish(
+  Future<void> _press(BuildContext context, WidgetRef ref) async {
+    await runControlAction(context, ref, connectionId, (mgr) => mgr.publish(
       publishTopic,
       config.payload,
       '', // template carries the full payload, no {value} substitution
       qos: mc.MqttQos.values[panel.qos.clamp(0, 2)],
       retain: panel.retain,
-    );
+    ));
   }
 
   @override
@@ -37,7 +36,7 @@ class ButtonPanel extends ConsumerWidget {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () => _press(ref),
+        onTap: () => _press(context, ref),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(

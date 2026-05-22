@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../data/database/database.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import 'control_action.dart';
 
 class RadioPanel extends ConsumerWidget {
   const RadioPanel({
@@ -23,15 +23,14 @@ class RadioPanel extends ConsumerWidget {
   final Panel panel;
   final OptionsConfig config;
 
-  Future<void> _publish(WidgetRef ref, SelectOption opt) async {
-    final mgr = await ref.read(mqttManagerProvider(connectionId).future);
-    mgr.publish(
+  Future<void> _publish(BuildContext context, WidgetRef ref, SelectOption opt) async {
+    await runControlAction(context, ref, connectionId, (mgr) => mgr.publish(
       publishTopic,
       opt.payload,
       '',
       qos: mc.MqttQos.values[panel.qos.clamp(0, 2)],
       retain: panel.retain,
-    );
+    ));
   }
 
   @override
@@ -65,7 +64,7 @@ class RadioPanel extends ConsumerWidget {
                 title: Text(o.label),
                 value: o.match,
                 groupValue: current,
-                onChanged: (_) => _publish(ref, o),
+                onChanged: (_) => _publish(context, ref, o),
               ),
           ],
         ),

@@ -7,9 +7,9 @@ import 'package:mqtt_client/mqtt_client.dart' as mc;
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../mqtt/json_path.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import 'control_action.dart';
 
 /// Resolves which cover command a [SegmentedButton] selection change maps to.
 ///
@@ -53,25 +53,23 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
   }
 
   Future<void> _publishRaw(String payload) async {
-    final mgr = await ref.read(mqttManagerProvider(widget.connectionId).future);
-    mgr.publish(
+    await runControlAction(context, ref, widget.connectionId, (mgr) => mgr.publish(
       widget.publishTopic,
       payload,
       '',
       qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
       retain: widget.panel.retain,
-    );
+    ));
   }
 
   Future<void> _publishPosition(double v) async {
-    final mgr = await ref.read(mqttManagerProvider(widget.connectionId).future);
-    mgr.publish(
+    await runControlAction(context, ref, widget.connectionId, (mgr) => mgr.publish(
       widget.publishTopic,
       widget.config.positionTemplate,
       v.round(),
       qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
       retain: widget.panel.retain,
-    );
+    ));
   }
 
   void _onSliderChanged(double v) {

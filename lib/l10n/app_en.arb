@@ -293,5 +293,7 @@
   "a11yDeleteOption": "Delete option",
   "a11yPanelOptions": "Panel options",
   "a11yMoreOptions": "More options",
-  "a11yDeleteConnection": "Delete connection"
+  "a11yDeleteConnection": "Delete connection",
+
+  "controlNotConnected": "Not connected — change not sent"
 }

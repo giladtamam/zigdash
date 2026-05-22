@@ -4,8 +4,8 @@ import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
+import 'control_action.dart';
 
 class TextInputPanel extends ConsumerStatefulWidget {
   const TextInputPanel({
@@ -35,15 +35,17 @@ class _TextInputPanelState extends ConsumerState<TextInputPanel> {
   }
 
   Future<void> _send() async {
-    final mgr = await ref.read(mqttManagerProvider(widget.connectionId).future);
-    mgr.publish(
-      widget.publishTopic,
-      widget.config.template,
-      _controller.text,
-      qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
-      retain: widget.panel.retain,
-    );
-    if (widget.config.clearOnSend) _controller.clear();
+    final text = _controller.text;
+    await runControlAction(context, ref, widget.connectionId, (mgr) {
+      mgr.publish(
+        widget.publishTopic,
+        widget.config.template,
+        text,
+        qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
+        retain: widget.panel.retain,
+      );
+      if (widget.config.clearOnSend) _controller.clear();
+    });
   }
 
   @override

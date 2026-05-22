@@ -828,4 +828,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get a11yDeleteConnection => 'Delete connection';
+
+  @override
+  String get controlNotConnected => 'Not connected — change not sent';
 }

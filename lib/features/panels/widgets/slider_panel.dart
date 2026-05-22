@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../data/database/database.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import 'control_action.dart';
 
 class SliderPanel extends ConsumerStatefulWidget {
   const SliderPanel({
@@ -52,14 +52,13 @@ class _SliderPanelState extends ConsumerState<SliderPanel> {
   }
 
   Future<void> _publish(double v) async {
-    final mgr = await ref.read(mqttManagerProvider(widget.connectionId).future);
-    mgr.publish(
+    await runControlAction(context, ref, widget.connectionId, (mgr) => mgr.publish(
       widget.publishTopic,
       widget.config.valueTemplate,
       v.round(),
       qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
       retain: widget.panel.retain,
-    );
+    ));
   }
 
   @override

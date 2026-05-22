@@ -4,9 +4,9 @@ import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
-import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import 'control_action.dart';
 
 class TogglePanel extends ConsumerWidget {
   const TogglePanel({
@@ -24,15 +24,14 @@ class TogglePanel extends ConsumerWidget {
   final Panel panel;
   final ToggleConfig config;
 
-  Future<void> _toggle(WidgetRef ref, bool currentlyOn) async {
-    final mgr = await ref.read(mqttManagerProvider(connectionId).future);
-    mgr.publish(
+  Future<void> _toggle(BuildContext context, WidgetRef ref, bool currentlyOn) async {
+    await runControlAction(context, ref, connectionId, (mgr) => mgr.publish(
       publishTopic,
       currentlyOn ? config.offPayload : config.onPayload,
       '',
       qos: mc.MqttQos.values[panel.qos.clamp(0, 2)],
       retain: panel.retain,
-    );
+    ));
   }
 
   @override
@@ -51,7 +50,7 @@ class TogglePanel extends ConsumerWidget {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () => _toggle(ref, isOn),
+        onTap: () => _toggle(context, ref, isOn),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -88,7 +87,7 @@ class TogglePanel extends ConsumerWidget {
               ),
               Switch.adaptive(
                 value: isOn,
-                onChanged: (_) => _toggle(ref, isOn),
+                onChanged: (_) => _toggle(context, ref, isOn),
               ),
             ],
           ),

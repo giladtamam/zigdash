@@ -1615,6 +1615,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete connection'**
   String get a11yDeleteConnection;
+
+  /// No description provided for @controlNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected — change not sent'**
+  String get controlNotConnected;
 }
 
 class _AppLocalizationsDelegate
