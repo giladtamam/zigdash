@@ -17,6 +17,18 @@ String composeTopic(String? prefix, String suffix) {
   return '$prefix/$cleanSuffix';
 }
 
+/// The topic a panel actually subscribes to, from the dashboard prefix, an
+/// optional per-panel prefix override, and the subscribe-topic suffix.
+String effectiveSubscribeTopic({
+  required String dashboardPrefix,
+  required String prefixOverride,
+  required String subscribeSuffix,
+}) {
+  final prefix =
+      prefixOverride.trim().isNotEmpty ? prefixOverride.trim() : dashboardPrefix;
+  return composeTopic(prefix, subscribeSuffix.trim());
+}
+
 /// Key for the panel-value stream. The provider family is keyed on this
 /// (not on Panel directly) so equal-but-different Panel objects from
 /// successive Drift emissions don't re-create the underlying subscription.
