@@ -1,7 +1,7 @@
 name: zigdash
 description: "Material 3 MQTT dashboard for Zigbee2MQTT control."
 publish_to: 'none'
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ^3.8.0
@@ -63,7 +63,24 @@ dev_dependencies:
   drift_dev: ^2.21.0
   freezed: ^2.5.7
   json_serializable: ^6.8.0
+  image: ^4.8.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
   generate: true
+
+# Launcher icon generation: `dart run flutter_launcher_icons`.
+# Source PNGs are produced by `dart run tool/gen_icon.dart`.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "#3B82F6"
+  adaptive_icon_foreground: "assets/icon/foreground.png"
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#3B82F6"
+    theme_color: "#3B82F6"
