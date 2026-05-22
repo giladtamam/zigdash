@@ -875,4 +875,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get previewNoValue => '(no value at this path)';
+
+  @override
+  String get connErrorTitle => 'Connection error';
+
+  @override
+  String get connErrorUnknown => 'No error details available.';
+
+  @override
+  String get connTestButton => 'Test connection';
+
+  @override
+  String get connTestOk => 'Connection successful';
+
+  @override
+  String connTestFailed(Object error) {
+    return 'Connection failed: $error';
+  }
 }

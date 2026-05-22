@@ -870,4 +870,21 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get previewNoValue => '(אין ערך בנתיב זה)';
+
+  @override
+  String get connErrorTitle => 'שגיאת חיבור';
+
+  @override
+  String get connErrorUnknown => 'אין פרטי שגיאה זמינים.';
+
+  @override
+  String get connTestButton => 'בדיקת חיבור';
+
+  @override
+  String get connTestOk => 'החיבור הצליח';
+
+  @override
+  String connTestFailed(Object error) {
+    return 'החיבור נכשל: $error';
+  }
 }

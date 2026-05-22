@@ -1699,6 +1699,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'(no value at this path)'**
   String get previewNoValue;
+
+  /// No description provided for @connErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error'**
+  String get connErrorTitle;
+
+  /// No description provided for @connErrorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'No error details available.'**
+  String get connErrorUnknown;
+
+  /// No description provided for @connTestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Test connection'**
+  String get connTestButton;
+
+  /// No description provided for @connTestOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection successful'**
+  String get connTestOk;
+
+  /// No description provided for @connTestFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed: {error}'**
+  String connTestFailed(Object error);
 }
 
 class _AppLocalizationsDelegate
