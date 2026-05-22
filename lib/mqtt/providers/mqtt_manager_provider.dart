@@ -26,6 +26,7 @@ final mqttManagerProvider =
       protocol: conn.protocol,
       username: conn.username,
       keepAliveSeconds: conn.keepAliveSeconds,
+      remoteHost: conn.remoteHost,
     ),
     password: password,
   );

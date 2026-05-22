@@ -27,6 +27,7 @@ class ConnectionRepo {
     String? password,
     int keepAliveSeconds = 60,
     bool autoConnect = false,
+    String? remoteHost,
   }) async {
     final id = newId();
     final now = DateTime.now();
@@ -39,6 +40,7 @@ class ConnectionRepo {
       username: Value(username),
       keepAliveSeconds: Value(keepAliveSeconds),
       autoConnect: Value(autoConnect),
+      remoteHost: Value(remoteHost),
       createdAt: now,
       updatedAt: now,
     ));
@@ -60,6 +62,7 @@ class ConnectionRepo {
     String? password,
     int keepAliveSeconds = 60,
     bool autoConnect = false,
+    String? remoteHost,
   }) async {
     await _dao.updateById(
       id,
@@ -71,6 +74,7 @@ class ConnectionRepo {
         username: Value(username),
         keepAliveSeconds: Value(keepAliveSeconds),
         autoConnect: Value(autoConnect),
+        remoteHost: Value(remoteHost),
         updatedAt: Value(DateTime.now()),
       ),
     );
