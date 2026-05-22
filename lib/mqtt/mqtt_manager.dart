@@ -77,6 +77,9 @@ class MqttManager {
     _endpoint.add(e);
   }
 
+  String? _lastError;
+  String? get lastError => _lastError;
+
   final Map<String, _SubEntry> _subs = {};
 
   // Guarded status emit. After [dispose] every call becomes a no-op so a
@@ -98,13 +101,15 @@ class MqttManager {
       final mc.MqttClient client;
       try {
         client = _buildClient(cand.host, cand.timeoutMs);
-      } on UnsupportedError {
+      } on UnsupportedError catch (e) {
         // Configuration mismatch (e.g. TCP requested in a browser) — not
         // transient, and the fallback host shares the same protocol, so abort
         // entirely without scheduling a reconnect.
+        _lastError = e.toString();
         _emit(MqttStatus.error);
         return;
-      } catch (_) {
+      } catch (e) {
+        _lastError = e.toString();
         continue; // transient build failure — try the next candidate
       }
       if (_disposed) {
@@ -115,7 +120,8 @@ class MqttManager {
 
       try {
         await client.connect(config.username, password);
-      } on Exception {
+      } on Exception catch (e) {
+        _lastError = e.toString();
         client.disconnect();
         continue; // unreachable / refused — try the next candidate
       }
@@ -124,11 +130,13 @@ class MqttManager {
         return;
       }
       if (client.connectionStatus?.state != mc.MqttConnectionState.connected) {
+        _lastError = 'Connect failed (no CONNACK)';
         client.disconnect();
         continue;
       }
 
       // Connected on this candidate.
+      _lastError = null;
       _emitEndpoint(cand.kind);
       _backoffMs = _initialBackoffMs;
       await _updatesSub?.cancel();

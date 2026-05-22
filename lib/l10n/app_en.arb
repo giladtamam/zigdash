@@ -320,5 +320,12 @@
       "value": {}
     }
   },
-  "previewNoValue": "(no value at this path)"
+  "previewNoValue": "(no value at this path)",
+
+  "connErrorTitle": "Connection error",
+  "connErrorUnknown": "No error details available.",
+  "connTestButton": "Test connection",
+  "connTestOk": "Connection successful",
+  "connTestFailed": "Connection failed: {error}",
+  "@connTestFailed": { "placeholders": { "error": {} } }
 }

@@ -320,5 +320,12 @@
       "value": {}
     }
   },
-  "previewNoValue": "(אין ערך בנתיב זה)"
+  "previewNoValue": "(אין ערך בנתיב זה)",
+
+  "connErrorTitle": "שגיאת חיבור",
+  "connErrorUnknown": "אין פרטי שגיאה זמינים.",
+  "connTestButton": "בדיקת חיבור",
+  "connTestOk": "החיבור הצליח",
+  "connTestFailed": "החיבור נכשל: {error}",
+  "@connTestFailed": { "placeholders": { "error": {} } }
 }

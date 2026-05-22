@@ -21,6 +21,27 @@ class ConnectionTile extends ConsumerWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
+  Future<void> _showErrorDetails(BuildContext context, WidgetRef ref) async {
+    final mgr = await ref.read(mqttManagerProvider(connection.id).future);
+    if (!context.mounted) return;
+    final errorText = mgr.lastError ?? context.l10n.connErrorUnknown;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.connErrorTitle),
+        content: SingleChildScrollView(
+          child: SelectableText(errorText),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(context.l10n.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final status = connection.autoConnect
@@ -37,6 +58,14 @@ class ConnectionTile extends ConsumerWidget {
               orElse: () => null,
             )
         : null;
+
+    final badge = StatusBadge(status: status, endpoint: endpoint);
+    final tappableBadge = status == MqttStatus.error
+        ? GestureDetector(
+            onTap: () => _showErrorDetails(context, ref),
+            child: badge,
+          )
+        : badge;
 
     return Dismissible(
       key: ValueKey(connection.id),
@@ -69,7 +98,7 @@ class ConnectionTile extends ConsumerWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            StatusBadge(status: status, endpoint: endpoint),
+            tappableBadge,
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
               tooltip: context.l10n.a11yMoreOptions,
