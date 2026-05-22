@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/routes.dart';
 import '../providers/settings_controller.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -61,6 +63,14 @@ class SettingsScreen extends ConsumerWidget {
             value: 'he',
             groupValue: settings.locale?.languageCode,
             onChanged: (_) => ctrl.setLocale(const Locale('he')),
+          ),
+          const Divider(),
+          _SectionHeader(l10n.settingsAbout),
+          ListTile(
+            leading: const Icon(Icons.help_outline),
+            title: Text(l10n.settingsHelp),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.help),
           ),
         ],
       ),

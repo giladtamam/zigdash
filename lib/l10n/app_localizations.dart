@@ -1561,6 +1561,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No panels yet.\nTap + to add a Toggle, Slider, or Button.'**
   String get panelGridEmpty;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Guide'**
+  String get settingsHelp;
 }
 
 class _AppLocalizationsDelegate

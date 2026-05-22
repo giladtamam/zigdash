@@ -10,6 +10,7 @@ import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
+import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import 'routes.dart';
 
@@ -41,6 +42,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       // Full-screen routes (no bottom nav). Push these from inside the shell
       // and the shell's NavigationBar gets out of the way.
+      GoRoute(
+        path: Routes.help,
+        builder: (_, __) => const HelpScreen(),
+      ),
       GoRoute(
         path: '/connections/:id/dashboards',
         builder: (_, state) => DashboardsScreen(connectionId: state.pathParameters['id']!),

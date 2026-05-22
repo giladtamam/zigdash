@@ -796,4 +796,10 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get panelGridEmpty =>
       'אין עדיין פאנלים.\nהקש + כדי להוסיף מתג, מחוון או כפתור.';
+
+  @override
+  String get settingsAbout => 'אודות';
+
+  @override
+  String get settingsHelp => 'עזרה ומדריך';
 }

@@ -801,4 +801,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get panelGridEmpty =>
       'No panels yet.\nTap + to add a Toggle, Slider, or Button.';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsHelp => 'Help & Guide';
 }

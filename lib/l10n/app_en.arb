@@ -282,5 +282,8 @@
   "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
   "panelScheduleActionOpen": "open",
   "panelScheduleActionClose": "close",
-  "panelGridEmpty": "No panels yet.\nTap + to add a Toggle, Slider, or Button."
+  "panelGridEmpty": "No panels yet.\nTap + to add a Toggle, Slider, or Button.",
+
+  "settingsAbout": "About",
+  "settingsHelp": "Help & Guide"
 }
