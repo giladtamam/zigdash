@@ -305,5 +305,20 @@
   "discoverScanning": "Scanning for devices…",
   "discoverNone": "No devices found.",
   "discoverFailed": "No device list found. Check the base topic and that the broker is connected.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "previewTitle": "Live preview",
+  "previewWaiting": "Waiting for a message on {topic}…",
+  "@previewWaiting": {
+    "placeholders": {
+      "topic": {}
+    }
+  },
+  "previewExtracted": "Extracted ({path}): {value}",
+  "@previewExtracted": {
+    "placeholders": {
+      "path": {},
+      "value": {}
+    }
+  },
+  "previewNoValue": "(no value at this path)"
 }

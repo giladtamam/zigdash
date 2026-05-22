@@ -854,4 +854,20 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get retry => 'נסה שוב';
+
+  @override
+  String get previewTitle => 'תצוגה מקדימה חיה';
+
+  @override
+  String previewWaiting(Object topic) {
+    return 'ממתין להודעה בנושא $topic…';
+  }
+
+  @override
+  String previewExtracted(Object path, Object value) {
+    return 'חולץ ($path): $value';
+  }
+
+  @override
+  String get previewNoValue => '(אין ערך בנתיב זה)';
 }

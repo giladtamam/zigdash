@@ -1675,6 +1675,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @previewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live preview'**
+  String get previewTitle;
+
+  /// No description provided for @previewWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a message on {topic}…'**
+  String previewWaiting(Object topic);
+
+  /// No description provided for @previewExtracted.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracted ({path}): {value}'**
+  String previewExtracted(Object path, Object value);
+
+  /// No description provided for @previewNoValue.
+  ///
+  /// In en, this message translates to:
+  /// **'(no value at this path)'**
+  String get previewNoValue;
 }
 
 class _AppLocalizationsDelegate

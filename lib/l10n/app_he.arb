@@ -305,5 +305,20 @@
   "discoverScanning": "סורק התקנים…",
   "discoverNone": "לא נמצאו התקנים.",
   "discoverFailed": "רשימת ההתקנים לא נמצאה. בדוק את נושא הבסיס ושהברוקר מחובר.",
-  "retry": "נסה שוב"
+  "retry": "נסה שוב",
+  "previewTitle": "תצוגה מקדימה חיה",
+  "previewWaiting": "ממתין להודעה בנושא {topic}…",
+  "@previewWaiting": {
+    "placeholders": {
+      "topic": {}
+    }
+  },
+  "previewExtracted": "חולץ ({path}): {value}",
+  "@previewExtracted": {
+    "placeholders": {
+      "path": {},
+      "value": {}
+    }
+  },
+  "previewNoValue": "(אין ערך בנתיב זה)"
 }

@@ -859,4 +859,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get previewTitle => 'Live preview';
+
+  @override
+  String previewWaiting(Object topic) {
+    return 'Waiting for a message on $topic…';
+  }
+
+  @override
+  String previewExtracted(Object path, Object value) {
+    return 'Extracted ($path): $value';
+  }
+
+  @override
+  String get previewNoValue => '(no value at this path)';
 }
