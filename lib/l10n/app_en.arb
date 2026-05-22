@@ -296,5 +296,14 @@
   "a11yMoreOptions": "More options",
   "a11yDeleteConnection": "Delete connection",
 
-  "controlNotConnected": "Not connected — change not sent"
+  "controlNotConnected": "Not connected — change not sent",
+
+  "discoverFromDevice": "Add from a device…",
+  "discoverFromDeviceSubtitle": "Auto-detect a Zigbee2MQTT device",
+  "discoverTitle": "Add from device",
+  "discoverBaseTopic": "Zigbee2MQTT base topic",
+  "discoverScanning": "Scanning for devices…",
+  "discoverNone": "No devices found.",
+  "discoverFailed": "No device list found. Check the base topic and that the broker is connected.",
+  "retry": "Retry"
 }

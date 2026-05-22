@@ -296,5 +296,14 @@
   "a11yMoreOptions": "אפשרויות נוספות",
   "a11yDeleteConnection": "מחיקת חיבור",
 
-  "controlNotConnected": "לא מחובר — השינוי לא נשלח"
+  "controlNotConnected": "לא מחובר — השינוי לא נשלח",
+
+  "discoverFromDevice": "הוספה מהתקן…",
+  "discoverFromDeviceSubtitle": "זיהוי אוטומטי של התקן Zigbee2MQTT",
+  "discoverTitle": "הוספה מהתקן",
+  "discoverBaseTopic": "נושא בסיס של Zigbee2MQTT",
+  "discoverScanning": "סורק התקנים…",
+  "discoverNone": "לא נמצאו התקנים.",
+  "discoverFailed": "רשימת ההתקנים לא נמצאה. בדוק את נושא הבסיס ושהברוקר מחובר.",
+  "retry": "נסה שוב"
 }

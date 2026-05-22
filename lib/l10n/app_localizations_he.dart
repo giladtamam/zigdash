@@ -829,4 +829,29 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get controlNotConnected => 'לא מחובר — השינוי לא נשלח';
+
+  @override
+  String get discoverFromDevice => 'הוספה מהתקן…';
+
+  @override
+  String get discoverFromDeviceSubtitle => 'זיהוי אוטומטי של התקן Zigbee2MQTT';
+
+  @override
+  String get discoverTitle => 'הוספה מהתקן';
+
+  @override
+  String get discoverBaseTopic => 'נושא בסיס של Zigbee2MQTT';
+
+  @override
+  String get discoverScanning => 'סורק התקנים…';
+
+  @override
+  String get discoverNone => 'לא נמצאו התקנים.';
+
+  @override
+  String get discoverFailed =>
+      'רשימת ההתקנים לא נמצאה. בדוק את נושא הבסיס ושהברוקר מחובר.';
+
+  @override
+  String get retry => 'נסה שוב';
 }

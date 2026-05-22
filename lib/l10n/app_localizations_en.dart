@@ -834,4 +834,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get controlNotConnected => 'Not connected — change not sent';
+
+  @override
+  String get discoverFromDevice => 'Add from a device…';
+
+  @override
+  String get discoverFromDeviceSubtitle => 'Auto-detect a Zigbee2MQTT device';
+
+  @override
+  String get discoverTitle => 'Add from device';
+
+  @override
+  String get discoverBaseTopic => 'Zigbee2MQTT base topic';
+
+  @override
+  String get discoverScanning => 'Scanning for devices…';
+
+  @override
+  String get discoverNone => 'No devices found.';
+
+  @override
+  String get discoverFailed =>
+      'No device list found. Check the base topic and that the broker is connected.';
+
+  @override
+  String get retry => 'Retry';
 }

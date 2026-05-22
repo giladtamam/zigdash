@@ -10,6 +10,8 @@ import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
+import '../../features/discovery/models/device_panel_suggestion.dart';
+import '../../features/discovery/screens/device_picker_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import 'routes.dart';
@@ -71,6 +73,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               initialType: _parseType(state.uri.queryParameters['type']),
               initialSliderPreset:
                   _parseSliderPreset(state.uri.queryParameters['preset']),
+              suggestion: state.extra as PanelSuggestion?,
+            ),
+          ),
+          GoRoute(
+            path: ':dashboardId/discover',
+            builder: (_, state) => DevicePickerScreen(
+              connectionId: state.pathParameters['id']!,
+              dashboardId: state.pathParameters['dashboardId']!,
             ),
           ),
           GoRoute(

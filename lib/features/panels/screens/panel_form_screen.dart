@@ -6,6 +6,7 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
+import '../../discovery/models/device_panel_suggestion.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import '../services/automation_config_publisher.dart';
@@ -38,6 +39,7 @@ class PanelFormScreen extends ConsumerStatefulWidget {
     this.panelId,
     this.initialType,
     this.initialSliderPreset,
+    this.suggestion,
   });
 
   final String connectionId;
@@ -45,6 +47,7 @@ class PanelFormScreen extends ConsumerStatefulWidget {
   final String? panelId;
   final PanelType? initialType;
   final SliderPreset? initialSliderPreset;
+  final PanelSuggestion? suggestion;
 
   @override
   ConsumerState<PanelFormScreen> createState() => _State();
@@ -153,7 +156,72 @@ class _State extends ConsumerState<PanelFormScreen> {
         _sliderTemplate.text = '{"position":{value}}';
         _sliderJsonPath.text = 'position';
       }
+      _applySuggestion(widget.suggestion);
       _loaded = true;
+    }
+  }
+
+  /// Pre-fills controllers from a [PanelSuggestion] when creating a new panel.
+  /// No-op when [suggestion] is null or when editing an existing panel.
+  void _applySuggestion(PanelSuggestion? suggestion) {
+    if (suggestion == null) return;
+
+    _type = suggestion.type;
+    _name.text = suggestion.name;
+    _topicPrefixOverride.text = suggestion.topicPrefixOverride;
+    _topic.text = suggestion.publishTopicSuffix;
+    _subscribeTopic.text = suggestion.subscribeTopicSuffix;
+
+    switch (suggestion.type) {
+      case PanelType.toggle:
+        if (suggestion.jsonPath != null) {
+          _toggleJsonPath.text = suggestion.jsonPath!;
+        }
+        if (suggestion.onMatch != null) {
+          _onMatch.text = suggestion.onMatch!;
+        }
+      case PanelType.slider:
+        if (suggestion.jsonPath != null) {
+          _sliderJsonPath.text = suggestion.jsonPath!;
+        }
+        if (suggestion.sliderIsBrightness) {
+          _sliderMin.text = '0';
+          _sliderMax.text = '254';
+          _sliderStep.text = '1';
+          _sliderTemplate.text = '{"brightness":{value}}';
+        } else {
+          _sliderMin.text = '0';
+          _sliderMax.text = '100';
+          _sliderStep.text = '1';
+          _sliderTemplate.text = '{"position":{value}}';
+        }
+      case PanelType.led:
+        if (suggestion.jsonPath != null) {
+          _ledJsonPath.text = suggestion.jsonPath!;
+        }
+        if (suggestion.onMatch != null) {
+          _ledOnMatch.text = suggestion.onMatch!;
+        }
+      case PanelType.progress:
+        if (suggestion.jsonPath != null) {
+          _progressJsonPath.text = suggestion.jsonPath!;
+        }
+        if (suggestion.unit != null) {
+          _progressUnit.text = suggestion.unit!;
+        }
+      case PanelType.cover:
+        // cover panel has good defaults; topic suffix already set above
+        break;
+      case PanelType.combo:
+        if (suggestion.jsonPath != null) {
+          _optionsJsonPath.text = suggestion.jsonPath!;
+        }
+      case PanelType.textLog:
+        if (suggestion.jsonPath != null) {
+          _textLogJsonPath.text = suggestion.jsonPath!;
+        }
+      default:
+        break;
     }
   }
 

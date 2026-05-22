@@ -184,6 +184,13 @@ void _openPanelPicker(BuildContext context,
               padding: const EdgeInsets.all(16),
               child: Text(sheetCtx.l10n.panelPickerTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             ),
+            ListTile(
+              leading: const Icon(Icons.travel_explore),
+              title: Text(sheetCtx.l10n.discoverFromDevice),
+              subtitle: Text(sheetCtx.l10n.discoverFromDeviceSubtitle),
+              onTap: () => Navigator.pop(sheetCtx, '__discover__'),
+            ),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
               child: Text(sheetCtx.l10n.panelPickerSectionControl, style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -284,13 +291,19 @@ void _openPanelPicker(BuildContext context,
     ),
   );
   if (type != null && context.mounted) {
-    // Tokens like "slider:position" carry an additional preset hint; split here.
-    final parts = type.split(':');
-    final t = parts.first;
-    final preset = parts.length > 1 ? '&preset=${parts[1]}' : '';
-    context.push(
-      '/connections/$connectionId/dashboards/$dashboardId/panels/new?type=$t$preset',
-    );
+    if (type == '__discover__') {
+      context.push(
+        '/connections/$connectionId/dashboards/$dashboardId/discover',
+      );
+    } else {
+      // Tokens like "slider:position" carry an additional preset hint; split here.
+      final parts = type.split(':');
+      final t = parts.first;
+      final preset = parts.length > 1 ? '&preset=${parts[1]}' : '';
+      context.push(
+        '/connections/$connectionId/dashboards/$dashboardId/panels/new?type=$t$preset',
+      );
+    }
   }
 }
 

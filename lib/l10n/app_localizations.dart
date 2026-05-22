@@ -1627,6 +1627,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not connected — change not sent'**
   String get controlNotConnected;
+
+  /// No description provided for @discoverFromDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from a device…'**
+  String get discoverFromDevice;
+
+  /// No description provided for @discoverFromDeviceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-detect a Zigbee2MQTT device'**
+  String get discoverFromDeviceSubtitle;
+
+  /// No description provided for @discoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from device'**
+  String get discoverTitle;
+
+  /// No description provided for @discoverBaseTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT base topic'**
+  String get discoverBaseTopic;
+
+  /// No description provided for @discoverScanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning for devices…'**
+  String get discoverScanning;
+
+  /// No description provided for @discoverNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices found.'**
+  String get discoverNone;
+
+  /// No description provided for @discoverFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'No device list found. Check the base topic and that the broker is connected.'**
+  String get discoverFailed;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate
