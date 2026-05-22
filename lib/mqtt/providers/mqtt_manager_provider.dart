@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/storage/secure_storage.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../broker_config.dart';
+import '../endpoint.dart';
 import '../mqtt_manager.dart';
 import '../mqtt_status.dart';
 
@@ -50,5 +51,16 @@ final connectionStatusProvider =
     loading: () => Stream.value(MqttStatus.connecting),
     error: (_, __) => Stream.value(MqttStatus.error),
     data: (mgr) => mgr.status$,
+  );
+});
+
+/// Live active-endpoint stream for a connection (null until connected).
+final connectionEndpointProvider =
+    StreamProvider.family<MqttEndpoint?, String>((ref, connectionId) async* {
+  final managerAsync = ref.watch(mqttManagerProvider(connectionId));
+  yield* managerAsync.when(
+    loading: () => Stream.value(null),
+    error: (_, __) => Stream.value(null),
+    data: (mgr) => mgr.endpoint$,
   );
 });

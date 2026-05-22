@@ -156,6 +156,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get statusError => 'שגיאה';
 
   @override
+  String get statusConnectedRemote => 'מחובר · מרחוק';
+
+  @override
   String get dashPlaceholder =>
       'פתח ברוקר מלשונית הברוקרים כדי לראות ולנהל את לוחות המחוונים שלו.';
 

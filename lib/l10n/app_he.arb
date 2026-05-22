@@ -49,6 +49,7 @@
   "statusConnected": "מחובר",
   "statusReconnecting": "מתחבר מחדש",
   "statusError": "שגיאה",
+  "statusConnectedRemote": "מחובר · מרחוק",
 
   "dashPlaceholder": "פתח ברוקר מלשונית הברוקרים כדי לראות ולנהל את לוחות המחוונים שלו.",
 

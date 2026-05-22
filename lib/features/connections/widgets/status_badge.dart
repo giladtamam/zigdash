@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../mqtt/endpoint.dart';
 import '../../../mqtt/mqtt_status.dart';
 
 class StatusBadge extends StatelessWidget {
-  const StatusBadge({super.key, required this.status});
+  const StatusBadge({super.key, required this.status, this.endpoint});
   final MqttStatus status;
+  final MqttEndpoint? endpoint;
 
   static const _colors = {
     MqttStatus.disconnected: Colors.grey,
@@ -23,7 +25,9 @@ class StatusBadge extends StatelessWidget {
       case MqttStatus.connecting:
         return l10n.statusConnecting;
       case MqttStatus.connected:
-        return l10n.statusConnected;
+        return endpoint == MqttEndpoint.remote
+            ? l10n.statusConnectedRemote
+            : l10n.statusConnected;
       case MqttStatus.reconnecting:
         return l10n.statusReconnecting;
       case MqttStatus.error:

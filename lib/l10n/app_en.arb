@@ -49,6 +49,7 @@
   "statusConnected": "Connected",
   "statusReconnecting": "Reconnecting",
   "statusError": "Error",
+  "statusConnectedRemote": "Connected · Remote",
 
   "dashPlaceholder": "Open a broker from the Brokers tab to see and manage its dashboards.",
 

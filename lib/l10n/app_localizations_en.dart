@@ -156,6 +156,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusError => 'Error';
 
   @override
+  String get statusConnectedRemote => 'Connected · Remote';
+
+  @override
   String get dashPlaceholder =>
       'Open a broker from the Brokers tab to see and manage its dashboards.';
 

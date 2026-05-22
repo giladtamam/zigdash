@@ -380,6 +380,12 @@ abstract class AppLocalizations {
   /// **'Error'**
   String get statusError;
 
+  /// No description provided for @statusConnectedRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected · Remote'**
+  String get statusConnectedRemote;
+
   /// No description provided for @dashPlaceholder.
   ///
   /// In en, this message translates to:

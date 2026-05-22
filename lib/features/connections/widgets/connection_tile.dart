@@ -31,6 +31,13 @@ class ConnectionTile extends ConsumerWidget {
             )
         : MqttStatus.disconnected;
 
+    final endpoint = connection.autoConnect
+        ? ref.watch(connectionEndpointProvider(connection.id)).maybeWhen(
+              data: (e) => e,
+              orElse: () => null,
+            )
+        : null;
+
     return Dismissible(
       key: ValueKey(connection.id),
       direction: DismissDirection.endToStart,
@@ -59,7 +66,7 @@ class ConnectionTile extends ConsumerWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            StatusBadge(status: status),
+            StatusBadge(status: status, endpoint: endpoint),
             PopupMenuButton<String>(
               icon: const Icon(Icons.more_vert),
               onSelected: (v) {
