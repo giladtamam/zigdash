@@ -887,4 +887,37 @@ class AppLocalizationsHe extends AppLocalizations {
   String connTestFailed(Object error) {
     return 'החיבור נכשל: $error';
   }
+
+  @override
+  String get aiAssistantTitle => 'עוזר AI';
+
+  @override
+  String get aiSetupTitle => 'חיבור PicoClaw';
+
+  @override
+  String get aiHost => 'מארח Hub';
+
+  @override
+  String get aiPort => 'פורט';
+
+  @override
+  String get aiToken => 'טוקן Pico';
+
+  @override
+  String get aiPrompt => 'שאל את הבית החכם…';
+
+  @override
+  String get aiConnecting => 'מתחבר…';
+
+  @override
+  String get aiConnected => 'מחובר';
+
+  @override
+  String get aiDisconnected => 'מנותק';
+
+  @override
+  String get aiTyping => 'העוזר מקליד…';
+
+  @override
+  String get aiSave => 'שמור';
 }

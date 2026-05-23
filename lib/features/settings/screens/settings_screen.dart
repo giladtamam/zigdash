@@ -67,6 +67,12 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(),
           _SectionHeader(l10n.settingsAbout),
           ListTile(
+            leading: const Icon(Icons.smart_toy_outlined),
+            title: Text(l10n.aiAssistantTitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.aiAssistant),
+          ),
+          ListTile(
             leading: const Icon(Icons.help_outline),
             title: Text(l10n.settingsHelp),
             trailing: const Icon(Icons.chevron_right),

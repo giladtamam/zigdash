@@ -12,6 +12,7 @@ import '../../features/dashboards/screens/dashboards_screen.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
+import '../../features/ai/screens/ai_chat_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import 'routes.dart';
@@ -47,6 +48,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.help,
         builder: (_, __) => const HelpScreen(),
+      ),
+      GoRoute(
+        path: Routes.aiAssistant,
+        builder: (_, __) => const AiChatScreen(),
       ),
       GoRoute(
         path: '/connections/:id/dashboards',

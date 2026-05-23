@@ -1729,6 +1729,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connection failed: {error}'**
   String connTestFailed(Object error);
+
+  /// No description provided for @aiAssistantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Assistant'**
+  String get aiAssistantTitle;
+
+  /// No description provided for @aiSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'PicoClaw connection'**
+  String get aiSetupTitle;
+
+  /// No description provided for @aiHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Hub host'**
+  String get aiHost;
+
+  /// No description provided for @aiPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get aiPort;
+
+  /// No description provided for @aiToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Pico token'**
+  String get aiToken;
+
+  /// No description provided for @aiPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your smart home…'**
+  String get aiPrompt;
+
+  /// No description provided for @aiConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get aiConnecting;
+
+  /// No description provided for @aiConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get aiConnected;
+
+  /// No description provided for @aiDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get aiDisconnected;
+
+  /// No description provided for @aiTyping.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant is typing…'**
+  String get aiTyping;
+
+  /// No description provided for @aiSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get aiSave;
 }
 
 class _AppLocalizationsDelegate

@@ -327,5 +327,17 @@
   "connTestButton": "בדיקת חיבור",
   "connTestOk": "החיבור הצליח",
   "connTestFailed": "החיבור נכשל: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } }
+  "@connTestFailed": { "placeholders": { "error": {} } },
+
+  "aiAssistantTitle": "עוזר AI",
+  "aiSetupTitle": "חיבור PicoClaw",
+  "aiHost": "מארח Hub",
+  "aiPort": "פורט",
+  "aiToken": "טוקן Pico",
+  "aiPrompt": "שאל את הבית החכם…",
+  "aiConnecting": "מתחבר…",
+  "aiConnected": "מחובר",
+  "aiDisconnected": "מנותק",
+  "aiTyping": "העוזר מקליד…",
+  "aiSave": "שמור"
 }

@@ -892,4 +892,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String connTestFailed(Object error) {
     return 'Connection failed: $error';
   }
+
+  @override
+  String get aiAssistantTitle => 'AI Assistant';
+
+  @override
+  String get aiSetupTitle => 'PicoClaw connection';
+
+  @override
+  String get aiHost => 'Hub host';
+
+  @override
+  String get aiPort => 'Port';
+
+  @override
+  String get aiToken => 'Pico token';
+
+  @override
+  String get aiPrompt => 'Ask your smart home…';
+
+  @override
+  String get aiConnecting => 'Connecting…';
+
+  @override
+  String get aiConnected => 'Connected';
+
+  @override
+  String get aiDisconnected => 'Disconnected';
+
+  @override
+  String get aiTyping => 'Assistant is typing…';
+
+  @override
+  String get aiSave => 'Save';
 }

@@ -327,5 +327,17 @@
   "connTestButton": "Test connection",
   "connTestOk": "Connection successful",
   "connTestFailed": "Connection failed: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } }
+  "@connTestFailed": { "placeholders": { "error": {} } },
+
+  "aiAssistantTitle": "AI Assistant",
+  "aiSetupTitle": "PicoClaw connection",
+  "aiHost": "Hub host",
+  "aiPort": "Port",
+  "aiToken": "Pico token",
+  "aiPrompt": "Ask your smart home…",
+  "aiConnecting": "Connecting…",
+  "aiConnected": "Connected",
+  "aiDisconnected": "Disconnected",
+  "aiTyping": "Assistant is typing…",
+  "aiSave": "Save"
 }
