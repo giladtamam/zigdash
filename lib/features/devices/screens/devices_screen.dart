@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
-import '../../discovery/models/device_panel_suggestion.dart';
-import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../device_health.dart';
 import '../devices_providers.dart';
@@ -344,15 +341,12 @@ class _PairingSheetState extends ConsumerState<_PairingSheet> {
             if (_entries.isNotEmpty) ...[
               const SizedBox(height: 12),
               const Divider(),
-              ..._entries.map((entry) => _PairedEntryTile(
-                    entry: entry,
-                    connectionId: widget.connectionId,
-                    base: widget.base,
-                    discoveryArgs: (
-                      connectionId: widget.connectionId,
-                      base: widget.base,
-                    ),
-                  )),
+              ..._entries.map((entry) => _PairedEntryTile(entry: entry)),
+              const SizedBox(height: 8),
+              Text(
+                l10n.devicesPairedHint,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ] else ...[
               const SizedBox(height: 24),
               const Center(child: CircularProgressIndicator()),
@@ -372,21 +366,13 @@ class _PairedEntry {
   final bool ready;
 }
 
-class _PairedEntryTile extends ConsumerWidget {
-  const _PairedEntryTile({
-    required this.entry,
-    required this.connectionId,
-    required this.base,
-    required this.discoveryArgs,
-  });
+class _PairedEntryTile extends StatelessWidget {
+  const _PairedEntryTile({required this.entry});
 
   final _PairedEntry entry;
-  final String connectionId;
-  final String base;
-  final DiscoveryArgs discoveryArgs;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
 
     return ListTile(
@@ -400,36 +386,6 @@ class _PairedEntryTile extends ConsumerWidget {
             ? l10n.devicesPaired(entry.name)
             : '${entry.name} — interviewing…',
       ),
-      trailing: entry.ready
-          ? TextButton(
-              onPressed: () async {
-                // Try to get device list to build a suggestion.
-                final devicesAsync =
-                    ref.read(discoveredDevicesProvider(discoveryArgs));
-                devicesAsync.whenData((devices) {
-                  final device = devices.cast<Z2mDevice?>().firstWhere(
-                        (d) => d?.friendlyName == entry.name,
-                        orElse: () => null,
-                      );
-                  if (device != null && context.mounted) {
-                    final suggestion = suggestPanel(device, base: base);
-                    // Close the sheet first, then navigate.
-                    Navigator.pop(context);
-                    context.push(
-                      '/connections/$connectionId/dashboards/new/panels/new',
-                      extra: suggestion,
-                    );
-                  } else if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                });
-                if (!devicesAsync.hasValue && context.mounted) {
-                  Navigator.pop(context);
-                }
-              },
-              child: Text(l10n.devicesAddButton),
-            )
-          : null,
     );
   }
 }

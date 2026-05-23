@@ -341,5 +341,6 @@
   "devicesOnline": "מקוון",
   "devicesOffline": "לא מקוון",
   "devicesPaired": "מוכן: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } }
+  "@devicesPaired": { "placeholders": { "name": {} } },
+  "devicesPairedHint": "נוסף לרשת. כדי להוסיף ללוח, השתמש ב'הוספה מהתקן' בלוח."
 }

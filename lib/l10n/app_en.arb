@@ -341,5 +341,6 @@
   "devicesOnline": "Online",
   "devicesOffline": "Offline",
   "devicesPaired": "Ready: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } }
+  "@devicesPaired": { "placeholders": { "name": {} } },
+  "devicesPairedHint": "Added to your network. To put it on a dashboard, use 'Add from a device' on that dashboard."
 }
