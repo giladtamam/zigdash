@@ -928,4 +928,96 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get devicesPairedHint =>
       'נוסף לרשת. כדי להוסיף ללוח, השתמש ב\'הוספה מהתקן\' בלוח.';
+
+  @override
+  String get scenesTitle => 'סצנות';
+
+  @override
+  String get scenesNone =>
+      'אין עדיין סצנות. הגדירו את ההתקנים כרצונכם ולאחר מכן שמרו אותם כסצנה.';
+
+  @override
+  String get scenesNewButton => 'סצנה חדשה';
+
+  @override
+  String scenesActivated(Object name) {
+    return 'הופעלה $name';
+  }
+
+  @override
+  String get scenesActivateOffline => 'אין חיבור — לא ניתן להפעיל את הסצנה';
+
+  @override
+  String get sceneFormNewTitle => 'סצנה חדשה';
+
+  @override
+  String get sceneFormEditTitle => 'עריכת סצנה';
+
+  @override
+  String get sceneFormNameLabel => 'שם הסצנה';
+
+  @override
+  String get sceneFormDevicesHeader => 'התקנים ללכידה';
+
+  @override
+  String get sceneFormCaptureHint =>
+      'נשמר המצב הניתן לשינוי של כל התקן נבחר (דלוק/כבוי, בהירות, צבע, מיקום…). ערכים לקריאה בלבד מתעלמים מהם.';
+
+  @override
+  String get sceneFormNoDevices =>
+      'אין התקנים שמדווחים מצב. ודאו שהם מקוונים ומשכו לרענון.';
+
+  @override
+  String sceneFormSelectedCount(int count) {
+    return '$count נבחרו';
+  }
+
+  @override
+  String get sceneFormNoDevicesSelected => 'בחרו לפחות התקן אחד ללכידה.';
+
+  @override
+  String get sceneFormNothingCaptured =>
+      'לא נלכד דבר הניתן לשינוי מההתקנים שנבחרו.';
+
+  @override
+  String get sceneDeleteTitle => 'למחוק סצנה?';
+
+  @override
+  String sceneDeleteMessage(Object name) {
+    return '\"$name\" יוסר. ההתקנים נשארים במצבם הנוכחי.';
+  }
+
+  @override
+  String get sceneEditAction => 'עריכה';
+
+  @override
+  String get sceneDeleteAction => 'מחיקה';
+
+  @override
+  String get sceneAddToDashboard => 'הוספה ללוח';
+
+  @override
+  String sceneAddedToDashboard(Object name) {
+    return 'נוסף ל-$name';
+  }
+
+  @override
+  String sceneActionsCount(int count) {
+    return '$count התקנים';
+  }
+
+  @override
+  String get panelTypeScene => 'סצנה';
+
+  @override
+  String get panelPickerSceneTitle => 'כפתור סצנה';
+
+  @override
+  String get panelPickerSceneSubtitle => 'הקשה אחת מפעילה סצנה שמורה';
+
+  @override
+  String get panelSceneChoose => 'סצנה';
+
+  @override
+  String get panelSceneMissing => 'הסצנה לא נמצאה — בחרו מחדש';
 }

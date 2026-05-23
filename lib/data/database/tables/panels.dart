@@ -16,6 +16,7 @@ enum PanelType {
   textInput,
   textLog,
   schedule,
+  scene,
 }
 
 enum PanelWidth { full, half, third }

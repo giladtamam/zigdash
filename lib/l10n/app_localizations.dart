@@ -1801,6 +1801,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added to your network. To put it on a dashboard, use \'Add from a device\' on that dashboard.'**
   String get devicesPairedHint;
+
+  /// No description provided for @scenesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenes'**
+  String get scenesTitle;
+
+  /// No description provided for @scenesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No scenes yet. Set your devices the way you like, then capture them as a scene.'**
+  String get scenesNone;
+
+  /// No description provided for @scenesNewButton.
+  ///
+  /// In en, this message translates to:
+  /// **'New scene'**
+  String get scenesNewButton;
+
+  /// No description provided for @scenesActivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Activated {name}'**
+  String scenesActivated(Object name);
+
+  /// No description provided for @scenesActivateOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected — can\'t activate the scene'**
+  String get scenesActivateOffline;
+
+  /// No description provided for @sceneFormNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New scene'**
+  String get sceneFormNewTitle;
+
+  /// No description provided for @sceneFormEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit scene'**
+  String get sceneFormEditTitle;
+
+  /// No description provided for @sceneFormNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene name'**
+  String get sceneFormNameLabel;
+
+  /// No description provided for @sceneFormDevicesHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices to capture'**
+  String get sceneFormDevicesHeader;
+
+  /// No description provided for @sceneFormCaptureHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Each selected device\'s current settable state (on/off, brightness, colour, position…) is saved. Read-only values are ignored.'**
+  String get sceneFormCaptureHint;
+
+  /// No description provided for @sceneFormNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices reporting state. Make sure they\'re online, then pull to refresh.'**
+  String get sceneFormNoDevices;
+
+  /// No description provided for @sceneFormSelectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String sceneFormSelectedCount(int count);
+
+  /// No description provided for @sceneFormNoDevicesSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one device to capture.'**
+  String get sceneFormNoDevicesSelected;
+
+  /// No description provided for @sceneFormNothingCaptured.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing settable was captured from the selected devices.'**
+  String get sceneFormNothingCaptured;
+
+  /// No description provided for @sceneDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete scene?'**
+  String get sceneDeleteTitle;
+
+  /// No description provided for @sceneDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" will be removed. Devices keep their current state.'**
+  String sceneDeleteMessage(Object name);
+
+  /// No description provided for @sceneEditAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get sceneEditAction;
+
+  /// No description provided for @sceneDeleteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get sceneDeleteAction;
+
+  /// No description provided for @sceneAddToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to dashboard'**
+  String get sceneAddToDashboard;
+
+  /// No description provided for @sceneAddedToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {name}'**
+  String sceneAddedToDashboard(Object name);
+
+  /// No description provided for @sceneActionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} devices'**
+  String sceneActionsCount(int count);
+
+  /// No description provided for @panelTypeScene.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene'**
+  String get panelTypeScene;
+
+  /// No description provided for @panelPickerSceneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene button'**
+  String get panelPickerSceneTitle;
+
+  /// No description provided for @panelPickerSceneSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One tap activates a saved scene'**
+  String get panelPickerSceneSubtitle;
+
+  /// No description provided for @panelSceneChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene'**
+  String get panelSceneChoose;
+
+  /// No description provided for @panelSceneMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene not found — re-pick it'**
+  String get panelSceneMissing;
 }
 
 class _AppLocalizationsDelegate

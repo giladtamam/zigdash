@@ -2231,12 +2231,585 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
   }
 }
 
+class $ScenesTable extends Scenes with TableInfo<$ScenesTable, Scene> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ScenesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES connections (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 64,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _iconCodepointMeta = const VerificationMeta(
+    'iconCodepoint',
+  );
+  @override
+  late final GeneratedColumn<int> iconCodepoint = GeneratedColumn<int>(
+    'icon_codepoint',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorSeedMeta = const VerificationMeta(
+    'colorSeed',
+  );
+  @override
+  late final GeneratedColumn<int> colorSeed = GeneratedColumn<int>(
+    'color_seed',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actionsMeta = const VerificationMeta(
+    'actions',
+  );
+  @override
+  late final GeneratedColumn<String> actions = GeneratedColumn<String>(
+    'actions',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    connectionId,
+    name,
+    iconCodepoint,
+    colorSeed,
+    actions,
+    sortOrder,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'scenes';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Scene> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('icon_codepoint')) {
+      context.handle(
+        _iconCodepointMeta,
+        iconCodepoint.isAcceptableOrUnknown(
+          data['icon_codepoint']!,
+          _iconCodepointMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_iconCodepointMeta);
+    }
+    if (data.containsKey('color_seed')) {
+      context.handle(
+        _colorSeedMeta,
+        colorSeed.isAcceptableOrUnknown(data['color_seed']!, _colorSeedMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_colorSeedMeta);
+    }
+    if (data.containsKey('actions')) {
+      context.handle(
+        _actionsMeta,
+        actions.isAcceptableOrUnknown(data['actions']!, _actionsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actionsMeta);
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Scene map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Scene(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      iconCodepoint: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}icon_codepoint'],
+      )!,
+      colorSeed: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color_seed'],
+      )!,
+      actions: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}actions'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ScenesTable createAlias(String alias) {
+    return $ScenesTable(attachedDatabase, alias);
+  }
+}
+
+class Scene extends DataClass implements Insertable<Scene> {
+  final String id;
+  final String connectionId;
+  final String name;
+  final int iconCodepoint;
+  final int colorSeed;
+  final String actions;
+  final int sortOrder;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Scene({
+    required this.id,
+    required this.connectionId,
+    required this.name,
+    required this.iconCodepoint,
+    required this.colorSeed,
+    required this.actions,
+    required this.sortOrder,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['connection_id'] = Variable<String>(connectionId);
+    map['name'] = Variable<String>(name);
+    map['icon_codepoint'] = Variable<int>(iconCodepoint);
+    map['color_seed'] = Variable<int>(colorSeed);
+    map['actions'] = Variable<String>(actions);
+    map['sort_order'] = Variable<int>(sortOrder);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  ScenesCompanion toCompanion(bool nullToAbsent) {
+    return ScenesCompanion(
+      id: Value(id),
+      connectionId: Value(connectionId),
+      name: Value(name),
+      iconCodepoint: Value(iconCodepoint),
+      colorSeed: Value(colorSeed),
+      actions: Value(actions),
+      sortOrder: Value(sortOrder),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Scene.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Scene(
+      id: serializer.fromJson<String>(json['id']),
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      name: serializer.fromJson<String>(json['name']),
+      iconCodepoint: serializer.fromJson<int>(json['iconCodepoint']),
+      colorSeed: serializer.fromJson<int>(json['colorSeed']),
+      actions: serializer.fromJson<String>(json['actions']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'connectionId': serializer.toJson<String>(connectionId),
+      'name': serializer.toJson<String>(name),
+      'iconCodepoint': serializer.toJson<int>(iconCodepoint),
+      'colorSeed': serializer.toJson<int>(colorSeed),
+      'actions': serializer.toJson<String>(actions),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Scene copyWith({
+    String? id,
+    String? connectionId,
+    String? name,
+    int? iconCodepoint,
+    int? colorSeed,
+    String? actions,
+    int? sortOrder,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Scene(
+    id: id ?? this.id,
+    connectionId: connectionId ?? this.connectionId,
+    name: name ?? this.name,
+    iconCodepoint: iconCodepoint ?? this.iconCodepoint,
+    colorSeed: colorSeed ?? this.colorSeed,
+    actions: actions ?? this.actions,
+    sortOrder: sortOrder ?? this.sortOrder,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Scene copyWithCompanion(ScenesCompanion data) {
+    return Scene(
+      id: data.id.present ? data.id.value : this.id,
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      name: data.name.present ? data.name.value : this.name,
+      iconCodepoint: data.iconCodepoint.present
+          ? data.iconCodepoint.value
+          : this.iconCodepoint,
+      colorSeed: data.colorSeed.present ? data.colorSeed.value : this.colorSeed,
+      actions: data.actions.present ? data.actions.value : this.actions,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Scene(')
+          ..write('id: $id, ')
+          ..write('connectionId: $connectionId, ')
+          ..write('name: $name, ')
+          ..write('iconCodepoint: $iconCodepoint, ')
+          ..write('colorSeed: $colorSeed, ')
+          ..write('actions: $actions, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    connectionId,
+    name,
+    iconCodepoint,
+    colorSeed,
+    actions,
+    sortOrder,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Scene &&
+          other.id == this.id &&
+          other.connectionId == this.connectionId &&
+          other.name == this.name &&
+          other.iconCodepoint == this.iconCodepoint &&
+          other.colorSeed == this.colorSeed &&
+          other.actions == this.actions &&
+          other.sortOrder == this.sortOrder &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class ScenesCompanion extends UpdateCompanion<Scene> {
+  final Value<String> id;
+  final Value<String> connectionId;
+  final Value<String> name;
+  final Value<int> iconCodepoint;
+  final Value<int> colorSeed;
+  final Value<String> actions;
+  final Value<int> sortOrder;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const ScenesCompanion({
+    this.id = const Value.absent(),
+    this.connectionId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.iconCodepoint = const Value.absent(),
+    this.colorSeed = const Value.absent(),
+    this.actions = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ScenesCompanion.insert({
+    required String id,
+    required String connectionId,
+    required String name,
+    required int iconCodepoint,
+    required int colorSeed,
+    required String actions,
+    this.sortOrder = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       connectionId = Value(connectionId),
+       name = Value(name),
+       iconCodepoint = Value(iconCodepoint),
+       colorSeed = Value(colorSeed),
+       actions = Value(actions),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Scene> custom({
+    Expression<String>? id,
+    Expression<String>? connectionId,
+    Expression<String>? name,
+    Expression<int>? iconCodepoint,
+    Expression<int>? colorSeed,
+    Expression<String>? actions,
+    Expression<int>? sortOrder,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (connectionId != null) 'connection_id': connectionId,
+      if (name != null) 'name': name,
+      if (iconCodepoint != null) 'icon_codepoint': iconCodepoint,
+      if (colorSeed != null) 'color_seed': colorSeed,
+      if (actions != null) 'actions': actions,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ScenesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? connectionId,
+    Value<String>? name,
+    Value<int>? iconCodepoint,
+    Value<int>? colorSeed,
+    Value<String>? actions,
+    Value<int>? sortOrder,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return ScenesCompanion(
+      id: id ?? this.id,
+      connectionId: connectionId ?? this.connectionId,
+      name: name ?? this.name,
+      iconCodepoint: iconCodepoint ?? this.iconCodepoint,
+      colorSeed: colorSeed ?? this.colorSeed,
+      actions: actions ?? this.actions,
+      sortOrder: sortOrder ?? this.sortOrder,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (iconCodepoint.present) {
+      map['icon_codepoint'] = Variable<int>(iconCodepoint.value);
+    }
+    if (colorSeed.present) {
+      map['color_seed'] = Variable<int>(colorSeed.value);
+    }
+    if (actions.present) {
+      map['actions'] = Variable<String>(actions.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ScenesCompanion(')
+          ..write('id: $id, ')
+          ..write('connectionId: $connectionId, ')
+          ..write('name: $name, ')
+          ..write('iconCodepoint: $iconCodepoint, ')
+          ..write('colorSeed: $colorSeed, ')
+          ..write('actions: $actions, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $ConnectionsTable connections = $ConnectionsTable(this);
   late final $DashboardsTable dashboards = $DashboardsTable(this);
   late final $PanelsTable panels = $PanelsTable(this);
+  late final $ScenesTable scenes = $ScenesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2245,6 +2818,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     connections,
     dashboards,
     panels,
+    scenes,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -2261,6 +2835,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('panels', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'connections',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('scenes', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -2318,6 +2899,25 @@ final class $$ConnectionsTableReferences
     ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_dashboardsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ScenesTable, List<Scene>> _scenesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.scenes,
+    aliasName: $_aliasNameGenerator(db.connections.id, db.scenes.connectionId),
+  );
+
+  $$ScenesTableProcessedTableManager get scenesRefs {
+    final manager = $$ScenesTableTableManager(
+      $_db,
+      $_db.scenes,
+    ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_scenesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -2410,6 +3010,31 @@ class $$ConnectionsTableFilterComposer
           }) => $$DashboardsTableFilterComposer(
             $db: $db,
             $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> scenesRefs(
+    Expression<bool> Function($$ScenesTableFilterComposer f) f,
+  ) {
+    final $$ScenesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.scenes,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ScenesTableFilterComposer(
+            $db: $db,
+            $table: $db.scenes,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -2567,6 +3192,31 @@ class $$ConnectionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> scenesRefs<T extends Object>(
+    Expression<T> Function($$ScenesTableAnnotationComposer a) f,
+  ) {
+    final $$ScenesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.scenes,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ScenesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.scenes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableTableManager
@@ -2582,7 +3232,7 @@ class $$ConnectionsTableTableManager
           $$ConnectionsTableUpdateCompanionBuilder,
           (Connection, $$ConnectionsTableReferences),
           Connection,
-          PrefetchHooks Function({bool dashboardsRefs})
+          PrefetchHooks Function({bool dashboardsRefs, bool scenesRefs})
         > {
   $$ConnectionsTableTableManager(_$AppDatabase db, $ConnectionsTable table)
     : super(
@@ -2663,38 +3313,63 @@ class $$ConnectionsTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({dashboardsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (dashboardsRefs) db.dashboards],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (dashboardsRefs)
-                    await $_getPrefetchedData<
-                      Connection,
-                      $ConnectionsTable,
-                      Dashboard
-                    >(
-                      currentTable: table,
-                      referencedTable: $$ConnectionsTableReferences
-                          ._dashboardsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$ConnectionsTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).dashboardsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.connectionId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({dashboardsRefs = false, scenesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (dashboardsRefs) db.dashboards,
+                    if (scenesRefs) db.scenes,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (dashboardsRefs)
+                        await $_getPrefetchedData<
+                          Connection,
+                          $ConnectionsTable,
+                          Dashboard
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ConnectionsTableReferences
+                              ._dashboardsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ConnectionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dashboardsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (scenesRefs)
+                        await $_getPrefetchedData<
+                          Connection,
+                          $ConnectionsTable,
+                          Scene
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ConnectionsTableReferences
+                              ._scenesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ConnectionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).scenesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -2711,7 +3386,7 @@ typedef $$ConnectionsTableProcessedTableManager =
       $$ConnectionsTableUpdateCompanionBuilder,
       (Connection, $$ConnectionsTableReferences),
       Connection,
-      PrefetchHooks Function({bool dashboardsRefs})
+      PrefetchHooks Function({bool dashboardsRefs, bool scenesRefs})
     >;
 typedef $$DashboardsTableCreateCompanionBuilder =
     DashboardsCompanion Function({
@@ -3733,6 +4408,401 @@ typedef $$PanelsTableProcessedTableManager =
       Panel,
       PrefetchHooks Function({bool dashboardId})
     >;
+typedef $$ScenesTableCreateCompanionBuilder =
+    ScenesCompanion Function({
+      required String id,
+      required String connectionId,
+      required String name,
+      required int iconCodepoint,
+      required int colorSeed,
+      required String actions,
+      Value<int> sortOrder,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$ScenesTableUpdateCompanionBuilder =
+    ScenesCompanion Function({
+      Value<String> id,
+      Value<String> connectionId,
+      Value<String> name,
+      Value<int> iconCodepoint,
+      Value<int> colorSeed,
+      Value<String> actions,
+      Value<int> sortOrder,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$ScenesTableReferences
+    extends BaseReferences<_$AppDatabase, $ScenesTable, Scene> {
+  $$ScenesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ConnectionsTable _connectionIdTable(_$AppDatabase db) =>
+      db.connections.createAlias(
+        $_aliasNameGenerator(db.scenes.connectionId, db.connections.id),
+      );
+
+  $$ConnectionsTableProcessedTableManager get connectionId {
+    final $_column = $_itemColumn<String>('connection_id')!;
+
+    final manager = $$ConnectionsTableTableManager(
+      $_db,
+      $_db.connections,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_connectionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ScenesTableFilterComposer
+    extends Composer<_$AppDatabase, $ScenesTable> {
+  $$ScenesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get iconCodepoint => $composableBuilder(
+    column: $table.iconCodepoint,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get colorSeed => $composableBuilder(
+    column: $table.colorSeed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get actions => $composableBuilder(
+    column: $table.actions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ConnectionsTableFilterComposer get connectionId {
+    final $$ConnectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScenesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ScenesTable> {
+  $$ScenesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get iconCodepoint => $composableBuilder(
+    column: $table.iconCodepoint,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get colorSeed => $composableBuilder(
+    column: $table.colorSeed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get actions => $composableBuilder(
+    column: $table.actions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ConnectionsTableOrderingComposer get connectionId {
+    final $$ConnectionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScenesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ScenesTable> {
+  $$ScenesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get iconCodepoint => $composableBuilder(
+    column: $table.iconCodepoint,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get colorSeed =>
+      $composableBuilder(column: $table.colorSeed, builder: (column) => column);
+
+  GeneratedColumn<String> get actions =>
+      $composableBuilder(column: $table.actions, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$ConnectionsTableAnnotationComposer get connectionId {
+    final $$ConnectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScenesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ScenesTable,
+          Scene,
+          $$ScenesTableFilterComposer,
+          $$ScenesTableOrderingComposer,
+          $$ScenesTableAnnotationComposer,
+          $$ScenesTableCreateCompanionBuilder,
+          $$ScenesTableUpdateCompanionBuilder,
+          (Scene, $$ScenesTableReferences),
+          Scene,
+          PrefetchHooks Function({bool connectionId})
+        > {
+  $$ScenesTableTableManager(_$AppDatabase db, $ScenesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ScenesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ScenesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ScenesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> connectionId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> iconCodepoint = const Value.absent(),
+                Value<int> colorSeed = const Value.absent(),
+                Value<String> actions = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ScenesCompanion(
+                id: id,
+                connectionId: connectionId,
+                name: name,
+                iconCodepoint: iconCodepoint,
+                colorSeed: colorSeed,
+                actions: actions,
+                sortOrder: sortOrder,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String connectionId,
+                required String name,
+                required int iconCodepoint,
+                required int colorSeed,
+                required String actions,
+                Value<int> sortOrder = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ScenesCompanion.insert(
+                id: id,
+                connectionId: connectionId,
+                name: name,
+                iconCodepoint: iconCodepoint,
+                colorSeed: colorSeed,
+                actions: actions,
+                sortOrder: sortOrder,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$ScenesTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback: ({connectionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (connectionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.connectionId,
+                                referencedTable: $$ScenesTableReferences
+                                    ._connectionIdTable(db),
+                                referencedColumn: $$ScenesTableReferences
+                                    ._connectionIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ScenesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ScenesTable,
+      Scene,
+      $$ScenesTableFilterComposer,
+      $$ScenesTableOrderingComposer,
+      $$ScenesTableAnnotationComposer,
+      $$ScenesTableCreateCompanionBuilder,
+      $$ScenesTableUpdateCompanionBuilder,
+      (Scene, $$ScenesTableReferences),
+      Scene,
+      PrefetchHooks Function({bool connectionId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3743,4 +4813,6 @@ class $AppDatabaseManager {
       $$DashboardsTableTableManager(_db, _db.dashboards);
   $$PanelsTableTableManager get panels =>
       $$PanelsTableTableManager(_db, _db.panels);
+  $$ScenesTableTableManager get scenes =>
+      $$ScenesTableTableManager(_db, _db.scenes);
 }

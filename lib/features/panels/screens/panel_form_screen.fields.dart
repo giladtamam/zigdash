@@ -416,6 +416,10 @@ extension _PanelFormFields on _State {
             onChanged: (v) => setState(() => _scheduleEnabled = v), // ignore: invalid_use_of_protected_member
           ),
         ];
+      case PanelType.scene:
+        // Scene panels are configured from the Scenes screen ("Add to
+        // dashboard"); the generic form only edits name/width here.
+        return const [];
     }
   }
 

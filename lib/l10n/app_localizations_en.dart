@@ -933,4 +933,98 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get devicesPairedHint =>
       'Added to your network. To put it on a dashboard, use \'Add from a device\' on that dashboard.';
+
+  @override
+  String get scenesTitle => 'Scenes';
+
+  @override
+  String get scenesNone =>
+      'No scenes yet. Set your devices the way you like, then capture them as a scene.';
+
+  @override
+  String get scenesNewButton => 'New scene';
+
+  @override
+  String scenesActivated(Object name) {
+    return 'Activated $name';
+  }
+
+  @override
+  String get scenesActivateOffline =>
+      'Not connected — can\'t activate the scene';
+
+  @override
+  String get sceneFormNewTitle => 'New scene';
+
+  @override
+  String get sceneFormEditTitle => 'Edit scene';
+
+  @override
+  String get sceneFormNameLabel => 'Scene name';
+
+  @override
+  String get sceneFormDevicesHeader => 'Devices to capture';
+
+  @override
+  String get sceneFormCaptureHint =>
+      'Each selected device\'s current settable state (on/off, brightness, colour, position…) is saved. Read-only values are ignored.';
+
+  @override
+  String get sceneFormNoDevices =>
+      'No devices reporting state. Make sure they\'re online, then pull to refresh.';
+
+  @override
+  String sceneFormSelectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get sceneFormNoDevicesSelected =>
+      'Select at least one device to capture.';
+
+  @override
+  String get sceneFormNothingCaptured =>
+      'Nothing settable was captured from the selected devices.';
+
+  @override
+  String get sceneDeleteTitle => 'Delete scene?';
+
+  @override
+  String sceneDeleteMessage(Object name) {
+    return '\"$name\" will be removed. Devices keep their current state.';
+  }
+
+  @override
+  String get sceneEditAction => 'Edit';
+
+  @override
+  String get sceneDeleteAction => 'Delete';
+
+  @override
+  String get sceneAddToDashboard => 'Add to dashboard';
+
+  @override
+  String sceneAddedToDashboard(Object name) {
+    return 'Added to $name';
+  }
+
+  @override
+  String sceneActionsCount(int count) {
+    return '$count devices';
+  }
+
+  @override
+  String get panelTypeScene => 'Scene';
+
+  @override
+  String get panelPickerSceneTitle => 'Scene button';
+
+  @override
+  String get panelPickerSceneSubtitle => 'One tap activates a saved scene';
+
+  @override
+  String get panelSceneChoose => 'Scene';
+
+  @override
+  String get panelSceneMissing => 'Scene not found — re-pick it';
 }

@@ -53,6 +53,7 @@ class _DevicePickerScreenState extends ConsumerState<DevicePickerScreen> {
         PanelType.radio => Icons.radio_button_checked,
         PanelType.textInput => Icons.keyboard,
         PanelType.schedule => Icons.schedule,
+        PanelType.scene => Icons.auto_awesome,
       };
 
   @override

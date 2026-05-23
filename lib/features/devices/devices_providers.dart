@@ -51,6 +51,32 @@ final deviceHealthProvider = StreamProvider.autoDispose
   }
 });
 
+/// Streams a map of `friendlyName -> latest raw state JSON` for all devices
+/// under [base]. Used by the scene-capture flow to snapshot device state.
+/// Subscribes to `$base/#`, ignoring `bridge/*` and `/availability` topics.
+final deviceStatesProvider = StreamProvider.autoDispose
+    .family<Map<String, String>, DeviceHealthArgs>((ref, args) async* {
+  final mgr = await ref.read(mqttManagerProvider(args.connectionId).future);
+  final base = args.base;
+  final stateByName = <String, String>{};
+
+  yield Map.unmodifiable(stateByName);
+
+  final pattern = '$base/#';
+  final stream = mgr.subscribe(pattern);
+  ref.onDispose(() => mgr.unsubscribe(pattern));
+
+  await for (final msg in stream) {
+    final topic = msg.topic;
+    if (topic.length <= base.length + 1) continue;
+    final rest = topic.substring(base.length + 1);
+    if (rest.startsWith('bridge')) continue;
+    if (rest.contains('/')) continue; // availability, /set echoes, etc.
+    stateByName[rest] = msg.payload;
+    yield Map.unmodifiable(stateByName);
+  }
+});
+
 /// Streams [BridgeEvent]s from `$base/bridge/event`.
 final bridgeEventsProvider = StreamProvider.autoDispose
     .family<BridgeEvent, BridgeEventArgs>((ref, args) async* {

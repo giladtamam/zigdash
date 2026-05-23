@@ -13,6 +13,8 @@ import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
 import '../../features/devices/screens/devices_screen.dart';
+import '../../features/scenes/screens/scenes_screen.dart';
+import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import 'routes.dart';
@@ -53,6 +55,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.devices,
         builder: (_, state) =>
             DevicesScreen(connectionId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: Routes.scenes,
+        builder: (_, state) =>
+            ScenesScreen(connectionId: state.pathParameters['id']!),
+        routes: [
+          GoRoute(
+            path: 'new',
+            builder: (_, state) =>
+                SceneFormScreen(connectionId: state.pathParameters['id']!),
+          ),
+          GoRoute(
+            path: ':sceneId/edit',
+            builder: (_, state) => SceneFormScreen(
+              connectionId: state.pathParameters['id']!,
+              sceneId: state.pathParameters['sceneId'],
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: '/connections/:id/dashboards',

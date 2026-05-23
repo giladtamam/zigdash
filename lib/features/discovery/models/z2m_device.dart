@@ -8,18 +8,29 @@ import 'dart:convert';
 /// [unit]     — optional unit string (e.g. "%").
 /// [valueOn]  — for binary exposes, the "on" value serialised as a string
 ///              (e.g. "ON" or "true").
+/// [access]   — Z2M access bitmask: bit 0 (1) published in state, bit 1 (2)
+///              settable via `<device>/set`, bit 2 (4) gettable. Defaults to 0
+///              when absent (e.g. composite parents carry no access of their own).
 class Z2mExpose {
+  /// Z2M access bit: the property can be written via `<device>/set`.
+  static const int accessSet = 0x02;
+
   final String type;
   final String? property;
   final String? unit;
   final String? valueOn;
+  final int access;
 
   const Z2mExpose({
     required this.type,
     this.property,
     this.unit,
     this.valueOn,
+    this.access = 0,
   });
+
+  /// True when this property can be written via `<device>/set`.
+  bool get isSettable => property != null && (access & accessSet) != 0;
 
   factory Z2mExpose._fromMap(Map<String, dynamic> map) {
     final rawValueOn = map['value_on'];
@@ -32,11 +43,17 @@ class Z2mExpose {
       valueOn = rawValueOn.toString();
     }
 
+    final rawAccess = map['access'];
+    final access = rawAccess is int
+        ? rawAccess
+        : (rawAccess is num ? rawAccess.toInt() : 0);
+
     return Z2mExpose(
       type: (map['type'] as String?) ?? 'unknown',
       property: map['property'] as String?,
       unit: map['unit'] as String?,
       valueOn: valueOn,
+      access: access,
     );
   }
 }
