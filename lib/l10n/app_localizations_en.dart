@@ -929,4 +929,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String devicesPaired(Object name) {
     return 'Ready: $name';
   }
+
+  @override
+  String get devicesPairedHint =>
+      'Added to your network. To put it on a dashboard, use \'Add from a device\' on that dashboard.';
 }

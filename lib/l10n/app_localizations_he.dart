@@ -924,4 +924,8 @@ class AppLocalizationsHe extends AppLocalizations {
   String devicesPaired(Object name) {
     return 'מוכן: $name';
   }
+
+  @override
+  String get devicesPairedHint =>
+      'נוסף לרשת. כדי להוסיף ללוח, השתמש ב\'הוספה מהתקן\' בלוח.';
 }

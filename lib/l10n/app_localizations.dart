@@ -1795,6 +1795,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ready: {name}'**
   String devicesPaired(Object name);
+
+  /// No description provided for @devicesPairedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your network. To put it on a dashboard, use \'Add from a device\' on that dashboard.'**
+  String get devicesPairedHint;
 }
 
 class _AppLocalizationsDelegate
