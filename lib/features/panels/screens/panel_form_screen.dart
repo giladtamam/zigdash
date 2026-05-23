@@ -114,6 +114,10 @@ class _State extends ConsumerState<PanelFormScreen> {
   final _coverPresets = TextEditingController(text: '0, 25, 50, 75, 100');
   bool _coverShowSlider = true;
 
+  // Scene field — preserved across generic-form edits (no UI field here; scene
+  // panels are created/edited from the Scenes screen).
+  String _sceneId = '';
+
   // Schedule fields
   final _scheduleOpenTime = TextEditingController(text: '07:00');
   final _scheduleCloseTime = TextEditingController(text: '19:00');
@@ -131,16 +135,20 @@ class _State extends ConsumerState<PanelFormScreen> {
 
   bool get _isEdit => widget.panelId != null;
 
+  // Scene panels carry no MQTT topic of their own (they activate a saved
+  // scene); marking scene both read- and write-only hides every topic field.
   bool get _isReadOnly =>
       _type == PanelType.led ||
       _type == PanelType.nodeStatus ||
       _type == PanelType.progress ||
-      _type == PanelType.textLog;
+      _type == PanelType.textLog ||
+      _type == PanelType.scene;
 
   bool get _isWriteOnly =>
       _type == PanelType.button ||
       _type == PanelType.textInput ||
-      _type == PanelType.schedule;
+      _type == PanelType.schedule ||
+      _type == PanelType.scene;
 
   /// Returns the json-path text for the current panel type, or '' for types
   /// without a json-path field (button, textInput, cover, schedule).
@@ -326,6 +334,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       _scheduleOpenPayload.text = cfg.openPayload;
       _scheduleClosePayload.text = cfg.closePayload;
       _scheduleEnabled = cfg.enabled;
+    } else if (cfg is SceneConfig) {
+      _sceneId = cfg.sceneId;
     }
     setState(() => _loaded = true);
   }
@@ -383,6 +393,9 @@ class _State extends ConsumerState<PanelFormScreen> {
         break;
       case PanelType.schedule:
         _topic.text = 'set';
+        break;
+      case PanelType.scene:
+        _topic.text = '';
         break;
     }
   }
@@ -458,6 +471,7 @@ class _State extends ConsumerState<PanelFormScreen> {
           closePayload: _scheduleClosePayload.text,
           enabled: _scheduleEnabled,
         ),
+      PanelType.scene => SceneConfig(sceneId: _sceneId),
     };
   }
 
@@ -600,6 +614,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       PanelType.textInput => l10n.panelTypeTextInput,
       PanelType.textLog => l10n.panelTypeTextLog,
       PanelType.schedule => l10n.panelTypeSchedule,
+      PanelType.scene => l10n.panelTypeScene,
     };
 
     return Scaffold(

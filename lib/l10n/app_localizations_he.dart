@@ -994,6 +994,14 @@ class AppLocalizationsHe extends AppLocalizations {
   String get sceneDeleteAction => 'מחיקה';
 
   @override
+  String get sceneAddToDashboard => 'הוספה ללוח';
+
+  @override
+  String sceneAddedToDashboard(Object name) {
+    return 'נוסף ל-$name';
+  }
+
+  @override
   String sceneActionsCount(int count) {
     return '$count התקנים';
   }

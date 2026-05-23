@@ -29,6 +29,7 @@ sealed class PanelConfig {
       PanelType.textInput => TextInputConfig.fromJson(j),
       PanelType.textLog => TextLogConfig.fromJson(j),
       PanelType.schedule => ScheduleConfig.fromJson(j),
+      PanelType.scene => SceneConfig.fromJson(j),
     };
   }
 
@@ -47,6 +48,7 @@ sealed class PanelConfig {
         PanelType.textInput => const TextInputConfig(),
         PanelType.textLog => const TextLogConfig(),
         PanelType.schedule => const ScheduleConfig(),
+        PanelType.scene => const SceneConfig(),
       };
 }
 
@@ -457,4 +459,17 @@ class ScheduleConfig extends PanelConfig {
         closePayload: j['closePayload'] as String? ?? '{"state":"CLOSE"}',
         enabled: j['enabled'] as bool? ?? true,
       );
+}
+
+class SceneConfig extends PanelConfig {
+  const SceneConfig({this.sceneId = ''});
+
+  /// Id of the Scene this panel activates.
+  final String sceneId;
+
+  @override
+  Map<String, dynamic> toJson() => {'sceneId': sceneId};
+
+  static SceneConfig fromJson(Map<String, dynamic> j) =>
+      SceneConfig(sceneId: j['sceneId'] as String? ?? '');
 }

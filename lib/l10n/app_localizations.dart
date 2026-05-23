@@ -1910,6 +1910,18 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get sceneDeleteAction;
 
+  /// No description provided for @sceneAddToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to dashboard'**
+  String get sceneAddToDashboard;
+
+  /// No description provided for @sceneAddedToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {name}'**
+  String sceneAddedToDashboard(Object name);
+
   /// No description provided for @sceneActionsCount.
   ///
   /// In en, this message translates to:

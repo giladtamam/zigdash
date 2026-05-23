@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
+import '../../../data/database/tables/panels.dart';
+import '../../../data/repositories/dashboard_repo.dart';
+import '../../../data/repositories/panel_repo.dart';
+import '../../panels/models/panel_config.dart';
 import '../models/scene.dart';
 import '../scenes_providers.dart';
 
@@ -59,6 +63,52 @@ class ScenesScreen extends ConsumerWidget {
     }
   }
 
+  /// Adds a scene-activation tile to a dashboard the user picks.
+  Future<void> _addToDashboard(
+    BuildContext context,
+    WidgetRef ref,
+    Scene scene,
+  ) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final dashboards =
+        await ref.read(dashboardRepoProvider).getByConnection(connectionId);
+    if (!context.mounted) return;
+    if (dashboards.isEmpty) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.scenesNone)));
+      return;
+    }
+    final chosen = await showModalBottomSheet<Dashboard>(
+      context: context,
+      builder: (sheetCtx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final d in dashboards)
+              ListTile(
+                leading: Icon(
+                  IconData(d.iconCodepoint, fontFamily: 'MaterialIcons'),
+                ),
+                title: Text(d.name),
+                onTap: () => Navigator.pop(sheetCtx, d),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (chosen == null) return;
+    await ref.read(panelRepoProvider).create(
+          dashboardId: chosen.id,
+          name: scene.name,
+          type: PanelType.scene,
+          topic: '',
+          width: PanelWidth.half,
+          config: SceneConfig(sceneId: scene.id),
+        );
+    messenger.showSnackBar(
+        SnackBar(content: Text(l10n.sceneAddedToDashboard(chosen.name))));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -102,10 +152,15 @@ class ScenesScreen extends ConsumerWidget {
                       );
                     } else if (v == 'delete') {
                       _confirmDelete(context, ref, scene);
+                    } else if (v == 'dashboard') {
+                      _addToDashboard(context, ref, scene);
                     }
                   },
                   itemBuilder: (_) => [
                     PopupMenuItem(value: 'edit', child: Text(l10n.sceneEditAction)),
+                    PopupMenuItem(
+                        value: 'dashboard',
+                        child: Text(l10n.sceneAddToDashboard)),
                     PopupMenuItem(
                         value: 'delete', child: Text(l10n.sceneDeleteAction)),
                   ],

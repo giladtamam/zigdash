@@ -1001,6 +1001,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sceneDeleteAction => 'Delete';
 
   @override
+  String get sceneAddToDashboard => 'Add to dashboard';
+
+  @override
+  String sceneAddedToDashboard(Object name) {
+    return 'Added to $name';
+  }
+
+  @override
   String sceneActionsCount(int count) {
     return '$count devices';
   }
