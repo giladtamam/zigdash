@@ -43,6 +43,12 @@ class DashboardsScreen extends ConsumerWidget {
               title: Text(connectionName),
               actions: [
               IconButton(
+                icon: const Icon(Icons.auto_awesome),
+                tooltip: context.l10n.scenesTitle,
+                onPressed: () =>
+                    context.push('/connections/$connectionId/scenes'),
+              ),
+              IconButton(
                 icon: const Icon(Icons.devices_other),
                 tooltip: context.l10n.devicesTitle,
                 onPressed: () =>
@@ -108,6 +114,12 @@ class _DashboardsTabbed extends StatelessWidget {
                 tooltip: context.l10n.dashAddDashboard,
                 onPressed: () =>
                     tabCtx.push('/connections/$connectionId/dashboards/form'),
+              ),
+              IconButton(
+                icon: const Icon(Icons.auto_awesome),
+                tooltip: context.l10n.scenesTitle,
+                onPressed: () =>
+                    tabCtx.push('/connections/$connectionId/scenes'),
               ),
               IconButton(
                 icon: const Icon(Icons.devices_other),
