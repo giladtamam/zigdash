@@ -887,4 +887,41 @@ class AppLocalizationsHe extends AppLocalizations {
   String connTestFailed(Object error) {
     return 'החיבור נכשל: $error';
   }
+
+  @override
+  String get devicesTitle => 'התקנים';
+
+  @override
+  String get devicesAddButton => 'הוספת התקן';
+
+  @override
+  String get devicesPairingTitle => 'צימוד — לחץ על כפתור ההתקן';
+
+  @override
+  String devicesPairingHint(int seconds) {
+    return 'מחפש התקנים חדשים… $secondsש׳';
+  }
+
+  @override
+  String get devicesPairingStop => 'עצור';
+
+  @override
+  String get devicesNone => 'לא נמצאו התקנים.';
+
+  @override
+  String get devicesBattery => 'סוללה';
+
+  @override
+  String get devicesLinkQuality => 'קישור';
+
+  @override
+  String get devicesOnline => 'מקוון';
+
+  @override
+  String get devicesOffline => 'לא מקוון';
+
+  @override
+  String devicesPaired(Object name) {
+    return 'מוכן: $name';
+  }
 }

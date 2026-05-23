@@ -327,5 +327,19 @@
   "connTestButton": "Test connection",
   "connTestOk": "Connection successful",
   "connTestFailed": "Connection failed: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } }
+  "@connTestFailed": { "placeholders": { "error": {} } },
+
+  "devicesTitle": "Devices",
+  "devicesAddButton": "Add device",
+  "devicesPairingTitle": "Pairing — press the device's button",
+  "devicesPairingHint": "Searching for new devices… {seconds}s",
+  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "devicesPairingStop": "Stop",
+  "devicesNone": "No devices found.",
+  "devicesBattery": "Battery",
+  "devicesLinkQuality": "Link",
+  "devicesOnline": "Online",
+  "devicesOffline": "Offline",
+  "devicesPaired": "Ready: {name}",
+  "@devicesPaired": { "placeholders": { "name": {} } }
 }

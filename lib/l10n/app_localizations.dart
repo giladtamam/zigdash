@@ -1729,6 +1729,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connection failed: {error}'**
   String connTestFailed(Object error);
+
+  /// No description provided for @devicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devicesTitle;
+
+  /// No description provided for @devicesAddButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add device'**
+  String get devicesAddButton;
+
+  /// No description provided for @devicesPairingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing — press the device\'s button'**
+  String get devicesPairingTitle;
+
+  /// No description provided for @devicesPairingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for new devices… {seconds}s'**
+  String devicesPairingHint(int seconds);
+
+  /// No description provided for @devicesPairingStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get devicesPairingStop;
+
+  /// No description provided for @devicesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices found.'**
+  String get devicesNone;
+
+  /// No description provided for @devicesBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get devicesBattery;
+
+  /// No description provided for @devicesLinkQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get devicesLinkQuality;
+
+  /// No description provided for @devicesOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get devicesOnline;
+
+  /// No description provided for @devicesOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get devicesOffline;
+
+  /// No description provided for @devicesPaired.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready: {name}'**
+  String devicesPaired(Object name);
 }
 
 class _AppLocalizationsDelegate

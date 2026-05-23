@@ -8,4 +8,5 @@ class Routes {
   static const settings = '/settings';
   static const help = '/help';
   static const deviceDiscovery = '/connections/:id/dashboards/:dashboardId/discover';
+  static const devices = '/connections/:id/devices';
 }

@@ -41,7 +41,15 @@ class DashboardsScreen extends ConsumerWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(connectionName),
-              actions: [_BackupMenu(connectionId: connectionId)],
+              actions: [
+              IconButton(
+                icon: const Icon(Icons.devices_other),
+                tooltip: context.l10n.devicesTitle,
+                onPressed: () =>
+                    context.push('/connections/$connectionId/devices'),
+              ),
+              _BackupMenu(connectionId: connectionId),
+            ],
             ),
             body: const _EmptyState(),
             floatingActionButton: FloatingActionButton.extended(
@@ -100,6 +108,12 @@ class _DashboardsTabbed extends StatelessWidget {
                 tooltip: context.l10n.dashAddDashboard,
                 onPressed: () =>
                     tabCtx.push('/connections/$connectionId/dashboards/form'),
+              ),
+              IconButton(
+                icon: const Icon(Icons.devices_other),
+                tooltip: context.l10n.devicesTitle,
+                onPressed: () =>
+                    tabCtx.push('/connections/$connectionId/devices'),
               ),
               _BackupMenu(connectionId: connectionId),
             ],

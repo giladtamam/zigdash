@@ -892,4 +892,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String connTestFailed(Object error) {
     return 'Connection failed: $error';
   }
+
+  @override
+  String get devicesTitle => 'Devices';
+
+  @override
+  String get devicesAddButton => 'Add device';
+
+  @override
+  String get devicesPairingTitle => 'Pairing — press the device\'s button';
+
+  @override
+  String devicesPairingHint(int seconds) {
+    return 'Searching for new devices… ${seconds}s';
+  }
+
+  @override
+  String get devicesPairingStop => 'Stop';
+
+  @override
+  String get devicesNone => 'No devices found.';
+
+  @override
+  String get devicesBattery => 'Battery';
+
+  @override
+  String get devicesLinkQuality => 'Link';
+
+  @override
+  String get devicesOnline => 'Online';
+
+  @override
+  String get devicesOffline => 'Offline';
+
+  @override
+  String devicesPaired(Object name) {
+    return 'Ready: $name';
+  }
 }

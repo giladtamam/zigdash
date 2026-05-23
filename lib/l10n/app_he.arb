@@ -327,5 +327,19 @@
   "connTestButton": "בדיקת חיבור",
   "connTestOk": "החיבור הצליח",
   "connTestFailed": "החיבור נכשל: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } }
+  "@connTestFailed": { "placeholders": { "error": {} } },
+
+  "devicesTitle": "התקנים",
+  "devicesAddButton": "הוספת התקן",
+  "devicesPairingTitle": "צימוד — לחץ על כפתור ההתקן",
+  "devicesPairingHint": "מחפש התקנים חדשים… {seconds}ש׳",
+  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "devicesPairingStop": "עצור",
+  "devicesNone": "לא נמצאו התקנים.",
+  "devicesBattery": "סוללה",
+  "devicesLinkQuality": "קישור",
+  "devicesOnline": "מקוון",
+  "devicesOffline": "לא מקוון",
+  "devicesPaired": "מוכן: {name}",
+  "@devicesPaired": { "placeholders": { "name": {} } }
 }
