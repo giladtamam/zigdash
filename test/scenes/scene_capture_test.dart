@@ -153,20 +153,20 @@ void main() {
     });
   });
 
-  group('Scene.encodeActions / decodeActions', () {
+  group('SceneAction.encodeList / decodeList', () {
     test('round-trips a list of actions', () {
       const actions = [
         SceneAction(setTopic: 'zigbee2mqtt/a/set', payload: '{"state":"ON"}'),
         SceneAction(setTopic: 'zigbee2mqtt/b/set', payload: '{"state":"OFF"}'),
       ];
-      final encoded = Scene.encodeActions(actions);
-      final decoded = Scene.decodeActions(encoded);
+      final encoded = SceneAction.encodeList(actions);
+      final decoded = SceneAction.decodeList(encoded);
       expect(decoded, actions);
     });
 
-    test('decodeActions returns empty on malformed input', () {
-      expect(Scene.decodeActions('not json'), isEmpty);
-      expect(Scene.decodeActions('{"not":"a list"}'), isEmpty);
+    test('decodeList returns empty on malformed input', () {
+      expect(SceneAction.decodeList('not json'), isEmpty);
+      expect(SceneAction.decodeList('{"not":"a list"}'), isEmpty);
     });
   });
 }

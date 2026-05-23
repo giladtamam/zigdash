@@ -5,16 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'tables/connections.dart';
 import 'tables/dashboards.dart';
 import 'tables/panels.dart';
+import 'tables/scenes.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Connections, Dashboards, Panels])
+@DriftDatabase(tables: [Connections, Dashboards, Panels, Scenes])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_open());
   AppDatabase.test(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -29,6 +30,9 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.addColumn(connections, connections.remoteHost);
+          }
+          if (from < 5) {
+            await m.createTable(scenes);
           }
         },
       );
