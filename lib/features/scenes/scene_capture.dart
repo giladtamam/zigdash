@@ -22,6 +22,21 @@ Map<String, dynamic> captureSettableState(
   };
 }
 
+/// Builds a Zigbee2MQTT `/get` payload that asks the device to report the
+/// current value of every property that is BOTH readable and settable
+/// (`access & 0x06 == 0x06`). Returns an empty map when nothing is both
+/// gettable and settable (so callers can skip publishing). Z2M answers a
+/// `<device>/get` of `{"position":""}` by reading the device and publishing
+/// fresh state to `<device>` — which is what the capture flow then snapshots.
+Map<String, String> buildGetPayload(Z2mDevice device) {
+  const gettableSettable = 0x06; // get (0x04) | set (0x02)
+  return {
+    for (final e in device.exposes)
+      if (e.property != null && (e.access & gettableSettable) == gettableSettable)
+        e.property!: '',
+  };
+}
+
 /// Builds a [SceneAction] for one device from its settable state snapshot.
 /// [base] is the connection/dashboard topic prefix (e.g. `zigbee2mqtt`).
 /// Returns null when there's nothing settable to publish.

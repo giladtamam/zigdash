@@ -965,7 +965,10 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'אין התקנים שמדווחים מצב. ודאו שהם מקוונים ומשכו לרענון.';
+      'לא נמצאו התקנים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.';
+
+  @override
+  String get sceneFormReadingState => 'קורא מצב נוכחי…';
 
   @override
   String sceneFormSelectedCount(int count) {

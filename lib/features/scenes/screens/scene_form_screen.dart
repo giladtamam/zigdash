@@ -56,6 +56,7 @@ class _State extends ConsumerState<SceneFormScreen> {
   int _existingActions = 0;
   bool _loaded = false;
   bool _saving = false;
+  bool _statesRequested = false;
 
   bool get _isEdit => widget.sceneId != null;
 
@@ -92,7 +93,21 @@ class _State extends ConsumerState<SceneFormScreen> {
     final args = (connectionId: widget.connectionId, base: next);
     ref.invalidate(discoveredDevicesProvider(args));
     ref.invalidate(deviceStatesProvider(args));
-    setState(() => _base = next);
+    setState(() {
+      _base = next;
+      _statesRequested = false; // re-pull state for the new base
+    });
+  }
+
+  /// Pull current state once the device list is known. Z2M setups often don't
+  /// retain state, so we publish a `/get` to each device and let the live
+  /// subscription deliver fresh values.
+  void _ensureStateRequested(List<Z2mDevice> devices) {
+    if (_statesRequested || devices.isEmpty) return;
+    _statesRequested = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) requestDeviceStates(ref, widget.connectionId, _base, devices);
+    });
   }
 
   /// Captures actions for the currently-selected devices.
@@ -180,13 +195,13 @@ class _State extends ConsumerState<SceneFormScreen> {
     final devices = devicesAsync.value ?? const <Z2mDevice>[];
     final states = statesAsync.value ?? const <String, String>{};
 
-    // Devices that can contribute to a scene: have settable exposes and a
-    // current state to capture.
+    _ensureStateRequested(devices);
+
+    // Devices that can contribute to a scene: anything with settable controls.
+    // Their live state may still be arriving (we pull it via `/get`).
     final capturable = [
       for (final d in devices)
-        if (d.exposes.any((e) => e.isSettable) &&
-            states.containsKey(d.friendlyName))
-          d,
+        if (d.exposes.any((e) => e.isSettable)) d,
     ];
 
     return Scaffold(
@@ -276,7 +291,7 @@ class _State extends ConsumerState<SceneFormScreen> {
                 ),
               ),
             const SizedBox(height: 8),
-            if (statesAsync.isLoading && capturable.isEmpty)
+            if (devicesAsync.isLoading && capturable.isEmpty)
               const Center(child: Padding(
                 padding: EdgeInsets.all(24),
                 child: CircularProgressIndicator(),
@@ -291,11 +306,12 @@ class _State extends ConsumerState<SceneFormScreen> {
                   style: Theme.of(context).textTheme.bodySmall),
               ...capturable.map((d) {
                 final name = d.friendlyName;
+                final state = states[name];
                 return CheckboxListTile(
                   contentPadding: EdgeInsets.zero,
                   value: _selected.contains(name),
                   title: Text(name),
-                  subtitle: Text(states[name] ?? '',
+                  subtitle: Text(state ?? l10n.sceneFormReadingState,
                       maxLines: 1, overflow: TextOverflow.ellipsis),
                   onChanged: (on) => setState(() {
                     if (on == true) {

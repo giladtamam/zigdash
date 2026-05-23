@@ -1,11 +1,15 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'dart:convert';
+
 import '../../core/utils/uuid.dart';
 import '../../data/database/daos/scene_dao.dart';
 import '../../data/database/database.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
+import '../discovery/models/z2m_device.dart';
 import 'models/scene.dart';
+import 'scene_capture.dart';
 
 /// Repository over [SceneDao]. Maps the create/update args to Drift companions.
 class SceneRepo {
@@ -72,6 +76,25 @@ final scenesForConnectionProvider =
     StreamProvider.family<List<Scene>, String>((ref, connectionId) {
   return ref.watch(sceneRepoProvider).watchByConnection(connectionId);
 });
+
+/// Asks each device to report its current state by publishing a Z2M `/get`
+/// request for its gettable+settable properties. Many Z2M setups don't retain
+/// device state, so without this the capture screen would see nothing to
+/// snapshot. No-op for devices that have nothing gettable+settable.
+Future<void> requestDeviceStates(
+  WidgetRef ref,
+  String connectionId,
+  String base,
+  List<Z2mDevice> devices,
+) async {
+  final mgr = await ref.read(mqttManagerProvider(connectionId).future);
+  if (!mgr.isConnected) return;
+  for (final device in devices) {
+    final payload = buildGetPayload(device);
+    if (payload.isEmpty) continue;
+    mgr.publish('$base/${device.friendlyName}/get', jsonEncode(payload), '');
+  }
+}
 
 /// Activates a scene: publishes each action's payload to its `/set` topic,
 /// lightly sequenced so the broker isn't flooded. Returns the number of

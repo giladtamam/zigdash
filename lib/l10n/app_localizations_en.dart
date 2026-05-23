@@ -971,7 +971,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'No devices reporting state. Make sure they\'re online, then pull to refresh.';
+      'No controllable devices found. Make sure they\'re paired, then tap refresh.';
+
+  @override
+  String get sceneFormReadingState => 'Reading current state…';
 
   @override
   String sceneFormSelectedCount(int count) {

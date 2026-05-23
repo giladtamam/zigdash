@@ -153,6 +153,36 @@ void main() {
     });
   });
 
+  group('buildGetPayload', () {
+    test('requests gettable+settable props (access & 6 == 6)', () {
+      // _light: state/brightness/color_temp are access 7 (get+set+published),
+      // linkquality is access 1 (read-only).
+      final payload = buildGetPayload(_light);
+      expect(payload.keys.toSet(),
+          {'state', 'brightness', 'color_temp'});
+      expect(payload.values.every((v) => v == ''), isTrue);
+    });
+
+    test('omits set-only props (no get bit) and read-only props', () {
+      // A cover: state is access 3 (set, no get) → omitted; position access 7.
+      const cover = Z2mDevice(
+        friendlyName: 'shutter',
+        type: 'Router',
+        exposes: [
+          Z2mExpose(type: 'cover'),
+          Z2mExpose(type: 'enum', property: 'state', access: 3),
+          Z2mExpose(type: 'numeric', property: 'position', access: 7),
+          Z2mExpose(type: 'numeric', property: 'linkquality', access: 1),
+        ],
+      );
+      expect(buildGetPayload(cover), {'position': ''});
+    });
+
+    test('returns empty when nothing is gettable+settable', () {
+      expect(buildGetPayload(_sensor), isEmpty);
+    });
+  });
+
   group('SceneAction.encodeList / decodeList', () {
     test('round-trips a list of actions', () {
       const actions = [

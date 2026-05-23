@@ -1865,8 +1865,14 @@ abstract class AppLocalizations {
   /// No description provided for @sceneFormNoDevices.
   ///
   /// In en, this message translates to:
-  /// **'No devices reporting state. Make sure they\'re online, then pull to refresh.'**
+  /// **'No controllable devices found. Make sure they\'re paired, then tap refresh.'**
   String get sceneFormNoDevices;
+
+  /// No description provided for @sceneFormReadingState.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading current state…'**
+  String get sceneFormReadingState;
 
   /// No description provided for @sceneFormSelectedCount.
   ///
