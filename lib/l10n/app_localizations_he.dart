@@ -807,6 +807,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get settingsHelp => 'עזרה ומדריך';
 
   @override
+  String get settingsVersion => 'גרסה';
+
+  @override
   String get a11yBackupMenu => 'גיבוי ושחזור';
 
   @override

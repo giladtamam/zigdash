@@ -812,6 +812,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsHelp => 'Help & Guide';
 
   @override
+  String get settingsVersion => 'Version';
+
+  @override
   String get a11yBackupMenu => 'Backup & restore';
 
   @override

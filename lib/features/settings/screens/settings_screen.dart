@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../providers/settings_controller.dart';
+
+/// App version + build number, e.g. "1.3.2 (10)".
+final appVersionProvider = FutureProvider<String>((ref) async {
+  final info = await PackageInfo.fromPlatform();
+  return '${info.version} (${info.buildNumber})';
+});
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -71,6 +78,16 @@ class SettingsScreen extends ConsumerWidget {
             title: Text(l10n.settingsHelp),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(Routes.help),
+          ),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: Text(l10n.settingsVersion),
+            trailing: Text(
+              ref.watch(appVersionProvider).valueOrNull ?? '…',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+            ),
           ),
         ],
       ),

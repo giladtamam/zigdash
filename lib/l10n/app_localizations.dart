@@ -1580,6 +1580,12 @@ abstract class AppLocalizations {
   /// **'Help & Guide'**
   String get settingsHelp;
 
+  /// No description provided for @settingsVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settingsVersion;
+
   /// No description provided for @a11yBackupMenu.
   ///
   /// In en, this message translates to:
