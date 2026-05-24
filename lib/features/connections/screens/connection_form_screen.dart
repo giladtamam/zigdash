@@ -11,6 +11,8 @@ import '../../../mqtt/broker_config.dart';
 import '../../../mqtt/mqtt_manager.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../widgets/protocol_dropdown.dart';
+import 'broker_help_sheet.dart';
+import 'broker_scan_sheet.dart';
 
 class ConnectionFormScreen extends ConsumerStatefulWidget {
   const ConnectionFormScreen({super.key, this.connectionId});
@@ -76,6 +78,17 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
       _port.text = ProtocolDropdown.defaultPort(p).toString();
     }
     setState(() => _protocol = p);
+  }
+
+  /// Opens the network scan; on a tapped result, fills host/port/protocol.
+  Future<void> _findBrokers() async {
+    final result = await BrokerScanSheet.show(context);
+    if (result == null || !mounted) return;
+    setState(() {
+      _host.text = result.host;
+      _port.text = result.port.toString();
+      _protocol = result.port == 8883 ? MqttProtocol.tcpSsl : MqttProtocol.tcp;
+    });
   }
 
   Future<void> _save() async {
@@ -223,6 +236,20 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                       return null;
                     },
                   ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                TextButton.icon(
+                  icon: const Icon(Icons.wifi_find, size: 18),
+                  label: Text(context.l10n.connFindBrokers),
+                  onPressed: _findBrokers,
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () => BrokerHelpSheet.show(context),
+                  child: Text(context.l10n.connHowToFind),
                 ),
               ],
             ),
