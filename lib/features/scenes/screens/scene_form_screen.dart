@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -52,7 +54,8 @@ class _State extends ConsumerState<SceneFormScreen> {
 
   Color _color = _swatches.first;
   IconData _icon = _icons.first;
-  final Set<String> _selected = {};
+  // friendlyName -> the state values this scene will publish for that device.
+  final Map<String, Map<String, dynamic>> _edits = {};
   int _existingActions = 0;
   bool _loaded = false;
   bool _saving = false;
@@ -110,43 +113,58 @@ class _State extends ConsumerState<SceneFormScreen> {
     });
   }
 
-  /// Captures actions for the currently-selected devices.
-  List<SceneAction> _captureSelected(
-    List<Z2mDevice> devices,
-    Map<String, String> states,
-  ) {
+  static Map<String, dynamic>? _parseState(String? raw) {
+    if (raw == null) return null;
+    try {
+      final d = jsonDecode(raw);
+      return d is Map<String, dynamic> ? d : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Selects/deselects a device. On select, seeds its editable values from the
+  /// device's current live state (or sensible defaults); devices with no typed
+  /// controls fall back to capturing their settable state as-is.
+  void _toggleDevice(Z2mDevice d, bool on, Map<String, String> states) {
+    setState(() {
+      if (!on) {
+        _edits.remove(d.friendlyName);
+        return;
+      }
+      final live = _parseState(states[d.friendlyName]);
+      var seed = initialSceneEdits(d, live);
+      if (seed.isEmpty && live != null) seed = captureSettableState(d, live);
+      _edits[d.friendlyName] = seed;
+    });
+  }
+
+  List<SceneAction> _buildActions() {
     final out = <SceneAction>[];
-    for (final device in devices) {
-      if (!_selected.contains(device.friendlyName)) continue;
-      final raw = states[device.friendlyName];
-      if (raw == null) continue;
-      final action = captureDeviceAction(
-        base: _base,
-        device: device,
-        rawStateJson: raw,
-      );
-      if (action != null) out.add(action);
+    for (final entry in _edits.entries) {
+      if (entry.value.isEmpty) continue;
+      out.add(SceneAction(
+        setTopic: '$_base/${entry.key}/set',
+        payload: jsonEncode(entry.value),
+      ));
     }
     return out;
   }
 
-  Future<void> _save(
-    List<Z2mDevice> devices,
-    Map<String, String> states,
-  ) async {
+  Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
 
-    final captured = _captureSelected(devices, states);
+    final captured = _buildActions();
 
     // New scenes must capture something; edits may keep existing actions.
-    if (!_isEdit && _selected.isEmpty) {
+    if (!_isEdit && _edits.isEmpty) {
       messenger.showSnackBar(
           SnackBar(content: Text(l10n.sceneFormNoDevicesSelected)));
       return;
     }
-    if (_selected.isNotEmpty && captured.isEmpty) {
+    if (_edits.isNotEmpty && captured.isEmpty) {
       messenger.showSnackBar(
           SnackBar(content: Text(l10n.sceneFormNothingCaptured)));
       return;
@@ -209,7 +227,7 @@ class _State extends ConsumerState<SceneFormScreen> {
         title: Text(_isEdit ? l10n.sceneFormEditTitle : l10n.sceneFormNewTitle),
         actions: [
           TextButton(
-            onPressed: _saving ? null : () => _save(devices, states),
+            onPressed: _saving ? null : _save,
             child: Text(_saving ? l10n.saving : l10n.save),
           ),
         ],
@@ -302,24 +320,31 @@ class _State extends ConsumerState<SceneFormScreen> {
                 child: Text(l10n.sceneFormNoDevices),
               )
             else ...[
-              Text(l10n.sceneFormSelectedCount(_selected.length),
+              Text(l10n.sceneFormSelectedCount(_edits.length),
                   style: Theme.of(context).textTheme.bodySmall),
               ...capturable.map((d) {
                 final name = d.friendlyName;
-                final state = states[name];
-                return CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: _selected.contains(name),
-                  title: Text(name),
-                  subtitle: Text(state ?? l10n.sceneFormReadingState,
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
-                  onChanged: (on) => setState(() {
-                    if (on == true) {
-                      _selected.add(name);
-                    } else {
-                      _selected.remove(name);
-                    }
-                  }),
+                final selected = _edits.containsKey(name);
+                final hasState = states.containsKey(name);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      value: selected,
+                      title: Text(name),
+                      subtitle: hasState || selected
+                          ? null
+                          : Text(l10n.sceneFormReadingState),
+                      onChanged: (on) => _toggleDevice(d, on == true, states),
+                    ),
+                    if (selected)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                            start: 16, bottom: 8),
+                        child: _deviceControls(d),
+                      ),
+                  ],
                 );
               }),
             ],
@@ -327,5 +352,76 @@ class _State extends ConsumerState<SceneFormScreen> {
         ),
       ),
     );
+  }
+
+  /// Editable controls (sliders/toggles) for a selected device's scene values.
+  /// Devices with no typed controls show the raw captured state instead.
+  Widget _deviceControls(Z2mDevice d) {
+    final l10n = context.l10n;
+    final edits = _edits[d.friendlyName]!;
+    final controls = sceneControlsFor(d);
+
+    if (controls.isEmpty) {
+      return Text(
+        edits.isEmpty ? l10n.sceneFormReadingState : jsonEncode(edits),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+      );
+    }
+
+    return Column(
+      children: controls.map((c) {
+        if (c.kind == SceneControlKind.toggle) {
+          final on = edits[c.property] == c.onValue;
+          return SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: Text(_controlLabel(c.property)),
+            value: on,
+            onChanged: (v) => setState(
+                () => edits[c.property] = v ? c.onValue : c.offValue),
+          );
+        }
+        final raw = edits[c.property];
+        final value =
+            (raw is num ? raw.toDouble() : c.min).clamp(c.min, c.max);
+        return Row(
+          children: [
+            SizedBox(
+              width: 88,
+              child: Text(_controlLabel(c.property),
+                  style: Theme.of(context).textTheme.bodyMedium),
+            ),
+            Expanded(
+              child: Slider(
+                min: c.min,
+                max: c.max,
+                divisions: (c.max - c.min).round(),
+                value: value,
+                label: '${value.round()}${c.unit ?? ''}',
+                onChanged: (v) =>
+                    setState(() => edits[c.property] = v.round()),
+              ),
+            ),
+            SizedBox(
+              width: 44,
+              child: Text('${value.round()}${c.unit ?? ''}',
+                  textAlign: TextAlign.end),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  String _controlLabel(String property) {
+    final l10n = context.l10n;
+    return switch (property) {
+      'state' => l10n.sceneCtrlPower,
+      'brightness' => l10n.sceneCtrlBrightness,
+      'position' => l10n.sceneCtrlPosition,
+      _ => property,
+    };
   }
 }

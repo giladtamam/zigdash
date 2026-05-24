@@ -153,6 +153,49 @@ void main() {
     });
   });
 
+  group('sceneControlsFor / initialSceneEdits', () {
+    const cover = Z2mDevice(
+      friendlyName: 'shutter',
+      type: 'Router',
+      exposes: [
+        Z2mExpose(type: 'cover'),
+        Z2mExpose(type: 'enum', property: 'state', access: 3), // skip (enum)
+        Z2mExpose(type: 'numeric', property: 'position', access: 7),
+      ],
+    );
+
+    test('cover yields a position slider only', () {
+      final controls = sceneControlsFor(cover);
+      expect(controls.length, 1);
+      expect(controls.single.property, 'position');
+      expect(controls.single.kind, SceneControlKind.slider);
+      expect(controls.single.max, 100);
+    });
+
+    test('light yields a state toggle and a brightness slider', () {
+      final controls = sceneControlsFor(_light);
+      expect(controls.map((c) => c.property).toList(), ['state', 'brightness']);
+      expect(controls[0].kind, SceneControlKind.toggle);
+      expect(controls[1].kind, SceneControlKind.slider);
+      expect(controls[1].max, 254);
+    });
+
+    test('seeds edits from live state', () {
+      final edits = initialSceneEdits(_light, {'state': 'ON', 'brightness': 200});
+      expect(edits, {'state': 'ON', 'brightness': 200});
+    });
+
+    test('seeds defaults when no live state', () {
+      final edits = initialSceneEdits(cover, null);
+      expect(edits, {'position': 50}); // mid-range
+    });
+
+    test('toggle resolves OFF when live state is off', () {
+      final edits = initialSceneEdits(_light, {'state': 'OFF', 'brightness': 0});
+      expect(edits['state'], 'OFF');
+    });
+  });
+
   group('buildGetPayload', () {
     test('requests gettable+settable props (access & 6 == 6)', () {
       // _light: state/brightness/color_temp are access 7 (get+set+published),

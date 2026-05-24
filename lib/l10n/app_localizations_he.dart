@@ -974,6 +974,15 @@ class AppLocalizationsHe extends AppLocalizations {
   String get sceneFormReadingState => 'קורא מצב נוכחי…';
 
   @override
+  String get sceneCtrlPower => 'הפעלה';
+
+  @override
+  String get sceneCtrlBrightness => 'בהירות';
+
+  @override
+  String get sceneCtrlPosition => 'מיקום';
+
+  @override
   String sceneFormSelectedCount(int count) {
     return '$count נבחרו';
   }

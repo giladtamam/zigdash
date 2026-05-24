@@ -1880,6 +1880,24 @@ abstract class AppLocalizations {
   /// **'Reading current state…'**
   String get sceneFormReadingState;
 
+  /// No description provided for @sceneCtrlPower.
+  ///
+  /// In en, this message translates to:
+  /// **'Power'**
+  String get sceneCtrlPower;
+
+  /// No description provided for @sceneCtrlBrightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get sceneCtrlBrightness;
+
+  /// No description provided for @sceneCtrlPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get sceneCtrlPosition;
+
   /// No description provided for @sceneFormSelectedCount.
   ///
   /// In en, this message translates to:

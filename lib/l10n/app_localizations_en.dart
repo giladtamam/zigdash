@@ -980,6 +980,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sceneFormReadingState => 'Reading current state…';
 
   @override
+  String get sceneCtrlPower => 'Power';
+
+  @override
+  String get sceneCtrlBrightness => 'Brightness';
+
+  @override
+  String get sceneCtrlPosition => 'Position';
+
+  @override
   String sceneFormSelectedCount(int count) {
     return '$count selected';
   }
