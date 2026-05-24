@@ -97,6 +97,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connLocalHost => 'Local host';
 
   @override
+  String get connFindBrokers => 'Find brokers';
+
+  @override
+  String get connHowToFind => 'How do I find this?';
+
+  @override
+  String get connRescan => 'Rescan';
+
+  @override
+  String get connBrokerNeedsLogin => 'Needs login';
+
+  @override
+  String connFindBrokersScanning(Object subnet) {
+    return 'Scanning $subnet…';
+  }
+
+  @override
+  String connFindBrokersFound(int count) {
+    return '$count broker(s) found — tap to use';
+  }
+
+  @override
+  String get connFindBrokersNone => 'No brokers found on your Wi-Fi.';
+
+  @override
+  String get connFindBrokersNoIp =>
+      'Couldn\'t read your Wi-Fi address. Make sure Wi-Fi is on and try again.';
+
+  @override
+  String get connHelpTitle => 'Finding your broker IP';
+
+  @override
+  String get connHelpDockerTitle => 'Zigbee2MQTT in Docker';
+
+  @override
+  String get connHelpDockerBody =>
+      'The broker IP is the LAN address of the machine running Docker (your NAS, Raspberry Pi, etc.). Find it in your router\'s device list, or run \'hostname -I\' / \'ip addr\' on that machine. Port is usually 1883 (Mosquitto). Use the host\'s LAN IP — not 127.0.0.1 — even if Mosquitto runs in its own container.';
+
+  @override
+  String get connHelpSmhubTitle => 'SMLIGHT SMHUB';
+
+  @override
+  String get connHelpSmhubBody =>
+      'The broker IP is the hub\'s IP address. Find it in the SMLIGHT web interface under Settings → Network, or in your router. Port is 1883, with no username/password by default.';
+
+  @override
+  String get connHelpZhaTitle => 'Home Assistant ZHA';
+
+  @override
+  String get connHelpZhaBody =>
+      'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant add-on or a Docker container), which provides an MQTT broker.';
+
+  @override
+  String get connHelpSameNetwork =>
+      'Your phone and the broker must be on the same Wi-Fi network (not a guest or isolated VLAN).';
+
+  @override
   String get connRemoteHost => 'Remote host (Tailscale)';
 
   @override

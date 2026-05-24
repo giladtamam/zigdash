@@ -266,6 +266,102 @@ abstract class AppLocalizations {
   /// **'Local host'**
   String get connLocalHost;
 
+  /// No description provided for @connFindBrokers.
+  ///
+  /// In en, this message translates to:
+  /// **'Find brokers'**
+  String get connFindBrokers;
+
+  /// No description provided for @connHowToFind.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I find this?'**
+  String get connHowToFind;
+
+  /// No description provided for @connRescan.
+  ///
+  /// In en, this message translates to:
+  /// **'Rescan'**
+  String get connRescan;
+
+  /// No description provided for @connBrokerNeedsLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs login'**
+  String get connBrokerNeedsLogin;
+
+  /// No description provided for @connFindBrokersScanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning {subnet}…'**
+  String connFindBrokersScanning(Object subnet);
+
+  /// No description provided for @connFindBrokersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} broker(s) found — tap to use'**
+  String connFindBrokersFound(int count);
+
+  /// No description provided for @connFindBrokersNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No brokers found on your Wi-Fi.'**
+  String get connFindBrokersNone;
+
+  /// No description provided for @connFindBrokersNoIp.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read your Wi-Fi address. Make sure Wi-Fi is on and try again.'**
+  String get connFindBrokersNoIp;
+
+  /// No description provided for @connHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your broker IP'**
+  String get connHelpTitle;
+
+  /// No description provided for @connHelpDockerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT in Docker'**
+  String get connHelpDockerTitle;
+
+  /// No description provided for @connHelpDockerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker IP is the LAN address of the machine running Docker (your NAS, Raspberry Pi, etc.). Find it in your router\'s device list, or run \'hostname -I\' / \'ip addr\' on that machine. Port is usually 1883 (Mosquitto). Use the host\'s LAN IP — not 127.0.0.1 — even if Mosquitto runs in its own container.'**
+  String get connHelpDockerBody;
+
+  /// No description provided for @connHelpSmhubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SMLIGHT SMHUB'**
+  String get connHelpSmhubTitle;
+
+  /// No description provided for @connHelpSmhubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker IP is the hub\'s IP address. Find it in the SMLIGHT web interface under Settings → Network, or in your router. Port is 1883, with no username/password by default.'**
+  String get connHelpSmhubBody;
+
+  /// No description provided for @connHelpZhaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant ZHA'**
+  String get connHelpZhaTitle;
+
+  /// No description provided for @connHelpZhaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant add-on or a Docker container), which provides an MQTT broker.'**
+  String get connHelpZhaBody;
+
+  /// No description provided for @connHelpSameNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone and the broker must be on the same Wi-Fi network (not a guest or isolated VLAN).'**
+  String get connHelpSameNetwork;
+
   /// No description provided for @connRemoteHost.
   ///
   /// In en, this message translates to:

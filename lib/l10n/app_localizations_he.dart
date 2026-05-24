@@ -97,6 +97,63 @@ class AppLocalizationsHe extends AppLocalizations {
   String get connLocalHost => 'מארח מקומי';
 
   @override
+  String get connFindBrokers => 'חיפוש ברוקרים';
+
+  @override
+  String get connHowToFind => 'איך מוצאים את זה?';
+
+  @override
+  String get connRescan => 'סריקה מחדש';
+
+  @override
+  String get connBrokerNeedsLogin => 'דורש התחברות';
+
+  @override
+  String connFindBrokersScanning(Object subnet) {
+    return 'סורק $subnet…';
+  }
+
+  @override
+  String connFindBrokersFound(int count) {
+    return 'נמצאו $count ברוקרים — הקש לבחירה';
+  }
+
+  @override
+  String get connFindBrokersNone => 'לא נמצאו ברוקרים ברשת ה‑Wi‑Fi.';
+
+  @override
+  String get connFindBrokersNoIp =>
+      'לא ניתן לקרוא את כתובת ה‑Wi‑Fi. ודא שה‑Wi‑Fi פעיל ונסה שוב.';
+
+  @override
+  String get connHelpTitle => 'איתור כתובת ה‑IP של הברוקר';
+
+  @override
+  String get connHelpDockerTitle => 'Zigbee2MQTT ב‑Docker';
+
+  @override
+  String get connHelpDockerBody =>
+      'כתובת הברוקר היא כתובת ה‑LAN של המכונה שמריצה את Docker (ה‑NAS, ה‑Raspberry Pi וכו\'). מצא אותה ברשימת המכשירים של הנתב, או הרץ \'hostname -I\' / \'ip addr\' על אותה מכונה. הפורט הוא בדרך כלל 1883 (Mosquitto). השתמש בכתובת ה‑LAN של המארח — לא 127.0.0.1 — גם אם Mosquitto רץ בקונטיינר נפרד.';
+
+  @override
+  String get connHelpSmhubTitle => 'SMLIGHT SMHUB';
+
+  @override
+  String get connHelpSmhubBody =>
+      'כתובת הברוקר היא כתובת ה‑IP של ההאב. מצא אותה בממשק הווב של SMLIGHT תחת Settings → Network, או בנתב. הפורט הוא 1883, ללא שם משתמש/סיסמה כברירת מחדל.';
+
+  @override
+  String get connHelpZhaTitle => 'Home Assistant ZHA';
+
+  @override
+  String get connHelpZhaBody =>
+      'ל‑ZHA אין ברוקר MQTT — הוא מתקשר ישירות עם Home Assistant, ולכן ZigDash לא יכול להתחבר אליו. כדי להשתמש ב‑ZigDash, עבור ל‑Zigbee2MQTT (זמין כתוסף ל‑Home Assistant או כקונטיינר Docker), שמספק ברוקר MQTT.';
+
+  @override
+  String get connHelpSameNetwork =>
+      'הטלפון והברוקר חייבים להיות באותה רשת Wi‑Fi (לא רשת אורחים או VLAN מבודד).';
+
+  @override
   String get connRemoteHost => 'מארח מרוחק (Tailscale)';
 
   @override
