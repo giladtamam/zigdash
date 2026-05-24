@@ -1,5 +1,5 @@
-/// Pure helpers for turning the phone's own IPv4 into a list of candidate
-/// hosts to probe on its `/24` subnet (assumes a `255.255.255.0` mask).
+// Pure helpers for turning the phone's own IPv4 into a list of candidate
+// hosts to probe on its `/24` subnet (assumes a `255.255.255.0` mask).
 
 /// Returns the first three octets of [ip] (e.g. `"192.168.7"` for
 /// `192.168.7.42`), or null when [ip] isn't a dotted IPv4 quad.
