@@ -7,6 +7,26 @@ import '../endpoint.dart';
 import '../mqtt_manager.dart';
 import '../mqtt_status.dart';
 
+/// Tracks every live [MqttManager] so app-lifecycle code can act on all of them
+/// at once — currently to force an immediate reconnect when the app returns to
+/// the foreground (a backgrounded socket is usually dead). Managers register on
+/// creation and unregister on dispose, so this only ever holds active ones.
+class MqttManagerRegistry {
+  final Set<MqttManager> _managers = {};
+
+  void register(MqttManager manager) => _managers.add(manager);
+  void unregister(MqttManager manager) => _managers.remove(manager);
+
+  void reconnectAll() {
+    for (final manager in _managers) {
+      manager.reconnectNow();
+    }
+  }
+}
+
+final mqttManagerRegistryProvider =
+    Provider<MqttManagerRegistry>((ref) => MqttManagerRegistry());
+
 /// One manager per Connection ID. Lives for the session — `autoDispose` here
 /// caused Riverpod to recreate the manager on every status stream restart, so
 /// no connection attempt ever survived long enough to receive CONNACK. The
@@ -32,7 +52,11 @@ final mqttManagerProvider =
     password: password,
   );
 
+  final registry = ref.watch(mqttManagerRegistryProvider);
+  registry.register(manager);
+
   ref.onDispose(() {
+    registry.unregister(manager);
     manager.dispose();
   });
 

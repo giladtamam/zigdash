@@ -23,6 +23,15 @@ class _SubEntry {
   int refs = 0;
 }
 
+/// Builds the platform [mc.MqttClient] for a candidate host. Defaults to the
+/// real [buildMqttClient]; tests inject a fake to exercise connect/timeout
+/// behavior without a live broker.
+typedef MqttClientFactory = mc.MqttClient Function(
+  BrokerConfig config,
+  String clientId, {
+  String? host,
+});
+
 /// Owns one MQTT client per [Connection]. Handles connect/disconnect, auto-reconnect
 /// with exponential backoff, and ref-counted topic subscriptions multiplexed over a
 /// single wire subscription per pattern.
@@ -31,7 +40,9 @@ class MqttManager {
     required this.config,
     required this.password,
     String? clientIdOverride,
-  }) : _clientId = clientIdOverride ?? _shortClientId(config.id);
+    MqttClientFactory? clientFactory,
+  })  : _clientId = clientIdOverride ?? _shortClientId(config.id),
+        _clientFactory = clientFactory ?? buildMqttClient;
 
   // MQTT 3.1 caps client identifiers at 23 chars and some broker builds
   // (notably the Mosquitto shipped on SMLIGHT SMHUB) reject longer IDs with
@@ -46,6 +57,7 @@ class MqttManager {
   final BrokerConfig config;
   final String password;
   final String _clientId;
+  final MqttClientFactory _clientFactory;
 
   mc.MqttClient? _client;
   StreamSubscription<List<mc.MqttReceivedMessage<mc.MqttMessage>>>? _updatesSub;
@@ -55,7 +67,9 @@ class MqttManager {
   int _backoffMs = _initialBackoffMs;
 
   static const _initialBackoffMs = 1000;
-  static const _maxBackoffMs = 120000;
+  // Capped low for a foreground app: a 2-minute ceiling meant that after a few
+  // failures the user could open the app and sit disconnected for minutes.
+  static const _maxBackoffMs = 30000;
 
   final _status = BehaviorSubject<MqttStatus>.seeded(MqttStatus.disconnected);
   Stream<MqttStatus> get status$ => _status.stream;
@@ -119,7 +133,20 @@ class MqttManager {
       _client = client;
 
       try {
-        await client.connect(config.username, password);
+        // Hard wall on the whole connect. mqtt_client's connectTimeoutPeriod
+        // only bounds the post-TCP CONNACK wait — the underlying Socket.connect
+        // has NO timeout, so a remote host whose SYN goes unanswered (Tailscale
+        // re-establishing, node asleep, blackholed LAN IP) would otherwise hang
+        // for the OS default (tens of seconds), wedging us in `connecting` while
+        // the guard above turns every reconnect into a no-op. Timing out here
+        // makes the per-candidate budgets in endpoint.dart actually effective.
+        await client
+            .connect(config.username, password)
+            .timeout(Duration(milliseconds: cand.timeoutMs));
+      } on TimeoutException catch (_) {
+        _lastError = 'Connect timed out (${cand.timeoutMs} ms) for ${cand.host}';
+        client.disconnect();
+        continue; // host unreachable within budget — try the next candidate
       } on Exception catch (e) {
         _lastError = e.toString();
         client.disconnect();
@@ -135,7 +162,12 @@ class MqttManager {
         continue;
       }
 
-      // Connected on this candidate.
+      // Connected on this candidate. Only now wire the disconnect handler:
+      // calling client.disconnect() on a *failed* candidate above fires
+      // mqtt_client's onDisconnected (solicited) while _userInitiatedDisconnect
+      // is false, which would otherwise schedule a phantom reconnect during
+      // normal candidate fallback.
+      client.onDisconnected = _onDisconnected;
       _lastError = null;
       _emitEndpoint(cand.kind);
       _backoffMs = _initialBackoffMs;
@@ -151,6 +183,23 @@ class MqttManager {
     // All candidates failed.
     _emit(MqttStatus.error);
     _scheduleReconnect();
+  }
+
+  /// Force an immediate reconnect, bypassing any pending backoff timer. Called
+  /// when the app returns to the foreground: a backgrounded socket is usually
+  /// dead and the next scheduled attempt may be up to [_maxBackoffMs] away, so
+  /// we reset the backoff and retry now. No-op if already connected/connecting
+  /// or if the user explicitly disconnected.
+  void reconnectNow() {
+    if (_disposed || _userInitiatedDisconnect) return;
+    if (_status.value == MqttStatus.connected ||
+        _status.value == MqttStatus.connecting) {
+      return;
+    }
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _backoffMs = _initialBackoffMs;
+    connect();
   }
 
   void disconnect() {
@@ -240,7 +289,7 @@ class MqttManager {
   }
 
   mc.MqttClient _buildClient(String host, int timeoutMs) {
-    final client = buildMqttClient(config, _clientId, host: host);
+    final client = _clientFactory(config, _clientId, host: host);
     client.logging(on: false);
     // Stay on mqtt_client's default protocol (MQTT 3.1, ProtocolName=MQIsdp).
     // The Mosquitto build on SMLIGHT SMHUB silently disconnects 3.1.1
@@ -248,7 +297,8 @@ class MqttManager {
     client.keepAlivePeriod = config.keepAliveSeconds;
     client.connectTimeoutPeriod = timeoutMs; // ms; per-candidate (LAN probe vs standard)
     client.autoReconnect = false; // we manage reconnects ourselves
-    client.onDisconnected = _onDisconnected;
+    // onDisconnected is wired in connect() only after a candidate reaches
+    // `connected`, so failed-candidate disconnects don't trigger a reconnect.
     client.connectionMessage = mc.MqttConnectMessage()
         .withClientIdentifier(_clientId)
         .startClean()
