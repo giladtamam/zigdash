@@ -420,6 +420,54 @@ extension _PanelFormFields on _State {
         // Scene panels are configured from the Scenes screen ("Add to
         // dashboard"); the generic form only edits name/width here.
         return const [];
+      case PanelType.autoClose:
+        return [
+          Text(
+            l10n.panelAutoCloseDescription,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _autoCloseTriggerPath,
+            decoration: InputDecoration(
+              labelText: l10n.panelAutoCloseTriggerPath,
+              helperText: l10n.panelAutoCloseTriggerPathHelper,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _autoCloseTriggerValue,
+            decoration: InputDecoration(
+              labelText: l10n.panelAutoCloseTriggerValue,
+              helperText: l10n.panelAutoCloseTriggerValueHelper,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _autoCloseClosePayload,
+            decoration: InputDecoration(
+              labelText: l10n.panelAutoCloseClosePayload,
+            ),
+            maxLines: 2,
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _autoCloseDelaySeconds,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: l10n.panelAutoCloseDelaySeconds,
+              helperText: l10n.panelAutoCloseDelaySecondsHelper,
+            ),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.panelAutoCloseEnabled),
+            value: _autoCloseEnabled,
+            onChanged: (v) => setState(() => _autoCloseEnabled = v), // ignore: invalid_use_of_protected_member
+          ),
+        ];
     }
   }
 
