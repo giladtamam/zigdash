@@ -161,7 +161,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       _type == PanelType.autoClose;
 
   /// Returns the json-path text for the current panel type, or '' for types
-  /// without a json-path field (button, textInput, cover, schedule).
+  /// without a json-path field (button, textInput, cover, schedule, autoClose).
   String get _currentJsonPath => switch (_type) {
         PanelType.toggle => _toggleJsonPath.text,
         PanelType.slider => _sliderJsonPath.text,
@@ -414,7 +414,7 @@ class _State extends ConsumerState<PanelFormScreen> {
         _topic.text = '';
         break;
       case PanelType.autoClose:
-        _topic.text = 'set';
+        _topic.text = '';
         break;
     }
   }
