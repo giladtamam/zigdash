@@ -10,6 +10,7 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../discovery/models/device_panel_suggestion.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
 
 part 'panel_form_screen.fields.dart';
@@ -125,6 +126,14 @@ class _State extends ConsumerState<PanelFormScreen> {
   final _scheduleClosePayload = TextEditingController(text: '{"state":"CLOSE"}');
   bool _scheduleEnabled = true;
 
+  // Auto-close fields
+  final _autoCloseTriggerPath = TextEditingController(text: 'state');
+  final _autoCloseTriggerValue = TextEditingController(text: 'ON');
+  final _autoCloseClosePayload =
+      TextEditingController(text: '{"state":"OFF"}');
+  final _autoCloseDelaySeconds = TextEditingController(text: '60');
+  bool _autoCloseEnabled = true;
+
   PanelType _type = PanelType.toggle;
   PanelWidth _width = PanelWidth.full;
   bool _retain = false;
@@ -148,7 +157,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       _type == PanelType.button ||
       _type == PanelType.textInput ||
       _type == PanelType.schedule ||
-      _type == PanelType.scene;
+      _type == PanelType.scene ||
+      _type == PanelType.autoClose;
 
   /// Returns the json-path text for the current panel type, or '' for types
   /// without a json-path field (button, textInput, cover, schedule).
@@ -334,6 +344,12 @@ class _State extends ConsumerState<PanelFormScreen> {
       _scheduleOpenPayload.text = cfg.openPayload;
       _scheduleClosePayload.text = cfg.closePayload;
       _scheduleEnabled = cfg.enabled;
+    } else if (cfg is AutoCloseConfig) {
+      _autoCloseTriggerPath.text = cfg.triggerPath;
+      _autoCloseTriggerValue.text = cfg.triggerValue;
+      _autoCloseClosePayload.text = cfg.closePayload;
+      _autoCloseDelaySeconds.text = cfg.delaySeconds.toString();
+      _autoCloseEnabled = cfg.enabled;
     } else if (cfg is SceneConfig) {
       _sceneId = cfg.sceneId;
     }
@@ -396,6 +412,9 @@ class _State extends ConsumerState<PanelFormScreen> {
         break;
       case PanelType.scene:
         _topic.text = '';
+        break;
+      case PanelType.autoClose:
+        _topic.text = 'set';
         break;
     }
   }
@@ -472,6 +491,15 @@ class _State extends ConsumerState<PanelFormScreen> {
           enabled: _scheduleEnabled,
         ),
       PanelType.scene => SceneConfig(sceneId: _sceneId),
+      PanelType.autoClose => AutoCloseConfig(
+          triggerPath: _autoCloseTriggerPath.text.trim().isEmpty
+              ? 'state'
+              : _autoCloseTriggerPath.text.trim(),
+          triggerValue: _autoCloseTriggerValue.text,
+          closePayload: _autoCloseClosePayload.text,
+          delaySeconds: int.tryParse(_autoCloseDelaySeconds.text) ?? 60,
+          enabled: _autoCloseEnabled,
+        ),
     };
   }
 
@@ -552,6 +580,29 @@ class _State extends ConsumerState<PanelFormScreen> {
           ));
         }
       }
+      if (_type == PanelType.autoClose) {
+        final effectivePrefix = prefixOverride ?? _topicPrefixHint;
+        final triggerTopic = composeTopic(effectivePrefix, _topic.text);
+        // Default target = triggerTopic + '/set' (Z2M convention). The v1
+        // form does not expose a separate target override; the wire contract
+        // supports it but the v1 UX assumes the Z2M target convention.
+        final target = '$triggerTopic/set';
+        final cfg = _buildConfig() as AutoCloseConfig;
+        final ok =
+            await ref.read(autoCloseConfigPublisherProvider).publishConfig(
+                  connectionId: widget.connectionId,
+                  panelId: panelId,
+                  name: _name.text.trim(),
+                  triggerTopic: triggerTopic,
+                  target: target,
+                  config: cfg,
+                );
+        if (!ok && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(context.l10n.panelAutoCloseSavedOffline),
+          ));
+        }
+      }
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -575,6 +626,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       _coverPresets,
       _scheduleOpenTime, _scheduleCloseTime,
       _scheduleOpenPayload, _scheduleClosePayload,
+      _autoCloseTriggerPath, _autoCloseTriggerValue,
+      _autoCloseClosePayload, _autoCloseDelaySeconds,
     ]) {
       c.dispose();
     }
@@ -615,6 +668,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       PanelType.textLog => l10n.panelTypeTextLog,
       PanelType.schedule => l10n.panelTypeSchedule,
       PanelType.scene => l10n.panelTypeScene,
+      PanelType.autoClose => l10n.panelTypeAutoClose,
     };
 
     return Scaffold(
