@@ -17,6 +17,7 @@ enum PanelType {
   textLog,
   schedule,
   scene,
+  autoClose,
 }
 
 enum PanelWidth { full, half, third }

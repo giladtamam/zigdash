@@ -30,6 +30,7 @@ sealed class PanelConfig {
       PanelType.textLog => TextLogConfig.fromJson(j),
       PanelType.schedule => ScheduleConfig.fromJson(j),
       PanelType.scene => SceneConfig.fromJson(j),
+      PanelType.autoClose => AutoCloseConfig.fromJson(j),
     };
   }
 
@@ -49,6 +50,7 @@ sealed class PanelConfig {
         PanelType.textLog => const TextLogConfig(),
         PanelType.schedule => const ScheduleConfig(),
         PanelType.scene => const SceneConfig(),
+        PanelType.autoClose => AutoCloseConfig(),
       };
 }
 

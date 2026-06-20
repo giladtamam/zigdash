@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 
 void main() {
@@ -47,6 +48,24 @@ void main() {
       final off = c.copyWith(enabled: false);
       expect(off.enabled, isFalse);
       expect(off.delaySeconds, 45);
+    });
+  });
+
+  group('PanelConfig dispatcher (autoClose)', () {
+    test('decode routes autoClose payload to AutoCloseConfig', () {
+      const raw =
+          '{"triggerPath":"state","triggerValue":"ON","closePayload":"{\\"state\\":\\"OFF\\"}","delaySeconds":45,"enabled":true}';
+      final cfg = PanelConfig.decode(PanelType.autoClose, raw);
+      expect(cfg, isA<AutoCloseConfig>());
+      expect((cfg as AutoCloseConfig).delaySeconds, 45);
+    });
+
+    test('defaultFor(autoClose) returns AutoCloseConfig with spec defaults', () {
+      final cfg = PanelConfig.defaultFor(PanelType.autoClose);
+      expect(cfg, isA<AutoCloseConfig>());
+      final a = cfg as AutoCloseConfig;
+      expect(a.delaySeconds, 60);
+      expect(a.triggerValue, 'ON');
     });
   });
 }
