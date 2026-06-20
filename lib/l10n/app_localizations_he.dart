@@ -291,6 +291,13 @@ class AppLocalizationsHe extends AppLocalizations {
       'זמני פתיחה/סגירה יומיים, מופעל ב-Hub (Node-RED)';
 
   @override
+  String get panelPickerAutoCloseTitle => 'סגירה אוטומטית';
+
+  @override
+  String get panelPickerAutoCloseSubtitle =>
+      'סגירת מכשיר אוטומטית N שניות אחרי הפעלה, רץ בהאב (Node-RED)';
+
+  @override
   String get panelPickerMultiStateTitle => 'רב-מצב';
 
   @override
@@ -482,6 +489,9 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelTypeSchedule => 'תזמון';
+
+  @override
+  String get panelTypeAutoClose => 'סגירה אוטומטית';
 
   @override
   String get panelFormName => 'שם';
@@ -755,6 +765,41 @@ class AppLocalizationsHe extends AppLocalizations {
       'נשמר — אין חיבור; לוח הזמנים יסונכרן בעת החיבור.';
 
   @override
+  String get panelAutoCloseDescription =>
+      'רץ על ה-SMHUB דרך Node-RED — פועל גם כשהטלפון כבוי. נושא הפרסום למעלה הוא נושא הפקודה של המכשיר (למשל door).';
+
+  @override
+  String get panelAutoCloseTriggerPath => 'נתיב JSON לטריגר';
+
+  @override
+  String get panelAutoCloseTriggerPathHelper =>
+      'השדה ב-JSON של המכשיר שצריך לעקוב (ברירת מחדל: state)';
+
+  @override
+  String get panelAutoCloseTriggerValue => 'ערך טריגר';
+
+  @override
+  String get panelAutoCloseTriggerValueHelper =>
+      'הפעל טיימר כששדה הטריגר שווה לערך הזה (ברירת מחדל: ON)';
+
+  @override
+  String get panelAutoCloseClosePayload => 'מטען סגירה';
+
+  @override
+  String get panelAutoCloseDelaySeconds => 'השהיה (שניות)';
+
+  @override
+  String get panelAutoCloseDelaySecondsHelper =>
+      '1-3600. זמן להמתין אחרי הפעלת המכשיר לפני פרסום מטען הסגירה.';
+
+  @override
+  String get panelAutoCloseEnabled => 'מופעל';
+
+  @override
+  String get panelAutoCloseSavedOffline =>
+      'נשמר — אין חיבור; החוק יסונכרן ברגע שתחזור החיבור.';
+
+  @override
   String get panelTileEdit => 'עריכת פאנל';
 
   @override
@@ -849,6 +894,23 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelScheduleActionClose => 'סגירה';
+
+  @override
+  String get panelAutoCloseIdle => 'במנוחה';
+
+  @override
+  String get panelAutoCloseDisabled => 'מושבת';
+
+  @override
+  String get panelAutoCloseOffline => 'אוטומציה לא מחוברת — החוק לא ירוץ';
+
+  @override
+  String panelAutoCloseClosingIn(int seconds) {
+    return 'סוגר בעוד $seconds שניות';
+  }
+
+  @override
+  String get panelAutoCloseClosingNow => 'סוגר עכשיו…';
 
   @override
   String get panelGridEmpty =>

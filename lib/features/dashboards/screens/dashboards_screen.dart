@@ -252,6 +252,12 @@ void _openPanelPicker(BuildContext context,
               onTap: () => Navigator.pop(sheetCtx, 'schedule'),
             ),
             ListTile(
+              leading: const Icon(Icons.timer_outlined),
+              title: Text(sheetCtx.l10n.panelPickerAutoCloseTitle),
+              subtitle: Text(sheetCtx.l10n.panelPickerAutoCloseSubtitle),
+              onTap: () => Navigator.pop(sheetCtx, 'autoClose'),
+            ),
+            ListTile(
               leading: const Icon(Icons.view_week),
               title: Text(sheetCtx.l10n.panelPickerMultiStateTitle),
               subtitle: Text(sheetCtx.l10n.panelPickerMultiStateSubtitle),

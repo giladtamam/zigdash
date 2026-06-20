@@ -19,21 +19,20 @@ import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import 'routes.dart';
 
-PanelType _parseType(String? s) => switch (s) {
-      'button' => PanelType.button,
-      'slider' => PanelType.slider,
-      'led' => PanelType.led,
-      'nodeStatus' => PanelType.nodeStatus,
-      'progress' => PanelType.progress,
-      'multiState' => PanelType.multiState,
-      'combo' => PanelType.combo,
-      'radio' => PanelType.radio,
-      'cover' => PanelType.cover,
-      'textInput' => PanelType.textInput,
-      'textLog' => PanelType.textLog,
-      'schedule' => PanelType.schedule,
-      _ => PanelType.toggle,
-    };
+/// Maps a `?type=` query token to a [PanelType]. Tokens are the enum's
+/// `.name` (the panel picker pushes `PanelType.<x>.name`), so resolve by name
+/// and fall back to [PanelType.toggle] for null/unknown values. Resolving by
+/// name (rather than a hand-kept switch) means new panel types are routable
+/// automatically — a missing case here previously sent `autoClose` to toggle.
+@visibleForTesting
+PanelType parsePanelTypeToken(String? s) {
+  if (s == null) return PanelType.toggle;
+  try {
+    return PanelType.values.byName(s);
+  } on ArgumentError {
+    return PanelType.toggle;
+  }
+}
 
 SliderPreset? _parseSliderPreset(String? s) => switch (s) {
       'brightness' => SliderPreset.brightness,
@@ -97,7 +96,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (_, state) => PanelFormScreen(
               connectionId: state.pathParameters['id']!,
               dashboardId: state.pathParameters['dashboardId']!,
-              initialType: _parseType(state.uri.queryParameters['type']),
+              initialType:
+                  parsePanelTypeToken(state.uri.queryParameters['type']),
               initialSliderPreset:
                   _parseSliderPreset(state.uri.queryParameters['preset']),
               suggestion: state.extra as PanelSuggestion?,

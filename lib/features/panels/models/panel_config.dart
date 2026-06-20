@@ -30,6 +30,7 @@ sealed class PanelConfig {
       PanelType.textLog => TextLogConfig.fromJson(j),
       PanelType.schedule => ScheduleConfig.fromJson(j),
       PanelType.scene => SceneConfig.fromJson(j),
+      PanelType.autoClose => AutoCloseConfig.fromJson(j),
     };
   }
 
@@ -49,6 +50,7 @@ sealed class PanelConfig {
         PanelType.textLog => const TextLogConfig(),
         PanelType.schedule => const ScheduleConfig(),
         PanelType.scene => const SceneConfig(),
+        PanelType.autoClose => AutoCloseConfig(),
       };
 }
 
@@ -472,4 +474,49 @@ class SceneConfig extends PanelConfig {
 
   static SceneConfig fromJson(Map<String, dynamic> j) =>
       SceneConfig(sceneId: j['sceneId'] as String? ?? '');
+}
+
+/// Configures a server-side "close device N seconds after it turns on" rule
+/// executed by the Node-RED auto-close flow on the SMHUB. ZigDash publishes
+/// this (plus the composed target topic) as retained MQTT config — it never
+/// runs the timer itself. Delay is in seconds, clamped to [1, 3600].
+class AutoCloseConfig extends PanelConfig {
+  AutoCloseConfig({
+    this.triggerPath = 'state',
+    this.triggerValue = 'ON',
+    this.closePayload = '{"state":"OFF"}',
+    int delaySeconds = 60,
+    this.enabled = true,
+  }) : delaySeconds = delaySeconds.clamp(1, 3600);
+
+  final String triggerPath;
+  final String triggerValue;
+  final String closePayload;
+  final int delaySeconds;
+  final bool enabled;
+
+  AutoCloseConfig copyWith({bool? enabled}) => AutoCloseConfig(
+        triggerPath: triggerPath,
+        triggerValue: triggerValue,
+        closePayload: closePayload,
+        delaySeconds: delaySeconds,
+        enabled: enabled ?? this.enabled,
+      );
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'triggerPath': triggerPath,
+        'triggerValue': triggerValue,
+        'closePayload': closePayload,
+        'delaySeconds': delaySeconds,
+        'enabled': enabled,
+      };
+
+  static AutoCloseConfig fromJson(Map<String, dynamic> j) => AutoCloseConfig(
+        triggerPath: j['triggerPath'] as String? ?? 'state',
+        triggerValue: j['triggerValue'] as String? ?? 'ON',
+        closePayload: j['closePayload'] as String? ?? '{"state":"OFF"}',
+        delaySeconds: (j['delaySeconds'] as num?)?.toInt() ?? 60,
+        enabled: j['enabled'] as bool? ?? true,
+      );
 }

@@ -614,6 +614,18 @@ abstract class AppLocalizations {
   /// **'Daily open/close times, run on the hub (Node-RED)'**
   String get panelPickerScheduleSubtitle;
 
+  /// No description provided for @panelPickerAutoCloseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-close rule'**
+  String get panelPickerAutoCloseTitle;
+
+  /// No description provided for @panelPickerAutoCloseSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Close a device automatically N seconds after it turns on, run on the hub (Node-RED)'**
+  String get panelPickerAutoCloseSubtitle;
+
   /// No description provided for @panelPickerMultiStateTitle.
   ///
   /// In en, this message translates to:
@@ -967,6 +979,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Schedule'**
   String get panelTypeSchedule;
+
+  /// No description provided for @panelTypeAutoClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-close'**
+  String get panelTypeAutoClose;
 
   /// No description provided for @panelFormName.
   ///
@@ -1472,6 +1490,66 @@ abstract class AppLocalizations {
   /// **'Saved — not connected; schedule will sync when online.'**
   String get panelScheduleSavedOffline;
 
+  /// No description provided for @panelAutoCloseDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on the SMHUB via Node-RED — fires even when this phone is off. The Publish topic above is the device\'s command target (e.g. door).'**
+  String get panelAutoCloseDescription;
+
+  /// No description provided for @panelAutoCloseTriggerPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger JSON path'**
+  String get panelAutoCloseTriggerPath;
+
+  /// No description provided for @panelAutoCloseTriggerPathHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Field in the device\'s state JSON to watch (default: state)'**
+  String get panelAutoCloseTriggerPathHelper;
+
+  /// No description provided for @panelAutoCloseTriggerValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger value'**
+  String get panelAutoCloseTriggerValue;
+
+  /// No description provided for @panelAutoCloseTriggerValueHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire the timer when the trigger field equals this value (default: ON)'**
+  String get panelAutoCloseTriggerValueHelper;
+
+  /// No description provided for @panelAutoCloseClosePayload.
+  ///
+  /// In en, this message translates to:
+  /// **'Close payload'**
+  String get panelAutoCloseClosePayload;
+
+  /// No description provided for @panelAutoCloseDelaySeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Delay (seconds)'**
+  String get panelAutoCloseDelaySeconds;
+
+  /// No description provided for @panelAutoCloseDelaySecondsHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'1-3600. Time to wait after the device turns on before publishing the close payload.'**
+  String get panelAutoCloseDelaySecondsHelper;
+
+  /// No description provided for @panelAutoCloseEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get panelAutoCloseEnabled;
+
+  /// No description provided for @panelAutoCloseSavedOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved — not connected; rule will sync when online.'**
+  String get panelAutoCloseSavedOffline;
+
   /// No description provided for @panelTileEdit.
   ///
   /// In en, this message translates to:
@@ -1651,6 +1729,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'close'**
   String get panelScheduleActionClose;
+
+  /// No description provided for @panelAutoCloseIdle.
+  ///
+  /// In en, this message translates to:
+  /// **'Idle'**
+  String get panelAutoCloseIdle;
+
+  /// No description provided for @panelAutoCloseDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get panelAutoCloseDisabled;
+
+  /// No description provided for @panelAutoCloseOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Automation offline — rule won\'t run'**
+  String get panelAutoCloseOffline;
+
+  /// No description provided for @panelAutoCloseClosingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing in {seconds}s'**
+  String panelAutoCloseClosingIn(int seconds);
+
+  /// No description provided for @panelAutoCloseClosingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing now…'**
+  String get panelAutoCloseClosingNow;
 
   /// No description provided for @panelGridEmpty.
   ///

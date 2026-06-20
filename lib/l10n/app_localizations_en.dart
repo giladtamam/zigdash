@@ -291,6 +291,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Daily open/close times, run on the hub (Node-RED)';
 
   @override
+  String get panelPickerAutoCloseTitle => 'Auto-close rule';
+
+  @override
+  String get panelPickerAutoCloseSubtitle =>
+      'Close a device automatically N seconds after it turns on, run on the hub (Node-RED)';
+
+  @override
   String get panelPickerMultiStateTitle => 'Multi-State';
 
   @override
@@ -487,6 +494,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelTypeSchedule => 'Schedule';
+
+  @override
+  String get panelTypeAutoClose => 'Auto-close';
 
   @override
   String get panelFormName => 'Name';
@@ -760,6 +770,41 @@ class AppLocalizationsEn extends AppLocalizations {
       'Saved — not connected; schedule will sync when online.';
 
   @override
+  String get panelAutoCloseDescription =>
+      'Runs on the SMHUB via Node-RED — fires even when this phone is off. The Publish topic above is the device\'s command target (e.g. door).';
+
+  @override
+  String get panelAutoCloseTriggerPath => 'Trigger JSON path';
+
+  @override
+  String get panelAutoCloseTriggerPathHelper =>
+      'Field in the device\'s state JSON to watch (default: state)';
+
+  @override
+  String get panelAutoCloseTriggerValue => 'Trigger value';
+
+  @override
+  String get panelAutoCloseTriggerValueHelper =>
+      'Fire the timer when the trigger field equals this value (default: ON)';
+
+  @override
+  String get panelAutoCloseClosePayload => 'Close payload';
+
+  @override
+  String get panelAutoCloseDelaySeconds => 'Delay (seconds)';
+
+  @override
+  String get panelAutoCloseDelaySecondsHelper =>
+      '1-3600. Time to wait after the device turns on before publishing the close payload.';
+
+  @override
+  String get panelAutoCloseEnabled => 'Enabled';
+
+  @override
+  String get panelAutoCloseSavedOffline =>
+      'Saved — not connected; rule will sync when online.';
+
+  @override
   String get panelTileEdit => 'Edit panel';
 
   @override
@@ -854,6 +899,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelScheduleActionClose => 'close';
+
+  @override
+  String get panelAutoCloseIdle => 'Idle';
+
+  @override
+  String get panelAutoCloseDisabled => 'Disabled';
+
+  @override
+  String get panelAutoCloseOffline => 'Automation offline — rule won\'t run';
+
+  @override
+  String panelAutoCloseClosingIn(int seconds) {
+    return 'Closing in ${seconds}s';
+  }
+
+  @override
+  String get panelAutoCloseClosingNow => 'Closing now…';
 
   @override
   String get panelGridEmpty =>
