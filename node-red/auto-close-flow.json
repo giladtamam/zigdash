@@ -10,7 +10,7 @@
     "id": "zigdash_ac_broker",
     "type": "mqtt-broker",
     "name": "SMHUB Mosquitto",
-    "broker": "10.0.0.57",
+    "broker": "192.168.7.210",
     "port": "1883",
     "clientid": "zigdash-autoclose",
     "autoConnect": true,
