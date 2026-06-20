@@ -8,7 +8,9 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
+import 'auto_close_panel.dart';
 import 'button_panel.dart';
 import 'combo_panel.dart';
 import 'cover_panel.dart';
@@ -126,6 +128,10 @@ class PanelTile extends ConsumerWidget {
                   await ref
                       .read(automationConfigPublisherProvider)
                       .clearConfig(connectionId: connectionId, panelId: panel.id);
+                } else if (panel.type == PanelType.autoClose) {
+                  await ref
+                      .read(autoCloseConfigPublisherProvider)
+                      .clearConfig(connectionId: connectionId, panelId: panel.id);
                 }
                 await repo.delete(panel.id);
               },
@@ -233,6 +239,13 @@ class PanelTile extends ConsumerWidget {
           connectionId: connectionId,
           panel: panel,
           config: config as SceneConfig,
+        ),
+      PanelType.autoClose => AutoClosePanel(
+          connectionId: connectionId,
+          triggerTopic: subscribeTopic,
+          target: publishTopic,
+          panel: panel,
+          config: config as AutoCloseConfig,
         ),
     };
 
