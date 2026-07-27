@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZigDash — MQTT Dashboard for Zigbee2MQTT</title>
+<meta name="description" content="ZigDash is the MQTT dashboard built for Zigbee2MQTT — it discovers your Zigbee devices automatically. Free, open source, no cloud, no ads.">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1c1e; --muted: #5a5e66; --card: #f2f4f6;
+    --accent: #006a6a; --accent-fg: #ffffff; --border: #dde1e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101415; --fg: #e2e6e8; --muted: #9aa3a8; --card: #1a2022;
+      --accent: #4cdada; --accent-fg: #003737; --border: #2a3235;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--fg); line-height: 1.6;
+  }
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 960px; margin: 0 auto; padding: 20px 24px;
+  }
+  header .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; }
+  header img { width: 32px; height: 32px; border-radius: 8px; }
+  nav a { color: var(--muted); text-decoration: none; margin-left: 18px; font-size: .95rem; }
+  nav a:hover { color: var(--accent); }
+  main { max-width: 960px; margin: 0 auto; padding: 0 24px 60px; }
+  .hero { text-align: center; padding: 48px 0 32px; }
+  .hero h1 { font-size: 2.2rem; line-height: 1.2; margin-bottom: 16px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { font-size: 1.15rem; color: var(--muted); max-width: 620px; margin: 0 auto 28px; }
+  .buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 12px; font-weight: 600;
+    text-decoration: none; border: 1px solid var(--border);
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: transparent; }
+  .btn.secondary { color: var(--fg); }
+  .btn.disabled { color: var(--muted); cursor: default; }
+  .shots {
+    display: flex; gap: 16px; overflow-x: auto; padding: 24px 4px; margin: 16px 0 40px;
+  }
+  .shots img {
+    height: 380px; border-radius: 16px; border: 1px solid var(--border);
+  }
+  h2 { font-size: 1.4rem; margin: 40px 0 18px; text-align: center; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .card h3 { font-size: 1.02rem; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: .95rem; }
+  .callout {
+    text-align: center; background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px 20px; margin-top: 40px;
+  }
+  .callout p { color: var(--muted); max-width: 640px; margin: 8px auto 0; }
+  footer {
+    border-top: 1px solid var(--border); text-align: center; color: var(--muted);
+    font-size: .9rem; padding: 24px; margin-top: 20px;
+  }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><img src="assets/icon.png" alt="ZigDash icon"> ZigDash</div>
+  <nav>
+    <a href="#install">Install</a>
+    <a href="https://gitlab.com/tamamg/zigdash">Source</a>
+    <a href="https://gitlab.com/tamamg/zigdash/-/blob/main/store/PRIVACY.md">Privacy</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <h1>The MQTT dashboard built for <span>Zigbee2MQTT</span></h1>
+    <p>Your Zigbee devices, zero setup. ZigDash discovers devices from your Z2M
+       bridge automatically — no manual topic wiring. No cloud, no ads, no account.
+       Free and open source.</p>
+    <div class="buttons">
+      <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash">Get it on Google Play</a>
+      <a class="btn secondary" href="https://gitlab.com/tamamg/zigdash/-/releases">APK / Obtainium</a>
+      <span class="btn disabled">F-Droid — coming soon</span>
+    </div>
+  </section>
+
+  <div class="shots">
+    <img src="assets/shot-dashboard.png" alt="Dashboard with device panels">
+    <img src="assets/shot-connections.png" alt="Broker connections">
+    <img src="assets/shot-settings.png" alt="Settings">
+    <img src="assets/shot-hebrew.png" alt="Hebrew RTL layout">
+  </div>
+
+  <h2>Built for your Zigbee2MQTT home</h2>
+  <div class="grid">
+    <div class="card"><h3>Auto-discovery</h3><p>Scan your Zigbee2MQTT bridge and create a panel for every device with one tap. JSON-path extraction understands real Z2M messages out of the box.</p></div>
+    <div class="card"><h3>16 panel types</h3><p>Toggle, slider, cover with presets, multi-state, combo, radio, scenes, text log, and more — lights, shutters, switches and sensors covered.</p></div>
+    <div class="card"><h3>Any broker</h3><p>TCP, SSL/TLS, WebSocket, WSS. LAN broker auto-scan, hardware-backed credential storage, automatic reconnect, instant multi-broker switching.</p></div>
+    <div class="card"><h3>Remote access</h3><p>Tailscale support — reach your broker securely over your WireGuard mesh. No port forwarding, no cloud relay.</p></div>
+    <div class="card"><h3>Material You</h3><p>Material 3 with dynamic color on Android 12+, phone and tablet in both orientations — ideal as a wall-mounted dashboard.</p></div>
+    <div class="card"><h3>English + Hebrew</h3><p>Full localization with automatic RTL layout (עברית).</p></div>
+  </div>
+
+  <div class="callout">
+    <h2 style="margin-top:0">Runs even when your phone is off</h2>
+    <p>Schedules and auto-close rules are saved as retained MQTT config and executed
+       by Node-RED on your always-on hub — SMLIGHT, Raspberry Pi, or any MQTT-aware
+       device. Bundled flows included.</p>
+  </div>
+
+  <h2 id="install">Install</h2>
+  <div class="grid">
+    <div class="card"><h3>Google Play</h3><p><a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash">play.google.com/store/apps/details?id=com.giladtamam.zigdash</a></p></div>
+    <div class="card"><h3>Obtainium / direct APK</h3><p>Add <a href="https://gitlab.com/tamamg/zigdash">gitlab.com/tamamg/zigdash</a> in Obtainium, or grab a signed per-ABI APK from <a href="https://gitlab.com/tamamg/zigdash/-/releases">releases</a>.</p></div>
+    <div class="card"><h3>F-Droid</h3><p>Submitted — listing goes live after review. Track the <a href="https://gitlab.com/fdroid/fdroiddata/-/merge_requests/44063">inclusion MR</a>.</p></div>
+    <div class="card"><h3>Source</h3><p>MIT-licensed Flutter app. Code, issues, and Node-RED flows at <a href="https://gitlab.com/tamamg/zigdash">gitlab.com/tamamg/zigdash</a>.</p></div>
+  </div>
+</main>
+<footer>
+  <p>100% private — no ads, no analytics, no account, no developer server.</p>
+  <p>MIT © 2026 Gilad Tamam · <a href="https://gitlab.com/tamamg/zigdash/-/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:giladtamam1@gmail.com">Contact</a></p>
+</footer>
+</body>
+</html>

@@ -47,3 +47,14 @@ release:
         --assets-link "{\"name\":\"app-arm64-v8a-release.apk\",\"url\":\"${PKG}/app-arm64-v8a-release.apk\",\"link_type\":\"package\"}" \
         --assets-link "{\"name\":\"app-armeabi-v7a-release.apk\",\"url\":\"${PKG}/app-armeabi-v7a-release.apk\",\"link_type\":\"package\"}" \
         --assets-link "{\"name\":\"app-x86_64-release.apk\",\"url\":\"${PKG}/app-x86_64-release.apk\",\"link_type\":\"package\"}"
+
+pages:
+  stage: release
+  image: alpine:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - cp -r landing public
+  artifacts:
+    paths:
+      - public
