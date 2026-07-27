@@ -18,7 +18,7 @@ build-apks:
     - printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=upload-keystore.jks\n' "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
     - flutter pub get
   script:
-    - flutter build apk --release --split-per-abi
+    - flutter build apk --release --split-per-abi --no-tree-shake-icons
     - |
       for apk in build/app/outputs/flutter-apk/*.apk; do
         name=$(basename "$apk")
