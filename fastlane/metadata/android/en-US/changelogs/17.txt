@@ -1,0 +1,1 @@
+Auto-Close Rule panels (edge-triggered delayed-off on your hub), target Android 16 (SDK 36), fixes.

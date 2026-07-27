@@ -1,0 +1,1 @@
+MQTT dashboard for Zigbee2MQTT — auto-discovers devices. No ads, open source.
