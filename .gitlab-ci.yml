@@ -1,0 +1,49 @@
+stages:
+  - build
+  - release
+
+# Requires masked+protected CI/CD variables (Settings → CI/CD → Variables):
+#   KEYSTORE_BASE64     base64 of the upload keystore (.jks)
+#   KEYSTORE_PASSWORD   keystore store password
+#   KEY_ALIAS           key alias
+#   KEY_PASSWORD        key password
+# Protect the variables and run releases only from protected tags.
+build-apks:
+  stage: build
+  image: ghcr.io/cirruslabs/flutter:stable
+  rules:
+    - if: $CI_COMMIT_TAG
+  before_script:
+    - echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+    - printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=upload-keystore.jks\n' "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
+    - flutter pub get
+  script:
+    - flutter build apk --release --split-per-abi
+    - |
+      for apk in build/app/outputs/flutter-apk/*.apk; do
+        name=$(basename "$apk")
+        curl --fail-with-body --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$apk" \
+          "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/zigdash/${CI_COMMIT_TAG}/${name}"
+      done
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/
+    expire_in: 1 week
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  needs:
+    - build-apks
+  script:
+    - |
+      PKG="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/zigdash/${CI_COMMIT_TAG}"
+      release-cli create \
+        --name "ZigDash ${CI_COMMIT_TAG}" \
+        --tag-name "${CI_COMMIT_TAG}" \
+        --description "See fastlane/metadata/android/en-US/changelogs/ for release notes." \
+        --assets-link "{\"name\":\"app-arm64-v8a-release.apk\",\"url\":\"${PKG}/app-arm64-v8a-release.apk\",\"link_type\":\"package\"}" \
+        --assets-link "{\"name\":\"app-armeabi-v7a-release.apk\",\"url\":\"${PKG}/app-armeabi-v7a-release.apk\",\"link_type\":\"package\"}" \
+        --assets-link "{\"name\":\"app-x86_64-release.apk\",\"url\":\"${PKG}/app-x86_64-release.apk\",\"link_type\":\"package\"}"
