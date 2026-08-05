@@ -5,9 +5,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
+import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/backup_service.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
+import '../../../data/repositories/panel_repo.dart';
 import '../../panels/widgets/panel_grid.dart';
 
 /// Per-connection dashboards screen. Shows a TabBar of all dashboards
@@ -76,7 +78,7 @@ class DashboardsScreen extends ConsumerWidget {
   }
 }
 
-class _DashboardsTabbed extends StatelessWidget {
+class _DashboardsTabbed extends ConsumerWidget {
   const _DashboardsTabbed({
     required this.connectionId,
     required this.connectionName,
@@ -87,8 +89,39 @@ class _DashboardsTabbed extends StatelessWidget {
   final String connectionName;
   final List<Dashboard> dashboards;
 
+  static const _panelTypeLabels = <PanelType, String>{
+    PanelType.toggle: 'Toggle',
+    PanelType.slider: 'Slider',
+    PanelType.cover: 'Cover',
+    PanelType.multiState: 'Multi-State',
+    PanelType.combo: 'Combo',
+    PanelType.radio: 'Radio',
+    PanelType.button: 'Button',
+    PanelType.led: 'LED',
+    PanelType.nodeStatus: 'Node Status',
+    PanelType.progress: 'Progress',
+    PanelType.textInput: 'Text Input',
+    PanelType.textLog: 'Text Log',
+    PanelType.schedule: 'Schedule',
+    PanelType.scene: 'Scene',
+    PanelType.autoClose: 'Auto-Close',
+  };
+
+  void _openReorderSheet(BuildContext context, WidgetRef ref, String dashboardId) {
+    final repo = ref.read(panelRepoProvider);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (sheetCtx) => _PanelReorderSheet(
+        dashboardId: dashboardId,
+        repo: repo,
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
       length: dashboards.length,
       child: Builder(builder: (tabCtx) {
@@ -107,6 +140,16 @@ class _DashboardsTabbed extends StatelessWidget {
                       '/connections/$connectionId/dashboards/${d.id}/edit',
                     );
                   },
+                );
+              }),
+              Builder(builder: (innerCtx) {
+                final idx = DefaultTabController.of(innerCtx).index;
+                final d = dashboards[idx];
+                if (d.locked) return const SizedBox.shrink();
+                return IconButton(
+                  icon: const Icon(Icons.reorder),
+                  tooltip: 'Reorder panels',
+                  onPressed: () => _openReorderSheet(innerCtx, ref, d.id),
                 );
               }),
               IconButton(
@@ -180,12 +223,27 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Text(
-          context.l10n.dashEmpty,
-          textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(48),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.grid_view_rounded,
+              size: 64,
+              color: theme.colorScheme.primary.withValues(alpha: 0.4),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              context.l10n.dashEmpty,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -446,3 +504,118 @@ class _BackupMenu extends ConsumerWidget {
     }
   }
 }
+
+class _PanelReorderSheet extends ConsumerStatefulWidget {
+  const _PanelReorderSheet({required this.dashboardId, required this.repo});
+
+  final String dashboardId;
+  final PanelRepo repo;
+
+  @override
+  ConsumerState<_PanelReorderSheet> createState() => _PanelReorderSheetState();
+}
+
+class _PanelReorderSheetState extends ConsumerState<_PanelReorderSheet> {
+  late List<Panel> _panels;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final panels = await widget.repo.getByDashboard(widget.dashboardId);
+    if (mounted) {
+      setState(() => _panels = panels);
+    }
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) newIndex--;
+      final item = _panels.removeAt(oldIndex);
+      _panels.insert(newIndex, item);
+    });
+  }
+
+  Future<void> _save() async {
+    await widget.repo.reorder(
+      widget.dashboardId,
+      _panels.map((p) => p.id).toList(),
+    );
+    if (mounted) Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_panels.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(32),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.6,
+      minChildSize: 0.3,
+      maxChildSize: 0.9,
+      expand: false,
+      builder: (ctx, scrollController) => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              children: [
+                Text(
+                  'Reorder panels',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const Spacer(),
+                FilledButton(onPressed: _save, child: const Text('Done')),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          Expanded(
+            child: ReorderableListView.builder(
+              itemCount: _panels.length,
+              onReorder: _onReorder,
+              buildDefaultDragHandles: true,
+              itemBuilder: (ctx, i) {
+                final p = _panels[i];
+                return ListTile(
+                  key: ValueKey(p.id),
+                  leading: const Icon(Icons.drag_handle),
+                  title: Text(p.name),
+                  subtitle: Text(
+                    _DashboardsTabbed._panelTypeLabels[p.type] ?? p.type.name,
+                  ),
+                  trailing: Icon(_panelTypeIcon(p.type), size: 24),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+IconData _panelTypeIcon(PanelType type) => switch (type) {
+      PanelType.toggle => Icons.toggle_on,
+      PanelType.slider => Icons.tune,
+      PanelType.cover => Icons.blinds_closed,
+      PanelType.button => Icons.send,
+      PanelType.led => Icons.circle,
+      PanelType.nodeStatus => Icons.cloud_done,
+      PanelType.progress => Icons.battery_5_bar,
+      PanelType.multiState => Icons.view_week,
+      PanelType.combo => Icons.arrow_drop_down_circle_outlined,
+      PanelType.radio => Icons.radio_button_checked,
+      PanelType.textInput => Icons.keyboard,
+      PanelType.textLog => Icons.notes,
+      PanelType.schedule => Icons.schedule,
+      PanelType.scene => Icons.auto_awesome,
+      PanelType.autoClose => Icons.timer_outlined,
+    };

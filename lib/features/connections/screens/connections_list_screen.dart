@@ -52,12 +52,33 @@ class _Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Text(
-          context.l10n.connEmpty,
-          textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(48),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.cloud_outlined,
+              size: 64,
+              color: theme.colorScheme.primary.withValues(alpha: 0.4),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              context.l10n.connEmpty,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () => context.push('/connections/form'),
+              icon: const Icon(Icons.add),
+              label: Text(context.l10n.connAddBroker),
+            ),
+          ],
         ),
       ),
     );

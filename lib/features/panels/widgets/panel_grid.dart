@@ -36,13 +36,27 @@ class PanelGrid extends ConsumerWidget {
       error: (e, _) => Center(child: Text(context.l10n.dashLoadFailed(e.toString()))),
       data: (rows) {
         if (rows.isEmpty) {
+          final theme = Theme.of(context);
           return Center(
             child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: Text(
-                context.l10n.panelGridEmpty,
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+              padding: const EdgeInsets.all(48),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.widgets_outlined,
+                    size: 64,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    context.l10n.panelGridEmpty,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           );

@@ -129,6 +129,18 @@ class PanelRepo {
       );
     }
   }
+
+  Future<void> reorder(String dashboardId, List<String> panelIds) async {
+    for (var i = 0; i < panelIds.length; i++) {
+      await _dao.updateById(
+        panelIds[i],
+        PanelsCompanion(
+          sortOrder: Value(i),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+    }
+  }
 }
 
 final panelRepoProvider = Provider<PanelRepo>((ref) {

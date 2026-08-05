@@ -21,88 +21,322 @@ extension _PanelFormFields on _State {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Card(
-        margin: EdgeInsets.zero,
-        elevation: 0,
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            width: 0.5,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.previewTitle,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                width: 0.5,
               ),
-              const SizedBox(height: 6),
-              rawAsync.when(
-                data: (raw) {
-                  final rawStr = raw?.toString() ?? '';
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      SelectableText(
-                        rawStr,
-                        style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 12),
-                        maxLines: 6,
+                      Text(
+                        l10n.previewTitle,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
-                      if (jsonPath.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Builder(builder: (_) {
-                          final extracted = rawStr.isNotEmpty
-                              ? extractByPath(rawStr, jsonPath)
-                              : null;
-                          return Text(
-                            extracted != null
-                                ? l10n.previewExtracted(
-                                    jsonPath, extracted.toString())
-                                : l10n.previewNoValue,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                  color: extracted != null
-                                      ? Theme.of(context).colorScheme.secondary
-                                      : Theme.of(context).colorScheme.error,
-                                  fontFamily: 'monospace',
-                                ),
-                          );
-                        }),
-                      ],
+                      const Spacer(),
+                      rawAsync.when(
+                        data: (raw) {
+                          final rawStr = raw?.toString() ?? '';
+                          return _buildPreviewValue(rawStr, jsonPath);
+                        },
+                        loading: () => const SizedBox(
+                          width: 10,
+                          height: 10,
+                          child: CircularProgressIndicator(strokeWidth: 1.5),
+                        ),
+                        error: (_, __) => Text(
+                          l10n.previewWaiting(topic),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.outline,
+                                fontStyle: FontStyle.italic,
+                              ),
+                        ),
+                      ),
                     ],
-                  );
-                },
-                loading: () => Text(
-                  l10n.previewWaiting(topic),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                        fontStyle: FontStyle.italic,
-                      ),
-                ),
-                error: (_, __) => Text(
-                  l10n.previewWaiting(topic),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                        fontStyle: FontStyle.italic,
-                      ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildVisualPreview(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPreviewValue(String rawStr, String jsonPath) {
+    if (rawStr.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    if (jsonPath.isNotEmpty) {
+      final extracted = extractByPath(rawStr, jsonPath);
+      return Text(
+        extracted?.toString() ?? '',
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: theme.colorScheme.secondary,
+          fontFamily: 'monospace',
+        ),
+      );
+    }
+    return Text(
+      rawStr,
+      style: theme.textTheme.labelSmall?.copyWith(
+        color: theme.colorScheme.outline,
+        fontFamily: 'monospace',
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildVisualPreview() {
+    final name = _name.text.isEmpty ? 'Panel' : _name.text;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    Widget panelContent;
+    switch (_type) {
+      case PanelType.toggle:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.toggle_off, color: cs.outline, size: 32),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+          ],
+        );
+      case PanelType.slider:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.tune, color: cs.primary, size: 24),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+            const Spacer(),
+            Container(
+              width: 80,
+              height: 4,
+              decoration: BoxDecoration(
+                color: cs.primary.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 20,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: cs.primary,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        );
+      case PanelType.cover:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.blinds_closed, color: cs.primary, size: 28),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+            const Spacer(),
+            FilledButton.tonalIcon(
+              onPressed: () {},
+              icon: const Icon(Icons.arrow_upward, size: 16),
+              label: const Text('OPEN'),
+              style: FilledButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                textStyle: const TextStyle(fontSize: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+            ),
+          ],
+        );
+      case PanelType.button:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.send, color: cs.primary, size: 24),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+            const Spacer(),
+            FilledButton(
+              onPressed: () {},
+              style: FilledButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              ),
+              child: const Text('SEND'),
+            ),
+          ],
+        );
+      case PanelType.led:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey.withValues(alpha: 0.3),
+                border: Border.all(color: cs.outline, width: 1.5),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+          ],
+        );
+      case PanelType.nodeStatus:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off, color: cs.outline, size: 24),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+            const Spacer(),
+            Text('offline', style: theme.textTheme.bodySmall?.copyWith(color: cs.error)),
+          ],
+        );
+      case PanelType.progress:
+        panelContent = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(name, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: 0.6,
+                      minHeight: 8,
+                      backgroundColor: cs.primary.withValues(alpha: 0.12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text('60%', style: theme.textTheme.labelMedium),
+              ],
+            ),
+          ],
+        );
+      case PanelType.multiState:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.view_week, color: cs.primary, size: 24),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+            const Spacer(),
+            for (final o in _optionRows.take(3))
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: ActionChip(
+                  label: Text(o.label.text, style: const TextStyle(fontSize: 10)),
+                  onPressed: () {},
+                  visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                ),
+              ),
+          ],
+        );
+      case PanelType.textLog:
+        panelContent = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.notes, color: cs.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(name, style: theme.textTheme.bodyMedium),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: cs.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                'Waiting for messages...',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: cs.outline,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        );
+      default:
+        panelContent = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(_panelTypeIcon(_type), color: cs.primary, size: 24),
+            const SizedBox(width: 8),
+            Text(name, style: theme.textTheme.bodyMedium),
+          ],
+        );
+    }
+
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      color: cs.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: cs.outlineVariant, width: 0.5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: SizedBox(
+          width: double.infinity,
+          child: panelContent,
         ),
       ),
     );
   }
+
+  IconData _panelTypeIcon(PanelType type) => switch (type) {
+        PanelType.toggle => Icons.toggle_on,
+        PanelType.slider => Icons.tune,
+        PanelType.cover => Icons.blinds_closed,
+        PanelType.button => Icons.send,
+        PanelType.led => Icons.circle,
+        PanelType.nodeStatus => Icons.cloud_done,
+        PanelType.progress => Icons.battery_5_bar,
+        PanelType.multiState => Icons.view_week,
+        PanelType.combo => Icons.arrow_drop_down_circle_outlined,
+        PanelType.radio => Icons.radio_button_checked,
+        PanelType.textInput => Icons.keyboard,
+        PanelType.textLog => Icons.notes,
+        PanelType.schedule => Icons.schedule,
+        PanelType.scene => Icons.auto_awesome,
+        PanelType.autoClose => Icons.timer_outlined,
+      };
 
   List<Widget> _typeSpecificFields() {
     final l10n = context.l10n;

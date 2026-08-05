@@ -695,50 +695,80 @@ class _State extends ConsumerState<PanelFormScreen> {
                   v == null || v.trim().isEmpty ? l10n.fieldRequired : null,
             ),
             const SizedBox(height: 12),
-            if (_topicPrefixHint != null && _topicPrefixHint!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  l10n.panelFormDashboardPrefix(_topicPrefixHint!),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
+            if (_type != PanelType.scene)
+              ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                initiallyExpanded: _isEdit,
+                title: Text('MQTT Settings', style: Theme.of(context).textTheme.titleSmall),
+                children: [
+                  if (_topicPrefixHint != null &&
+                      _topicPrefixHint!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        l10n.panelFormDashboardPrefix(_topicPrefixHint!),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
                       ),
-                ),
+                    ),
+                  TextFormField(
+                    controller: _topicPrefixOverride,
+                    decoration: InputDecoration(
+                      labelText: l10n.panelFormTopicPrefixOverride,
+                      hintText: l10n.panelFormTopicPrefixOverrideHint,
+                      helperText: l10n.panelFormTopicPrefixOverrideHelper,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (!_isReadOnly)
+                    TextFormField(
+                      controller: _topic,
+                      decoration: InputDecoration(
+                        labelText: l10n.panelFormPublishTopic,
+                        hintText: l10n.panelFormPublishTopicHint,
+                        helperText: l10n.panelFormPublishTopicHelper,
+                      ),
+                    ),
+                  if (!_isWriteOnly) ...[
+                    if (!_isReadOnly) const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _subscribeTopic,
+                      decoration: InputDecoration(
+                        labelText: _isReadOnly
+                            ? l10n.panelFormTopicSuffix
+                            : l10n.panelFormSubscribeTopic,
+                        hintText: '',
+                        helperText: _isReadOnly
+                            ? l10n.panelFormSubscribeTopicHelperReadOnly
+                            : l10n.panelFormSubscribeTopicHelper,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<int>(
+                    value: _qos,
+                    decoration: InputDecoration(labelText: l10n.panelFormQos),
+                    items: [
+                      DropdownMenuItem(
+                          value: 0, child: Text(l10n.panelFormQos0)),
+                      DropdownMenuItem(
+                          value: 1, child: Text(l10n.panelFormQos1)),
+                      DropdownMenuItem(
+                          value: 2, child: Text(l10n.panelFormQos2)),
+                    ],
+                    onChanged: (v) =>
+                        v == null ? null : setState(() => _qos = v),
+                  ),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.panelFormRetain),
+                    value: _retain,
+                    onChanged: (v) => setState(() => _retain = v),
+                  ),
+                ],
               ),
-            TextFormField(
-              controller: _topicPrefixOverride,
-              decoration: InputDecoration(
-                labelText: l10n.panelFormTopicPrefixOverride,
-                hintText: l10n.panelFormTopicPrefixOverrideHint,
-                helperText: l10n.panelFormTopicPrefixOverrideHelper,
-              ),
-            ),
             const SizedBox(height: 12),
-            if (!_isReadOnly)
-              TextFormField(
-                controller: _topic,
-                decoration: InputDecoration(
-                  labelText: l10n.panelFormPublishTopic,
-                  hintText: l10n.panelFormPublishTopicHint,
-                  helperText: l10n.panelFormPublishTopicHelper,
-                ),
-              ),
-            if (!_isWriteOnly) ...[
-              if (!_isReadOnly) const SizedBox(height: 12),
-              TextFormField(
-                controller: _subscribeTopic,
-                decoration: InputDecoration(
-                  labelText: _isReadOnly
-                      ? l10n.panelFormTopicSuffix
-                      : l10n.panelFormSubscribeTopic,
-                  hintText: '',
-                  helperText: _isReadOnly
-                      ? l10n.panelFormSubscribeTopicHelperReadOnly
-                      : l10n.panelFormSubscribeTopicHelper,
-                ),
-              ),
-            ],
-            const SizedBox(height: 16),
             if (_loaded) _buildLivePreview(),
             ..._typeSpecificFields(),
             const SizedBox(height: 16),
@@ -757,32 +787,6 @@ class _State extends ConsumerState<PanelFormScreen> {
                     child: Text(l10n.panelFormWidthThird)),
               ],
               onChanged: (v) => v == null ? null : setState(() => _width = v),
-            ),
-            const SizedBox(height: 12),
-            ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              title: Text(l10n.advanced),
-              children: [
-                DropdownButtonFormField<int>(
-                  value: _qos,
-                  decoration: InputDecoration(labelText: l10n.panelFormQos),
-                  items: [
-                    DropdownMenuItem(
-                        value: 0, child: Text(l10n.panelFormQos0)),
-                    DropdownMenuItem(
-                        value: 1, child: Text(l10n.panelFormQos1)),
-                    DropdownMenuItem(
-                        value: 2, child: Text(l10n.panelFormQos2)),
-                  ],
-                  onChanged: (v) => v == null ? null : setState(() => _qos = v),
-                ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.panelFormRetain),
-                  value: _retain,
-                  onChanged: (v) => setState(() => _retain = v),
-                ),
-              ],
             ),
           ],
         ),
