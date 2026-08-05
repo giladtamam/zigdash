@@ -5,8 +5,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_he.dart';
+import 'app_localizations_nb.dart';
+import 'app_localizations_nl.dart';
+import 'app_localizations_sv.dart';
 
 // ignore_for_file: type=lint
 
@@ -94,8 +99,13 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
+    Locale('es'),
     Locale('he'),
+    Locale('nb'),
+    Locale('nl'),
+    Locale('sv'),
   ];
 
   /// No description provided for @appTitle.
@@ -103,6 +113,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ZigDash'**
   String get appTitle;
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to ZigDash'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your private, local dashboard for Zigbee2MQTT.\nNo cloud. No tracking. Just control.'**
+  String get onboardingWelcomeSubtitle;
+
+  /// No description provided for @onboardingBrokerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your broker'**
+  String get onboardingBrokerTitle;
+
+  /// No description provided for @onboardingBrokerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Point ZigDash at your MQTT broker to talk directly to your Zigbee devices. Works with Mosquitto, SMLIGHT, and any MQTT server.'**
+  String get onboardingBrokerSubtitle;
+
+  /// No description provided for @onboardingDashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your dashboards'**
+  String get onboardingDashboardTitle;
+
+  /// No description provided for @onboardingDashboardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create custom dashboards with toggles, sliders, covers, and more. Arrange panels your way — all stored on your device.'**
+  String get onboardingDashboardSubtitle;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @onboardingDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Try demo'**
+  String get onboardingDemo;
 
   /// No description provided for @navBrokers.
   ///
@@ -2191,6 +2261,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scene not found — re-pick it'**
   String get panelSceneMissing;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get languageGerman;
+
+  /// No description provided for @languageDutch.
+  ///
+  /// In en, this message translates to:
+  /// **'Nederlands'**
+  String get languageDutch;
+
+  /// No description provided for @languageSwedish.
+  ///
+  /// In en, this message translates to:
+  /// **'Svenska'**
+  String get languageSwedish;
+
+  /// No description provided for @languageNorwegian.
+  ///
+  /// In en, this message translates to:
+  /// **'Norsk'**
+  String get languageNorwegian;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Español'**
+  String get languageSpanish;
 }
 
 class _AppLocalizationsDelegate
@@ -2203,8 +2303,15 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'he'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'he',
+    'nb',
+    'nl',
+    'sv',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2213,10 +2320,20 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'he':
       return AppLocalizationsHe();
+    case 'nb':
+      return AppLocalizationsNb();
+    case 'nl':
+      return AppLocalizationsNl();
+    case 'sv':
+      return AppLocalizationsSv();
   }
 
   throw FlutterError(

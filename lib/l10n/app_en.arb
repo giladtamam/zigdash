@@ -1,6 +1,16 @@
 {
   "@@locale": "en",
   "appTitle": "ZigDash",
+  "onboardingWelcomeTitle": "Welcome to ZigDash",
+  "onboardingWelcomeSubtitle": "Your private, local dashboard for Zigbee2MQTT.\nNo cloud. No tracking. Just control.",
+  "onboardingBrokerTitle": "Connect your broker",
+  "onboardingBrokerSubtitle": "Point ZigDash at your MQTT broker to talk directly to your Zigbee devices. Works with Mosquitto, SMLIGHT, and any MQTT server.",
+  "onboardingDashboardTitle": "Build your dashboards",
+  "onboardingDashboardSubtitle": "Create custom dashboards with toggles, sliders, covers, and more. Arrange panels your way — all stored on your device.",
+  "onboardingSkip": "Skip",
+  "onboardingNext": "Next",
+  "onboardingGetStarted": "Get Started",
+  "onboardingDemo": "Try demo",
   "navBrokers": "Brokers",
   "navDashboards": "Dashboards",
   "navSettings": "Settings",
@@ -416,5 +426,10 @@
   "panelPickerSceneTitle": "Scene button",
   "panelPickerSceneSubtitle": "One tap activates a saved scene",
   "panelSceneChoose": "Scene",
-  "panelSceneMissing": "Scene not found — re-pick it"
+  "panelSceneMissing": "Scene not found — re-pick it",
+  "languageGerman": "Deutsch",
+  "languageDutch": "Nederlands",
+  "languageSwedish": "Svenska",
+  "languageNorwegian": "Norsk",
+  "languageSpanish": "Español"
 }

@@ -217,7 +217,11 @@ class MqttManager {
   Future<void> dispose() async {
     _disposed = true;
     disconnect();
-    for (final e in _subs.values) {
+    // Iterate a copy: closing a subject runs listeners' onDone, which can
+    // synchronously unsubscribe (and remove from _subs) — mutating the map
+    // during iteration crashed with ConcurrentModificationError on shutdown
+    // or broker switch.
+    for (final e in _subs.values.toList()) {
       await e.subject.close();
     }
     _subs.clear();

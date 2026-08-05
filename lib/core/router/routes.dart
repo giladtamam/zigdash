@@ -1,6 +1,7 @@
 class Routes {
   Routes._();
 
+  static const onboarding = '/onboarding';
   static const connections = '/connections';
   static const connectionForm = '/connections/form';
   static const connectionEdit = '/connections/:id/edit';

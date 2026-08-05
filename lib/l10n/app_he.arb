@@ -1,6 +1,16 @@
 {
   "@@locale": "he",
   "appTitle": "ZigDash",
+  "onboardingWelcomeTitle": "ברוכים הבאים ל-ZigDash",
+  "onboardingWelcomeSubtitle": "לוח בקרה פרטי ומקומי ל-Zigbee2MQTT.\nללא ענן. ללא מעקב. רק שליטה.",
+  "onboardingBrokerTitle": "התחברו לברוקר",
+  "onboardingBrokerSubtitle": "הפנו את ZigDash לברוקר ה-MQTT שלכם כדי לדבר ישירות עם מכשירי ה-Zigbee. עובד עם Mosquitto, SMLIGHT וכל שרת MQTT.",
+  "onboardingDashboardTitle": "בנו לוחות בקרה",
+  "onboardingDashboardSubtitle": "צרו לוחות מותאמים אישית עם מתגים, סליידרים, תריסים ועוד. סדרו את הפאנלים כרצונכם — הכול נשמר במכשיר.",
+  "onboardingSkip": "דילוג",
+  "onboardingNext": "הבא",
+  "onboardingGetStarted": "בואו נתחיל",
+  "onboardingDemo": "נסו הדגמה",
   "navBrokers": "ברוקרים",
   "navDashboards": "לוחות",
   "navSettings": "הגדרות",
@@ -416,5 +426,10 @@
   "panelPickerSceneTitle": "כפתור סצנה",
   "panelPickerSceneSubtitle": "הקשה אחת מפעילה סצנה שמורה",
   "panelSceneChoose": "סצנה",
-  "panelSceneMissing": "הסצנה לא נמצאה — בחרו מחדש"
+  "panelSceneMissing": "הסצנה לא נמצאה — בחרו מחדש",
+  "languageGerman": "Deutsch",
+  "languageDutch": "Nederlands",
+  "languageSwedish": "Svenska",
+  "languageNorwegian": "Norsk",
+  "languageSpanish": "Español"
 }

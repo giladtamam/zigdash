@@ -71,6 +71,36 @@ class SettingsScreen extends ConsumerWidget {
             groupValue: settings.locale?.languageCode,
             onChanged: (_) => ctrl.setLocale(const Locale('he')),
           ),
+          RadioListTile<String?>(
+            title: Text(l10n.languageGerman),
+            value: 'de',
+            groupValue: settings.locale?.languageCode,
+            onChanged: (_) => ctrl.setLocale(const Locale('de')),
+          ),
+          RadioListTile<String?>(
+            title: Text(l10n.languageDutch),
+            value: 'nl',
+            groupValue: settings.locale?.languageCode,
+            onChanged: (_) => ctrl.setLocale(const Locale('nl')),
+          ),
+          RadioListTile<String?>(
+            title: Text(l10n.languageSwedish),
+            value: 'sv',
+            groupValue: settings.locale?.languageCode,
+            onChanged: (_) => ctrl.setLocale(const Locale('sv')),
+          ),
+          RadioListTile<String?>(
+            title: Text(l10n.languageNorwegian),
+            value: 'nb',
+            groupValue: settings.locale?.languageCode,
+            onChanged: (_) => ctrl.setLocale(const Locale('nb')),
+          ),
+          RadioListTile<String?>(
+            title: Text(l10n.languageSpanish),
+            value: 'es',
+            groupValue: settings.locale?.languageCode,
+            onChanged: (_) => ctrl.setLocale(const Locale('es')),
+          ),
           const Divider(),
           _SectionHeader(l10n.settingsAbout),
           ListTile(

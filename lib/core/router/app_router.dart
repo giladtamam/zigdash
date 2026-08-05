@@ -9,6 +9,8 @@ import '../../features/connections/screens/connections_list_screen.dart';
 import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
+import '../../features/onboarding/onboarding_provider.dart';
+import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
@@ -43,57 +45,75 @@ SliderPreset? _parseSliderPreset(String? s) => switch (s) {
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: Routes.connections,
+    // Onboarding lives in the router (not in MaterialApp's builder) so the
+    // onboarding screen can navigate with context.go — an InheritedGoRouter
+    // is only available below the Router, and a builder-wrapped child sits
+    // above it (previously every onboarding button threw "No GoRouter found").
+    redirect: (context, state) {
+      final onboarding = ref.read(onboardingProvider);
+      final onOnboarding = state.matchedLocation == Routes.onboarding;
+      if (onboarding.needsOnboarding && !onOnboarding) {
+        return Routes.onboarding;
+      }
+      if (!onboarding.needsOnboarding && onOnboarding) {
+        return Routes.connections;
+      }
+      return null;
+    },
     routes: [
-      // Full-screen routes (no bottom nav). Push these from inside the shell
-      // and the shell's NavigationBar gets out of the way.
+      GoRoute(
+        path: Routes.onboarding,
+        builder: (_, __) => const OnboardingScreen(),
+      ),
       GoRoute(
         path: Routes.help,
-        builder: (_, __) => const HelpScreen(),
+        pageBuilder: (_, __) => _slideUp(const HelpScreen()),
       ),
       GoRoute(
         path: Routes.devices,
-        builder: (_, state) =>
-            DevicesScreen(connectionId: state.pathParameters['id']!),
+        pageBuilder: (_, state) => _slideUp(
+            DevicesScreen(connectionId: state.pathParameters['id']!)),
       ),
       GoRoute(
         path: Routes.scenes,
-        builder: (_, state) =>
-            ScenesScreen(connectionId: state.pathParameters['id']!),
+        pageBuilder: (_, state) => _slideUp(
+            ScenesScreen(connectionId: state.pathParameters['id']!)),
         routes: [
           GoRoute(
             path: 'new',
-            builder: (_, state) =>
-                SceneFormScreen(connectionId: state.pathParameters['id']!),
+            pageBuilder: (_, state) => _slideUp(
+                SceneFormScreen(connectionId: state.pathParameters['id']!)),
           ),
           GoRoute(
             path: ':sceneId/edit',
-            builder: (_, state) => SceneFormScreen(
+            pageBuilder: (_, state) => _slideUp(SceneFormScreen(
               connectionId: state.pathParameters['id']!,
               sceneId: state.pathParameters['sceneId'],
-            ),
+            )),
           ),
         ],
       ),
       GoRoute(
         path: '/connections/:id/dashboards',
-        builder: (_, state) => DashboardsScreen(connectionId: state.pathParameters['id']!),
+        pageBuilder: (_, state) => _slideUp(
+            DashboardsScreen(connectionId: state.pathParameters['id']!)),
         routes: [
           GoRoute(
             path: 'form',
-            builder: (_, state) => DashboardFormScreen(
+            pageBuilder: (_, state) => _slideUp(DashboardFormScreen(
               connectionId: state.pathParameters['id']!,
-            ),
+            )),
           ),
           GoRoute(
             path: ':dashboardId/edit',
-            builder: (_, state) => DashboardFormScreen(
+            pageBuilder: (_, state) => _slideUp(DashboardFormScreen(
               connectionId: state.pathParameters['id']!,
               dashboardId: state.pathParameters['dashboardId'],
-            ),
+            )),
           ),
           GoRoute(
             path: ':dashboardId/panels/new',
-            builder: (_, state) => PanelFormScreen(
+            pageBuilder: (_, state) => _slideUp(PanelFormScreen(
               connectionId: state.pathParameters['id']!,
               dashboardId: state.pathParameters['dashboardId']!,
               initialType:
@@ -101,27 +121,28 @@ final routerProvider = Provider<GoRouter>((ref) {
               initialSliderPreset:
                   _parseSliderPreset(state.uri.queryParameters['preset']),
               suggestion: state.extra as PanelSuggestion?,
-            ),
+            )),
           ),
           GoRoute(
             path: ':dashboardId/discover',
-            builder: (_, state) => DevicePickerScreen(
+            pageBuilder: (_, state) => _slideUp(DevicePickerScreen(
               connectionId: state.pathParameters['id']!,
               dashboardId: state.pathParameters['dashboardId']!,
-            ),
+            )),
           ),
           GoRoute(
             path: ':dashboardId/panels/:panelId/edit',
-            builder: (_, state) => PanelFormScreen(
+            pageBuilder: (_, state) => _slideUp(PanelFormScreen(
               connectionId: state.pathParameters['id']!,
               dashboardId: state.pathParameters['dashboardId']!,
               panelId: state.pathParameters['panelId'],
-            ),
+            )),
           ),
         ],
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => _RootShell(shell: navigationShell),
+        builder: (context, state, navigationShell) =>
+            _RootShell(shell: navigationShell),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -131,12 +152,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(
                     path: 'form',
-                    builder: (_, __) => const ConnectionFormScreen(),
+                    pageBuilder: (_, __) =>
+                        _slideUp(const ConnectionFormScreen()),
                   ),
                   GoRoute(
                     path: ':id/edit',
-                    builder: (_, state) =>
-                        ConnectionFormScreen(connectionId: state.pathParameters['id']),
+                    pageBuilder: (_, state) =>
+                        _slideUp(ConnectionFormScreen(
+                            connectionId: state.pathParameters['id'])),
                   ),
                 ],
               ),
@@ -163,6 +186,24 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+Page<dynamic> _slideUp(Widget child) => CustomTransitionPage(
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+          SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.05),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOut,
+        )),
+        child: FadeTransition(
+          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          child: child,
+        ),
+      ),
+    );
 
 class _RootShell extends StatelessWidget {
   const _RootShell({required this.shell});

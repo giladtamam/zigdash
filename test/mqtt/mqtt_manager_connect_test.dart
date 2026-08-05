@@ -118,6 +118,37 @@ void main() {
     });
   });
 
+  test('dispose() tolerates listeners unsubscribing during subject close', () {
+    fakeAsync((async) {
+      final manager = MqttManager(
+        config: configWithRemote(),
+        password: '',
+        clientFactory: factoryFor({
+          localHost: _Behavior.succeed,
+          remoteHost: _Behavior.succeed,
+        }),
+      );
+
+      // No connect() — _client stays null, so unsubscribe takes the
+      // ref-count-only path (no wire UNSUBSCRIBE) and still mutates _subs.
+      // This mirrors panelValueProvider's autoDispose teardown: closing a
+      // subject runs onDone → unsubscribe → _subs.remove while dispose() is
+      // iterating _subs. Before the fix that crashed with
+      // ConcurrentModificationError on shutdown / broker switch.
+      manager.subscribe('a/b').listen(
+        (_) {},
+        onDone: () => manager.unsubscribe('a/b'),
+      );
+
+      var disposed = false;
+      manager.dispose().then((_) => disposed = true);
+      async.flushMicrotasks();
+
+      expect(disposed, isTrue,
+          reason: 'dispose() must complete without concurrent-modification');
+    });
+  });
+
   test('falls back to the remote host when the local probe times out', () {
     fakeAsync((async) {
       final manager = MqttManager(

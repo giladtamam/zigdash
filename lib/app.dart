@@ -15,18 +15,22 @@ class ZigDashApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final settings = ref.watch(settingsControllerProvider);
+
     return AppLifecycleReconnector(
       child: DynamicColorBuilder(
         builder: (light, dark) => MaterialApp.router(
           onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light(dynamic: settings.dynamicColor ? light : null),
-          darkTheme: AppTheme.dark(dynamic: settings.dynamicColor ? dark : null),
+          darkTheme:
+              AppTheme.dark(dynamic: settings.dynamicColor ? dark : null),
           themeMode: settings.themeMode,
           locale: settings.locale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           routerConfig: router,
+          // Onboarding is a router route (Routes.onboarding) with a redirect,
+          // so its context.go calls can reach the InheritedGoRouter.
         ),
       ),
     );

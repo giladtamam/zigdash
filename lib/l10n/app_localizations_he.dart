@@ -12,6 +12,39 @@ class AppLocalizationsHe extends AppLocalizations {
   String get appTitle => 'ZigDash';
 
   @override
+  String get onboardingWelcomeTitle => 'ברוכים הבאים ל-ZigDash';
+
+  @override
+  String get onboardingWelcomeSubtitle =>
+      'לוח בקרה פרטי ומקומי ל-Zigbee2MQTT.\nללא ענן. ללא מעקב. רק שליטה.';
+
+  @override
+  String get onboardingBrokerTitle => 'התחברו לברוקר';
+
+  @override
+  String get onboardingBrokerSubtitle =>
+      'הפנו את ZigDash לברוקר ה-MQTT שלכם כדי לדבר ישירות עם מכשירי ה-Zigbee. עובד עם Mosquitto, SMLIGHT וכל שרת MQTT.';
+
+  @override
+  String get onboardingDashboardTitle => 'בנו לוחות בקרה';
+
+  @override
+  String get onboardingDashboardSubtitle =>
+      'צרו לוחות מותאמים אישית עם מתגים, סליידרים, תריסים ועוד. סדרו את הפאנלים כרצונכם — הכול נשמר במכשיר.';
+
+  @override
+  String get onboardingSkip => 'דילוג';
+
+  @override
+  String get onboardingNext => 'הבא';
+
+  @override
+  String get onboardingGetStarted => 'בואו נתחיל';
+
+  @override
+  String get onboardingDemo => 'נסו הדגמה';
+
+  @override
   String get navBrokers => 'ברוקרים';
 
   @override
@@ -1154,4 +1187,19 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelSceneMissing => 'הסצנה לא נמצאה — בחרו מחדש';
+
+  @override
+  String get languageGerman => 'Deutsch';
+
+  @override
+  String get languageDutch => 'Nederlands';
+
+  @override
+  String get languageSwedish => 'Svenska';
+
+  @override
+  String get languageNorwegian => 'Norsk';
+
+  @override
+  String get languageSpanish => 'Español';
 }
