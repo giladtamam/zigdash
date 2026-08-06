@@ -11,6 +11,7 @@ import '../../mqtt/broker_config.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../mqtt/mqtt_status.dart';
 import '../connections/diagnostics/connect_diagnostics.dart';
+import '../connections/diagnostics/connect_diagnostics_provider.dart';
 import '../connections/screens/broker_scan_sheet.dart';
 import '../connections/widgets/broker_fields.dart';
 import '../connections/widgets/diagnostics_ladder_view.dart';

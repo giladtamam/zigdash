@@ -9,6 +9,7 @@ import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../mqtt/broker_config.dart';
 import '../diagnostics/connect_diagnostics.dart';
+import '../diagnostics/connect_diagnostics_provider.dart';
 import '../widgets/broker_fields.dart';
 import '../widgets/diagnostics_ladder_view.dart';
 import '../widgets/protocol_dropdown.dart';

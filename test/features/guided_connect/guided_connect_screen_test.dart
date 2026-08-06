@@ -11,6 +11,7 @@ import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
+import 'package:zigdash/features/connections/diagnostics/connect_diagnostics_provider.dart';
 import 'package:zigdash/features/guided_connect/guided_connect_screen.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';

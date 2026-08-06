@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../mqtt/broker_config.dart';
@@ -283,9 +282,3 @@ class ConnectDiagnostics {
     }
   }
 }
-
-/// Provider the wizard and the connection form read; tests override it with a
-/// [ConnectDiagnostics] built on fakes.
-final connectDiagnosticsProvider = Provider<ConnectDiagnostics>(
-  (ref) => ConnectDiagnostics(),
-);
