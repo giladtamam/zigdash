@@ -8,8 +8,9 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../mqtt/broker_config.dart';
-import '../../../mqtt/mqtt_manager.dart';
-import '../../../mqtt/mqtt_status.dart';
+import '../diagnostics/connect_diagnostics.dart';
+import '../widgets/broker_fields.dart';
+import '../widgets/diagnostics_ladder_view.dart';
 import '../widgets/protocol_dropdown.dart';
 import 'broker_help_sheet.dart';
 import 'broker_scan_sheet.dart';
@@ -73,10 +74,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   }
 
   void _onProtocolChanged(MqttProtocol p) {
-    final currentDefault = ProtocolDropdown.defaultPort(_protocol);
-    if (_port.text == currentDefault.toString()) {
-      _port.text = ProtocolDropdown.defaultPort(p).toString();
-    }
+    applyProtocolPortDefault(_port, _protocol, p);
     setState(() => _protocol = p);
   }
 
@@ -84,11 +82,12 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   Future<void> _findBrokers() async {
     final result = await BrokerScanSheet.show(context);
     if (result == null || !mounted) return;
-    setState(() {
-      _host.text = result.host;
-      _port.text = result.port.toString();
-      _protocol = result.port == 8883 ? MqttProtocol.tcpSsl : MqttProtocol.tcp;
-    });
+    setState(() => applyScanResult(
+          host: _host,
+          port: _port,
+          onProtocol: (p) => _protocol = p,
+          result: result,
+        ));
   }
 
   Future<void> _save() async {
@@ -145,33 +144,79 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
       keepAliveSeconds: int.parse(_keepAlive.text),
       remoteHost: _remoteHost.text.trim().isEmpty ? null : _remoteHost.text.trim(),
     );
-    final mgr = MqttManager(config: cfg, password: _password.text);
+    final diagnostics = ref.read(connectDiagnosticsProvider);
 
-    MqttStatus result = MqttStatus.error;
     try {
-      unawaited(mgr.connect());
-      result = await mgr.status$
-          .firstWhere((s) => s == MqttStatus.connected || s == MqttStatus.error)
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => MqttStatus.error,
-          );
-    } finally {
-      await mgr.dispose();
-      if (mounted) setState(() => _testing = false);
+      final report = await diagnostics.run(config: cfg, password: _password.text);
+      if (!mounted) return;
+      setState(() => _testing = false);
+      _showLadderSheet(report);
+    } catch (e) {
+      // The ladder reports per-step failures itself; an unexpected throw just
+      // falls back to the old generic failure message.
+      if (!mounted) return;
+      setState(() => _testing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.connTestFailed(e.toString()))),
+      );
     }
+  }
 
-    if (!mounted) return;
-    if (result == MqttStatus.connected) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.connTestOk)),
-      );
-    } else {
-      final errorDetail = mgr.lastError ?? '';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.connTestFailed(errorDetail))),
-      );
-    }
+  /// Shows the diagnostic ladder for the just-run test. Retry re-runs the
+  /// ladder with the current form values.
+  void _showLadderSheet(DiagnosticsReport report) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DiagnosticsLadderView(
+                steps: report.steps,
+                showTriedHint: true,
+                candidatesTried: report.candidatesTried,
+              ),
+              const SizedBox(height: 16),
+              if (report.connected)
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () => Navigator.of(sheetContext).pop(),
+                    icon: const Icon(Icons.check),
+                    label: Text(context.l10n.connTestOk),
+                  ),
+                )
+              else
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(sheetContext).pop(),
+                        child: Text(context.l10n.cancel),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: () {
+                          Navigator.of(sheetContext).pop();
+                          _testConnection();
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: Text(context.l10n.retry),
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override

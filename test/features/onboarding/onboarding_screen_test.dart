@@ -136,4 +136,52 @@ void main() {
     expect(conns.map((c) => c.name), contains('Demo Smart Home'));
     expect(conns.single.host, 'demo.local');
   });
+    testWidgets('Connect my broker on the last page opens the guided connect flow',
+        (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final db = AppDatabase.test(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      final router = GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(path: '/', builder: (_, __) => const OnboardingScreen()),
+          GoRoute(
+            path: Routes.connections,
+            builder: (_, __) => const Scaffold(body: Text('STUB_CONNECTIONS')),
+          ),
+          GoRoute(
+            path: Routes.guidedConnect,
+            builder: (_, __) => const Scaffold(body: Text('STUB_GUIDED')),
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          sharedPreferencesProvider.overrideWithValue(prefs),
+        ],
+        child: MaterialApp.router(
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
+      ));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Next'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Connect my broker'), findsOneWidget);
+
+      await tester.tap(find.text('Connect my broker'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('STUB_GUIDED'), findsOneWidget);
+      expect(prefs.getBool('onboarding_complete'), isTrue);
+    });
 }

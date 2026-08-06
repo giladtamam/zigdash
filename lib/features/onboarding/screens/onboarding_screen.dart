@@ -46,6 +46,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
+  void _connectBroker() {
+    ref.read(onboardingProvider.notifier).completeOnboarding();
+    context.go(Routes.guidedConnect);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -107,6 +112,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ],
               ),
             ),
+            if (_page == 2) ...[
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.tonalIcon(
+                    onPressed: _connectBroker,
+                    icon: const Icon(Icons.wifi_tethering),
+                    label: Text(l10n.onboardingConnectBroker),
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
           ],
         ),

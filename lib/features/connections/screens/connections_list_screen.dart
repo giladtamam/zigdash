@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/routes.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../widgets/connection_tile.dart';
 
@@ -15,7 +16,16 @@ class ConnectionsListScreen extends ConsumerWidget {
     final repo = ref.watch(connectionRepoProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.connectionsTitle)),
+      appBar: AppBar(
+        title: Text(context.l10n.connectionsTitle),
+        actions: [
+          IconButton(
+            tooltip: context.l10n.guidedConnectTitle,
+            icon: const Icon(Icons.auto_fix_high),
+            onPressed: () => context.push(Routes.guidedConnect),
+          ),
+        ],
+      ),
       body: connections.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(context.l10n.connLoadFailed(e.toString()))),
@@ -74,9 +84,14 @@ class _Empty extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
+              onPressed: () => context.push(Routes.guidedConnect),
+              icon: const Icon(Icons.auto_fix_high),
+              label: Text(context.l10n.guidedConnectTitle),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
               onPressed: () => context.push('/connections/form'),
-              icon: const Icon(Icons.add),
-              label: Text(context.l10n.connAddBroker),
+              child: Text(context.l10n.connAddBroker),
             ),
           ],
         ),

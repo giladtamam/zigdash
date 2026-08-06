@@ -1202,4 +1202,105 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'הגדרת ברוקר';
+
+  @override
+  String get guidedConnectIntro =>
+      'נבדוק כל שלב בחיבור ונציג את מכשירי ה-Zigbee שלכם.';
+
+  @override
+  String get guidedBaseTopic => 'נושא בסיס';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'בדיקה וחיבור';
+
+  @override
+  String get guidedTesting => 'בודקים את החיבור…';
+
+  @override
+  String get stepResolve => 'פתרון שם מארח';
+
+  @override
+  String get stepTcp => 'חיבור TCP';
+
+  @override
+  String get stepConnack => 'לחיצת יד MQTT';
+
+  @override
+  String get stepAuth => 'אימות';
+
+  @override
+  String get stepDevices => 'חיפוש מכשירים';
+
+  @override
+  String get diagResolveFail =>
+      'לא ניתן לפתור את שם המארח. בדקו את הכתובת שהזנתם.';
+
+  @override
+  String get diagResolveTimeout =>
+      'פתרון שם המארח עבר את גבול הזמן. בדקו את הכתובת ואת הרשת.';
+
+  @override
+  String get diagTcpFail =>
+      'לא ניתן להגיע לברוקר. האם Zigbee2MQTT פעיל? בדקו את הכתובת והיציאה.';
+
+  @override
+  String get diagTcpTimeout =>
+      'החיבור לברוקר עבר את גבול הזמן. ייתכן שהוא לא זמין או מחוץ לרשת.';
+
+  @override
+  String get diagConnackFail =>
+      'הברוקר לא השלים את לחיצת היד של MQTT. ודאו שזה ברוקר MQTT (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'הברוקר דחה את שם המשתמש או הסיסמה. בדקו את פרטי ההתחברות.';
+
+  @override
+  String get diagAuthRefused => 'הברוקר סירב לחיבור. בדקו את הגדרות החיבור.';
+
+  @override
+  String foundDevices(Object count) {
+    return 'נמצאו $count מכשירים';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'מכשירי הזיגבי שלכם נראים. המשיכו לבניית לוח המחוונים.';
+
+  @override
+  String get noDevicesTitle => 'מחובר — עדיין לא נמצאו מכשירים';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash רואה את הברוקר, אך טרם נמצאו מכשירי Zigbee. אפשר להתחיל שיוך מכשירים.';
+
+  @override
+  String get startPairing => 'התחלת שיוך';
+
+  @override
+  String get pairingEnabled =>
+      'השיוך פעיל. לחצו על כפתור השיוך במכשיר כדי לצרף אותו.';
+
+  @override
+  String get continueToDashboard => 'המשך ללוח המחוונים';
+
+  @override
+  String get guidedBackToForm => 'עריכת הגדרות';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return 'נוסו $count כתובות';
+  }
+
+  @override
+  String get guidedSaveFailed => 'לא ניתן היה לשמור את החיבור. נסו שוב.';
+
+  @override
+  String get onboardingConnectBroker => 'חיבור הברוקר שלי';
 }

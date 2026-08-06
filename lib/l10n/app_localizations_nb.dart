@@ -1214,4 +1214,106 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'Sett opp broker';
+
+  @override
+  String get guidedConnectIntro =>
+      'Vi tester hvert trinn i tilkoblingen og viser Zigbee-enhetene dine.';
+
+  @override
+  String get guidedBaseTopic => 'Basistemae';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'Test og koble til';
+
+  @override
+  String get guidedTesting => 'Tester tilkoblingen…';
+
+  @override
+  String get stepResolve => 'Løse opp vert';
+
+  @override
+  String get stepTcp => 'TCP-tilkobling';
+
+  @override
+  String get stepConnack => 'MQTT-håndtrykk';
+
+  @override
+  String get stepAuth => 'Autentisering';
+
+  @override
+  String get stepDevices => 'Søker etter enheter';
+
+  @override
+  String get diagResolveFail =>
+      'Vertsnavnet kunne ikke løses opp. Kontroller adressen du skrev inn.';
+
+  @override
+  String get diagResolveTimeout =>
+      'Oppløsningen av verten tok for lang tid. Kontroller adresse og nettverk.';
+
+  @override
+  String get diagTcpFail =>
+      'Brokeren er ikke tilgjengelig. Kjører Zigbee2MQTT? Kontroller adresse og port.';
+
+  @override
+  String get diagTcpTimeout =>
+      'Tilkoblingen til brokeren tok for lang tid. Den kan være frakoblet eller utilgjengelig.';
+
+  @override
+  String get diagConnackFail =>
+      'Brokeren fullførte ikke MQTT-håndtrykket. Sørg for at det er en MQTT-broker (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'Brokeren avviste brukernavn eller passord. Kontroller påloggingsinformasjonen.';
+
+  @override
+  String get diagAuthRefused =>
+      'Brokeren avviste tilkoblingen. Kontroller tilkoblingsinnstillingene.';
+
+  @override
+  String foundDevices(Object count) {
+    return 'Fant $count enheter';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'Zigbee-enhetene dine er synlige. Fortsett til dashbordet.';
+
+  @override
+  String get noDevicesTitle => 'Tilkoblet – ingen enheter funnet ennå';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash ser brokeren, men har ennå ikke funnet noen Zigbee-enheter. Du kan starte paring.';
+
+  @override
+  String get startPairing => 'Start paring';
+
+  @override
+  String get pairingEnabled =>
+      'Paring er aktivert. Trykk på paringsknappen på enheten din.';
+
+  @override
+  String get continueToDashboard => 'Fortsett til dashbordet';
+
+  @override
+  String get guidedBackToForm => 'Rediger innstillinger';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return 'Prøvde $count adresser';
+  }
+
+  @override
+  String get guidedSaveFailed => 'Kunne ikke lagre tilkoblingen. Prøv igjen.';
+
+  @override
+  String get onboardingConnectBroker => 'Koble til min broker';
 }

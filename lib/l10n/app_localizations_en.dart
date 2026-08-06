@@ -1209,4 +1209,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'Set up your broker';
+
+  @override
+  String get guidedConnectIntro =>
+      'We\'ll test each step of the connection and show your Zigbee devices.';
+
+  @override
+  String get guidedBaseTopic => 'Base topic';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'Test & connect';
+
+  @override
+  String get guidedTesting => 'Testing your connection…';
+
+  @override
+  String get stepResolve => 'Resolving host';
+
+  @override
+  String get stepTcp => 'TCP connection';
+
+  @override
+  String get stepConnack => 'MQTT handshake';
+
+  @override
+  String get stepAuth => 'Authentication';
+
+  @override
+  String get stepDevices => 'Looking for devices';
+
+  @override
+  String get diagResolveFail =>
+      'The host name couldn\'t be resolved. Check the address you entered.';
+
+  @override
+  String get diagResolveTimeout =>
+      'Resolving the host timed out. Check the address and your network.';
+
+  @override
+  String get diagTcpFail =>
+      'Can\'t reach the broker. Is Zigbee2MQTT running? Check the address and port.';
+
+  @override
+  String get diagTcpTimeout =>
+      'Connecting to the broker timed out. It may be offline or unreachable.';
+
+  @override
+  String get diagConnackFail =>
+      'The broker didn\'t complete the MQTT handshake. Make sure this is an MQTT broker (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'The broker rejected the username or password. Check your credentials.';
+
+  @override
+  String get diagAuthRefused =>
+      'The broker refused the connection. Check the connection settings.';
+
+  @override
+  String foundDevices(Object count) {
+    return 'Found $count devices';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'Your Zigbee devices are visible. Continue to build your dashboard.';
+
+  @override
+  String get noDevicesTitle => 'Connected — no devices found yet';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash can see your broker, but hasn\'t found any Zigbee devices yet. You can start pairing to add them.';
+
+  @override
+  String get startPairing => 'Start pairing';
+
+  @override
+  String get pairingEnabled =>
+      'Pairing is enabled. Press the pairing button on your device to join it.';
+
+  @override
+  String get continueToDashboard => 'Continue to dashboard';
+
+  @override
+  String get guidedBackToForm => 'Edit settings';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return 'Tried $count addresses';
+  }
+
+  @override
+  String get guidedSaveFailed =>
+      'Couldn\'t save the connection. Please try again.';
+
+  @override
+  String get onboardingConnectBroker => 'Connect my broker';
 }

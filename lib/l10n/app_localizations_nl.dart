@@ -1218,4 +1218,107 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'Broker instellen';
+
+  @override
+  String get guidedConnectIntro =>
+      'We testen elke stap van de verbinding en tonen uw Zigbee-apparaten.';
+
+  @override
+  String get guidedBaseTopic => 'Basis-topic';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'Testen en verbinden';
+
+  @override
+  String get guidedTesting => 'Verbinding testen…';
+
+  @override
+  String get stepResolve => 'Host oplossen';
+
+  @override
+  String get stepTcp => 'TCP-verbinding';
+
+  @override
+  String get stepConnack => 'MQTT-handshake';
+
+  @override
+  String get stepAuth => 'Authenticatie';
+
+  @override
+  String get stepDevices => 'Apparaten zoeken';
+
+  @override
+  String get diagResolveFail =>
+      'De hostnaam kon niet worden opgelost. Controleer het ingevoerde adres.';
+
+  @override
+  String get diagResolveTimeout =>
+      'Het oplossen van de host duurde te lang. Controleer adres en netwerk.';
+
+  @override
+  String get diagTcpFail =>
+      'De broker is niet bereikbaar. Draait Zigbee2MQTT? Controleer adres en poort.';
+
+  @override
+  String get diagTcpTimeout =>
+      'Verbinding met de broker verliep te lang. Deze is mogelijk offline of niet bereikbaar.';
+
+  @override
+  String get diagConnackFail =>
+      'De broker heeft de MQTT-handshake niet voltooid. Zorg dat het een MQTT-broker is (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'De broker heeft gebruikersnaam of wachtwoord geweigerd. Controleer uw gegevens.';
+
+  @override
+  String get diagAuthRefused =>
+      'De broker heeft de verbinding geweigerd. Controleer de verbindingsinstellingen.';
+
+  @override
+  String foundDevices(Object count) {
+    return '$count apparaten gevonden';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'Uw Zigbee-apparaten zijn zichtbaar. Ga verder met uw dashboard.';
+
+  @override
+  String get noDevicesTitle => 'Verbonden – nog geen apparaten gevonden';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash ziet de broker, maar heeft nog geen Zigbee-apparaten gevonden. U kunt het koppelen starten.';
+
+  @override
+  String get startPairing => 'Koppelen starten';
+
+  @override
+  String get pairingEnabled =>
+      'Koppelen is ingeschakeld. Druk op de koppelknop van uw apparaat.';
+
+  @override
+  String get continueToDashboard => 'Naar dashboard';
+
+  @override
+  String get guidedBackToForm => 'Instellingen bewerken';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return '$count adressen geprobeerd';
+  }
+
+  @override
+  String get guidedSaveFailed =>
+      'De verbinding kon niet worden opgeslagen. Probeer het opnieuw.';
+
+  @override
+  String get onboardingConnectBroker => 'Mijn broker verbinden';
 }

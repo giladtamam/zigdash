@@ -1213,4 +1213,107 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'Konfigurera broker';
+
+  @override
+  String get guidedConnectIntro =>
+      'Vi testar varje steg i anslutningen och visar dina Zigbee-enheter.';
+
+  @override
+  String get guidedBaseTopic => 'Bastopic';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'Testa och anslut';
+
+  @override
+  String get guidedTesting => 'Testar anslutningen…';
+
+  @override
+  String get stepResolve => 'Lösa upp värd';
+
+  @override
+  String get stepTcp => 'TCP-anslutning';
+
+  @override
+  String get stepConnack => 'MQTT-handskakning';
+
+  @override
+  String get stepAuth => 'Autentisering';
+
+  @override
+  String get stepDevices => 'Söker efter enheter';
+
+  @override
+  String get diagResolveFail =>
+      'Värdnamnet kunde inte lösas upp. Kontrollera adressen du angav.';
+
+  @override
+  String get diagResolveTimeout =>
+      'Upplösningen av värden tog för lång tid. Kontrollera adress och nätverk.';
+
+  @override
+  String get diagTcpFail =>
+      'Det går inte att nå servern (brokern). Körs Zigbee2MQTT? Kontrollera adress och port.';
+
+  @override
+  String get diagTcpTimeout =>
+      'Anslutningen till servern tog för lång tid. Den kan vara offline eller oåtkomlig.';
+
+  @override
+  String get diagConnackFail =>
+      'Servern slutförde inte MQTT-handskakningen. Se till att det är en MQTT-server (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'Servern avvisade användarnamn eller lösenord. Kontrollera dina uppgifter.';
+
+  @override
+  String get diagAuthRefused =>
+      'Servern avvisade anslutningen. Kontrollera anslutningsinställningarna.';
+
+  @override
+  String foundDevices(Object count) {
+    return 'Hittade $count enheter';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'Dina Zigbee-enheter är synliga. Fortsätt till din instrumentpanel.';
+
+  @override
+  String get noDevicesTitle => 'Ansluten – inga enheter hittade ännu';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash ser servern men har ännu inte hittat några Zigbee-enheter. Du kan starta ihopparning.';
+
+  @override
+  String get startPairing => 'Starta ihopparning';
+
+  @override
+  String get pairingEnabled =>
+      'Ihopparning är aktiverad. Tryck på ihopparningsknappen på din enhet.';
+
+  @override
+  String get continueToDashboard => 'Fortsätt till instrumentpanelen';
+
+  @override
+  String get guidedBackToForm => 'Redigera inställningar';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return 'Försökte $count adresser';
+  }
+
+  @override
+  String get guidedSaveFailed =>
+      'Det gick inte att spara anslutningen. Försök igen.';
+
+  @override
+  String get onboardingConnectBroker => 'Anslut min server';
 }

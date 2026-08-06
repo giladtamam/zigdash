@@ -1221,4 +1221,107 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'Broker einrichten';
+
+  @override
+  String get guidedConnectIntro =>
+      'Wir testen jeden Schritt der Verbindung und zeigen Ihre Zigbee-Geräte.';
+
+  @override
+  String get guidedBaseTopic => 'Basis-Topic';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'Testen & verbinden';
+
+  @override
+  String get guidedTesting => 'Verbindung wird getestet …';
+
+  @override
+  String get stepResolve => 'Host auflösen';
+
+  @override
+  String get stepTcp => 'TCP-Verbindung';
+
+  @override
+  String get stepConnack => 'MQTT-Handshake';
+
+  @override
+  String get stepAuth => 'Authentifizierung';
+
+  @override
+  String get stepDevices => 'Geräte suchen';
+
+  @override
+  String get diagResolveFail =>
+      'Der Hostname konnte nicht aufgelöst werden. Überprüfen Sie die eingegebene Adresse.';
+
+  @override
+  String get diagResolveTimeout =>
+      'Das Auflösen des Hosts ist abgelaufen. Prüfen Sie Adresse und Netzwerk.';
+
+  @override
+  String get diagTcpFail =>
+      'Der Broker ist nicht erreichbar. Läuft Zigbee2MQTT? Prüfen Sie Adresse und Port.';
+
+  @override
+  String get diagTcpTimeout =>
+      'Zeitüberschreitung beim Verbinden. Der Broker ist möglicherweise offline oder nicht erreichbar.';
+
+  @override
+  String get diagConnackFail =>
+      'Der Broker hat den MQTT-Handshake nicht abgeschlossen. Stellen Sie sicher, dass es ein MQTT-Broker ist (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'Der Broker hat Benutzername oder Passwort abgelehnt. Prüfen Sie Ihre Zugangsdaten.';
+
+  @override
+  String get diagAuthRefused =>
+      'Der Broker hat die Verbindung abgelehnt. Prüfen Sie die Verbindungseinstellungen.';
+
+  @override
+  String foundDevices(Object count) {
+    return '$count Geräte gefunden';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'Ihre Zigbee-Geräte sind sichtbar. Fahren Sie mit Ihrem Dashboard fort.';
+
+  @override
+  String get noDevicesTitle => 'Verbunden – noch keine Geräte gefunden';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash sieht den Broker, hat aber noch keine Zigbee-Geräte gefunden. Sie können das Pairing starten.';
+
+  @override
+  String get startPairing => 'Pairing starten';
+
+  @override
+  String get pairingEnabled =>
+      'Pairing ist aktiviert. Drücken Sie die Pairing-Taste an Ihrem Gerät.';
+
+  @override
+  String get continueToDashboard => 'Zum Dashboard';
+
+  @override
+  String get guidedBackToForm => 'Einstellungen bearbeiten';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return '$count Adressen versucht';
+  }
+
+  @override
+  String get guidedSaveFailed =>
+      'Die Verbindung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get onboardingConnectBroker => 'Meinen Broker verbinden';
 }

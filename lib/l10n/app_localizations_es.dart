@@ -1219,4 +1219,107 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get guidedConnectTitle => 'Configurar broker';
+
+  @override
+  String get guidedConnectIntro =>
+      'Probaremos cada paso de la conexión y mostraremos tus dispositivos Zigbee.';
+
+  @override
+  String get guidedBaseTopic => 'Tema base';
+
+  @override
+  String get guidedBaseTopicHint => 'zigbee2mqtt';
+
+  @override
+  String get guidedConnect => 'Probar y conectar';
+
+  @override
+  String get guidedTesting => 'Probando la conexión…';
+
+  @override
+  String get stepResolve => 'Resolver host';
+
+  @override
+  String get stepTcp => 'Conexión TCP';
+
+  @override
+  String get stepConnack => 'Handshake MQTT';
+
+  @override
+  String get stepAuth => 'Autenticación';
+
+  @override
+  String get stepDevices => 'Buscando dispositivos';
+
+  @override
+  String get diagResolveFail =>
+      'No se pudo resolver el nombre del host. Comprueba la dirección introducida.';
+
+  @override
+  String get diagResolveTimeout =>
+      'Se agotó el tiempo al resolver el host. Comprueba la dirección y la red.';
+
+  @override
+  String get diagTcpFail =>
+      'No se puede alcanzar el broker. ¿Está Zigbee2MQTT en marcha? Comprueba la dirección y el puerto.';
+
+  @override
+  String get diagTcpTimeout =>
+      'Se agotó el tiempo de conexión con el broker. Puede estar desconectado o ser inalcanzable.';
+
+  @override
+  String get diagConnackFail =>
+      'El broker no completó el handshake MQTT. Asegúrate de que es un broker MQTT (Mosquitto, Zigbee2MQTT).';
+
+  @override
+  String get diagAuthRejected =>
+      'El broker rechazó el usuario o la contraseña. Comprueba tus credenciales.';
+
+  @override
+  String get diagAuthRefused =>
+      'El broker rechazó la conexión. Comprueba la configuración de conexión.';
+
+  @override
+  String foundDevices(Object count) {
+    return 'Se encontraron $count dispositivos';
+  }
+
+  @override
+  String get foundDevicesHint =>
+      'Tus dispositivos Zigbee son visibles. Continúa para crear tu panel.';
+
+  @override
+  String get noDevicesTitle => 'Conectado: aún no se encontraron dispositivos';
+
+  @override
+  String get noDevicesHint =>
+      'ZigDash ve el broker, pero aún no ha encontrado dispositivos Zigbee. Puedes iniciar el emparejamiento.';
+
+  @override
+  String get startPairing => 'Iniciar emparejamiento';
+
+  @override
+  String get pairingEnabled =>
+      'El emparejamiento está activado. Pulsa el botón de emparejamiento en tu dispositivo.';
+
+  @override
+  String get continueToDashboard => 'Continuar al panel';
+
+  @override
+  String get guidedBackToForm => 'Editar configuración';
+
+  @override
+  String ladderTriedHint(Object count) {
+    return 'Se probaron $count direcciones';
+  }
+
+  @override
+  String get guidedSaveFailed =>
+      'No se pudo guardar la conexión. Inténtalo de nuevo.';
+
+  @override
+  String get onboardingConnectBroker => 'Conectar mi broker';
 }

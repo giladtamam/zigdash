@@ -2291,6 +2291,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Español'**
   String get languageSpanish;
+
+  /// No description provided for @guidedConnectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your broker'**
+  String get guidedConnectTitle;
+
+  /// No description provided for @guidedConnectIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll test each step of the connection and show your Zigbee devices.'**
+  String get guidedConnectIntro;
+
+  /// No description provided for @guidedBaseTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Base topic'**
+  String get guidedBaseTopic;
+
+  /// No description provided for @guidedBaseTopicHint.
+  ///
+  /// In en, this message translates to:
+  /// **'zigbee2mqtt'**
+  String get guidedBaseTopicHint;
+
+  /// No description provided for @guidedConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Test & connect'**
+  String get guidedConnect;
+
+  /// No description provided for @guidedTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing your connection…'**
+  String get guidedTesting;
+
+  /// No description provided for @stepResolve.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolving host'**
+  String get stepResolve;
+
+  /// No description provided for @stepTcp.
+  ///
+  /// In en, this message translates to:
+  /// **'TCP connection'**
+  String get stepTcp;
+
+  /// No description provided for @stepConnack.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT handshake'**
+  String get stepConnack;
+
+  /// No description provided for @stepAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication'**
+  String get stepAuth;
+
+  /// No description provided for @stepDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for devices'**
+  String get stepDevices;
+
+  /// No description provided for @diagResolveFail.
+  ///
+  /// In en, this message translates to:
+  /// **'The host name couldn\'t be resolved. Check the address you entered.'**
+  String get diagResolveFail;
+
+  /// No description provided for @diagResolveTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolving the host timed out. Check the address and your network.'**
+  String get diagResolveTimeout;
+
+  /// No description provided for @diagTcpFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach the broker. Is Zigbee2MQTT running? Check the address and port.'**
+  String get diagTcpFail;
+
+  /// No description provided for @diagTcpTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to the broker timed out. It may be offline or unreachable.'**
+  String get diagTcpTimeout;
+
+  /// No description provided for @diagConnackFail.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker didn\'t complete the MQTT handshake. Make sure this is an MQTT broker (Mosquitto, Zigbee2MQTT).'**
+  String get diagConnackFail;
+
+  /// No description provided for @diagAuthRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker rejected the username or password. Check your credentials.'**
+  String get diagAuthRejected;
+
+  /// No description provided for @diagAuthRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker refused the connection. Check the connection settings.'**
+  String get diagAuthRefused;
+
+  /// No description provided for @foundDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {count} devices'**
+  String foundDevices(Object count);
+
+  /// No description provided for @foundDevicesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Zigbee devices are visible. Continue to build your dashboard.'**
+  String get foundDevicesHint;
+
+  /// No description provided for @noDevicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected — no devices found yet'**
+  String get noDevicesTitle;
+
+  /// No description provided for @noDevicesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can see your broker, but hasn\'t found any Zigbee devices yet. You can start pairing to add them.'**
+  String get noDevicesHint;
+
+  /// No description provided for @startPairing.
+  ///
+  /// In en, this message translates to:
+  /// **'Start pairing'**
+  String get startPairing;
+
+  /// No description provided for @pairingEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing is enabled. Press the pairing button on your device to join it.'**
+  String get pairingEnabled;
+
+  /// No description provided for @continueToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to dashboard'**
+  String get continueToDashboard;
+
+  /// No description provided for @guidedBackToForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit settings'**
+  String get guidedBackToForm;
+
+  /// No description provided for @ladderTriedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tried {count} addresses'**
+  String ladderTriedHint(Object count);
+
+  /// No description provided for @guidedSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save the connection. Please try again.'**
+  String get guidedSaveFailed;
+
+  /// No description provided for @onboardingConnectBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect my broker'**
+  String get onboardingConnectBroker;
 }
 
 class _AppLocalizationsDelegate
