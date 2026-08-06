@@ -6,12 +6,15 @@
 //   dart run bin/smoke_diagnostics.dart --host localhost --port 1883
 //   dart run bin/smoke_diagnostics.dart --host 192.168.7.210 --base zigbee2mqtt
 //   dart run bin/smoke_diagnostics.dart --host 192.168.7.210 --user mqtt --pass secret
+//   dart run bin/smoke_diagnostics.dart --host localhost --v311  # 3.1.1-only brokers
 
 import 'dart:io';
 
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
+import 'package:zigdash/mqtt/client_factory.dart';
+import 'package:zigdash/mqtt/mqtt_manager.dart' show MqttClientFactory;
 
 Future<void> main(List<String> args) async {
   final opts = _parse(args);
@@ -25,9 +28,23 @@ Future<void> main(List<String> args) async {
     keepAliveSeconds: 30,
   );
 
+  // ZigDash's manager deliberately speaks MQTT 3.1 (SMLIGHT Mosquitto). Some
+  // test brokers (e.g. aedes) are 3.1.1-only — force 3.1.1 for those.
+  MqttClientFactory factory = buildMqttClient;
+  if (opts['v311'] == 'true') {
+    factory = (cfg, clientId, {host}) {
+      final client = buildMqttClient(cfg, clientId, host: host);
+      client.setProtocolV311();
+      return client;
+    };
+  }
+
   stdout.writeln(
-      'Running ladder against ${opts['host']}:${opts['port']} (base "${opts['base']}")…');
-  final diag = ConnectDiagnostics(deviceWindow: const Duration(seconds: 5));
+      'Running ladder against ${opts['host']}:${opts['port']} (base "${opts['base']}")${opts['v311'] == 'true' ? ' [v3.1.1]' : ''}…');
+  final diag = ConnectDiagnostics(
+    deviceWindow: const Duration(seconds: 5),
+    clientFactory: factory,
+  );
   final report = await diag.run(
     config: config,
     password: opts['pass'] ?? '',
@@ -59,6 +76,7 @@ Map<String, String> _parse(List<String> args) {
     'protocol': get('protocol') ?? 'tcp',
     'user': get('user') ?? '',
     'pass': get('pass') ?? '',
+    'v311': args.contains('--v311') ? 'true' : 'false',
   };
 }
 

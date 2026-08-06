@@ -53,7 +53,13 @@ class _FakeClient extends mc.MqttClient {
   }
 
   @override
-  mc.MqttClientConnectionStatus? get connectionStatus => _status;
+  mc.MqttClientConnectionStatus? get connectionStatus =>
+      // Faithful to mqtt_client: after a failed connect with no CONNACK
+      // (refused / hang) the handler's status is null; a CONNACK refusal
+      // (authRejected) leaves the return code readable.
+      (behavior == _ConnectBehavior.refused || behavior == _ConnectBehavior.hang)
+          ? null
+          : _status;
 
   @override
   Stream<List<mc.MqttReceivedMessage<mc.MqttMessage>>>? get updates =>

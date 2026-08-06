@@ -161,12 +161,12 @@ class ConnectDiagnostics {
     }
 
     // --- connack ---
+    // Inspect the status AFTER connect, whether it returned or threw: strict
+    // brokers send a refusal CONNACK then drop the socket, which mqtt_client
+    // surfaces as a thrown error — the return code is still in the status.
     var answered = false;
     try {
       await client.connect(config.username, password).timeout(budget);
-      final status = client.connectionStatus;
-      final code = status?.returnCode;
-      answered = status?.state == mc.MqttConnectionState.connected || code != null;
     } on UnsupportedError {
       _dispose(client);
       steps
@@ -177,8 +177,12 @@ class ConnectDiagnostics {
     } on TimeoutException {
       // No CONNACK within budget — fall through to the fail below.
     } catch (_) {
-      // Socket-level failure — fall through to the fail below.
+      // Socket-level failure OR a refusal CONNACK + close — the status below
+      // distinguishes "broker answered and refused" from "never answered".
     }
+    final status = client.connectionStatus;
+    final code = status?.returnCode;
+    answered = status?.state == mc.MqttConnectionState.connected || code != null;
     if (!answered) {
       _dispose(client);
       steps.add(StepResult(step: DiagnosticStep.connack, status: StepStatus.fail, detailKey: 'diagConnackFail'));
@@ -187,8 +191,6 @@ class ConnectDiagnostics {
     steps.add(StepResult(step: DiagnosticStep.connack, status: StepStatus.pass));
 
     // --- auth (from the CONNACK return code) ---
-    final status = client.connectionStatus;
-    final code = status?.returnCode;
     final connected = status?.state == mc.MqttConnectionState.connected;
     if (connected ||
         code == null ||
@@ -268,10 +270,12 @@ class ConnectDiagnostics {
     client.keepAlivePeriod = 5;
     client.connectTimeoutPeriod = budget.inMilliseconds;
     client.autoReconnect = false; // diagnostics run one shot
+    // No will: the manager sets withWillQos() which emits a will flag with an
+    // empty topic — a spec violation strict brokers (e.g. aedes) reject by
+    // dropping the connection, and a probe connection has no use for a will.
     client.connectionMessage = mc.MqttConnectMessage()
         .withClientIdentifier(clientId)
-        .startClean()
-        .withWillQos(mc.MqttQos.atLeastOnce);
+        .startClean();
   }
 
   void _dispose(mc.MqttClient client) {
