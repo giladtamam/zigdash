@@ -33,6 +33,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Local brainstorming companion artifacts
+.superpowers/
+
 # Drift worker build artifacts (the .js itself is committed)
 web/drift_worker.js.deps
 web/drift_worker.js.map
