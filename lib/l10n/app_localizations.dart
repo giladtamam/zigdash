@@ -2465,6 +2465,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect my broker'**
   String get onboardingConnectBroker;
+
+  /// No description provided for @setupWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to ZigDash'**
+  String get setupWelcomeTitle;
+
+  /// No description provided for @setupWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash controls your existing Zigbee2MQTT home — locally, with no cloud. Make sure Zigbee2MQTT is running, then let ZigDash find it.'**
+  String get setupWelcomeBody;
+
+  /// No description provided for @setupFindMySetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Find my setup'**
+  String get setupFindMySetup;
+
+  /// No description provided for @setupManualEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter details manually'**
+  String get setupManualEntry;
+
+  /// No description provided for @setupScanningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for a connection…'**
+  String get setupScanningTitle;
+
+  /// No description provided for @setupScanningHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this device on the same local network as your Zigbee2MQTT host.'**
+  String get setupScanningHint;
+
+  /// No description provided for @setupCandidateFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible connection found'**
+  String get setupCandidateFound;
+
+  /// No description provided for @setupNoCandidatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection found'**
+  String get setupNoCandidatesTitle;
+
+  /// No description provided for @setupNoCandidatesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Where does Zigbee2MQTT run?'**
+  String get setupNoCandidatesBody;
+
+  /// No description provided for @setupGuideHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant: make sure the MQTT broker add-on (e.g. Mosquitto) and the Zigbee2MQTT add-on are installed and running.'**
+  String get setupGuideHa;
+
+  /// No description provided for @setupGuidePi.
+  ///
+  /// In en, this message translates to:
+  /// **'Raspberry Pi / Linux: check that your broker (e.g. Mosquitto) and the Zigbee2MQTT service are running, and that port 1883 is reachable.'**
+  String get setupGuidePi;
+
+  /// No description provided for @setupGuideSmlight.
+  ///
+  /// In en, this message translates to:
+  /// **'SMLIGHT / SMHUB: open the device\'s web UI, enable the MQTT broker, and check that Zigbee2MQTT shows as connected.'**
+  String get setupGuideSmlight;
+
+  /// No description provided for @setupTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupTryAgain;
+
+  /// No description provided for @setupAuthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This broker needs a login'**
+  String get setupAuthTitle;
+
+  /// No description provided for @setupAuthBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the MQTT username and password for {host}.'**
+  String setupAuthBody(Object host);
+
+  /// No description provided for @setupAuthRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The username or password was rejected. Check them and try again.'**
+  String get setupAuthRejectedBody;
+
+  /// No description provided for @setupVerifyingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the connection…'**
+  String get setupVerifyingTitle;
+
+  /// No description provided for @setupReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your devices'**
+  String get setupReviewTitle;
+
+  /// No description provided for @setupReviewSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} devices found. Choose what goes on your first dashboard.'**
+  String setupReviewSubtitle(Object count);
+
+  /// No description provided for @setupCreateWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create dashboard with {count}'**
+  String setupCreateWithCount(Object count);
+
+  /// No description provided for @setupGroupOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other devices'**
+  String get setupGroupOther;
+
+  /// No description provided for @setupGroupUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported devices'**
+  String get setupGroupUnsupported;
+
+  /// No description provided for @setupCreatingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating your dashboard…'**
+  String get setupCreatingTitle;
+
+  /// No description provided for @setupReadyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your dashboard is ready'**
+  String get setupReadyTitle;
+
+  /// No description provided for @setupReadyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} controls created.'**
+  String setupReadyBody(Object count);
+
+  /// No description provided for @setupOpenDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Open dashboard'**
+  String get setupOpenDashboard;
+
+  /// No description provided for @setupErrUnreachableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach this address'**
+  String get setupErrUnreachableTitle;
+
+  /// No description provided for @setupErrUnreachableBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This device and the Zigbee2MQTT host can\'t reach each other. Check that both are on the same local network.'**
+  String get setupErrUnreachableBody;
+
+  /// No description provided for @setupErrUnreachableAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrUnreachableAction;
+
+  /// No description provided for @setupErrPortClosedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing answers on this port'**
+  String get setupErrPortClosedTitle;
+
+  /// No description provided for @setupErrPortClosedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The host is reachable, but no MQTT broker answered. Check that the broker is running and that the port is correct.'**
+  String get setupErrPortClosedBody;
+
+  /// No description provided for @setupErrPortClosedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrPortClosedAction;
+
+  /// No description provided for @setupErrAuthRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login required'**
+  String get setupErrAuthRequiredTitle;
+
+  /// No description provided for @setupErrAuthRequiredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This broker needs a username and password.'**
+  String get setupErrAuthRequiredBody;
+
+  /// No description provided for @setupErrAuthRequiredAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter login'**
+  String get setupErrAuthRequiredAction;
+
+  /// No description provided for @setupErrAuthRejectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login rejected'**
+  String get setupErrAuthRejectedTitle;
+
+  /// No description provided for @setupErrAuthRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker rejected these credentials.'**
+  String get setupErrAuthRejectedBody;
+
+  /// No description provided for @setupErrAuthRejectedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrAuthRejectedAction;
+
+  /// No description provided for @setupErrNotZ2mTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Zigbee2MQTT here'**
+  String get setupErrNotZ2mTitle;
+
+  /// No description provided for @setupErrNotZ2mBody.
+  ///
+  /// In en, this message translates to:
+  /// **'An MQTT broker answers here, but Zigbee2MQTT topics weren\'t found. It may be a different broker.'**
+  String get setupErrNotZ2mBody;
+
+  /// No description provided for @setupErrNotZ2mAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick another'**
+  String get setupErrNotZ2mAction;
+
+  /// No description provided for @setupErrNoDevicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices received'**
+  String get setupErrNoDevicesTitle;
+
+  /// No description provided for @setupErrNoDevicesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT is running, but no devices were published during the check. Pair devices in Zigbee2MQTT first.'**
+  String get setupErrNoDevicesBody;
+
+  /// No description provided for @setupErrNoDevicesAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check again'**
+  String get setupErrNoDevicesAction;
+
+  /// No description provided for @setupErrScanFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No local network'**
+  String get setupErrScanFailedTitle;
+
+  /// No description provided for @setupErrScanFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t determine this device\'s local network. Connect to Wi-Fi and try again.'**
+  String get setupErrScanFailedBody;
+
+  /// No description provided for @setupErrScanFailedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrScanFailedAction;
+
+  /// No description provided for @setupErrSaveFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save'**
+  String get setupErrSaveFailedTitle;
+
+  /// No description provided for @setupErrSaveFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving your setup failed. Nothing was half-saved — you can safely retry.'**
+  String get setupErrSaveFailedBody;
+
+  /// No description provided for @setupErrSaveFailedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrSaveFailedAction;
+
+  /// No description provided for @setupErrUnknownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get setupErrUnknownTitle;
+
+  /// No description provided for @setupErrUnknownBody.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get setupErrUnknownBody;
+
+  /// No description provided for @setupErrUnknownAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrUnknownAction;
 }
 
 class _AppLocalizationsDelegate

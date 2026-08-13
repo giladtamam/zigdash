@@ -1303,4 +1303,183 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get onboardingConnectBroker => 'חיבור הברוקר שלי';
+
+  @override
+  String get setupWelcomeTitle => 'ברוכים הבאים ל-ZigDash';
+
+  @override
+  String get setupWelcomeBody =>
+      'ZigDash שולט בבית ה-Zigbee2MQTT הקיים שלך — מקומית, ללא ענן. ודאו ש-Zigbee2MQTT פועל, ותנו ל-ZigDash למצוא אותו.';
+
+  @override
+  String get setupFindMySetup => 'מצאו את ההתקנה שלי';
+
+  @override
+  String get setupManualEntry => 'הזנת פרטים ידנית';
+
+  @override
+  String get setupScanningTitle => 'מחפש חיבור…';
+
+  @override
+  String get setupScanningHint =>
+      'השאירו מכשיר זה באותה רשת מקומית של מארח ה-Zigbee2MQTT.';
+
+  @override
+  String get setupCandidateFound => 'נמצא חיבור אפשרי';
+
+  @override
+  String get setupNoCandidatesTitle => 'לא נמצא חיבור';
+
+  @override
+  String get setupNoCandidatesBody => 'איפה ה-Zigbee2MQTT שלך פועל?';
+
+  @override
+  String get setupGuideHa =>
+      'Home Assistant: ודאו שה-add-on של ה-MQTT broker (למשל Mosquitto) וה-add-on של Zigbee2MQTT מותקנים ופועלים.';
+
+  @override
+  String get setupGuidePi =>
+      'Raspberry Pi / Linux: בדקו שה-broker (למשל Mosquitto) ושירות ה-Zigbee2MQTT פועלים, ושפורט 1883 נגיש.';
+
+  @override
+  String get setupGuideSmlight =>
+      'SMLIGHT / SMHUB: פתחו את ממשק ה-web של המכשיר, הפעילו את ה-MQTT broker ובדקו ש-Zigbee2MQTT מוצג כמחובר.';
+
+  @override
+  String get setupTryAgain => 'נסו שוב';
+
+  @override
+  String get setupAuthTitle => 'ה-broker דורש התחברות';
+
+  @override
+  String setupAuthBody(Object host) {
+    return 'הזינו שם משתמש וסיסמה של MQTT עבור $host.';
+  }
+
+  @override
+  String get setupAuthRejectedBody =>
+      'שם המשתמש או הסיסמה נדחו. בדקו ונסו שוב.';
+
+  @override
+  String get setupVerifyingTitle => 'בודק את החיבור…';
+
+  @override
+  String get setupReviewTitle => 'המכשירים שלך';
+
+  @override
+  String setupReviewSubtitle(Object count) {
+    return 'נמצאו $count מכשירים. בחרו מה ייכנס ללוח הראשון.';
+  }
+
+  @override
+  String setupCreateWithCount(Object count) {
+    return 'צרו לוח עם $count';
+  }
+
+  @override
+  String get setupGroupOther => 'מכשירים אחרים';
+
+  @override
+  String get setupGroupUnsupported => 'מכשירים לא נתמכים';
+
+  @override
+  String get setupCreatingTitle => 'יוצר את הלוח…';
+
+  @override
+  String get setupReadyTitle => 'הלוח מוכן';
+
+  @override
+  String setupReadyBody(Object count) {
+    return 'נוצרו $count פקדים.';
+  }
+
+  @override
+  String get setupOpenDashboard => 'פתחו את הלוח';
+
+  @override
+  String get setupErrUnreachableTitle => 'לא ניתן להגיע לכתובת';
+
+  @override
+  String get setupErrUnreachableBody =>
+      'מכשיר זה ומארח ה-Zigbee2MQTT לא מגיעים זה לזה. בדקו ששניהם באותה רשת מקומית.';
+
+  @override
+  String get setupErrUnreachableAction => 'נסו שוב';
+
+  @override
+  String get setupErrPortClosedTitle => 'שום דבר לא עונה בפורט הזה';
+
+  @override
+  String get setupErrPortClosedBody =>
+      'המארח נגיש, אבל אף MQTT broker לא ענה. בדקו שה-broker פועל ושהפורט נכון.';
+
+  @override
+  String get setupErrPortClosedAction => 'נסו שוב';
+
+  @override
+  String get setupErrAuthRequiredTitle => 'נדרשת התחברות';
+
+  @override
+  String get setupErrAuthRequiredBody => 'ה-broker דורש שם משתמש וסיסמה.';
+
+  @override
+  String get setupErrAuthRequiredAction => 'הזינו פרטי התחברות';
+
+  @override
+  String get setupErrAuthRejectedTitle => 'ההתחברות נדחתה';
+
+  @override
+  String get setupErrAuthRejectedBody => 'ה-broker דחה את פרטי ההתחברות האלה.';
+
+  @override
+  String get setupErrAuthRejectedAction => 'נסו שוב';
+
+  @override
+  String get setupErrNotZ2mTitle => 'אין כאן Zigbee2MQTT';
+
+  @override
+  String get setupErrNotZ2mBody =>
+      'MQTT broker עונה כאן, אבל לא נמצאו topics של Zigbee2MQTT. ייתכן שזה broker אחר.';
+
+  @override
+  String get setupErrNotZ2mAction => 'בחרו אחר';
+
+  @override
+  String get setupErrNoDevicesTitle => 'לא התקבלו מכשירים';
+
+  @override
+  String get setupErrNoDevicesBody =>
+      'Zigbee2MQTT פועל, אבל אף מכשיר לא פורסם במהלך הבדיקה. צמידו מכשירים ב-Zigbee2MQTT קודם.';
+
+  @override
+  String get setupErrNoDevicesAction => 'בדקו שוב';
+
+  @override
+  String get setupErrScanFailedTitle => 'אין רשת מקומית';
+
+  @override
+  String get setupErrScanFailedBody =>
+      'לא ניתן לזהות את הרשת המקומית של מכשיר זה. התחברו ל-Wi-Fi ונסו שוב.';
+
+  @override
+  String get setupErrScanFailedAction => 'נסו שוב';
+
+  @override
+  String get setupErrSaveFailedTitle => 'השמירה נכשלה';
+
+  @override
+  String get setupErrSaveFailedBody =>
+      'שמירת ההתקנה נכשלה. דבר לא נשמר חלקית — אפשר לנסות שוב בבטחה.';
+
+  @override
+  String get setupErrSaveFailedAction => 'נסו שוב';
+
+  @override
+  String get setupErrUnknownTitle => 'משהו השתבש';
+
+  @override
+  String get setupErrUnknownBody => 'אירעה שגיאה בלתי צפויה.';
+
+  @override
+  String get setupErrUnknownAction => 'נסו שוב';
 }

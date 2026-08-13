@@ -26,7 +26,11 @@
   "languageHebrew": "עברית",
   "connectionsTitle": "חיבורים",
   "connLoadFailed": "טעינה נכשלה: {error}",
-  "@connLoadFailed": { "placeholders": { "error": {} } },
+  "@connLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "connAddBroker": "הוספת ברוקר",
   "connEmpty": "אין עדיין חיבורים.\nהקש \"הוספת ברוקר\" כדי לחבר את ZigDash לשרת ה-MQTT שלך.",
   "connNew": "חיבור חדש",
@@ -44,9 +48,19 @@
   "connRescan": "סריקה מחדש",
   "connBrokerNeedsLogin": "דורש התחברות",
   "connFindBrokersScanning": "סורק {subnet}…",
-  "@connFindBrokersScanning": { "placeholders": { "subnet": {} } },
+  "@connFindBrokersScanning": {
+    "placeholders": {
+      "subnet": {}
+    }
+  },
   "connFindBrokersFound": "נמצאו {count} ברוקרים — הקש לבחירה",
-  "@connFindBrokersFound": { "placeholders": { "count": { "type": "int" } } },
+  "@connFindBrokersFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "connFindBrokersNone": "לא נמצאו ברוקרים ברשת ה‑Wi‑Fi.",
   "connFindBrokersNoIp": "לא ניתן לקרוא את כתובת ה‑Wi‑Fi. ודא שה‑Wi‑Fi פעיל ונסה שוב.",
   "connHelpTitle": "איתור כתובת ה‑IP של הברוקר",
@@ -74,23 +88,28 @@
   "cancel": "ביטול",
   "connDeleteTitle": "מחיקת חיבור?",
   "connDeleteContent": "מסיר את \"{name}\", לוחות המחוונים והפאנלים שלו, והסיסמה השמורה.",
-  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "@connDeleteContent": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "statusDisconnected": "מנותק",
   "statusConnecting": "מתחבר",
   "statusConnected": "מחובר",
   "statusReconnecting": "מתחבר מחדש",
   "statusError": "שגיאה",
   "statusConnectedRemote": "מחובר · מרחוק",
-
   "dashPlaceholder": "פתח ברוקר מלשונית הברוקרים כדי לראות ולנהל את לוחות המחוונים שלו.",
-
   "dashAddDashboard": "הוספת לוח",
   "dashEditDashboard": "עריכת לוח",
   "dashAddPanel": "הוספת פאנל",
   "dashEmpty": "אין עדיין לוחות.\nהקש \"הוספת לוח\" כדי ליצור אחד לברוקר זה.",
   "dashLoadFailed": "שגיאה: {error}",
-  "@dashLoadFailed": { "placeholders": { "error": {} } },
-
+  "@dashLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "panelPickerTitle": "הוספת פאנל",
   "panelPickerSectionControl": "שליטה",
   "panelPickerSectionState": "מצב",
@@ -124,7 +143,6 @@
   "panelPickerProgressSubtitle": "מד עמודה לסוללה, איכות קישור וכד׳",
   "panelPickerTextLogTitle": "יומן טקסט",
   "panelPickerTextLogSubtitle": "היסטוריה גוללת של הודעות בנושא",
-
   "dashExportMenu": "יצוא לוחות",
   "dashImportMenu": "יבוא לוחות",
   "dashExportTitle": "יצוא לוחות",
@@ -135,10 +153,19 @@
   "dashImportHint": "הדבק כאן JSON שיוצא",
   "dashImportButton": "יבוא",
   "dashImportSuccess": "{count,plural, =1{יובא לוח אחד} other{יובאו {count} לוחות}}",
-  "@dashImportSuccess": { "placeholders": { "count": { "type": "int" } } },
+  "@dashImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "dashImportFailed": "יבוא נכשל: {error}",
-  "@dashImportFailed": { "placeholders": { "error": {} } },
-
+  "@dashImportFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashFormNew": "לוח חדש",
   "dashFormEdit": "עריכת לוח",
   "dashFormName": "שם",
@@ -154,12 +181,18 @@
   "dashDeleteTitle": "למחוק את הלוח?",
   "dashDeleteContent": "כל הפאנלים תחתיו יוסרו גם כן.",
   "dashDeleteConfirm": "מחיקה",
-
   "panelFormNew": "{type} חדש",
-  "@panelFormNew": { "placeholders": { "type": {} } },
+  "@panelFormNew": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelFormEdit": "עריכת {type}",
-  "@panelFormEdit": { "placeholders": { "type": {} } },
-
+  "@panelFormEdit": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelTypeButton": "כפתור",
   "panelTypeToggle": "מתג",
   "panelTypeSlider": "מחוון",
@@ -174,10 +207,13 @@
   "panelTypeTextLog": "יומן טקסט",
   "panelTypeSchedule": "תזמון",
   "panelTypeAutoClose": "סגירה אוטומטית",
-
   "panelFormName": "שם",
   "panelFormDashboardPrefix": "קידומת לוח: {prefix}/ (בשימוש אלא אם כן עוקפת למטה)",
-  "@panelFormDashboardPrefix": { "placeholders": { "prefix": {} } },
+  "@panelFormDashboardPrefix": {
+    "placeholders": {
+      "prefix": {}
+    }
+  },
   "panelFormTopicPrefixOverride": "עקיפת קידומת נושא (לא חובה)",
   "panelFormTopicPrefixOverrideHint": "zigbee2mqtt/shutter",
   "panelFormTopicPrefixOverrideHelper": "שימוש בהתקן אחר בלוח זה. ריק = השתמש בקידומת הלוח.",
@@ -197,14 +233,12 @@
   "panelFormQos1": "1 — לפחות פעם אחת",
   "panelFormQos2": "2 — בדיוק פעם אחת",
   "panelFormRetain": "שמירה בברוקר",
-
   "panelToggleOnPayload": "עומס הפעלה",
   "panelToggleOffPayload": "עומס כיבוי",
   "panelToggleJsonPath": "נתיב JSON (לא חובה)",
   "panelToggleJsonPathHint": "state",
   "panelToggleOnMatch": "ערך הפעלה",
   "panelToggleOnMatchHelper": "ערך בנתיב JSON שמסמן \"מופעל\" (לדוגמה: \"ON\")",
-
   "panelSliderMin": "מינימום",
   "panelSliderMax": "מקסימום",
   "panelSliderStep": "צעד",
@@ -212,9 +246,7 @@
   "panelSliderTemplateHelper": "השתמש במילה value כ-placeholder — היא מוחלפת בערך המחוון",
   "panelSliderJsonPath": "נתיב JSON (לא חובה)",
   "panelSliderJsonPathHint": "brightness",
-
   "panelButtonPayload": "עומס",
-
   "panelLedJsonPath": "נתיב JSON (לא חובה)",
   "panelLedJsonPathHint": "contact",
   "panelLedJsonPathHelper": "לדוגמה: \"contact\", \"occupancy\", \"water_leak\"",
@@ -224,12 +256,10 @@
   "panelLedOnLabelHint": "ON",
   "panelLedOffLabel": "תווית כיבוי (לא חובה)",
   "panelLedOffLabelHint": "OFF",
-
   "panelNodeOnlinePayload": "עומס מקוון",
   "panelNodeOnlinePayloadHelper": "ערך שמסמן \"מקוון\" (ברירת מחדל Z2M: \"online\")",
   "panelNodeJsonPath": "נתיב JSON (לא חובה)",
   "panelNodeJsonPathHelper": "השאר ריק לברירת מחדל Z2M (מחרוזת \"online\"/\"offline\" גולמית)",
-
   "panelProgressMin": "מינימום",
   "panelProgressMax": "מקסימום",
   "panelProgressUnit": "יחידה",
@@ -237,7 +267,6 @@
   "panelProgressJsonPath": "נתיב JSON (לא חובה)",
   "panelProgressJsonPathHint": "battery",
   "panelProgressJsonPathHelper": "לדוגמה: \"battery\", \"linkquality\"",
-
   "panelOptionsJsonPath": "נתיב JSON (לא חובה)",
   "panelOptionsJsonPathHint": "state",
   "panelOptionsJsonPathHelper": "שדה בעומס המתקבל המכיל את הערך הנוכחי",
@@ -246,24 +275,20 @@
   "panelOptionsPayload": "עומס",
   "panelOptionsMatch": "התאמה (ערך נוכחי)",
   "panelOptionsAdd": "הוספת אפשרות",
-
   "panelCoverDescription": "כפתורי פתיחה / עצירה / סגירה בתוספת שורת גישות מיקום. משתמש בעומסי תריס Z2M סטנדרטיים (state ו-position).",
   "panelCoverPresets": "גישות מיקום",
   "panelCoverPresetsHint": "0, 25, 50, 100",
   "panelCoverPresetsHelper": "אחוזים מופרדים בפסיק (0–100). ריק = ללא שורת גישות.",
   "panelCoverShowSlider": "הצגת מחוון מיקום",
-
   "panelTextInputHint": "רמז (לא חובה)",
   "panelTextInputHintHint": "הקלד ערך…",
   "panelTextInputTemplate": "תבנית",
   "panelTextInputTemplateHelper": "השתמש במילה value כ-placeholder — היא מוחלפת בטקסט שהוקלד. ברירת מחדל מפרסמת את הטקסט הגולמי.",
   "panelTextInputClearAfterSend": "נקה לאחר שליחה",
-
   "panelTextLogMaxLines": "מספר שורות מקסימלי",
   "panelTextLogMaxLinesHelper": "כמה הודעות אחרונות לשמור",
   "panelTextLogJsonPath": "נתיב JSON (לא חובה)",
   "panelTextLogJsonPathHelper": "רישום שדה זה בלבד במקום כל העומס",
-
   "panelScheduleDescription": "פועל ב-SMHUB דרך Node-RED — מופעל גם כשהטלפון כבוי. נושא הפרסום למעלה הוא יעד פקודת התריס.",
   "panelScheduleOpenTime": "זמן פתיחה",
   "panelScheduleCloseTime": "זמן סגירה",
@@ -271,7 +296,6 @@
   "panelScheduleClosePayload": "עומס סגירה",
   "panelScheduleEnabled": "מופעל",
   "panelScheduleSavedOffline": "נשמר — אין חיבור; לוח הזמנים יסונכרן בעת החיבור.",
-
   "panelAutoCloseDescription": "רץ על ה-SMHUB דרך Node-RED — פועל גם כשהטלפון כבוי. נושא הפרסום למעלה הוא נושא הפקודה של המכשיר (למשל door).",
   "panelAutoCloseTriggerPath": "נתיב JSON לטריגר",
   "panelAutoCloseTriggerPathHelper": "השדה ב-JSON של המכשיר שצריך לעקוב (ברירת מחדל: state)",
@@ -282,7 +306,6 @@
   "panelAutoCloseDelaySecondsHelper": "1-3600. זמן להמתין אחרי הפעלת המכשיר לפני פרסום מטען הסגירה.",
   "panelAutoCloseEnabled": "מופעל",
   "panelAutoCloseSavedOffline": "נשמר — אין חיבור; החוק יסונכרן ברגע שתחזור החיבור.",
-
   "panelTileEdit": "עריכת פאנל",
   "panelTileDuplicate": "שכפול פאנל",
   "panelTileMoveUp": "הזזה למעלה",
@@ -292,51 +315,60 @@
   "panelTileWidthHalf": "חצי",
   "panelTileWidthThird": "⅓",
   "panelTileDelete": "מחיקת פאנל",
-
   "panelCoverOpen": "פתיחה",
   "panelCoverStop": "עצירה",
   "panelCoverClose": "סגירה",
-
   "panelToggleNoState": "(אין מצב)",
   "panelToggleError": "שגיאה",
-
   "panelStateOn": "פועל",
   "panelStateOff": "כבוי",
-
   "panelNodeStatusOnline": "מקוון",
   "panelNodeStatusOffline": "לא מקוון",
   "panelNodeStatusUnknown": "לא ידוע",
   "panelNodeStatusError": "שגיאה",
-
   "panelMultiStateNoOptions": "לא הוגדרו אפשרויות",
-
   "panelTextInputDefaultHint": "הקלד ערך…",
-
   "panelTextLogWaiting": "ממתין להודעות…",
-
   "panelScheduleOpensAt": "פותח בשעה {time}",
-  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "@panelScheduleOpensAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleClosesAt": "סוגר בשעה {time}",
-  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "@panelScheduleClosesAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleOfflineWarning": "המתזמן לא מקוון — לא יפעל",
   "panelScheduleDisabled": "מושבת",
   "panelScheduleNext": "הבא: {action} בשעה {at}",
-  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "@panelScheduleNext": {
+    "placeholders": {
+      "action": {},
+      "at": {}
+    }
+  },
   "panelScheduleActionOpen": "פתיחה",
   "panelScheduleActionClose": "סגירה",
   "panelAutoCloseIdle": "במנוחה",
   "panelAutoCloseDisabled": "מושבת",
   "panelAutoCloseOffline": "אוטומציה לא מחוברת — החוק לא ירוץ",
   "panelAutoCloseClosingIn": "סוגר בעוד {seconds} שניות",
-  "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@panelAutoCloseClosingIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "panelAutoCloseClosingNow": "סוגר עכשיו…",
   "panelGridEmpty": "אין עדיין פאנלים.\nהקש + כדי להוסיף מתג, מחוון או כפתור.",
   "panelsOffline": "לא מקוון — מוצגים הערכים האחרונים",
-
   "settingsAbout": "אודות",
   "settingsHelp": "עזרה ומדריך",
   "settingsVersion": "גרסה",
-
   "a11yBackupMenu": "גיבוי ושחזור",
   "a11ySelectColor": "בחירת צבע",
   "a11ySelectIcon": "בחירת אייקון",
@@ -344,9 +376,7 @@
   "a11yPanelOptions": "אפשרויות פאנל",
   "a11yMoreOptions": "אפשרויות נוספות",
   "a11yDeleteConnection": "מחיקת חיבור",
-
   "controlNotConnected": "לא מחובר — השינוי לא נשלח",
-
   "discoverFromDevice": "הוספה מהתקן…",
   "discoverFromDeviceSubtitle": "זיהוי אוטומטי של התקן Zigbee2MQTT",
   "discoverTitle": "הוספה מהתקן",
@@ -370,19 +400,27 @@
     }
   },
   "previewNoValue": "(אין ערך בנתיב זה)",
-
   "connErrorTitle": "שגיאת חיבור",
   "connErrorUnknown": "אין פרטי שגיאה זמינים.",
   "connTestButton": "בדיקת חיבור",
   "connTestOk": "החיבור הצליח",
   "connTestFailed": "החיבור נכשל: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } },
-
+  "@connTestFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "devicesTitle": "התקנים",
   "devicesAddButton": "הוספת התקן",
   "devicesPairingTitle": "צימוד — לחץ על כפתור ההתקן",
   "devicesPairingHint": "מחפש התקנים חדשים… {seconds}ש׳",
-  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "@devicesPairingHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "devicesPairingStop": "עצור",
   "devicesNone": "לא נמצאו התקנים.",
   "devicesBattery": "סוללה",
@@ -390,13 +428,21 @@
   "devicesOnline": "מקוון",
   "devicesOffline": "לא מקוון",
   "devicesPaired": "מוכן: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } },
+  "@devicesPaired": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "devicesPairedHint": "נוסף לרשת. כדי להוסיף ללוח, השתמש ב'הוספה מהתקן' בלוח.",
   "scenesTitle": "סצנות",
   "scenesNone": "אין עדיין סצנות. הגדירו את ההתקנים כרצונכם ולאחר מכן שמרו אותם כסצנה.",
   "scenesNewButton": "סצנה חדשה",
   "scenesActivated": "הופעלה {name}",
-  "@scenesActivated": { "placeholders": { "name": {} } },
+  "@scenesActivated": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "scenesActivateOffline": "אין חיבור — לא ניתן להפעיל את הסצנה",
   "sceneFormNewTitle": "סצנה חדשה",
   "sceneFormEditTitle": "עריכת סצנה",
@@ -409,19 +455,39 @@
   "sceneCtrlBrightness": "בהירות",
   "sceneCtrlPosition": "מיקום",
   "sceneFormSelectedCount": "{count} נבחרו",
-  "@sceneFormSelectedCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneFormSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sceneFormNoDevicesSelected": "בחרו לפחות התקן אחד ללכידה.",
   "sceneFormNothingCaptured": "לא נלכד דבר הניתן לשינוי מההתקנים שנבחרו.",
   "sceneDeleteTitle": "למחוק סצנה?",
   "sceneDeleteMessage": "\"{name}\" יוסר. ההתקנים נשארים במצבם הנוכחי.",
-  "@sceneDeleteMessage": { "placeholders": { "name": {} } },
+  "@sceneDeleteMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "sceneEditAction": "עריכה",
   "sceneDeleteAction": "מחיקה",
   "sceneAddToDashboard": "הוספה ללוח",
   "sceneAddedToDashboard": "נוסף ל-{name}",
-  "@sceneAddedToDashboard": { "placeholders": { "name": {} } },
+  "@sceneAddedToDashboard": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "sceneActionsCount": "{count} התקנים",
-  "@sceneActionsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneActionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "panelTypeScene": "סצנה",
   "panelPickerSceneTitle": "כפתור סצנה",
   "panelPickerSceneSubtitle": "הקשה אחת מפעילה סצנה שמורה",
@@ -451,7 +517,11 @@
   "diagAuthRejected": "הברוקר דחה את שם המשתמש או הסיסמה. בדקו את פרטי ההתחברות.",
   "diagAuthRefused": "הברוקר סירב לחיבור. בדקו את הגדרות החיבור.",
   "foundDevices": "נמצאו {count} מכשירים",
-  "@foundDevices": { "placeholders": {"count": {}} },
+  "@foundDevices": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "foundDevicesHint": "מכשירי הזיגבי שלכם נראים. המשיכו לבניית לוח המחוונים.",
   "noDevicesTitle": "מחובר — עדיין לא נמצאו מכשירים",
   "noDevicesHint": "ZigDash רואה את הברוקר, אך טרם נמצאו מכשירי Zigbee. אפשר להתחיל שיוך מכשירים.",
@@ -460,7 +530,64 @@
   "continueToDashboard": "המשך ללוח המחוונים",
   "guidedBackToForm": "עריכת הגדרות",
   "ladderTriedHint": "נוסו {count} כתובות",
-  "@ladderTriedHint": { "placeholders": {"count": {}} },
+  "@ladderTriedHint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "guidedSaveFailed": "לא ניתן היה לשמור את החיבור. נסו שוב.",
-  "onboardingConnectBroker": "חיבור הברוקר שלי"
+  "onboardingConnectBroker": "חיבור הברוקר שלי",
+  "setupWelcomeTitle": "ברוכים הבאים ל-ZigDash",
+  "setupWelcomeBody": "ZigDash שולט בבית ה-Zigbee2MQTT הקיים שלך — מקומית, ללא ענן. ודאו ש-Zigbee2MQTT פועל, ותנו ל-ZigDash למצוא אותו.",
+  "setupFindMySetup": "מצאו את ההתקנה שלי",
+  "setupManualEntry": "הזנת פרטים ידנית",
+  "setupScanningTitle": "מחפש חיבור…",
+  "setupScanningHint": "השאירו מכשיר זה באותה רשת מקומית של מארח ה-Zigbee2MQTT.",
+  "setupCandidateFound": "נמצא חיבור אפשרי",
+  "setupNoCandidatesTitle": "לא נמצא חיבור",
+  "setupNoCandidatesBody": "איפה ה-Zigbee2MQTT שלך פועל?",
+  "setupGuideHa": "Home Assistant: ודאו שה-add-on של ה-MQTT broker (למשל Mosquitto) וה-add-on של Zigbee2MQTT מותקנים ופועלים.",
+  "setupGuidePi": "Raspberry Pi / Linux: בדקו שה-broker (למשל Mosquitto) ושירות ה-Zigbee2MQTT פועלים, ושפורט 1883 נגיש.",
+  "setupGuideSmlight": "SMLIGHT / SMHUB: פתחו את ממשק ה-web של המכשיר, הפעילו את ה-MQTT broker ובדקו ש-Zigbee2MQTT מוצג כמחובר.",
+  "setupTryAgain": "נסו שוב",
+  "setupAuthTitle": "ה-broker דורש התחברות",
+  "setupAuthBody": "הזינו שם משתמש וסיסמה של MQTT עבור {host}.",
+  "setupAuthRejectedBody": "שם המשתמש או הסיסמה נדחו. בדקו ונסו שוב.",
+  "setupVerifyingTitle": "בודק את החיבור…",
+  "setupReviewTitle": "המכשירים שלך",
+  "setupReviewSubtitle": "נמצאו {count} מכשירים. בחרו מה ייכנס ללוח הראשון.",
+  "setupCreateWithCount": "צרו לוח עם {count}",
+  "setupGroupOther": "מכשירים אחרים",
+  "setupGroupUnsupported": "מכשירים לא נתמכים",
+  "setupCreatingTitle": "יוצר את הלוח…",
+  "setupReadyTitle": "הלוח מוכן",
+  "setupReadyBody": "נוצרו {count} פקדים.",
+  "setupOpenDashboard": "פתחו את הלוח",
+  "setupErrUnreachableTitle": "לא ניתן להגיע לכתובת",
+  "setupErrUnreachableBody": "מכשיר זה ומארח ה-Zigbee2MQTT לא מגיעים זה לזה. בדקו ששניהם באותה רשת מקומית.",
+  "setupErrUnreachableAction": "נסו שוב",
+  "setupErrPortClosedTitle": "שום דבר לא עונה בפורט הזה",
+  "setupErrPortClosedBody": "המארח נגיש, אבל אף MQTT broker לא ענה. בדקו שה-broker פועל ושהפורט נכון.",
+  "setupErrPortClosedAction": "נסו שוב",
+  "setupErrAuthRequiredTitle": "נדרשת התחברות",
+  "setupErrAuthRequiredBody": "ה-broker דורש שם משתמש וסיסמה.",
+  "setupErrAuthRequiredAction": "הזינו פרטי התחברות",
+  "setupErrAuthRejectedTitle": "ההתחברות נדחתה",
+  "setupErrAuthRejectedBody": "ה-broker דחה את פרטי ההתחברות האלה.",
+  "setupErrAuthRejectedAction": "נסו שוב",
+  "setupErrNotZ2mTitle": "אין כאן Zigbee2MQTT",
+  "setupErrNotZ2mBody": "MQTT broker עונה כאן, אבל לא נמצאו topics של Zigbee2MQTT. ייתכן שזה broker אחר.",
+  "setupErrNotZ2mAction": "בחרו אחר",
+  "setupErrNoDevicesTitle": "לא התקבלו מכשירים",
+  "setupErrNoDevicesBody": "Zigbee2MQTT פועל, אבל אף מכשיר לא פורסם במהלך הבדיקה. צמידו מכשירים ב-Zigbee2MQTT קודם.",
+  "setupErrNoDevicesAction": "בדקו שוב",
+  "setupErrScanFailedTitle": "אין רשת מקומית",
+  "setupErrScanFailedBody": "לא ניתן לזהות את הרשת המקומית של מכשיר זה. התחברו ל-Wi-Fi ונסו שוב.",
+  "setupErrScanFailedAction": "נסו שוב",
+  "setupErrSaveFailedTitle": "השמירה נכשלה",
+  "setupErrSaveFailedBody": "שמירת ההתקנה נכשלה. דבר לא נשמר חלקית — אפשר לנסות שוב בבטחה.",
+  "setupErrSaveFailedAction": "נסו שוב",
+  "setupErrUnknownTitle": "משהו השתבש",
+  "setupErrUnknownBody": "אירעה שגיאה בלתי צפויה.",
+  "setupErrUnknownAction": "נסו שוב"
 }

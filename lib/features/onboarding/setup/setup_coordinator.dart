@@ -145,7 +145,7 @@ class SetupCoordinator {
 
   Future<void> startScan() async {
     final op = ++_op;
-    await _scanSub?.cancel();
+    _cancelScan();
     _emit(const SetupScanning([]));
     final ip = await _deviceIp();
     if (op != _op) return;
@@ -174,7 +174,7 @@ class SetupCoordinator {
   }
 
   Future<void> selectCandidate(SetupCandidate candidate) async {
-    await _scanSub?.cancel();
+    _cancelScan();
     await _verify(candidate);
   }
 
@@ -245,8 +245,7 @@ class SetupCoordinator {
   /// session's preserved values, and returns to a safe initial state.
   Future<void> cancel() async {
     _op++;
-    await _scanSub?.cancel();
-    _scanSub = null;
+    _cancelScan();
     _username = null;
     _password = null;
     _rows = null;
@@ -255,8 +254,16 @@ class SetupCoordinator {
 
   Future<void> dispose() async {
     _op++;
-    await _scanSub?.cancel();
+    _cancelScan();
     await _states.close();
+  }
+
+  /// Cancels the active scan without awaiting the subscription teardown —
+  /// awaiting it can stall behind a still-open stream, and the listener
+  /// already drops events once the state leaves [SetupScanning].
+  void _cancelScan() {
+    unawaited(_scanSub?.cancel());
+    _scanSub = null;
   }
 
   // --- Internals ---
