@@ -71,12 +71,17 @@ class Z2mDevice {
   final String? model;
   final List<Z2mExpose> exposes;
 
+  /// False when Z2M has no converter for the device. Defaults to true: older
+  /// payloads and hand-built fixtures omit the flag and mean "works fine".
+  final bool supported;
+
   const Z2mDevice({
     required this.friendlyName,
     required this.type,
     this.vendor,
     this.model,
     this.exposes = const [],
+    this.supported = true,
   });
 }
 
@@ -99,6 +104,7 @@ List<Z2mDevice> parseBridgeDevices(String jsonString) {
       if (deviceType == 'Coordinator') continue;
 
       final friendlyName = (map['friendly_name'] as String?) ?? '';
+      final supported = map['supported'] != false;
 
       final definition = map['definition'] as Map<String, dynamic>?;
       final vendor = definition?['vendor'] as String?;
@@ -113,6 +119,7 @@ List<Z2mDevice> parseBridgeDevices(String jsonString) {
         vendor: vendor,
         model: model,
         exposes: exposes,
+        supported: supported,
       ));
     }
 
