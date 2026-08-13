@@ -7,6 +7,7 @@ import '../l10n/l10n_ext.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/connections/screens/connections_list_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
+import '../../features/onboarding/setup/setup_screen.dart';
 import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
@@ -160,6 +161,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'guided',
                     pageBuilder: (_, __) => _slideUp(
                         const GuidedConnectScreen()),
+                  ),
+                  GoRoute(
+                    path: 'setup',
+                    pageBuilder: (_, __) =>
+                        _slideUp(const SetupScreen()),
                   ),
                   GoRoute(
                     path: ':id/edit',

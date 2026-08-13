@@ -5,6 +5,7 @@ class Routes {
   static const connections = '/connections';
   static const connectionForm = '/connections/form';
   static const guidedConnect = '/connections/guided';
+  static const setup = '/connections/setup';
   static const connectionEdit = '/connections/:id/edit';
   static const dashboards = '/dashboards';
   static const settings = '/settings';

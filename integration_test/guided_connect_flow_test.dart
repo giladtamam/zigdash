@@ -27,12 +27,16 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // --- Onboarding → last page → "Connect my broker" ---
+    // --- Onboarding → last page → "Connect my broker" → discovery-first
+    // setup → "Enter details manually" (the guided form is the flow's
+    // manual fallback since v2's discovery-first onboarding). ---
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Connect my broker'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enter details manually'));
     await tester.pumpAndSettle();
 
     // --- Wizard: default Z2M preset (localhost:1883). Run with

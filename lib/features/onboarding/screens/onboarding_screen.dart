@@ -48,7 +48,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _connectBroker() {
     ref.read(onboardingProvider.notifier).completeOnboarding();
-    context.go(Routes.guidedConnect);
+    // Discovery-first setup: scan for the broker before asking for fields.
+    // The manual guided-connect form remains available inside the flow.
+    context.go(Routes.setup);
   }
 
   @override
