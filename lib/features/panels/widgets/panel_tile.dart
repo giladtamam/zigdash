@@ -6,6 +6,8 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
+import '../../../mqtt/mqtt_status.dart';
+import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import '../services/auto_close_config_publisher.dart';
@@ -17,6 +19,7 @@ import 'cover_panel.dart';
 import 'led_panel.dart';
 import 'multi_state_panel.dart';
 import 'node_status_panel.dart';
+import 'panel_reliability_frame.dart';
 import 'progress_panel.dart';
 import 'radio_panel.dart';
 import 'slider_panel.dart';
@@ -149,6 +152,60 @@ class PanelTile extends ConsumerWidget {
     final subscribeTopic =
         composeTopic(effectivePrefix, panel.subscribeTopic ?? panel.topic);
     final config = PanelConfig.decode(panel.type, panel.config);
+    final connectionStatus =
+        ref.watch(connectionStatusProvider(connectionId)).valueOrNull;
+    final subscribed = switch (panel.type) {
+      PanelType.toggle ||
+      PanelType.slider ||
+      PanelType.led ||
+      PanelType.nodeStatus ||
+      PanelType.progress ||
+      PanelType.multiState ||
+      PanelType.combo ||
+      PanelType.radio ||
+      PanelType.cover ||
+      PanelType.textLog => true,
+      _ => false,
+    };
+    final interactiveSubscribed = switch (panel.type) {
+      PanelType.toggle ||
+      PanelType.slider ||
+      PanelType.multiState ||
+      PanelType.combo ||
+      PanelType.radio ||
+      PanelType.cover => true,
+      _ => false,
+    };
+    final publishOnly = switch (panel.type) {
+      PanelType.button ||
+      PanelType.textInput ||
+      PanelType.scene ||
+      PanelType.schedule => true,
+      _ => false,
+    };
+    final jsonPath = switch (config) {
+      ToggleConfig config => config.jsonPath,
+      SliderConfig config => config.jsonPath,
+      LedConfig config => config.jsonPath,
+      NodeStatusConfig config => config.jsonPath,
+      ProgressConfig config => config.jsonPath,
+      OptionsConfig config => config.jsonPath,
+      TextLogConfig config => config.jsonPath,
+      _ => null,
+    };
+    final snapshot = subscribed
+        ? ref.watch(panelValueSnapshotProvider(PanelStreamKey(
+            connectionId: connectionId,
+            topic: subscribeTopic,
+            jsonPath: jsonPath,
+          ))).valueOrNull
+        : null;
+    final stale = snapshot?.freshness == PanelFreshness.stale;
+    final controlsEnabled = interactiveSubscribed
+        ? snapshot?.freshness == PanelFreshness.fresh
+        : publishOnly
+            ? connectionStatus == MqttStatus.connected
+            : true;
 
     final widget = switch (panel.type) {
       PanelType.button => ButtonPanel(
@@ -246,6 +303,7 @@ class PanelTile extends ConsumerWidget {
           target: publishTopic,
           panel: panel,
           config: config as AutoCloseConfig,
+          brokerPublishEnabled: connectionStatus == MqttStatus.connected,
         ),
     };
 
@@ -254,7 +312,12 @@ class PanelTile extends ConsumerWidget {
       button: !locked,
       child: GestureDetector(
         onLongPress: locked ? null : () => _openOptions(context, ref),
-        child: widget,
+        child: PanelReliabilityFrame(
+          stale: stale,
+          controlsEnabled: controlsEnabled,
+          valueLabel: snapshot?.value?.toString(),
+          child: widget,
+        ),
       ),
     );
   }

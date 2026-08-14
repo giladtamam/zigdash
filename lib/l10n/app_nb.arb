@@ -1,4 +1,6 @@
 {
+  "reliabilityLastKnown": "Sist kjente",
+  "reliabilityControlsUnavailable": "Kontroller utilgjengelige",
   "@@locale": "nb",
   "appTitle": "ZigDash",
   "onboardingWelcomeTitle": "Velkommen til ZigDash",

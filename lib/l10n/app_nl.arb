@@ -1,4 +1,6 @@
 {
+  "reliabilityLastKnown": "Laatst bekend",
+  "reliabilityControlsUnavailable": "Bediening niet beschikbaar",
   "@@locale": "nl",
   "appTitle": "ZigDash",
   "onboardingWelcomeTitle": "Welkom bij ZigDash",

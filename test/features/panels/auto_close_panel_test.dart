@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:drift/native.dart';
 
 import 'package:zigdash/data/database/database.dart';
+import 'package:zigdash/data/database/daos/panel_dao.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
+import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/services/auto_close_config_publisher.dart';
@@ -28,6 +31,28 @@ Panel _panel({String name = 'Door auto-close'}) => Panel(
       updatedAt: DateTime(2026, 6, 20),
     );
 
+class _RecordingPanelRepo extends PanelRepo {
+  _RecordingPanelRepo(this.database) : super(PanelDao(database));
+
+  final AppDatabase database;
+  AutoCloseConfig? updatedConfig;
+
+  @override
+  Future<void> update({
+    required String id,
+    required String name,
+    required String topic,
+    String? subscribeTopic,
+    String? topicPrefixOverride,
+    int qos = 1,
+    bool retain = false,
+    PanelWidth width = PanelWidth.half,
+    required PanelConfig config,
+  }) async {
+    updatedConfig = config as AutoCloseConfig;
+  }
+}
+
 Widget _wrap(Widget child, {required List<Override> overrides}) {
   return ProviderScope(
     overrides: overrides,
@@ -40,6 +65,35 @@ Widget _wrap(Widget child, {required List<Override> overrides}) {
 }
 
 void main() {
+  testWidgets('offline toggle saves locally without attempting broker publish',
+      (tester) async {
+    final repo = _RecordingPanelRepo(
+      AppDatabase.test(NativeDatabase.memory()),
+    );
+    addTearDown(repo.database.close);
+    await tester.pumpWidget(_wrap(
+      AutoClosePanel(
+        connectionId: 'c1',
+        triggerTopic: 'zigbee2mqtt/door',
+        target: 'zigbee2mqtt/door/set',
+        panel: _panel(),
+        config: AutoCloseConfig(enabled: true),
+        brokerPublishEnabled: false,
+      ),
+      overrides: [
+        panelRepoProvider.overrideWithValue(repo),
+        panelValueProvider.overrideWith((ref, _) => Stream.value('offline')),
+      ],
+    ));
+    await tester.pump();
+
+    await tester.tap(find.byType(Switch));
+    await tester.pump();
+
+    expect(repo.updatedConfig?.enabled, isFalse);
+    expect(find.textContaining('Saved'), findsOneWidget);
+  });
+
   group('AutoClosePanel status line', () {
     testWidgets('renders Idle when state.status = idle and bridge online',
         (tester) async {

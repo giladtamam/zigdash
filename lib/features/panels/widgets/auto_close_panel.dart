@@ -23,6 +23,7 @@ class AutoClosePanel extends ConsumerStatefulWidget {
     required this.target,
     required this.panel,
     required this.config,
+    this.brokerPublishEnabled = true,
   });
 
   final String connectionId;
@@ -30,6 +31,7 @@ class AutoClosePanel extends ConsumerStatefulWidget {
   final String target;       // device's command topic (full, composed)
   final Panel panel;
   final AutoCloseConfig config;
+  final bool brokerPublishEnabled;
 
   @override
   ConsumerState<AutoClosePanel> createState() => _AutoClosePanelState();
@@ -70,7 +72,7 @@ class _AutoClosePanelState extends ConsumerState<AutoClosePanel> {
             width: panel.width,
             config: next,
           );
-      final ok =
+      final ok = widget.brokerPublishEnabled &&
           await ref.read(autoCloseConfigPublisherProvider).publishConfig(
                 connectionId: widget.connectionId,
                 panelId: panel.id,

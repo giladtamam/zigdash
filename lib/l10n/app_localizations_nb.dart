@@ -9,6 +9,12 @@ class AppLocalizationsNb extends AppLocalizations {
   AppLocalizationsNb([String locale = 'nb']) : super(locale);
 
   @override
+  String get reliabilityLastKnown => 'Sist kjente';
+
+  @override
+  String get reliabilityControlsUnavailable => 'Kontroller utilgjengelige';
+
+  @override
   String get appTitle => 'ZigDash';
 
   @override

@@ -9,6 +9,12 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
+  String get reliabilityLastKnown => 'Laatst bekend';
+
+  @override
+  String get reliabilityControlsUnavailable => 'Bediening niet beschikbaar';
+
+  @override
   String get appTitle => 'ZigDash';
 
   @override

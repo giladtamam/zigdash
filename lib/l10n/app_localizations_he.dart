@@ -9,6 +9,12 @@ class AppLocalizationsHe extends AppLocalizations {
   AppLocalizationsHe([String locale = 'he']) : super(locale);
 
   @override
+  String get reliabilityLastKnown => 'ערך אחרון ידוע';
+
+  @override
+  String get reliabilityControlsUnavailable => 'הפקדים אינם זמינים';
+
+  @override
   String get appTitle => 'ZigDash';
 
   @override

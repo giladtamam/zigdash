@@ -7,6 +7,7 @@ import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/widgets/panel_grid.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 
@@ -60,8 +61,15 @@ List<Override> _overrides({
         (ref, _) => Stream<List<Panel>>.value(panels),
       ),
       connectionStatusProvider.overrideWith(
-        (ref, _) =>
-            throw StateError('PanelGrid must not watch connection status'),
+        (ref, _) => Stream.value(MqttStatus.connected),
+      ),
+      panelValueSnapshotProvider.overrideWith(
+        (ref, _) => Stream.value(PanelValueSnapshot(
+          value: null,
+          receivedAt: DateTime(2026, 8, 5),
+          connectionGeneration: 1,
+          freshness: PanelFreshness.fresh,
+        )),
       ),
       panelValueProvider.overrideWith(
         (ref, _) => Stream<Object?>.value(null),

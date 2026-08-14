@@ -9,6 +9,12 @@ class AppLocalizationsSv extends AppLocalizations {
   AppLocalizationsSv([String locale = 'sv']) : super(locale);
 
   @override
+  String get reliabilityLastKnown => 'Senast kända';
+
+  @override
+  String get reliabilityControlsUnavailable => 'Kontroller inte tillgängliga';
+
+  @override
   String get appTitle => 'ZigDash';
 
   @override

@@ -1,4 +1,6 @@
 {
+  "reliabilityLastKnown": "ערך אחרון ידוע",
+  "reliabilityControlsUnavailable": "הפקדים אינם זמינים",
   "@@locale": "he",
   "appTitle": "ZigDash",
   "onboardingWelcomeTitle": "ברוכים הבאים ל-ZigDash",

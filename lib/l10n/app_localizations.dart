@@ -108,6 +108,18 @@ abstract class AppLocalizations {
     Locale('sv'),
   ];
 
+  /// No description provided for @reliabilityLastKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'Last known'**
+  String get reliabilityLastKnown;
+
+  /// No description provided for @reliabilityControlsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Controls unavailable'**
+  String get reliabilityControlsUnavailable;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:

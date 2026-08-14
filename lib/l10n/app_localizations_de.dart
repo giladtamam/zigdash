@@ -9,6 +9,12 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get reliabilityLastKnown => 'Zuletzt bekannt';
+
+  @override
+  String get reliabilityControlsUnavailable => 'Steuerung nicht verfügbar';
+
+  @override
   String get appTitle => 'ZigDash';
 
   @override

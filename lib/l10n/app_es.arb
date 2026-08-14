@@ -1,4 +1,6 @@
 {
+  "reliabilityLastKnown": "Último valor conocido",
+  "reliabilityControlsUnavailable": "Controles no disponibles",
   "@@locale": "es",
   "appTitle": "ZigDash",
   "onboardingWelcomeTitle": "Bienvenido a ZigDash",
