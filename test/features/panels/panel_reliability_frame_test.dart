@@ -8,6 +8,7 @@ Widget _wrap({
   required bool controlsEnabled,
   String? valueLabel,
   VoidCallback? onLongPress,
+  VoidCallback? onPressed,
   TextDirection textDirection = TextDirection.ltr,
 }) {
   return MaterialApp(
@@ -23,7 +24,7 @@ Widget _wrap({
             controlsEnabled: controlsEnabled,
             valueLabel: valueLabel,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: onPressed ?? () {},
               child: const Text('Control'),
             ),
           ),
@@ -43,11 +44,13 @@ void main() {
     tester,
   ) async {
     var longPressed = false;
+    var presses = 0;
     await tester.pumpWidget(
       _wrap(
         stale: true,
         controlsEnabled: false,
         onLongPress: () => longPressed = true,
+        onPressed: () => presses++,
       ),
     );
 
@@ -56,6 +59,8 @@ void main() {
       tester.widget<AbsorbPointer>(inFrame(AbsorbPointer).first).absorbing,
       isTrue,
     );
+    await tester.tap(find.text('Control'), warnIfMissed: false);
+    expect(presses, 0);
     await tester.longPress(find.byType(PanelReliabilityFrame));
     expect(longPressed, isTrue);
   });
