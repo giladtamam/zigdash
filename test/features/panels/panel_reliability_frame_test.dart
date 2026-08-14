@@ -114,6 +114,10 @@ void main() {
       tester.getSemantics(find.byType(PanelReliabilityFrame)).label,
       contains('Controls unavailable'),
     );
+    expect(
+      find.bySemanticsLabel(RegExp('Last known')),
+      findsOneWidget,
+    );
     semantics.dispose();
   });
 

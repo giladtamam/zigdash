@@ -32,6 +32,7 @@ class _LogEntry {
 
 class _TextLogPanelState extends ConsumerState<TextLogPanel> {
   final List<_LogEntry> _log = [];
+  (String, int, DateTime)? _lastMessageIdentity;
 
   String _ts(DateTime t) =>
       '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}:${t.second.toString().padLeft(2, '0')}';
@@ -43,11 +44,18 @@ class _TextLogPanelState extends ConsumerState<TextLogPanel> {
       topic: widget.subscribeTopic,
       jsonPath: widget.config.jsonPath,
     );
-    ref.listen(panelValueProvider(key), (prev, next) {
-      next.whenData((v) {
-        if (v == null) return;
+    ref.listen(panelValueSnapshotProvider(key), (prev, next) {
+      next.whenData((snapshot) {
+        if (snapshot.value == null) return;
+        final identity = (
+          widget.subscribeTopic,
+          snapshot.connectionGeneration,
+          snapshot.receivedAt,
+        );
+        if (_lastMessageIdentity == identity) return;
+        _lastMessageIdentity = identity;
         setState(() {
-          _log.insert(0, _LogEntry(DateTime.now(), v.toString()));
+          _log.insert(0, _LogEntry(DateTime.now(), snapshot.value.toString()));
           if (_log.length > widget.config.maxLines) {
             _log.removeRange(widget.config.maxLines, _log.length);
           }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,7 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
+import '../../../mqtt/json_path.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import '../services/auto_close_config_publisher.dart';
@@ -28,6 +31,42 @@ import 'scene_panel.dart';
 import 'schedule_panel.dart';
 import 'text_log_panel.dart';
 import 'toggle_panel.dart';
+
+String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
+  if (value == null) return null;
+  return switch (config) {
+    CoverConfig config => _coverReliabilityValueLabel(config, value),
+    TextLogConfig config when config.jsonPath == null =>
+      _textLogReliabilityValueLabel(value),
+    _ => value.toString(),
+  };
+}
+
+String? _textLogReliabilityValueLabel(Object value) {
+  if (value is Map || value is List) return null;
+  final text = value.toString();
+  try {
+    final decoded = json.decode(text);
+    if (decoded is Map || decoded is List) return null;
+  } catch (_) {
+    // Plain text is already the meaningful display label.
+  }
+  return text;
+}
+
+String? _coverReliabilityValueLabel(CoverConfig config, Object value) {
+  final raw = value.toString();
+  final state = extractByPath(raw, config.statePath)?.toString();
+  final positionValue = extractByPath(raw, config.positionPath);
+  final position = positionValue is num
+      ? positionValue.round()
+      : int.tryParse(positionValue?.toString() ?? '');
+  final parts = [
+    if (state != null && state.isNotEmpty) state,
+    if (position != null) '$position%',
+  ];
+  return parts.isEmpty ? null : parts.join(', ');
+}
 
 /// Dispatcher that picks the right concrete panel widget based on
 /// [Panel.type], decoded config, and the effective publish/subscribe topics
@@ -315,7 +354,7 @@ class PanelTile extends ConsumerWidget {
         child: PanelReliabilityFrame(
           stale: stale,
           controlsEnabled: controlsEnabled,
-          valueLabel: snapshot?.value?.toString(),
+          valueLabel: panelReliabilityValueLabel(config, snapshot?.value),
           child: widget,
         ),
       ),

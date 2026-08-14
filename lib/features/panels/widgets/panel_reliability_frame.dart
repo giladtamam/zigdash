@@ -42,13 +42,15 @@ class PanelReliabilityFrame extends StatelessWidget {
             PositionedDirectional(
               top: 6,
               end: 6,
-              child: IgnorePointer(
-                child: Chip(
-                  visualDensity: VisualDensity.compact,
-                  padding: EdgeInsets.zero,
-                  label: Text(
-                    l10n.reliabilityLastKnown,
-                    style: Theme.of(context).textTheme.labelSmall,
+              child: ExcludeSemantics(
+                child: IgnorePointer(
+                  child: Chip(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    label: Text(
+                      l10n.reliabilityLastKnown,
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                   ),
                 ),
               ),

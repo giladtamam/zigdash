@@ -11,7 +11,7 @@ import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
 
-Panel _panel(PanelType type) => Panel(
+Panel _panel(PanelType type, {PanelConfig? config}) => Panel(
   id: 'p1',
   dashboardId: 'd1',
   name: 'Test panel',
@@ -23,23 +23,18 @@ Panel _panel(PanelType type) => Panel(
   retain: false,
   width: PanelWidth.full,
   sortOrder: 0,
-  config: PanelConfig.defaultFor(type).encode(),
+  config: (config ?? PanelConfig.defaultFor(type)).encode(),
   mergeFlags: 0,
   createdAt: DateTime(2026, 8, 14),
   updatedAt: DateTime(2026, 8, 14),
-);
-
-PanelValueSnapshot _snapshot(PanelFreshness freshness) => PanelValueSnapshot(
-  value: 'ON',
-  receivedAt: DateTime(2026, 8, 14),
-  connectionGeneration: 1,
-  freshness: freshness,
 );
 
 Widget _wrap(
   PanelType type, {
   required MqttStatus status,
   PanelFreshness? freshness,
+  Object? snapshotValue,
+  PanelConfig? config,
 }) => ProviderScope(
   key: ValueKey((type, status, freshness)),
   overrides: [
@@ -47,7 +42,12 @@ Widget _wrap(
     panelValueSnapshotProvider.overrideWith(
       (ref, _) => freshness == null
           ? const Stream<PanelValueSnapshot>.empty()
-          : Stream.value(_snapshot(freshness)),
+          : Stream.value(PanelValueSnapshot(
+              value: snapshotValue ?? 'ON',
+              receivedAt: DateTime(2026, 8, 14),
+              connectionGeneration: 1,
+              freshness: freshness,
+            )),
     ),
     panelValueProvider.overrideWith((ref, _) => Stream.value('ON')),
   ],
@@ -59,7 +59,7 @@ Widget _wrap(
         connectionId: 'c1',
         dashboardId: 'd1',
         topicPrefix: 'home',
-        panel: _panel(type),
+        panel: _panel(type, config: config),
         locked: true,
       ),
     ),
@@ -76,6 +76,20 @@ AbsorbPointer _gate(WidgetTester tester) => tester.widget<AbsorbPointer>(
 );
 
 void main() {
+  test('text log reliability label does not expose structured payloads', () {
+    expect(
+      panelReliabilityValueLabel(
+        const TextLogConfig(),
+        '{"event":"door opened"}',
+      ),
+      isNull,
+    );
+    expect(
+      panelReliabilityValueLabel(const TextLogConfig(), 'door opened'),
+      'door opened',
+    );
+  });
+
   testWidgets('subscribed interactive panel requires a fresh snapshot', (
     tester,
   ) async {
@@ -138,5 +152,33 @@ void main() {
     );
     await tester.pump();
     expect(_gate(tester).absorbing, isFalse);
+  });
+
+  testWidgets('stale cover semantics describe state and position, not JSON', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      _wrap(
+        PanelType.cover,
+        status: MqttStatus.disconnected,
+        freshness: PanelFreshness.stale,
+        snapshotValue: '{"motor":{"state":"OPEN","position":42}}',
+        config: const CoverConfig(
+          statePath: 'motor.state',
+          positionPath: 'motor.position',
+        ),
+      ),
+    );
+    await tester.pump();
+
+    final label = tester
+        .getSemantics(find.byType(PanelReliabilityFrame))
+        .label;
+    expect(label, contains('OPEN'));
+    expect(label, contains('42%'));
+    expect(label, isNot(contains('motor')));
+    expect(label, isNot(contains('{')));
+    semantics.dispose();
   });
 }
