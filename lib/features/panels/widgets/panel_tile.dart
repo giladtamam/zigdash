@@ -36,8 +36,7 @@ String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
   if (value == null) return null;
   return switch (config) {
     CoverConfig config => _coverReliabilityValueLabel(config, value),
-    TextLogConfig config when config.jsonPath == null =>
-      _textLogReliabilityValueLabel(value),
+    TextLogConfig() => _textLogReliabilityValueLabel(value),
     _ => value.toString(),
   };
 }

@@ -88,6 +88,13 @@ void main() {
       panelReliabilityValueLabel(const TextLogConfig(), 'door opened'),
       'door opened',
     );
+    expect(
+      panelReliabilityValueLabel(
+        const TextLogConfig(jsonPath: 'event'),
+        {'kind': 'door', 'open': true},
+      ),
+      isNull,
+    );
   });
 
   testWidgets('subscribed interactive panel requires a fresh snapshot', (
