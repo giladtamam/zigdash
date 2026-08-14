@@ -1,0 +1,1 @@
+Guided setup: ZigDash now finds your Zigbee2MQTT broker on the local network automatically, checks the connection step by step with plain-language fixes, and creates your first dashboard from discovered devices. New languages: German, Dutch, Swedish, Norwegian, Spanish. Manual entry stays available for advanced setups.
