@@ -7,7 +7,6 @@ import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/widgets/panel_grid.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
-import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 
@@ -55,23 +54,22 @@ Dashboard _dashboard() => Dashboard(
 /// stream yields null so tiles render in a deterministic "no data" state.
 List<Override> _overrides({
   required List<Panel> panels,
-  MqttStatus status = MqttStatus.connected,
 }) =>
     [
       panelsForDashboardProvider.overrideWith(
         (ref, _) => Stream<List<Panel>>.value(panels),
       ),
       connectionStatusProvider.overrideWith(
-        (ref, _) => Stream<MqttStatus>.value(status),
+        (ref, _) =>
+            throw StateError('PanelGrid must not watch connection status'),
       ),
       panelValueProvider.overrideWith(
         (ref, _) => Stream<Object?>.value(null),
       ),
     ];
 
-Widget _wrap({required List<Panel> panels, MqttStatus status = MqttStatus.connected}) =>
-    ProviderScope(
-      overrides: _overrides(panels: panels, status: status),
+Widget _wrap({required List<Panel> panels}) => ProviderScope(
+      overrides: _overrides(panels: panels),
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -103,26 +101,20 @@ void main() {
     expect(find.textContaining('No panels yet'), findsNothing);
   });
 
-  testWidgets('shows the offline banner when the broker is disconnected',
-      (tester) async {
-    await tester.pumpWidget(_wrap(
-      panels: [_panel('p1', 'Kitchen Plug', PanelType.toggle, PanelWidth.full)],
-      status: MqttStatus.disconnected,
-    ));
-    await tester.pumpAndSettle();
-
-    expect(find.textContaining('Offline'), findsOneWidget);
-    // Panel tile still renders while offline.
-    expect(find.text('Kitchen Plug'), findsOneWidget);
-  });
-
-  testWidgets('no offline banner while connected', (tester) async {
-    await tester.pumpWidget(_wrap(panels: [
-      _panel('p1', 'Kitchen Plug', PanelType.toggle, PanelWidth.full),
-    ]));
+  testWidgets('does not duplicate dashboard connection status copy', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        panels: [
+          _panel('p1', 'Kitchen Plug', PanelType.toggle, PanelWidth.full),
+        ],
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Offline'), findsNothing);
+    expect(find.text('Kitchen Plug'), findsOneWidget);
   });
 
   testWidgets('full / half / third widths map to the expected tile sizes',

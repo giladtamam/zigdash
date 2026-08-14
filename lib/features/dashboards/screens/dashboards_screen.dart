@@ -70,7 +70,7 @@ class DashboardsScreen extends ConsumerWidget {
               children: [
                 ConnectionStatusBanner(
                   status: connectionStatus,
-                  onReconnect: () => _reconnect(ref),
+                  onReconnect: () => _reconnectNow(context, ref, connectionId),
                 ),
                 const Expanded(child: _EmptyState()),
               ],
@@ -91,11 +91,6 @@ class DashboardsScreen extends ConsumerWidget {
         );
       },
     );
-  }
-
-  Future<void> _reconnect(WidgetRef ref) async {
-    final manager = await ref.read(mqttManagerProvider(connectionId).future);
-    manager.reconnectNow();
   }
 }
 
@@ -212,12 +207,7 @@ class _DashboardsTabbed extends ConsumerWidget {
             children: [
               ConnectionStatusBanner(
                 status: connectionStatus,
-                onReconnect: () async {
-                  final manager = await ref.read(
-                    mqttManagerProvider(connectionId).future,
-                  );
-                  manager.reconnectNow();
-                },
+                onReconnect: () => _reconnectNow(tabCtx, ref, connectionId),
               ),
               Expanded(
                 child: TabBarView(
@@ -254,6 +244,23 @@ class _DashboardsTabbed extends ConsumerWidget {
           }),
         );
       }),
+    );
+  }
+}
+
+Future<void> _reconnectNow(
+  BuildContext context,
+  WidgetRef ref,
+  String connectionId,
+) async {
+  final failureMessage = context.l10n.connectionFailed;
+  try {
+    final manager = await ref.read(mqttManagerProvider(connectionId).future);
+    manager.reconnectNow();
+  } catch (_) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(failureMessage)),
     );
   }
 }
