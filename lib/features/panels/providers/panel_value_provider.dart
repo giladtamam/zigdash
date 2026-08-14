@@ -1,7 +1,42 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../mqtt/json_path.dart';
+import '../../../mqtt/mqtt_manager.dart';
+import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
+
+enum PanelFreshness { fresh, stale }
+
+class PanelValueSnapshot {
+  const PanelValueSnapshot({
+    required this.value,
+    required this.receivedAt,
+    required this.connectionGeneration,
+    required this.freshness,
+  });
+
+  factory PanelValueSnapshot.fromMessage({
+    required MqttRxMessage message,
+    required Object? value,
+    required MqttStatus status,
+    required int currentGeneration,
+  }) => PanelValueSnapshot(
+    value: value,
+    receivedAt: message.receivedAt,
+    connectionGeneration: message.connectionGeneration,
+    freshness:
+        status == MqttStatus.connected &&
+            message.connectionGeneration == currentGeneration
+        ? PanelFreshness.fresh
+        : PanelFreshness.stale,
+  );
+
+  final Object? value;
+  final DateTime receivedAt;
+  final int connectionGeneration;
+  final PanelFreshness freshness;
+}
 
 /// Compose an absolute MQTT topic from an optional dashboard prefix and a
 /// panel-level suffix. Leading slashes on the suffix are trimmed (they
@@ -55,15 +90,31 @@ class PanelStreamKey {
   int get hashCode => Object.hash(connectionId, topic, jsonPath);
 }
 
-/// Yields the JSON-path-extracted value of every MQTT message arriving on
-/// the given topic for the given connection. Auto-disposes — when the
-/// last watcher unmounts the manager's ref-count drops via [onDispose].
-final panelValueProvider =
-    StreamProvider.autoDispose.family<Object?, PanelStreamKey>((ref, key) async* {
-  final mgr = await ref.read(mqttManagerProvider(key.connectionId).future);
-  final stream = mgr.subscribe(key.topic);
-  ref.onDispose(() => mgr.unsubscribe(key.topic));
-  await for (final msg in stream) {
-    yield extractByPath(msg.payload, key.jsonPath);
-  }
-});
+/// Yields the latest value together with whether it belongs to the manager's
+/// current connected session.
+final panelValueSnapshotProvider = StreamProvider.autoDispose
+    .family<PanelValueSnapshot, PanelStreamKey>((ref, key) async* {
+      final mgr = await ref.read(mqttManagerProvider(key.connectionId).future);
+      final messages = mgr.subscribe(key.topic);
+      ref.onDispose(() => mgr.unsubscribe(key.topic));
+      yield* Rx.combineLatest2<MqttRxMessage, MqttStatus, PanelValueSnapshot>(
+        messages,
+        mgr.status$,
+        (message, status) => PanelValueSnapshot.fromMessage(
+          message: message,
+          value: extractByPath(message.payload, key.jsonPath),
+          status: status,
+          currentGeneration: mgr.connectionGeneration,
+        ),
+      );
+    });
+
+/// Backwards-compatible value-only projection for existing panel widgets.
+final panelValueProvider = StreamProvider.autoDispose
+    .family<Object?, PanelStreamKey>((ref, key) {
+      // Riverpod 2 has no non-deprecated way for one StreamProvider to project
+      // another while retaining the StreamProvider override API used by callers.
+      // ignore: deprecated_member_use
+      final snapshots = ref.watch(panelValueSnapshotProvider(key).stream);
+      return snapshots.map((snapshot) => snapshot.value);
+    });
