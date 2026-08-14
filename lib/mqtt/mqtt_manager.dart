@@ -11,26 +11,37 @@ import 'mqtt_status.dart';
 import 'topic_matcher.dart';
 
 class MqttRxMessage {
-  MqttRxMessage(this.topic, this.payload);
+  const MqttRxMessage({
+    required this.topic,
+    required this.payload,
+    required this.receivedAt,
+    required this.connectionGeneration,
+  });
   final String topic;
   final String payload;
+  final DateTime receivedAt;
+  final int connectionGeneration;
 }
 
 class _SubEntry {
   _SubEntry(this.pattern);
   final String pattern;
-  final BehaviorSubject<MqttRxMessage> subject = BehaviorSubject<MqttRxMessage>();
+  final BehaviorSubject<MqttRxMessage> subject =
+      BehaviorSubject<MqttRxMessage>();
   int refs = 0;
 }
 
 /// Builds the platform [mc.MqttClient] for a candidate host. Defaults to the
 /// real [buildMqttClient]; tests inject a fake to exercise connect/timeout
 /// behavior without a live broker.
-typedef MqttClientFactory = mc.MqttClient Function(
-  BrokerConfig config,
-  String clientId, {
-  String? host,
-});
+typedef MqttClientFactory =
+    mc.MqttClient Function(
+      BrokerConfig config,
+      String clientId, {
+      String? host,
+    });
+
+typedef Now = DateTime Function();
 
 /// Owns one MQTT client per [Connection]. Handles connect/disconnect, auto-reconnect
 /// with exponential backoff, and ref-counted topic subscriptions multiplexed over a
@@ -41,8 +52,10 @@ class MqttManager {
     required this.password,
     String? clientIdOverride,
     MqttClientFactory? clientFactory,
-  })  : _clientId = clientIdOverride ?? _shortClientId(config.id),
-        _clientFactory = clientFactory ?? buildMqttClient;
+    Now? now,
+  }) : _clientId = clientIdOverride ?? _shortClientId(config.id),
+       _clientFactory = clientFactory ?? buildMqttClient,
+       _now = now ?? DateTime.now;
 
   // MQTT 3.1 caps client identifiers at 23 chars and some broker builds
   // (notably the Mosquitto shipped on SMLIGHT SMHUB) reject longer IDs with
@@ -58,6 +71,7 @@ class MqttManager {
   final String password;
   final String _clientId;
   final MqttClientFactory _clientFactory;
+  final Now _now;
 
   mc.MqttClient? _client;
   StreamSubscription<List<mc.MqttReceivedMessage<mc.MqttMessage>>>? _updatesSub;
@@ -65,6 +79,9 @@ class MqttManager {
   bool _userInitiatedDisconnect = false;
   bool _disposed = false;
   int _backoffMs = _initialBackoffMs;
+  int _connectionGeneration = 0;
+
+  int get connectionGeneration => _connectionGeneration;
 
   static const _initialBackoffMs = 1000;
   // Capped low for a foreground app: a 2-minute ceiling meant that after a few
@@ -107,7 +124,10 @@ class MqttManager {
   Future<void> connect() async {
     if (_disposed) return;
     _userInitiatedDisconnect = false;
-    if (_status.value == MqttStatus.connecting || _status.value == MqttStatus.connected) return;
+    if (_status.value == MqttStatus.connecting ||
+        _status.value == MqttStatus.connected) {
+      return;
+    }
     _emit(MqttStatus.connecting);
     _emitEndpoint(null);
 
@@ -144,7 +164,8 @@ class MqttManager {
             .connect(config.username, password)
             .timeout(Duration(milliseconds: cand.timeoutMs));
       } on TimeoutException catch (_) {
-        _lastError = 'Connect timed out (${cand.timeoutMs} ms) for ${cand.host}';
+        _lastError =
+            'Connect timed out (${cand.timeoutMs} ms) for ${cand.host}';
         client.disconnect();
         continue; // host unreachable within budget — try the next candidate
       } on Exception catch (e) {
@@ -168,11 +189,14 @@ class MqttManager {
       // is false, which would otherwise schedule a phantom reconnect during
       // normal candidate fallback.
       client.onDisconnected = _onDisconnected;
+      final connectionGeneration = ++_connectionGeneration;
       _lastError = null;
       _emitEndpoint(cand.kind);
       _backoffMs = _initialBackoffMs;
       await _updatesSub?.cancel();
-      _updatesSub = client.updates?.listen(_onUpdates);
+      _updatesSub = client.updates?.listen(
+        (events) => _onUpdates(events, connectionGeneration),
+      );
       for (final pattern in _subs.keys) {
         client.subscribe(pattern, mc.MqttQos.atLeastOnce);
       }
@@ -273,7 +297,8 @@ class MqttManager {
     bool retain = false,
   }) {
     final client = _client;
-    if (client == null || client.connectionStatus?.state != mc.MqttConnectionState.connected) {
+    if (client == null ||
+        client.connectionStatus?.state != mc.MqttConnectionState.connected) {
       return;
     }
     final payload = template.replaceAll('{value}', value.toString());
@@ -299,7 +324,8 @@ class MqttManager {
     // The Mosquitto build on SMLIGHT SMHUB silently disconnects 3.1.1
     // CONNECT packets with "protocol error" — even though they're spec-valid.
     client.keepAlivePeriod = config.keepAliveSeconds;
-    client.connectTimeoutPeriod = timeoutMs; // ms; per-candidate (LAN probe vs standard)
+    client.connectTimeoutPeriod =
+        timeoutMs; // ms; per-candidate (LAN probe vs standard)
     client.autoReconnect = false; // we manage reconnects ourselves
     // onDisconnected is wired in connect() only after a candidate reaches
     // `connected`, so failed-candidate disconnects don't trigger a reconnect.
@@ -310,12 +336,24 @@ class MqttManager {
     return client;
   }
 
-  void _onUpdates(List<mc.MqttReceivedMessage<mc.MqttMessage>> events) {
+  void _onUpdates(
+    List<mc.MqttReceivedMessage<mc.MqttMessage>> events,
+    int connectionGeneration,
+  ) {
     for (final event in events) {
       final pub = event.payload;
       if (pub is! mc.MqttPublishMessage) continue;
-      final payload = mc.MqttPublishPayload.bytesToStringAsString(pub.payload.message);
-      _fanOut(event.topic, payload);
+      final payload = mc.MqttPublishPayload.bytesToStringAsString(
+        pub.payload.message,
+      );
+      _fanOut(
+        MqttRxMessage(
+          topic: event.topic,
+          payload: payload,
+          receivedAt: _now(),
+          connectionGeneration: connectionGeneration,
+        ),
+      );
     }
   }
 
@@ -336,10 +374,10 @@ class MqttManager {
     });
   }
 
-  void _fanOut(String topic, String payload) {
+  void _fanOut(MqttRxMessage message) {
     for (final entry in _subs.values) {
-      if (topicMatches(entry.pattern, topic)) {
-        entry.subject.add(MqttRxMessage(topic, payload));
+      if (topicMatches(entry.pattern, message.topic)) {
+        entry.subject.add(message);
       }
     }
   }

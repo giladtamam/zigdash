@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,14 +27,20 @@ enum _Behavior {
 /// [fakeAsync] without a live broker.
 class _FakeClient extends mc.MqttClient {
   _FakeClient(String server, this.behavior)
-      : super.withPort(server, 'cid', 1883);
+    : super.withPort(server, 'cid', 1883);
 
   final _Behavior behavior;
   final mc.MqttClientConnectionStatus _status = mc.MqttClientConnectionStatus();
-  final StreamController<List<mc.MqttReceivedMessage<mc.MqttMessage>>> _updates =
-      StreamController.broadcast();
+  final StreamController<List<mc.MqttReceivedMessage<mc.MqttMessage>>>
+  _updates = StreamController.broadcast();
 
   bool disconnectCalled = false;
+
+  void emit(String topic, String payload) {
+    final message = mc.MqttPublishMessage();
+    message.payload.message.addAll(utf8.encode(payload));
+    _updates.add([mc.MqttReceivedMessage(topic, message)]);
+  }
 
   @override
   Future<mc.MqttClientConnectionStatus?> connect([String? u, String? p]) {
@@ -66,6 +73,12 @@ class _FakeClient extends mc.MqttClient {
   @override
   Stream<List<mc.MqttReceivedMessage<mc.MqttMessage>>>? get updates =>
       _updates.stream;
+
+  @override
+  mc.Subscription? subscribe(String topic, mc.MqttQos qosLevel) => null;
+
+  @override
+  void unsubscribe(String topic, {expectAcknowledge = false}) {}
 }
 
 void main() {
@@ -73,12 +86,12 @@ void main() {
   const remoteHost = '100.64.0.1';
 
   BrokerConfig configWithRemote() => const BrokerConfig(
-        id: 'conn-1',
-        host: localHost,
-        port: 1883,
-        protocol: MqttProtocol.tcp,
-        remoteHost: remoteHost,
-      );
+    id: 'conn-1',
+    host: localHost,
+    port: 1883,
+    protocol: MqttProtocol.tcp,
+    remoteHost: remoteHost,
+  );
 
   /// Factory that returns a fake whose behavior is chosen per host.
   MqttClientFactory factoryFor(Map<String, _Behavior> byHost) {
@@ -88,8 +101,7 @@ void main() {
     };
   }
 
-  test(
-      'connect() completes (does not hang) and ends in error when every '
+  test('connect() completes (does not hang) and ends in error when every '
       'candidate socket hangs', () {
     fakeAsync((async) {
       final manager = MqttManager(
@@ -109,8 +121,11 @@ void main() {
       // and `completed` would stay false.
       async.elapse(const Duration(milliseconds: 8100));
 
-      expect(completed, isTrue,
-          reason: 'connect() must terminate once both candidates time out');
+      expect(
+        completed,
+        isTrue,
+        reason: 'connect() must terminate once both candidates time out',
+      );
       expect(manager.status, MqttStatus.error);
 
       manager.dispose();
@@ -135,17 +150,19 @@ void main() {
       // subject runs onDone → unsubscribe → _subs.remove while dispose() is
       // iterating _subs. Before the fix that crashed with
       // ConcurrentModificationError on shutdown / broker switch.
-      manager.subscribe('a/b').listen(
-        (_) {},
-        onDone: () => manager.unsubscribe('a/b'),
-      );
+      manager
+          .subscribe('a/b')
+          .listen((_) {}, onDone: () => manager.unsubscribe('a/b'));
 
       var disposed = false;
       manager.dispose().then((_) => disposed = true);
       async.flushMicrotasks();
 
-      expect(disposed, isTrue,
-          reason: 'dispose() must complete without concurrent-modification');
+      expect(
+        disposed,
+        isTrue,
+        reason: 'dispose() must complete without concurrent-modification',
+      );
     });
   });
 
@@ -172,8 +189,7 @@ void main() {
     });
   });
 
-  test(
-      'a failed candidate does not emit a phantom reconnect before the next '
+  test('a failed candidate does not emit a phantom reconnect before the next '
       'candidate connects', () {
     fakeAsync((async) {
       final manager = MqttManager(
@@ -199,6 +215,121 @@ void main() {
       expect(manager.activeEndpoint, MqttEndpoint.remote);
 
       sub.cancel();
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('received publish has the receive time and connection generation', () {
+    fakeAsync((async) {
+      final receivedAt = DateTime.utc(2026, 8, 14, 10, 30);
+      late _FakeClient client;
+      final manager = MqttManager(
+        config: configWithRemote(),
+        password: '',
+        now: () => receivedAt,
+        clientFactory: (config, clientId, {host}) =>
+            client = _FakeClient(host ?? config.host, _Behavior.succeed),
+      );
+      MqttRxMessage? received;
+      manager.subscribe('devices/+').listen((message) => received = message);
+
+      manager.connect();
+      async.flushMicrotasks();
+      client.emit('devices/lamp', '{"state":"ON"}');
+      async.flushMicrotasks();
+
+      expect(manager.connectionGeneration, 1);
+      expect(received?.topic, 'devices/lamp');
+      expect(received?.payload, '{"state":"ON"}');
+      expect(received?.receivedAt, receivedAt);
+      expect(received?.connectionGeneration, 1);
+
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test(
+    'failed reconnect candidate does not increment connection generation',
+    () {
+      fakeAsync((async) {
+        final clients = <_FakeClient>[];
+        final behaviors = <_Behavior>[
+          _Behavior.succeed,
+          _Behavior.fail,
+          _Behavior.succeed,
+        ];
+        final manager = MqttManager(
+          config: configWithRemote(),
+          password: '',
+          clientFactory: (config, clientId, {host}) {
+            final client = _FakeClient(
+              host ?? config.host,
+              behaviors.removeAt(0),
+            );
+            clients.add(client);
+            return client;
+          },
+        );
+
+        manager.connect();
+        async.flushMicrotasks();
+        expect(manager.connectionGeneration, 1);
+
+        clients.first._updates.close();
+        async.flushMicrotasks();
+        clients.first.onDisconnected?.call();
+        manager.reconnectNow();
+        async.elapse(const Duration(seconds: 1));
+
+        expect(clients, hasLength(3));
+        expect(clients[1].disconnectCalled, isTrue);
+        expect(
+          clients[2].connectionStatus?.state,
+          mc.MqttConnectionState.connected,
+        );
+        expect(manager.connectionGeneration, 2);
+
+        manager.dispose();
+        async.flushMicrotasks();
+      });
+    },
+  );
+
+  test('reconnectNow twice while connecting creates only one new client', () {
+    fakeAsync((async) {
+      final clients = <_FakeClient>[];
+      final behaviors = <_Behavior>[_Behavior.succeed, _Behavior.hang];
+      final manager = MqttManager(
+        config: const BrokerConfig(
+          id: 'conn-1',
+          host: localHost,
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+        ),
+        password: '',
+        clientFactory: (config, clientId, {host}) {
+          final client = _FakeClient(
+            host ?? config.host,
+            behaviors.removeAt(0),
+          );
+          clients.add(client);
+          return client;
+        },
+      );
+
+      manager.connect();
+      async.flushMicrotasks();
+      clients.first.onDisconnected?.call();
+
+      manager.reconnectNow();
+      manager.reconnectNow();
+      async.flushMicrotasks();
+
+      expect(manager.status, MqttStatus.connecting);
+      expect(clients, hasLength(2));
+
       manager.dispose();
       async.flushMicrotasks();
     });
