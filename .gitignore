@@ -35,6 +35,7 @@ migrate_working_dir/
 
 # Local brainstorming companion artifacts
 .superpowers/
+.worktrees/
 
 # Drift worker build artifacts (the .js itself is committed)
 web/drift_worker.js.deps
