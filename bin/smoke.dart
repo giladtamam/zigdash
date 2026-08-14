@@ -7,6 +7,7 @@
 //   dart run bin/smoke.dart --host 192.168.7.210 --port 1883
 //   dart run bin/smoke.dart --host 192.168.7.210 --sub 'zigbee2mqtt/#' --seconds 8
 //   dart run bin/smoke.dart --host 192.168.7.210 --pub-topic 'zigdash/ping' --pub-payload 'pong'
+//   dart run bin/smoke.dart --host 192.168.7.210 --outage-checklist true
 
 import 'dart:async';
 import 'dart:io';
@@ -38,8 +39,10 @@ void main(List<String> args) async {
     (s) => s == MqttStatus.connected || s == MqttStatus.error,
   );
   unawaited(mgr.connect());
-  final result = await connected.timeout(const Duration(seconds: 10),
-      onTimeout: () => MqttStatus.error);
+  final result = await connected.timeout(
+    const Duration(seconds: 10),
+    onTimeout: () => MqttStatus.error,
+  );
 
   if (result != MqttStatus.connected) {
     stderr.writeln('[smoke] failed to connect; exiting');
@@ -50,8 +53,12 @@ void main(List<String> args) async {
 
   final pattern = opts['sub']!;
   stderr.writeln('[smoke] subscribing to "$pattern"');
+  var deliveryCount = 0;
   final msgSub = mgr.subscribe(pattern).listen((msg) {
-    stdout.writeln('${msg.topic}\t${_truncate(msg.payload, 120)}');
+    deliveryCount++;
+    stdout.writeln(
+      '[delivery $deliveryCount]\t${msg.topic}\t${_truncate(msg.payload, 120)}',
+    );
   });
 
   if (opts['pub-topic'] != null) {
@@ -63,9 +70,13 @@ void main(List<String> args) async {
     mgr.publish(topic, '{value}', payload, retain: retain);
   }
 
-  final seconds = int.parse(opts['seconds']!);
-  stderr.writeln('[smoke] listening for ${seconds}s...');
-  await Future<void>.delayed(Duration(seconds: seconds));
+  if (opts['outage-checklist'] == 'true') {
+    await _runOutageChecklist(opts, () => deliveryCount);
+  } else {
+    final seconds = int.parse(opts['seconds']!);
+    stderr.writeln('[smoke] listening for ${seconds}s...');
+    await Future<void>.delayed(Duration(seconds: seconds));
+  }
 
   stderr.writeln('[smoke] disconnecting');
   await msgSub.cancel();
@@ -86,9 +97,14 @@ Map<String, String?> _parse(List<String> args) {
     'pub-payload': null,
     'retain': 'false',
     'seconds': '10',
+    'outage-checklist': 'false',
   };
   for (var i = 0; i < args.length; i++) {
     final a = args[i];
+    if (a == '--help' || a == '-h') {
+      _printUsage();
+      exit(0);
+    }
     if (!a.startsWith('--')) continue;
     final key = a.substring(2);
     if (!defaults.containsKey(key)) {
@@ -102,15 +118,69 @@ Map<String, String?> _parse(List<String> args) {
     defaults[key] = args[++i];
   }
   if (defaults['host'] == null) {
-    stderr.writeln('usage: dart run bin/smoke.dart --host <broker> [--port 1883] [--sub zigbee2mqtt/#] [--pub-topic t --pub-payload p] [--seconds 10]');
+    _printUsage();
     exit(2);
   }
   return defaults;
 }
 
-MqttProtocol _protocolFromString(String s) {
-  return MqttProtocol.values.firstWhere((p) => p.name == s,
-      orElse: () => throw ArgumentError('unknown protocol: $s'));
+void _printUsage() {
+  stderr.writeln(
+    'usage: dart run bin/smoke.dart --host <broker> [--port 1883] '
+    '[--sub zigbee2mqtt/#] [--pub-topic t --pub-payload p] [--seconds 10] '
+    '[--outage-checklist true]',
+  );
+  stderr.writeln(
+    '  --outage-checklist true  Run opt-in, Enter-driven broker outage checks.',
+  );
 }
 
-String _truncate(String s, int n) => s.length <= n ? s : '${s.substring(0, n)}...';
+Future<void> _runOutageChecklist(
+  Map<String, String?> opts,
+  int Function() deliveryCount,
+) async {
+  stderr.writeln('''
+[outage checklist] Keep the ZigDash app open on a dashboard that uses this broker.
+This mode never controls the broker; perform each broker action yourself.
+
+Checkpoint 1 — note the current delivery count (${deliveryCount()}).
+Stop the external broker now. In ZigDash, confirm the connection shows
+"Reconnecting" and existing values remain visible as "Last known".
+Press Enter only after both UI states have been observed.''');
+  stdin.readLineSync();
+
+  stderr.writeln('''
+Checkpoint 2 — restart the external broker now.
+Wait for ZigDash and this smoke client to reconnect, then press Enter.''');
+  stdin.readLineSync();
+
+  final suggestedTopic = opts['pub-topic'];
+  final topicInstruction = suggestedTopic == null
+      ? 'a topic matched by "${opts['sub']}"'
+      : '"$suggestedTopic"';
+  stderr.writeln('''
+Checkpoint 3 — publish a NEW retained value to $topicInstruction using an
+external publisher (for example mosquitto_pub with the retain flag). Do not
+reuse the pre-outage payload. In ZigDash, confirm the new value replaces the
+last-known value and the stale/"Last known" indication clears.
+Press Enter after the new retained value is visible.''');
+  stdin.readLineSync();
+
+  stderr.writeln('''
+Checkpoint 4 — verify the new retained publish appeared exactly once in
+ZigDash and exactly once in the numbered smoke deliveries above. A single
+publish must not create duplicate deliveries after reconnect.
+Current smoke delivery count: ${deliveryCount()}.
+Press Enter to finish and disconnect.''');
+  stdin.readLineSync();
+}
+
+MqttProtocol _protocolFromString(String s) {
+  return MqttProtocol.values.firstWhere(
+    (p) => p.name == s,
+    orElse: () => throw ArgumentError('unknown protocol: $s'),
+  );
+}
+
+String _truncate(String s, int n) =>
+    s.length <= n ? s : '${s.substring(0, n)}...';
