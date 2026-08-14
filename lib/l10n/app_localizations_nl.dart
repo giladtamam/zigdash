@@ -1323,183 +1323,183 @@ class AppLocalizationsNl extends AppLocalizations {
   String get onboardingConnectBroker => 'Mijn broker verbinden';
 
   @override
-  String get setupWelcomeTitle => 'Welcome to ZigDash';
+  String get setupWelcomeTitle => 'Welkom bij ZigDash';
 
   @override
   String get setupWelcomeBody =>
-      'ZigDash controls your existing Zigbee2MQTT home — locally, with no cloud. Make sure Zigbee2MQTT is running, then let ZigDash find it.';
+      'ZigDash bedient je bestaande Zigbee2MQTT-woning — lokaal, zonder cloud. Zorg dat Zigbee2MQTT draait en laat ZigDash het vinden.';
 
   @override
-  String get setupFindMySetup => 'Find my setup';
+  String get setupFindMySetup => 'Vind mijn installatie';
 
   @override
-  String get setupManualEntry => 'Enter details manually';
+  String get setupManualEntry => 'Gegevens handmatig invoeren';
 
   @override
-  String get setupScanningTitle => 'Looking for a connection…';
+  String get setupScanningTitle => 'Verbinding zoeken…';
 
   @override
   String get setupScanningHint =>
-      'Keep this device on the same local network as your Zigbee2MQTT host.';
+      'Houd dit apparaat op hetzelfde lokale netwerk als je Zigbee2MQTT-host.';
 
   @override
-  String get setupCandidateFound => 'Possible connection found';
+  String get setupCandidateFound => 'Mogelijke verbinding gevonden';
 
   @override
-  String get setupNoCandidatesTitle => 'No connection found';
+  String get setupNoCandidatesTitle => 'Geen verbinding gevonden';
 
   @override
-  String get setupNoCandidatesBody => 'Where does Zigbee2MQTT run?';
+  String get setupNoCandidatesBody => 'Waar draait Zigbee2MQTT?';
 
   @override
   String get setupGuideHa =>
-      'Home Assistant: make sure the MQTT broker add-on (e.g. Mosquitto) and the Zigbee2MQTT add-on are installed and running.';
+      'Home Assistant: zorg dat de MQTT-broker-add-on (bijv. Mosquitto) en de Zigbee2MQTT-add-on geïnstalleerd zijn en draaien.';
 
   @override
   String get setupGuidePi =>
-      'Raspberry Pi / Linux: check that your broker (e.g. Mosquitto) and the Zigbee2MQTT service are running, and that port 1883 is reachable.';
+      'Raspberry Pi / Linux: controleer dat je broker (bijv. Mosquitto) en de Zigbee2MQTT-service draaien en dat poort 1883 bereikbaar is.';
 
   @override
   String get setupGuideSmlight =>
-      'SMLIGHT / SMHUB: open the device\'s web UI, enable the MQTT broker, and check that Zigbee2MQTT shows as connected.';
+      'SMLIGHT / SMHUB: open de webinterface van het apparaat, schakel de MQTT-broker in en controleer dat Zigbee2MQTT als verbonden wordt weergegeven.';
 
   @override
-  String get setupTryAgain => 'Try again';
+  String get setupTryAgain => 'Opnieuw proberen';
 
   @override
-  String get setupAuthTitle => 'This broker needs a login';
+  String get setupAuthTitle => 'Deze broker vereist een login';
 
   @override
   String setupAuthBody(Object host) {
-    return 'Enter the MQTT username and password for $host.';
+    return 'Voer de MQTT-gebruikersnaam en het wachtwoord voor $host in.';
   }
 
   @override
   String get setupAuthRejectedBody =>
-      'The username or password was rejected. Check them and try again.';
+      'De gebruikersnaam of het wachtwoord is geweigerd. Controleer ze en probeer het opnieuw.';
 
   @override
-  String get setupVerifyingTitle => 'Checking the connection…';
+  String get setupVerifyingTitle => 'Verbinding controleren…';
 
   @override
-  String get setupReviewTitle => 'Your devices';
+  String get setupReviewTitle => 'Je apparaten';
 
   @override
   String setupReviewSubtitle(Object count) {
-    return '$count devices found. Choose what goes on your first dashboard.';
+    return '$count apparaten gevonden. Kies wat op je eerste dashboard komt.';
   }
 
   @override
   String setupCreateWithCount(Object count) {
-    return 'Create dashboard with $count';
+    return 'Dashboard maken met $count';
   }
 
   @override
-  String get setupGroupOther => 'Other devices';
+  String get setupGroupOther => 'Andere apparaten';
 
   @override
-  String get setupGroupUnsupported => 'Unsupported devices';
+  String get setupGroupUnsupported => 'Niet-ondersteunde apparaten';
 
   @override
-  String get setupCreatingTitle => 'Creating your dashboard…';
+  String get setupCreatingTitle => 'Je dashboard wordt gemaakt…';
 
   @override
-  String get setupReadyTitle => 'Your dashboard is ready';
+  String get setupReadyTitle => 'Je dashboard is klaar';
 
   @override
   String setupReadyBody(Object count) {
-    return '$count controls created.';
+    return '$count bedieningen gemaakt.';
   }
 
   @override
-  String get setupOpenDashboard => 'Open dashboard';
+  String get setupOpenDashboard => 'Dashboard openen';
 
   @override
-  String get setupErrUnreachableTitle => 'Can\'t reach this address';
+  String get setupErrUnreachableTitle => 'Dit adres is niet bereikbaar';
 
   @override
   String get setupErrUnreachableBody =>
-      'This device and the Zigbee2MQTT host can\'t reach each other. Check that both are on the same local network.';
+      'Dit apparaat en de Zigbee2MQTT-host kunnen elkaar niet bereiken. Controleer dat beide op hetzelfde lokale netwerk zitten.';
 
   @override
-  String get setupErrUnreachableAction => 'Try again';
+  String get setupErrUnreachableAction => 'Opnieuw proberen';
 
   @override
-  String get setupErrPortClosedTitle => 'Nothing answers on this port';
+  String get setupErrPortClosedTitle => 'Niets antwoordt op deze poort';
 
   @override
   String get setupErrPortClosedBody =>
-      'The host is reachable, but no MQTT broker answered. Check that the broker is running and that the port is correct.';
+      'De host is bereikbaar, maar geen MQTT-broker heeft geantwoord. Controleer dat de broker draait en dat de poort klopt.';
 
   @override
-  String get setupErrPortClosedAction => 'Try again';
+  String get setupErrPortClosedAction => 'Opnieuw proberen';
 
   @override
-  String get setupErrAuthRequiredTitle => 'Login required';
+  String get setupErrAuthRequiredTitle => 'Login vereist';
 
   @override
   String get setupErrAuthRequiredBody =>
-      'This broker needs a username and password.';
+      'Deze broker vereist een gebruikersnaam en wachtwoord.';
 
   @override
-  String get setupErrAuthRequiredAction => 'Enter login';
+  String get setupErrAuthRequiredAction => 'Login invoeren';
 
   @override
-  String get setupErrAuthRejectedTitle => 'Login rejected';
+  String get setupErrAuthRejectedTitle => 'Login geweigerd';
 
   @override
   String get setupErrAuthRejectedBody =>
-      'The broker rejected these credentials.';
+      'De broker heeft deze inloggegevens geweigerd.';
 
   @override
-  String get setupErrAuthRejectedAction => 'Try again';
+  String get setupErrAuthRejectedAction => 'Opnieuw proberen';
 
   @override
-  String get setupErrNotZ2mTitle => 'No Zigbee2MQTT here';
+  String get setupErrNotZ2mTitle => 'Hier is geen Zigbee2MQTT';
 
   @override
   String get setupErrNotZ2mBody =>
-      'An MQTT broker answers here, but Zigbee2MQTT topics weren\'t found. It may be a different broker.';
+      'Hier antwoordt een MQTT-broker, maar er zijn geen Zigbee2MQTT-topics gevonden. Het kan een andere broker zijn.';
 
   @override
-  String get setupErrNotZ2mAction => 'Pick another';
+  String get setupErrNotZ2mAction => 'Kies een andere';
 
   @override
-  String get setupErrNoDevicesTitle => 'No devices received';
+  String get setupErrNoDevicesTitle => 'Geen apparaten ontvangen';
 
   @override
   String get setupErrNoDevicesBody =>
-      'Zigbee2MQTT is running, but no devices were published during the check. Pair devices in Zigbee2MQTT first.';
+      'Zigbee2MQTT draait, maar er zijn tijdens de controle geen apparaten gepubliceerd. Koppel eerst apparaten in Zigbee2MQTT.';
 
   @override
-  String get setupErrNoDevicesAction => 'Check again';
+  String get setupErrNoDevicesAction => 'Opnieuw controleren';
 
   @override
-  String get setupErrScanFailedTitle => 'No local network';
+  String get setupErrScanFailedTitle => 'Geen lokaal netwerk';
 
   @override
   String get setupErrScanFailedBody =>
-      'Couldn\'t determine this device\'s local network. Connect to Wi-Fi and try again.';
+      'Het lokale netwerk van dit apparaat kon niet worden bepaald. Verbind met wifi en probeer het opnieuw.';
 
   @override
-  String get setupErrScanFailedAction => 'Try again';
+  String get setupErrScanFailedAction => 'Opnieuw proberen';
 
   @override
-  String get setupErrSaveFailedTitle => 'Couldn\'t save';
+  String get setupErrSaveFailedTitle => 'Opslaan mislukt';
 
   @override
   String get setupErrSaveFailedBody =>
-      'Saving your setup failed. Nothing was half-saved — you can safely retry.';
+      'Het opslaan van je installatie is mislukt. Er is niets half opgeslagen — je kunt het veilig opnieuw proberen.';
 
   @override
-  String get setupErrSaveFailedAction => 'Try again';
+  String get setupErrSaveFailedAction => 'Opnieuw proberen';
 
   @override
-  String get setupErrUnknownTitle => 'Something went wrong';
+  String get setupErrUnknownTitle => 'Er is iets misgegaan';
 
   @override
-  String get setupErrUnknownBody => 'An unexpected error occurred.';
+  String get setupErrUnknownBody => 'Er is een onverwachte fout opgetreden.';
 
   @override
-  String get setupErrUnknownAction => 'Try again';
+  String get setupErrUnknownAction => 'Opnieuw proberen';
 }
