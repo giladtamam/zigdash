@@ -46,4 +46,44 @@ void main() {
     input.complete('');
     expect(await confirmation, isTrue);
   });
+
+  test('session cleans up every resource when prompt input throws', () async {
+    final cleanup = <String>[];
+    final errors = <Object>[];
+
+    final completed = await smoke.runSmokeSession(
+      run: () async => throw FormatException('invalid stdin UTF-8'),
+      cancelMessages: () async => cleanup.add('messages'),
+      disposeManager: () async => cleanup.add('manager'),
+      cancelStatus: () async => cleanup.add('status'),
+      onError: (error, _) => errors.add(error),
+    );
+
+    expect(completed, isFalse);
+    expect(cleanup, ['messages', 'manager', 'status']);
+    expect(errors.single, isA<FormatException>());
+  });
+
+  test(
+    'session continues cleanup after an earlier cleanup hook throws',
+    () async {
+      final cleanup = <String>[];
+      final errors = <Object>[];
+
+      final completed = await smoke.runSmokeSession(
+        run: () async => true,
+        cancelMessages: () async {
+          cleanup.add('messages');
+          throw StateError('cancel failed');
+        },
+        disposeManager: () async => cleanup.add('manager'),
+        cancelStatus: () async => cleanup.add('status'),
+        onError: (error, _) => errors.add(error),
+      );
+
+      expect(completed, isFalse);
+      expect(cleanup, ['messages', 'manager', 'status']);
+      expect(errors.single, isA<StateError>());
+    },
+  );
 }

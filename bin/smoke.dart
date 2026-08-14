@@ -68,46 +68,94 @@ void main(List<String> args) async {
     }
   });
 
-  if (opts['pub-topic'] != null) {
-    final topic = opts['pub-topic']!;
-    final payload = opts['pub-payload'] ?? 'hello-from-zigdash-smoke';
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    final retain = opts['retain'] == 'true';
-    stderr.writeln('[smoke] publishing to "$topic" (retain=$retain): $payload');
-    mgr.publish(topic, '{value}', payload, retain: retain);
-  }
+  Object? sessionError;
+  final sessionCompleted = await runSmokeSession(
+    run: () async {
+      if (opts['pub-topic'] != null) {
+        final topic = opts['pub-topic']!;
+        final payload = opts['pub-payload'] ?? 'hello-from-zigdash-smoke';
+        await Future<void>.delayed(const Duration(milliseconds: 250));
+        final retain = opts['retain'] == 'true';
+        stderr.writeln(
+          '[smoke] publishing to "$topic" (retain=$retain): $payload',
+        );
+        mgr.publish(topic, '{value}', payload, retain: retain);
+      }
 
-  var checklistCompleted = true;
-  if (outageChecklist) {
-    final inputLines = StreamIterator<String>(
-      stdin.transform(utf8.decoder).transform(const LineSplitter()),
-    );
-    try {
-      checklistCompleted = await _runOutageChecklist(
-        opts,
-        () => deliveryCount,
-        readLine: () async =>
-            await inputLines.moveNext() ? inputLines.current : null,
-      );
-    } finally {
-      await inputLines.cancel();
-    }
-  } else {
-    final seconds = int.parse(opts['seconds']!);
-    stderr.writeln('[smoke] listening for ${seconds}s...');
-    await Future<void>.delayed(Duration(seconds: seconds));
-  }
+      if (outageChecklist) {
+        final inputLines = StreamIterator<String>(
+          stdin.transform(utf8.decoder).transform(const LineSplitter()),
+        );
+        try {
+          return await _runOutageChecklist(
+            opts,
+            () => deliveryCount,
+            readLine: () async =>
+                await inputLines.moveNext() ? inputLines.current : null,
+          );
+        } finally {
+          await inputLines.cancel();
+        }
+      }
 
-  stderr.writeln('[smoke] disconnecting');
-  await msgSub.cancel();
-  await mgr.dispose();
-  await statusSub.cancel();
-  if (!checklistCompleted) {
+      final seconds = int.parse(opts['seconds']!);
+      stderr.writeln('[smoke] listening for ${seconds}s...');
+      await Future<void>.delayed(Duration(seconds: seconds));
+      return true;
+    },
+    cancelMessages: msgSub.cancel,
+    disposeManager: mgr.dispose,
+    cancelStatus: statusSub.cancel,
+    onError: (error, _) => sessionError ??= error,
+  );
+
+  if (sessionError != null) {
+    stderr.writeln('[smoke] session failed: $sessionError');
+    exitCode = 1;
+    return;
+  }
+  if (!sessionCompleted) {
     stderr.writeln('[smoke] outage checklist aborted');
     exitCode = 1;
     return;
   }
   stderr.writeln('[smoke] done');
+}
+
+typedef SmokeSessionError = void Function(Object error, StackTrace stackTrace);
+
+Future<bool> runSmokeSession({
+  required Future<bool> Function() run,
+  required Future<void> Function() cancelMessages,
+  required Future<void> Function() disposeManager,
+  required Future<void> Function() cancelStatus,
+  required SmokeSessionError onError,
+}) async {
+  var completed = false;
+  var failed = false;
+
+  Future<void> capture(Future<void> Function() action) async {
+    try {
+      await action();
+    } catch (error, stackTrace) {
+      failed = true;
+      onError(error, stackTrace);
+    }
+  }
+
+  try {
+    completed = await run();
+  } catch (error, stackTrace) {
+    failed = true;
+    onError(error, stackTrace);
+  } finally {
+    await capture(() async => stderr.writeln('[smoke] disconnecting'));
+    await capture(cancelMessages);
+    await capture(disposeManager);
+    await capture(cancelStatus);
+  }
+
+  return !failed && completed;
 }
 
 Map<String, String?> _parse(List<String> args) {
