@@ -77,6 +77,8 @@ class MqttManager {
   StreamSubscription<List<mc.MqttReceivedMessage<mc.MqttMessage>>>? _updatesSub;
   Timer? _reconnectTimer;
   bool _userInitiatedDisconnect = false;
+  bool _connectInFlight = false;
+  bool _reconnectInProgress = false;
   bool _disposed = false;
   int _backoffMs = _initialBackoffMs;
   int _connectionGeneration = 0;
@@ -124,11 +126,20 @@ class MqttManager {
   Future<void> connect() async {
     if (_disposed) return;
     _userInitiatedDisconnect = false;
-    if (_status.value == MqttStatus.connecting ||
-        _status.value == MqttStatus.connected) {
-      return;
+    if (_connectInFlight || _status.value == MqttStatus.connected) return;
+    _connectInFlight = true;
+    try {
+      await _connect();
+    } finally {
+      _connectInFlight = false;
     }
-    _emit(MqttStatus.connecting);
+  }
+
+  Future<void> _connect() async {
+    final attemptStatus = _reconnectInProgress
+        ? MqttStatus.reconnecting
+        : MqttStatus.connecting;
+    if (_status.value != attemptStatus) _emit(attemptStatus);
     _emitEndpoint(null);
 
     for (final cand in endpointCandidates(config)) {
@@ -201,6 +212,7 @@ class MqttManager {
         client.subscribe(pattern, mc.MqttQos.atLeastOnce);
       }
       _emit(MqttStatus.connected);
+      _reconnectInProgress = false;
       return;
     }
 
@@ -228,6 +240,7 @@ class MqttManager {
 
   void disconnect() {
     _userInitiatedDisconnect = true;
+    _reconnectInProgress = false;
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _updatesSub?.cancel();
@@ -360,6 +373,7 @@ class MqttManager {
   void _onDisconnected(mc.MqttClient client) {
     if (!identical(client, _client)) return;
     if (_userInitiatedDisconnect || _disposed) return;
+    _reconnectInProgress = true;
     _emit(MqttStatus.reconnecting);
     _scheduleReconnect();
   }

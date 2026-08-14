@@ -327,9 +327,75 @@ void main() {
       manager.reconnectNow();
       async.flushMicrotasks();
 
-      expect(manager.status, MqttStatus.connecting);
+      expect(manager.status, MqttStatus.reconnecting);
       expect(clients, hasLength(2));
 
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('scheduled retry after connection loss stays reconnecting', () {
+    fakeAsync((async) {
+      final clients = <_FakeClient>[];
+      final behaviors = <_Behavior>[_Behavior.succeed, _Behavior.hang];
+      final manager = MqttManager(
+        config: const BrokerConfig(
+          id: 'conn-1',
+          host: localHost,
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+        ),
+        password: '',
+        clientFactory: (config, clientId, {host}) {
+          final client = _FakeClient(
+            host ?? config.host,
+            behaviors.removeAt(0),
+          );
+          clients.add(client);
+          return client;
+        },
+      );
+      final statuses = <MqttStatus>[];
+      manager.status$.listen(statuses.add);
+
+      manager.connect();
+      async.flushMicrotasks();
+      clients.first.onDisconnected?.call();
+      async.elapse(const Duration(seconds: 1));
+
+      expect(clients, hasLength(2));
+      expect(manager.status, MqttStatus.reconnecting);
+      expect(statuses, [
+        MqttStatus.disconnected,
+        MqttStatus.connecting,
+        MqttStatus.connected,
+        MqttStatus.reconnecting,
+      ]);
+
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('initial connection attempt stays connecting', () {
+    fakeAsync((async) {
+      final manager = MqttManager(
+        config: const BrokerConfig(
+          id: 'conn-1',
+          host: localHost,
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+        ),
+        password: '',
+        clientFactory: (config, clientId, {host}) =>
+            _FakeClient(host ?? config.host, _Behavior.hang),
+      );
+
+      manager.connect();
+      async.flushMicrotasks();
+
+      expect(manager.status, MqttStatus.connecting);
       manager.dispose();
       async.flushMicrotasks();
     });

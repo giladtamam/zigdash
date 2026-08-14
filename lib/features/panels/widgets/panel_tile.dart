@@ -32,6 +32,98 @@ import 'schedule_panel.dart';
 import 'text_log_panel.dart';
 import 'toggle_panel.dart';
 
+enum PanelSubscriptionMode { none, readOnly, interactive }
+
+enum PanelControlGate { always, connected, freshSnapshot, autoClose }
+
+enum PanelJsonPathSource { none, config }
+
+@immutable
+class PanelReliabilityPolicy {
+  const PanelReliabilityPolicy._({
+    required this.subscriptionMode,
+    required this.controlGate,
+    required this.jsonPathSource,
+  });
+
+  const PanelReliabilityPolicy.publishOnly()
+    : this._(
+        subscriptionMode: PanelSubscriptionMode.none,
+        controlGate: PanelControlGate.connected,
+        jsonPathSource: PanelJsonPathSource.none,
+      );
+
+  const PanelReliabilityPolicy.interactiveSubscription({
+    this.jsonPathSource = PanelJsonPathSource.config,
+  }) : subscriptionMode = PanelSubscriptionMode.interactive,
+       controlGate = PanelControlGate.freshSnapshot;
+
+  const PanelReliabilityPolicy.readOnlySubscription()
+    : this._(
+        subscriptionMode: PanelSubscriptionMode.readOnly,
+        controlGate: PanelControlGate.always,
+        jsonPathSource: PanelJsonPathSource.config,
+      );
+
+  const PanelReliabilityPolicy.autoClose()
+    : this._(
+        subscriptionMode: PanelSubscriptionMode.none,
+        controlGate: PanelControlGate.autoClose,
+        jsonPathSource: PanelJsonPathSource.none,
+      );
+
+  final PanelSubscriptionMode subscriptionMode;
+  final PanelControlGate controlGate;
+  final PanelJsonPathSource jsonPathSource;
+
+  bool get subscribes => subscriptionMode != PanelSubscriptionMode.none;
+
+  String? jsonPath(PanelConfig config) {
+    if (jsonPathSource == PanelJsonPathSource.none) return null;
+    return switch (config) {
+      ToggleConfig config => config.jsonPath,
+      SliderConfig config => config.jsonPath,
+      LedConfig config => config.jsonPath,
+      NodeStatusConfig config => config.jsonPath,
+      ProgressConfig config => config.jsonPath,
+      OptionsConfig config => config.jsonPath,
+      TextLogConfig config => config.jsonPath,
+      _ => null,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PanelReliabilityPolicy &&
+      other.subscriptionMode == subscriptionMode &&
+      other.controlGate == controlGate &&
+      other.jsonPathSource == jsonPathSource;
+
+  @override
+  int get hashCode =>
+      Object.hash(subscriptionMode, controlGate, jsonPathSource);
+}
+
+PanelReliabilityPolicy panelReliabilityPolicy(PanelType type) => switch (type) {
+  PanelType.button ||
+  PanelType.textInput ||
+  PanelType.schedule ||
+  PanelType.scene => const PanelReliabilityPolicy.publishOnly(),
+  PanelType.toggle ||
+  PanelType.slider ||
+  PanelType.multiState ||
+  PanelType.combo ||
+  PanelType.radio => const PanelReliabilityPolicy.interactiveSubscription(),
+  PanelType.cover => const PanelReliabilityPolicy.interactiveSubscription(
+    jsonPathSource: PanelJsonPathSource.none,
+  ),
+  PanelType.led ||
+  PanelType.nodeStatus ||
+  PanelType.progress ||
+  PanelType.textLog => const PanelReliabilityPolicy.readOnlySubscription(),
+  PanelType.autoClose => const PanelReliabilityPolicy.autoClose(),
+};
+
 String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
   if (value == null) return null;
   return switch (config) {
@@ -140,14 +232,17 @@ class PanelTile extends ConsumerWidget {
                       showSelectedIcon: false,
                       segments: [
                         ButtonSegment(
-                            value: PanelWidth.full,
-                            label: Text(l10n.panelTileWidthFull)),
+                          value: PanelWidth.full,
+                          label: Text(l10n.panelTileWidthFull),
+                        ),
                         ButtonSegment(
-                            value: PanelWidth.half,
-                            label: Text(l10n.panelTileWidthHalf)),
+                          value: PanelWidth.half,
+                          label: Text(l10n.panelTileWidthHalf),
+                        ),
                         ButtonSegment(
-                            value: PanelWidth.third,
-                            label: Text(l10n.panelTileWidthThird)),
+                          value: PanelWidth.third,
+                          label: Text(l10n.panelTileWidthThird),
+                        ),
                       ],
                       selected: {panel.width},
                       onSelectionChanged: (sel) async {
@@ -168,11 +263,17 @@ class PanelTile extends ConsumerWidget {
                 if (panel.type == PanelType.schedule) {
                   await ref
                       .read(automationConfigPublisherProvider)
-                      .clearConfig(connectionId: connectionId, panelId: panel.id);
+                      .clearConfig(
+                        connectionId: connectionId,
+                        panelId: panel.id,
+                      );
                 } else if (panel.type == PanelType.autoClose) {
                   await ref
                       .read(autoCloseConfigPublisherProvider)
-                      .clearConfig(connectionId: connectionId, panelId: panel.id);
+                      .clearConfig(
+                        connectionId: connectionId,
+                        panelId: panel.id,
+                      );
                 }
                 await repo.delete(panel.id);
               },
@@ -187,162 +288,136 @@ class PanelTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final effectivePrefix = panel.topicPrefixOverride ?? topicPrefix;
     final publishTopic = composeTopic(effectivePrefix, panel.topic);
-    final subscribeTopic =
-        composeTopic(effectivePrefix, panel.subscribeTopic ?? panel.topic);
+    final subscribeTopic = composeTopic(
+      effectivePrefix,
+      panel.subscribeTopic ?? panel.topic,
+    );
     final config = PanelConfig.decode(panel.type, panel.config);
-    final connectionStatus =
-        ref.watch(connectionStatusProvider(connectionId)).valueOrNull;
-    final subscribed = switch (panel.type) {
-      PanelType.toggle ||
-      PanelType.slider ||
-      PanelType.led ||
-      PanelType.nodeStatus ||
-      PanelType.progress ||
-      PanelType.multiState ||
-      PanelType.combo ||
-      PanelType.radio ||
-      PanelType.cover ||
-      PanelType.textLog => true,
-      _ => false,
-    };
-    final interactiveSubscribed = switch (panel.type) {
-      PanelType.toggle ||
-      PanelType.slider ||
-      PanelType.multiState ||
-      PanelType.combo ||
-      PanelType.radio ||
-      PanelType.cover => true,
-      _ => false,
-    };
-    final publishOnly = switch (panel.type) {
-      PanelType.button ||
-      PanelType.textInput ||
-      PanelType.scene ||
-      PanelType.schedule => true,
-      _ => false,
-    };
-    final jsonPath = switch (config) {
-      ToggleConfig config => config.jsonPath,
-      SliderConfig config => config.jsonPath,
-      LedConfig config => config.jsonPath,
-      NodeStatusConfig config => config.jsonPath,
-      ProgressConfig config => config.jsonPath,
-      OptionsConfig config => config.jsonPath,
-      TextLogConfig config => config.jsonPath,
-      _ => null,
-    };
-    final snapshot = subscribed
-        ? ref.watch(panelValueSnapshotProvider(PanelStreamKey(
-            connectionId: connectionId,
-            topic: subscribeTopic,
-            jsonPath: jsonPath,
-          ))).valueOrNull
+    final reliability = panelReliabilityPolicy(panel.type);
+    final connectionStatus = ref
+        .watch(connectionStatusProvider(connectionId))
+        .valueOrNull;
+    final snapshot = reliability.subscribes
+        ? ref
+              .watch(
+                panelValueSnapshotProvider(
+                  PanelStreamKey(
+                    connectionId: connectionId,
+                    topic: subscribeTopic,
+                    jsonPath: reliability.jsonPath(config),
+                  ),
+                ),
+              )
+              .valueOrNull
         : null;
     final stale = snapshot?.freshness == PanelFreshness.stale;
-    final controlsEnabled = interactiveSubscribed
-        ? snapshot?.freshness == PanelFreshness.fresh
-        : publishOnly
-            ? connectionStatus == MqttStatus.connected
-            : true;
+    final controlsEnabled = switch (reliability.controlGate) {
+      PanelControlGate.freshSnapshot =>
+        snapshot?.freshness == PanelFreshness.fresh,
+      PanelControlGate.connected => connectionStatus == MqttStatus.connected,
+      PanelControlGate.always || PanelControlGate.autoClose => true,
+    };
 
     final widget = switch (panel.type) {
       PanelType.button => ButtonPanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          panel: panel,
-          config: config as ButtonConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        panel: panel,
+        config: config as ButtonConfig,
+      ),
       PanelType.toggle => TogglePanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as ToggleConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as ToggleConfig,
+      ),
       PanelType.slider => SliderPanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as SliderConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as SliderConfig,
+      ),
       PanelType.led => LedPanel(
-          connectionId: connectionId,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as LedConfig,
-        ),
+        connectionId: connectionId,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as LedConfig,
+      ),
       PanelType.nodeStatus => NodeStatusPanel(
-          connectionId: connectionId,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as NodeStatusConfig,
-        ),
+        connectionId: connectionId,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as NodeStatusConfig,
+      ),
       PanelType.progress => ProgressPanel(
-          connectionId: connectionId,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as ProgressConfig,
-        ),
+        connectionId: connectionId,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as ProgressConfig,
+      ),
       PanelType.multiState => MultiStatePanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as OptionsConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as OptionsConfig,
+      ),
       PanelType.combo => ComboPanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as OptionsConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as OptionsConfig,
+      ),
       PanelType.radio => RadioPanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as OptionsConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as OptionsConfig,
+      ),
       PanelType.cover => CoverPanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as CoverConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as CoverConfig,
+      ),
       PanelType.textInput => TextInputPanel(
-          connectionId: connectionId,
-          publishTopic: publishTopic,
-          panel: panel,
-          config: config as TextInputConfig,
-        ),
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        panel: panel,
+        config: config as TextInputConfig,
+      ),
       PanelType.textLog => TextLogPanel(
-          connectionId: connectionId,
-          subscribeTopic: subscribeTopic,
-          panel: panel,
-          config: config as TextLogConfig,
-        ),
+        connectionId: connectionId,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as TextLogConfig,
+      ),
       PanelType.schedule => SchedulePanel(
-          connectionId: connectionId,
-          target: publishTopic,
-          panel: panel,
-          config: config as ScheduleConfig,
-        ),
+        connectionId: connectionId,
+        target: publishTopic,
+        panel: panel,
+        config: config as ScheduleConfig,
+      ),
       PanelType.scene => ScenePanel(
-          connectionId: connectionId,
-          panel: panel,
-          config: config as SceneConfig,
-        ),
+        connectionId: connectionId,
+        panel: panel,
+        config: config as SceneConfig,
+      ),
       PanelType.autoClose => AutoClosePanel(
-          connectionId: connectionId,
-          triggerTopic: subscribeTopic,
-          target: publishTopic,
-          panel: panel,
-          config: config as AutoCloseConfig,
-          brokerPublishEnabled: connectionStatus == MqttStatus.connected,
-        ),
+        connectionId: connectionId,
+        triggerTopic: subscribeTopic,
+        target: publishTopic,
+        panel: panel,
+        config: config as AutoCloseConfig,
+        brokerPublishEnabled:
+            reliability.controlGate == PanelControlGate.autoClose &&
+            connectionStatus == MqttStatus.connected,
+      ),
     };
 
     return Semantics(

@@ -42,12 +42,14 @@ Widget _wrap(
     panelValueSnapshotProvider.overrideWith(
       (ref, _) => freshness == null
           ? const Stream<PanelValueSnapshot>.empty()
-          : Stream.value(PanelValueSnapshot(
-              value: snapshotValue ?? 'ON',
-              receivedAt: DateTime(2026, 8, 14),
-              connectionGeneration: 1,
-              freshness: freshness,
-            )),
+          : Stream.value(
+              PanelValueSnapshot(
+                value: snapshotValue ?? 'ON',
+                receivedAt: DateTime(2026, 8, 14),
+                connectionGeneration: 1,
+                freshness: freshness,
+              ),
+            ),
     ),
     panelValueProvider.overrideWith((ref, _) => Stream.value('ON')),
   ],
@@ -76,6 +78,34 @@ AbsorbPointer _gate(WidgetTester tester) => tester.widget<AbsorbPointer>(
 );
 
 void main() {
+  test('every panel type has an intentional reliability policy', () {
+    const expected = <PanelType, PanelReliabilityPolicy>{
+      PanelType.button: PanelReliabilityPolicy.publishOnly(),
+      PanelType.toggle: PanelReliabilityPolicy.interactiveSubscription(),
+      PanelType.slider: PanelReliabilityPolicy.interactiveSubscription(),
+      PanelType.led: PanelReliabilityPolicy.readOnlySubscription(),
+      PanelType.nodeStatus: PanelReliabilityPolicy.readOnlySubscription(),
+      PanelType.progress: PanelReliabilityPolicy.readOnlySubscription(),
+      PanelType.multiState: PanelReliabilityPolicy.interactiveSubscription(),
+      PanelType.combo: PanelReliabilityPolicy.interactiveSubscription(),
+      PanelType.radio: PanelReliabilityPolicy.interactiveSubscription(),
+      PanelType.cover: PanelReliabilityPolicy.interactiveSubscription(
+        jsonPathSource: PanelJsonPathSource.none,
+      ),
+      PanelType.textInput: PanelReliabilityPolicy.publishOnly(),
+      PanelType.textLog: PanelReliabilityPolicy.readOnlySubscription(),
+      PanelType.schedule: PanelReliabilityPolicy.publishOnly(),
+      PanelType.scene: PanelReliabilityPolicy.publishOnly(),
+      PanelType.autoClose: PanelReliabilityPolicy.autoClose(),
+    };
+
+    expect(expected.keys, containsAll(PanelType.values));
+    expect(expected.length, PanelType.values.length);
+    for (final type in PanelType.values) {
+      expect(panelReliabilityPolicy(type), expected[type], reason: type.name);
+    }
+  });
+
   test('text log reliability label does not expose structured payloads', () {
     expect(
       panelReliabilityValueLabel(
@@ -89,10 +119,10 @@ void main() {
       'door opened',
     );
     expect(
-      panelReliabilityValueLabel(
-        const TextLogConfig(jsonPath: 'event'),
-        {'kind': 'door', 'open': true},
-      ),
+      panelReliabilityValueLabel(const TextLogConfig(jsonPath: 'event'), {
+        'kind': 'door',
+        'open': true,
+      }),
       isNull,
     );
   });
@@ -179,9 +209,7 @@ void main() {
     );
     await tester.pump();
 
-    final label = tester
-        .getSemantics(find.byType(PanelReliabilityFrame))
-        .label;
+    final label = tester.getSemantics(find.byType(PanelReliabilityFrame)).label;
     expect(label, contains('OPEN'));
     expect(label, contains('42%'));
     expect(label, isNot(contains('motor')));
