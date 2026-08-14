@@ -136,7 +136,7 @@ void main() {
     expect(conns.map((c) => c.name), contains('Demo Smart Home'));
     expect(conns.single.host, 'demo.local');
   });
-    testWidgets('Connect my broker on the last page opens the guided connect flow',
+    testWidgets('Connect my broker on the last page opens the discovery-first setup flow',
         (tester) async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
@@ -152,8 +152,8 @@ void main() {
             builder: (_, __) => const Scaffold(body: Text('STUB_CONNECTIONS')),
           ),
           GoRoute(
-            path: Routes.guidedConnect,
-            builder: (_, __) => const Scaffold(body: Text('STUB_GUIDED')),
+            path: Routes.setup,
+            builder: (_, __) => const Scaffold(body: Text('STUB_SETUP')),
           ),
         ],
       );
@@ -181,7 +181,7 @@ void main() {
       await tester.tap(find.text('Connect my broker'));
       await tester.pumpAndSettle();
 
-      expect(find.text('STUB_GUIDED'), findsOneWidget);
+      expect(find.text('STUB_SETUP'), findsOneWidget);
       expect(prefs.getBool('onboarding_complete'), isTrue);
     });
 }
