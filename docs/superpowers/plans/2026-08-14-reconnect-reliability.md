@@ -32,7 +32,7 @@
 - Modify: `lib/mqtt/mqtt_manager.dart`
 - Modify: `test/mqtt/mqtt_manager_connect_test.dart`
 
-- [ ] **Step 1: Write failing metadata and generation tests**
+- [x] **Step 1: Write failing metadata and generation tests**
 
 Add focused tests that inject a fixed clock, complete a successful fake connection,
 deliver one publish event, and assert the desired API:
@@ -63,7 +63,7 @@ still `1`, then reconnect successfully and assert `2`. Add a third test that
 calls `reconnectNow()` twice while connecting and asserts the factory created
 only one new client.
 
-- [ ] **Step 2: Run the tests and verify RED**
+- [x] **Step 2: Run the tests and verify RED**
 
 Run:
 
@@ -74,7 +74,7 @@ flutter test test/mqtt/mqtt_manager_connect_test.dart
 Expected: compilation fails because `now`, `connectionGeneration`, `receivedAt`,
 and `MqttRxMessage.connectionGeneration` do not exist.
 
-- [ ] **Step 3: Implement minimal metadata and generation support**
+- [x] **Step 3: Implement minimal metadata and generation support**
 
 Change the message and manager APIs to:
 
@@ -139,7 +139,7 @@ void _onUpdates(
 Update `_fanOut` to accept the message object and use `message.topic` for
 matching. Preserve the existing reconnect guards.
 
-- [ ] **Step 4: Run focused tests and verify GREEN**
+- [x] **Step 4: Run focused tests and verify GREEN**
 
 Run:
 
@@ -149,7 +149,7 @@ flutter test test/mqtt/mqtt_manager_connect_test.dart
 
 Expected: all MQTT manager connection tests pass.
 
-- [ ] **Step 5: Run static analysis on changed files**
+- [x] **Step 5: Run static analysis on changed files**
 
 Run:
 
@@ -165,7 +165,7 @@ Expected: no errors or warnings.
 - Modify: `lib/features/panels/providers/panel_value_provider.dart`
 - Create: `test/features/panels/panel_value_snapshot_test.dart`
 
-- [ ] **Step 1: Write failing freshness-model tests**
+- [x] **Step 1: Write failing freshness-model tests**
 
 Define the wished-for pure model first:
 
@@ -211,7 +211,7 @@ test('current-generation value is fresh only while connected', () {
 Add provider tests using a fake manager stream for
 `unknown -> fresh -> stale -> stale after reconnect -> fresh after new message`.
 
-- [ ] **Step 2: Run snapshot tests and verify RED**
+- [x] **Step 2: Run snapshot tests and verify RED**
 
 Run:
 
@@ -222,7 +222,7 @@ flutter test test/features/panels/panel_value_snapshot_test.dart
 Expected: compilation fails because `PanelValueSnapshot`, `PanelFreshness`, and
 `panelValueSnapshotProvider` do not exist.
 
-- [ ] **Step 3: Implement the snapshot model and provider**
+- [x] **Step 3: Implement the snapshot model and provider**
 
 Add:
 
@@ -270,7 +270,7 @@ final panelValueProvider = Provider.autoDispose
 });
 ```
 
-- [ ] **Step 4: Run snapshot and existing panel tests**
+- [x] **Step 4: Run snapshot and existing panel tests**
 
 Run:
 
@@ -280,7 +280,7 @@ flutter test test/features/panels/panel_value_snapshot_test.dart test/features/p
 
 Expected: all panel provider/widget tests pass.
 
-- [ ] **Step 5: Run static analysis on the provider**
+- [x] **Step 5: Run static analysis on the provider**
 
 Run:
 
@@ -304,7 +304,7 @@ Expected: no errors or warnings.
 - Modify: `lib/l10n/app_nb.arb`
 - Modify: `lib/l10n/app_es.arb`
 
-- [ ] **Step 1: Write failing banner widget tests**
+- [x] **Step 1: Write failing banner widget tests**
 
 Test these cases with injected status and reconnect callback:
 
@@ -327,7 +327,7 @@ testWidgets('reconnecting shows last-known copy and reconnect action',
 Also assert: `connected` renders no banner; `connecting` has no button; `error`
 states automatic retries continue; semantics use a live region.
 
-- [ ] **Step 2: Run banner tests and verify RED**
+- [x] **Step 2: Run banner tests and verify RED**
 
 Run:
 
@@ -337,7 +337,7 @@ flutter test test/features/dashboards/connection_status_banner_test.dart
 
 Expected: compilation fails because `ConnectionStatusBanner` does not exist.
 
-- [ ] **Step 3: Implement banner and dashboard wiring**
+- [x] **Step 3: Implement banner and dashboard wiring**
 
 Create a stateless banner with this public API:
 
@@ -369,7 +369,7 @@ Add localized keys: `reliabilityConnecting`, `reliabilityReconnecting`,
 `reliabilityLastKnownSubtitle`, `reliabilityConnectionFailed`,
 `reliabilityAutomaticRetry`, and `reliabilityReconnectNow` in all seven ARBs.
 
-- [ ] **Step 4: Generate localization code**
+- [x] **Step 4: Generate localization code**
 
 Run:
 
@@ -379,7 +379,7 @@ flutter gen-l10n
 
 Expected: generated localization classes contain all six reliability getters.
 
-- [ ] **Step 5: Run banner and dashboard tests**
+- [x] **Step 5: Run banner and dashboard tests**
 
 Run:
 
@@ -398,7 +398,7 @@ Expected: all tests pass.
 - Modify: `lib/l10n/app_en.arb`
 - Modify: the other six locale ARBs listed in Task 3
 
-- [ ] **Step 1: Write failing reliability-frame tests**
+- [x] **Step 1: Write failing reliability-frame tests**
 
 Use a child button and an outer options callback:
 
@@ -431,7 +431,7 @@ Also test fresh presentation, read-only stale values, and semantics containing
 “last known” and “controls unavailable.” Add a Hebrew `Directionality.rtl`
 case asserting the stale chip remains in the logical trailing corner.
 
-- [ ] **Step 2: Run frame tests and verify RED**
+- [x] **Step 2: Run frame tests and verify RED**
 
 Run:
 
@@ -441,7 +441,7 @@ flutter test test/features/panels/panel_reliability_frame_test.dart
 
 Expected: compilation fails because `PanelReliabilityFrame` does not exist.
 
-- [ ] **Step 3: Implement the frame and panel classification**
+- [x] **Step 3: Implement the frame and panel classification**
 
 Create:
 
@@ -494,7 +494,7 @@ editable but its broker-publish action follows connected status.
 Add localized keys `reliabilityLastKnown` and
 `reliabilityControlsUnavailable` in all locale ARBs and regenerate l10n.
 
-- [ ] **Step 4: Run frame and panel tests**
+- [x] **Step 4: Run frame and panel tests**
 
 Run:
 
@@ -507,7 +507,7 @@ Expected: all tests pass, including existing panel behavior.
 Confirm these UI-only providers depend solely on local MQTT/Riverpod state;
 they must not introduce HTTP, analytics, telemetry, or logging dependencies.
 
-- [ ] **Step 5: Run static analysis for UI changes**
+- [x] **Step 5: Run static analysis for UI changes**
 
 Run:
 
@@ -524,12 +524,12 @@ Expected: no errors or warnings.
 - Modify: `bin/smoke.dart`
 - Verify unchanged: `integration_test/setup_flow_test.dart`
 
-- [ ] **Step 1: Add failing lifecycle idempotence test**
+- [x] **Step 1: Add failing lifecycle idempotence test**
 
 Add a test that resumes while the manager status is `connecting` and asserts the
 fake manager's client factory count does not increase.
 
-- [ ] **Step 2: Run lifecycle test and verify its result**
+- [x] **Step 2: Run lifecycle test and verify its result**
 
 Run:
 
@@ -542,7 +542,7 @@ duplicate attempt or passes because the existing `reconnectNow()` guard already
 satisfies the requirement. If it passes immediately, keep it as characterization
 coverage and make no production change.
 
-- [ ] **Step 3: Extend the real-broker integration scenario**
+- [x] **Step 3: Extend the real-broker integration scenario**
 
 After the setup creates a dashboard, drive a harness-controlled broker outage:
 
@@ -563,7 +563,7 @@ Keep its happy-path test unchanged. Add the outage/restart sequence to
 between printed checkpoints, and retain the exact device matrix in the design
 document. Do not add process-control hooks to production app code.
 
-- [ ] **Step 4: Run all unit/widget tests**
+- [x] **Step 4: Run all unit/widget tests**
 
 Run:
 
@@ -573,7 +573,7 @@ flutter test
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Run full static analysis**
+- [x] **Step 5: Run full static analysis**
 
 Run:
 
@@ -585,7 +585,8 @@ Expected: no errors. The two existing `avoid_print` info findings in
 `bin/proto_probe.dart` may remain unless this work removes them in a separate
 mechanical cleanup.
 
-- [ ] **Step 6: Run the real-broker test when the harness is available**
+- [ ] **Step 6: Run the real-broker test when the harness is available** — Not
+  run: no controllable broker/device was available.
 
 Run:
 
