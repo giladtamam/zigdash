@@ -10,6 +10,7 @@
 //   dart run bin/smoke.dart --host 192.168.7.210 --outage-checklist true
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:zigdash/data/database/tables/connections.dart';
@@ -78,7 +79,19 @@ void main(List<String> args) async {
 
   var checklistCompleted = true;
   if (outageChecklist) {
-    checklistCompleted = _runOutageChecklist(opts, () => deliveryCount);
+    final inputLines = StreamIterator<String>(
+      stdin.transform(utf8.decoder).transform(const LineSplitter()),
+    );
+    try {
+      checklistCompleted = await _runOutageChecklist(
+        opts,
+        () => deliveryCount,
+        readLine: () async =>
+            await inputLines.moveNext() ? inputLines.current : null,
+      );
+    } finally {
+      await inputLines.cancel();
+    }
   } else {
     final seconds = int.parse(opts['seconds']!);
     stderr.writeln('[smoke] listening for ${seconds}s...');
@@ -147,11 +160,11 @@ void _printUsage() {
   );
 }
 
-bool _runOutageChecklist(
+Future<bool> _runOutageChecklist(
   Map<String, String?> opts,
   int Function() deliveryCount, {
-  String? Function()? readLine,
-}) {
+  required Future<String?> Function() readLine,
+}) async {
   stderr.writeln('''
 [outage checklist] Keep the ZigDash app open on a dashboard that uses this broker.
 This mode never controls the broker; perform each broker action yourself.
@@ -160,12 +173,12 @@ Checkpoint 1 — note the current delivery count (${deliveryCount()}).
 Stop the external broker now. In ZigDash, confirm the connection shows
 "Reconnecting" and existing values remain visible as "Last known".
 Press Enter only after both UI states have been observed.''');
-  if (!_waitForEnter(readLine: readLine)) return false;
+  if (!await _waitForEnter(readLine)) return false;
 
   stderr.writeln('''
 Checkpoint 2 — restart the external broker now.
 Wait for ZigDash and this smoke client to reconnect, then press Enter.''');
-  if (!_waitForEnter(readLine: readLine)) return false;
+  if (!await _waitForEnter(readLine)) return false;
 
   final suggestedTopic = opts['pub-topic'];
   final topicInstruction = suggestedTopic == null
@@ -177,7 +190,7 @@ external publisher (for example mosquitto_pub with the retain flag). Do not
 reuse the pre-outage payload. In ZigDash, confirm the new value replaces the
 last-known value and the stale/"Last known" indication clears.
 Press Enter after the new retained value is visible.''');
-  if (!_waitForEnter(readLine: readLine)) return false;
+  if (!await _waitForEnter(readLine)) return false;
 
   stderr.writeln('''
 Checkpoint 4 — verify the new retained publish appeared exactly once in
@@ -185,11 +198,11 @@ ZigDash and exactly once in the numbered smoke deliveries above. A single
 publish must not create duplicate deliveries after reconnect.
 Current smoke delivery count: ${deliveryCount()}.
 Press Enter to finish and disconnect.''');
-  return _waitForEnter(readLine: readLine);
+  return _waitForEnter(readLine);
 }
 
-bool _waitForEnter({String? Function()? readLine}) {
-  if (checkpointConfirmed(readLine ?? stdin.readLineSync)) return true;
+Future<bool> _waitForEnter(Future<String?> Function() readLine) async {
+  if (await checkpointConfirmed(readLine)) return true;
   stderr.writeln(
     '[outage checklist] stdin closed before confirmation; aborting safely',
   );
@@ -204,7 +217,8 @@ String formatSmokeDelivery(
     ? '$topic\t$payload'
     : '[delivery $deliveryNumber]\t$topic\t$payload';
 
-bool checkpointConfirmed(String? Function() readLine) => readLine() != null;
+Future<bool> checkpointConfirmed(Future<String?> Function() readLine) async =>
+    await readLine() != null;
 
 MqttProtocol _protocolFromString(String s) {
   return MqttProtocol.values.firstWhere(

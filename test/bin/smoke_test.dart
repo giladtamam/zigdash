@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../bin/smoke.dart' as smoke;
@@ -24,11 +26,24 @@ void main() {
     );
   });
 
-  test('checkpoint confirmation rejects EOF', () {
-    expect(smoke.checkpointConfirmed(() => null), isFalse);
+  test('checkpoint confirmation rejects EOF', () async {
+    expect(await smoke.checkpointConfirmed(() async => null), isFalse);
   });
 
-  test('checkpoint confirmation accepts an empty Enter line', () {
-    expect(smoke.checkpointConfirmed(() => ''), isTrue);
+  test('checkpoint confirmation accepts an empty Enter line', () async {
+    expect(await smoke.checkpointConfirmed(() async => ''), isTrue);
+  });
+
+  test('event loop continues while checkpoint input is pending', () async {
+    final input = Completer<String?>();
+    var timerCompleted = false;
+    final confirmation = smoke.checkpointConfirmed(() => input.future);
+
+    Timer.run(() => timerCompleted = true);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(timerCompleted, isTrue);
+    input.complete('');
+    expect(await confirmation, isTrue);
   });
 }
