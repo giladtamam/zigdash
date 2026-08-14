@@ -334,4 +334,45 @@ void main() {
       async.flushMicrotasks();
     });
   });
+
+  test('late disconnect from an old client does not reconnect again', () {
+    fakeAsync((async) {
+      final clients = <_FakeClient>[];
+      final manager = MqttManager(
+        config: const BrokerConfig(
+          id: 'conn-1',
+          host: localHost,
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+        ),
+        password: '',
+        clientFactory: (config, clientId, {host}) {
+          final client = _FakeClient(host ?? config.host, _Behavior.succeed);
+          clients.add(client);
+          return client;
+        },
+      );
+
+      manager.connect();
+      async.flushMicrotasks();
+      final oldDisconnect = clients.first.onDisconnected!;
+
+      manager.disconnect();
+      manager.connect();
+      async.flushMicrotasks();
+      expect(manager.status, MqttStatus.connected);
+      expect(manager.connectionGeneration, 2);
+      expect(clients, hasLength(2));
+
+      oldDisconnect();
+      async.elapse(const Duration(seconds: 2));
+
+      expect(manager.status, MqttStatus.connected);
+      expect(manager.connectionGeneration, 2);
+      expect(clients, hasLength(2));
+
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
 }

@@ -188,7 +188,7 @@ class MqttManager {
       // mqtt_client's onDisconnected (solicited) while _userInitiatedDisconnect
       // is false, which would otherwise schedule a phantom reconnect during
       // normal candidate fallback.
-      client.onDisconnected = _onDisconnected;
+      client.onDisconnected = () => _onDisconnected(client);
       final connectionGeneration = ++_connectionGeneration;
       _lastError = null;
       _emitEndpoint(cand.kind);
@@ -357,7 +357,8 @@ class MqttManager {
     }
   }
 
-  void _onDisconnected() {
+  void _onDisconnected(mc.MqttClient client) {
+    if (!identical(client, _client)) return;
     if (_userInitiatedDisconnect || _disposed) return;
     _emit(MqttStatus.reconnecting);
     _scheduleReconnect();
