@@ -142,4 +142,53 @@ void main() {
       expect(states.last.requireValue.freshness, PanelFreshness.fresh);
     },
   );
+
+  test(
+    'status-only transitions reuse the value extracted for the message',
+    () async {
+      final manager = _FakeMqttManager();
+      final container = ProviderContainer(
+        overrides: [
+          mqttManagerProvider.overrideWith((ref, id) async => manager),
+        ],
+      );
+      addTearDown(container.dispose);
+      addTearDown(manager.dispose);
+      const key = PanelStreamKey(
+        connectionId: 'connection',
+        topic: 'device/state',
+        jsonPath: 'state',
+      );
+      final subscription = container.listen(
+        panelValueSnapshotProvider(key),
+        (_, __) {},
+      );
+      addTearDown(subscription.close);
+
+      await Future<void>.delayed(Duration.zero);
+      manager.generation = 1;
+      manager.statuses.add(MqttStatus.connected);
+      manager.messages.add(
+        MqttRxMessage(
+          topic: 'device/state',
+          payload: '{"state":{"power":"on"}}',
+          receivedAt: DateTime.utc(2026, 8, 14, 12),
+          connectionGeneration: 1,
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+      final extractedValue = container
+          .read(panelValueSnapshotProvider(key))
+          .requireValue
+          .value;
+
+      manager.statuses.add(MqttStatus.reconnecting);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        container.read(panelValueSnapshotProvider(key)).requireValue.value,
+        same(extractedValue),
+      );
+    },
+  );
 }

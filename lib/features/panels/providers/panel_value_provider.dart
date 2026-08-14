@@ -38,6 +38,13 @@ class PanelValueSnapshot {
   final PanelFreshness freshness;
 }
 
+class _ExtractedPanelMessage {
+  const _ExtractedPanelMessage(this.message, this.value);
+
+  final MqttRxMessage message;
+  final Object? value;
+}
+
 /// Compose an absolute MQTT topic from an optional dashboard prefix and a
 /// panel-level suffix. Leading slashes on the suffix are trimmed (they
 /// mean nothing here — MQTT topics aren't paths). Empty suffix collapses
@@ -97,12 +104,22 @@ final panelValueSnapshotProvider = StreamProvider.autoDispose
       final mgr = await ref.read(mqttManagerProvider(key.connectionId).future);
       final messages = mgr.subscribe(key.topic);
       ref.onDispose(() => mgr.unsubscribe(key.topic));
-      yield* Rx.combineLatest2<MqttRxMessage, MqttStatus, PanelValueSnapshot>(
-        messages,
+      final extractedMessages = messages.map(
+        (message) => _ExtractedPanelMessage(
+          message,
+          extractByPath(message.payload, key.jsonPath),
+        ),
+      );
+      yield* Rx.combineLatest2<
+        _ExtractedPanelMessage,
+        MqttStatus,
+        PanelValueSnapshot
+      >(
+        extractedMessages,
         mgr.status$,
-        (message, status) => PanelValueSnapshot.fromMessage(
-          message: message,
-          value: extractByPath(message.payload, key.jsonPath),
+        (extracted, status) => PanelValueSnapshot.fromMessage(
+          message: extracted.message,
+          value: extracted.value,
           status: status,
           currentGeneration: mgr.connectionGeneration,
         ),
