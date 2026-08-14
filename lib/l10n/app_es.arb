@@ -337,6 +337,12 @@
   "panelAutoCloseClosingNow": "Cerrando…",
   "panelGridEmpty": "Aún no hay paneles.\nToca + para añadir un Interruptor, Deslizador o Botón.",
   "panelsOffline": "Sin conexión: mostrando últimos valores",
+  "connectionConnecting": "Conectando…",
+  "connectionReconnecting": "Reconectando…",
+  "connectionShowingLastKnownValues": "Mostrando los últimos valores conocidos",
+  "connectionFailed": "Error de conexión",
+  "connectionAutomaticRetry": "Los reintentos automáticos continuarán",
+  "connectionReconnectNow": "Reconectar ahora",
 
   "settingsAbout": "Acerca de",
   "settingsHelp": "Ayuda y guía",

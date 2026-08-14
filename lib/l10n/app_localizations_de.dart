@@ -968,6 +968,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get panelsOffline => 'Offline – letzte Werte werden angezeigt';
 
   @override
+  String get connectionConnecting => 'Verbindung wird hergestellt…';
+
+  @override
+  String get connectionReconnecting => 'Verbindung wird wiederhergestellt…';
+
+  @override
+  String get connectionShowingLastKnownValues =>
+      'Letzte bekannte Werte werden angezeigt';
+
+  @override
+  String get connectionFailed => 'Verbindung fehlgeschlagen';
+
+  @override
+  String get connectionAutomaticRetry =>
+      'Automatische Wiederholungsversuche werden fortgesetzt';
+
+  @override
+  String get connectionReconnectNow => 'Jetzt neu verbinden';
+
+  @override
   String get settingsAbout => 'Über';
 
   @override

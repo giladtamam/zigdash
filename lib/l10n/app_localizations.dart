@@ -1842,6 +1842,42 @@ abstract class AppLocalizations {
   /// **'Offline — showing last values'**
   String get panelsOffline;
 
+  /// No description provided for @connectionConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get connectionConnecting;
+
+  /// No description provided for @connectionReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting…'**
+  String get connectionReconnecting;
+
+  /// No description provided for @connectionShowingLastKnownValues.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing last known values'**
+  String get connectionShowingLastKnownValues;
+
+  /// No description provided for @connectionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get connectionFailed;
+
+  /// No description provided for @connectionAutomaticRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic retry will continue'**
+  String get connectionAutomaticRetry;
+
+  /// No description provided for @connectionReconnectNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect now'**
+  String get connectionReconnectNow;
+
   /// No description provided for @settingsAbout.
   ///
   /// In en, this message translates to:

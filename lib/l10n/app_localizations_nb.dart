@@ -963,6 +963,24 @@ class AppLocalizationsNb extends AppLocalizations {
   String get panelsOffline => 'Offline – viser siste verdier';
 
   @override
+  String get connectionConnecting => 'Kobler til…';
+
+  @override
+  String get connectionReconnecting => 'Kobler til på nytt…';
+
+  @override
+  String get connectionShowingLastKnownValues => 'Viser sist kjente verdier';
+
+  @override
+  String get connectionFailed => 'Tilkoblingen mislyktes';
+
+  @override
+  String get connectionAutomaticRetry => 'Automatiske forsøk fortsetter';
+
+  @override
+  String get connectionReconnectNow => 'Koble til på nytt nå';
+
+  @override
   String get settingsAbout => 'Om';
 
   @override

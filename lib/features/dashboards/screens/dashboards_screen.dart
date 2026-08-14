@@ -10,7 +10,10 @@ import '../../../data/repositories/backup_service.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
+import '../../../mqtt/mqtt_status.dart';
+import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../panels/widgets/panel_grid.dart';
+import '../widgets/connection_status_banner.dart';
 
 /// Per-connection dashboards screen. Shows a TabBar of all dashboards
 /// under [connectionId] and renders the selected dashboard's [PanelGrid].
@@ -22,7 +25,11 @@ class DashboardsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final connectionAsync = ref.watch(connectionByIdProvider(connectionId));
-    final dashboardsAsync = ref.watch(dashboardsForConnectionProvider(connectionId));
+    final dashboardsAsync =
+        ref.watch(dashboardsForConnectionProvider(connectionId));
+    final connectionStatus =
+        ref.watch(connectionStatusProvider(connectionId)).valueOrNull ??
+            MqttStatus.connecting;
 
     final connectionName = connectionAsync.maybeWhen(
       data: (c) => c?.name ?? 'Connection',
@@ -44,22 +51,30 @@ class DashboardsScreen extends ConsumerWidget {
             appBar: AppBar(
               title: Text(connectionName),
               actions: [
-              IconButton(
-                icon: const Icon(Icons.auto_awesome),
-                tooltip: context.l10n.scenesTitle,
-                onPressed: () =>
-                    context.push('/connections/$connectionId/scenes'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.devices_other),
-                tooltip: context.l10n.devicesTitle,
-                onPressed: () =>
-                    context.push('/connections/$connectionId/devices'),
-              ),
-              _BackupMenu(connectionId: connectionId),
-            ],
+                IconButton(
+                  icon: const Icon(Icons.auto_awesome),
+                  tooltip: context.l10n.scenesTitle,
+                  onPressed: () =>
+                      context.push('/connections/$connectionId/scenes'),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.devices_other),
+                  tooltip: context.l10n.devicesTitle,
+                  onPressed: () =>
+                      context.push('/connections/$connectionId/devices'),
+                ),
+                _BackupMenu(connectionId: connectionId),
+              ],
             ),
-            body: const _EmptyState(),
+            body: Column(
+              children: [
+                ConnectionStatusBanner(
+                  status: connectionStatus,
+                  onReconnect: () => _reconnect(ref),
+                ),
+                const Expanded(child: _EmptyState()),
+              ],
+            ),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () =>
                   context.push('/connections/$connectionId/dashboards/form'),
@@ -72,9 +87,15 @@ class DashboardsScreen extends ConsumerWidget {
           connectionId: connectionId,
           connectionName: connectionName,
           dashboards: dashboards,
+          connectionStatus: connectionStatus,
         );
       },
     );
+  }
+
+  Future<void> _reconnect(WidgetRef ref) async {
+    final manager = await ref.read(mqttManagerProvider(connectionId).future);
+    manager.reconnectNow();
   }
 }
 
@@ -83,11 +104,13 @@ class _DashboardsTabbed extends ConsumerWidget {
     required this.connectionId,
     required this.connectionName,
     required this.dashboards,
+    required this.connectionStatus,
   });
 
   final String connectionId;
   final String connectionName;
   final List<Dashboard> dashboards;
+  final MqttStatus connectionStatus;
 
   static const _panelTypeLabels = <PanelType, String>{
     PanelType.toggle: 'Toggle',
@@ -107,7 +130,8 @@ class _DashboardsTabbed extends ConsumerWidget {
     PanelType.autoClose: 'Auto-Close',
   };
 
-  void _openReorderSheet(BuildContext context, WidgetRef ref, String dashboardId) {
+  void _openReorderSheet(
+      BuildContext context, WidgetRef ref, String dashboardId) {
     final repo = ref.read(panelRepoProvider);
     showModalBottomSheet(
       context: context,
@@ -184,29 +208,45 @@ class _DashboardsTabbed extends ConsumerWidget {
               }).toList(),
             ),
           ),
-          body: TabBarView(
-            children: dashboards.map((d) {
-              final dashboardTheme = Theme.of(tabCtx).copyWith(
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: Color(d.colorSeed),
-                  brightness: Theme.of(tabCtx).brightness,
+          body: Column(
+            children: [
+              ConnectionStatusBanner(
+                status: connectionStatus,
+                onReconnect: () async {
+                  final manager = await ref.read(
+                    mqttManagerProvider(connectionId).future,
+                  );
+                  manager.reconnectNow();
+                },
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: dashboards.map((d) {
+                    final dashboardTheme = Theme.of(tabCtx).copyWith(
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: Color(d.colorSeed),
+                        brightness: Theme.of(tabCtx).brightness,
+                      ),
+                    );
+                    return Theme(
+                      data: dashboardTheme,
+                      child: PanelGrid(
+                        connectionId: connectionId,
+                        dashboard: d,
+                      ),
+                    );
+                  }).toList(),
                 ),
-              );
-              return Theme(
-                data: dashboardTheme,
-                child: PanelGrid(
-                  connectionId: connectionId,
-                  dashboard: d,
-                ),
-              );
-            }).toList(),
+              ),
+            ],
           ),
           floatingActionButton: Builder(builder: (innerCtx) {
             final idx = DefaultTabController.of(innerCtx).index;
             return FloatingActionButton.extended(
               onPressed: () {
                 final d = dashboards[idx];
-                _openPanelPicker(innerCtx, connectionId: connectionId, dashboardId: d.id);
+                _openPanelPicker(innerCtx,
+                    connectionId: connectionId, dashboardId: d.id);
               },
               icon: const Icon(Icons.add),
               label: Text(innerCtx.l10n.dashAddPanel),
@@ -266,7 +306,9 @@ void _openPanelPicker(BuildContext context,
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Text(sheetCtx.l10n.panelPickerTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              child: Text(sheetCtx.l10n.panelPickerTitle,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
             ),
             ListTile(
               leading: const Icon(Icons.travel_explore),
@@ -277,7 +319,8 @@ void _openPanelPicker(BuildContext context,
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-              child: Text(sheetCtx.l10n.panelPickerSectionControl, style: const TextStyle(fontWeight: FontWeight.w600)),
+              child: Text(sheetCtx.l10n.panelPickerSectionControl,
+                  style: const TextStyle(fontWeight: FontWeight.w600)),
             ),
             ListTile(
               leading: const Icon(Icons.toggle_on),
@@ -348,7 +391,8 @@ void _openPanelPicker(BuildContext context,
             const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: Text(sheetCtx.l10n.panelPickerSectionState, style: const TextStyle(fontWeight: FontWeight.w600)),
+              child: Text(sheetCtx.l10n.panelPickerSectionState,
+                  style: const TextStyle(fontWeight: FontWeight.w600)),
             ),
             ListTile(
               leading: const Icon(Icons.circle, color: Colors.green),
@@ -413,8 +457,10 @@ class _BackupMenu extends ConsumerWidget {
         if (v == 'import') _import(context, ref);
       },
       itemBuilder: (_) => [
-        PopupMenuItem(value: 'export', child: Text(context.l10n.dashExportMenu)),
-        PopupMenuItem(value: 'import', child: Text(context.l10n.dashImportMenu)),
+        PopupMenuItem(
+            value: 'export', child: Text(context.l10n.dashExportMenu)),
+        PopupMenuItem(
+            value: 'import', child: Text(context.l10n.dashImportMenu)),
       ],
     );
   }
@@ -422,7 +468,8 @@ class _BackupMenu extends ConsumerWidget {
   Future<void> _export(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;
-    final json = await ref.read(backupServiceProvider).exportConnection(connectionId);
+    final json =
+        await ref.read(backupServiceProvider).exportConnection(connectionId);
     if (!context.mounted) return;
     await showDialog<void>(
       context: context,
@@ -498,7 +545,8 @@ class _BackupMenu extends ConsumerWidget {
         SnackBar(content: Text(l10n.dashImportSuccess(n))),
       );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(l10n.dashImportFailed(e.toString()))));
+      messenger.showSnackBar(
+          SnackBar(content: Text(l10n.dashImportFailed(e.toString()))));
     } finally {
       controller.dispose();
     }

@@ -962,6 +962,24 @@ class AppLocalizationsSv extends AppLocalizations {
   String get panelsOffline => 'Offline – visar senaste värden';
 
   @override
+  String get connectionConnecting => 'Ansluter…';
+
+  @override
+  String get connectionReconnecting => 'Återansluter…';
+
+  @override
+  String get connectionShowingLastKnownValues => 'Visar senast kända värden';
+
+  @override
+  String get connectionFailed => 'Anslutningen misslyckades';
+
+  @override
+  String get connectionAutomaticRetry => 'Automatiska försök fortsätter';
+
+  @override
+  String get connectionReconnectNow => 'Anslut igen nu';
+
+  @override
   String get settingsAbout => 'Om';
 
   @override

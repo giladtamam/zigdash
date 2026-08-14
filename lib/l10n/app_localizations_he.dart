@@ -953,6 +953,25 @@ class AppLocalizationsHe extends AppLocalizations {
   String get panelsOffline => 'לא מקוון — מוצגים הערכים האחרונים';
 
   @override
+  String get connectionConnecting => 'מתחבר…';
+
+  @override
+  String get connectionReconnecting => 'מתחבר מחדש…';
+
+  @override
+  String get connectionShowingLastKnownValues =>
+      'מציג את הערכים הידועים האחרונים';
+
+  @override
+  String get connectionFailed => 'החיבור נכשל';
+
+  @override
+  String get connectionAutomaticRetry => 'ניסיונות החיבור האוטומטיים יימשכו';
+
+  @override
+  String get connectionReconnectNow => 'התחבר עכשיו';
+
+  @override
   String get settingsAbout => 'אודות';
 
   @override

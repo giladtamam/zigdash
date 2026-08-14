@@ -337,6 +337,12 @@
   "panelAutoCloseClosingNow": "Stänger nu…",
   "panelGridEmpty": "Inga paneler ännu.\nTryck på + för att lägga till en Strömbrytare, ett Reglage eller en Knapp.",
   "panelsOffline": "Offline – visar senaste värden",
+  "connectionConnecting": "Ansluter…",
+  "connectionReconnecting": "Återansluter…",
+  "connectionShowingLastKnownValues": "Visar senast kända värden",
+  "connectionFailed": "Anslutningen misslyckades",
+  "connectionAutomaticRetry": "Automatiska försök fortsätter",
+  "connectionReconnectNow": "Anslut igen nu",
 
   "settingsAbout": "Om",
   "settingsHelp": "Hjälp & guide",

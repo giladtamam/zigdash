@@ -337,6 +337,12 @@
   "panelAutoCloseClosingNow": "Lukker nå…",
   "panelGridEmpty": "Ingen paneler ennå.\nTrykk på + for å legge til en Bryter, Glidebryter eller Knapp.",
   "panelsOffline": "Offline – viser siste verdier",
+  "connectionConnecting": "Kobler til…",
+  "connectionReconnecting": "Kobler til på nytt…",
+  "connectionShowingLastKnownValues": "Viser sist kjente verdier",
+  "connectionFailed": "Tilkoblingen mislyktes",
+  "connectionAutomaticRetry": "Automatiske forsøk fortsetter",
+  "connectionReconnectNow": "Koble til på nytt nå",
 
   "settingsAbout": "Om",
   "settingsHelp": "Hjelp & veiledning",

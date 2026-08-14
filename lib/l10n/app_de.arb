@@ -337,6 +337,12 @@
   "panelAutoCloseClosingNow": "Schließe jetzt…",
   "panelGridEmpty": "Noch keine Panels.\nTippe auf +, um einen Schalter, Regler oder eine Taste hinzuzufügen.",
   "panelsOffline": "Offline – letzte Werte werden angezeigt",
+  "connectionConnecting": "Verbindung wird hergestellt…",
+  "connectionReconnecting": "Verbindung wird wiederhergestellt…",
+  "connectionShowingLastKnownValues": "Letzte bekannte Werte werden angezeigt",
+  "connectionFailed": "Verbindung fehlgeschlagen",
+  "connectionAutomaticRetry": "Automatische Wiederholungsversuche werden fortgesetzt",
+  "connectionReconnectNow": "Jetzt neu verbinden",
 
   "settingsAbout": "Über",
   "settingsHelp": "Hilfe & Anleitung",

@@ -337,6 +337,12 @@
   "panelAutoCloseClosingNow": "Sluiten…",
   "panelGridEmpty": "Nog geen panelen.\nTik op + om een Schakelaar, Schuifregelaar of Knop toe te voegen.",
   "panelsOffline": "Offline — laatste waarden worden getoond",
+  "connectionConnecting": "Verbinden…",
+  "connectionReconnecting": "Opnieuw verbinden…",
+  "connectionShowingLastKnownValues": "Laatst bekende waarden worden weergegeven",
+  "connectionFailed": "Verbinding mislukt",
+  "connectionAutomaticRetry": "Automatisch opnieuw proberen gaat door",
+  "connectionReconnectNow": "Nu opnieuw verbinden",
 
   "settingsAbout": "Over",
   "settingsHelp": "Help & Handleiding",

@@ -958,6 +958,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panelsOffline => 'Offline — showing last values';
 
   @override
+  String get connectionConnecting => 'Connecting…';
+
+  @override
+  String get connectionReconnecting => 'Reconnecting…';
+
+  @override
+  String get connectionShowingLastKnownValues => 'Showing last known values';
+
+  @override
+  String get connectionFailed => 'Connection failed';
+
+  @override
+  String get connectionAutomaticRetry => 'Automatic retry will continue';
+
+  @override
+  String get connectionReconnectNow => 'Reconnect now';
+
+  @override
   String get settingsAbout => 'About';
 
   @override

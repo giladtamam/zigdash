@@ -332,6 +332,12 @@
   "panelAutoCloseClosingNow": "Closing now…",
   "panelGridEmpty": "No panels yet.\nTap + to add a Toggle, Slider, or Button.",
   "panelsOffline": "Offline — showing last values",
+  "connectionConnecting": "Connecting…",
+  "connectionReconnecting": "Reconnecting…",
+  "connectionShowingLastKnownValues": "Showing last known values",
+  "connectionFailed": "Connection failed",
+  "connectionAutomaticRetry": "Automatic retry will continue",
+  "connectionReconnectNow": "Reconnect now",
 
   "settingsAbout": "About",
   "settingsHelp": "Help & Guide",
