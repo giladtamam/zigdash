@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show SemanticsFlag;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,6 +88,7 @@ Future<SetupCoordinator> _pump(
   Stream<ProbeResult> Function(String ip)? scan,
   Z2mFetchResult fetch =
       const Z2mFetchResult(detected: true, devices: [_lamp]),
+  Locale? locale,
 }) async {
   final coordinator = SetupCoordinator(
     scan: scan ??
@@ -106,10 +108,11 @@ Future<SetupCoordinator> _pump(
           return coordinator;
         }),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: SetupScreen(),
+        home: const SetupScreen(),
       ),
     ),
   );
@@ -249,5 +252,53 @@ void main() {
     expect(find.text('Your dashboard is ready'), findsOneWidget);
     expect(find.text('1 controls created.'), findsOneWidget);
     expect(find.text('Open dashboard'), findsOneWidget);
+  });
+
+  testWidgets('renders in RTL for Hebrew', (tester) async {
+    await _pump(tester, locale: const Locale('he'));
+
+    final title = find.text('ברוכים הבאים ל-ZigDash');
+    expect(title, findsOneWidget);
+    expect(find.text('מצאו את ההתקנה שלי'), findsOneWidget);
+    expect(Directionality.of(tester.element(title)), TextDirection.rtl);
+  });
+
+  testWidgets('status changes are announced via live regions',
+      (tester) async {
+    final controller = StreamController<ProbeResult>();
+    addTearDown(controller.close);
+    await _pump(tester, scan: (_) => controller.stream);
+
+    await tester.tap(find.text('Find my setup'));
+    await tester.pump();
+
+    final node =
+        tester.getSemantics(find.bySemanticsLabel('Looking for a connection…'));
+    expect(node.hasFlag(SemanticsFlag.isLiveRegion), isTrue);
+  });
+
+  testWidgets('device rows expose selected/disabled state to assistive tech',
+      (tester) async {
+    await _pump(tester,
+        fetch: const Z2mFetchResult(
+            detected: true, devices: [_lamp, _mystery]));
+    await tester.tap(find.text('Find my setup'));
+    await tester.pump();
+    await tester.pump();
+    await tester.tap(find.text('Possible connection found'));
+    await tester.pump();
+    await tester.pump();
+
+    // CheckboxListTile derives its semantics (checked state, label,
+    // enabled/disabled) from these properties.
+    final lamp = tester.widget<CheckboxListTile>(
+        find.widgetWithText(CheckboxListTile, 'lamp'));
+    expect(lamp.value, isTrue);
+    expect(lamp.onChanged, isNotNull);
+
+    final mystery = tester.widget<CheckboxListTile>(
+        find.widgetWithText(CheckboxListTile, 'mystery_box'));
+    expect(mystery.value, isFalse);
+    expect(mystery.onChanged, isNull); // disabled for screen readers
   });
 }

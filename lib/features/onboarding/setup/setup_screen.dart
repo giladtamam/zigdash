@@ -424,20 +424,20 @@ class _DeviceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = row.selectable;
-    return Semantics(
-      selected: row.selected,
-      enabled: enabled,
-      child: CheckboxListTile(
-        value: row.selected,
-        onChanged: enabled
-            ? (_) => onToggle(row.device.friendlyName)
-            : null,
-        title: Text(row.device.friendlyName),
-        subtitle: Text(
-          [row.device.vendor, row.device.model]
-              .whereType<String>()
-              .join(' · '),
-        ),
+    // CheckboxListTile owns the semantics: it exposes the row's checked
+    // state, its label, and enabled/disabled (onChanged null ⇒ disabled).
+    // A Semantics(selected:) wrapper here would be overridden by the tile's
+    // own `selected: false` and is therefore dead code.
+    return CheckboxListTile(
+      value: row.selected,
+      onChanged: enabled
+          ? (_) => onToggle(row.device.friendlyName)
+          : null,
+      title: Text(row.device.friendlyName),
+      subtitle: Text(
+        [row.device.vendor, row.device.model]
+            .whereType<String>()
+            .join(' · '),
       ),
     );
   }
