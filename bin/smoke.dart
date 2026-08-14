@@ -52,13 +52,19 @@ void main(List<String> args) async {
   }
 
   final pattern = opts['sub']!;
+  final outageChecklist = opts['outage-checklist'] == 'true';
   stderr.writeln('[smoke] subscribing to "$pattern"');
   var deliveryCount = 0;
   final msgSub = mgr.subscribe(pattern).listen((msg) {
-    deliveryCount++;
-    stdout.writeln(
-      '[delivery $deliveryCount]\t${msg.topic}\t${_truncate(msg.payload, 120)}',
-    );
+    final payload = _truncate(msg.payload, 120);
+    if (outageChecklist) {
+      deliveryCount++;
+      stdout.writeln(
+        formatSmokeDelivery(msg.topic, payload, deliveryNumber: deliveryCount),
+      );
+    } else {
+      stdout.writeln(formatSmokeDelivery(msg.topic, payload));
+    }
   });
 
   if (opts['pub-topic'] != null) {
@@ -70,8 +76,9 @@ void main(List<String> args) async {
     mgr.publish(topic, '{value}', payload, retain: retain);
   }
 
-  if (opts['outage-checklist'] == 'true') {
-    await _runOutageChecklist(opts, () => deliveryCount);
+  var checklistCompleted = true;
+  if (outageChecklist) {
+    checklistCompleted = _runOutageChecklist(opts, () => deliveryCount);
   } else {
     final seconds = int.parse(opts['seconds']!);
     stderr.writeln('[smoke] listening for ${seconds}s...');
@@ -82,6 +89,11 @@ void main(List<String> args) async {
   await msgSub.cancel();
   await mgr.dispose();
   await statusSub.cancel();
+  if (!checklistCompleted) {
+    stderr.writeln('[smoke] outage checklist aborted');
+    exitCode = 1;
+    return;
+  }
   stderr.writeln('[smoke] done');
 }
 
@@ -135,10 +147,11 @@ void _printUsage() {
   );
 }
 
-Future<void> _runOutageChecklist(
+bool _runOutageChecklist(
   Map<String, String?> opts,
-  int Function() deliveryCount,
-) async {
+  int Function() deliveryCount, {
+  String? Function()? readLine,
+}) {
   stderr.writeln('''
 [outage checklist] Keep the ZigDash app open on a dashboard that uses this broker.
 This mode never controls the broker; perform each broker action yourself.
@@ -147,12 +160,12 @@ Checkpoint 1 — note the current delivery count (${deliveryCount()}).
 Stop the external broker now. In ZigDash, confirm the connection shows
 "Reconnecting" and existing values remain visible as "Last known".
 Press Enter only after both UI states have been observed.''');
-  stdin.readLineSync();
+  if (!_waitForEnter(readLine: readLine)) return false;
 
   stderr.writeln('''
 Checkpoint 2 — restart the external broker now.
 Wait for ZigDash and this smoke client to reconnect, then press Enter.''');
-  stdin.readLineSync();
+  if (!_waitForEnter(readLine: readLine)) return false;
 
   final suggestedTopic = opts['pub-topic'];
   final topicInstruction = suggestedTopic == null
@@ -164,7 +177,7 @@ external publisher (for example mosquitto_pub with the retain flag). Do not
 reuse the pre-outage payload. In ZigDash, confirm the new value replaces the
 last-known value and the stale/"Last known" indication clears.
 Press Enter after the new retained value is visible.''');
-  stdin.readLineSync();
+  if (!_waitForEnter(readLine: readLine)) return false;
 
   stderr.writeln('''
 Checkpoint 4 — verify the new retained publish appeared exactly once in
@@ -172,8 +185,26 @@ ZigDash and exactly once in the numbered smoke deliveries above. A single
 publish must not create duplicate deliveries after reconnect.
 Current smoke delivery count: ${deliveryCount()}.
 Press Enter to finish and disconnect.''');
-  stdin.readLineSync();
+  return _waitForEnter(readLine: readLine);
 }
+
+bool _waitForEnter({String? Function()? readLine}) {
+  if (checkpointConfirmed(readLine ?? stdin.readLineSync)) return true;
+  stderr.writeln(
+    '[outage checklist] stdin closed before confirmation; aborting safely',
+  );
+  return false;
+}
+
+String formatSmokeDelivery(
+  String topic,
+  String payload, {
+  int? deliveryNumber,
+}) => deliveryNumber == null
+    ? '$topic\t$payload'
+    : '[delivery $deliveryNumber]\t$topic\t$payload';
+
+bool checkpointConfirmed(String? Function() readLine) => readLine() != null;
 
 MqttProtocol _protocolFromString(String s) {
   return MqttProtocol.values.firstWhere(
