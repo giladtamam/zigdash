@@ -603,7 +603,7 @@ and a new retained message restores freshness without duplicate deliveries.
 - Modify: `pubspec.yaml`
 - Modify: `docs/superpowers/plans/2026-08-14-reconnect-reliability.md`
 
-- [ ] **Step 1: Bump the patch version**
+- [x] **Step 1: Bump the patch version**
 
 Change:
 
@@ -611,7 +611,7 @@ Change:
 version: 1.9.1+20
 ```
 
-- [ ] **Step 2: Re-run verification after the version change**
+- [x] **Step 2: Re-run verification after the version change**
 
 Run:
 
@@ -623,13 +623,13 @@ git diff --check
 
 Expected: tests pass, analysis has no errors, and diff check is clean.
 
-- [ ] **Step 3: Perform code review**
+- [x] **Step 3: Perform code review**
 
 Use the repository code-review skill against commit `9cb6173`, checking both
 the design spec and repository standards. Fix every confirmed issue and rerun
 the affected tests.
 
-- [ ] **Step 4: Commit the implementation**
+- [x] **Step 4: Commit the implementation**
 
 ```bash
 git add docs/superpowers/plans/2026-08-14-reconnect-reliability.md \
@@ -637,7 +637,7 @@ git add docs/superpowers/plans/2026-08-14-reconnect-reliability.md \
 git commit -m "feat: add reconnect reliability UX"
 ```
 
-- [ ] **Step 5: Verify the committed tree**
+- [x] **Step 5: Verify the committed tree**
 
 Run:
 
