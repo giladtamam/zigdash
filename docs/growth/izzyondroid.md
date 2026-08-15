@@ -6,13 +6,17 @@ which satisfies their core requirement.
 
 ## How to submit
 
-1. Open a "New App Request" issue at the IzzyOnDroid repo:
-   https://codeberg.org/izzyondroid/repo/issues
-   (If the repo has moved again, find it from https://android.izzysoft.de —
-   follow the current "Request an app" template.)
+1. Open a "New App Request" issue at the IzzyOnDroid issue tracker:
+   https://codeberg.org/IzzyOnDroid/repodata/issues
+   (The `repo` repo is the data/scripts; issues live in `repodata`.
+   If it moves again, find the link from https://izzyondroid.org/about/.)
 
 2. Fill the template with the data below. Their bot checks the GitHub release
    APK and the app's FOSS credentials.
+
+3. Size limit: ~30 MB per app (rule of thumb). Our universal APK is 31.6 MB,
+   so point them at the per-ABI split APKs (arm64 / armeabi-v7a / x86_64,
+   ~12 MB each) already attached to the v1.9.1 release.
 
 ## Request data
 
