@@ -1,0 +1,1 @@
+MQTT-dashboard voor Zigbee2MQTT — vindt apparaten zelf. Geen advertenties.

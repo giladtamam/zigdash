@@ -47,6 +47,9 @@ dependencies:
   # Preferences
   shared_preferences: ^2.3.2
 
+  # Play in-app review prompt (no-ops on non-Play installs)
+  in_app_review: ^2.0.12
+
   # Encrypted password storage
   flutter_secure_storage: ^9.2.4
 

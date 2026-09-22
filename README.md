@@ -38,8 +38,9 @@ MQTT.
 - **Tailscale support** — secure remote access over your WireGuard mesh, no
   port forwarding.
 - **Polished** — Material 3 with Material You dynamic color (Android 12+),
-  phone and tablet in both orientations, English and Hebrew (עברית) with full
-  RTL, responsive panel grid, dashboard lock, JSON backup/restore.
+  phone and tablet in both orientations, seven languages (English, German,
+  Spanish, Dutch, Swedish, Norwegian, Hebrew) with full RTL, responsive panel
+  grid, dashboard lock, JSON backup/restore.
 - **100% private** — no ads, no analytics, no account, no developer server.
   Data lives on your device and your broker.
 

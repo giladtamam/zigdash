@@ -1,0 +1,42 @@
+ZigDash is het MQTT-dashboard gebouwd voor Zigbee2MQTT — het vindt je Zigbee-apparaten automatisch, zodat je smarthome-dashboard zichzelf bouwt. Geen cloud, geen advertenties, geen account: gratis en open source. Bedien lampen, rolluiken, schakelaars en sensoren vanaf je telefoon of een tablet aan de muur — en automatiseer op je hub, ook als je telefoon uit staat.
+
+AUTOMATISCHE DETECTIE VOOR ZIGBEE2MQTT
+• Scan je Zigbee2MQTT-bridge en maak met één tik een paneel voor elk apparaat — geen topics meer handmatig instellen.
+• JSON-pad-extractie op elk paneel, zodat ZigDash echte Zigbee2MQTT-berichten meteen begrijpt.
+• Eigen topics, QoS en retain per paneel wanneer je volledige controle wilt.
+
+VERBIND MET ELKE BROKER
+• Elke MQTT-broker — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Brokerdetectie scant automatisch je lokale netwerk.
+• Gebruikersnaam en wachtwoord in hardwarematig beveiligde opslag — nooit in platte tekst.
+• Live status met automatisch opnieuw verbinden (exponentiële backoff).
+• Tailscale-ondersteuning: toegang op afstand via je WireGuard-mesh, zonder poorten open te zetten.
+• Meerdere brokers met direct wisselen.
+• Een volwaardige MQTT-client eronder: publiceer en abonneer op elk topic.
+
+16 PANEELTYPES — BEDIEN ALLES
+Schakelaar, Knop, Schuifregelaar, Rolluik (open/stop/dicht met presets), Multistatus, Combo, Radio, Led-indicator, Nodestatus, Voortgang, Tekstinvoer, Tekstlog, Scène, Schema, Automatisch-sluiten-regel en Zigbee2MQTT-apparaatdetectie. Van lampen en rolluiken tot sensoren en scènes — één zigbee-dashboard voor elk apparaat.
+
+AUTOMATISERING — WERKT ALS JE TELEFOON UIT STAAT
+• Schemapanelen: dagelijkse open- en sluittimers, opgeslagen als retained MQTT-configuratie.
+• Automatisch-sluiten-regels: zet een apparaat N seconden na het inschakelen weer uit — ideaal voor ventilatoren, pompen en tijdlampen.
+• Beide draaien op je altijd-aan hub (Node-RED op SMLIGHT, Raspberry Pi of elk MQTT-apparaat). Node-RED-flows meegeleverd.
+
+VERZORGD — TELEFOON EN TABLET
+• Material 3 met lichte, donkere en systeemthema's; Material You dynamische kleuren op Android 12+.
+• Telefoon en tablet, staand en liggend — ideaal als domotica-dashboard aan de muur.
+• Zeven talen — Engels, Duits, Spaans, Nederlands, Zweeds, Noors en Hebreeuws (עברית) — met automatische RTL.
+• Responsief paneelraster (hele, halve, derde breedte), dashboardvergrendeling, back-up en herstel als draagbare JSON, scènes.
+
+100% PRIVÉ. GEEN CLOUD.
+• Geen advertenties. Geen analytics. Geen account. Geen server van de ontwikkelaar.
+• Je gegevens blijven op je apparaat en je MQTT-broker — nergens anders.
+• Open source (MIT). De code is openbaar en controleerbaar.
+
+VOOR WIE IS DIT?
+Je draait Zigbee2MQTT met je eigen broker (Mosquitto op een Raspberry Pi, SMLIGHT SMHUB…) — misschien naast Home Assistant — en wilt snelle bediening vanaf je telefoon of een wandtablet zonder de Zigbee2MQTT-webinterface te openen. Klaar met cloudafhankelijke apps, vendor lock-in en dataverzameling? Dan is ZigDash iets voor jou.
+
+WAT JE NODIG HEBT
+• Een Zigbee2MQTT-installatie met een MQTT-broker in je lokale netwerk.
+• Tailscale (optioneel) voor toegang van buitenshuis.
+• Node-RED (optioneel) voor automatisering op de hub.

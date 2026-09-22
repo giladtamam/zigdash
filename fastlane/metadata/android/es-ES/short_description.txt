@@ -1,0 +1,1 @@
+Panel MQTT para Zigbee2MQTT: detecta dispositivos solo. Sin anuncios, libre.
