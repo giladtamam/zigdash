@@ -1,0 +1,42 @@
+ZigDash er MQTT-dashbordet bygget for Zigbee2MQTT — det finner Zigbee-enhetene dine automatisk, slik at smarthus-dashbordet bygger seg selv. Ingen sky, ingen reklame, ingen konto: gratis og med åpen kildekode. Styr lys, persienner, brytere og sensorer fra mobilen eller et veggmontert nettbrett — og automatiser på huben din, selv når mobilen er av.
+
+AUTOMATISK OPPDAGELSE FOR ZIGBEE2MQTT
+• Skann Zigbee2MQTT-broen din og lag et panel for hver enhet med ett trykk — ingen manuell oppkobling av topics.
+• JSON-sti-uttrekk på hvert panel, slik at ZigDash forstår ekte Zigbee2MQTT-meldinger med en gang.
+• Egne topics, QoS og retain per panel når du vil ha full kontroll.
+
+KOBLE TIL HVILKEN SOM HELST BROKER
+• Enhver MQTT-broker — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Brokeroppdagelse skanner det lokale nettverket ditt automatisk.
+• Brukernavn og passord i maskinvarestøttet sikker lagring — aldri i klartekst.
+• Livestatus med automatisk gjenoppkobling (eksponentiell backoff).
+• Tailscale-støtte: fjerntilgang over WireGuard-nettet ditt, uten portåpning.
+• Flere brokere med umiddelbar veksling.
+• En fullverdig MQTT-klient under panseret: publiser og abonner på hvilket som helst topic.
+
+16 PANELTYPER — STYR ALT
+Bryter, Knapp, Glidebryter, Persienne (åpne/stopp/lukk med forhåndsvalg), Flertilstand, Combo, Radio, LED-indikator, Nodestatus, Fremdrift, Tekstinntasting, Tekstlogg, Scene, Plan, Automatisk lukking-regel og Zigbee2MQTT-enhetsoppdagelse. Fra lys og persienner til sensorer og scener — ett zigbee-dashbord for hver enhet.
+
+AUTOMATISERING — KJØRER NÅR MOBILEN ER AV
+• Planpaneler: daglige åpne- og lukketidsur lagret som retained MQTT-konfigurasjon.
+• Automatisk lukking-regler: slå av en enhet N sekunder etter at den slås på — perfekt for vifter, pumper og tidsstyrt lys.
+• Begge kjører på den alltid påslåtte huben din (Node-RED på SMLIGHT, Raspberry Pi eller hvilken som helst MQTT-enhet). Node-RED-flyter følger med.
+
+GJENNOMARBEIDET — MOBIL OG NETTBRETT
+• Material 3 med lyst, mørkt og systemtema; Material You dynamiske farger på Android 12+.
+• Mobil og nettbrett, stående og liggende — ideelt som veggmontert dashbord for hjemmeautomasjon.
+• Sju språk — engelsk, tysk, spansk, nederlandsk, svensk, norsk og hebraisk (עברית) — med automatisk RTL.
+• Responsivt panelrutenett (hel, halv, tredjedels bredde), dashbordlås, sikkerhetskopiering og gjenoppretting som portabel JSON, scener.
+
+100 % PRIVAT. INGEN SKY.
+• Ingen reklame. Ingen analyse. Ingen konto. Ingen utviklerserver.
+• Dataene dine ligger på enheten din og MQTT-brokeren din — ingen andre steder.
+• Åpen kildekode (MIT). Koden er offentlig og kan granskes.
+
+HVEM ER DETTE FOR?
+Du kjører Zigbee2MQTT med din egen broker (Mosquitto på en Raspberry Pi, SMLIGHT SMHUB…) — kanskje ved siden av Home Assistant — og vil ha rask styring fra mobilen eller et veggnettbrett uten å åpne Zigbee2MQTT-nettgrensesnittet. Lei av skyavhengige apper, leverandørlåsing og datainnsamling? Da er ZigDash for deg.
+
+HVA DU TRENGER
+• Et Zigbee2MQTT-oppsett med en MQTT-broker i det lokale nettverket ditt.
+• Tailscale (valgfritt) for fjerntilgang utenfra.
+• Node-RED (valgfritt) for automatisering på huben.
