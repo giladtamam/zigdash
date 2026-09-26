@@ -16,7 +16,7 @@ cd "$(dirname "$0")/.."
 
 TARGET="${1:-apk}"
 case "$TARGET" in
-  apk)    flutter build apk --release --no-tree-shake-icons ;;
-  bundle) flutter build appbundle --release --no-tree-shake-icons ;;
+  apk)    tool/flutter build apk --release --no-tree-shake-icons ;;
+  bundle) tool/flutter build appbundle --release --no-tree-shake-icons ;;
   *) echo "usage: $0 [apk|bundle]"; exit 2 ;;
 esac

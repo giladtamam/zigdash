@@ -1,0 +1,1 @@
+Corrige la conexión con brókers MQTT estrictos (por ejemplo aedes) que rechazaban la conexión de ZigDash. Diseño de borde a borde en todas las versiones de Android. Correcciones menores.

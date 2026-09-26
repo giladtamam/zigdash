@@ -1,4 +1,3 @@
-import 'dart:ui' show SemanticsFlag;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -86,7 +85,7 @@ void main() {
     final liveRegions = find.bySemanticsIdentifier('connection-status-banner');
     expect(liveRegions, findsOneWidget);
     expect(
-      tester.getSemantics(liveRegions).hasFlag(SemanticsFlag.isLiveRegion),
+      tester.getSemantics(liveRegions).flagsCollection.isLiveRegion,
       isTrue,
     );
     handle.dispose();

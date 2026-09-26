@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show SemanticsFlag;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -274,7 +273,7 @@ void main() {
 
     final node =
         tester.getSemantics(find.bySemanticsLabel('Looking for a connection…'));
-    expect(node.hasFlag(SemanticsFlag.isLiveRegion), isTrue);
+    expect(node.flagsCollection.isLiveRegion, isTrue);
   });
 
   testWidgets('device rows expose selected/disabled state to assistive tech',

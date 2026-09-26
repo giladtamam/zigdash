@@ -361,6 +361,7 @@
   "a11yDeleteOption": "Slett alternativ",
   "a11yPanelOptions": "Panelalternativer",
   "a11yMoreOptions": "Flere alternativer",
+  "a11yRefresh": "Oppdater",
   "a11yDeleteConnection": "Slett tilkobling",
 
   "controlNotConnected": "Ikke tilkoblet – endringen ble ikke sendt",

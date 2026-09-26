@@ -1,0 +1,1 @@
+Verhelpt verbinden met strikte MQTT-brokers (bijvoorbeeld aedes) die de verbinding van ZigDash weigerden. Edge-to-edge-weergave op alle Android-versies. Kleine fixes.

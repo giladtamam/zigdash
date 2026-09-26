@@ -1970,6 +1970,12 @@ abstract class AppLocalizations {
   /// **'More options'**
   String get a11yMoreOptions;
 
+  /// Screen-reader label for icon-only refresh buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get a11yRefresh;
+
   /// No description provided for @a11yDeleteConnection.
   ///
   /// In en, this message translates to:

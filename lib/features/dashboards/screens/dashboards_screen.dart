@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/review/review_prompt_trigger.dart';
+import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/backup_service.dart';
@@ -197,7 +198,7 @@ class _DashboardsTabbed extends ConsumerWidget {
               tabs: dashboards.map((d) {
                 return Tab(
                   icon: Icon(
-                    IconData(d.iconCodepoint, fontFamily: 'MaterialIcons'),
+                    materialIcon(d.iconCodepoint),
                   ),
                   text: d.name,
                 );
@@ -588,9 +589,9 @@ class _PanelReorderSheetState extends ConsumerState<_PanelReorderSheet> {
     }
   }
 
+  // onReorderItem already adjusts newIndex for the removed item.
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
-      if (newIndex > oldIndex) newIndex--;
       final item = _panels.removeAt(oldIndex);
       _panels.insert(newIndex, item);
     });
@@ -637,7 +638,7 @@ class _PanelReorderSheetState extends ConsumerState<_PanelReorderSheet> {
           Expanded(
             child: ReorderableListView.builder(
               itemCount: _panels.length,
-              onReorder: _onReorder,
+              onReorderItem: _onReorder,
               buildDefaultDragHandles: true,
               itemBuilder: (ctx, i) {
                 final p = _panels[i];

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/material_icon.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 
 const _swatches = <Color>[
@@ -69,7 +70,7 @@ class _State extends ConsumerState<DashboardFormScreen> {
       _name.text = d.name;
       _topicPrefix.text = d.topicPrefix ?? '';
       _color = Color(d.colorSeed);
-      _icon = IconData(d.iconCodepoint, fontFamily: 'MaterialIcons');
+      _icon = materialIcon(d.iconCodepoint);
       _locked = d.locked;
       _loaded = true;
     });

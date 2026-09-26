@@ -1,0 +1,1 @@
+Fixes connecting to strict MQTT brokers (for example aedes) that rejected ZigDash's connection. Edge-to-edge layout on all Android versions. Minor fixes.

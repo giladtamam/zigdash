@@ -28,23 +28,27 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         children: [
           _SectionHeader(l10n.settingsAppearance),
-          RadioListTile<ThemeMode>(
-            title: Text(l10n.themeSystem),
-            value: ThemeMode.system,
+          RadioGroup<ThemeMode>(
             groupValue: settings.themeMode,
-            onChanged: (v) => ctrl.setThemeMode(v!),
-          ),
-          RadioListTile<ThemeMode>(
-            title: Text(l10n.themeLight),
-            value: ThemeMode.light,
-            groupValue: settings.themeMode,
-            onChanged: (v) => ctrl.setThemeMode(v!),
-          ),
-          RadioListTile<ThemeMode>(
-            title: Text(l10n.themeDark),
-            value: ThemeMode.dark,
-            groupValue: settings.themeMode,
-            onChanged: (v) => ctrl.setThemeMode(v!),
+            onChanged: (v) {
+              if (v != null) ctrl.setThemeMode(v);
+            },
+            child: Column(
+              children: [
+                RadioListTile<ThemeMode>(
+                  title: Text(l10n.themeSystem),
+                  value: ThemeMode.system,
+                ),
+                RadioListTile<ThemeMode>(
+                  title: Text(l10n.themeLight),
+                  value: ThemeMode.light,
+                ),
+                RadioListTile<ThemeMode>(
+                  title: Text(l10n.themeDark),
+                  value: ThemeMode.dark,
+                ),
+              ],
+            ),
           ),
           SwitchListTile(
             title: Text(l10n.settingsDynamicColor),
@@ -54,59 +58,50 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(),
           _SectionHeader(l10n.settingsLanguage),
-          RadioListTile<String?>(
-            title: Text(l10n.languageSystem),
-            value: null,
+          RadioGroup<String?>(
             groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(null),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageEnglish),
-            value: 'en',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('en')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageHebrew),
-            value: 'he',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('he')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageGerman),
-            value: 'de',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('de')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageDutch),
-            value: 'nl',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('nl')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageSwedish),
-            value: 'sv',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('sv')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageNorwegian),
-            value: 'nb',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('nb')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageSpanish),
-            value: 'es',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('es')),
-          ),
-          RadioListTile<String?>(
-            title: Text(l10n.languageFrench),
-            value: 'fr',
-            groupValue: settings.locale?.languageCode,
-            onChanged: (_) => ctrl.setLocale(const Locale('fr')),
+            onChanged: (code) =>
+                ctrl.setLocale(code == null ? null : Locale(code)),
+            child: Column(
+              children: [
+                RadioListTile<String?>(
+                  title: Text(l10n.languageSystem),
+                  value: null,
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageEnglish),
+                  value: 'en',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageHebrew),
+                  value: 'he',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageGerman),
+                  value: 'de',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageDutch),
+                  value: 'nl',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageSwedish),
+                  value: 'sv',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageNorwegian),
+                  value: 'nb',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageSpanish),
+                  value: 'es',
+                ),
+                RadioListTile<String?>(
+                  title: Text(l10n.languageFrench),
+                  value: 'fr',
+                ),
+              ],
+            ),
           ),
           const Divider(),
           _SectionHeader(l10n.settingsAbout),

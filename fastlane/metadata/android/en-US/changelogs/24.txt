@@ -1,0 +1,1 @@
+No more connection drops when the same home is set up on two devices, like a phone and a wall tablet. Leaving a dashboard no longer disconnects from Mosquitto 2 brokers, including SMLIGHT hubs. WebSocket connections now work. TalkBack reads each tile's name and state, and sliders their value. Material You colors reach cards and sheets. Includes 1.9.3.

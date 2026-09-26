@@ -1,0 +1,1 @@
+Keine Abbrüche mehr, wenn dasselbe Zuhause auf zwei Geräten eingerichtet ist, etwa Handy und Wandtablet. Das Verlassen eines Dashboards trennt nicht mehr von Mosquitto-2-Brokern, auch SMLIGHT-Hubs. WebSocket-Verbindungen funktionieren jetzt. TalkBack liest Name und Zustand jeder Kachel, Schieberegler ihren Wert. Material-You-Farben erreichen Karten und Blätter. Enthält 1.9.3.

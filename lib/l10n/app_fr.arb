@@ -310,6 +310,7 @@
   "a11yDeleteOption": "Supprimer l'option",
   "a11yPanelOptions": "Options du panneau",
   "a11yMoreOptions": "Plus d'options",
+  "a11yRefresh": "Actualiser",
   "a11yDeleteConnection": "Supprimer la connexion",
   "controlNotConnected": "Non connecté — modification non envoyée",
   "discoverFromDevice": "Ajouter depuis un appareil…",

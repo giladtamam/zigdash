@@ -361,6 +361,7 @@
   "a11yDeleteOption": "Optie verwijderen",
   "a11yPanelOptions": "Paneelopties",
   "a11yMoreOptions": "Meer opties",
+  "a11yRefresh": "Vernieuwen",
   "a11yDeleteConnection": "Verbinding verwijderen",
 
   "controlNotConnected": "Niet verbonden — wijziging niet verzonden",

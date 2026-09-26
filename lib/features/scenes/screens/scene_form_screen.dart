@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/material_icon.dart';
+import '../../devices/devices_providers.dart';
 import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
-import '../../devices/devices_providers.dart';
 import '../models/scene.dart';
 import '../scene_capture.dart';
 import '../scenes_providers.dart';
@@ -78,7 +79,7 @@ class _State extends ConsumerState<SceneFormScreen> {
     if (scene == null || !mounted) return;
     _name.text = scene.name;
     _color = Color(scene.colorSeed);
-    _icon = IconData(scene.iconCodepoint, fontFamily: 'MaterialIcons');
+    _icon = materialIcon(scene.iconCodepoint);
     _existingActions = SceneAction.decodeList(scene.actions).length;
     setState(() => _loaded = true);
   }

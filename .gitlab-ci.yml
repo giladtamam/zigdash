@@ -10,10 +10,15 @@ stages:
 # Protect the variables and run releases only from protected tags.
 build-apks:
   stage: build
-  image: ghcr.io/cirruslabs/flutter:stable
+  # No prebuilt image exists for the pinned Flutter; install the version in
+  # .fvmrc on top of the Android SDK image.
+  image: ghcr.io/cirruslabs/android-sdk:36
   rules:
     - if: $CI_COMMIT_TAG
   before_script:
+    - FLUTTER_VERSION=$(sed -n 's/.*"flutter"[^"]*"\([^"]*\)".*/\1/p' .fvmrc)
+    - git clone --depth 1 --branch "$FLUTTER_VERSION" https://github.com/flutter/flutter.git "$HOME/flutter"
+    - export PATH="$HOME/flutter/bin:$PATH"
     - echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
     - printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=upload-keystore.jks\n' "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
     - flutter pub get

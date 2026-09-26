@@ -418,9 +418,13 @@ class PanelTile extends ConsumerWidget {
       ),
     };
 
-    return Semantics(
-      label: locked ? null : context.l10n.a11yPanelOptions,
-      button: !locked,
+    // "Panel options" is the long-press hint, not the tile's label: labelling
+    // the wrapper as a "Panel options" button hid the name and state of
+    // read-only tiles (LED, node status, progress, text log) from TalkBack.
+    // Read-only tiles merge into one node (name, state, long-press); tiles
+    // with controls keep each control as its own node.
+    final tile = Semantics(
+      onLongPressHint: locked ? null : context.l10n.a11yPanelOptions,
       child: GestureDetector(
         onLongPress: locked ? null : () => _openOptions(context, ref),
         child: PanelReliabilityFrame(
@@ -431,5 +435,8 @@ class PanelTile extends ConsumerWidget {
         ),
       ),
     );
+    return reliability.subscriptionMode == PanelSubscriptionMode.readOnly
+        ? MergeSemantics(child: tile)
+        : Semantics(container: true, child: tile);
   }
 }

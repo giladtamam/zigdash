@@ -747,7 +747,8 @@ class _State extends ConsumerState<PanelFormScreen> {
                   ],
                   const SizedBox(height: 8),
                   DropdownButtonFormField<int>(
-                    value: _qos,
+                    key: ValueKey('qos-$_qos'),
+                    initialValue: _qos,
                     decoration: InputDecoration(labelText: l10n.panelFormQos),
                     items: [
                       DropdownMenuItem(
@@ -773,7 +774,8 @@ class _State extends ConsumerState<PanelFormScreen> {
             ..._typeSpecificFields(),
             const SizedBox(height: 16),
             DropdownButtonFormField<PanelWidth>(
-              value: _width,
+              key: ValueKey(_width),
+              initialValue: _width,
               decoration: InputDecoration(labelText: l10n.panelFormWidth),
               items: [
                 DropdownMenuItem(

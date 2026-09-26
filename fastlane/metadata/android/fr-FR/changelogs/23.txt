@@ -1,0 +1,1 @@
+Corrige la connexion aux brokers MQTT stricts (par exemple aedes) qui refusaient la connexion de ZigDash. Affichage bord à bord sur toutes les versions d'Android. Corrections mineures.
