@@ -4,11 +4,11 @@ import '../../../data/repositories/dashboard_repo.dart';
 import 'dart:ui' show Locale;
 
 import '../../../data/database/daos/device_registry_dao.dart';
-import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../devices/device_profile.dart';
+import '../../devices/device_tiles.dart';
 import '../../discovery/models/device_panel_suggestion.dart';
 import '../../panels/models/panel_config.dart';
 import '../demo_service.dart' show isDemoConnection;
@@ -206,30 +206,15 @@ extension on SetupCreator {
     ReviewRow row,
     String? sectionId,
     int sortOrder,
-  ) {
-    final device = row.device;
-    final profile = classifyExposes(device.rawExposes);
-    final model = [?device.vendor, ?device.model].join(' ');
-    return _panels.create(
-      dashboardId: dashboardId,
-      name: device.friendlyName,
-      type: PanelType.device,
-      topic: 'set',
-      subscribeTopic: '',
-      topicPrefixOverride: '$base/${device.friendlyName}',
-      width: switch (profile.deviceClass) {
-        DeviceClass.colorLight || DeviceClass.cover => PanelWidth.wide,
-        _ => PanelWidth.small,
-      },
-      sortOrder: sortOrder,
-      sectionId: sectionId,
-      deviceIeee: device.ieeeAddress,
-      config: DeviceTileConfig(
-        profile: profile,
-        model: model.isEmpty ? null : model,
-      ),
-    );
-  }
+  ) =>
+      createDeviceTile(
+        _panels,
+        dashboardId: dashboardId,
+        base: base,
+        device: row.device,
+        sectionId: sectionId,
+        sortOrder: sortOrder,
+      );
 
   Future<void> _createSuggested(
     String dashboardId,

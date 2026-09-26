@@ -1617,4 +1617,79 @@ class AppLocalizationsNl extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'Huis $number';
   }
+
+  @override
+  String get dashAddTile => 'Tegel toevoegen';
+
+  @override
+  String get addTileSearch => 'Apparaten zoeken';
+
+  @override
+  String get addTileNotOnDashboard => 'Op geen dashboard';
+
+  @override
+  String get addTileAllDevices => 'Alle apparaten';
+
+  @override
+  String get addTileReading => 'Meetwaarde';
+
+  @override
+  String get addTileReadingSubtitle => 'Eén waarde van een apparaat of topic';
+
+  @override
+  String get addTileCustom => 'Eigen MQTT-tegel';
+
+  @override
+  String get addTileCustomSubtitle => 'Elk tegeltype, ingesteld via topic';
+
+  @override
+  String get addTileNoDevices =>
+      'Geen apparaten. Verbind met je broker of koppel een apparaat in Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Toevoegen';
+
+  @override
+  String get addTileName => 'Naam';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'bijv. $model';
+  }
+
+  @override
+  String get addTileSection => 'Sectie';
+
+  @override
+  String get addTileNoSection => 'Geen sectie';
+
+  @override
+  String get addTileSize => 'Grootte';
+
+  @override
+  String get deviceClassColorLight => 'Kleurenlamp';
+
+  @override
+  String get deviceClassLight => 'Lamp';
+
+  @override
+  String get deviceClassSwitch => 'Schakelaar of stekker';
+
+  @override
+  String get deviceClassCover => 'Rolluik';
+
+  @override
+  String get deviceClassLeak => 'Lek of rook';
+
+  @override
+  String get deviceClassContact => 'Contact';
+
+  @override
+  String get deviceClassMotion => 'Beweging';
+
+  @override
+  String get deviceClassClimate => 'Klimaatsensor';
+
+  @override
+  String get deviceClassGeneric => 'Apparaat';
 }

@@ -1622,4 +1622,79 @@ class AppLocalizationsFr extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'Maison $number';
   }
+
+  @override
+  String get dashAddTile => 'Ajouter une tuile';
+
+  @override
+  String get addTileSearch => 'Rechercher des appareils';
+
+  @override
+  String get addTileNotOnDashboard => 'Sur aucun tableau de bord';
+
+  @override
+  String get addTileAllDevices => 'Tous les appareils';
+
+  @override
+  String get addTileReading => 'Mesure';
+
+  @override
+  String get addTileReadingSubtitle => 'Une valeur d’un appareil ou d’un topic';
+
+  @override
+  String get addTileCustom => 'Tuile MQTT personnalisée';
+
+  @override
+  String get addTileCustomSubtitle => 'Tout type de tuile, configuré par topic';
+
+  @override
+  String get addTileNoDevices =>
+      'Aucun appareil. Connectez-vous à votre broker ou appairez un appareil dans Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Ajouter';
+
+  @override
+  String get addTileName => 'Nom';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'ex. $model';
+  }
+
+  @override
+  String get addTileSection => 'Section';
+
+  @override
+  String get addTileNoSection => 'Aucune section';
+
+  @override
+  String get addTileSize => 'Taille';
+
+  @override
+  String get deviceClassColorLight => 'Lumière couleur';
+
+  @override
+  String get deviceClassLight => 'Lumière';
+
+  @override
+  String get deviceClassSwitch => 'Interrupteur ou prise';
+
+  @override
+  String get deviceClassCover => 'Volet';
+
+  @override
+  String get deviceClassLeak => 'Fuite ou fumée';
+
+  @override
+  String get deviceClassContact => 'Contact';
+
+  @override
+  String get deviceClassMotion => 'Mouvement';
+
+  @override
+  String get deviceClassClimate => 'Capteur climatique';
+
+  @override
+  String get deviceClassGeneric => 'Appareil';
 }

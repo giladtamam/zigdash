@@ -1620,4 +1620,79 @@ class AppLocalizationsDe extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'Zuhause $number';
   }
+
+  @override
+  String get dashAddTile => 'Kachel hinzufügen';
+
+  @override
+  String get addTileSearch => 'Geräte suchen';
+
+  @override
+  String get addTileNotOnDashboard => 'Auf keinem Dashboard';
+
+  @override
+  String get addTileAllDevices => 'Alle Geräte';
+
+  @override
+  String get addTileReading => 'Messwert';
+
+  @override
+  String get addTileReadingSubtitle => 'Ein Wert von einem Gerät oder Topic';
+
+  @override
+  String get addTileCustom => 'Eigene MQTT-Kachel';
+
+  @override
+  String get addTileCustomSubtitle => 'Jeder Kacheltyp, per Topic eingerichtet';
+
+  @override
+  String get addTileNoDevices =>
+      'Keine Geräte. Verbinde dich mit deinem Broker oder kopple ein Gerät in Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Hinzufügen';
+
+  @override
+  String get addTileName => 'Name';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'z. B. $model';
+  }
+
+  @override
+  String get addTileSection => 'Bereich';
+
+  @override
+  String get addTileNoSection => 'Kein Bereich';
+
+  @override
+  String get addTileSize => 'Größe';
+
+  @override
+  String get deviceClassColorLight => 'Farblicht';
+
+  @override
+  String get deviceClassLight => 'Licht';
+
+  @override
+  String get deviceClassSwitch => 'Schalter oder Steckdose';
+
+  @override
+  String get deviceClassCover => 'Rollo';
+
+  @override
+  String get deviceClassLeak => 'Leck oder Rauch';
+
+  @override
+  String get deviceClassContact => 'Kontakt';
+
+  @override
+  String get deviceClassMotion => 'Bewegung';
+
+  @override
+  String get deviceClassClimate => 'Klimasensor';
+
+  @override
+  String get deviceClassGeneric => 'Gerät';
 }

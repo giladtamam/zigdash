@@ -1606,4 +1606,79 @@ class AppLocalizationsEn extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'Home $number';
   }
+
+  @override
+  String get dashAddTile => 'Add tile';
+
+  @override
+  String get addTileSearch => 'Search devices';
+
+  @override
+  String get addTileNotOnDashboard => 'Not on a dashboard';
+
+  @override
+  String get addTileAllDevices => 'All devices';
+
+  @override
+  String get addTileReading => 'Reading';
+
+  @override
+  String get addTileReadingSubtitle => 'One value from a device or topic';
+
+  @override
+  String get addTileCustom => 'Custom MQTT tile';
+
+  @override
+  String get addTileCustomSubtitle => 'Any tile type, set up by topic';
+
+  @override
+  String get addTileNoDevices =>
+      'No devices to show. Connect to your broker, or pair a device in Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Add';
+
+  @override
+  String get addTileName => 'Name';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'e.g. $model';
+  }
+
+  @override
+  String get addTileSection => 'Section';
+
+  @override
+  String get addTileNoSection => 'No section';
+
+  @override
+  String get addTileSize => 'Size';
+
+  @override
+  String get deviceClassColorLight => 'Color light';
+
+  @override
+  String get deviceClassLight => 'Light';
+
+  @override
+  String get deviceClassSwitch => 'Switch or plug';
+
+  @override
+  String get deviceClassCover => 'Cover';
+
+  @override
+  String get deviceClassLeak => 'Leak or smoke';
+
+  @override
+  String get deviceClassContact => 'Contact';
+
+  @override
+  String get deviceClassMotion => 'Motion';
+
+  @override
+  String get deviceClassClimate => 'Climate sensor';
+
+  @override
+  String get deviceClassGeneric => 'Device';
 }

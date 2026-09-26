@@ -1596,4 +1596,79 @@ class AppLocalizationsHe extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'בית $number';
   }
+
+  @override
+  String get dashAddTile => 'הוספת אריח';
+
+  @override
+  String get addTileSearch => 'חיפוש מכשירים';
+
+  @override
+  String get addTileNotOnDashboard => 'לא בשום לוח';
+
+  @override
+  String get addTileAllDevices => 'כל המכשירים';
+
+  @override
+  String get addTileReading => 'קריאה';
+
+  @override
+  String get addTileReadingSubtitle => 'ערך אחד ממכשיר או מ‑topic';
+
+  @override
+  String get addTileCustom => 'אריח MQTT מותאם';
+
+  @override
+  String get addTileCustomSubtitle => 'כל סוג אריח, מוגדר לפי topic';
+
+  @override
+  String get addTileNoDevices =>
+      'אין מכשירים להצגה. התחברו ל‑broker או צמדו מכשיר ב‑Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'הוספה';
+
+  @override
+  String get addTileName => 'שם';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'למשל $model';
+  }
+
+  @override
+  String get addTileSection => 'מקטע';
+
+  @override
+  String get addTileNoSection => 'ללא מקטע';
+
+  @override
+  String get addTileSize => 'גודל';
+
+  @override
+  String get deviceClassColorLight => 'נורה צבעונית';
+
+  @override
+  String get deviceClassLight => 'תאורה';
+
+  @override
+  String get deviceClassSwitch => 'מתג או שקע';
+
+  @override
+  String get deviceClassCover => 'תריס';
+
+  @override
+  String get deviceClassLeak => 'נזילה או עשן';
+
+  @override
+  String get deviceClassContact => 'מגע';
+
+  @override
+  String get deviceClassMotion => 'תנועה';
+
+  @override
+  String get deviceClassClimate => 'חיישן אקלים';
+
+  @override
+  String get deviceClassGeneric => 'מכשיר';
 }

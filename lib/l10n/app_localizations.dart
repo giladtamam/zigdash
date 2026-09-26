@@ -2995,6 +2995,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home {number}'**
   String homeNumberedName(int number);
+
+  /// No description provided for @dashAddTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tile'**
+  String get dashAddTile;
+
+  /// No description provided for @addTileSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search devices'**
+  String get addTileSearch;
+
+  /// No description provided for @addTileNotOnDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on a dashboard'**
+  String get addTileNotOnDashboard;
+
+  /// No description provided for @addTileAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices'**
+  String get addTileAllDevices;
+
+  /// No description provided for @addTileReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get addTileReading;
+
+  /// No description provided for @addTileReadingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One value from a device or topic'**
+  String get addTileReadingSubtitle;
+
+  /// No description provided for @addTileCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom MQTT tile'**
+  String get addTileCustom;
+
+  /// No description provided for @addTileCustomSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Any tile type, set up by topic'**
+  String get addTileCustomSubtitle;
+
+  /// No description provided for @addTileNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices to show. Connect to your broker, or pair a device in Zigbee2MQTT.'**
+  String get addTileNoDevices;
+
+  /// No description provided for @addTileAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addTileAdd;
+
+  /// No description provided for @addTileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get addTileName;
+
+  /// No description provided for @addTileNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. {model}'**
+  String addTileNameHint(String model);
+
+  /// No description provided for @addTileSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Section'**
+  String get addTileSection;
+
+  /// No description provided for @addTileNoSection.
+  ///
+  /// In en, this message translates to:
+  /// **'No section'**
+  String get addTileNoSection;
+
+  /// No description provided for @addTileSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get addTileSize;
+
+  /// No description provided for @deviceClassColorLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Color light'**
+  String get deviceClassColorLight;
+
+  /// No description provided for @deviceClassLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get deviceClassLight;
+
+  /// No description provided for @deviceClassSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch or plug'**
+  String get deviceClassSwitch;
+
+  /// No description provided for @deviceClassCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get deviceClassCover;
+
+  /// No description provided for @deviceClassLeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Leak or smoke'**
+  String get deviceClassLeak;
+
+  /// No description provided for @deviceClassContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get deviceClassContact;
+
+  /// No description provided for @deviceClassMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion'**
+  String get deviceClassMotion;
+
+  /// No description provided for @deviceClassClimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Climate sensor'**
+  String get deviceClassClimate;
+
+  /// No description provided for @deviceClassGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get deviceClassGeneric;
 }
 
 class _AppLocalizationsDelegate

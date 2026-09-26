@@ -15,6 +15,7 @@ import '../../features/onboarding/onboarding_provider.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
+import '../../features/panels/screens/add_tile_screen.dart';
 import '../../features/devices/screens/devices_screen.dart';
 import '../../features/scenes/screens/scenes_screen.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
@@ -132,6 +133,19 @@ final routerProvider = Provider<GoRouter>((ref) {
                   _parseSliderPreset(state.uri.queryParameters['preset']),
               suggestion: state.extra as PanelSuggestion?,
             )),
+          ),
+          GoRoute(
+            path: ':dashboardId/add',
+            pageBuilder: (_, state) {
+              final connectionId = state.pathParameters['id']!;
+              final dashboardId = state.pathParameters['dashboardId']!;
+              return _slideUp(AddTileScreen(
+                connectionId: connectionId,
+                dashboardId: dashboardId,
+                onCustomTile: (context) => openCustomTilePicker(context,
+                    connectionId: connectionId, dashboardId: dashboardId),
+              ));
+            },
           ),
           GoRoute(
             path: ':dashboardId/discover',

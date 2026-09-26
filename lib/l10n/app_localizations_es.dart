@@ -1618,4 +1618,80 @@ class AppLocalizationsEs extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'Casa $number';
   }
+
+  @override
+  String get dashAddTile => 'Añadir mosaico';
+
+  @override
+  String get addTileSearch => 'Buscar dispositivos';
+
+  @override
+  String get addTileNotOnDashboard => 'En ningún panel';
+
+  @override
+  String get addTileAllDevices => 'Todos los dispositivos';
+
+  @override
+  String get addTileReading => 'Lectura';
+
+  @override
+  String get addTileReadingSubtitle => 'Un valor de un dispositivo o topic';
+
+  @override
+  String get addTileCustom => 'Mosaico MQTT personalizado';
+
+  @override
+  String get addTileCustomSubtitle =>
+      'Cualquier tipo de mosaico, configurado por topic';
+
+  @override
+  String get addTileNoDevices =>
+      'No hay dispositivos. Conéctate a tu broker o empareja un dispositivo en Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Añadir';
+
+  @override
+  String get addTileName => 'Nombre';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'p. ej. $model';
+  }
+
+  @override
+  String get addTileSection => 'Sección';
+
+  @override
+  String get addTileNoSection => 'Sin sección';
+
+  @override
+  String get addTileSize => 'Tamaño';
+
+  @override
+  String get deviceClassColorLight => 'Luz de color';
+
+  @override
+  String get deviceClassLight => 'Luz';
+
+  @override
+  String get deviceClassSwitch => 'Interruptor o enchufe';
+
+  @override
+  String get deviceClassCover => 'Persiana';
+
+  @override
+  String get deviceClassLeak => 'Fuga o humo';
+
+  @override
+  String get deviceClassContact => 'Contacto';
+
+  @override
+  String get deviceClassMotion => 'Movimiento';
+
+  @override
+  String get deviceClassClimate => 'Sensor de clima';
+
+  @override
+  String get deviceClassGeneric => 'Dispositivo';
 }

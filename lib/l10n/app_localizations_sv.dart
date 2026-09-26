@@ -1609,4 +1609,80 @@ class AppLocalizationsSv extends AppLocalizations {
   String homeNumberedName(int number) {
     return 'Hem $number';
   }
+
+  @override
+  String get dashAddTile => 'Lägg till ruta';
+
+  @override
+  String get addTileSearch => 'Sök enheter';
+
+  @override
+  String get addTileNotOnDashboard => 'Inte på någon panel';
+
+  @override
+  String get addTileAllDevices => 'Alla enheter';
+
+  @override
+  String get addTileReading => 'Mätvärde';
+
+  @override
+  String get addTileReadingSubtitle =>
+      'Ett värde från en enhet eller ett topic';
+
+  @override
+  String get addTileCustom => 'Egen MQTT-ruta';
+
+  @override
+  String get addTileCustomSubtitle => 'Valfri rutetyp, inställd med topic';
+
+  @override
+  String get addTileNoDevices =>
+      'Inga enheter att visa. Anslut till din broker eller para en enhet i Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Lägg till';
+
+  @override
+  String get addTileName => 'Namn';
+
+  @override
+  String addTileNameHint(String model) {
+    return 't.ex. $model';
+  }
+
+  @override
+  String get addTileSection => 'Sektion';
+
+  @override
+  String get addTileNoSection => 'Ingen sektion';
+
+  @override
+  String get addTileSize => 'Storlek';
+
+  @override
+  String get deviceClassColorLight => 'Färglampa';
+
+  @override
+  String get deviceClassLight => 'Lampa';
+
+  @override
+  String get deviceClassSwitch => 'Brytare eller uttag';
+
+  @override
+  String get deviceClassCover => 'Persienn';
+
+  @override
+  String get deviceClassLeak => 'Läcka eller rök';
+
+  @override
+  String get deviceClassContact => 'Kontakt';
+
+  @override
+  String get deviceClassMotion => 'Rörelse';
+
+  @override
+  String get deviceClassClimate => 'Klimatsensor';
+
+  @override
+  String get deviceClassGeneric => 'Enhet';
 }

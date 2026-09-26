@@ -107,3 +107,9 @@ final homeDeviceSyncProvider =
         .ignore();
   }, fireImmediately: true);
 });
+
+/// IEEE addresses on any tile of a home.
+final linkedIeeesProvider =
+    StreamProvider.autoDispose.family<Set<String>, String>((ref, connectionId) =>
+        DeviceRegistryDao(ref.watch(appDatabaseProvider))
+            .watchLinkedIeees(connectionId));

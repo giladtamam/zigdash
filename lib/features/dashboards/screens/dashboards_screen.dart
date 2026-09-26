@@ -260,11 +260,11 @@ class _DashboardsTabbed extends ConsumerWidget {
             return FloatingActionButton.extended(
               onPressed: () {
                 final d = dashboards[idx];
-                _openPanelPicker(innerCtx,
-                    connectionId: connectionId, dashboardId: d.id);
+                innerCtx.push(
+                    '/connections/$connectionId/dashboards/${d.id}/add');
               },
               icon: const Icon(Icons.add),
-              label: Text(innerCtx.l10n.dashAddPanel),
+              label: Text(innerCtx.l10n.dashAddTile),
             );
           }),
         );
@@ -322,11 +322,10 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-void _openPanelPicker(BuildContext context,
+/// The Custom MQTT tile type list, opened from Add tile. The chosen type's
+/// form replaces Add tile, so saving returns to the dashboard.
+Future<void> openCustomTilePicker(BuildContext context,
     {required String connectionId, required String dashboardId}) async {
-  // Lazy import to avoid a circular reference in feature folders.
-  // The picker is a thin bottom sheet that pushes to the form route.
-  // Implementation in lib/features/panels/screens/panel_picker_sheet.dart.
   final type = await showModalBottomSheet<String>(
     context: context,
     isScrollControlled: true,
@@ -342,13 +341,6 @@ void _openPanelPicker(BuildContext context,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.w600)),
             ),
-            ListTile(
-              leading: const Icon(Icons.travel_explore),
-              title: Text(sheetCtx.l10n.discoverFromDevice),
-              subtitle: Text(sheetCtx.l10n.discoverFromDeviceSubtitle),
-              onTap: () => Navigator.pop(sheetCtx, '__discover__'),
-            ),
-            const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
               child: Text(sheetCtx.l10n.panelPickerSectionControl,
@@ -457,19 +449,13 @@ void _openPanelPicker(BuildContext context,
     ),
   );
   if (type != null && context.mounted) {
-    if (type == '__discover__') {
-      context.push(
-        '/connections/$connectionId/dashboards/$dashboardId/discover',
-      );
-    } else {
-      // Tokens like "slider:position" carry an additional preset hint; split here.
-      final parts = type.split(':');
-      final t = parts.first;
-      final preset = parts.length > 1 ? '&preset=${parts[1]}' : '';
-      context.push(
-        '/connections/$connectionId/dashboards/$dashboardId/panels/new?type=$t$preset',
-      );
-    }
+    // Tokens like "slider:position" carry an additional preset hint; split here.
+    final parts = type.split(':');
+    final t = parts.first;
+    final preset = parts.length > 1 ? '&preset=${parts[1]}' : '';
+    context.pushReplacement(
+      '/connections/$connectionId/dashboards/$dashboardId/panels/new?type=$t$preset',
+    );
   }
 }
 
