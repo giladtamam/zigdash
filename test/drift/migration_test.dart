@@ -93,6 +93,18 @@ void main() {
           createdAt: 0,
           updatedAt: 0,
         ));
+    // A tile left behind by a pre-1.12 dashboard delete (no cascades then).
+    await old.into(old.panels).insert(v5.PanelsCompanion.insert(
+          id: 'orphan',
+          dashboardId: 'deleted-dashboard',
+          name: 'orphan',
+          type: 'toggle',
+          topic: 't',
+          width: 'half',
+          config: '{}',
+          createdAt: 0,
+          updatedAt: 0,
+        ));
     await old.close();
 
     final db = AppDatabase.test(schema.newConnection());
@@ -114,6 +126,8 @@ void main() {
       expect(p.sectionId, isNull);
       expect(p.deviceIeee, isNull);
     }
+    expect(await db.select(db.panels).get(), hasLength(_v5Types.length),
+        reason: 'the orphaned tile is dropped');
     expect(await db.select(db.scenes).get(), hasLength(1));
     expect(await db.select(db.sections).get(), isEmpty);
   });

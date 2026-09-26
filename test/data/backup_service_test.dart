@@ -148,4 +148,23 @@ void main() {
     expect(rows.single.sectionId, isNull);
     expect(await sections.getByDashboard(dashId), isEmpty);
   });
+
+  test('deleting a dashboard deletes its sections and tiles', () async {
+    final c = await connection('c1');
+    final dashId = await dashboards.create(
+        connectionId: c, name: 'Home', colorSeed: 0, iconCodepoint: 0);
+    await sections.create(dashboardId: dashId, name: 'A');
+    await panels.create(
+      dashboardId: dashId,
+      name: 'p',
+      type: PanelType.toggle,
+      topic: 't',
+      config: PanelConfig.defaultFor(PanelType.toggle),
+    );
+
+    await dashboards.delete(dashId);
+
+    expect(await db.select(db.panels).get(), isEmpty);
+    expect(await db.select(db.sections).get(), isEmpty);
+  });
 }

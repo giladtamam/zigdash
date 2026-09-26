@@ -55,7 +55,26 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(panels, panels.sectionId);
             await m.addColumn(panels, panels.deviceIeee);
             await m.createIndex(panelsDeviceIeee);
+            // Before 1.12 foreign keys were off, so deletes never cascaded
+            // and left rows behind. Drop them before enforcement starts.
+            await customStatement(
+              'DELETE FROM dashboards WHERE connection_id NOT IN '
+              '(SELECT id FROM connections)',
+            );
+            await customStatement(
+              'DELETE FROM panels WHERE dashboard_id NOT IN '
+              '(SELECT id FROM dashboards)',
+            );
+            await customStatement(
+              'DELETE FROM scenes WHERE connection_id NOT IN '
+              '(SELECT id FROM connections)',
+            );
           }
+        },
+        // The schema's cascades (home → dashboards → sections, tiles) only
+        // run with enforcement on; SQLite leaves it off per connection.
+        beforeOpen: (_) async {
+          await customStatement('PRAGMA foreign_keys = ON');
         },
       );
 

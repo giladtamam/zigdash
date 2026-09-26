@@ -27,6 +27,8 @@ Decided in "Decide the tile data model" (see [ADR 0003](../adr/0003-device-tiles
 
 A device is **on no dashboard** when it is a non-coordinator device of the current home in `bridge/devices` and no tile of that home carries its IEEE.
 
+**Foreign keys.** Before 1.12, ZigDash never turned SQLite foreign-key enforcement on, so deleting a dashboard or home left its tiles behind. From schema 6, `beforeOpen` sets `PRAGMA foreign_keys = ON`, so the declared cascades run: a home removes its dashboards, scenes and dismissals, and a dashboard removes its sections and tiles. The 5 → 6 migration first deletes rows that older versions orphaned.
+
 The migration runs offline and has no network. Auto-linking therefore happens at the first connect after the upgrade, not inside `onUpgrade`.
 
 ## 2. Classifying devices
