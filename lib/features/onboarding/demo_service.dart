@@ -13,13 +13,20 @@ import '../../data/database/tables/panels.dart';
 import '../../features/panels/models/panel_config.dart';
 import '../../features/settings/providers/settings_controller.dart';
 
+/// Host of the demo home, which never connects to a real broker.
+const demoHost = 'demo.local';
+
+/// Whether a connection with [host] is the demo home.
+bool isDemoConnection(String? host) => host == demoHost;
+
 class DemoService extends Notifier<bool> {
   @override
   bool build() {
     return ref.read(sharedPreferencesProvider).getBool('demo_mode') ?? false;
   }
 
-  Future<void> activate() async {
+  /// Creates the demo home and returns its connection id.
+  Future<String> activate() async {
     final db = ref.read(appDatabaseProvider);
     final connDao = ConnectionDao(db);
     final dashDao = DashboardDao(db);
@@ -30,7 +37,7 @@ class DemoService extends Notifier<bool> {
     await connDao.insertRow(ConnectionsCompanion.insert(
       id: connId,
       name: 'Demo Smart Home',
-      host: 'demo.local',
+      host: demoHost,
       port: 1883,
       protocol: MqttProtocol.tcp,
       autoConnect: const Value(false),
@@ -111,6 +118,7 @@ class DemoService extends Notifier<bool> {
     await ref.read(sharedPreferencesProvider).setBool('demo_mode', true);
     await ref.read(sharedPreferencesProvider).setBool('onboarding_complete', true);
     state = true;
+    return connId;
   }
 
   Future<void> deactivate() async {
@@ -119,7 +127,7 @@ class DemoService extends Notifier<bool> {
     final connections = await connDao.watchAll().first;
 
     for (final c in connections) {
-      if (c.host == 'demo.local') {
+      if (isDemoConnection(c.host)) {
         await connDao.deleteById(c.id);
       }
     }

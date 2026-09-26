@@ -17,6 +17,7 @@ import '../connections/widgets/broker_fields.dart';
 import '../connections/widgets/diagnostics_ladder_view.dart';
 import '../connections/widgets/protocol_dropdown.dart';
 import '../devices/devices_providers.dart';
+import '../onboarding/first_run.dart';
 
 enum _Phase { form, running, failed, success }
 
@@ -369,9 +370,11 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
         ],
         const SizedBox(height: 24),
         FilledButton.icon(
-          onPressed: () {
+          onPressed: () async {
             final id = _savedConnectionId;
-            if (id != null) context.go('/connections/$id/dashboards');
+            if (id == null) return;
+            await ref.read(firstRunProvider).finish(id);
+            if (context.mounted) context.go('/connections/$id/dashboards');
           },
           icon: const Icon(Icons.dashboard_outlined),
           label: Text(l10n.continueToDashboard),

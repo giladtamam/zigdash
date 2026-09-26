@@ -6,6 +6,7 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../connections/diagnostics/connect_diagnostics_provider.dart';
 import '../../connections/discovery/broker_scan_providers.dart';
 import '../../connections/discovery/network_info.dart';
+import '../first_run.dart';
 import 'setup_coordinator.dart';
 import 'setup_creator.dart';
 import 'z2m_probe.dart';
@@ -26,6 +27,8 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
       dashboards: ref.watch(dashboardRepoProvider),
       panels: ref.watch(panelRepoProvider),
     ),
+    onCreated: (result) =>
+        ref.read(firstRunProvider).finish(result.connectionId),
   );
   ref.onDispose(coordinator.dispose);
   return coordinator;

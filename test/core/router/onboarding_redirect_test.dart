@@ -39,17 +39,33 @@ void main() {
         ),
       );
 
-  testWidgets('fresh install redirects to onboarding', (tester) async {
+  // First-run decision: one door, no carousel.
+  testWidgets('a fresh install lands in setup', (tester) async {
     final c = await containerWithPrefs({});
     addTearDown(c.dispose);
 
     await tester.pumpWidget(app(c));
     await tester.pumpAndSettle();
 
-    expect(find.text('Welcome to ZigDash'), findsOneWidget);
+    expect(find.text('Find my setup'), findsOneWidget);
+    expect(find.text('Next'), findsNothing, reason: 'no carousel');
+    expect(find.byType(NavigationBar), findsNothing,
+        reason: 'setup renders outside the navigation shell');
   });
 
-  testWidgets('completed onboarding starts on the connections screen',
+  testWidgets('during first run the app screens redirect to setup',
+      (tester) async {
+    final c = await containerWithPrefs({});
+    addTearDown(c.dispose);
+    await tester.pumpWidget(app(c));
+    await tester.pumpAndSettle();
+
+    c.read(routerProvider).go(Routes.settings);
+    await tester.pumpAndSettle();
+    expect(find.text('Find my setup'), findsOneWidget);
+  });
+
+  testWidgets('with first run done and no home remembered, the list opens',
       (tester) async {
     final c = await containerWithPrefs({'onboarding_complete': true});
     addTearDown(c.dispose);
@@ -58,23 +74,33 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Connections'), findsOneWidget);
-    expect(find.text('Welcome to ZigDash'), findsNothing);
+    expect(find.text('Find my setup'), findsNothing);
   });
 
-  testWidgets('completing onboarding mid-session navigates to connections',
+  testWidgets('the retired onboarding address leads to the start location',
+      (tester) async {
+    final c = await containerWithPrefs({'onboarding_complete': true});
+    addTearDown(c.dispose);
+    await tester.pumpWidget(app(c));
+    await tester.pumpAndSettle();
+
+    c.read(routerProvider).go(Routes.onboarding);
+    await tester.pumpAndSettle();
+    expect(find.text('Connections'), findsOneWidget);
+  });
+
+  testWidgets('finishing first run mid-session releases the app',
       (tester) async {
     final c = await containerWithPrefs({});
     addTearDown(c.dispose);
-
     await tester.pumpWidget(app(c));
     await tester.pumpAndSettle();
-    expect(find.text('Welcome to ZigDash'), findsOneWidget);
+    expect(find.text('Find my setup'), findsOneWidget);
 
     await c.read(onboardingProvider.notifier).completeOnboarding();
     c.read(routerProvider).go(Routes.connections);
     await tester.pumpAndSettle();
 
     expect(find.text('Connections'), findsOneWidget);
-    expect(find.text('Welcome to ZigDash'), findsNothing);
   });
 }

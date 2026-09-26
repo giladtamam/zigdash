@@ -12,7 +12,6 @@ import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_placeholder.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
 import '../../features/onboarding/onboarding_provider.dart';
-import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
@@ -21,6 +20,8 @@ import '../../features/scenes/screens/scenes_screen.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
+import 'first_run_redirect.dart';
+import 'last_dashboard_store.dart';
 import 'routes.dart';
 
 /// Maps a `?type=` query token to a [PanelType]. Tokens are the enum's
@@ -45,27 +46,34 @@ SliderPreset? _parseSliderPreset(String? s) => switch (s) {
     };
 
 final routerProvider = Provider<GoRouter>((ref) {
+  // Read once: the app opens on the last-used home's dashboards.
+  final startLocation = ref.read(lastDashboardStoreProvider).startLocation;
   return GoRouter(
-    initialLocation: Routes.connections,
-    // Onboarding lives in the router (not in MaterialApp's builder) so the
-    // onboarding screen can navigate with context.go — an InheritedGoRouter
-    // is only available below the Router, and a builder-wrapped child sits
-    // above it (previously every onboarding button threw "No GoRouter found").
-    redirect: (context, state) {
-      final onboarding = ref.read(onboardingProvider);
-      final onOnboarding = state.matchedLocation == Routes.onboarding;
-      if (onboarding.needsOnboarding && !onOnboarding) {
-        return Routes.onboarding;
-      }
-      if (!onboarding.needsOnboarding && onOnboarding) {
-        return Routes.connections;
-      }
-      return null;
-    },
+    initialLocation: startLocation,
+    // First run lives in the router (not in MaterialApp's builder) so its
+    // screens can navigate with context.go — an InheritedGoRouter is only
+    // available below the Router.
+    redirect: (context, state) => firstRunRedirect(
+      needsSetup: ref.read(onboardingProvider).needsOnboarding,
+      location: state.matchedLocation,
+      startLocation: ref.read(lastDashboardStoreProvider).startLocation,
+    ),
     routes: [
+      // Retired carousel address; the redirect above always leaves it.
       GoRoute(
         path: Routes.onboarding,
-        builder: (_, __) => const OnboardingScreen(),
+        redirect: (_, __) => Routes.setup,
+      ),
+      // First run and adding a home: outside the navigation shell.
+      GoRoute(
+        path: Routes.setup,
+        builder: (_, __) => const SetupScreen(),
+        routes: [
+          GoRoute(
+            path: 'manual',
+            pageBuilder: (_, __) => _slideUp(const GuidedConnectScreen()),
+          ),
+        ],
       ),
       GoRoute(
         path: Routes.help,
@@ -156,16 +164,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'form',
                     pageBuilder: (_, __) =>
                         _slideUp(const ConnectionFormScreen()),
-                  ),
-                  GoRoute(
-                    path: 'guided',
-                    pageBuilder: (_, __) => _slideUp(
-                        const GuidedConnectScreen()),
-                  ),
-                  GoRoute(
-                    path: 'setup',
-                    pageBuilder: (_, __) =>
-                        _slideUp(const SetupScreen()),
                   ),
                   GoRoute(
                     path: ':id/edit',

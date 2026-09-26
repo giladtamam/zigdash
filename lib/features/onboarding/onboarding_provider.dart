@@ -27,11 +27,6 @@ class OnboardingController extends Notifier<OnboardingState> {
     await ref.read(sharedPreferencesProvider).setBool(_kOnboardingComplete, true);
   }
 
-  Future<void> skipOnboarding() async {
-    state = OnboardingState(isComplete: true, isDemo: state.isDemo);
-    await ref.read(sharedPreferencesProvider).setBool(_kOnboardingComplete, true);
-  }
-
   Future<void> enableDemo() async {
     state = OnboardingState(isComplete: true, isDemo: true);
     await ref.read(sharedPreferencesProvider).setBool(_kOnboardingComplete, true);

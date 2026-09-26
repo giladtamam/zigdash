@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/review/review_prompt_trigger.dart';
+import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
@@ -14,6 +15,7 @@ import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
+import '../../onboarding/demo_banner.dart';
 import '../../panels/widgets/panel_grid.dart';
 import '../widgets/connection_status_banner.dart';
 
@@ -208,6 +210,8 @@ class _DashboardsTabbed extends ConsumerWidget {
           body: Column(
             children: [
               ReviewPromptTrigger(connectionId: connectionId),
+              RememberHome(connectionId: connectionId),
+              DemoBanner(connectionId: connectionId),
               ConnectionStatusBanner(
                 status: connectionStatus,
                 onReconnect: () => _reconnectNow(tabCtx, ref, connectionId),

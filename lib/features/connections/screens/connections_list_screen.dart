@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/router/routes.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../widgets/connection_tile.dart';
@@ -42,7 +43,10 @@ class ConnectionsListScreen extends ConsumerWidget {
                 connection: c,
                 onOpen: () => context.push('/connections/${c.id}/dashboards'),
                 onEdit: () => context.push('/connections/${c.id}/edit'),
-                onDelete: () => repo.delete(c.id),
+                onDelete: () async {
+                  await repo.delete(c.id);
+                  await ref.read(lastDashboardStoreProvider).forget(c.id);
+                },
               );
             },
           );

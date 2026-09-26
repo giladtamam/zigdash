@@ -13,6 +13,7 @@ import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics_provider.dart';
 import 'package:zigdash/features/guided_connect/guided_connect_screen.dart';
+import 'package:zigdash/features/onboarding/first_run.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/mqtt_manager.dart';
@@ -105,6 +106,16 @@ DiagnosticsReport _successReport({int count = 2}) => DiagnosticsReport(
       deviceNames: count > 0 ? ['office_light', 'lamp'] : const [],
     );
 
+class _RecordingFirstRun implements FirstRun {
+  final finished = <String>[];
+  @override
+  Future<void> finish(String connectionId) async => finished.add(connectionId);
+  @override
+  Future<String> startDemo() async => 'demo';
+}
+
+var _firstRun = _RecordingFirstRun();
+
 GoRouter _router() => GoRouter(
       initialLocation: Routes.guidedConnect,
       routes: [
@@ -134,6 +145,7 @@ Widget _wrap({
       ),
     ),
     connectDiagnosticsProvider.overrideWithValue(diagnostics),
+    firstRunProvider.overrideWithValue(_firstRun),
     ...extraOverrides.values,
   ];
   return ProviderScope(
@@ -147,6 +159,8 @@ Widget _wrap({
 }
 
 void main() {
+  setUp(() => _firstRun = _RecordingFirstRun());
+
   testWidgets('preset pre-fills host, port and base topic', (tester) async {
     final db = AppDatabase.test(NativeDatabase.memory());
     addTearDown(db.close);
@@ -247,6 +261,8 @@ void main() {
     await tester.tap(find.text('Continue to dashboard'));
     await tester.pumpAndSettle();
     expect(find.text('STUB_DASHBOARDS'), findsOneWidget);
+    // Manual entry also finishes first run with the saved home.
+    expect(_firstRun.finished, hasLength(1));
   });
 
   testWidgets('zero devices flags the state and offers pairing',
