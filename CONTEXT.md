@@ -26,6 +26,8 @@
 
 **Device link** — the IEEE address a tile carries (`panels.deviceIeee`): always on device and reading tiles, optional on custom MQTT tiles. It decides whether a device is on a dashboard.
 
+**Not responding** — a device tile's state when the device ignored its state request (`/get`) for 15 seconds after connecting. Zigbee2MQTT availability is off by default, so this is often the only sign a device has dropped off the Zigbee network. The tile still sends commands.
+
 **Edit mode** — the one mode in which a dashboard is rearranged: tiles show a grip and an edit badge, controls are inert, and changes save as they happen.
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.

@@ -105,10 +105,8 @@ These are in scope for 2.0 but not designed yet. They get decided in the phase t
 - In-app analytics or A/B tests, which the no-telemetry rule excludes.
 - Paid design tooling.
 
-## Next: release 1.10, Foundations
+## Status
 
-1. Install Flutter 3.47 for ZigDash only, move Java to 17, migrate to RadioGroup, and bump dynamic_color to ^1.9.0.
-2. Add a GitHub Actions workflow for analyze and test.
-3. Add the alchemist golden harness and record baselines of today's UI.
-4. Fix the three accessibility defects and the MQTT client-id takeover loop.
-5. Ship through the internal track and the device check, then 100% production.
+- **1.10 Foundations** and **1.11 First run** shipped. **1.11.1** fixes tiles created by the 1.11.0 setup (a doubled topic).
+- **1.12 Dashboard** is built on `release/1.12-dashboard` as specified in [dashboard-1.12.md](dashboard-1.12.md), version 1.12.0+27. It was checked against the reference SMHUB on 2026-09-26.
+- **Next: 1.13 Devices and tablet.** The device page, Settings with homes, the navigation rail, and the tablet layout.

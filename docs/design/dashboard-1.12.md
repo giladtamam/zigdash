@@ -106,6 +106,8 @@ Decided in "Decide how last-known values survive a restart" (see [ADR 0004](../a
   - Topics that have not been subscribed for 30 days are pruned.
   - Each home keeps at most 2,000 topics, dropping the oldest first.
 - **Fresh state:** once per connection, device tiles on screen send `<base>/<name>/get` with `{"<property>":""}`. They do this only for properties with access bit 4, and the requests are spaced out. Custom MQTT tiles are never polled.
+- **Device tiles offline:** device tiles are never blocked while disconnected. Their sheet opens to read last-known values, and a command sent offline reports "Not connected" instead of being swallowed.
+- **Demo:** demo values are current, not last known. The demo never connects, so it shows no status line.
 - **Status line:** a slim "Can't reach your broker · Why?" line replaces `ConnectionStatusBanner`. "Why?" opens the connection diagnostics, where manual retry lives. The line never covers tiles.
 
 ## 6. Navigation and homes
@@ -154,7 +156,7 @@ Board: [edit-mode.png](screens/1.12/edit-mode.png).
 
 - **Device list.** Add tile opens a searchable list of devices, with the ones on no dashboard first. Picking a device shows its recommended tile (class, size, name) and lets the user change it before saving.
 - **Other rows.** "Reading" asks for a device property or a topic. At the bottom, "Custom MQTT tile" opens today's type picker and form.
-- **Custom form.** It is reordered: name and topic first, then "Pick a device", then payloads and JSON path under Advanced.
+- **Custom form.** Unchanged in 1.12. Its reordering is deferred to 1.13 (see the end of this spec).
 - **Shared sheet.** The Devices tab uses the same "Add to dashboard" sheet.
 
 ## 9. Migration and generation
@@ -212,3 +214,4 @@ Decided in "Decide migration of existing dashboards and what setup generates".
 - **Zigbee2MQTT group scenes.** ZigDash keeps its own scenes.
 - **A column-count setting.** The window size decides the columns.
 - **Bulk conversion of custom tiles.** Conversion is per tile only.
+- **The reordered Custom MQTT tile form** (§8: name and topic first, "Pick a device", payloads under Advanced). 1.12 keeps today's form behind "Custom MQTT tile". Device and reading tiles now cover what most people reached for the form to build, so the form moves to 1.13 with the device page, which it links to.
