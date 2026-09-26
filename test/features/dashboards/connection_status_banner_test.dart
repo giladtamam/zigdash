@@ -86,7 +86,7 @@ void main() {
     final liveRegions = find.bySemanticsIdentifier('connection-status-banner');
     expect(liveRegions, findsOneWidget);
     expect(
-      tester.getSemantics(liveRegions).hasFlag(SemanticsFlag.isLiveRegion),
+      tester.getSemantics(liveRegions).flagsCollection.isLiveRegion,
       isTrue,
     );
     handle.dispose();

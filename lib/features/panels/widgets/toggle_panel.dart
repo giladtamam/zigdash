@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
@@ -102,7 +103,7 @@ class TogglePanel extends ConsumerWidget {
 
   IconData _icon(bool on) {
     final cp = on ? config.onIconCodepoint : config.offIconCodepoint;
-    if (cp != null) return IconData(cp, fontFamily: 'MaterialIcons');
+    if (cp != null) return materialIcon(cp);
     return on ? Icons.power_settings_new : Icons.power_off;
   }
 }

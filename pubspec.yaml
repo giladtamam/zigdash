@@ -5,7 +5,7 @@ version: 1.9.2+22
 
 environment:
   sdk: ^3.8.0
-  flutter: ">=3.32.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -37,7 +37,7 @@ dependencies:
   go_router: ^14.6.0
 
   # Material You system colors (Android 12+)
-  dynamic_color: ^1.7.0
+  dynamic_color: ^1.9.0
 
   # Localization
   flutter_localizations:

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -87,7 +88,7 @@ class ScenesScreen extends ConsumerWidget {
             for (final d in dashboards)
               ListTile(
                 leading: Icon(
-                  IconData(d.iconCodepoint, fontFamily: 'MaterialIcons'),
+                  materialIcon(d.iconCodepoint),
                 ),
                 title: Text(d.name),
                 onTap: () => Navigator.pop(sheetCtx, d),
@@ -138,7 +139,7 @@ class ScenesScreen extends ConsumerWidget {
                   backgroundColor: Color(scene.colorSeed),
                   foregroundColor: Colors.white,
                   child: Icon(
-                    IconData(scene.iconCodepoint, fontFamily: 'MaterialIcons'),
+                    materialIcon(scene.iconCodepoint),
                   ),
                 ),
                 title: Text(scene.name),
