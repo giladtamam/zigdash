@@ -29,6 +29,14 @@ class DemoService extends Notifier<bool> {
   Future<String> activate() async {
     final db = ref.read(appDatabaseProvider);
     final connDao = ConnectionDao(db);
+    // Reuse an existing demo home rather than seeding a second one.
+    for (final c in await connDao.watchAll().first) {
+      if (isDemoConnection(c.host)) {
+        await ref.read(sharedPreferencesProvider).setBool('demo_mode', true);
+        state = true;
+        return c.id;
+      }
+    }
     final dashDao = DashboardDao(db);
     final panelDao = PanelDao(db);
     final now = DateTime.now();

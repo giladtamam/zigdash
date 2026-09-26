@@ -28,4 +28,24 @@ void main() {
     await store.forget('c1');
     expect(store.startLocation, Routes.connections);
   });
+
+  test('the last dashboard of each home is remembered', () async {
+    final store = LastDashboardStore(prefs);
+    await store.rememberDashboard('c1', 'd2');
+    await store.rememberDashboard('c2', 'd9');
+
+    final reopened = LastDashboardStore(prefs);
+    expect(reopened.lastDashboardOf('c1'), 'd2');
+    expect(reopened.lastDashboardOf('c2'), 'd9');
+    expect(reopened.lastDashboardOf('c3'), isNull);
+    expect(reopened.startLocation, '/connections/c2/dashboards',
+        reason: 'the most recent home opens');
+  });
+
+  test('forgetting a home forgets its last dashboard', () async {
+    final store = LastDashboardStore(prefs);
+    await store.rememberDashboard('c1', 'd2');
+    await store.forget('c1');
+    expect(store.lastDashboardOf('c1'), isNull);
+  });
 }

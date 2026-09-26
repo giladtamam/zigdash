@@ -46,6 +46,15 @@ void main() {
     expect(hosts, ['demo.local']);
   });
 
+  test('trying the demo twice keeps a single demo home', () async {
+    final first = await c.read(firstRunProvider).startDemo();
+    final second = await c.read(firstRunProvider).startDemo();
+
+    expect(second, first);
+    final hosts = (await ConnectionDao(db).watchAll().first).map((x) => x.host);
+    expect(hosts, ['demo.local']);
+  });
+
   // First-run decision: completing real setup deletes the demo connection.
   test('finishing first run from demo removes the demo home and opens the '
       'new one', () async {

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/l10n_ext.dart';
+import '../../core/router/routes.dart';
 import '../../data/database/tables/connections.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../mqtt/broker_config.dart';
@@ -373,8 +374,13 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
           onPressed: () async {
             final id = _savedConnectionId;
             if (id == null) return;
-            await ref.read(firstRunProvider).finish(id);
-            if (context.mounted) context.go('/connections/$id/dashboards');
+            try {
+              await ref.read(firstRunProvider).finish(id);
+            } catch (_) {
+              // The home is saved; bookkeeping failing must not strand the
+              // user on this screen.
+            }
+            if (context.mounted) context.go(Routes.homeDashboards(id));
           },
           icon: const Icon(Icons.dashboard_outlined),
           label: Text(l10n.continueToDashboard),

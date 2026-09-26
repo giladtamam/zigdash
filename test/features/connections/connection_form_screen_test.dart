@@ -2,6 +2,8 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:zigdash/features/onboarding/first_run.dart';
 import 'package:zigdash/core/storage/secure_storage.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
 import 'package:zigdash/data/database/database.dart';
@@ -76,7 +78,61 @@ Widget _wrap(AppDatabase db, {ConnectDiagnostics? diagnostics}) => ProviderScope
 // Tests
 // ---------------------------------------------------------------------------
 
+class _RecordingFirstRun implements FirstRun {
+  final finished = <String>[];
+  @override
+  Future<void> finish(String connectionId) async => finished.add(connectionId);
+  @override
+  Future<String> startDemo() async => 'demo';
+}
+
 void main() {
+  // First-run decision: completing real setup deletes the demo connection.
+  // Saving a new home through this form counts as real setup too.
+  testWidgets('saving a new home finishes first run with it', (tester) async {
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final firstRun = _RecordingFirstRun();
+    final router = GoRouter(
+      initialLocation: '/',
+      routes: [
+        GoRoute(path: '/', builder: (_, __) => const Text('list')),
+        GoRoute(
+          path: '/form',
+          builder: (_, __) => const ConnectionFormScreen(),
+        ),
+      ],
+    );
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        ..._overrides(db),
+        firstRunProvider.overrideWithValue(firstRun),
+      ],
+      child: MaterialApp.router(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        routerConfig: router,
+      ),
+    ));
+    router.push('/form');
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.widgetWithText(TextFormField, 'Name'), 'Home');
+    await tester.enterText(
+        find.widgetWithText(TextFormField, 'Local host'), '192.168.1.20');
+    await tester.tap(find.text('Save'));
+    // The save writes to a real (in-memory) database, which only completes
+    // on the real clock.
+    await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+
+    final saved = await tester.runAsync(
+        () => ConnectionDao(db).watchAll().first);
+    expect(firstRun.finished, [saved!.single.id]);
+    expect(find.text('list'), findsOneWidget, reason: 'the form closed');
+  });
+
   testWidgets('new form renders Name, Local host, Port and Test connection',
       (tester) async {
     final db = AppDatabase.test(NativeDatabase.memory());

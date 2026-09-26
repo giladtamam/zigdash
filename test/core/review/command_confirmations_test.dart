@@ -32,10 +32,18 @@ void main() {
         isFalse);
   });
 
-  test('a custom topic confirms on the same topic', () {
+  test('a per-attribute Zigbee2MQTT command is confirmed by the device', () {
+    final c = make();
+    c.commandSent('zigbee2mqtt/lamp/set/brightness', t0);
+    expect(c.messageReceived('zigbee2mqtt/lamp', t0), isTrue);
+  });
+
+  // The broker echoes a publish back on its own topic, so a command outside
+  // the Zigbee2MQTT /set convention cannot prove a device answered.
+  test('a custom topic does not confirm itself', () {
     final c = make();
     c.commandSent('home/relay', t0);
-    expect(c.messageReceived('home/relay', t0), isTrue);
+    expect(c.messageReceived('home/relay', t0), isFalse);
   });
 
   test('one command is confirmed once', () {

@@ -41,11 +41,12 @@ class ConnectionsListScreen extends ConsumerWidget {
               final c = rows[i];
               return ConnectionTile(
                 connection: c,
-                onOpen: () => context.push('/connections/${c.id}/dashboards'),
+                onOpen: () => context.push(Routes.homeDashboards(c.id)),
                 onEdit: () => context.push('/connections/${c.id}/edit'),
                 onDelete: () async {
+                  final store = ref.read(lastDashboardStoreProvider);
                   await repo.delete(c.id);
-                  await ref.read(lastDashboardStoreProvider).forget(c.id);
+                  await store.forget(c.id);
                 },
               );
             },

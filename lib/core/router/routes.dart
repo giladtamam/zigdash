@@ -14,4 +14,8 @@ class Routes {
   static const deviceDiscovery = '/connections/:id/dashboards/:dashboardId/discover';
   static const devices = '/connections/:id/devices';
   static const scenes = '/connections/:id/scenes';
+
+  /// The dashboards of home (connection) [connectionId].
+  static String homeDashboards(String connectionId) =>
+      '/connections/$connectionId/dashboards';
 }

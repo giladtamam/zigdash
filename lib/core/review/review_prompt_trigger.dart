@@ -28,7 +28,9 @@ class _ReviewPromptTriggerState extends ConsumerState<ReviewPromptTrigger> {
     ref.listenManual(
       commandConfirmedProvider(widget.connectionId),
       (_, next) {
-        if (next.hasValue) {
+        // Only a fresh confirmation; not a loading or error state that
+        // still carries an earlier value.
+        if (next is AsyncData<DateTime>) {
           ref.read(reviewPromptControllerProvider).recordSuccessfulSession();
         }
       },

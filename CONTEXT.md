@@ -24,6 +24,8 @@
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.
 
+**First run** — from install until the user has a home or has chosen the demo. During first run the app shows only setup (and its manual entry and help). It ends when setup, manual entry or the connection form saves a real home, or when the user tries the demo. Code: `needsOnboarding` / `FirstRun`.
+
 **Demo mode** — a sample connection and dashboard with no real broker, marked as demo on screen and removed when real setup completes.
 
 **Last-known value** — a panel's most recent received value while its broker is unreachable; shown, but marked stale.

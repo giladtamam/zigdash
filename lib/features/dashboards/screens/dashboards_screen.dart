@@ -145,8 +145,13 @@ class _DashboardsTabbed extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Reopen the dashboard last used in this home.
+    final store = ref.read(lastDashboardStoreProvider);
+    final last = store.lastDashboardOf(connectionId);
+    final initial = dashboards.indexWhere((d) => d.id == last);
     return DefaultTabController(
       length: dashboards.length,
+      initialIndex: initial < 0 ? 0 : initial,
       child: Builder(builder: (tabCtx) {
         return Scaffold(
           appBar: AppBar(
@@ -197,6 +202,9 @@ class _DashboardsTabbed extends ConsumerWidget {
             ],
             bottom: TabBar(
               isScrollable: dashboards.length > 3,
+              onTap: (i) => store
+                  .rememberDashboard(connectionId, dashboards[i].id)
+                  .ignore(),
               tabs: dashboards.map((d) {
                 return Tab(
                   icon: Icon(

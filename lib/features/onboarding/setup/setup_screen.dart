@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
@@ -28,14 +29,14 @@ class SetupScreen extends ConsumerWidget {
     ref.listen(setupStateProvider, (_, next) {
       final s = next.valueOrNull;
       if (s is SetupComplete) {
-        context.go('/connections/${s.result.connectionId}/dashboards');
+        context.go(Routes.homeDashboards(s.result.connectionId));
       }
     });
 
     void manual() => context.push(Routes.guidedConnect);
     Future<void> tryDemo() async {
       final id = await ref.read(firstRunProvider).startDemo();
-      if (context.mounted) context.go('/connections/$id/dashboards');
+      if (context.mounted) context.go(Routes.homeDashboards(id));
     }
 
     return Scaffold(
@@ -221,11 +222,7 @@ class _ScanEmpty extends StatelessWidget {
         const SizedBox(height: 8),
         Text(l10n.setupNoCandidatesBody, style: theme.textTheme.bodyLarge),
         const SizedBox(height: 12),
-        Text(l10n.setupGuideHa, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 8),
-        Text(l10n.setupGuidePi, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 8),
-        Text(l10n.setupGuideSmlight, style: theme.textTheme.bodyMedium),
+        const _SetupGuides(),
         const SizedBox(height: 24),
         FilledButton.icon(
           onPressed: onRetry,
@@ -259,11 +256,11 @@ class _NoZigbee2Mqtt extends StatefulWidget {
 }
 
 class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
-  late final _base = TextEditingController(text: widget.base);
+  late final _baseController = TextEditingController(text: widget.base);
 
   @override
   void dispose() {
-    _base.dispose();
+    _baseController.dispose();
     super.dispose();
   }
 
@@ -288,14 +285,14 @@ class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
           children: [
             Expanded(
               child: TextField(
-                controller: _base,
+                controller: _baseController,
                 decoration: InputDecoration(labelText: l10n.discoverBaseTopic),
                 onSubmitted: widget.onRetry,
               ),
             ),
             const SizedBox(width: 8),
             FilledButton(
-              onPressed: () => widget.onRetry(_base.text),
+              onPressed: () => widget.onRetry(_baseController.text),
               child: Text(l10n.retry),
             ),
           ],
@@ -303,11 +300,7 @@ class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
         const SizedBox(height: 24),
         Text(l10n.setupGuidesTitle, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
-        Text(l10n.setupGuideHa, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 8),
-        Text(l10n.setupGuidePi, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 8),
-        Text(l10n.setupGuideSmlight, style: theme.textTheme.bodyMedium),
+        const _SetupGuides(),
         const SizedBox(height: 24),
         OutlinedButton.icon(
           onPressed: widget.onDemo,
@@ -556,6 +549,50 @@ class _DeviceRow extends StatelessWidget {
             .whereType<String>()
             .join(' · '),
       ),
+    );
+  }
+}
+
+/// Where Zigbee2MQTT usually runs, each opening its setup guide in the
+/// browser. Shown when nothing was found and when Zigbee2MQTT is missing.
+class _SetupGuides extends StatelessWidget {
+  const _SetupGuides();
+
+  static final _ha = Uri.parse(
+      'https://www.zigbee2mqtt.io/guide/installation/03_ha_addon.html');
+  static final _linux =
+      Uri.parse('https://www.zigbee2mqtt.io/guide/installation/01_linux.html');
+  static final _smlight =
+      Uri.parse('https://smlight.tech/support/manuals/books/smhub');
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _GuideLink(text: l10n.setupGuideHa, url: _ha),
+        _GuideLink(text: l10n.setupGuidePi, url: _linux),
+        _GuideLink(text: l10n.setupGuideSmlight, url: _smlight),
+      ],
+    );
+  }
+}
+
+class _GuideLink extends StatelessWidget {
+  const _GuideLink({required this.text, required this.url});
+  final String text;
+  final Uri url;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(text, style: theme.textTheme.bodyMedium),
+      trailing: Icon(Icons.open_in_new,
+          size: 20, color: theme.colorScheme.primary),
+      onTap: () => launchUrl(url, mode: LaunchMode.externalApplication),
     );
   }
 }
