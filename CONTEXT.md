@@ -1,14 +1,18 @@
 # ZigDash — domain glossary
 
-**Broker** — the user's MQTT server (e.g. Mosquitto on a Pi or SMLIGHT hub). ZigDash stores one **Connection** per broker: address, protocol, credentials. User-facing copy says "broker"; code says `Connection`.
+**Broker** — the user's MQTT server (e.g. Mosquitto on a Pi or SMLIGHT hub). ZigDash stores one **Connection** per broker: address, protocol, credentials.
+
+**Home** — what users call a connection in everyday UI. The app shows one home at a time and switches between homes in the header. The word "broker" appears only in setup and connection settings; code says `Connection`.
 
 **Zigbee2MQTT bridge** — the Zigbee2MQTT instance publishing under a base topic (default `zigbee2mqtt`) on a broker. A broker can be reachable while no bridge publishes on it.
 
 **Device** — a Zigbee device the bridge reports in `bridge/devices`. Devices exist independently of dashboards.
 
-**Dashboard** — a named, user-arranged screen of panels belonging to one connection. **Home** is the last-used dashboard; the app opens there.
+**Dashboard** — a named, user-arranged screen of tiles belonging to one home; the primary object users work with. Rooms are not a concept: a user who wants rooms names dashboards after them. The app opens on the last-used dashboard.
 
-**Panel** — one control or readout on a dashboard, bound to MQTT topics. A **tile** is a panel's visual on screen.
+**Panel** — one control or readout on a dashboard, bound to MQTT topics (code term). Users see it as a **tile**; "panel" does not appear in UI copy.
+
+**Section** — a titled group of tiles inside a dashboard (e.g. Lights, Covers). Generated dashboards are sectioned by device type.
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.
 
