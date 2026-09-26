@@ -1,15 +1,55 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mqtt_client/mqtt_client.dart' as mc;
 import 'package:zigdash/data/database/database.dart';
+import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/widgets/panel_reliability_frame.dart';
 import 'package:zigdash/features/panels/widgets/panel_tile.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/mqtt/broker_config.dart';
+import 'package:zigdash/mqtt/mqtt_manager.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
+
+class _RecordingMqttManager extends MqttManager {
+  _RecordingMqttManager()
+    : super(
+        config: const BrokerConfig(
+          id: 'c1',
+          host: 'localhost',
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+        ),
+        password: '',
+      );
+
+  bool connected = false;
+  String? publishedTopic;
+  String? publishedTemplate;
+  Object? publishedValue;
+
+  @override
+  bool get isConnected => connected;
+
+  @override
+  void publish(
+    String topic,
+    String template,
+    Object value, {
+    mc.MqttQos qos = mc.MqttQos.atLeastOnce,
+    bool retain = false,
+  }) {
+    publishedTopic = topic;
+    publishedTemplate = template;
+    publishedValue = value;
+  }
+}
 
 Panel _panel(PanelType type, {PanelConfig? config}) => Panel(
   id: 'p1',
@@ -35,10 +75,17 @@ Widget _wrap(
   PanelFreshness? freshness,
   Object? snapshotValue,
   PanelConfig? config,
+  Stream<MqttStatus>? statusStream,
+  MqttManager? manager,
+  Object? panelValue,
 }) => ProviderScope(
   key: ValueKey((type, status, freshness)),
   overrides: [
-    connectionStatusProvider.overrideWith((ref, _) => Stream.value(status)),
+    connectionStatusProvider.overrideWith(
+      (ref, _) => statusStream ?? Stream.value(status),
+    ),
+    if (manager != null)
+      mqttManagerProvider.overrideWith((ref, _) async => manager),
     panelValueSnapshotProvider.overrideWith(
       (ref, _) => freshness == null
           ? const Stream<PanelValueSnapshot>.empty()
@@ -51,7 +98,9 @@ Widget _wrap(
               ),
             ),
     ),
-    panelValueProvider.overrideWith((ref, _) => Stream.value('ON')),
+    panelValueProvider.overrideWith(
+      (ref, _) => Stream.value(panelValue ?? 'ON'),
+    ),
   ],
   child: MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -127,13 +176,60 @@ void main() {
     );
   });
 
-  testWidgets('subscribed interactive panel requires a fresh snapshot', (
+  testWidgets('reconnect enables a stale interactive control immediately', (
+    tester,
+  ) async {
+    final statuses = StreamController<MqttStatus>.broadcast();
+    final manager = _RecordingMqttManager();
+    addTearDown(statuses.close);
+    addTearDown(manager.dispose);
+    final semantics = tester.ensureSemantics();
+
+    await tester.pumpWidget(
+      _wrap(
+        PanelType.toggle,
+        status: MqttStatus.disconnected,
+        freshness: PanelFreshness.stale,
+        snapshotValue: 'OFF',
+        statusStream: statuses.stream,
+        manager: manager,
+        panelValue: 'OFF',
+      ),
+    );
+    statuses.add(MqttStatus.disconnected);
+    await tester.pump();
+
+    expect(find.text('Last known'), findsOneWidget);
+    expect(_gate(tester).absorbing, isTrue);
+
+    manager.connected = true;
+    statuses.add(MqttStatus.connected);
+    await tester.pump();
+
+    expect(find.text('Last known'), findsOneWidget);
+    expect(_gate(tester).absorbing, isFalse);
+    final semanticsLabel = tester
+        .getSemantics(find.byType(PanelReliabilityFrame))
+        .label;
+    expect(semanticsLabel, contains('Last known'));
+    expect(semanticsLabel, isNot(contains('Controls unavailable')));
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    expect(manager.publishedTopic, 'home/device');
+    expect(manager.publishedTemplate, '{"state":"ON"}');
+    expect(manager.publishedValue, '');
+    semantics.dispose();
+  });
+
+  testWidgets('disconnected interactive panel keeps controls unavailable', (
     tester,
   ) async {
     await tester.pumpWidget(
       _wrap(
         PanelType.toggle,
-        status: MqttStatus.connected,
+        status: MqttStatus.disconnected,
         freshness: PanelFreshness.stale,
       ),
     );

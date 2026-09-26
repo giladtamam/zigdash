@@ -36,7 +36,9 @@ android {
         applicationId = "com.giladtamam.zigdash"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Play automatic protection (installer check) requires minSdk >= 24;
+        // Play rejected the 1.9.2 bundle at Flutter's default of 21.
+        minSdk = 24
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName

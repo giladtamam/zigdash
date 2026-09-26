@@ -1,7 +1,7 @@
 name: zigdash
 description: "Material 3 MQTT dashboard for Zigbee2MQTT control."
 publish_to: 'none'
-version: 1.9.1+20
+version: 1.9.2+21
 
 environment:
   sdk: ^3.8.0
@@ -47,9 +47,6 @@ dependencies:
   # Preferences
   shared_preferences: ^2.3.2
 
-  # Play in-app review prompt (no-ops on non-Play installs)
-  in_app_review: ^2.0.12
-
   # Encrypted password storage
   flutter_secure_storage: ^9.2.4
 
@@ -59,6 +56,7 @@ dependencies:
 
   # App version display (Settings → About)
   package_info_plus: ^8.1.0
+  in_app_review: ^2.0.12
 
 dev_dependencies:
   flutter_test:

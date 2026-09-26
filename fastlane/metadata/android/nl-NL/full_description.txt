@@ -1,42 +1,42 @@
-ZigDash is het MQTT-dashboard gebouwd voor Zigbee2MQTT — het vindt je Zigbee-apparaten automatisch, zodat je smarthome-dashboard zichzelf bouwt. Geen cloud, geen advertenties, geen account: gratis en open source. Bedien lampen, rolluiken, schakelaars en sensoren vanaf je telefoon of een tablet aan de muur — en automatiseer op je hub, ook als je telefoon uit staat.
+ZigDash is het MQTT-dashboard gemaakt voor Zigbee2MQTT: het ontdekt je Zigbee-apparaten automatisch, zodat je smarthome-dashboard zichzelf opbouwt. Geen cloud, geen advertenties, geen account: gratis en open source. Bedien lampen, rolluiken, schakelaars en sensoren vanaf je telefoon of een wandtablet, en automatiseer op je hub, zelfs als je telefoon uit staat.
 
 AUTOMATISCHE DETECTIE VOOR ZIGBEE2MQTT
-• Scan je Zigbee2MQTT-bridge en maak met één tik een paneel voor elk apparaat — geen topics meer handmatig instellen.
-• JSON-pad-extractie op elk paneel, zodat ZigDash echte Zigbee2MQTT-berichten meteen begrijpt.
+• Scan je Zigbee2MQTT-bridge en maak met één tik een paneel voor elk apparaat, zonder topics handmatig te koppelen.
+• JSON-pad-extractie op elk paneel, zodat ZigDash echte Zigbee2MQTT-berichten direct begrijpt.
 • Eigen topics, QoS en retain per paneel wanneer je volledige controle wilt.
 
 VERBIND MET ELKE BROKER
-• Elke MQTT-broker — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Brokerdetectie scant automatisch je lokale netwerk.
-• Gebruikersnaam en wachtwoord in hardwarematig beveiligde opslag — nooit in platte tekst.
-• Live status met automatisch opnieuw verbinden (exponentiële backoff).
-• Tailscale-ondersteuning: toegang op afstand via je WireGuard-mesh, zonder poorten open te zetten.
+• Elke MQTT-broker: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Brokerdetectie scant je lokale netwerk automatisch.
+• Gebruikersnaam en wachtwoord in hardwarematig beveiligde opslag, nooit als platte tekst.
+• Livestatus met automatisch opnieuw verbinden (exponentiële backoff).
+• Tailscale-ondersteuning: toegang op afstand via je WireGuard-mesh, zonder port forwarding.
 • Meerdere brokers met direct wisselen.
-• Een volwaardige MQTT-client eronder: publiceer en abonneer op elk topic.
+• Een volledige MQTT-client onder de motorkap: publiceer en abonneer op elk topic.
 
-16 PANEELTYPES — BEDIEN ALLES
-Schakelaar, Knop, Schuifregelaar, Rolluik (open/stop/dicht met presets), Multistatus, Combo, Radio, Led-indicator, Nodestatus, Voortgang, Tekstinvoer, Tekstlog, Scène, Schema, Automatisch-sluiten-regel en Zigbee2MQTT-apparaatdetectie. Van lampen en rolluiken tot sensoren en scènes — één zigbee-dashboard voor elk apparaat.
+16 PANEELTYPES – BEDIEN ALLES
+Schakelaar, Knop, Schuifregelaar, Rolluik (open/stop/dicht met presets), Multi-State, Combo, Radio, LED-indicator, Node-status, Voortgang, Tekstinvoer, Tekstlog, Scène, Schema, Auto-uit-regel en Zigbee2MQTT-apparaatdetectie. Van lampen en rolluiken tot sensoren en scènes: één Zigbee-dashboard voor elk apparaat.
 
-AUTOMATISERING — WERKT ALS JE TELEFOON UIT STAAT
-• Schemapanelen: dagelijkse open- en sluittimers, opgeslagen als retained MQTT-configuratie.
-• Automatisch-sluiten-regels: zet een apparaat N seconden na het inschakelen weer uit — ideaal voor ventilatoren, pompen en tijdlampen.
+AUTOMATISERING – WERKT OOK ALS JE TELEFOON UIT STAAT
+• Schemapanelen: dagelijkse open/dicht-timers opgeslagen als retained MQTT-configuratie.
+• Auto-uit-regels: schakel een apparaat N seconden na inschakelen weer uit, perfect voor ventilatoren, pompen en tijdgeschakelde verlichting.
 • Beide draaien op je altijd-aan hub (Node-RED op SMLIGHT, Raspberry Pi of elk MQTT-apparaat). Node-RED-flows meegeleverd.
 
-VERZORGD — TELEFOON EN TABLET
-• Material 3 met lichte, donkere en systeemthema's; Material You dynamische kleuren op Android 12+.
-• Telefoon en tablet, staand en liggend — ideaal als domotica-dashboard aan de muur.
-• Zeven talen — Engels, Duits, Spaans, Nederlands, Zweeds, Noors en Hebreeuws (עברית) — met automatische RTL.
-• Responsief paneelraster (hele, halve, derde breedte), dashboardvergrendeling, back-up en herstel als draagbare JSON, scènes.
+VERZORGD – TELEFOON EN TABLET
+• Material 3 met licht, donker en systeemthema; Material You dynamische kleuren op Android 12+.
+• Telefoon en tablet, staand en liggend, ideaal als wandgemonteerd domotica-dashboard.
+• Beschikbaar in het Nederlands, Engels, Duits, Spaans, Zweeds, Noors en Hebreeuws, met automatische RTL.
+• Responsief paneelraster (volle, halve, derde breedte), dashboardvergrendeling, back-up/herstel als draagbare JSON, scènes.
 
 100% PRIVÉ. GEEN CLOUD.
 • Geen advertenties. Geen analytics. Geen account. Geen server van de ontwikkelaar.
-• Je gegevens blijven op je apparaat en je MQTT-broker — nergens anders.
+• Je gegevens staan op je apparaat en je MQTT-broker, nergens anders.
 • Open source (MIT). De code is openbaar en controleerbaar.
 
 VOOR WIE IS DIT?
-Je draait Zigbee2MQTT met je eigen broker (Mosquitto op een Raspberry Pi, SMLIGHT SMHUB…) — misschien naast Home Assistant — en wilt snelle bediening vanaf je telefoon of een wandtablet zonder de Zigbee2MQTT-webinterface te openen. Klaar met cloudafhankelijke apps, vendor lock-in en dataverzameling? Dan is ZigDash iets voor jou.
+Je draait Zigbee2MQTT met je eigen broker (Mosquitto op een Raspberry Pi, SMLIGHT SMHUB…), misschien naast Home Assistant, en wilt snelle bediening vanaf je telefoon of een wandtablet zonder de Zigbee2MQTT-webinterface te openen. Klaar met cloudafhankelijke apps, vendor lock-in en dataverzameling? ZigDash is voor jou.
 
 WAT JE NODIG HEBT
-• Een Zigbee2MQTT-installatie met een MQTT-broker in je lokale netwerk.
-• Tailscale (optioneel) voor toegang van buitenshuis.
+• Een Zigbee2MQTT-installatie met een MQTT-broker op je lokale netwerk.
+• Tailscale (optioneel) voor toegang op afstand buitenshuis.
 • Node-RED (optioneel) voor automatisering op de hub.

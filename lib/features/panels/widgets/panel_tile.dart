@@ -34,7 +34,7 @@ import 'toggle_panel.dart';
 
 enum PanelSubscriptionMode { none, readOnly, interactive }
 
-enum PanelControlGate { always, connected, freshSnapshot, autoClose }
+enum PanelControlGate { always, connected, autoClose }
 
 enum PanelJsonPathSource { none, config }
 
@@ -56,7 +56,7 @@ class PanelReliabilityPolicy {
   const PanelReliabilityPolicy.interactiveSubscription({
     this.jsonPathSource = PanelJsonPathSource.config,
   }) : subscriptionMode = PanelSubscriptionMode.interactive,
-       controlGate = PanelControlGate.freshSnapshot;
+       controlGate = PanelControlGate.connected;
 
   const PanelReliabilityPolicy.readOnlySubscription()
     : this._(
@@ -312,8 +312,6 @@ class PanelTile extends ConsumerWidget {
         : null;
     final stale = snapshot?.freshness == PanelFreshness.stale;
     final controlsEnabled = switch (reliability.controlGate) {
-      PanelControlGate.freshSnapshot =>
-        snapshot?.freshness == PanelFreshness.fresh,
       PanelControlGate.connected => connectionStatus == MqttStatus.connected,
       PanelControlGate.always || PanelControlGate.autoClose => true,
     };

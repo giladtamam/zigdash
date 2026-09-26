@@ -1,0 +1,1 @@
+Beoordeel ZigDash vanuit Instellingen, plus een eenmalig, privé beoordelingsverzoek na een paar geslaagde sessies (niets verlaat je toestel). Paneelbediening blijft nu bruikbaar zolang de broker verbonden is, zonder op een nieuwe waarde te wachten. Kleine fixes.

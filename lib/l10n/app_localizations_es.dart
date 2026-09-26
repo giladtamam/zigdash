@@ -1001,6 +1001,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsVersion => 'Versión';
 
   @override
+  String get settingsRateApp => 'Califica ZigDash';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      '¿Te gusta? Una reseña rápida ayuda a otros a encontrarla.';
+
+  @override
+  String get settingsBuyCoffee => 'Invítame un café';
+
+  @override
+  String get settingsBuyCoffeeSubtitle =>
+      'Gratis y de código abierto — las propinas mantienen el café fluyendo.';
+
+  @override
   String get a11yBackupMenu => 'Copia de seguridad y restauración';
 
   @override

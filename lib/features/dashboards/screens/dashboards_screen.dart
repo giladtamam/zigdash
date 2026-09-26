@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
-import '../../../core/review/review_prompt.dart';
+import '../../../core/review/review_prompt_trigger.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/backup_service.dart';
@@ -84,14 +84,11 @@ class DashboardsScreen extends ConsumerWidget {
             ),
           );
         }
-        return ReviewPromptTrigger(
-          active: connectionStatus == MqttStatus.connected,
-          child: _DashboardsTabbed(
-            connectionId: connectionId,
-            connectionName: connectionName,
-            dashboards: dashboards,
-            connectionStatus: connectionStatus,
-          ),
+        return _DashboardsTabbed(
+          connectionId: connectionId,
+          connectionName: connectionName,
+          dashboards: dashboards,
+          connectionStatus: connectionStatus,
         );
       },
     );
@@ -209,6 +206,7 @@ class _DashboardsTabbed extends ConsumerWidget {
           ),
           body: Column(
             children: [
+              ReviewPromptTrigger(connectionId: connectionId),
               ConnectionStatusBanner(
                 status: connectionStatus,
                 onReconnect: () => _reconnectNow(tabCtx, ref, connectionId),

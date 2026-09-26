@@ -1,1 +1,1 @@
-MQTT-dashboard voor Zigbee2MQTT — vindt apparaten zelf. Geen advertenties.
+Zigbee2MQTT-dashboard met apparaatdetectie. Geen ads, geen cloud, open source.

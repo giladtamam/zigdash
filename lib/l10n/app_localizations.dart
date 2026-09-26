@@ -1908,6 +1908,30 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get settingsVersion;
 
+  /// No description provided for @settingsRateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate ZigDash'**
+  String get settingsRateApp;
+
+  /// No description provided for @settingsRateAppSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying it? A quick review helps others find it.'**
+  String get settingsRateAppSubtitle;
+
+  /// No description provided for @settingsBuyCoffee.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy me a coffee'**
+  String get settingsBuyCoffee;
+
+  /// No description provided for @settingsBuyCoffeeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free & open source — tips keep it brewing.'**
+  String get settingsBuyCoffeeSubtitle;
+
   /// No description provided for @a11yBackupMenu.
   ///
   /// In en, this message translates to:

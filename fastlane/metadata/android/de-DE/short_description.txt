@@ -1,1 +1,1 @@
-MQTT-Dashboard für Zigbee2MQTT — findet Geräte selbst. Werbefrei, Open Source.
+Zigbee2MQTT-Dashboard mit Geräteerkennung. Werbefrei, quelloffen, ohne Cloud.

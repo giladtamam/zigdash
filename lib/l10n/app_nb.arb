@@ -349,6 +349,10 @@
   "settingsAbout": "Om",
   "settingsHelp": "Hjelp & veiledning",
   "settingsVersion": "Versjon",
+  "settingsRateApp": "Vurder ZigDash",
+  "settingsRateAppSubtitle": "Liker du den? En rask anmeldelse hjelper andre med å finne appen.",
+  "settingsBuyCoffee": "Kjøp meg en kaffe",
+  "settingsBuyCoffeeSubtitle": "Gratis og åpen kildekode — tips holder kaffen varm.",
 
   "a11yBackupMenu": "Sikkerhetskopier & gjenopprett",
   "a11ySelectColor": "Velg farge",

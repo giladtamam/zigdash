@@ -349,6 +349,10 @@
   "settingsAbout": "Over",
   "settingsHelp": "Help & Handleiding",
   "settingsVersion": "Versie",
+  "settingsRateApp": "Beoordeel ZigDash",
+  "settingsRateAppSubtitle": "Tevreden? Een korte review helpt anderen de app te vinden.",
+  "settingsBuyCoffee": "Trakteer me op een koffie",
+  "settingsBuyCoffeeSubtitle": "Gratis & open source — fooien houden de koffie stromen.",
 
   "a11yBackupMenu": "Back-up & herstel",
   "a11ySelectColor": "Kleur selecteren",

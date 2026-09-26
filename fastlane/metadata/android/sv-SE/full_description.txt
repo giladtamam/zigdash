@@ -1,42 +1,42 @@
-ZigDash är MQTT-dashboarden byggd för Zigbee2MQTT — den hittar dina Zigbee-enheter automatiskt, så att din smarta hem-dashboard bygger sig själv. Inget moln, ingen reklam, inget konto: gratis och med öppen källkod. Styr lampor, rullgardiner, strömbrytare och sensorer från mobilen eller en väggmonterad surfplatta — och automatisera på din hubb, även när mobilen är avstängd.
+ZigDash är MQTT-dashboarden byggd för Zigbee2MQTT: den hittar dina Zigbee-enheter automatiskt, så din smarta hem-dashboard bygger sig själv. Inget moln, ingen reklam, inget konto: gratis och öppen källkod. Styr lampor, rullgardiner, brytare och sensorer från mobilen eller en väggmonterad surfplatta, och automatisera på din hubb även när mobilen är avstängd.
 
 AUTOMATISK IDENTIFIERING FÖR ZIGBEE2MQTT
-• Skanna din Zigbee2MQTT-bridge och skapa en panel för varje enhet med en tryckning — ingen manuell koppling av topics.
-• JSON-sökvägsextrahering på varje panel, så att ZigDash förstår riktiga Zigbee2MQTT-meddelanden direkt.
+• Skanna din Zigbee2MQTT-bridge och skapa en panel för varje enhet med ett tryck, utan att koppla topics manuellt.
+• JSON-sökvägsextraktion i varje panel, så ZigDash förstår riktiga Zigbee2MQTT-meddelanden direkt.
 • Egna topics, QoS och retain per panel när du vill ha full kontroll.
 
 ANSLUT TILL VILKEN BROKER SOM HELST
-• Vilken MQTT-broker som helst — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Alla MQTT-brokers: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
 • Brokeridentifiering skannar ditt lokala nätverk automatiskt.
-• Användarnamn och lösenord i hårdvarubackad säker lagring — aldrig i klartext.
+• Användarnamn och lösenord i hårdvaruskyddad säker lagring, aldrig i klartext.
 • Livestatus med automatisk återanslutning (exponentiell backoff).
-• Stöd för Tailscale: fjärråtkomst via ditt WireGuard-nät, utan portöppning.
-• Flera brokers med direkt växling.
-• En fullständig MQTT-klient under huven: publicera och prenumerera på valfritt topic.
+• Tailscale-stöd: fjärråtkomst via ditt WireGuard-nät, utan portvidarebefordran.
+• Flera brokers med omedelbart byte.
+• En fullständig MQTT-klient under huven: publicera och prenumerera på vilket topic som helst.
 
-16 PANELTYPER — STYR ALLT
-Strömbrytare, Knapp, Reglage, Rullgardin (öppna/stopp/stäng med förinställningar), Flerläge, Combo, Radio, LED-indikator, Nodstatus, Förlopp, Textinmatning, Textlogg, Scen, Schema, Regel för automatisk stängning och Zigbee2MQTT-enhetsidentifiering. Från lampor och rullgardiner till sensorer och scener — en zigbee-dashboard för varje enhet.
+16 PANELTYPER – STYR ALLT
+Brytare, Knapp, Reglage, Rullgardin (öppna/stopp/stäng med förval), Flerläge, Kombo, Radio, LED-indikator, Nodstatus, Förlopp, Textinmatning, Textlogg, Scen, Schema, Auto-av-regel och Zigbee2MQTT-enhetsidentifiering. Från lampor och rullgardiner till sensorer och scener: en Zigbee-dashboard för varje enhet.
 
-AUTOMATISERING — KÖRS NÄR MOBILEN ÄR AVSTÄNGD
-• Schemapaneler: dagliga öppna- och stängtimers sparade som retained MQTT-konfiguration.
-• Regler för automatisk stängning: stäng av en enhet N sekunder efter att den slagits på — perfekt för fläktar, pumpar och tidsstyrd belysning.
-• Båda körs på din alltid påslagna hubb (Node-RED på SMLIGHT, Raspberry Pi eller vilken MQTT-enhet som helst). Node-RED-flöden medföljer.
+AUTOMATION – KÖRS ÄVEN NÄR MOBILEN ÄR AV
+• Schemapaneler: dagliga öppna/stäng-timers sparade som retained MQTT-konfiguration.
+• Auto-av-regler: stäng av en enhet N sekunder efter att den slagits på, perfekt för fläktar, pumpar och tidsstyrd belysning.
+• Båda körs på din alltid-på-hubb (Node-RED på SMLIGHT, Raspberry Pi eller valfri MQTT-enhet). Node-RED-flöden ingår.
 
-GENOMARBETAD — MOBIL OCH SURFPLATTA
+GENOMARBETAD – MOBIL OCH SURFPLATTA
 • Material 3 med ljust, mörkt och systemtema; Material You dynamiska färger på Android 12+.
-• Mobil och surfplatta, stående och liggande — perfekt som väggmonterad hemautomationspanel.
-• Sju språk — engelska, tyska, spanska, nederländska, svenska, norska och hebreiska (עברית) — med automatisk RTL.
-• Responsivt panelrutnät (hel, halv, tredjedels bredd), dashboardlås, säkerhetskopiering och återställning som portabel JSON, scener.
+• Mobil och surfplatta, stående och liggande, perfekt som väggmonterad hemautomationsdashboard.
+• Finns på svenska, engelska, tyska, spanska, nederländska, norska och hebreiska, med automatisk RTL.
+• Responsivt panelrutnät (hel, halv, tredjedels bredd), dashboardlås, säkerhetskopiering/återställning som portabel JSON, scener.
 
 100 % PRIVAT. INGET MOLN.
 • Ingen reklam. Ingen analys. Inget konto. Ingen utvecklarserver.
-• Dina data finns på din enhet och din MQTT-broker — ingen annanstans.
+• Dina data finns på din enhet och din MQTT-broker, ingen annanstans.
 • Öppen källkod (MIT). Koden är offentlig och granskningsbar.
 
-VEM ÄR DEN FÖR?
-Du kör Zigbee2MQTT med din egen broker (Mosquitto på en Raspberry Pi, SMLIGHT SMHUB…) — kanske vid sidan av Home Assistant — och vill ha snabb styrning från mobilen eller en väggplatta utan att öppna Zigbee2MQTT:s webbgränssnitt. Trött på molnberoende appar, inlåsning och datainsamling? Då är ZigDash för dig.
+VEM ÄR DET HÄR FÖR?
+Du kör Zigbee2MQTT med egen broker (Mosquitto på en Raspberry Pi, SMLIGHT SMHUB …), kanske tillsammans med Home Assistant, och vill ha snabb styrning från mobilen eller en väggplatta utan att öppna Zigbee2MQTT:s webbgränssnitt. Trött på molnberoende appar, leverantörslåsning och datainsamling? ZigDash är för dig.
 
-VAD DU BEHÖVER
+DET HÄR BEHÖVER DU
 • En Zigbee2MQTT-installation med en MQTT-broker i ditt lokala nätverk.
 • Tailscale (valfritt) för fjärråtkomst utanför hemmet.
-• Node-RED (valfritt) för automatisering på hubben.
+• Node-RED (valfritt) för automation på hubben.

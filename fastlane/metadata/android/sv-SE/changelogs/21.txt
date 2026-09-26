@@ -1,0 +1,1 @@
+Betygsätt ZigDash från Inställningar, plus en engångs, privat betygsförfrågan efter några lyckade sessioner (inget lämnar din enhet). Panelkontroller förblir nu användbara så länge brokern är ansluten, utan att vänta på ett nytt värde. Mindre rättelser.

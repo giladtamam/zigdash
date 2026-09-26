@@ -991,6 +991,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsVersion => 'Version';
 
   @override
+  String get settingsRateApp => 'Rate ZigDash';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      'Enjoying it? A quick review helps others find it.';
+
+  @override
+  String get settingsBuyCoffee => 'Buy me a coffee';
+
+  @override
+  String get settingsBuyCoffeeSubtitle =>
+      'Free & open source — tips keep it brewing.';
+
+  @override
   String get a11yBackupMenu => 'Backup & restore';
 
   @override

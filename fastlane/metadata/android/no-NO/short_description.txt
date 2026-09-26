@@ -1,1 +1,1 @@
-MQTT-dashbord for Zigbee2MQTT — finner enheter selv. Reklamefri, åpen kode.
+Zigbee2MQTT-dashbord som finner enheter automatisk. Reklamefri, åpen kildekode.

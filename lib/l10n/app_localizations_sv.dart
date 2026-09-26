@@ -995,6 +995,20 @@ class AppLocalizationsSv extends AppLocalizations {
   String get settingsVersion => 'Version';
 
   @override
+  String get settingsRateApp => 'Betygsätt ZigDash';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      'Gillar du den? En snabb recension hjälper andra att hitta appen.';
+
+  @override
+  String get settingsBuyCoffee => 'Bjud mig på en kaffe';
+
+  @override
+  String get settingsBuyCoffeeSubtitle =>
+      'Gratis & öppen källkod — dricks håller kaffet varmt.';
+
+  @override
   String get a11yBackupMenu => 'Säkerhetskopiera & återställ';
 
   @override

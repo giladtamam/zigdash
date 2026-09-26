@@ -349,6 +349,10 @@
   "settingsAbout": "Über",
   "settingsHelp": "Hilfe & Anleitung",
   "settingsVersion": "Version",
+  "settingsRateApp": "ZigDash bewerten",
+  "settingsRateAppSubtitle": "Gefällt sie dir? Eine kurze Bewertung hilft anderen, die App zu finden.",
+  "settingsBuyCoffee": "Spendiere mir einen Kaffee",
+  "settingsBuyCoffeeSubtitle": "Kostenlos & Open Source — Trinkgeld hält den Kaffee am Fließen.",
 
   "a11yBackupMenu": "Sichern & Wiederherstellen",
   "a11ySelectColor": "Farbe auswählen",

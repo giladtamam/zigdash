@@ -987,6 +987,20 @@ class AppLocalizationsHe extends AppLocalizations {
   String get settingsVersion => 'גרסה';
 
   @override
+  String get settingsRateApp => 'דרגו את ZigDash';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      'נהנים? ביקורת קצרה עוזרת לאחרים למצוא את האפליקציה.';
+
+  @override
+  String get settingsBuyCoffee => 'קנו לי קפה';
+
+  @override
+  String get settingsBuyCoffeeSubtitle =>
+      'חינם ובקוד פתוח — טיפים שומרים על הקפה זורם.';
+
+  @override
   String get a11yBackupMenu => 'גיבוי ושחזור';
 
   @override

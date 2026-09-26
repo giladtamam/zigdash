@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
@@ -103,6 +104,19 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(),
           _SectionHeader(l10n.settingsAbout),
+          ListTile(
+            leading: const Icon(Icons.star_outline),
+            title: Text(l10n.settingsRateApp),
+            subtitle: Text(l10n.settingsRateAppSubtitle),
+            onTap: () async {
+              final review = InAppReview.instance;
+              if (await review.isAvailable()) {
+                await review.requestReview();
+              } else {
+                await review.openStoreListing();
+              }
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.help_outline),
             title: Text(l10n.settingsHelp),

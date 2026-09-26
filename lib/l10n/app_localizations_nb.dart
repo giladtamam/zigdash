@@ -996,6 +996,20 @@ class AppLocalizationsNb extends AppLocalizations {
   String get settingsVersion => 'Versjon';
 
   @override
+  String get settingsRateApp => 'Vurder ZigDash';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      'Liker du den? En rask anmeldelse hjelper andre med å finne appen.';
+
+  @override
+  String get settingsBuyCoffee => 'Kjøp meg en kaffe';
+
+  @override
+  String get settingsBuyCoffeeSubtitle =>
+      'Gratis og åpen kildekode — tips holder kaffen varm.';
+
+  @override
   String get a11yBackupMenu => 'Sikkerhetskopier & gjenopprett';
 
   @override

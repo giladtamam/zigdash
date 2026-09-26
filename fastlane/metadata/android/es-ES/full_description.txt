@@ -1,42 +1,42 @@
-ZigDash es el panel MQTT hecho para Zigbee2MQTT: detecta tus dispositivos Zigbee automáticamente, así que tu tablero domótico se construye solo. Sin nube, sin anuncios, sin cuenta: gratuito y de código abierto. Controla luces, persianas, interruptores y sensores desde el móvil o desde una tablet en la pared, y automatiza en tu hub aunque el móvil esté apagado.
+ZigDash es el panel MQTT creado para Zigbee2MQTT: detecta tus dispositivos Zigbee automáticamente, así que tu panel domótico se construye solo. Sin nube, sin anuncios, sin cuenta: gratis y de código abierto. Controla luces, persianas, interruptores y sensores desde el móvil o una tablet de pared, y automatiza en tu hub incluso con el móvil apagado.
 
 DETECCIÓN AUTOMÁTICA PARA ZIGBEE2MQTT
-• Escanea tu bridge de Zigbee2MQTT y crea un panel para cada dispositivo con un toque, sin cablear topics a mano.
-• Extracción por ruta JSON en cada panel: ZigDash entiende los mensajes reales de Zigbee2MQTT desde el primer momento.
-• Topics propios, QoS y retain por panel cuando quieras control total.
+• Escanea tu bridge Zigbee2MQTT y crea un panel por cada dispositivo con un solo toque, sin configurar topics a mano.
+• Extracción por ruta JSON en cada panel, para que ZigDash entienda los mensajes reales de Zigbee2MQTT desde el principio.
+• Topics personalizados, QoS y retain por panel cuando quieras control total.
 
-CONÉCTATE A CUALQUIER BROKER
-• Cualquier broker MQTT: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• La detección de brokers escanea tu red local automáticamente.
+CONÉCTATE A CUALQUIER BRÓKER
+• Cualquier bróker MQTT: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• La detección de brókers escanea tu red local automáticamente.
 • Usuario y contraseña en almacenamiento seguro respaldado por hardware, nunca en texto plano.
-• Estado en vivo con reconexión automática (retroceso exponencial).
+• Estado en vivo con reconexión automática (backoff exponencial).
 • Compatible con Tailscale: acceso remoto por tu malla WireGuard, sin abrir puertos.
-• Varios brokers con cambio instantáneo.
-• Un cliente MQTT completo por debajo: publica y suscríbete a cualquier topic.
+• Varios brókers con cambio instantáneo.
+• Un cliente MQTT completo: publica y suscríbete a cualquier topic.
 
 16 TIPOS DE PANEL: CONTRÓLALO TODO
-Interruptor, Botón, Deslizador, Persiana (abrir/parar/cerrar con preajustes), Multiestado, Combo, Radio, Indicador LED, Estado de nodo, Progreso, Entrada de texto, Registro de texto, Escena, Programación, Regla de cierre automático y Detección de dispositivos Zigbee2MQTT. De luces y persianas a sensores y escenas: un tablero zigbee para cada dispositivo.
+Interruptor, Botón, Deslizador, Persiana (abrir/parar/cerrar con posiciones), Multiestado, Combo, Radio, Indicador LED, Estado de nodo, Progreso, Entrada de texto, Registro de texto, Escena, Programación, Regla de autoapagado y Detección de dispositivos Zigbee2MQTT. De luces y persianas a sensores y escenas: un panel Zigbee para cada dispositivo.
 
-AUTOMATIZACIÓN: FUNCIONA CON EL MÓVIL APAGADO
-• Paneles de programación: temporizadores diarios de apertura y cierre guardados como configuración MQTT retenida.
-• Reglas de cierre automático: apaga un dispositivo N segundos después de encenderse, ideal para ventiladores, bombas y luces temporizadas.
+AUTOMATIZACIÓN QUE FUNCIONA CON EL MÓVIL APAGADO
+• Paneles de programación: temporizadores diarios de abrir/cerrar guardados como configuración MQTT retenida.
+• Reglas de autoapagado: apaga un dispositivo N segundos después de encenderse, ideal para ventiladores, bombas y luces temporizadas.
 • Ambos se ejecutan en tu hub siempre encendido (Node-RED en SMLIGHT, Raspberry Pi o cualquier dispositivo con MQTT). Incluye flujos de Node-RED.
 
-CUIDADO AL DETALLE: MÓVIL Y TABLET
-• Material 3 con temas claro, oscuro y del sistema; color dinámico Material You en Android 12+.
-• Móvil y tablet, vertical y horizontal: ideal como tablero domótico montado en la pared.
-• Siete idiomas — inglés, alemán, español, neerlandés, sueco, noruego y hebreo (עברית) — con RTL automático.
-• Cuadrícula de paneles adaptable (ancho completo, medio, un tercio), bloqueo del tablero, copia y restauración en JSON portable, escenas.
+PULIDO PARA MÓVIL Y TABLET
+• Material 3 con tema claro, oscuro y del sistema; color dinámico Material You en Android 12+.
+• Móvil y tablet, vertical y horizontal: ideal como panel domótico de pared.
+• Disponible en español, inglés, alemán, neerlandés, sueco, noruego y hebreo, con RTL automático.
+• Cuadrícula adaptable (ancho completo, mitad, tercio), bloqueo del panel, copia de seguridad y restauración en JSON portable, escenas.
 
 100 % PRIVADO. SIN NUBE.
 • Sin anuncios. Sin analíticas. Sin cuenta. Sin servidor del desarrollador.
-• Tus datos viven en tu dispositivo y en tu broker MQTT, en ningún otro sitio.
+• Tus datos viven en tu dispositivo y en tu bróker MQTT, en ningún otro sitio.
 • Código abierto (MIT). El código es público y auditable.
 
 ¿PARA QUIÉN ES?
-Usas Zigbee2MQTT con tu propio broker (Mosquitto en una Raspberry Pi, SMLIGHT SMHUB…), quizá junto a Home Assistant, y quieres control rápido desde el móvil o una tablet de pared sin abrir la interfaz web de Zigbee2MQTT. ¿Cansado de apps dependientes de la nube, del bloqueo de fabricante y de la recogida de datos? ZigDash es para ti.
+Usas Zigbee2MQTT con tu propio bróker (Mosquitto en una Raspberry Pi, SMLIGHT SMHUB…), quizá junto a Home Assistant, y quieres control rápido desde el móvil o una tablet de pared sin abrir la web de Zigbee2MQTT. ¿Harto de apps dependientes de la nube, del bloqueo de fabricante y de la recolección de datos? ZigDash es para ti.
 
 QUÉ NECESITAS
-• Una instalación de Zigbee2MQTT con un broker MQTT en tu red local.
-• Tailscale (opcional) para acceso remoto desde fuera de casa.
+• Una instalación de Zigbee2MQTT con un bróker MQTT en tu red local.
+• Tailscale (opcional) para acceso remoto fuera de casa.
 • Node-RED (opcional) para automatización en el hub.
