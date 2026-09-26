@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:alchemist/alchemist.dart';
@@ -8,6 +9,7 @@ import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/devices/device_profile.dart';
+import 'package:zigdash/features/devices/device_state_refresher.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/widgets/panel_grid.dart';
@@ -152,6 +154,9 @@ List<Override> _overrides() => [
       sectionsForDashboardProvider.overrideWith((ref, _) => Stream.value(_sections)),
       panelsForDashboardProvider.overrideWith((ref, _) => Stream.value(_panels)),
       connectionStatusProvider.overrideWith((ref, _) => Stream.value(MqttStatus.connected)),
+      // No broker: tiles never ask for state in a golden.
+      deviceStateRefresherProvider
+          .overrideWith((ref, _) => Completer<DeviceStateRefresher>().future),
       panelValueSnapshotProvider.overrideWith((ref, key) => Stream.value(PanelValueSnapshot(
             value: _valueFor(key),
             receivedAt: _stamp,

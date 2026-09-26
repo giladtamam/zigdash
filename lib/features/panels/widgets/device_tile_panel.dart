@@ -7,7 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../mqtt/mqtt_status.dart';
+import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../devices/device_profile.dart';
+import '../../devices/device_state_refresher.dart';
 import '../../devices/device_state.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
@@ -74,6 +77,17 @@ class DeviceTilePanel extends ConsumerWidget {
         .valueOrNull;
     final state = DeviceState(profile, decodeDeviceState(payload));
     final cls = profile.deviceClass;
+
+    // Once per connection, ask the device for its state (Zigbee2MQTT does
+    // not retain it). Rebuilds on reconnect via the status watch.
+    final connected = ref.watch(connectionStatusProvider(connectionId)).valueOrNull ==
+        MqttStatus.connected;
+    final refresher =
+        ref.watch(deviceStateRefresherProvider(connectionId)).valueOrNull;
+    if (connected && refresher != null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => refresher.request(subscribeTopic, profile));
+    }
     final alarming =
         cls == DeviceClass.leakSmoke && state.alarm == true;
 

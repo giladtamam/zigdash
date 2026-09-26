@@ -33,6 +33,8 @@ class _Recorder extends MqttManager {
   @override
   void publish(String topic, String template, Object value,
       {mc.MqttQos qos = mc.MqttQos.atLeastOnce, bool retain = false}) {
+    // State requests (once per connection) are not commands.
+    if (topic.endsWith('/get')) return;
     sent.add((topic, json.decode(template) as Map<String, Object?>));
   }
 }
