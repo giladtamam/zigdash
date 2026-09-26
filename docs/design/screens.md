@@ -19,8 +19,8 @@ Screens already covered by the direction round live on the same canvas: the Sign
 
 ![Add tile](screens/D-add-tile.png)
 
-- **What changed.** The picker lists devices, not the 16 MQTT panel types (audit: jargon picker). "Not on a dashboard" comes first, then all devices with type and live state.
-- **Custom MQTT tile.** The 16 raw behaviors sit behind one row at the bottom and open the topic-first form. That form keeps today's fields in the new styling and is not mocked separately.
+- **What changed.** The picker lists devices, not the 15 MQTT panel types (audit: jargon picker). "Not on a dashboard" comes first, then all devices with type and live state.
+- **Custom MQTT tile.** The 15 raw panel types sit behind one row at the bottom and open the topic-first form. That form keeps today's fields in the new styling and is not mocked separately.
 - **Why.** New users think in devices. Power users keep every raw behavior one tap away.
 
 ## Devices
@@ -78,6 +78,30 @@ Screens already covered by the direction round live on the same canvas: the Sign
 - **Header.** Dashboard switching uses chips when there are two or more dashboards. Connection state sits at the end of the header.
 - **Wide tiles.** Reading tiles can span two columns, so a temperature can be read from across the room.
 - **Theme.** Dark is the tablet default from the direction round. This board shows the light variant with the same layout.
+
+## 1.12 Dashboard boards (interim look A)
+
+These five boards are in the interim Calm Material look, not Signal. They sit in the "1.12" row of the canvas (version 9) and are built as specified in [dashboard-1.12.md](dashboard-1.12.md).
+
+![Device tiles](screens/1.12/tiles.png)
+
+- **Device tiles by class.** One board shows every class with the offline line, a stale tile with its age chip, a leak alarm and a generic tile waiting for its first report.
+
+![Color sheet](screens/1.12/color-sheet.png)
+
+- **Color light sheet.** Brightness, white temperature, eight presets and a hue slider. The swatch shows what the bulb reports (`color_mode`), and colors are sent as hex.
+
+![Edit mode](screens/1.12/edit-mode.png)
+
+- **Edit mode.** The unassigned-devices card, sections with grip and rename, tiles with grip and ⋯ badge, and the badge sheet with Size, Move to section, Edit tile and Remove.
+
+![Devices tab](screens/1.12/devices-tab.png)
+
+- **Devices tab stopgap.** Today's health list, with a "Not on a dashboard" marker and tap-to-add. The device page comes in 1.13.
+
+![Home switcher](screens/1.12/home-switcher.png)
+
+- **Home switcher.** The home name opens the menu at two or more homes. "Manage homes" opens the Homes list until 1.13 Settings.
 
 ## Not mocked here
 

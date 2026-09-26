@@ -22,7 +22,7 @@ People who find the listing install the app, but few come back. The redesign is 
 3. **Devices first, MQTT second.** Users pick devices. Raw topics stay one tap away under "Custom MQTT tile".
 4. **Show the last known value.** When the broker is unreachable, tiles keep their last values, marked stale, under a slim status line.
 5. **One way to edit.** One Edit mode replaces the per-screen toolbar icons.
-6. **Protected.** Material You dynamic color, Hebrew right-to-left, all eight locales, system font scaling, the 16 panel behaviors, and no telemetry.
+6. **Protected.** Material You dynamic color, Hebrew right-to-left, all eight locales, system font scaling, the 15 panel types, and no telemetry.
 
 ## Decisions
 
@@ -30,7 +30,7 @@ People who find the listing install the app, but few come back. The redesign is 
 |---|---|---|
 | First run | One door with four discovery outcomes: one broker, several, none, or broker without Zigbee2MQTT. A device review list, then straight to the dashboard. The demo appears only on the none-found and no-Zigbee2MQTT outcomes, with a persistent connect bar. | [ia.md](ia.md), First-run section below |
 | Structure | Dashboards stay primary, with no rooms. A broker is a "home", switched in the header. The bottom bar is Dashboards, Devices and Scenes. Settings sits in the header. | [ia.md](ia.md), [ADR 0001](../adr/0001-dashboards-not-rooms.md) |
-| Adding tiles | "Add tile" is device-first. Each device gets one composite device tile, in 7 classes plus a generic fallback. A new reading tile shows numeric sensors. The 16 raw types sit under "Custom MQTT tile" with a form that leads with the topic. | Adding tiles section below |
+| Adding tiles | "Add tile" is device-first. Each device gets one composite device tile, in 7 classes plus a generic fallback. A new reading tile shows numeric sensors. The 15 raw types sit under "Custom MQTT tile" with a form that leads with the topic. | Adding tiles section below |
 | Visual direction | 2.0 is **Signal**: a warm ground, amber fill when on, squircle tiles and a bold display face. It takes the tablet layout from Wall Panel. Calm Material is the interim look until 2.0. | [Claude Design canvas](https://claude.ai/artifact/Gt1x8Q8TpDfY2VMVqNqF5w) |
 | Tokens | Amber is a harmonized accent over dynamic color. Fonts are Space Grotesk, IBM Plex Sans and IBM Plex Sans Hebrew. There are six state roles. Radii are 28, 18, 12 and 20. The grid has 2, 3 or 4 columns. Icons are Material Symbols Rounded. | [tokens.md](tokens.md), [ADR 0002](../adr/0002-amber-is-a-harmonized-accent.md) |
 | Screens | There are nine Signal boards, each with a per-screen note. The dashboard, dark offline, welcome and dark tablet boards from the direction round complete the set. | [screens.md](screens.md) |
@@ -65,7 +65,7 @@ People who find the listing install the app, but few come back. The redesign is 
 
   Thermostats and color lights come later.
 - **Reading tile:** a numeric value with its unit, for temperature, humidity or power.
-- **Custom MQTT tile:** the 16 existing types. The form leads with name and topic and offers "Pick a device". A live preview comes before the payload fields. Payloads and JSON path collapse under Advanced.
+- **Custom MQTT tile:** the 15 existing types. The form leads with name and topic and offers "Pick a device". A live preview comes before the payload fields. Payloads and JSON path collapse under Advanced.
 - **New devices** are never auto-added. Edit mode shows a card counting unassigned devices, and the Devices tab carries a badge.
 
 ## Where everything lives
@@ -77,6 +77,8 @@ People who find the listing install the app, but few come back. The redesign is 
 | Information architecture diagram | [ia.md](ia.md) |
 | Design tokens | [tokens.md](tokens.md) |
 | Per-screen notes and exported images | [screens.md](screens.md), [screens/](screens/) |
+| Release 1.12 Dashboard build spec | [dashboard-1.12.md](dashboard-1.12.md) |
+| Research: classifying Zigbee2MQTT devices | [research/device-classes.md](research/device-classes.md) |
 | Phases, guardrails, store and community plan | [phasing.md](phasing.md) |
 | Decision records | [docs/adr/](../adr/) |
 | Research: reference smart-home UIs | [research/reference-ui-benchmark.md](research/reference-ui-benchmark.md) |

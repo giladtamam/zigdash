@@ -12,7 +12,7 @@
 
 **Panel** — one control or readout on a dashboard, bound to MQTT topics (code term). Users see it as a **tile**; "panel" does not appear in UI copy.
 
-**Device tile** — one tile representing a whole device of a known class (light, switch/plug, cover, climate sensor, contact, motion, leak/smoke), composed from panel behaviors. Tap the icon for the quick action, the body for full controls, long-press to edit. Unknown classes get a generic device tile.
+**Device tile** — one tile representing a whole device of a known class (color light, light, switch/plug, cover, climate sensor, contact, motion, leak/smoke), stored as one panel of type `device` bound to the device's IEEE address. Tap the icon for the quick action, the body for full controls, long-press to edit. Unknown classes get a generic device tile.
 
 **Reading tile** — a tile showing one numeric value with its unit (temperature, humidity, power).
 
@@ -20,9 +20,13 @@
 
 **Unassigned device** — a device reported by the bridge that is on no dashboard in its home. Surfaced as a prompt, never added automatically.
 
-**Tile size** — how much of a dashboard row a tile takes: **Small** (one grid column), **Wide** (two columns) or **Full** (the whole row). Columns are 2 on phones, 3 on medium windows, 4 on tablets, so a Small tile stays small on a tablet. Code today: `PanelWidth` (full/half/third).
+**Tile size** — how much of a dashboard row a tile takes: **Small** (one grid column), **Wide** (two columns) or **Full** (the whole row). Columns are 2 on phones, 3 on medium windows, 4 on tablets, so a Small tile stays small on a tablet. Code: `PanelWidth` small/wide/full from 1.12 (before that full/half/third; half and third migrate to Small).
 
-**Section** — a titled group of tiles inside a dashboard (e.g. Lights, Covers). Generated dashboards are sectioned by device type.
+**Section** — a titled group of tiles inside a dashboard (e.g. Lights, Sensors). Generated dashboards are sectioned by device type. Tiles with no section render first, without a header; dashboards from before 1.12 start that way.
+
+**Device link** — the IEEE address a tile carries (`panels.deviceIeee`): always on device and reading tiles, optional on custom MQTT tiles. It decides whether a device is on a dashboard.
+
+**Edit mode** — the one mode in which a dashboard is rearranged: tiles show a grip and an edit badge, controls are inert, and changes save as they happen.
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.
 
