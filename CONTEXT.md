@@ -12,6 +12,14 @@
 
 **Panel** — one control or readout on a dashboard, bound to MQTT topics (code term). Users see it as a **tile**; "panel" does not appear in UI copy.
 
+**Device tile** — one tile representing a whole device of a known class (light, switch/plug, cover, climate sensor, contact, motion, leak/smoke), composed from panel behaviors. Tap the icon for the quick action, the body for full controls, long-press to edit. Unknown classes get a generic device tile.
+
+**Reading tile** — a tile showing one numeric value with its unit (temperature, humidity, power).
+
+**Custom MQTT tile** — any of the raw panel types (toggle, slider, multi-state, text log…) configured by topic and payload rather than from a device. The expert path.
+
+**Unassigned device** — a device reported by the bridge that is on no dashboard in its home. Surfaced as a prompt, never added automatically.
+
 **Section** — a titled group of tiles inside a dashboard (e.g. Lights, Covers). Generated dashboards are sectioned by device type.
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.
