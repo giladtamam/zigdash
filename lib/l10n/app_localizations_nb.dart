@@ -18,36 +18,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get appTitle => 'ZigDash';
 
   @override
-  String get onboardingWelcomeTitle => 'Velkommen til ZigDash';
-
-  @override
-  String get onboardingWelcomeSubtitle =>
-      'Det private, lokale dashbordet ditt for Zigbee2MQTT.\nIngen sky. Ingen sporing. Bare kontroll.';
-
-  @override
-  String get onboardingBrokerTitle => 'Koble til brokeren din';
-
-  @override
-  String get onboardingBrokerSubtitle =>
-      'Pek ZigDash mot MQTT-brokeren din for å snakke direkte med Zigbee-enhetene dine. Fungerer med Mosquitto, SMLIGHT og alle MQTT-servere.';
-
-  @override
-  String get onboardingDashboardTitle => 'Bygg dashbordene dine';
-
-  @override
-  String get onboardingDashboardSubtitle =>
-      'Lag egne dashbord med brytere, glidebrytere, persienner og mer. Ordne paneler slik du vil – alt lagres lokalt på enheten din.';
-
-  @override
-  String get onboardingSkip => 'Hopp over';
-
-  @override
-  String get onboardingNext => 'Neste';
-
-  @override
-  String get onboardingGetStarted => 'Kom i gang';
-
-  @override
   String get onboardingDemo => 'Prøv demo';
 
   @override
@@ -1359,9 +1329,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get guidedSaveFailed => 'Kunne ikke lagre tilkoblingen. Prøv igjen.';
 
   @override
-  String get onboardingConnectBroker => 'Koble til min broker';
-
-  @override
   String get setupWelcomeTitle => 'Velkommen til ZigDash';
 
   @override
@@ -1400,7 +1367,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupGuideSmlight =>
-      'SMLIGHT / SMHUB: åpne enhetens webgrensesnitt, aktiver MQTT-brokeren og sjekk at Zigbee2MQTT vises som tilkoblet.';
+      'SMLIGHT / SMHUB: åpne webgrensesnittet, gå til Settings > MQTT, slå på Allow External slik at telefonen når brokeren, og sjekk at Zigbee2MQTT kjører.';
 
   @override
   String get setupTryAgain => 'Prøv igjen';
@@ -1541,4 +1508,28 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupErrUnknownAction => 'Prøv igjen';
+
+  @override
+  String get setupNoZ2mTitle =>
+      'Brokeren din fungerer, men Zigbee2MQTT publiserer ikke her';
+
+  @override
+  String setupNoZ2mBody(String base) {
+    return 'Vi lyttet på $base/bridge og hørte ingenting.';
+  }
+
+  @override
+  String get setupBaseTopicQuestion => 'Bruker du et annet basistema?';
+
+  @override
+  String get setupGuidesTitle => 'Sett opp Zigbee2MQTT';
+
+  @override
+  String get setupTryDemoMeanwhile => 'Prøv demoen i mellomtiden';
+
+  @override
+  String get demoBannerText => 'Du er i demomodus';
+
+  @override
+  String get demoBannerAction => 'Koble til hjemmet ditt';
 }

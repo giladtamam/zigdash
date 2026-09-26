@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../first_run.dart';
 import 'recommendation_policy.dart';
 import 'setup_candidate.dart';
 import 'setup_coordinator.dart';
@@ -23,46 +24,67 @@ class SetupScreen extends ConsumerWidget {
     final state = asyncState.valueOrNull ?? coordinator.state;
     final l10n = context.l10n;
 
+    // No "ready" screen: a finished setup opens its dashboard directly.
+    ref.listen(setupStateProvider, (_, next) {
+      final s = next.valueOrNull;
+      if (s is SetupComplete) {
+        context.go('/connections/${s.result.connectionId}/dashboards');
+      }
+    });
+
+    void manual() => context.push(Routes.guidedConnect);
+    Future<void> tryDemo() async {
+      final id = await ref.read(firstRunProvider).startDemo();
+      if (context.mounted) context.go('/connections/$id/dashboards');
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.setupWelcomeTitle)),
       body: SafeArea(
         child: switch (state) {
           SetupIdle() => _Welcome(
               onFind: coordinator.startScan,
-              onManual: () => context.go(Routes.guidedConnect),
+              onManual: manual,
             ),
           SetupScanning() => _Scanning(
               state: state,
               onSelect: coordinator.selectCandidate,
-              onManual: () => context.go(Routes.guidedConnect),
+              onManual: manual,
             ),
           SetupScanEmpty() => _ScanEmpty(
               onRetry: coordinator.retry,
-              onManual: () => context.go(Routes.guidedConnect),
+              onManual: manual,
+              onDemo: tryDemo,
             ),
           SetupVerifying() => const _Verifying(),
           SetupNeedsAuth() => _AuthPrompt(
               state: state,
               onSubmit: coordinator.submitCredentials,
             ),
+          SetupFailed(kind: SetupErrorKind.notZigbee2Mqtt) => _NoZigbee2Mqtt(
+              base: coordinator.base,
+              onRetry: coordinator.retryWithBase,
+              onDemo: tryDemo,
+              onManual: manual,
+            ),
           SetupFailed() => _Failure(
               state: state,
-              onRetry: state.kind == SetupErrorKind.notZigbee2Mqtt
-                  ? coordinator.startScan
-                  : coordinator.retry,
-              onManual: () => context.go(Routes.guidedConnect),
+              onRetry: coordinator.retry,
+              onManual: manual,
             ),
           SetupReview() => _Review(
               state: state,
               onToggle: coordinator.toggleDevice,
               onCreate: coordinator.createDashboard,
             ),
-          SetupCreating() => const _Creating(),
-          SetupComplete() => _Complete(
-              state: state,
-              onOpen: () => context.go(
-                  '/connections/${state.result.connectionId}/dashboards'),
+          SetupCreating() => _Review(
+              state: state.review,
+              busy: true,
+              onToggle: (_) {},
+              onCreate: () {},
             ),
+          // Navigation to the dashboard is under way (see ref.listen above).
+          SetupComplete() => const SizedBox.shrink(),
         },
       ),
     );
@@ -175,9 +197,14 @@ class _Scanning extends StatelessWidget {
 }
 
 class _ScanEmpty extends StatelessWidget {
-  const _ScanEmpty({required this.onRetry, required this.onManual});
+  const _ScanEmpty({
+    required this.onRetry,
+    required this.onManual,
+    required this.onDemo,
+  });
   final VoidCallback onRetry;
   final VoidCallback onManual;
+  final VoidCallback onDemo;
 
   @override
   Widget build(BuildContext context) {
@@ -207,6 +234,87 @@ class _ScanEmpty extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
+        TextButton(onPressed: onDemo, child: Text(l10n.onboardingDemo)),
+      ],
+    );
+  }
+}
+
+/// "Your broker works, but Zigbee2MQTT isn't publishing here": check the base
+/// topic on the same broker, see setup guides, or try the demo meanwhile.
+class _NoZigbee2Mqtt extends StatefulWidget {
+  const _NoZigbee2Mqtt({
+    required this.base,
+    required this.onRetry,
+    required this.onDemo,
+    required this.onManual,
+  });
+  final String base;
+  final ValueChanged<String> onRetry;
+  final VoidCallback onDemo;
+  final VoidCallback onManual;
+
+  @override
+  State<_NoZigbee2Mqtt> createState() => _NoZigbee2MqttState();
+}
+
+class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
+  late final _base = TextEditingController(text: widget.base);
+
+  @override
+  void dispose() {
+    _base.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Semantics(
+          liveRegion: true,
+          child: Text(l10n.setupNoZ2mTitle, style: theme.textTheme.titleLarge),
+        ),
+        const SizedBox(height: 8),
+        Text(l10n.setupNoZ2mBody(widget.base),
+            style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 24),
+        Text(l10n.setupBaseTopicQuestion, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _base,
+                decoration: InputDecoration(labelText: l10n.discoverBaseTopic),
+                onSubmitted: widget.onRetry,
+              ),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: () => widget.onRetry(_base.text),
+              child: Text(l10n.retry),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text(l10n.setupGuidesTitle, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Text(l10n.setupGuideHa, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 8),
+        Text(l10n.setupGuidePi, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 8),
+        Text(l10n.setupGuideSmlight, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 24),
+        OutlinedButton.icon(
+          onPressed: widget.onDemo,
+          icon: const Icon(Icons.play_circle_outline),
+          label: Text(l10n.setupTryDemoMeanwhile),
+        ),
+        TextButton(onPressed: widget.onManual, child: Text(l10n.setupManualEntry)),
       ],
     );
   }
@@ -353,10 +461,14 @@ class _Review extends StatelessWidget {
     required this.state,
     required this.onToggle,
     required this.onCreate,
+    this.busy = false,
   });
   final SetupReview state;
   final ValueChanged<String> onToggle;
   final VoidCallback onCreate;
+
+  /// Saving: the list stays up and the button shows progress.
+  final bool busy;
 
   @override
   Widget build(BuildContext context) {
@@ -393,8 +505,13 @@ class _Review extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: FilledButton.icon(
-            onPressed: state.selectedCount > 0 ? onCreate : null,
-            icon: const Icon(Icons.dashboard_outlined),
+            onPressed: state.selectedCount > 0 && !busy ? onCreate : null,
+            icon: busy
+                ? const SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.dashboard_outlined),
             label: Text(l10n.setupCreateWithCount(state.selectedCount)),
           ),
         ),
@@ -439,61 +556,6 @@ class _DeviceRow extends StatelessWidget {
             .whereType<String>()
             .join(' · '),
       ),
-    );
-  }
-}
-
-class _Creating extends StatelessWidget {
-  const _Creating();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 16),
-          Semantics(
-            liveRegion: true,
-            child: Text(context.l10n.setupCreatingTitle),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Complete extends StatelessWidget {
-  const _Complete({required this.state, required this.onOpen});
-  final SetupComplete state;
-  final VoidCallback onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    return ListView(
-      padding: const EdgeInsets.all(24),
-      children: [
-        const SizedBox(height: 32),
-        Icon(Icons.check_circle, size: 56, color: theme.colorScheme.tertiary),
-        const SizedBox(height: 16),
-        Semantics(
-          liveRegion: true,
-          child: Text(l10n.setupReadyTitle,
-              textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
-        ),
-        const SizedBox(height: 8),
-        Text(l10n.setupReadyBody(state.result.panelCount),
-            textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 32),
-        FilledButton.icon(
-          onPressed: onOpen,
-          icon: const Icon(Icons.dashboard_outlined),
-          label: Text(l10n.setupOpenDashboard),
-        ),
-      ],
     );
   }
 }

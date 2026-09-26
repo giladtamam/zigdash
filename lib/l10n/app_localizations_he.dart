@@ -18,36 +18,6 @@ class AppLocalizationsHe extends AppLocalizations {
   String get appTitle => 'ZigDash';
 
   @override
-  String get onboardingWelcomeTitle => 'ברוכים הבאים ל-ZigDash';
-
-  @override
-  String get onboardingWelcomeSubtitle =>
-      'לוח בקרה פרטי ומקומי ל-Zigbee2MQTT.\nללא ענן. ללא מעקב. רק שליטה.';
-
-  @override
-  String get onboardingBrokerTitle => 'התחברו לברוקר';
-
-  @override
-  String get onboardingBrokerSubtitle =>
-      'הפנו את ZigDash לברוקר ה-MQTT שלכם כדי לדבר ישירות עם מכשירי ה-Zigbee. עובד עם Mosquitto, SMLIGHT וכל שרת MQTT.';
-
-  @override
-  String get onboardingDashboardTitle => 'בנו לוחות בקרה';
-
-  @override
-  String get onboardingDashboardSubtitle =>
-      'צרו לוחות מותאמים אישית עם מתגים, סליידרים, תריסים ועוד. סדרו את הפאנלים כרצונכם — הכול נשמר במכשיר.';
-
-  @override
-  String get onboardingSkip => 'דילוג';
-
-  @override
-  String get onboardingNext => 'הבא';
-
-  @override
-  String get onboardingGetStarted => 'בואו נתחיל';
-
-  @override
   String get onboardingDemo => 'נסו הדגמה';
 
   @override
@@ -1347,9 +1317,6 @@ class AppLocalizationsHe extends AppLocalizations {
   String get guidedSaveFailed => 'לא ניתן היה לשמור את החיבור. נסו שוב.';
 
   @override
-  String get onboardingConnectBroker => 'חיבור הברוקר שלי';
-
-  @override
   String get setupWelcomeTitle => 'ברוכים הבאים ל-ZigDash';
 
   @override
@@ -1388,7 +1355,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get setupGuideSmlight =>
-      'SMLIGHT / SMHUB: פתחו את ממשק ה-web של המכשיר, הפעילו את ה-MQTT broker ובדקו ש-Zigbee2MQTT מוצג כמחובר.';
+      'SMLIGHT / SMHUB: פתחו את ממשק הווב, עברו ל‑Settings > MQTT, הפעילו את Allow External כדי שהטלפון יגיע ל‑broker, וודאו ש‑Zigbee2MQTT פועל.';
 
   @override
   String get setupTryAgain => 'נסו שוב';
@@ -1527,4 +1494,28 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get setupErrUnknownAction => 'נסו שוב';
+
+  @override
+  String get setupNoZ2mTitle =>
+      'ה‑broker שלך עובד, אבל Zigbee2MQTT לא מפרסם כאן';
+
+  @override
+  String setupNoZ2mBody(String base) {
+    return 'האזנו ל‑$base/bridge ולא התקבל דבר.';
+  }
+
+  @override
+  String get setupBaseTopicQuestion => 'משתמשים ב‑base topic אחר?';
+
+  @override
+  String get setupGuidesTitle => 'הגדרת Zigbee2MQTT';
+
+  @override
+  String get setupTryDemoMeanwhile => 'בינתיים לנסות את ההדגמה';
+
+  @override
+  String get demoBannerText => 'את/ה במצב הדגמה';
+
+  @override
+  String get demoBannerAction => 'חיבור הבית שלך';
 }

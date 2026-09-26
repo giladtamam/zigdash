@@ -128,60 +128,6 @@ abstract class AppLocalizations {
   /// **'ZigDash'**
   String get appTitle;
 
-  /// No description provided for @onboardingWelcomeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome to ZigDash'**
-  String get onboardingWelcomeTitle;
-
-  /// No description provided for @onboardingWelcomeSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your private, local dashboard for Zigbee2MQTT.\nNo cloud. No tracking. Just control.'**
-  String get onboardingWelcomeSubtitle;
-
-  /// No description provided for @onboardingBrokerTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect your broker'**
-  String get onboardingBrokerTitle;
-
-  /// No description provided for @onboardingBrokerSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Point ZigDash at your MQTT broker to talk directly to your Zigbee devices. Works with Mosquitto, SMLIGHT, and any MQTT server.'**
-  String get onboardingBrokerSubtitle;
-
-  /// No description provided for @onboardingDashboardTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Build your dashboards'**
-  String get onboardingDashboardTitle;
-
-  /// No description provided for @onboardingDashboardSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Create custom dashboards with toggles, sliders, covers, and more. Arrange panels your way — all stored on your device.'**
-  String get onboardingDashboardSubtitle;
-
-  /// No description provided for @onboardingSkip.
-  ///
-  /// In en, this message translates to:
-  /// **'Skip'**
-  String get onboardingSkip;
-
-  /// No description provided for @onboardingNext.
-  ///
-  /// In en, this message translates to:
-  /// **'Next'**
-  String get onboardingNext;
-
-  /// No description provided for @onboardingGetStarted.
-  ///
-  /// In en, this message translates to:
-  /// **'Get Started'**
-  String get onboardingGetStarted;
-
   /// No description provided for @onboardingDemo.
   ///
   /// In en, this message translates to:
@@ -2546,12 +2492,6 @@ abstract class AppLocalizations {
   /// **'Couldn\'t save the connection. Please try again.'**
   String get guidedSaveFailed;
 
-  /// No description provided for @onboardingConnectBroker.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect my broker'**
-  String get onboardingConnectBroker;
-
   /// No description provided for @setupWelcomeTitle.
   ///
   /// In en, this message translates to:
@@ -2621,7 +2561,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuideSmlight.
   ///
   /// In en, this message translates to:
-  /// **'SMLIGHT / SMHUB: open the device\'s web UI, enable the MQTT broker, and check that Zigbee2MQTT shows as connected.'**
+  /// **'SMLIGHT / SMHUB: open the device\'s web UI, go to Settings > MQTT, turn on Allow External so your phone can reach the broker, and check that Zigbee2MQTT shows as running.'**
   String get setupGuideSmlight;
 
   /// No description provided for @setupTryAgain.
@@ -2869,6 +2809,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get setupErrUnknownAction;
+
+  /// No description provided for @setupNoZ2mTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your broker works, but Zigbee2MQTT isn\'t publishing here'**
+  String get setupNoZ2mTitle;
+
+  /// No description provided for @setupNoZ2mBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We listened on {base}/bridge and heard nothing.'**
+  String setupNoZ2mBody(String base);
+
+  /// No description provided for @setupBaseTopicQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Using a different base topic?'**
+  String get setupBaseTopicQuestion;
+
+  /// No description provided for @setupGuidesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Zigbee2MQTT'**
+  String get setupGuidesTitle;
+
+  /// No description provided for @setupTryDemoMeanwhile.
+  ///
+  /// In en, this message translates to:
+  /// **'Try the demo meanwhile'**
+  String get setupTryDemoMeanwhile;
+
+  /// No description provided for @demoBannerText.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re in demo mode'**
+  String get demoBannerText;
+
+  /// No description provided for @demoBannerAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your home'**
+  String get demoBannerAction;
 }
 
 class _AppLocalizationsDelegate

@@ -18,36 +18,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appTitle => 'ZigDash';
 
   @override
-  String get onboardingWelcomeTitle => 'Bienvenido a ZigDash';
-
-  @override
-  String get onboardingWelcomeSubtitle =>
-      'Tu panel privado y local para Zigbee2MQTT.\nSin nube. Sin seguimiento. Solo control.';
-
-  @override
-  String get onboardingBrokerTitle => 'Conecta tu broker';
-
-  @override
-  String get onboardingBrokerSubtitle =>
-      'Apunta ZigDash a tu broker MQTT para hablar directamente con tus dispositivos Zigbee. Funciona con Mosquitto, SMLIGHT y cualquier servidor MQTT.';
-
-  @override
-  String get onboardingDashboardTitle => 'Crea tus tableros';
-
-  @override
-  String get onboardingDashboardSubtitle =>
-      'Crea tableros personalizados con interruptores, deslizadores, persianas y más. Organiza los paneles a tu manera: todo se guarda en tu dispositivo.';
-
-  @override
-  String get onboardingSkip => 'Omitir';
-
-  @override
-  String get onboardingNext => 'Siguiente';
-
-  @override
-  String get onboardingGetStarted => 'Comenzar';
-
-  @override
   String get onboardingDemo => 'Probar demo';
 
   @override
@@ -1367,9 +1337,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo guardar la conexión. Inténtalo de nuevo.';
 
   @override
-  String get onboardingConnectBroker => 'Conectar mi broker';
-
-  @override
   String get setupWelcomeTitle => 'Bienvenido a ZigDash';
 
   @override
@@ -1408,7 +1375,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupGuideSmlight =>
-      'SMLIGHT / SMHUB: abre la interfaz web del dispositivo, activa el broker MQTT y comprueba que Zigbee2MQTT aparezca como conectado.';
+      'SMLIGHT / SMHUB: abre la interfaz web, ve a Settings > MQTT, activa Allow External para que el móvil llegue al bróker y comprueba que Zigbee2MQTT está en marcha.';
 
   @override
   String get setupTryAgain => 'Reintentar';
@@ -1549,4 +1516,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupErrUnknownAction => 'Reintentar';
+
+  @override
+  String get setupNoZ2mTitle =>
+      'Tu bróker funciona, pero Zigbee2MQTT no publica aquí';
+
+  @override
+  String setupNoZ2mBody(String base) {
+    return 'Escuchamos en $base/bridge y no llegó nada.';
+  }
+
+  @override
+  String get setupBaseTopicQuestion => '¿Usas otro tema base?';
+
+  @override
+  String get setupGuidesTitle => 'Configurar Zigbee2MQTT';
+
+  @override
+  String get setupTryDemoMeanwhile => 'Prueba la demo mientras tanto';
+
+  @override
+  String get demoBannerText => 'Estás en modo demo';
+
+  @override
+  String get demoBannerAction => 'Conecta tu hogar';
 }
