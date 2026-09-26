@@ -1,0 +1,1 @@
+No more connection drops when the same home is set up on two devices, such as a phone and a wall tablet. TalkBack now reads each tile's name and state, and sliders read their real value. Material You colors now reach cards and sheets. Also includes 1.9.3: strict MQTT brokers connect again, and edge-to-edge layout.

@@ -1,0 +1,1 @@
+Se acabaron las desconexiones cuando el mismo hogar está configurado en dos dispositivos, como un móvil y una tableta de pared. TalkBack ahora lee el nombre y el estado de cada panel, y los deslizadores su valor real. Los colores de Material You llegan ahora a tarjetas y hojas. Incluye también 1.9.3: los brókers MQTT estrictos vuelven a conectar y diseño de borde a borde.

@@ -1,0 +1,1 @@
+Keine Verbindungsabbrüche mehr, wenn dasselbe Zuhause auf zwei Geräten eingerichtet ist, etwa Handy und Wandtablet. TalkBack liest jetzt Name und Zustand jeder Kachel, Schieberegler ihren echten Wert. Material-You-Farben erreichen jetzt Karten und Blätter. Enthält auch 1.9.3: strikte MQTT-Broker verbinden wieder, randlose Darstellung.

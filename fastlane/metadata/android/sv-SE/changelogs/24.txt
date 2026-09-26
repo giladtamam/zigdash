@@ -1,0 +1,1 @@
+Inga fler avbrott när samma hem är konfigurerat på två enheter, till exempel en telefon och en väggplatta. TalkBack läser nu upp namn och status för varje ruta, och reglage läser upp sitt verkliga värde. Material You-färger når nu även kort och ark. Innehåller även 1.9.3: strikta MQTT-brokers ansluter igen, kant-till-kant-layout.

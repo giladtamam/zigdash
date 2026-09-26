@@ -1,0 +1,1 @@
+Geen verbindingsonderbrekingen meer als hetzelfde huis op twee apparaten is ingesteld, zoals een telefoon en een wandtablet. TalkBack leest nu de naam en status van elke tegel voor, en schuifregelaars hun echte waarde. Material You-kleuren gelden nu ook voor kaarten en panelen. Bevat ook 1.9.3: strikte MQTT-brokers verbinden weer, edge-to-edge-weergave.
