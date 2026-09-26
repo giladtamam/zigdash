@@ -102,6 +102,12 @@ class SettingsScreen extends ConsumerWidget {
             groupValue: settings.locale?.languageCode,
             onChanged: (_) => ctrl.setLocale(const Locale('es')),
           ),
+          RadioListTile<String?>(
+            title: Text(l10n.languageFrench),
+            value: 'fr',
+            groupValue: settings.locale?.languageCode,
+            onChanged: (_) => ctrl.setLocale(const Locale('fr')),
+          ),
           const Divider(),
           _SectionHeader(l10n.settingsAbout),
           ListTile(

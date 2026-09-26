@@ -444,6 +444,7 @@
   "languageSwedish": "Svenska",
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
+  "languageFrench": "Français",
   "guidedConnectTitle": "Set up your broker",
   "guidedConnectIntro": "We'll test each step of the connection and show your Zigbee devices.",
   "guidedBaseTopic": "Base topic",

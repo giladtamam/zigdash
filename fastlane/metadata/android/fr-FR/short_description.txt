@@ -1,0 +1,1 @@
+Dashboard Zigbee2MQTT avec détection auto. Sans pub, sans cloud, open source.

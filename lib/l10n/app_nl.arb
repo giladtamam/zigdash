@@ -31,6 +31,7 @@
   "languageSwedish": "Svenska",
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
+  "languageFrench": "Français",
   "connectionsTitle": "Verbindingen",
   "connLoadFailed": "Laden mislukt: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },

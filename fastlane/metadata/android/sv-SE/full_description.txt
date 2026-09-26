@@ -25,7 +25,7 @@ AUTOMATION – KÖRS ÄVEN NÄR MOBILEN ÄR AV
 GENOMARBETAD – MOBIL OCH SURFPLATTA
 • Material 3 med ljust, mörkt och systemtema; Material You dynamiska färger på Android 12+.
 • Mobil och surfplatta, stående och liggande, perfekt som väggmonterad hemautomationsdashboard.
-• Finns på svenska, engelska, tyska, spanska, nederländska, norska och hebreiska, med automatisk RTL.
+• Finns på svenska, engelska, franska, tyska, spanska, nederländska, norska och hebreiska, med automatisk RTL.
 • Responsivt panelrutnät (hel, halv, tredjedels bredd), dashboardlås, säkerhetskopiering/återställning som portabel JSON, scener.
 
 100 % PRIVAT. INGET MOLN.

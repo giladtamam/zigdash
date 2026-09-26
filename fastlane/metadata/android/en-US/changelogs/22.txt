@@ -1,0 +1,1 @@
+New: French translation. Rate ZigDash from Settings, and a one-time, private in-app rating prompt after a few successful sessions (nothing leaves your device). Panel controls now stay usable whenever the broker is connected instead of waiting for a fresh value. Minor fixes.

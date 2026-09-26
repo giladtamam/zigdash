@@ -1,0 +1,1 @@
+Nouveau : traduction française. Notez ZigDash depuis les Paramètres, plus une demande d'avis unique et privée après quelques sessions réussies (rien ne quitte votre appareil). Les commandes des panneaux restent utilisables tant que le broker est connecté, sans attendre une nouvelle valeur. Corrections mineures.

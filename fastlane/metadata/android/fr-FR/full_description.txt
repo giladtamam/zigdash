@@ -1,0 +1,42 @@
+ZigDash est le dashboard MQTT conçu pour Zigbee2MQTT : il détecte vos appareils Zigbee automatiquement, votre tableau de bord domotique se construit donc tout seul. Pas de cloud, pas de pub, pas de compte : gratuit et open source. Pilotez lumières, volets, interrupteurs et capteurs depuis votre téléphone ou une tablette murale, et automatisez sur votre hub, même quand le téléphone est éteint.
+
+DÉTECTION AUTOMATIQUE POUR ZIGBEE2MQTT
+• Scannez votre bridge Zigbee2MQTT et créez un panneau pour chaque appareil d'un seul geste, sans câbler les topics à la main.
+• Extraction par chemin JSON sur chaque panneau : ZigDash comprend les vrais messages Zigbee2MQTT dès le départ.
+• Topics personnalisés, QoS et retain par panneau quand vous voulez tout contrôler.
+
+CONNECTEZ N'IMPORTE QUEL BROKER
+• Tout broker MQTT : TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• La détection de brokers scanne automatiquement votre réseau local.
+• Identifiant et mot de passe dans un stockage sécurisé par le matériel, jamais en clair.
+• État en direct avec reconnexion automatique (backoff exponentiel).
+• Prise en charge de Tailscale : accès à distance via votre maillage WireGuard, sans redirection de port.
+• Plusieurs brokers avec bascule instantanée.
+• Un client MQTT complet sous le capot : publiez et abonnez-vous à n'importe quel topic.
+
+16 TYPES DE PANNEAUX : PILOTEZ TOUT
+Interrupteur, Bouton, Curseur, Volet (ouvrir/stop/fermer avec positions), Multi-état, Liste, Radio, Voyant LED, État du nœud, Progression, Saisie de texte, Journal, Scène, Programmation, Règle d'arrêt auto et Détection d'appareils Zigbee2MQTT. Des lumières et volets aux capteurs et scènes : un seul dashboard Zigbee pour chaque appareil.
+
+AUTOMATISATION : FONCTIONNE TÉLÉPHONE ÉTEINT
+• Panneaux de programmation : minuteries quotidiennes d'ouverture/fermeture enregistrées en configuration MQTT retained.
+• Règles d'arrêt auto : éteindre un appareil N secondes après son allumage, parfait pour ventilateurs, pompes et éclairages temporisés.
+• Les deux tournent sur votre hub toujours allumé (Node-RED sur SMLIGHT, Raspberry Pi ou tout appareil MQTT). Flux Node-RED fournis.
+
+SOIGNÉ : TÉLÉPHONE ET TABLETTE
+• Material 3 avec thèmes clair, sombre et système ; couleurs dynamiques Material You sur Android 12+.
+• Téléphone et tablette, portrait et paysage : idéal en dashboard domotique mural.
+• Disponible en français, anglais, allemand, espagnol, néerlandais, suédois, norvégien et hébreu, avec RTL automatique.
+• Grille de panneaux réactive (pleine, demie, tiers de largeur), verrouillage du dashboard, sauvegarde/restauration en JSON portable, scènes.
+
+100 % PRIVÉ. SANS CLOUD.
+• Pas de pub. Pas d'analytics. Pas de compte. Pas de serveur du développeur.
+• Vos données restent sur votre appareil et votre broker MQTT, nulle part ailleurs.
+• Open source (MIT). Le code est public et auditable.
+
+POUR QUI ?
+Vous faites tourner Zigbee2MQTT avec votre propre broker (Mosquitto sur un Raspberry Pi, SMLIGHT SMHUB…), peut-être à côté de Home Assistant, et vous voulez un contrôle rapide depuis le téléphone ou une tablette murale sans ouvrir l'interface web de Zigbee2MQTT. Lassé des applis dépendantes du cloud, du verrouillage constructeur et de la collecte de données ? ZigDash est fait pour vous.
+
+CE QU'IL VOUS FAUT
+• Une installation Zigbee2MQTT avec un broker MQTT sur votre réseau local.
+• Tailscale (facultatif) pour l'accès à distance hors de chez vous.
+• Node-RED (facultatif) pour l'automatisation côté hub.

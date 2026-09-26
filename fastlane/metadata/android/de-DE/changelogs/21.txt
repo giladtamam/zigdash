@@ -1,1 +1,0 @@
-ZigDash direkt in den Einstellungen bewerten, plus eine einmalige, private Bewertungsanfrage nach einigen erfolgreichen Sitzungen (nichts verlässt dein Gerät). Panel-Steuerungen bleiben jetzt nutzbar, sobald der Broker verbunden ist, statt auf einen frischen Wert zu warten. Kleinere Korrekturen.

@@ -52,7 +52,7 @@ AUTOMATION — RUNS WHEN YOUR PHONE IS OFF
 POLISHED — PHONE & TABLET
 • Material 3 with light, dark, and system themes; Android 12+ Material You dynamic color.
 • Phone and tablet, portrait and landscape — ideal as a wall-mounted home automation dashboard.
-• Seven languages — English, German, Spanish, Dutch, Swedish, Norwegian and Hebrew (עברית) — with automatic RTL.
+• Eight languages — English, French, German, Spanish, Dutch, Swedish, Norwegian and Hebrew (עברית) — with automatic RTL.
 • Responsive panel grid (full, half, third width), dashboard lock, backup/restore as portable JSON, scenes.
 
 ━━━━━━━━━━━━━━━━━━━━━━

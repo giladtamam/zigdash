@@ -10,7 +10,7 @@ void main() {
   test('supportedLocales covers every shipped locale', () {
     final codes =
         AppLocalizations.supportedLocales.map((l) => l.languageCode).toSet();
-    expect(codes, containsAll(['en', 'he', 'de', 'nl', 'sv', 'nb', 'es']));
+    expect(codes, containsAll(['en', 'he', 'de', 'nl', 'sv', 'nb', 'es', 'fr']));
   });
 
   testWidgets('Settings renders Hebrew + RTL when locale is he', (tester) async {

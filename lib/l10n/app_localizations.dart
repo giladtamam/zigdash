@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
 import 'app_localizations_he.dart';
 import 'app_localizations_nb.dart';
 import 'app_localizations_nl.dart';
@@ -102,6 +103,7 @@ abstract class AppLocalizations {
     Locale('de'),
     Locale('en'),
     Locale('es'),
+    Locale('fr'),
     Locale('he'),
     Locale('nb'),
     Locale('nl'),
@@ -2364,6 +2366,12 @@ abstract class AppLocalizations {
   /// **'Español'**
   String get languageSpanish;
 
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get languageFrench;
+
   /// No description provided for @guidedConnectTitle.
   ///
   /// In en, this message translates to:
@@ -2871,6 +2879,7 @@ class _AppLocalizationsDelegate
     'de',
     'en',
     'es',
+    'fr',
     'he',
     'nb',
     'nl',
@@ -2890,6 +2899,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
     case 'he':
       return AppLocalizationsHe();
     case 'nb':

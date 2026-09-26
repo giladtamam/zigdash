@@ -1,1 +1,0 @@
-Valora ZigDash desde Ajustes, además de una única solicitud de valoración privada tras algunas sesiones correctas (nada sale de tu dispositivo). Los controles de los paneles ahora siguen disponibles siempre que el bróker esté conectado, sin esperar un valor nuevo. Correcciones menores.

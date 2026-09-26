@@ -31,6 +31,7 @@
   "languageSwedish": "Svenska",
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
+  "languageFrench": "Français",
   "connectionsTitle": "Anslutningar",
   "connLoadFailed": "Kunde inte ladda: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },

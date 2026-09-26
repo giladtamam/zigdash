@@ -1260,6 +1260,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get languageSpanish => 'Español';
 
   @override
+  String get languageFrench => 'Français';
+
+  @override
   String get guidedConnectTitle => 'Broker instellen';
 
   @override
