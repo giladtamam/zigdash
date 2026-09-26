@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../devices/device_registry.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/review/review_prompt_trigger.dart';
 import '../../../core/router/last_dashboard_store.dart';
@@ -34,6 +35,13 @@ class DashboardsScreen extends ConsumerWidget {
     final connectionStatus =
         ref.watch(connectionStatusProvider(connectionId)).valueOrNull ??
             MqttStatus.connecting;
+
+    // Link tiles to devices and follow renames while this home is open.
+    final base = dashboardsAsync.valueOrNull?.firstOrNull?.topicPrefix;
+    if (base != null && base.isNotEmpty) {
+      ref.watch(homeDeviceSyncProvider(
+          (connectionId: connectionId, base: base)));
+    }
 
     final connectionName = connectionAsync.maybeWhen(
       data: (c) => c?.name ?? 'Connection',

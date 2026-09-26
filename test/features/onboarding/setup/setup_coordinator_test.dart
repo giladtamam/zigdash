@@ -74,6 +74,7 @@ class _FakeCreator implements SetupStore {
     int dashboardColor = 0,
     int dashboardIcon = 0,
     required List<ReviewRow> selected,
+    List<ReviewRow> notSelected = const [],
   }) async {
     calls++;
     lastBase = base;

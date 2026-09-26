@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart' show Locale;
 import 'package:zigdash/core/storage/secure_storage.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
 import 'package:zigdash/data/database/daos/dashboard_dao.dart';
+import 'package:zigdash/data/database/daos/device_registry_dao.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
 import 'package:zigdash/data/database/daos/section_dao.dart';
 import 'package:zigdash/data/database/database.dart';
@@ -248,6 +249,29 @@ void main() {
       final dao = ConnectionDao(db);
       expect((await dao.getById(first.connectionId))!.name, 'My Home');
       expect((await dao.getById(second.connectionId))!.name, 'Home 2');
+    });
+
+    test('devices left unticked are not new; the home is marked seen',
+        () async {
+      final registry = DeviceRegistryDao(db);
+      final withRegistry = SetupCreator(
+        connections: ConnectionRepo(ConnectionDao(db), _MemSecure()),
+        dashboards: DashboardRepo(DashboardDao(db)),
+        sections: SectionRepo(SectionDao(db)),
+        panels: PanelRepo(PanelDao(db)),
+        registry: registry,
+      );
+      final result = await withRegistry.create(
+        host: '192.168.68.55',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+        selected: [pick(bulb)],
+        notSelected: [pick(plug).copyWith(selected: false)],
+      );
+
+      expect(await registry.watchDismissed(result.connectionId).first,
+          {'0x6ce4a4fffe6d2f80'});
+      expect(await registry.devicesSeenAt(result.connectionId), isNotNull);
     });
 
     test('names are written in the app language', () async {

@@ -2,6 +2,8 @@ import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/database/daos/device_registry_dao.dart';
+import '../../../data/database/database.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
@@ -32,6 +34,7 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
       dashboards: ref.watch(dashboardRepoProvider),
       sections: ref.watch(sectionRepoProvider),
       panels: ref.watch(panelRepoProvider),
+      registry: DeviceRegistryDao(ref.watch(appDatabaseProvider)),
       l10n: _appL10n(ref.read(settingsControllerProvider).locale),
     ),
     onCreated: (result) =>

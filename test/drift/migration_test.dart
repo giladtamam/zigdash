@@ -153,5 +153,8 @@ void main() {
         reason: 'the orphaned tile is dropped');
     expect(await db.select(db.scenes).get(), hasLength(1));
     expect(await db.select(db.sections).get(), isEmpty);
+    // Upgraded homes have not had their devices recorded as seen yet.
+    final home = await db.select(db.connections).getSingle();
+    expect(home.devicesSeenAt, isNull);
   });
 }

@@ -77,6 +77,7 @@ class _FakeStore implements SetupStore {
     int dashboardColor = 0,
     int dashboardIcon = 0,
     required List<ReviewRow> selected,
+    List<ReviewRow> notSelected = const [],
   }) async =>
       SetupResult(
           connectionId: 'c1', dashboardId: 'd1', panelCount: selected.length);

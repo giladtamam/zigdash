@@ -131,6 +131,16 @@
             "dsl_features": []
           },
           {
+            "name": "devices_seen_at",
+            "getter_name": "devicesSeenAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
             "name": "created_at",
             "getter_name": "createdAt",
             "moor_type": "dateTime",
@@ -872,7 +882,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"connections\" (\"id\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"host\" TEXT NOT NULL, \"port\" INTEGER NOT NULL, \"protocol\" TEXT NOT NULL, \"username\" TEXT NULL, \"keep_alive_seconds\" INTEGER NOT NULL DEFAULT 60, \"auto_connect\" INTEGER NOT NULL DEFAULT 0 CHECK (\"auto_connect\" IN (0, 1)), \"home_dashboard_id\" TEXT NULL, \"remote_host\" TEXT NULL, \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, PRIMARY KEY (\"id\"));"
+          "sql": "CREATE TABLE IF NOT EXISTS \"connections\" (\"id\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"host\" TEXT NOT NULL, \"port\" INTEGER NOT NULL, \"protocol\" TEXT NOT NULL, \"username\" TEXT NULL, \"keep_alive_seconds\" INTEGER NOT NULL DEFAULT 60, \"auto_connect\" INTEGER NOT NULL DEFAULT 0 CHECK (\"auto_connect\" IN (0, 1)), \"home_dashboard_id\" TEXT NULL, \"remote_host\" TEXT NULL, \"devices_seen_at\" INTEGER NULL, \"created_at\" INTEGER NOT NULL, \"updated_at\" INTEGER NOT NULL, PRIMARY KEY (\"id\"));"
         }
       ]
     },

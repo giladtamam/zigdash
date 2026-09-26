@@ -231,6 +231,7 @@ class SetupCoordinator {
         password: _password,
         base: base,
         selected: rows.where((r) => r.selected).toList(),
+        notSelected: rows.where((r) => !r.selected).toList(),
       );
       if (op != _op) return;
       try {

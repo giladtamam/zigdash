@@ -118,6 +118,18 @@ class $ConnectionsTable extends Connections
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _devicesSeenAtMeta = const VerificationMeta(
+    'devicesSeenAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> devicesSeenAt =
+      GeneratedColumn<DateTime>(
+        'devices_seen_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -152,6 +164,7 @@ class $ConnectionsTable extends Connections
     autoConnect,
     homeDashboardId,
     remoteHost,
+    devicesSeenAt,
     createdAt,
     updatedAt,
   ];
@@ -235,6 +248,15 @@ class $ConnectionsTable extends Connections
         remoteHost.isAcceptableOrUnknown(data['remote_host']!, _remoteHostMeta),
       );
     }
+    if (data.containsKey('devices_seen_at')) {
+      context.handle(
+        _devicesSeenAtMeta,
+        devicesSeenAt.isAcceptableOrUnknown(
+          data['devices_seen_at']!,
+          _devicesSeenAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -302,6 +324,10 @@ class $ConnectionsTable extends Connections
         DriftSqlType.string,
         data['${effectivePrefix}remote_host'],
       ),
+      devicesSeenAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}devices_seen_at'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -333,6 +359,11 @@ class Connection extends DataClass implements Insertable<Connection> {
   final bool autoConnect;
   final String? homeDashboardId;
   final String? remoteHost;
+
+  /// When the home's existing devices were recorded as seen (first connect
+  /// after 1.12 setup or upgrade). Null until then; only devices paired
+  /// later count as new.
+  final DateTime? devicesSeenAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Connection({
@@ -346,6 +377,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     required this.autoConnect,
     this.homeDashboardId,
     this.remoteHost,
+    this.devicesSeenAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -372,6 +404,9 @@ class Connection extends DataClass implements Insertable<Connection> {
     if (!nullToAbsent || remoteHost != null) {
       map['remote_host'] = Variable<String>(remoteHost);
     }
+    if (!nullToAbsent || devicesSeenAt != null) {
+      map['devices_seen_at'] = Variable<DateTime>(devicesSeenAt);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -395,6 +430,9 @@ class Connection extends DataClass implements Insertable<Connection> {
       remoteHost: remoteHost == null && nullToAbsent
           ? const Value.absent()
           : Value(remoteHost),
+      devicesSeenAt: devicesSeenAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(devicesSeenAt),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -418,6 +456,7 @@ class Connection extends DataClass implements Insertable<Connection> {
       autoConnect: serializer.fromJson<bool>(json['autoConnect']),
       homeDashboardId: serializer.fromJson<String?>(json['homeDashboardId']),
       remoteHost: serializer.fromJson<String?>(json['remoteHost']),
+      devicesSeenAt: serializer.fromJson<DateTime?>(json['devicesSeenAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -438,6 +477,7 @@ class Connection extends DataClass implements Insertable<Connection> {
       'autoConnect': serializer.toJson<bool>(autoConnect),
       'homeDashboardId': serializer.toJson<String?>(homeDashboardId),
       'remoteHost': serializer.toJson<String?>(remoteHost),
+      'devicesSeenAt': serializer.toJson<DateTime?>(devicesSeenAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -454,6 +494,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     bool? autoConnect,
     Value<String?> homeDashboardId = const Value.absent(),
     Value<String?> remoteHost = const Value.absent(),
+    Value<DateTime?> devicesSeenAt = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Connection(
@@ -469,6 +510,9 @@ class Connection extends DataClass implements Insertable<Connection> {
         ? homeDashboardId.value
         : this.homeDashboardId,
     remoteHost: remoteHost.present ? remoteHost.value : this.remoteHost,
+    devicesSeenAt: devicesSeenAt.present
+        ? devicesSeenAt.value
+        : this.devicesSeenAt,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -492,6 +536,9 @@ class Connection extends DataClass implements Insertable<Connection> {
       remoteHost: data.remoteHost.present
           ? data.remoteHost.value
           : this.remoteHost,
+      devicesSeenAt: data.devicesSeenAt.present
+          ? data.devicesSeenAt.value
+          : this.devicesSeenAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -510,6 +557,7 @@ class Connection extends DataClass implements Insertable<Connection> {
           ..write('autoConnect: $autoConnect, ')
           ..write('homeDashboardId: $homeDashboardId, ')
           ..write('remoteHost: $remoteHost, ')
+          ..write('devicesSeenAt: $devicesSeenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -528,6 +576,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     autoConnect,
     homeDashboardId,
     remoteHost,
+    devicesSeenAt,
     createdAt,
     updatedAt,
   );
@@ -545,6 +594,7 @@ class Connection extends DataClass implements Insertable<Connection> {
           other.autoConnect == this.autoConnect &&
           other.homeDashboardId == this.homeDashboardId &&
           other.remoteHost == this.remoteHost &&
+          other.devicesSeenAt == this.devicesSeenAt &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -560,6 +610,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
   final Value<bool> autoConnect;
   final Value<String?> homeDashboardId;
   final Value<String?> remoteHost;
+  final Value<DateTime?> devicesSeenAt;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -574,6 +625,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     this.autoConnect = const Value.absent(),
     this.homeDashboardId = const Value.absent(),
     this.remoteHost = const Value.absent(),
+    this.devicesSeenAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -589,6 +641,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     this.autoConnect = const Value.absent(),
     this.homeDashboardId = const Value.absent(),
     this.remoteHost = const Value.absent(),
+    this.devicesSeenAt = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -610,6 +663,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     Expression<bool>? autoConnect,
     Expression<String>? homeDashboardId,
     Expression<String>? remoteHost,
+    Expression<DateTime>? devicesSeenAt,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -625,6 +679,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
       if (autoConnect != null) 'auto_connect': autoConnect,
       if (homeDashboardId != null) 'home_dashboard_id': homeDashboardId,
       if (remoteHost != null) 'remote_host': remoteHost,
+      if (devicesSeenAt != null) 'devices_seen_at': devicesSeenAt,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -642,6 +697,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     Value<bool>? autoConnect,
     Value<String?>? homeDashboardId,
     Value<String?>? remoteHost,
+    Value<DateTime?>? devicesSeenAt,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -657,6 +713,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
       autoConnect: autoConnect ?? this.autoConnect,
       homeDashboardId: homeDashboardId ?? this.homeDashboardId,
       remoteHost: remoteHost ?? this.remoteHost,
+      devicesSeenAt: devicesSeenAt ?? this.devicesSeenAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -698,6 +755,9 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     if (remoteHost.present) {
       map['remote_host'] = Variable<String>(remoteHost.value);
     }
+    if (devicesSeenAt.present) {
+      map['devices_seen_at'] = Variable<DateTime>(devicesSeenAt.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -723,6 +783,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
           ..write('autoConnect: $autoConnect, ')
           ..write('homeDashboardId: $homeDashboardId, ')
           ..write('remoteHost: $remoteHost, ')
+          ..write('devicesSeenAt: $devicesSeenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -3695,6 +3756,7 @@ typedef $$ConnectionsTableCreateCompanionBuilder =
       Value<bool> autoConnect,
       Value<String?> homeDashboardId,
       Value<String?> remoteHost,
+      Value<DateTime?> devicesSeenAt,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -3711,6 +3773,7 @@ typedef $$ConnectionsTableUpdateCompanionBuilder =
       Value<bool> autoConnect,
       Value<String?> homeDashboardId,
       Value<String?> remoteHost,
+      Value<DateTime?> devicesSeenAt,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -3841,6 +3904,11 @@ class $$ConnectionsTableFilterComposer
 
   ColumnFilters<String> get remoteHost => $composableBuilder(
     column: $table.remoteHost,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get devicesSeenAt => $composableBuilder(
+    column: $table.devicesSeenAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3989,6 +4057,11 @@ class $$ConnectionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get devicesSeenAt => $composableBuilder(
+    column: $table.devicesSeenAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -4044,6 +4117,11 @@ class $$ConnectionsTableAnnotationComposer
 
   GeneratedColumn<String> get remoteHost => $composableBuilder(
     column: $table.remoteHost,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get devicesSeenAt => $composableBuilder(
+    column: $table.devicesSeenAt,
     builder: (column) => column,
   );
 
@@ -4171,6 +4249,7 @@ class $$ConnectionsTableTableManager
                 Value<bool> autoConnect = const Value.absent(),
                 Value<String?> homeDashboardId = const Value.absent(),
                 Value<String?> remoteHost = const Value.absent(),
+                Value<DateTime?> devicesSeenAt = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -4185,6 +4264,7 @@ class $$ConnectionsTableTableManager
                 autoConnect: autoConnect,
                 homeDashboardId: homeDashboardId,
                 remoteHost: remoteHost,
+                devicesSeenAt: devicesSeenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -4201,6 +4281,7 @@ class $$ConnectionsTableTableManager
                 Value<bool> autoConnect = const Value.absent(),
                 Value<String?> homeDashboardId = const Value.absent(),
                 Value<String?> remoteHost = const Value.absent(),
+                Value<DateTime?> devicesSeenAt = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -4215,6 +4296,7 @@ class $$ConnectionsTableTableManager
                 autoConnect: autoConnect,
                 homeDashboardId: homeDashboardId,
                 remoteHost: remoteHost,
+                devicesSeenAt: devicesSeenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,

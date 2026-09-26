@@ -1,8 +1,9 @@
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
-import 'package:flutter/widgets.dart' show Locale;
+import 'dart:ui' show Locale;
 
+import '../../../data/database/daos/device_registry_dao.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
@@ -40,6 +41,7 @@ abstract class SetupStore {
     int dashboardColor,
     int dashboardIcon,
     required List<ReviewRow> selected,
+    List<ReviewRow> notSelected,
   });
 }
 
@@ -56,8 +58,10 @@ class SetupCreator implements SetupStore {
     required DashboardRepo dashboards,
     required SectionRepo sections,
     required PanelRepo panels,
+    DeviceRegistryDao? registry,
     AppLocalizations? l10n,
   })  : _connections = connections,
+        _registry = registry,
         _dashboards = dashboards,
         _sections = sections,
         _panels = panels,
@@ -67,6 +71,7 @@ class SetupCreator implements SetupStore {
   final DashboardRepo _dashboards;
   final SectionRepo _sections;
   final PanelRepo _panels;
+  final DeviceRegistryDao? _registry;
   final AppLocalizations _l10n;
 
   SetupResult? _done;
@@ -83,6 +88,7 @@ class SetupCreator implements SetupStore {
     int dashboardColor = 0xFF00696B,
     int dashboardIcon = 0xe88a, // Icons.home codepoint
     required List<ReviewRow> selected,
+    List<ReviewRow> notSelected = const [],
   }) async {
     final done = _done;
     if (done != null) return done;
@@ -107,6 +113,15 @@ class SetupCreator implements SetupStore {
         iconCodepoint: dashboardIcon,
       );
       final count = await _createTiles(dashboardId, base, selected);
+      // Devices left out on purpose are not "new": only later pairings
+      // raise the Devices dot.
+      final registry = _registry;
+      if (registry != null) {
+        await registry.dismiss(connectionId, [
+          for (final r in notSelected) ?r.device.ieeeAddress,
+        ]);
+        await registry.markDevicesSeen(connectionId);
+      }
       return _done = SetupResult(
         connectionId: connectionId,
         dashboardId: dashboardId,

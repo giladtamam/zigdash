@@ -54,6 +54,7 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(deviceDismissals);
             await m.addColumn(panels, panels.sectionId);
             await m.addColumn(panels, panels.deviceIeee);
+            await m.addColumn(connections, connections.devicesSeenAt);
             await m.createIndex(panelsDeviceIeee);
             // 1.11 setup stored the device's full topic as both prefix and
             // topic, so its tiles used '<device>/<device>'. Rewrite them to

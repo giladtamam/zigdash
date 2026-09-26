@@ -1,0 +1,109 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../data/database/daos/device_registry_dao.dart';
+import '../../data/database/database.dart';
+import '../../data/database/tables/panels.dart';
+import '../discovery/models/z2m_device.dart';
+import '../discovery/providers/discovery_provider.dart';
+import '../panels/providers/panel_value_provider.dart';
+
+/// Keeps a home's tiles in step with its Zigbee2MQTT device list. Runs on
+/// every `bridge/devices` message and is safe to repeat.
+class DeviceRegistry {
+  DeviceRegistry(this._dao);
+
+  final DeviceRegistryDao _dao;
+
+  Future<void> sync(
+    String connectionId,
+    String base,
+    List<Z2mDevice> devices,
+  ) async {
+    final byIeee = {
+      for (final d in devices)
+        if (d.ieeeAddress != null) d.ieeeAddress!: d,
+    };
+    final byTopic = {
+      for (final d in byIeee.values) '$base/${d.friendlyName}': d,
+    };
+    final tiles = await _dao.tilesOfHome(connectionId);
+    for (final (tile, dashboardPrefix) in tiles) {
+      final ieee = tile.deviceIeee;
+      if (ieee != null) {
+        // Follow renames: device and reading tiles address the device by its
+        // current friendly name.
+        final device = byIeee[ieee];
+        final expected = device == null ? null : '$base/${device.friendlyName}';
+        if (expected != null &&
+            (tile.type == PanelType.device || tile.type == PanelType.reading) &&
+            tile.topicPrefixOverride != expected) {
+          await _dao.setPrefix(tile.id, expected);
+        }
+        continue;
+      }
+      // Link custom tiles that read or command a known device's topic, so
+      // devices already on a dashboard never count as unassigned.
+      final prefix = tile.topicPrefixOverride ?? dashboardPrefix;
+      for (final topic in {
+        composeTopic(prefix, tile.subscribeTopic ?? tile.topic),
+        composeTopic(prefix, tile.topic),
+      }) {
+        final state = topic.endsWith('/set')
+            ? topic.substring(0, topic.length - 4)
+            : topic;
+        final device = byTopic[state];
+        if (device != null) {
+          await _dao.setLink(tile.id, device.ieeeAddress!);
+          break;
+        }
+      }
+    }
+    // Once per home: devices that exist now count as seen, so an upgrade or
+    // a fresh setup never raises the new-device dot. Only later pairings do.
+    if (await _dao.devicesSeenAt(connectionId) == null) {
+      final linked = (await _dao.tilesOfHome(connectionId))
+          .map((t) => t.$1.deviceIeee)
+          .whereType<String>()
+          .toSet();
+      await _dao.dismiss(
+        connectionId,
+        byIeee.keys.where((ieee) => !linked.contains(ieee)),
+      );
+      await _dao.markDevicesSeen(connectionId);
+    }
+  }
+}
+
+/// Devices of a home that are on no dashboard and not dismissed: what the
+/// Devices-tab dot and the Edit-mode card count.
+List<Z2mDevice> unassignedDevices(
+  List<Z2mDevice> devices,
+  Set<String> linked,
+  Set<String> dismissed,
+) =>
+    [
+      for (final d in devices)
+        if (d.ieeeAddress != null &&
+            !linked.contains(d.ieeeAddress) &&
+            !dismissed.contains(d.ieeeAddress))
+          d,
+    ];
+
+final deviceRegistryProvider = Provider<DeviceRegistry>(
+  (ref) => DeviceRegistry(DeviceRegistryDao(ref.watch(appDatabaseProvider))),
+);
+
+/// Keeps [DeviceRegistry] in step with a home's device list while watched:
+/// runs a sync on the retained list and on every update. An empty or
+/// unreadable list is skipped, so a bad payload never marks devices seen.
+final homeDeviceSyncProvider =
+    Provider.autoDispose.family<void, DiscoveryArgs>((ref, args) {
+  ref.listen(bridgeDevicesStreamProvider(args), (_, next) {
+    final devices = next.valueOrNull;
+    if (devices == null || devices.isEmpty) return;
+    ref
+        .read(deviceRegistryProvider)
+        .sync(args.connectionId, args.base, devices)
+        .ignore();
+  }, fireImmediately: true);
+});
