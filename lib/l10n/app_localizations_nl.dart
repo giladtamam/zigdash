@@ -928,7 +928,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Nog geen panelen.\nTik op + om een Schakelaar, Schuifregelaar of Knop toe te voegen.';
+      'Nog geen tegels.\nTik op Tegel toevoegen om je apparaten hier te zetten.';
 
   @override
   String get panelsOffline => 'Offline — laatste waarden worden getoond';

@@ -327,7 +327,7 @@
   "panelAutoCloseClosingIn": "Stänger om {seconds}s",
   "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
   "panelAutoCloseClosingNow": "Stänger nu…",
-  "panelGridEmpty": "Inga paneler ännu.\nTryck på + för att lägga till en Strömbrytare, ett Reglage eller en Knapp.",
+  "panelGridEmpty": "Inga rutor ännu.\nTryck på Lägg till ruta för att lägga dina enheter här.",
   "panelsOffline": "Offline – visar senaste värden",
   "connectionConnecting": "Ansluter…",
   "connectionReconnecting": "Återansluter…",

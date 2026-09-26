@@ -327,7 +327,7 @@
   "panelAutoCloseClosingIn": "Sluit over {seconds}s",
   "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
   "panelAutoCloseClosingNow": "Sluiten…",
-  "panelGridEmpty": "Nog geen panelen.\nTik op + om een Schakelaar, Schuifregelaar of Knop toe te voegen.",
+  "panelGridEmpty": "Nog geen tegels.\nTik op Tegel toevoegen om je apparaten hier te zetten.",
   "panelsOffline": "Offline — laatste waarden worden getoond",
   "connectionConnecting": "Verbinden…",
   "connectionReconnecting": "Opnieuw verbinden…",

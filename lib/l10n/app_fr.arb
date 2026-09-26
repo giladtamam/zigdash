@@ -278,7 +278,7 @@
   "panelAutoCloseOffline": "Automatisation hors ligne — la règle ne s'exécutera pas",
   "panelAutoCloseClosingIn": "Fermeture dans {seconds} s",
   "panelAutoCloseClosingNow": "Fermeture en cours…",
-  "panelGridEmpty": "Aucun panneau pour l'instant.\nAppuyez sur + pour ajouter un interrupteur, un curseur ou un bouton.",
+  "panelGridEmpty": "Aucune tuile pour l’instant.\nAppuyez sur Ajouter une tuile pour placer vos appareils ici.",
   "panelsOffline": "Hors ligne — dernières valeurs affichées",
   "connectionConnecting": "Connexion…",
   "connectionReconnecting": "Reconnexion…",

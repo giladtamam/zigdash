@@ -932,7 +932,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Noch keine Panels.\nTippe auf +, um einen Schalter, Regler oder eine Taste hinzuzufügen.';
+      'Noch keine Kacheln.\nTippe auf „Kachel hinzufügen“, um deine Geräte hier abzulegen.';
 
   @override
   String get panelsOffline => 'Offline – letzte Werte werden angezeigt';

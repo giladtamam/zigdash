@@ -327,7 +327,7 @@
   "panelAutoCloseClosingIn": "Se cierra en {seconds}s",
   "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
   "panelAutoCloseClosingNow": "Cerrando…",
-  "panelGridEmpty": "Aún no hay paneles.\nToca + para añadir un Interruptor, Deslizador o Botón.",
+  "panelGridEmpty": "Aún no hay mosaicos.\nToca Añadir mosaico para poner aquí tus dispositivos.",
   "panelsOffline": "Sin conexión: mostrando últimos valores",
   "connectionConnecting": "Conectando…",
   "connectionReconnecting": "Reconectando…",

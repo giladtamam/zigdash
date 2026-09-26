@@ -4,6 +4,13 @@ import '../discovery/models/z2m_device.dart';
 import '../panels/models/panel_config.dart';
 import 'device_profile.dart';
 
+/// The Zigbee2MQTT base topic for a dashboard: its topic prefix, or the
+/// Zigbee2MQTT default when a hand-made dashboard left it empty.
+String z2mBase(String? dashboardPrefix) {
+  final p = dashboardPrefix?.trim() ?? '';
+  return p.isEmpty ? 'zigbee2mqtt' : p;
+}
+
 /// A tile's default size for a device class: Wide for colour lights and
 /// covers, Small otherwise.
 PanelWidth defaultTileSize(DeviceClass c) => switch (c) {

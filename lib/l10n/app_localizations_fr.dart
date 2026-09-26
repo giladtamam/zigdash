@@ -932,7 +932,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Aucun panneau pour l\'instant.\nAppuyez sur + pour ajouter un interrupteur, un curseur ou un bouton.';
+      'Aucune tuile pour l’instant.\nAppuyez sur Ajouter une tuile pour placer vos appareils ici.';
 
   @override
   String get panelsOffline => 'Hors ligne — dernières valeurs affichées';

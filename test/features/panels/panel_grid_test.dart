@@ -112,7 +112,7 @@ void main() {
     await tester.pumpWidget(_wrap(panels: []));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('No panels yet'), findsOneWidget);
+    expect(find.textContaining('No tiles yet'), findsOneWidget);
   });
 
   testWidgets('renders a panel tile per row with its name', (tester) async {
@@ -126,7 +126,7 @@ void main() {
     expect(find.text('Living Room Light'), findsOneWidget);
     expect(find.text('Brightness'), findsOneWidget);
     expect(find.text('Fan Mode'), findsOneWidget);
-    expect(find.textContaining('No panels yet'), findsNothing);
+    expect(find.textContaining('No tiles yet'), findsNothing);
   });
 
   testWidgets('does not duplicate dashboard connection status copy', (

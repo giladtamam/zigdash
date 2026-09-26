@@ -917,7 +917,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'אין עדיין פאנלים.\nהקש + כדי להוסיף מתג, מחוון או כפתור.';
+      'אין עדיין אריחים.\nהקישו על \'הוספת אריח\' כדי להציב כאן את המכשירים.';
 
   @override
   String get panelsOffline => 'לא מקוון — מוצגים הערכים האחרונים';

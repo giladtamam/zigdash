@@ -327,7 +327,7 @@
   "panelAutoCloseClosingIn": "Lukker om {seconds}s",
   "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
   "panelAutoCloseClosingNow": "Lukker nå…",
-  "panelGridEmpty": "Ingen paneler ennå.\nTrykk på + for å legge til en Bryter, Glidebryter eller Knapp.",
+  "panelGridEmpty": "Ingen fliser ennå.\nTrykk på Legg til flis for å legge enhetene dine her.",
   "panelsOffline": "Offline – viser siste verdier",
   "connectionConnecting": "Kobler til…",
   "connectionReconnecting": "Kobler til på nytt…",

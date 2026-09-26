@@ -930,7 +930,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Aún no hay paneles.\nToca + para añadir un Interruptor, Deslizador o Botón.';
+      'Aún no hay mosaicos.\nToca Añadir mosaico para poner aquí tus dispositivos.';
 
   @override
   String get panelsOffline => 'Sin conexión: mostrando últimos valores';

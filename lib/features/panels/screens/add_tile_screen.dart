@@ -49,11 +49,11 @@ class _AddTileScreenState extends ConsumerState<AddTileScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final dashboard = ref.watch(dashboardByIdProvider(widget.dashboardId));
-    final base = dashboard.valueOrNull?.topicPrefix;
-    final devicesAsync = base == null || base.isEmpty
-        ? const AsyncValue<List<Z2mDevice>>.data([])
+    final d = dashboard.valueOrNull;
+    final devicesAsync = d == null
+        ? const AsyncValue<List<Z2mDevice>>.loading()
         : ref.watch(bridgeDevicesStreamProvider(
-            (connectionId: widget.connectionId, base: base)));
+            (connectionId: widget.connectionId, base: z2mBase(d.topicPrefix))));
     final linked =
         ref.watch(linkedIeeesProvider(widget.connectionId)).valueOrNull ??
             const <String>{};
@@ -219,7 +219,7 @@ class _AddDeviceSheetState extends ConsumerState<_AddDeviceSheet> {
     await createDeviceTile(
       ref.read(panelRepoProvider),
       dashboardId: widget.dashboardId,
-      base: dashboard.topicPrefix ?? 'zigbee2mqtt',
+      base: z2mBase(dashboard.topicPrefix),
       device: widget.device,
       name: name.isEmpty ? widget.device.friendlyName : name,
       size: _size,

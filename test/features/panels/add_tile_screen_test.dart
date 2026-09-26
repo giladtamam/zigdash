@@ -76,7 +76,8 @@ void main() {
   });
   tearDown(() => db.close());
 
-  Widget app(List<Z2mDevice> devices, {Set<String> linked = const {}}) =>
+  Widget app(List<Z2mDevice> devices,
+          {Set<String> linked = const {}, String? prefix = 'zigbee2mqtt'}) =>
       ProviderScope(
         overrides: [
           panelRepoProvider.overrideWithValue(repo),
@@ -84,7 +85,7 @@ void main() {
                 id: 'd1',
                 connectionId: 'c1',
                 name: 'Home',
-                topicPrefix: 'zigbee2mqtt',
+                topicPrefix: prefix,
                 colorSeed: 0,
                 iconCodepoint: 0,
                 locked: false,
@@ -92,8 +93,8 @@ void main() {
                 createdAt: _stamp,
                 updatedAt: _stamp,
               )),
-          bridgeDevicesStreamProvider
-              .overrideWith((ref, _) => Stream.value(devices)),
+          bridgeDevicesStreamProvider.overrideWith((ref, args) =>
+              Stream.value(args.base == 'zigbee2mqtt' ? devices : [])),
           linkedIeeesProvider.overrideWith((ref, _) => Stream.value(linked)),
           sectionsForDashboardProvider.overrideWith((ref, _) => Stream.value([
                 Section(
@@ -134,6 +135,13 @@ void main() {
     await tester.scrollUntilVisible(find.text('Custom MQTT tile'), 100,
         scrollable: find.byType(Scrollable).first);
     expect(find.text('Custom MQTT tile'), findsOneWidget);
+  });
+
+  testWidgets('a dashboard with no topic prefix still lists Zigbee2MQTT devices',
+      (tester) async {
+    await tester.pumpWidget(app([_dev('hall', '0x2')], prefix: null));
+    await tester.pumpAndSettle();
+    expect(find.text('hall'), findsWidgets);
   });
 
   testWidgets('adding a device creates its tile in the matching section',

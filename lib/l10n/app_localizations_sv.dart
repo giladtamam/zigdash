@@ -926,7 +926,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Inga paneler ännu.\nTryck på + för att lägga till en Strömbrytare, ett Reglage eller en Knapp.';
+      'Inga rutor ännu.\nTryck på Lägg till ruta för att lägga dina enheter här.';
 
   @override
   String get panelsOffline => 'Offline – visar senaste värden';

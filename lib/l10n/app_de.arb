@@ -327,7 +327,7 @@
   "panelAutoCloseClosingIn": "Schließt in {seconds}s",
   "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
   "panelAutoCloseClosingNow": "Schließe jetzt…",
-  "panelGridEmpty": "Noch keine Panels.\nTippe auf +, um einen Schalter, Regler oder eine Taste hinzuzufügen.",
+  "panelGridEmpty": "Noch keine Kacheln.\nTippe auf „Kachel hinzufügen“, um deine Geräte hier abzulegen.",
   "panelsOffline": "Offline – letzte Werte werden angezeigt",
   "connectionConnecting": "Verbindung wird hergestellt…",
   "connectionReconnecting": "Verbindung wird wiederhergestellt…",

@@ -321,7 +321,7 @@
   "panelAutoCloseClosingIn": "Closing in {seconds}s",
   "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
   "panelAutoCloseClosingNow": "Closing now…",
-  "panelGridEmpty": "No panels yet.\nTap + to add a Toggle, Slider, or Button.",
+  "panelGridEmpty": "No tiles yet.\nTap Add tile to put your devices here.",
   "panelsOffline": "Offline — showing last values",
   "connectionConnecting": "Connecting…",
   "connectionReconnecting": "Reconnecting…",

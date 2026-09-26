@@ -922,7 +922,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'No panels yet.\nTap + to add a Toggle, Slider, or Button.';
+      'No tiles yet.\nTap Add tile to put your devices here.';
 
   @override
   String get panelsOffline => 'Offline — showing last values';

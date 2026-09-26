@@ -1781,7 +1781,7 @@ abstract class AppLocalizations {
   /// No description provided for @panelGridEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No panels yet.\nTap + to add a Toggle, Slider, or Button.'**
+  /// **'No tiles yet.\nTap Add tile to put your devices here.'**
   String get panelGridEmpty;
 
   /// No description provided for @panelsOffline.

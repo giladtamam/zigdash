@@ -927,7 +927,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Ingen paneler ennå.\nTrykk på + for å legge til en Bryter, Glidebryter eller Knapp.';
+      'Ingen fliser ennå.\nTrykk på Legg til flis for å legge enhetene dine her.';
 
   @override
   String get panelsOffline => 'Offline – viser siste verdier';
