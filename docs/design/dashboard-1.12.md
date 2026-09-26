@@ -140,7 +140,12 @@ Board: [edit-mode.png](screens/1.12/edit-mode.png).
 - **Bottom bar** in Edit mode is replaced by "Add tile" and "Add section".
 - **Unassigned card:** "N devices aren't on any dashboard", with **Add**, which opens Add tile filtered to those devices, and **✕**, which writes `device_dismissals` for them. A newly paired device brings the card back.
 - **TalkBack:** every drag has a path that needs no dragging. Tiles and sections get the custom actions "Move earlier" and "Move later", and tiles also have "Move to section".
-- **Build note:** implement drag with `LongPressDraggable` / `DragTarget` over the section grid, with no new package. Spike it in the first build week, because cross-section drops on a row-matched grid are the riskiest interaction in the release.
+- **Drag, from the spike (2026-09-26):** a throwaway widget-test spike on the packed-row grid confirmed the approach. It used one `LongPressDraggable` per tile, one `DragTarget` per tile and one per section header, with no new package. It covered moving a Wide tile ahead of a Small tile across rows, dropping into another section, dropping on a section header, and a quick swipe scrolling instead of moving a tile. Rules for the build:
+  - Use `dragAnchorStrategy: pointerDragAnchorStrategy`. With the default strategy, `DragTargetDetails.offset` is the feedback's top-left corner, not the finger, and before/after decisions come out wrong.
+  - A drop on a tile's leading half inserts before it, and on the trailing half after it. "Leading" flips in right-to-left.
+  - A drop on a section header makes the tile that section's first. A drop on a tile takes that tile's section.
+  - Reorder the list and let the grid repack. Never place tiles by coordinates.
+  - `Draggable` does not scroll the dashboard near its edges. Drive `EdgeDraggingAutoScroller` from `onDragUpdate`.
 
 ## 8. Add tile
 
