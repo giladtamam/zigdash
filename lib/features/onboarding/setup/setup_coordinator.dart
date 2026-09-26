@@ -82,9 +82,11 @@ class SetupReview extends SetupState {
   int get selectedCount => rows.where((r) => r.selected).length;
 }
 
-/// Saving connection + dashboard + panels.
+/// Saving connection + dashboard + panels. Carries the [review] so the list
+/// stays on screen with a busy button instead of a separate screen.
 class SetupCreating extends SetupState {
-  const SetupCreating();
+  const SetupCreating(this.review);
+  final SetupReview review;
 }
 
 /// Done — the dashboard is ready.
@@ -110,8 +112,10 @@ class SetupCoordinator {
     required ConnectDiagnostics diagnostics,
     required DeviceListFetcher fetchDevices,
     required SetupStore creator,
-    this.base = 'zigbee2mqtt',
-  })  : _scan = scan,
+    String base = 'zigbee2mqtt',
+    this.onCreated,
+  })  : _base = base,
+        _scan = scan,
         _deviceIp = deviceIp,
         _diagnostics = diagnostics,
         _fetchDevices = fetchDevices,
@@ -122,7 +126,15 @@ class SetupCoordinator {
   final ConnectDiagnostics _diagnostics;
   final DeviceListFetcher _fetchDevices;
   final SetupStore _creator;
-  final String base;
+
+  /// Runs once after a successful setup, before [SetupComplete] is emitted
+  /// (the app clears demo mode, finishes first run and remembers the new
+  /// dashboard). Its failures never undo the saved setup.
+  final Future<void> Function(SetupResult result)? onCreated;
+
+  /// The Zigbee2MQTT base topic for this session; [retryWithBase] changes it.
+  String get base => _base;
+  String _base;
 
   final _states = StreamController<SetupState>.broadcast();
   SetupState _state = const SetupIdle();
@@ -163,9 +175,14 @@ class SetupCoordinator {
       onDone: () {
         if (_state is! SetupScanning) return;
         final merged = mergeCandidates(buffer);
-        _emit(merged.isEmpty
-            ? const SetupScanEmpty()
-            : SetupScanning(merged, done: true));
+        if (merged.isEmpty) {
+          _emit(const SetupScanEmpty());
+        } else if (merged.length == 1) {
+          // One broker found: continue without asking the user to pick it.
+          unawaited(_verify(merged.single));
+        } else {
+          _emit(SetupScanning(merged, done: true));
+        }
       },
       onError: (_) {
         if (_state is SetupScanning) _emit(const SetupScanEmpty());
@@ -204,7 +221,7 @@ class SetupCoordinator {
     final candidate = _candidate;
     if (rows == null || candidate == null) return;
     final op = ++_op;
-    _emit(const SetupCreating());
+    _emit(SetupCreating(SetupReview(candidate, rows)));
     try {
       final result = await _creator.create(
         host: candidate.host,
@@ -215,6 +232,13 @@ class SetupCoordinator {
         base: base,
         selected: rows.where((r) => r.selected).toList(),
       );
+      if (op != _op) return;
+      try {
+        await onCreated?.call(result);
+      } catch (_) {
+        // The connection and dashboard are saved; follow-up bookkeeping
+        // failing must not turn a working setup into an error.
+      }
       if (op != _op) return;
       _emit(SetupComplete(result));
     } catch (_) {
@@ -239,6 +263,16 @@ class SetupCoordinator {
         await _verify(s.candidate!);
       }
     }
+  }
+
+  /// From "broker found, no Zigbee2MQTT": check [newBase] on the same broker.
+  /// Blank input keeps the current base topic.
+  Future<void> retryWithBase(String newBase) async {
+    final s = _state;
+    if (s is! SetupFailed || s.candidate == null) return;
+    final trimmed = newBase.trim();
+    if (trimmed.isNotEmpty) _base = trimmed;
+    await _verify(s.candidate!);
   }
 
   /// Leaves setup: cancels the scan and every in-flight operation, drops the
