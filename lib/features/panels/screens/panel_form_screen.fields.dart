@@ -336,6 +336,8 @@ extension _PanelFormFields on _State {
         PanelType.schedule => Icons.schedule,
         PanelType.scene => Icons.auto_awesome,
         PanelType.autoClose => Icons.timer_outlined,
+        PanelType.device => Icons.devices_other,
+        PanelType.reading => Icons.speed,
       };
 
   List<Widget> _typeSpecificFields() {
@@ -654,6 +656,28 @@ extension _PanelFormFields on _State {
         // Scene panels are configured from the Scenes screen ("Add to
         // dashboard"); the generic form only edits name/width here.
         return const [];
+      case PanelType.device:
+        // Device tiles are configured from the device; only name and size
+        // are edited here.
+        return const [];
+      case PanelType.reading:
+        return [
+          TextFormField(
+            controller: _readingJsonPath,
+            decoration: InputDecoration(
+              labelText: l10n.panelProgressJsonPath,
+              hintText: 'temperature',
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextFormField(
+            controller: _readingUnit,
+            decoration: InputDecoration(
+              labelText: l10n.panelProgressUnit,
+              hintText: '°C',
+            ),
+          ),
+        ];
       case PanelType.autoClose:
         return [
           Text(

@@ -127,6 +127,8 @@ class _DashboardsTabbed extends ConsumerWidget {
     PanelType.schedule: 'Schedule',
     PanelType.scene: 'Scene',
     PanelType.autoClose: 'Auto-Close',
+    PanelType.device: 'Device',
+    PanelType.reading: 'Reading',
   };
 
   void _openReorderSheet(
@@ -688,4 +690,6 @@ IconData _panelTypeIcon(PanelType type) => switch (type) {
       PanelType.schedule => Icons.schedule,
       PanelType.scene => Icons.auto_awesome,
       PanelType.autoClose => Icons.timer_outlined,
+      PanelType.device => Icons.devices_other,
+      PanelType.reading => Icons.speed,
     };

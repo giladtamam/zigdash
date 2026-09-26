@@ -503,6 +503,12 @@ class AppLocalizationsHe extends AppLocalizations {
   String get panelTypeAutoClose => 'סגירה אוטומטית';
 
   @override
+  String get panelTypeDevice => 'מכשיר';
+
+  @override
+  String get panelTypeReading => 'קריאה';
+
+  @override
   String get panelFormName => 'שם';
 
   @override
@@ -1506,4 +1512,68 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get demoBannerAction => 'חיבור הבית שלך';
+
+  @override
+  String get deviceOn => 'פועל';
+
+  @override
+  String get deviceOff => 'כבוי';
+
+  @override
+  String get deviceOpen => 'פתוח';
+
+  @override
+  String get deviceClosed => 'סגור';
+
+  @override
+  String get deviceMotion => 'תנועה';
+
+  @override
+  String get deviceClear => 'שקט';
+
+  @override
+  String get deviceLeakDetected => 'זוהתה נזילה';
+
+  @override
+  String get deviceSmokeDetected => 'זוהה עשן';
+
+  @override
+  String get deviceGasDetected => 'זוהה גז';
+
+  @override
+  String get deviceWaiting => 'ממתין לדיווח ראשון';
+
+  @override
+  String deviceEndpointsOnOff(int on, int off) {
+    return '$on פועלים · $off כבויים';
+  }
+
+  @override
+  String get deviceBrightness => 'בהירות';
+
+  @override
+  String get deviceWhite => 'לבן';
+
+  @override
+  String get deviceColor => 'צבע';
+
+  @override
+  String get deviceHue => 'גוון';
+
+  @override
+  String get devicePosition => 'מיקום';
+
+  @override
+  String get deviceControls => 'פקדים';
+
+  @override
+  String deviceBattery(int percent) {
+    return 'סוללה $percent%';
+  }
+
+  @override
+  String get deviceToggle => 'הפעלה או כיבוי';
+
+  @override
+  String get deviceMore => 'עוד';
 }

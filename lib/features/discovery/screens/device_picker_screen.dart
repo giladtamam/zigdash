@@ -55,6 +55,8 @@ class _DevicePickerScreenState extends ConsumerState<DevicePickerScreen> {
         PanelType.schedule => Icons.schedule,
         PanelType.scene => Icons.auto_awesome,
         PanelType.autoClose => Icons.timer_outlined,
+      PanelType.device => Icons.devices_other,
+      PanelType.reading => Icons.speed,
       };
 
   @override

@@ -19,12 +19,14 @@ import 'auto_close_panel.dart';
 import 'button_panel.dart';
 import 'combo_panel.dart';
 import 'cover_panel.dart';
+import 'device_tile_panel.dart';
 import 'led_panel.dart';
 import 'multi_state_panel.dart';
 import 'node_status_panel.dart';
 import 'panel_reliability_frame.dart';
 import 'progress_panel.dart';
 import 'radio_panel.dart';
+import 'reading_panel.dart';
 import 'slider_panel.dart';
 import 'text_input_panel.dart';
 import 'scene_panel.dart';
@@ -88,6 +90,7 @@ class PanelReliabilityPolicy {
       ProgressConfig config => config.jsonPath,
       OptionsConfig config => config.jsonPath,
       TextLogConfig config => config.jsonPath,
+      ReadingConfig config => config.jsonPath,
       _ => null,
     };
   }
@@ -122,6 +125,10 @@ PanelReliabilityPolicy panelReliabilityPolicy(PanelType type) => switch (type) {
   PanelType.progress ||
   PanelType.textLog => const PanelReliabilityPolicy.readOnlySubscription(),
   PanelType.autoClose => const PanelReliabilityPolicy.autoClose(),
+  PanelType.device => const PanelReliabilityPolicy.interactiveSubscription(
+    jsonPathSource: PanelJsonPathSource.none,
+  ),
+  PanelType.reading => const PanelReliabilityPolicy.readOnlySubscription(),
 };
 
 String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
@@ -129,6 +136,8 @@ String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
   return switch (config) {
     CoverConfig config => _coverReliabilityValueLabel(config, value),
     TextLogConfig() => _textLogReliabilityValueLabel(value),
+    // The tile reads its own state line; the raw payload is JSON.
+    DeviceTileConfig() => null,
     _ => value.toString(),
   };
 }
@@ -415,6 +424,19 @@ class PanelTile extends ConsumerWidget {
         brokerPublishEnabled:
             reliability.controlGate == PanelControlGate.autoClose &&
             connectionStatus == MqttStatus.connected,
+      ),
+      PanelType.device => DeviceTilePanel(
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as DeviceTileConfig,
+      ),
+      PanelType.reading => ReadingPanel(
+        connectionId: connectionId,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as ReadingConfig,
       ),
     };
 

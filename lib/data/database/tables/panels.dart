@@ -19,6 +19,13 @@ enum PanelType {
   schedule,
   scene,
   autoClose,
+
+  /// A whole Zigbee2MQTT device of a known class (1.12). Config:
+  /// DeviceTileConfig; the device is `deviceIeee`.
+  device,
+
+  /// One numeric value with its unit (1.12). Config: ReadingConfig.
+  reading,
 }
 
 /// A tile's size on the dashboard grid: **Small** spans one column, **Wide**

@@ -146,6 +146,11 @@ void main() {
       PanelType.schedule: PanelReliabilityPolicy.publishOnly(),
       PanelType.scene: PanelReliabilityPolicy.publishOnly(),
       PanelType.autoClose: PanelReliabilityPolicy.autoClose(),
+      // Device tiles read the whole state payload and send /set commands.
+      PanelType.device: PanelReliabilityPolicy.interactiveSubscription(
+        jsonPathSource: PanelJsonPathSource.none,
+      ),
+      PanelType.reading: PanelReliabilityPolicy.readOnlySubscription(),
     };
 
     expect(expected.keys, containsAll(PanelType.values));

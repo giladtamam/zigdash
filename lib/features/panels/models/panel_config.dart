@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../../../data/database/tables/panels.dart';
+import '../../devices/device_profile.dart';
 
 /// Type-specific configuration stored as JSON in `Panels.config`. Decoded
 /// on the fly in panel widgets. Refactor to a freezed sealed union once
@@ -31,6 +32,8 @@ sealed class PanelConfig {
       PanelType.schedule => ScheduleConfig.fromJson(j),
       PanelType.scene => SceneConfig.fromJson(j),
       PanelType.autoClose => AutoCloseConfig.fromJson(j),
+      PanelType.device => DeviceTileConfig.fromJson(j),
+      PanelType.reading => ReadingConfig.fromJson(j),
     };
   }
 
@@ -51,6 +54,11 @@ sealed class PanelConfig {
         PanelType.schedule => const ScheduleConfig(),
         PanelType.scene => const SceneConfig(),
         PanelType.autoClose => AutoCloseConfig(),
+        PanelType.device => const DeviceTileConfig(
+            profile:
+                DeviceProfile(deviceClass: DeviceClass.generic, features: []),
+          ),
+        PanelType.reading => const ReadingConfig(),
       };
 }
 
@@ -518,5 +526,54 @@ class AutoCloseConfig extends PanelConfig {
         closePayload: j['closePayload'] as String? ?? '{"state":"OFF"}',
         delaySeconds: (j['delaySeconds'] as num?)?.toInt() ?? 60,
         enabled: j['enabled'] as bool? ?? true,
+      );
+}
+
+/// A device tile: the device's class and exposes, cached when the tile was
+/// added so it renders with the broker unreachable. The device itself is the
+/// panel's `deviceIeee`; its topics are resolved from the friendly name.
+class DeviceTileConfig extends PanelConfig {
+  const DeviceTileConfig({required this.profile, this.model});
+
+  final DeviceProfile profile;
+
+  /// Vendor and model, e.g. "Tuya CK-BL702-AL-01", shown when the friendly
+  /// name is still an IEEE address.
+  final String? model;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'profile': profile.toJson(),
+        if (model != null) 'model': model,
+      };
+
+  static DeviceTileConfig fromJson(Map<String, dynamic> j) => DeviceTileConfig(
+        profile: DeviceProfile.fromJson(j['profile']),
+        model: j['model'] as String?,
+      );
+}
+
+/// A reading tile: one numeric value at [jsonPath] of the subscribed
+/// payload, shown with [unit].
+class ReadingConfig extends PanelConfig {
+  const ReadingConfig({this.jsonPath = 'temperature', this.unit, this.decimals});
+
+  final String jsonPath;
+  final String? unit;
+
+  /// Fraction digits; null shows the value as received, trimmed to one.
+  final int? decimals;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'jsonPath': jsonPath,
+        if (unit != null) 'unit': unit,
+        if (decimals != null) 'decimals': decimals,
+      };
+
+  static ReadingConfig fromJson(Map<String, dynamic> j) => ReadingConfig(
+        jsonPath: j['jsonPath'] as String? ?? 'temperature',
+        unit: j['unit'] as String?,
+        decimals: (j['decimals'] as num?)?.toInt(),
       );
 }

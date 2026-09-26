@@ -118,6 +118,13 @@ class _State extends ConsumerState<PanelFormScreen> {
   // Scene field — preserved across generic-form edits (no UI field here; scene
   // panels are created/edited from the Scenes screen).
   String _sceneId = '';
+  // Device tile config — preserved as loaded; its topics and exposes are
+  // managed from the device, so the form edits only name and size.
+  DeviceTileConfig? _deviceConfig;
+
+  // Reading fields
+  final _readingJsonPath = TextEditingController(text: 'temperature');
+  final _readingUnit = TextEditingController();
 
   // Schedule fields
   final _scheduleOpenTime = TextEditingController(text: '07:00');
@@ -151,14 +158,17 @@ class _State extends ConsumerState<PanelFormScreen> {
       _type == PanelType.nodeStatus ||
       _type == PanelType.progress ||
       _type == PanelType.textLog ||
-      _type == PanelType.scene;
+      _type == PanelType.scene ||
+      _type == PanelType.device ||
+      _type == PanelType.reading;
 
   bool get _isWriteOnly =>
       _type == PanelType.button ||
       _type == PanelType.textInput ||
       _type == PanelType.schedule ||
       _type == PanelType.scene ||
-      _type == PanelType.autoClose;
+      _type == PanelType.autoClose ||
+      _type == PanelType.device;
 
   /// Returns the json-path text for the current panel type, or '' for types
   /// without a json-path field (button, textInput, cover, schedule, autoClose).
@@ -173,6 +183,7 @@ class _State extends ConsumerState<PanelFormScreen> {
         PanelType.radio =>
           _optionsJsonPath.text,
         PanelType.textLog => _textLogJsonPath.text,
+        PanelType.reading => _readingJsonPath.text,
         _ => '',
       };
 
@@ -192,6 +203,7 @@ class _State extends ConsumerState<PanelFormScreen> {
     _progressJsonPath.addListener(_onTopicChanged);
     _optionsJsonPath.addListener(_onTopicChanged);
     _textLogJsonPath.addListener(_onTopicChanged);
+    _readingJsonPath.addListener(_onTopicChanged);
     _type = widget.initialType ?? PanelType.toggle;
     _loadDashboardPrefix();
     if (_isEdit) {
@@ -352,6 +364,11 @@ class _State extends ConsumerState<PanelFormScreen> {
       _autoCloseEnabled = cfg.enabled;
     } else if (cfg is SceneConfig) {
       _sceneId = cfg.sceneId;
+    } else if (cfg is DeviceTileConfig) {
+      _deviceConfig = cfg;
+    } else if (cfg is ReadingConfig) {
+      _readingJsonPath.text = cfg.jsonPath;
+      _readingUnit.text = cfg.unit ?? '';
     }
     setState(() => _loaded = true);
   }
@@ -415,6 +432,14 @@ class _State extends ConsumerState<PanelFormScreen> {
         break;
       case PanelType.autoClose:
         _topic.text = '';
+        break;
+      case PanelType.device:
+        _topic.text = 'set';
+        _subscribeTopic.text = '';
+        break;
+      case PanelType.reading:
+        _topic.text = '';
+        _subscribeTopic.text = '';
         break;
     }
   }
@@ -499,6 +524,14 @@ class _State extends ConsumerState<PanelFormScreen> {
           closePayload: _autoCloseClosePayload.text,
           delaySeconds: int.tryParse(_autoCloseDelaySeconds.text) ?? 60,
           enabled: _autoCloseEnabled,
+        ),
+      PanelType.device => _deviceConfig ??
+          PanelConfig.defaultFor(PanelType.device) as DeviceTileConfig,
+      PanelType.reading => ReadingConfig(
+          jsonPath: _readingJsonPath.text.trim().isEmpty
+              ? 'value'
+              : _readingJsonPath.text.trim(),
+          unit: nullIfBlank(_readingUnit.text),
         ),
     };
   }
@@ -628,6 +661,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       _scheduleOpenPayload, _scheduleClosePayload,
       _autoCloseTriggerPath, _autoCloseTriggerValue,
       _autoCloseClosePayload, _autoCloseDelaySeconds,
+      _readingJsonPath, _readingUnit,
     ]) {
       c.dispose();
     }
@@ -669,6 +703,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       PanelType.schedule => l10n.panelTypeSchedule,
       PanelType.scene => l10n.panelTypeScene,
       PanelType.autoClose => l10n.panelTypeAutoClose,
+      PanelType.device => l10n.panelTypeDevice,
+      PanelType.reading => l10n.panelTypeReading,
     };
 
     return Scaffold(

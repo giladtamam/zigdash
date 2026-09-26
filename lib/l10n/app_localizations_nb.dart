@@ -510,6 +510,12 @@ class AppLocalizationsNb extends AppLocalizations {
   String get panelTypeAutoClose => 'Auto-lukk';
 
   @override
+  String get panelTypeDevice => 'Enhet';
+
+  @override
+  String get panelTypeReading => 'Måling';
+
+  @override
   String get panelFormName => 'Navn';
 
   @override
@@ -1520,4 +1526,68 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get demoBannerAction => 'Koble til hjemmet ditt';
+
+  @override
+  String get deviceOn => 'På';
+
+  @override
+  String get deviceOff => 'Av';
+
+  @override
+  String get deviceOpen => 'Åpen';
+
+  @override
+  String get deviceClosed => 'Lukket';
+
+  @override
+  String get deviceMotion => 'Bevegelse';
+
+  @override
+  String get deviceClear => 'Rolig';
+
+  @override
+  String get deviceLeakDetected => 'Lekkasje oppdaget';
+
+  @override
+  String get deviceSmokeDetected => 'Røyk oppdaget';
+
+  @override
+  String get deviceGasDetected => 'Gass oppdaget';
+
+  @override
+  String get deviceWaiting => 'Venter på første rapport';
+
+  @override
+  String deviceEndpointsOnOff(int on, int off) {
+    return '$on på · $off av';
+  }
+
+  @override
+  String get deviceBrightness => 'Lysstyrke';
+
+  @override
+  String get deviceWhite => 'Hvit';
+
+  @override
+  String get deviceColor => 'Farge';
+
+  @override
+  String get deviceHue => 'Nyanse';
+
+  @override
+  String get devicePosition => 'Posisjon';
+
+  @override
+  String get deviceControls => 'Kontroller';
+
+  @override
+  String deviceBattery(int percent) {
+    return 'Batteri $percent %';
+  }
+
+  @override
+  String get deviceToggle => 'Slå på eller av';
+
+  @override
+  String get deviceMore => 'Mer';
 }

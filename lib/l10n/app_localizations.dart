@@ -1016,6 +1016,18 @@ abstract class AppLocalizations {
   /// **'Auto-close'**
   String get panelTypeAutoClose;
 
+  /// No description provided for @panelTypeDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get panelTypeDevice;
+
+  /// No description provided for @panelTypeReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get panelTypeReading;
+
   /// No description provided for @panelFormName.
   ///
   /// In en, this message translates to:
@@ -2827,6 +2839,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect your home'**
   String get demoBannerAction;
+
+  /// No description provided for @deviceOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get deviceOn;
+
+  /// No description provided for @deviceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get deviceOff;
+
+  /// No description provided for @deviceOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get deviceOpen;
+
+  /// No description provided for @deviceClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get deviceClosed;
+
+  /// No description provided for @deviceMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion'**
+  String get deviceMotion;
+
+  /// No description provided for @deviceClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get deviceClear;
+
+  /// No description provided for @deviceLeakDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Leak detected'**
+  String get deviceLeakDetected;
+
+  /// No description provided for @deviceSmokeDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoke detected'**
+  String get deviceSmokeDetected;
+
+  /// No description provided for @deviceGasDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Gas detected'**
+  String get deviceGasDetected;
+
+  /// No description provided for @deviceWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for first report'**
+  String get deviceWaiting;
+
+  /// No description provided for @deviceEndpointsOnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'{on} on · {off} off'**
+  String deviceEndpointsOnOff(int on, int off);
+
+  /// No description provided for @deviceBrightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get deviceBrightness;
+
+  /// No description provided for @deviceWhite.
+  ///
+  /// In en, this message translates to:
+  /// **'White'**
+  String get deviceWhite;
+
+  /// No description provided for @deviceColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get deviceColor;
+
+  /// No description provided for @deviceHue.
+  ///
+  /// In en, this message translates to:
+  /// **'Hue'**
+  String get deviceHue;
+
+  /// No description provided for @devicePosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get devicePosition;
+
+  /// No description provided for @deviceControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Controls'**
+  String get deviceControls;
+
+  /// No description provided for @deviceBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery {percent}%'**
+  String deviceBattery(int percent);
+
+  /// No description provided for @deviceToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on or off'**
+  String get deviceToggle;
+
+  /// No description provided for @deviceMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get deviceMore;
 }
 
 class _AppLocalizationsDelegate
