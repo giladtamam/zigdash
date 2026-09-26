@@ -111,8 +111,13 @@ class DeviceTilePanel extends ConsumerWidget {
         (cls == DeviceClass.generic && switches.isNotEmpty);
     final anyOn = switches.any((f) => state.isOn(f) == true);
 
+    final silent = ref
+            .watch(deviceSilentProvider(
+                (connectionId: connectionId, topic: subscribeTopic)))
+            .valueOrNull ??
+        false;
     final big = _bigValue(state, l10n);
-    final line = deviceStateLine(state, l10n);
+    final line = deviceStateLine(state, l10n, notResponding: silent);
     final color = cls == DeviceClass.colorLight ? state.lightColor : null;
 
     return Card(
@@ -217,8 +222,16 @@ class DeviceTilePanel extends ConsumerWidget {
 }
 
 /// The state line under a device tile's name: state · main value · battery.
-String deviceStateLine(DeviceState state, AppLocalizations l10n) {
-  if (!state.hasReported) return l10n.deviceWaiting;
+/// Before any state: "Not responding" once the device ignored its state
+/// request, otherwise "Waiting for first report".
+String deviceStateLine(
+  DeviceState state,
+  AppLocalizations l10n, {
+  bool notResponding = false,
+}) {
+  if (!state.hasReported) {
+    return notResponding ? l10n.deviceNotResponding : l10n.deviceWaiting;
+  }
   final profile = state.profile;
   final parts = <String>[];
   String onOff(bool? on) => on == null
@@ -353,8 +366,9 @@ class _QuickAction extends StatelessWidget {
               icon: Icon(icon),
             )
           : IconButton.filledTonal(
-              // Unknown state: disabled until the device reports.
-              onPressed: on == null ? null : onPressed,
+              // Unknown state still switches: the command toggles (or turns
+              // on) without knowing the current state.
+              onPressed: onPressed,
               tooltip: tooltip,
               icon: Icon(icon),
             ),

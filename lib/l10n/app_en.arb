@@ -584,5 +584,6 @@
   "deviceClassContact": "Contact",
   "deviceClassMotion": "Motion",
   "deviceClassClimate": "Climate sensor",
-  "deviceClassGeneric": "Device"
+  "deviceClassGeneric": "Device",
+  "deviceNotResponding": "Not responding"
 }

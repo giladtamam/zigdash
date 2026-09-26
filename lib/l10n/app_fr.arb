@@ -504,5 +504,6 @@
   "deviceClassContact": "Contact",
   "deviceClassMotion": "Mouvement",
   "deviceClassClimate": "Capteur climatique",
-  "deviceClassGeneric": "Appareil"
+  "deviceClassGeneric": "Appareil",
+  "deviceNotResponding": "Ne répond pas"
 }

@@ -1692,4 +1692,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get deviceClassGeneric => 'Apparaat';
+
+  @override
+  String get deviceNotResponding => 'Reageert niet';
 }

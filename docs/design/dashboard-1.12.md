@@ -83,7 +83,8 @@ Board: [tiles.png](screens/1.12/tiles.png), [color-sheet.png](screens/1.12/color
 
 - **Battery** shows in the state line. At 20% or below, or when `battery_low` is set, it is drawn in the error color.
 - **Stale:** the tile is dimmed and carries an age chip ("2 h ago", or a date after a day).
-- **Never reported:** values show "—" and the tile says "waiting for first report". Toggles stay disabled until the state is known.
+- **Never reported:** values show "—" and the tile says "Waiting for first report". The quick action still works: it sends `value_toggle` (or on), which needs no known state. Found on the reference SMHUB, where bulbs out of reach never report, so a disabled switch left the tile unusable.
+- **Not responding:** if a device ignores its state request for 15 s, the tile says "Not responding" instead of waiting. Zigbee2MQTT availability is off by default, so this is often the only sign that a device has dropped off the network.
 - **Header summary** under the home name: "N on" (lights and switches on in this dashboard) and the temperature of the first climate tile, when there is one.
 - **Names** default to the Zigbee2MQTT friendly name. When that name is an IEEE address, the add sheet asks for a name and uses vendor and model as the hint.
 - **TalkBack.**

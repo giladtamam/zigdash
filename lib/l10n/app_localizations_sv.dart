@@ -1685,4 +1685,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get deviceClassGeneric => 'Enhet';
+
+  @override
+  String get deviceNotResponding => 'Svarar inte';
 }

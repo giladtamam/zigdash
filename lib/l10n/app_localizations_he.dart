@@ -1671,4 +1671,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get deviceClassGeneric => 'מכשיר';
+
+  @override
+  String get deviceNotResponding => 'לא מגיב';
 }

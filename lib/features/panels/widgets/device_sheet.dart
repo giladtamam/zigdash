@@ -98,9 +98,7 @@ class DeviceSheet extends ConsumerWidget {
             ? _endpointLabel(f.endpoint, i)
             : l10n.deviceToggle),
         value: state.isOn(f) ?? false,
-        onChanged: state.isOn(f) == null
-            ? null
-            : (_) => send(DeviceCommand.toggle(f, state.isOn(f))),
+        onChanged: (_) => send(DeviceCommand.toggle(f, state.isOn(f))),
       ));
     }
 

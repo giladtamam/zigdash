@@ -130,7 +130,7 @@ void main() {
     expect(mgr.sent.single.$2, {'state': 'TOGGLE'});
   });
 
-  testWidgets('before the first report the tile says so and cannot toggle',
+  testWidgets('before the first report the tile says so and still toggles',
       (tester) async {
     final mgr = _Recorder();
     addTearDown(mgr.dispose);
@@ -140,7 +140,20 @@ void main() {
     expect(find.text('Waiting for first report'), findsOneWidget);
     await tester.tap(find.byIcon(Icons.lightbulb_outline));
     await tester.pumpAndSettle();
-    expect(mgr.sent, isEmpty);
+    expect(mgr.sent.single.$2, {'state': 'TOGGLE'});
+  });
+
+  testWidgets('a device that ignores its state request reads Not responding',
+      (tester) async {
+    final mgr = _Recorder();
+    addTearDown(mgr.dispose);
+    await tester.pumpWidget(_wrap(_device(_bulb), mgr: mgr));
+    await tester.pumpAndSettle();
+    expect(find.text('Waiting for first report'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 16));
+    await tester.pump();
+    expect(find.text('Not responding'), findsOneWidget);
   });
 
   testWidgets('the color sheet sends a preset as hex', (tester) async {

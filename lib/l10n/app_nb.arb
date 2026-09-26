@@ -579,5 +579,6 @@
   "deviceClassContact": "Kontakt",
   "deviceClassMotion": "Bevegelse",
   "deviceClassClimate": "Klimasensor",
-  "deviceClassGeneric": "Enhet"
+  "deviceClassGeneric": "Enhet",
+  "deviceNotResponding": "Svarer ikke"
 }

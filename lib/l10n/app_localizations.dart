@@ -3139,6 +3139,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Device'**
   String get deviceClassGeneric;
+
+  /// No description provided for @deviceNotResponding.
+  ///
+  /// In en, this message translates to:
+  /// **'Not responding'**
+  String get deviceNotResponding;
 }
 
 class _AppLocalizationsDelegate

@@ -648,5 +648,6 @@
   "deviceClassContact": "מגע",
   "deviceClassMotion": "תנועה",
   "deviceClassClimate": "חיישן אקלים",
-  "deviceClassGeneric": "מכשיר"
+  "deviceClassGeneric": "מכשיר",
+  "deviceNotResponding": "לא מגיב"
 }
