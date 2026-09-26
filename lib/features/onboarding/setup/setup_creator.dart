@@ -100,10 +100,10 @@ class SetupCreator implements SetupStore {
           dashboardId: dashboardId,
           name: s.name,
           type: s.type,
-          topic: s.topicPrefixOverride,
-          subscribeTopic: s.subscribeTopicSuffix.isEmpty
-              ? s.topicPrefixOverride
-              : '${s.topicPrefixOverride}/${s.subscribeTopicSuffix}',
+          // Suffixes under the device's prefix, as the panel form stores
+          // them: PanelTile composes prefix + suffix.
+          topic: s.publishTopicSuffix,
+          subscribeTopic: s.subscribeTopicSuffix,
           topicPrefixOverride: s.topicPrefixOverride,
           sortOrder: count,
           config: panelConfigFor(s),

@@ -13,6 +13,7 @@ import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/onboarding/setup/recommendation_policy.dart';
 import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
+import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 
 class _MemSecure implements SecureStore {
   final _m = <String, String>{};
@@ -70,6 +71,24 @@ void main() {
         containsAll([PanelType.slider, PanelType.cover]));
     expect(panels.map((p) => p.topicPrefixOverride),
         containsAll(['zigbee2mqtt/lamp', 'zigbee2mqtt/shutter']));
+  });
+
+  test('created tiles publish to <device>/set and read <device>', () async {
+    final result = await creator.create(
+      host: '192.168.1.10',
+      port: 1883,
+      protocol: MqttProtocol.tcp,
+      selected: selected,
+    );
+    final dash = await DashboardDao(db).getById(result.dashboardId);
+    final lamp = (await PanelDao(db).getByDashboard(result.dashboardId))
+        .firstWhere((p) => p.name == 'lamp');
+
+    // Composed exactly as PanelTile does.
+    final prefix = lamp.topicPrefixOverride ?? dash!.topicPrefix;
+    expect(composeTopic(prefix, lamp.topic), 'zigbee2mqtt/lamp/set');
+    expect(composeTopic(prefix, lamp.subscribeTopic ?? lamp.topic),
+        'zigbee2mqtt/lamp');
   });
 
   test('a second create call returns the same result without duplicating',

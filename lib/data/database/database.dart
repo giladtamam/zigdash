@@ -35,7 +35,24 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(scenes);
           }
         },
+        beforeOpen: (_) => repairSetupTopics(),
       );
+
+  /// 1.11.0 setup stored the device's full topic as both prefix and topic,
+  /// so its tiles used `<device>/<device>`. Rewrites them to the suffixes
+  /// setup meant ('set' for controls, '' to read). Idempotent: repaired rows
+  /// no longer match.
+  Future<void> repairSetupTopics() async {
+    await customStatement(
+      "UPDATE panels SET subscribe_topic = '' "
+      'WHERE subscribe_topic = topic_prefix_override',
+    );
+    await customStatement(
+      'UPDATE panels SET topic = CASE WHEN type IN '
+      "('toggle', 'slider', 'cover') THEN 'set' ELSE '' END "
+      'WHERE topic = topic_prefix_override',
+    );
+  }
 
   static QueryExecutor _open() => driftDatabase(
         name: 'zigdash',
