@@ -1,0 +1,1 @@
+Snabbare första start: ZigDash öppnar med Hitta min installation, ansluter själv när den hittar en broker och går direkt till din nya instrumentpanel. Fungerar brokern men Zigbee2MQTT publicerar inget kan du kontrollera basämnet direkt. Demon är tydligt märkt och försvinner när du ansluter ditt hem. Appen öppnar nu den panel du använde senast.

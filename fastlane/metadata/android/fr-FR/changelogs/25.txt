@@ -1,0 +1,1 @@
+Premier lancement plus rapide : ZigDash s'ouvre sur Trouver mon installation, se connecte seul s'il trouve un broker et arrive directement sur votre nouveau tableau. Si le broker répond mais que Zigbee2MQTT ne publie pas, vérifiez le topic de base sur place. La démo est bien signalée et disparaît quand vous connectez votre maison. L'app s'ouvre sur le dernier tableau utilisé.

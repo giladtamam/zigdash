@@ -1,0 +1,1 @@
+Raskere oppstart: ZigDash åpner med Finn oppsettet mitt, kobler til selv når den finner én broker, og går rett til det nye dashbordet. Fungerer brokeren, men Zigbee2MQTT publiserer ikke, kan du sjekke basistemaet der og da. Demoen er tydelig merket og fjernes når du kobler til hjemmet ditt. Appen åpner nå dashbordet du brukte sist.

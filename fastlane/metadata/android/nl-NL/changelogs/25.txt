@@ -1,0 +1,1 @@
+Snellere eerste start: ZigDash opent met Vind mijn installatie, verbindt zelf als er één broker is en opent direct je nieuwe dashboard. Werkt de broker maar publiceert Zigbee2MQTT niets, dan controleer je het basistopic ter plekke. De demo is duidelijk gemarkeerd en verdwijnt als je je huis verbindt. De app opent nu op het laatst gebruikte dashboard.

@@ -1,67 +1,78 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/app.dart';
+import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/data/repositories/dashboard_repo.dart';
+import 'package:zigdash/data/repositories/panel_repo.dart';
+import 'package:zigdash/features/connections/diagnostics/connect_diagnostics_provider.dart';
+import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart';
+import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
+import 'package:zigdash/features/onboarding/setup/setup_providers.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 
-/// End-to-end boot flow on a fresh install:
-/// onboarding pages → demo mode → connections list → demo connection →
-/// dashboard tab → panel grid renders the seeded demo panels.
+/// End-to-end first run into the demo on a fresh install:
+/// setup → Find my setup finds nothing → Try demo → the demo dashboard opens
+/// directly, marked with the demo bar, with the seeded panels.
 ///
-/// Run on a device or emulator:
-///   flutter test integration_test -d DEVICE
-/// or via the host driver:
-///   flutter drive --driver=test_driver/integration_test.dart \
-///     --target=integration_test/app_flow_test.dart -d DEVICE
+/// The scan is stubbed to find nothing so the run does not depend on the
+/// test phone's network; the demo is only offered where setup cannot finish.
+///
+///   flutter test integration_test/app_flow_test.dart -d DEVICE
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('fresh install: onboarding → demo mode → dashboard grid',
+  testWidgets('fresh install: nothing found → Try demo → demo dashboard',
       (tester) async {
-    // Deterministic fresh state regardless of previous runs on the device.
-    // Mirror lib/main.dart wiring: ZigDashApp needs a ProviderScope with the
-    // real SharedPreferences instance (the provider throws otherwise).
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     await tester.pumpWidget(ProviderScope(
-      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        setupCoordinatorProvider.overrideWith((ref) {
+          final coordinator = SetupCoordinator(
+            scan: (_) => const Stream.empty(),
+            deviceIp: () async => '10.0.2.15',
+            diagnostics: ref.watch(connectDiagnosticsProvider),
+            fetchDevices: (_, __, ___) async =>
+                const Z2mFetchResult(detected: false, devices: []),
+            creator: SetupCreator(
+              connections: ref.watch(connectionRepoProvider),
+              dashboards: ref.watch(dashboardRepoProvider),
+              panels: ref.watch(panelRepoProvider),
+            ),
+          );
+          ref.onDispose(coordinator.dispose);
+          return coordinator;
+        }),
+      ],
       child: const ZigDashApp(),
     ));
     await tester.pumpAndSettle();
 
-    // --- Onboarding: page 1 ---
-    expect(find.text('Welcome to ZigDash'), findsOneWidget);
+    // --- One door: the app opens on setup, no carousel ---
+    expect(find.text('Find my setup'), findsOneWidget);
+    expect(find.text('Try demo'), findsNothing);
 
-    await tester.tap(find.text('Next'));
-    await tester.pumpAndSettle();
-    expect(find.text('Connect your broker'), findsOneWidget);
+    await tester.tap(find.text('Find my setup'));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('No connection found'), findsOneWidget);
 
-    await tester.tap(find.text('Next'));
-    await tester.pumpAndSettle();
-    expect(find.text('Build your dashboards'), findsOneWidget);
-
-    // --- Enter demo mode. From here on the app owns MQTT auto-connect /
-    // reconnect timers, so pumpAndSettle is unsafe; use bounded pumps. ---
+    // --- The demo, from the dead end. From here the app owns MQTT timers,
+    // so pumpAndSettle is unsafe; use bounded pumps. ---
     await tester.tap(find.text('Try demo'));
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump(const Duration(milliseconds: 300));
-    await tester.pump(const Duration(milliseconds: 300));
+    for (var i = 0; i < 6; i++) {
+      await tester.pump(const Duration(milliseconds: 200));
+    }
 
-    // --- Connections list: demo connection seeded ---
-    expect(find.text('Demo Smart Home'), findsOneWidget);
-
-    // --- Open the demo connection → dashboards tab bar ---
-    await tester.tap(find.text('Demo Smart Home'));
-    await tester.pump(const Duration(milliseconds: 100));
-    await tester.pump(const Duration(milliseconds: 300));
-
-    expect(find.text('My Home'), findsWidgets); // dashboard tab label
-
-    // --- Panel grid renders the seeded demo panels ---
-    await tester.pump(const Duration(milliseconds: 300));
+    // --- The demo dashboard opens directly, marked as demo ---
+    expect(find.text("You're in demo mode"), findsOneWidget);
+    expect(find.text('Connect your home'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
     expect(find.text('Living Room Light'), findsOneWidget);
-    expect(find.text('Brightness'), findsOneWidget);
     expect(find.text('Living Room Cover'), findsOneWidget);
     expect(find.text('Front Door'), findsOneWidget);
   });
