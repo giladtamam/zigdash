@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../devices/device_registry.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/review/review_prompt_trigger.dart';
 import '../../../core/router/last_dashboard_store.dart';
+import '../../../core/router/routes.dart';
 import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
@@ -16,6 +16,7 @@ import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
+import '../../devices/device_registry.dart';
 import '../../onboarding/demo_banner.dart';
 import '../../panels/widgets/panel_grid.dart';
 import '../widgets/connection_status_banner.dart';
@@ -50,17 +51,20 @@ class DashboardsScreen extends ConsumerWidget {
 
     return dashboardsAsync.when(
       loading: () => Scaffold(
-        appBar: AppBar(title: Text(connectionName)),
+        appBar: AppBar(
+            leading: const _HomesButton(), title: Text(connectionName)),
         body: const Center(child: CircularProgressIndicator()),
       ),
       error: (e, _) => Scaffold(
-        appBar: AppBar(title: Text(connectionName)),
+        appBar: AppBar(
+            leading: const _HomesButton(), title: Text(connectionName)),
         body: Center(child: Text(context.l10n.dashLoadFailed(e.toString()))),
       ),
       data: (dashboards) {
         if (dashboards.isEmpty) {
           return Scaffold(
             appBar: AppBar(
+              leading: const _HomesButton(),
               title: Text(connectionName),
               actions: [
                 IconButton(
@@ -165,6 +169,7 @@ class _DashboardsTabbed extends ConsumerWidget {
       child: Builder(builder: (tabCtx) {
         return Scaffold(
           appBar: AppBar(
+            leading: const _HomesButton(),
             title: Text(connectionName),
             actions: [
               Builder(builder: (innerCtx) {
@@ -687,3 +692,21 @@ IconData _panelTypeIcon(PanelType type) => switch (type) {
       PanelType.device => Icons.devices_other,
       PanelType.reading => Icons.speed,
     };
+
+/// Leads to the broker list. The app opens straight on a home's dashboard,
+/// which sits outside the tab shell, so without this there is no way to
+/// another home or Settings. A normal back arrow when there is somewhere to
+/// go back to.
+class _HomesButton extends StatelessWidget {
+  const _HomesButton();
+
+  @override
+  Widget build(BuildContext context) {
+    if (Navigator.of(context).canPop()) return const BackButton();
+    return IconButton(
+      tooltip: context.l10n.connectionsTitle,
+      icon: const Icon(Icons.home_work_outlined),
+      onPressed: () => context.go(Routes.connections),
+    );
+  }
+}
