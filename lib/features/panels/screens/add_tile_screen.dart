@@ -147,23 +147,18 @@ class _AddTileScreenState extends ConsumerState<AddTileScreen> {
         deviceClassLabel(cls, l10n),
         ?deviceModelLabel(d),
       ].join(' · ')),
-      onTap: () => _confirm(d, cls),
+      onTap: () => _confirm(d),
     );
   }
 
-  Future<void> _confirm(Z2mDevice device, DeviceClass cls) async {
-    final added = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      builder: (_) => _AddDeviceSheet(
-        dashboardId: widget.dashboardId,
-        device: device,
-        deviceClass: cls,
-      ),
+  Future<void> _confirm(Z2mDevice device) async {
+    final added = await showAddDeviceSheet(
+      context,
+      connectionId: widget.connectionId,
+      dashboardId: widget.dashboardId,
+      device: device,
     );
-    if (added == true && mounted) Navigator.pop(context);
+    if (added && mounted) Navigator.pop(context);
   }
 }
 
@@ -180,23 +175,48 @@ String deviceClassLabel(DeviceClass c, AppLocalizations l10n) => switch (c) {
     };
 
 /// The recommended tile for a device — name, size, section — editable
-/// before it is added.
-class _AddDeviceSheet extends ConsumerStatefulWidget {
-  const _AddDeviceSheet({
-    required this.dashboardId,
+/// before it is added. Shared by Add tile and the Devices tab; without a
+/// [dashboardId] it also asks which dashboard (when the home has several).
+class AddDeviceSheet extends ConsumerStatefulWidget {
+  const AddDeviceSheet({
+    super.key,
+    required this.connectionId,
+    this.dashboardId,
     required this.device,
     required this.deviceClass,
   });
 
-  final String dashboardId;
+  final String connectionId;
+  final String? dashboardId;
   final Z2mDevice device;
   final DeviceClass deviceClass;
 
   @override
-  ConsumerState<_AddDeviceSheet> createState() => _AddDeviceSheetState();
+  ConsumerState<AddDeviceSheet> createState() => _AddDeviceSheetState();
 }
 
-class _AddDeviceSheetState extends ConsumerState<_AddDeviceSheet> {
+/// Opens [AddDeviceSheet]; true when a tile was added.
+Future<bool> showAddDeviceSheet(
+  BuildContext context, {
+  required String connectionId,
+  String? dashboardId,
+  required Z2mDevice device,
+}) async =>
+    await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (_) => AddDeviceSheet(
+        connectionId: connectionId,
+        dashboardId: dashboardId,
+        device: device,
+        deviceClass: classifyExposes(device.rawExposes).deviceClass,
+      ),
+    ) ==
+    true;
+
+class _AddDeviceSheetState extends ConsumerState<AddDeviceSheet> {
   late final _name = TextEditingController(
     // An IEEE address is not a name: ask for one.
     text: isIeeeName(widget.device.friendlyName)
@@ -206,6 +226,7 @@ class _AddDeviceSheetState extends ConsumerState<_AddDeviceSheet> {
   late PanelWidth _size = defaultTileSize(widget.deviceClass);
   String? _sectionId;
   bool _sectionChosen = false;
+  late String? _dashboardId = widget.dashboardId;
   bool _saving = false;
 
   @override
@@ -219,7 +240,7 @@ class _AddDeviceSheetState extends ConsumerState<_AddDeviceSheet> {
     final name = _name.text.trim();
     await createDeviceTile(
       ref.read(panelRepoProvider),
-      dashboardId: widget.dashboardId,
+      dashboardId: dashboard.id,
       base: z2mBase(dashboard.topicPrefix),
       device: widget.device,
       name: name.isEmpty ? widget.device.friendlyName : name,
@@ -234,13 +255,20 @@ class _AddDeviceSheetState extends ConsumerState<_AddDeviceSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final dashboard =
-        ref.watch(dashboardByIdProvider(widget.dashboardId)).valueOrNull;
-    final sections =
-        ref.watch(sectionsForDashboardProvider(widget.dashboardId)).valueOrNull ??
+    final dashboards =
+        ref.watch(dashboardsForConnectionProvider(widget.connectionId))
+                .valueOrNull ??
+            const <Dashboard>[];
+    _dashboardId ??= dashboards.firstOrNull?.id;
+    final dashboardId = _dashboardId;
+    final dashboard = dashboards.where((d) => d.id == dashboardId).firstOrNull;
+    final sections = dashboardId == null
+        ? const <Section>[]
+        : ref.watch(sectionsForDashboardProvider(dashboardId)).valueOrNull ??
             const <Section>[];
-    final tiles =
-        ref.watch(panelsForDashboardProvider(widget.dashboardId)).valueOrNull ??
+    final tiles = dashboardId == null
+        ? const <Panel>[]
+        : ref.watch(panelsForDashboardProvider(dashboardId)).valueOrNull ??
             const <Panel>[];
     if (!_sectionChosen) {
       // Default to the section named after the class's group, if any.
@@ -293,9 +321,25 @@ class _AddDeviceSheetState extends ConsumerState<_AddDeviceSheet> {
             selected: {_size},
             onSelectionChanged: (s) => setState(() => _size = s.first),
           ),
+          if (widget.dashboardId == null && dashboards.length > 1) ...[
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              initialValue: dashboardId,
+              decoration: InputDecoration(labelText: l10n.navDashboards),
+              items: [
+                for (final d in dashboards)
+                  DropdownMenuItem(value: d.id, child: Text(d.name)),
+              ],
+              onChanged: (v) => setState(() {
+                _dashboardId = v;
+                _sectionChosen = false;
+              }),
+            ),
+          ],
           if (sections.isNotEmpty) ...[
             const SizedBox(height: 16),
             DropdownButtonFormField<String?>(
+              key: ValueKey(dashboardId),
               initialValue: _sectionId,
               decoration: InputDecoration(labelText: l10n.addTileSection),
               items: [

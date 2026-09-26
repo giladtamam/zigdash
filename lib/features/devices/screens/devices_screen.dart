@@ -8,7 +8,14 @@ import '../../discovery/providers/discovery_provider.dart';
 import '../device_health.dart';
 import '../devices_providers.dart';
 import '../z2m_bridge.dart';
+import '../../../data/repositories/dashboard_repo.dart';
+import '../../discovery/models/z2m_device.dart';
 import '../../home/home_shell.dart';
+import '../../panels/screens/add_tile_screen.dart' show showAddDeviceSheet;
+import '../../panels/widgets/device_tile_panel.dart' show deviceClassIcon;
+import '../device_profile.dart';
+import '../device_registry.dart';
+import '../device_tiles.dart';
 
 class DevicesScreen extends ConsumerStatefulWidget {
   const DevicesScreen({super.key, required this.connectionId});
@@ -20,22 +27,46 @@ class DevicesScreen extends ConsumerStatefulWidget {
 }
 
 class _DevicesScreenState extends ConsumerState<DevicesScreen> {
-  final _baseController = TextEditingController(text: 'zigbee2mqtt');
-  String _base = 'zigbee2mqtt';
+  /// Set from the ⋮ menu; otherwise the home's base topic.
+  String? _baseOverride;
 
-  @override
-  void dispose() {
-    _baseController.dispose();
-    super.dispose();
-  }
+  String get _base => _baseOverride ??
+      z2mBase(ref
+          .watch(dashboardsForConnectionProvider(widget.connectionId))
+          .valueOrNull
+          ?.firstOrNull
+          ?.topicPrefix);
 
   void _refresh() {
-    final newBase = _baseController.text.trim();
-    if (newBase.isEmpty) return;
-    final args = (connectionId: widget.connectionId, base: newBase);
+    final args = (connectionId: widget.connectionId, base: _base);
     ref.invalidate(discoveredDevicesProvider(args));
     ref.invalidate(deviceHealthProvider(args));
-    setState(() => _base = newBase);
+  }
+
+  Future<void> _editBase() async {
+    final controller = TextEditingController(text: _base);
+    final l10n = context.l10n;
+    final value = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.discoverBaseTopic),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          onSubmitted: (v) => Navigator.pop(ctx, v),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, controller.text),
+            child: Text(MaterialLocalizations.of(ctx).okButtonLabel),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    final v = value?.trim();
+    if (v == null || v.isEmpty || !mounted) return;
+    setState(() => _baseOverride = v);
   }
 
   void _openPairing() {
@@ -58,34 +89,19 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: HomeTitle(connectionId: widget.connectionId),
-        actions: const [SettingsAction()],
+        actions: [
+          const SettingsAction(),
+          PopupMenuButton<String>(
+            onSelected: (v) => v == 'base' ? _editBase() : _refresh(),
+            itemBuilder: (_) => [
+              PopupMenuItem(value: 'refresh', child: Text(l10n.a11yRefresh)),
+              PopupMenuItem(value: 'base', child: Text(l10n.discoverBaseTopic)),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _baseController,
-                    decoration: InputDecoration(
-                      labelText: l10n.discoverBaseTopic,
-                      border: const OutlineInputBorder(),
-                      isDense: true,
-                    ),
-                    onSubmitted: (_) => _refresh(),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                IconButton.filledTonal(
-                  onPressed: _refresh,
-                  tooltip: l10n.a11yRefresh,
-                  icon: const Icon(Icons.refresh),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: healthAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -112,11 +128,35 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
                 if (devices.isEmpty) {
                   return Center(child: Text(l10n.devicesNone));
                 }
+                final byName = {
+                  for (final d in ref
+                          .watch(discoveredDevicesProvider(args))
+                          .valueOrNull ??
+                      const <Z2mDevice>[])
+                    d.friendlyName: d,
+                };
+                final linked = ref
+                        .watch(linkedIeeesProvider(widget.connectionId))
+                        .valueOrNull ??
+                    const <String>{};
                 return ListView.builder(
                   itemCount: devices.length,
                   itemBuilder: (context, i) {
-                    final d = devices[i];
-                    return _DeviceHealthTile(health: d);
+                    final h = devices[i];
+                    final device = byName[h.friendlyName];
+                    return _DeviceHealthTile(
+                      health: h,
+                      device: device,
+                      onDashboard: device?.ieeeAddress == null ||
+                          linked.contains(device!.ieeeAddress),
+                      onTap: device == null
+                          ? null
+                          : () => showAddDeviceSheet(
+                                context,
+                                connectionId: widget.connectionId,
+                                device: device,
+                              ),
+                    );
                   },
                 );
               },
@@ -137,22 +177,64 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
 // Device health list tile
 // ---------------------------------------------------------------------------
 
+/// One device: class icon, name, model, battery and link quality; a
+/// "Not on a dashboard" marker; availability only when Zigbee2MQTT reports
+/// it (it is off by default, and unknown is not offline). Tap to add it to
+/// a dashboard.
 class _DeviceHealthTile extends StatelessWidget {
-  const _DeviceHealthTile({required this.health});
+  const _DeviceHealthTile({
+    required this.health,
+    required this.device,
+    required this.onDashboard,
+    required this.onTap,
+  });
 
   final DeviceHealth health;
+  final Z2mDevice? device;
+  final bool onDashboard;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     final battery = health.battery;
     final lq = health.linkQuality;
     final online = health.online;
+    final d = device;
+    final cls = d == null ? null : classifyExposes(d.rawExposes).deviceClass;
 
     return ListTile(
+      onTap: onTap,
+      leading: cls == null ? null : Icon(deviceClassIcon(cls)),
       title: Text(health.friendlyName),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (!onDashboard)
+            Chip(
+              label: Text(l10n.addTileNotOnDashboard,
+                  style: theme.textTheme.labelSmall),
+              visualDensity: VisualDensity.compact,
+            ),
+          if (online != null)
+            _OnlineIndicator(
+              online: online,
+              labelOnline: l10n.devicesOnline,
+              labelOffline: l10n.devicesOffline,
+            ),
+        ],
+      ),
       subtitle: Row(
         children: [
+          if (d != null && deviceModelLabel(d) != null) ...[
+            Flexible(
+              child: Text(deviceModelLabel(d)!,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall),
+            ),
+            const SizedBox(width: 12),
+          ],
           // Battery
           const Icon(Icons.battery_4_bar, size: 16),
           const SizedBox(width: 2),
@@ -169,11 +251,6 @@ class _DeviceHealthTile extends StatelessWidget {
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
-      ),
-      trailing: _OnlineIndicator(
-        online: online,
-        labelOnline: l10n.devicesOnline,
-        labelOffline: l10n.devicesOffline,
       ),
     );
   }

@@ -93,6 +93,20 @@ void main() {
                 createdAt: _stamp,
                 updatedAt: _stamp,
               )),
+          dashboardsForConnectionProvider.overrideWith((ref, _) => Stream.value([
+                Dashboard(
+                  id: 'd1',
+                  connectionId: 'c1',
+                  name: 'Home',
+                  topicPrefix: prefix,
+                  colorSeed: 0,
+                  iconCodepoint: 0,
+                  locked: false,
+                  sortOrder: 0,
+                  createdAt: _stamp,
+                  updatedAt: _stamp,
+                ),
+              ])),
           bridgeDevicesStreamProvider.overrideWith((ref, args) =>
               Stream.value(args.base == 'zigbee2mqtt' ? devices : [])),
           linkedIeeesProvider.overrideWith((ref, _) => Stream.value(linked)),
