@@ -545,16 +545,16 @@ class AppLocalizationsHe extends AppLocalizations {
       'ריק = מנוי לקידומת עצמה (מצב Z2M). זהה לנושא פרסום = שימוש בו.';
 
   @override
-  String get panelFormWidth => 'רוחב';
+  String get tileSize => 'גודל';
 
   @override
-  String get panelFormWidthFull => 'מלא';
+  String get tileSizeSmall => 'קטן';
 
   @override
-  String get panelFormWidthHalf => 'חצי';
+  String get tileSizeWide => 'רחב';
 
   @override
-  String get panelFormWidthThird => 'שליש';
+  String get tileSizeFull => 'מלא';
 
   @override
   String get panelFormQos => 'QoS';
@@ -819,18 +819,6 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'הזזה למטה';
-
-  @override
-  String get panelTileWidth => 'רוחב';
-
-  @override
-  String get panelTileWidthFull => 'מלא';
-
-  @override
-  String get panelTileWidthHalf => 'חצי';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'מחיקת פאנל';

@@ -1,19 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'panel_dao.dart';
+part of 'section_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$PanelDaoMixin on DatabaseAccessor<AppDatabase> {
+mixin _$SectionDaoMixin on DatabaseAccessor<AppDatabase> {
   $ConnectionsTable get connections => attachedDatabase.connections;
   $DashboardsTable get dashboards => attachedDatabase.dashboards;
   $SectionsTable get sections => attachedDatabase.sections;
   $PanelsTable get panels => attachedDatabase.panels;
-  PanelDaoManager get managers => PanelDaoManager(this);
+  SectionDaoManager get managers => SectionDaoManager(this);
 }
 
-class PanelDaoManager {
-  final _$PanelDaoMixin _db;
-  PanelDaoManager(this._db);
+class SectionDaoManager {
+  final _$SectionDaoMixin _db;
+  SectionDaoManager(this._db);
   $$ConnectionsTableTableManager get connections =>
       $$ConnectionsTableTableManager(_db.attachedDatabase, _db.connections);
   $$DashboardsTableTableManager get dashboards =>

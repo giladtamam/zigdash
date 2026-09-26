@@ -98,8 +98,8 @@ void main() {
   testWidgets('renders a panel tile per row with its name', (tester) async {
     await tester.pumpWidget(_wrap(panels: [
       _panel('p1', 'Living Room Light', PanelType.toggle, PanelWidth.full),
-      _panel('p2', 'Brightness', PanelType.slider, PanelWidth.half),
-      _panel('p3', 'Fan Mode', PanelType.multiState, PanelWidth.third),
+      _panel('p2', 'Brightness', PanelType.slider, PanelWidth.small),
+      _panel('p3', 'Fan Mode', PanelType.multiState, PanelWidth.wide),
     ]));
     await tester.pumpAndSettle();
 
@@ -125,7 +125,7 @@ void main() {
     expect(find.text('Kitchen Plug'), findsOneWidget);
   });
 
-  testWidgets('full / half / third widths map to the expected tile sizes',
+  testWidgets('small / wide / full sizes map to the expected tile widths',
       (tester) async {
     tester.view.physicalSize = const Size(800, 600);
     tester.view.devicePixelRatio = 1.0;
@@ -134,8 +134,8 @@ void main() {
 
     await tester.pumpWidget(_wrap(panels: [
       _panel('p1', 'Full', PanelType.toggle, PanelWidth.full),
-      _panel('p2', 'Half', PanelType.toggle, PanelWidth.half),
-      _panel('p3', 'Third', PanelType.toggle, PanelWidth.third),
+      _panel('p2', 'Small', PanelType.toggle, PanelWidth.small),
+      _panel('p3', 'Wide', PanelType.toggle, PanelWidth.wide),
     ]));
     await tester.pumpAndSettle();
 
@@ -148,7 +148,7 @@ void main() {
 
     // Grid padding 8 per side; spacing 8 between items.
     expect(cardWidth('Full'), closeTo(800 - 16, 0.5));
-    expect(cardWidth('Half'), closeTo((800 - 24) / 2, 0.5));
-    expect(cardWidth('Third'), closeTo((800 - 32) / 3, 0.5));
+    expect(cardWidth('Small'), closeTo((800 - 24) / 2, 0.5));
+    expect(cardWidth('Wide'), closeTo(800 - 16, 0.5));
   });
 }

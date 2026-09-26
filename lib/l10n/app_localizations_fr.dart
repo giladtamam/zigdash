@@ -557,16 +557,16 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vide = abonnement au préfixe lui-même (état Z2M). Identique au topic de publication = utiliser celui-ci.';
 
   @override
-  String get panelFormWidth => 'Largeur';
+  String get tileSize => 'Taille';
 
   @override
-  String get panelFormWidthFull => 'Pleine';
+  String get tileSizeSmall => 'Petit';
 
   @override
-  String get panelFormWidthHalf => 'Moitié';
+  String get tileSizeWide => 'Large';
 
   @override
-  String get panelFormWidthThird => 'Tiers';
+  String get tileSizeFull => 'Pleine largeur';
 
   @override
   String get panelFormQos => 'QoS';
@@ -832,18 +832,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'Descendre';
-
-  @override
-  String get panelTileWidth => 'Largeur';
-
-  @override
-  String get panelTileWidthFull => 'Pleine';
-
-  @override
-  String get panelTileWidthHalf => 'Moitié';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'Supprimer le panneau';

@@ -1357,6 +1357,423 @@ class DashboardsCompanion extends UpdateCompanion<Dashboard> {
   }
 }
 
+class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SectionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dashboardIdMeta = const VerificationMeta(
+    'dashboardId',
+  );
+  @override
+  late final GeneratedColumn<String> dashboardId = GeneratedColumn<String>(
+    'dashboard_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES dashboards (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 64,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    dashboardId,
+    name,
+    sortOrder,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sections';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Section> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('dashboard_id')) {
+      context.handle(
+        _dashboardIdMeta,
+        dashboardId.isAcceptableOrUnknown(
+          data['dashboard_id']!,
+          _dashboardIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_dashboardIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Section map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Section(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      dashboardId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dashboard_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SectionsTable createAlias(String alias) {
+    return $SectionsTable(attachedDatabase, alias);
+  }
+}
+
+class Section extends DataClass implements Insertable<Section> {
+  final String id;
+  final String dashboardId;
+  final String name;
+  final int sortOrder;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Section({
+    required this.id,
+    required this.dashboardId,
+    required this.name,
+    required this.sortOrder,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['dashboard_id'] = Variable<String>(dashboardId);
+    map['name'] = Variable<String>(name);
+    map['sort_order'] = Variable<int>(sortOrder);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SectionsCompanion toCompanion(bool nullToAbsent) {
+    return SectionsCompanion(
+      id: Value(id),
+      dashboardId: Value(dashboardId),
+      name: Value(name),
+      sortOrder: Value(sortOrder),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Section.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Section(
+      id: serializer.fromJson<String>(json['id']),
+      dashboardId: serializer.fromJson<String>(json['dashboardId']),
+      name: serializer.fromJson<String>(json['name']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'dashboardId': serializer.toJson<String>(dashboardId),
+      'name': serializer.toJson<String>(name),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Section copyWith({
+    String? id,
+    String? dashboardId,
+    String? name,
+    int? sortOrder,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Section(
+    id: id ?? this.id,
+    dashboardId: dashboardId ?? this.dashboardId,
+    name: name ?? this.name,
+    sortOrder: sortOrder ?? this.sortOrder,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Section copyWithCompanion(SectionsCompanion data) {
+    return Section(
+      id: data.id.present ? data.id.value : this.id,
+      dashboardId: data.dashboardId.present
+          ? data.dashboardId.value
+          : this.dashboardId,
+      name: data.name.present ? data.name.value : this.name,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Section(')
+          ..write('id: $id, ')
+          ..write('dashboardId: $dashboardId, ')
+          ..write('name: $name, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, dashboardId, name, sortOrder, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Section &&
+          other.id == this.id &&
+          other.dashboardId == this.dashboardId &&
+          other.name == this.name &&
+          other.sortOrder == this.sortOrder &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SectionsCompanion extends UpdateCompanion<Section> {
+  final Value<String> id;
+  final Value<String> dashboardId;
+  final Value<String> name;
+  final Value<int> sortOrder;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const SectionsCompanion({
+    this.id = const Value.absent(),
+    this.dashboardId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SectionsCompanion.insert({
+    required String id,
+    required String dashboardId,
+    required String name,
+    this.sortOrder = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       dashboardId = Value(dashboardId),
+       name = Value(name),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Section> custom({
+    Expression<String>? id,
+    Expression<String>? dashboardId,
+    Expression<String>? name,
+    Expression<int>? sortOrder,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (dashboardId != null) 'dashboard_id': dashboardId,
+      if (name != null) 'name': name,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SectionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? dashboardId,
+    Value<String>? name,
+    Value<int>? sortOrder,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return SectionsCompanion(
+      id: id ?? this.id,
+      dashboardId: dashboardId ?? this.dashboardId,
+      name: name ?? this.name,
+      sortOrder: sortOrder ?? this.sortOrder,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (dashboardId.present) {
+      map['dashboard_id'] = Variable<String>(dashboardId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SectionsCompanion(')
+          ..write('id: $id, ')
+          ..write('dashboardId: $dashboardId, ')
+          ..write('name: $name, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -1525,6 +1942,31 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _sectionIdMeta = const VerificationMeta(
+    'sectionId',
+  );
+  @override
+  late final GeneratedColumn<String> sectionId = GeneratedColumn<String>(
+    'section_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sections (id) ON DELETE SET NULL',
+    ),
+  );
+  static const VerificationMeta _deviceIeeeMeta = const VerificationMeta(
+    'deviceIeee',
+  );
+  @override
+  late final GeneratedColumn<String> deviceIeee = GeneratedColumn<String>(
+    'device_ieee',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1542,6 +1984,8 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
     mergeFlags,
     createdAt,
     updatedAt,
+    sectionId,
+    deviceIeee,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1653,6 +2097,18 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('section_id')) {
+      context.handle(
+        _sectionIdMeta,
+        sectionId.isAcceptableOrUnknown(data['section_id']!, _sectionIdMeta),
+      );
+    }
+    if (data.containsKey('device_ieee')) {
+      context.handle(
+        _deviceIeeeMeta,
+        deviceIeee.isAcceptableOrUnknown(data['device_ieee']!, _deviceIeeeMeta),
+      );
+    }
     return context;
   }
 
@@ -1726,6 +2182,14 @@ class $PanelsTable extends Panels with TableInfo<$PanelsTable, Panel> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      sectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}section_id'],
+      ),
+      deviceIeee: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}device_ieee'],
+      ),
     );
   }
 
@@ -1756,6 +2220,13 @@ class Panel extends DataClass implements Insertable<Panel> {
   final int mergeFlags;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// The section this tile sits in; null renders it first, without a header.
+  final String? sectionId;
+
+  /// IEEE address of the device this tile shows, if any. Decides whether a
+  /// device is on a dashboard.
+  final String? deviceIeee;
   const Panel({
     required this.id,
     required this.dashboardId,
@@ -1772,6 +2243,8 @@ class Panel extends DataClass implements Insertable<Panel> {
     required this.mergeFlags,
     required this.createdAt,
     required this.updatedAt,
+    this.sectionId,
+    this.deviceIeee,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1801,6 +2274,12 @@ class Panel extends DataClass implements Insertable<Panel> {
     map['merge_flags'] = Variable<int>(mergeFlags);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || sectionId != null) {
+      map['section_id'] = Variable<String>(sectionId);
+    }
+    if (!nullToAbsent || deviceIeee != null) {
+      map['device_ieee'] = Variable<String>(deviceIeee);
+    }
     return map;
   }
 
@@ -1825,6 +2304,12 @@ class Panel extends DataClass implements Insertable<Panel> {
       mergeFlags: Value(mergeFlags),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      sectionId: sectionId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sectionId),
+      deviceIeee: deviceIeee == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deviceIeee),
     );
   }
 
@@ -1855,6 +2340,8 @@ class Panel extends DataClass implements Insertable<Panel> {
       mergeFlags: serializer.fromJson<int>(json['mergeFlags']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      sectionId: serializer.fromJson<String?>(json['sectionId']),
+      deviceIeee: serializer.fromJson<String?>(json['deviceIeee']),
     );
   }
   @override
@@ -1880,6 +2367,8 @@ class Panel extends DataClass implements Insertable<Panel> {
       'mergeFlags': serializer.toJson<int>(mergeFlags),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'sectionId': serializer.toJson<String?>(sectionId),
+      'deviceIeee': serializer.toJson<String?>(deviceIeee),
     };
   }
 
@@ -1899,6 +2388,8 @@ class Panel extends DataClass implements Insertable<Panel> {
     int? mergeFlags,
     DateTime? createdAt,
     DateTime? updatedAt,
+    Value<String?> sectionId = const Value.absent(),
+    Value<String?> deviceIeee = const Value.absent(),
   }) => Panel(
     id: id ?? this.id,
     dashboardId: dashboardId ?? this.dashboardId,
@@ -1919,6 +2410,8 @@ class Panel extends DataClass implements Insertable<Panel> {
     mergeFlags: mergeFlags ?? this.mergeFlags,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    sectionId: sectionId.present ? sectionId.value : this.sectionId,
+    deviceIeee: deviceIeee.present ? deviceIeee.value : this.deviceIeee,
   );
   Panel copyWithCompanion(PanelsCompanion data) {
     return Panel(
@@ -1945,6 +2438,10 @@ class Panel extends DataClass implements Insertable<Panel> {
           : this.mergeFlags,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      sectionId: data.sectionId.present ? data.sectionId.value : this.sectionId,
+      deviceIeee: data.deviceIeee.present
+          ? data.deviceIeee.value
+          : this.deviceIeee,
     );
   }
 
@@ -1965,7 +2462,9 @@ class Panel extends DataClass implements Insertable<Panel> {
           ..write('config: $config, ')
           ..write('mergeFlags: $mergeFlags, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('sectionId: $sectionId, ')
+          ..write('deviceIeee: $deviceIeee')
           ..write(')'))
         .toString();
   }
@@ -1987,6 +2486,8 @@ class Panel extends DataClass implements Insertable<Panel> {
     mergeFlags,
     createdAt,
     updatedAt,
+    sectionId,
+    deviceIeee,
   );
   @override
   bool operator ==(Object other) =>
@@ -2006,7 +2507,9 @@ class Panel extends DataClass implements Insertable<Panel> {
           other.config == this.config &&
           other.mergeFlags == this.mergeFlags &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.sectionId == this.sectionId &&
+          other.deviceIeee == this.deviceIeee);
 }
 
 class PanelsCompanion extends UpdateCompanion<Panel> {
@@ -2025,6 +2528,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
   final Value<int> mergeFlags;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<String?> sectionId;
+  final Value<String?> deviceIeee;
   final Value<int> rowid;
   const PanelsCompanion({
     this.id = const Value.absent(),
@@ -2042,6 +2547,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     this.mergeFlags = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.sectionId = const Value.absent(),
+    this.deviceIeee = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PanelsCompanion.insert({
@@ -2060,6 +2567,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     this.mergeFlags = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.sectionId = const Value.absent(),
+    this.deviceIeee = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        dashboardId = Value(dashboardId),
@@ -2086,6 +2595,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     Expression<int>? mergeFlags,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String>? sectionId,
+    Expression<String>? deviceIeee,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2105,6 +2616,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
       if (mergeFlags != null) 'merge_flags': mergeFlags,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (sectionId != null) 'section_id': sectionId,
+      if (deviceIeee != null) 'device_ieee': deviceIeee,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2125,6 +2638,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     Value<int>? mergeFlags,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<String?>? sectionId,
+    Value<String?>? deviceIeee,
     Value<int>? rowid,
   }) {
     return PanelsCompanion(
@@ -2143,6 +2658,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
       mergeFlags: mergeFlags ?? this.mergeFlags,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      sectionId: sectionId ?? this.sectionId,
+      deviceIeee: deviceIeee ?? this.deviceIeee,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2201,6 +2718,12 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (sectionId.present) {
+      map['section_id'] = Variable<String>(sectionId.value);
+    }
+    if (deviceIeee.present) {
+      map['device_ieee'] = Variable<String>(deviceIeee.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2225,6 +2748,8 @@ class PanelsCompanion extends UpdateCompanion<Panel> {
           ..write('mergeFlags: $mergeFlags, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('sectionId: $sectionId, ')
+          ..write('deviceIeee: $deviceIeee, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2803,13 +3328,301 @@ class ScenesCompanion extends UpdateCompanion<Scene> {
   }
 }
 
+class $DeviceDismissalsTable extends DeviceDismissals
+    with TableInfo<$DeviceDismissalsTable, DeviceDismissal> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DeviceDismissalsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES connections (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _ieeeMeta = const VerificationMeta('ieee');
+  @override
+  late final GeneratedColumn<String> ieee = GeneratedColumn<String>(
+    'ieee',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dismissedAtMeta = const VerificationMeta(
+    'dismissedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dismissedAt = GeneratedColumn<DateTime>(
+    'dismissed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [connectionId, ieee, dismissedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'device_dismissals';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DeviceDismissal> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('ieee')) {
+      context.handle(
+        _ieeeMeta,
+        ieee.isAcceptableOrUnknown(data['ieee']!, _ieeeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ieeeMeta);
+    }
+    if (data.containsKey('dismissed_at')) {
+      context.handle(
+        _dismissedAtMeta,
+        dismissedAt.isAcceptableOrUnknown(
+          data['dismissed_at']!,
+          _dismissedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_dismissedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {connectionId, ieee};
+  @override
+  DeviceDismissal map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DeviceDismissal(
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      ieee: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ieee'],
+      )!,
+      dismissedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}dismissed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DeviceDismissalsTable createAlias(String alias) {
+    return $DeviceDismissalsTable(attachedDatabase, alias);
+  }
+}
+
+class DeviceDismissal extends DataClass implements Insertable<DeviceDismissal> {
+  final String connectionId;
+  final String ieee;
+  final DateTime dismissedAt;
+  const DeviceDismissal({
+    required this.connectionId,
+    required this.ieee,
+    required this.dismissedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['connection_id'] = Variable<String>(connectionId);
+    map['ieee'] = Variable<String>(ieee);
+    map['dismissed_at'] = Variable<DateTime>(dismissedAt);
+    return map;
+  }
+
+  DeviceDismissalsCompanion toCompanion(bool nullToAbsent) {
+    return DeviceDismissalsCompanion(
+      connectionId: Value(connectionId),
+      ieee: Value(ieee),
+      dismissedAt: Value(dismissedAt),
+    );
+  }
+
+  factory DeviceDismissal.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DeviceDismissal(
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      ieee: serializer.fromJson<String>(json['ieee']),
+      dismissedAt: serializer.fromJson<DateTime>(json['dismissedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'connectionId': serializer.toJson<String>(connectionId),
+      'ieee': serializer.toJson<String>(ieee),
+      'dismissedAt': serializer.toJson<DateTime>(dismissedAt),
+    };
+  }
+
+  DeviceDismissal copyWith({
+    String? connectionId,
+    String? ieee,
+    DateTime? dismissedAt,
+  }) => DeviceDismissal(
+    connectionId: connectionId ?? this.connectionId,
+    ieee: ieee ?? this.ieee,
+    dismissedAt: dismissedAt ?? this.dismissedAt,
+  );
+  DeviceDismissal copyWithCompanion(DeviceDismissalsCompanion data) {
+    return DeviceDismissal(
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      ieee: data.ieee.present ? data.ieee.value : this.ieee,
+      dismissedAt: data.dismissedAt.present
+          ? data.dismissedAt.value
+          : this.dismissedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeviceDismissal(')
+          ..write('connectionId: $connectionId, ')
+          ..write('ieee: $ieee, ')
+          ..write('dismissedAt: $dismissedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(connectionId, ieee, dismissedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DeviceDismissal &&
+          other.connectionId == this.connectionId &&
+          other.ieee == this.ieee &&
+          other.dismissedAt == this.dismissedAt);
+}
+
+class DeviceDismissalsCompanion extends UpdateCompanion<DeviceDismissal> {
+  final Value<String> connectionId;
+  final Value<String> ieee;
+  final Value<DateTime> dismissedAt;
+  final Value<int> rowid;
+  const DeviceDismissalsCompanion({
+    this.connectionId = const Value.absent(),
+    this.ieee = const Value.absent(),
+    this.dismissedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DeviceDismissalsCompanion.insert({
+    required String connectionId,
+    required String ieee,
+    required DateTime dismissedAt,
+    this.rowid = const Value.absent(),
+  }) : connectionId = Value(connectionId),
+       ieee = Value(ieee),
+       dismissedAt = Value(dismissedAt);
+  static Insertable<DeviceDismissal> custom({
+    Expression<String>? connectionId,
+    Expression<String>? ieee,
+    Expression<DateTime>? dismissedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (connectionId != null) 'connection_id': connectionId,
+      if (ieee != null) 'ieee': ieee,
+      if (dismissedAt != null) 'dismissed_at': dismissedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DeviceDismissalsCompanion copyWith({
+    Value<String>? connectionId,
+    Value<String>? ieee,
+    Value<DateTime>? dismissedAt,
+    Value<int>? rowid,
+  }) {
+    return DeviceDismissalsCompanion(
+      connectionId: connectionId ?? this.connectionId,
+      ieee: ieee ?? this.ieee,
+      dismissedAt: dismissedAt ?? this.dismissedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (ieee.present) {
+      map['ieee'] = Variable<String>(ieee.value);
+    }
+    if (dismissedAt.present) {
+      map['dismissed_at'] = Variable<DateTime>(dismissedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeviceDismissalsCompanion(')
+          ..write('connectionId: $connectionId, ')
+          ..write('ieee: $ieee, ')
+          ..write('dismissedAt: $dismissedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $ConnectionsTable connections = $ConnectionsTable(this);
   late final $DashboardsTable dashboards = $DashboardsTable(this);
+  late final $SectionsTable sections = $SectionsTable(this);
   late final $PanelsTable panels = $PanelsTable(this);
   late final $ScenesTable scenes = $ScenesTable(this);
+  late final $DeviceDismissalsTable deviceDismissals = $DeviceDismissalsTable(
+    this,
+  );
+  late final Index panelsDeviceIeee = Index(
+    'panels_device_ieee',
+    'CREATE INDEX panels_device_ieee ON panels (device_ieee)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2817,8 +3630,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     connections,
     dashboards,
+    sections,
     panels,
     scenes,
+    deviceDismissals,
+    panelsDeviceIeee,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -2834,7 +3650,21 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         'dashboards',
         limitUpdateKind: UpdateKind.delete,
       ),
+      result: [TableUpdate('sections', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'dashboards',
+        limitUpdateKind: UpdateKind.delete,
+      ),
       result: [TableUpdate('panels', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'sections',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('panels', kind: UpdateKind.update)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -2842,6 +3672,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('scenes', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'connections',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('device_dismissals', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -2918,6 +3755,29 @@ final class $$ConnectionsTableReferences
     ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_scenesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DeviceDismissalsTable, List<DeviceDismissal>>
+  _deviceDismissalsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.deviceDismissals,
+    aliasName: $_aliasNameGenerator(
+      db.connections.id,
+      db.deviceDismissals.connectionId,
+    ),
+  );
+
+  $$DeviceDismissalsTableProcessedTableManager get deviceDismissalsRefs {
+    final manager = $$DeviceDismissalsTableTableManager(
+      $_db,
+      $_db.deviceDismissals,
+    ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _deviceDismissalsRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -3035,6 +3895,31 @@ class $$ConnectionsTableFilterComposer
           }) => $$ScenesTableFilterComposer(
             $db: $db,
             $table: $db.scenes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> deviceDismissalsRefs(
+    Expression<bool> Function($$DeviceDismissalsTableFilterComposer f) f,
+  ) {
+    final $$DeviceDismissalsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.deviceDismissals,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DeviceDismissalsTableFilterComposer(
+            $db: $db,
+            $table: $db.deviceDismissals,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3217,6 +4102,31 @@ class $$ConnectionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> deviceDismissalsRefs<T extends Object>(
+    Expression<T> Function($$DeviceDismissalsTableAnnotationComposer a) f,
+  ) {
+    final $$DeviceDismissalsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.deviceDismissals,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DeviceDismissalsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.deviceDismissals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableTableManager
@@ -3232,7 +4142,11 @@ class $$ConnectionsTableTableManager
           $$ConnectionsTableUpdateCompanionBuilder,
           (Connection, $$ConnectionsTableReferences),
           Connection,
-          PrefetchHooks Function({bool dashboardsRefs, bool scenesRefs})
+          PrefetchHooks Function({
+            bool dashboardsRefs,
+            bool scenesRefs,
+            bool deviceDismissalsRefs,
+          })
         > {
   $$ConnectionsTableTableManager(_$AppDatabase db, $ConnectionsTable table)
     : super(
@@ -3314,12 +4228,17 @@ class $$ConnectionsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({dashboardsRefs = false, scenesRefs = false}) {
+              ({
+                dashboardsRefs = false,
+                scenesRefs = false,
+                deviceDismissalsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (dashboardsRefs) db.dashboards,
                     if (scenesRefs) db.scenes,
+                    if (deviceDismissalsRefs) db.deviceDismissals,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -3366,6 +4285,27 @@ class $$ConnectionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (deviceDismissalsRefs)
+                        await $_getPrefetchedData<
+                          Connection,
+                          $ConnectionsTable,
+                          DeviceDismissal
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ConnectionsTableReferences
+                              ._deviceDismissalsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ConnectionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).deviceDismissalsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -3386,7 +4326,11 @@ typedef $$ConnectionsTableProcessedTableManager =
       $$ConnectionsTableUpdateCompanionBuilder,
       (Connection, $$ConnectionsTableReferences),
       Connection,
-      PrefetchHooks Function({bool dashboardsRefs, bool scenesRefs})
+      PrefetchHooks Function({
+        bool dashboardsRefs,
+        bool scenesRefs,
+        bool deviceDismissalsRefs,
+      })
     >;
 typedef $$DashboardsTableCreateCompanionBuilder =
     DashboardsCompanion Function({
@@ -3437,6 +4381,25 @@ final class $$DashboardsTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$SectionsTable, List<Section>> _sectionsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.sections,
+    aliasName: $_aliasNameGenerator(db.dashboards.id, db.sections.dashboardId),
+  );
+
+  $$SectionsTableProcessedTableManager get sectionsRefs {
+    final manager = $$SectionsTableTableManager(
+      $_db,
+      $_db.sections,
+    ).filter((f) => f.dashboardId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_sectionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -3535,6 +4498,31 @@ class $$DashboardsTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> sectionsRefs(
+    Expression<bool> Function($$SectionsTableFilterComposer f) f,
+  ) {
+    final $$SectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.sections,
+      getReferencedColumn: (t) => t.dashboardId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.sections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<bool> panelsRefs(
@@ -3704,6 +4692,31 @@ class $$DashboardsTableAnnotationComposer
     return composer;
   }
 
+  Expression<T> sectionsRefs<T extends Object>(
+    Expression<T> Function($$SectionsTableAnnotationComposer a) f,
+  ) {
+    final $$SectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.sections,
+      getReferencedColumn: (t) => t.dashboardId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> panelsRefs<T extends Object>(
     Expression<T> Function($$PanelsTableAnnotationComposer a) f,
   ) {
@@ -3743,7 +4756,11 @@ class $$DashboardsTableTableManager
           $$DashboardsTableUpdateCompanionBuilder,
           (Dashboard, $$DashboardsTableReferences),
           Dashboard,
-          PrefetchHooks Function({bool connectionId, bool panelsRefs})
+          PrefetchHooks Function({
+            bool connectionId,
+            bool sectionsRefs,
+            bool panelsRefs,
+          })
         > {
   $$DashboardsTableTableManager(_$AppDatabase db, $DashboardsTable table)
     : super(
@@ -3816,7 +4833,470 @@ class $$DashboardsTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({connectionId = false, panelsRefs = false}) {
+          prefetchHooksCallback:
+              ({
+                connectionId = false,
+                sectionsRefs = false,
+                panelsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (sectionsRefs) db.sections,
+                    if (panelsRefs) db.panels,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (connectionId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.connectionId,
+                                    referencedTable: $$DashboardsTableReferences
+                                        ._connectionIdTable(db),
+                                    referencedColumn:
+                                        $$DashboardsTableReferences
+                                            ._connectionIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (sectionsRefs)
+                        await $_getPrefetchedData<
+                          Dashboard,
+                          $DashboardsTable,
+                          Section
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DashboardsTableReferences
+                              ._sectionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DashboardsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).sectionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.dashboardId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (panelsRefs)
+                        await $_getPrefetchedData<
+                          Dashboard,
+                          $DashboardsTable,
+                          Panel
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DashboardsTableReferences
+                              ._panelsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DashboardsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).panelsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.dashboardId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$DashboardsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DashboardsTable,
+      Dashboard,
+      $$DashboardsTableFilterComposer,
+      $$DashboardsTableOrderingComposer,
+      $$DashboardsTableAnnotationComposer,
+      $$DashboardsTableCreateCompanionBuilder,
+      $$DashboardsTableUpdateCompanionBuilder,
+      (Dashboard, $$DashboardsTableReferences),
+      Dashboard,
+      PrefetchHooks Function({
+        bool connectionId,
+        bool sectionsRefs,
+        bool panelsRefs,
+      })
+    >;
+typedef $$SectionsTableCreateCompanionBuilder =
+    SectionsCompanion Function({
+      required String id,
+      required String dashboardId,
+      required String name,
+      Value<int> sortOrder,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$SectionsTableUpdateCompanionBuilder =
+    SectionsCompanion Function({
+      Value<String> id,
+      Value<String> dashboardId,
+      Value<String> name,
+      Value<int> sortOrder,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$SectionsTableReferences
+    extends BaseReferences<_$AppDatabase, $SectionsTable, Section> {
+  $$SectionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DashboardsTable _dashboardIdTable(_$AppDatabase db) =>
+      db.dashboards.createAlias(
+        $_aliasNameGenerator(db.sections.dashboardId, db.dashboards.id),
+      );
+
+  $$DashboardsTableProcessedTableManager get dashboardId {
+    final $_column = $_itemColumn<String>('dashboard_id')!;
+
+    final manager = $$DashboardsTableTableManager(
+      $_db,
+      $_db.dashboards,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_dashboardIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$PanelsTable, List<Panel>> _panelsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.panels,
+    aliasName: $_aliasNameGenerator(db.sections.id, db.panels.sectionId),
+  );
+
+  $$PanelsTableProcessedTableManager get panelsRefs {
+    final manager = $$PanelsTableTableManager(
+      $_db,
+      $_db.panels,
+    ).filter((f) => f.sectionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_panelsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$SectionsTableFilterComposer
+    extends Composer<_$AppDatabase, $SectionsTable> {
+  $$SectionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$DashboardsTableFilterComposer get dashboardId {
+    final $$DashboardsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.dashboardId,
+      referencedTable: $db.dashboards,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DashboardsTableFilterComposer(
+            $db: $db,
+            $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> panelsRefs(
+    Expression<bool> Function($$PanelsTableFilterComposer f) f,
+  ) {
+    final $$PanelsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.panels,
+      getReferencedColumn: (t) => t.sectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PanelsTableFilterComposer(
+            $db: $db,
+            $table: $db.panels,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SectionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SectionsTable> {
+  $$SectionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$DashboardsTableOrderingComposer get dashboardId {
+    final $$DashboardsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.dashboardId,
+      referencedTable: $db.dashboards,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DashboardsTableOrderingComposer(
+            $db: $db,
+            $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SectionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SectionsTable> {
+  $$SectionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$DashboardsTableAnnotationComposer get dashboardId {
+    final $$DashboardsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.dashboardId,
+      referencedTable: $db.dashboards,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DashboardsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> panelsRefs<T extends Object>(
+    Expression<T> Function($$PanelsTableAnnotationComposer a) f,
+  ) {
+    final $$PanelsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.panels,
+      getReferencedColumn: (t) => t.sectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PanelsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.panels,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SectionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SectionsTable,
+          Section,
+          $$SectionsTableFilterComposer,
+          $$SectionsTableOrderingComposer,
+          $$SectionsTableAnnotationComposer,
+          $$SectionsTableCreateCompanionBuilder,
+          $$SectionsTableUpdateCompanionBuilder,
+          (Section, $$SectionsTableReferences),
+          Section,
+          PrefetchHooks Function({bool dashboardId, bool panelsRefs})
+        > {
+  $$SectionsTableTableManager(_$AppDatabase db, $SectionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SectionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SectionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SectionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> dashboardId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SectionsCompanion(
+                id: id,
+                dashboardId: dashboardId,
+                name: name,
+                sortOrder: sortOrder,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String dashboardId,
+                required String name,
+                Value<int> sortOrder = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SectionsCompanion.insert(
+                id: id,
+                dashboardId: dashboardId,
+                name: name,
+                sortOrder: sortOrder,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SectionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({dashboardId = false, panelsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [if (panelsRefs) db.panels],
@@ -3836,15 +5316,15 @@ class $$DashboardsTableTableManager
                       dynamic
                     >
                   >(state) {
-                    if (connectionId) {
+                    if (dashboardId) {
                       state =
                           state.withJoin(
                                 currentTable: table,
-                                currentColumn: table.connectionId,
-                                referencedTable: $$DashboardsTableReferences
-                                    ._connectionIdTable(db),
-                                referencedColumn: $$DashboardsTableReferences
-                                    ._connectionIdTable(db)
+                                currentColumn: table.dashboardId,
+                                referencedTable: $$SectionsTableReferences
+                                    ._dashboardIdTable(db),
+                                referencedColumn: $$SectionsTableReferences
+                                    ._dashboardIdTable(db)
                                     .id,
                               )
                               as T;
@@ -3855,20 +5335,14 @@ class $$DashboardsTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (panelsRefs)
-                    await $_getPrefetchedData<
-                      Dashboard,
-                      $DashboardsTable,
-                      Panel
-                    >(
+                    await $_getPrefetchedData<Section, $SectionsTable, Panel>(
                       currentTable: table,
-                      referencedTable: $$DashboardsTableReferences
+                      referencedTable: $$SectionsTableReferences
                           ._panelsRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$DashboardsTableReferences(db, table, p0).panelsRefs,
+                          $$SectionsTableReferences(db, table, p0).panelsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.dashboardId == item.id,
-                          ),
+                          referencedItems.where((e) => e.sectionId == item.id),
                       typedResults: items,
                     ),
                 ];
@@ -3879,19 +5353,19 @@ class $$DashboardsTableTableManager
       );
 }
 
-typedef $$DashboardsTableProcessedTableManager =
+typedef $$SectionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $DashboardsTable,
-      Dashboard,
-      $$DashboardsTableFilterComposer,
-      $$DashboardsTableOrderingComposer,
-      $$DashboardsTableAnnotationComposer,
-      $$DashboardsTableCreateCompanionBuilder,
-      $$DashboardsTableUpdateCompanionBuilder,
-      (Dashboard, $$DashboardsTableReferences),
-      Dashboard,
-      PrefetchHooks Function({bool connectionId, bool panelsRefs})
+      $SectionsTable,
+      Section,
+      $$SectionsTableFilterComposer,
+      $$SectionsTableOrderingComposer,
+      $$SectionsTableAnnotationComposer,
+      $$SectionsTableCreateCompanionBuilder,
+      $$SectionsTableUpdateCompanionBuilder,
+      (Section, $$SectionsTableReferences),
+      Section,
+      PrefetchHooks Function({bool dashboardId, bool panelsRefs})
     >;
 typedef $$PanelsTableCreateCompanionBuilder =
     PanelsCompanion Function({
@@ -3910,6 +5384,8 @@ typedef $$PanelsTableCreateCompanionBuilder =
       Value<int> mergeFlags,
       required DateTime createdAt,
       required DateTime updatedAt,
+      Value<String?> sectionId,
+      Value<String?> deviceIeee,
       Value<int> rowid,
     });
 typedef $$PanelsTableUpdateCompanionBuilder =
@@ -3929,6 +5405,8 @@ typedef $$PanelsTableUpdateCompanionBuilder =
       Value<int> mergeFlags,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<String?> sectionId,
+      Value<String?> deviceIeee,
       Value<int> rowid,
     });
 
@@ -3949,6 +5427,23 @@ final class $$PanelsTableReferences
       $_db.dashboards,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_dashboardIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $SectionsTable _sectionIdTable(_$AppDatabase db) => db.sections
+      .createAlias($_aliasNameGenerator(db.panels.sectionId, db.sections.id));
+
+  $$SectionsTableProcessedTableManager? get sectionId {
+    final $_column = $_itemColumn<String>('section_id');
+    if ($_column == null) return null;
+    final manager = $$SectionsTableTableManager(
+      $_db,
+      $_db.sections,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_sectionIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -4037,6 +5532,11 @@ class $$PanelsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get deviceIeee => $composableBuilder(
+    column: $table.deviceIeee,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$DashboardsTableFilterComposer get dashboardId {
     final $$DashboardsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -4051,6 +5551,29 @@ class $$PanelsTableFilterComposer
           }) => $$DashboardsTableFilterComposer(
             $db: $db,
             $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SectionsTableFilterComposer get sectionId {
+    final $$SectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sectionId,
+      referencedTable: $db.sections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.sections,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4140,6 +5663,11 @@ class $$PanelsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get deviceIeee => $composableBuilder(
+    column: $table.deviceIeee,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$DashboardsTableOrderingComposer get dashboardId {
     final $$DashboardsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4154,6 +5682,29 @@ class $$PanelsTableOrderingComposer
           }) => $$DashboardsTableOrderingComposer(
             $db: $db,
             $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SectionsTableOrderingComposer get sectionId {
+    final $$SectionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sectionId,
+      referencedTable: $db.sections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SectionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.sections,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4221,6 +5772,11 @@ class $$PanelsTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
+  GeneratedColumn<String> get deviceIeee => $composableBuilder(
+    column: $table.deviceIeee,
+    builder: (column) => column,
+  );
+
   $$DashboardsTableAnnotationComposer get dashboardId {
     final $$DashboardsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -4235,6 +5791,29 @@ class $$PanelsTableAnnotationComposer
           }) => $$DashboardsTableAnnotationComposer(
             $db: $db,
             $table: $db.dashboards,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$SectionsTableAnnotationComposer get sectionId {
+    final $$SectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sectionId,
+      referencedTable: $db.sections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sections,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4258,7 +5837,7 @@ class $$PanelsTableTableManager
           $$PanelsTableUpdateCompanionBuilder,
           (Panel, $$PanelsTableReferences),
           Panel,
-          PrefetchHooks Function({bool dashboardId})
+          PrefetchHooks Function({bool dashboardId, bool sectionId})
         > {
   $$PanelsTableTableManager(_$AppDatabase db, $PanelsTable table)
     : super(
@@ -4288,6 +5867,8 @@ class $$PanelsTableTableManager
                 Value<int> mergeFlags = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<String?> sectionId = const Value.absent(),
+                Value<String?> deviceIeee = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PanelsCompanion(
                 id: id,
@@ -4305,6 +5886,8 @@ class $$PanelsTableTableManager
                 mergeFlags: mergeFlags,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                sectionId: sectionId,
+                deviceIeee: deviceIeee,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -4324,6 +5907,8 @@ class $$PanelsTableTableManager
                 Value<int> mergeFlags = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
+                Value<String?> sectionId = const Value.absent(),
+                Value<String?> deviceIeee = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PanelsCompanion.insert(
                 id: id,
@@ -4341,6 +5926,8 @@ class $$PanelsTableTableManager
                 mergeFlags: mergeFlags,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                sectionId: sectionId,
+                deviceIeee: deviceIeee,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -4349,7 +5936,7 @@ class $$PanelsTableTableManager
                     (e.readTable(table), $$PanelsTableReferences(db, table, e)),
               )
               .toList(),
-          prefetchHooksCallback: ({dashboardId = false}) {
+          prefetchHooksCallback: ({dashboardId = false, sectionId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -4382,6 +5969,19 @@ class $$PanelsTableTableManager
                               )
                               as T;
                     }
+                    if (sectionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.sectionId,
+                                referencedTable: $$PanelsTableReferences
+                                    ._sectionIdTable(db),
+                                referencedColumn: $$PanelsTableReferences
+                                    ._sectionIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
 
                     return state;
                   },
@@ -4406,7 +6006,7 @@ typedef $$PanelsTableProcessedTableManager =
       $$PanelsTableUpdateCompanionBuilder,
       (Panel, $$PanelsTableReferences),
       Panel,
-      PrefetchHooks Function({bool dashboardId})
+      PrefetchHooks Function({bool dashboardId, bool sectionId})
     >;
 typedef $$ScenesTableCreateCompanionBuilder =
     ScenesCompanion Function({
@@ -4803,6 +6403,301 @@ typedef $$ScenesTableProcessedTableManager =
       Scene,
       PrefetchHooks Function({bool connectionId})
     >;
+typedef $$DeviceDismissalsTableCreateCompanionBuilder =
+    DeviceDismissalsCompanion Function({
+      required String connectionId,
+      required String ieee,
+      required DateTime dismissedAt,
+      Value<int> rowid,
+    });
+typedef $$DeviceDismissalsTableUpdateCompanionBuilder =
+    DeviceDismissalsCompanion Function({
+      Value<String> connectionId,
+      Value<String> ieee,
+      Value<DateTime> dismissedAt,
+      Value<int> rowid,
+    });
+
+final class $$DeviceDismissalsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $DeviceDismissalsTable, DeviceDismissal> {
+  $$DeviceDismissalsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ConnectionsTable _connectionIdTable(_$AppDatabase db) =>
+      db.connections.createAlias(
+        $_aliasNameGenerator(
+          db.deviceDismissals.connectionId,
+          db.connections.id,
+        ),
+      );
+
+  $$ConnectionsTableProcessedTableManager get connectionId {
+    final $_column = $_itemColumn<String>('connection_id')!;
+
+    final manager = $$ConnectionsTableTableManager(
+      $_db,
+      $_db.connections,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_connectionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DeviceDismissalsTableFilterComposer
+    extends Composer<_$AppDatabase, $DeviceDismissalsTable> {
+  $$DeviceDismissalsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get ieee => $composableBuilder(
+    column: $table.ieee,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dismissedAt => $composableBuilder(
+    column: $table.dismissedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ConnectionsTableFilterComposer get connectionId {
+    final $$ConnectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DeviceDismissalsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DeviceDismissalsTable> {
+  $$DeviceDismissalsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get ieee => $composableBuilder(
+    column: $table.ieee,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dismissedAt => $composableBuilder(
+    column: $table.dismissedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ConnectionsTableOrderingComposer get connectionId {
+    final $$ConnectionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DeviceDismissalsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DeviceDismissalsTable> {
+  $$DeviceDismissalsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get ieee =>
+      $composableBuilder(column: $table.ieee, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dismissedAt => $composableBuilder(
+    column: $table.dismissedAt,
+    builder: (column) => column,
+  );
+
+  $$ConnectionsTableAnnotationComposer get connectionId {
+    final $$ConnectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DeviceDismissalsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DeviceDismissalsTable,
+          DeviceDismissal,
+          $$DeviceDismissalsTableFilterComposer,
+          $$DeviceDismissalsTableOrderingComposer,
+          $$DeviceDismissalsTableAnnotationComposer,
+          $$DeviceDismissalsTableCreateCompanionBuilder,
+          $$DeviceDismissalsTableUpdateCompanionBuilder,
+          (DeviceDismissal, $$DeviceDismissalsTableReferences),
+          DeviceDismissal,
+          PrefetchHooks Function({bool connectionId})
+        > {
+  $$DeviceDismissalsTableTableManager(
+    _$AppDatabase db,
+    $DeviceDismissalsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DeviceDismissalsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DeviceDismissalsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DeviceDismissalsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> connectionId = const Value.absent(),
+                Value<String> ieee = const Value.absent(),
+                Value<DateTime> dismissedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DeviceDismissalsCompanion(
+                connectionId: connectionId,
+                ieee: ieee,
+                dismissedAt: dismissedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String connectionId,
+                required String ieee,
+                required DateTime dismissedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => DeviceDismissalsCompanion.insert(
+                connectionId: connectionId,
+                ieee: ieee,
+                dismissedAt: dismissedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DeviceDismissalsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({connectionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (connectionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.connectionId,
+                                referencedTable:
+                                    $$DeviceDismissalsTableReferences
+                                        ._connectionIdTable(db),
+                                referencedColumn:
+                                    $$DeviceDismissalsTableReferences
+                                        ._connectionIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DeviceDismissalsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DeviceDismissalsTable,
+      DeviceDismissal,
+      $$DeviceDismissalsTableFilterComposer,
+      $$DeviceDismissalsTableOrderingComposer,
+      $$DeviceDismissalsTableAnnotationComposer,
+      $$DeviceDismissalsTableCreateCompanionBuilder,
+      $$DeviceDismissalsTableUpdateCompanionBuilder,
+      (DeviceDismissal, $$DeviceDismissalsTableReferences),
+      DeviceDismissal,
+      PrefetchHooks Function({bool connectionId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4811,8 +6706,12 @@ class $AppDatabaseManager {
       $$ConnectionsTableTableManager(_db, _db.connections);
   $$DashboardsTableTableManager get dashboards =>
       $$DashboardsTableTableManager(_db, _db.dashboards);
+  $$SectionsTableTableManager get sections =>
+      $$SectionsTableTableManager(_db, _db.sections);
   $$PanelsTableTableManager get panels =>
       $$PanelsTableTableManager(_db, _db.panels);
   $$ScenesTableTableManager get scenes =>
       $$ScenesTableTableManager(_db, _db.scenes);
+  $$DeviceDismissalsTableTableManager get deviceDismissals =>
+      $$DeviceDismissalsTableTableManager(_db, _db.deviceDismissals);
 }

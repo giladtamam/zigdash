@@ -103,7 +103,7 @@ class ScenesScreen extends ConsumerWidget {
           name: scene.name,
           type: PanelType.scene,
           topic: '',
-          width: PanelWidth.half,
+          width: PanelWidth.small,
           config: SceneConfig(sceneId: scene.id),
         );
     messenger.showSnackBar(

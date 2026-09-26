@@ -74,7 +74,7 @@ class DemoService extends Notifier<bool> {
           'light/living',
           PanelConfig.defaultFor(PanelType.slider),
           sortOrder: 1,
-          width: PanelWidth.half),
+          width: PanelWidth.small),
       _panel(dashId, 'Living Room Cover', PanelType.cover, 'cover/living',
           PanelConfig.defaultFor(PanelType.cover), sortOrder: 2),
       _panel(
@@ -84,11 +84,11 @@ class DemoService extends Notifier<bool> {
           'contact/door',
           const LedConfig(onMatch: 'true', onLabel: 'Open', offLabel: 'Closed'),
           sortOrder: 3,
-          width: PanelWidth.half),
+          width: PanelWidth.small),
       _panel(dashId, 'Zigbee Router', PanelType.nodeStatus, 'router/status',
           PanelConfig.defaultFor(PanelType.nodeStatus),
           sortOrder: 4,
-          width: PanelWidth.half),
+          width: PanelWidth.small),
       _panel(
           dashId,
           'Battery',
@@ -96,7 +96,7 @@ class DemoService extends Notifier<bool> {
           'sensor/battery',
           const ProgressConfig(min: 0, max: 100, unit: '%'),
           sortOrder: 5,
-          width: PanelWidth.half),
+          width: PanelWidth.small),
       _panel(
           dashId,
           'Fan Mode',
@@ -114,7 +114,7 @@ class DemoService extends Notifier<bool> {
       _panel(dashId, 'Entry Button', PanelType.button, 'button/entry',
           PanelConfig.defaultFor(PanelType.button),
           sortOrder: 7,
-          width: PanelWidth.third),
+          width: PanelWidth.small),
       _panel(dashId, 'Event Log', PanelType.textLog, 'system/log',
           PanelConfig.defaultFor(PanelType.textLog), sortOrder: 8),
     ];

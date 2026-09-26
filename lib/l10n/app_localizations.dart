@@ -1088,29 +1088,29 @@ abstract class AppLocalizations {
   /// **'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.'**
   String get panelFormSubscribeTopicHelper;
 
-  /// No description provided for @panelFormWidth.
+  /// No description provided for @tileSize.
   ///
   /// In en, this message translates to:
-  /// **'Width'**
-  String get panelFormWidth;
+  /// **'Size'**
+  String get tileSize;
 
-  /// No description provided for @panelFormWidthFull.
+  /// No description provided for @tileSizeSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get tileSizeSmall;
+
+  /// No description provided for @tileSizeWide.
+  ///
+  /// In en, this message translates to:
+  /// **'Wide'**
+  String get tileSizeWide;
+
+  /// No description provided for @tileSizeFull.
   ///
   /// In en, this message translates to:
   /// **'Full'**
-  String get panelFormWidthFull;
-
-  /// No description provided for @panelFormWidthHalf.
-  ///
-  /// In en, this message translates to:
-  /// **'Half'**
-  String get panelFormWidthHalf;
-
-  /// No description provided for @panelFormWidthThird.
-  ///
-  /// In en, this message translates to:
-  /// **'Third'**
-  String get panelFormWidthThird;
+  String get tileSizeFull;
 
   /// No description provided for @panelFormQos.
   ///
@@ -1603,30 +1603,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Move down'**
   String get panelTileMoveDown;
-
-  /// No description provided for @panelTileWidth.
-  ///
-  /// In en, this message translates to:
-  /// **'Width'**
-  String get panelTileWidth;
-
-  /// No description provided for @panelTileWidthFull.
-  ///
-  /// In en, this message translates to:
-  /// **'Full'**
-  String get panelTileWidthFull;
-
-  /// No description provided for @panelTileWidthHalf.
-  ///
-  /// In en, this message translates to:
-  /// **'Half'**
-  String get panelTileWidthHalf;
-
-  /// No description provided for @panelTileWidthThird.
-  ///
-  /// In en, this message translates to:
-  /// **'⅓'**
-  String get panelTileWidthThird;
 
   /// No description provided for @panelTileDelete.
   ///

@@ -46,7 +46,7 @@ class _RecordingPanelRepo extends PanelRepo {
     String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
-    PanelWidth width = PanelWidth.half,
+    PanelWidth width = PanelWidth.small,
     required PanelConfig config,
   }) async {
     updatedConfig = config as AutoCloseConfig;

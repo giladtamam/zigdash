@@ -54,12 +54,12 @@ final _dashboard = Dashboard(
 );
 
 final _panels = [
-  _panel('living_light', 'Living room', PanelType.toggle, PanelWidth.half),
-  _panel('kitchen_light', 'Kitchen', PanelType.toggle, PanelWidth.half),
+  _panel('living_light', 'Living room', PanelType.toggle, PanelWidth.small),
+  _panel('kitchen_light', 'Kitchen', PanelType.toggle, PanelWidth.small),
   _panel('dimmer', 'Brightness', PanelType.slider, PanelWidth.full),
   _panel('shutter', 'Living room shutter', PanelType.cover, PanelWidth.full),
-  _panel('door', 'Front door', PanelType.led, PanelWidth.half),
-  _panel('battery', 'Climate battery', PanelType.progress, PanelWidth.half),
+  _panel('door', 'Front door', PanelType.led, PanelWidth.small),
+  _panel('battery', 'Climate battery', PanelType.progress, PanelWidth.small),
   _panel('log', 'Hallway motion', PanelType.textLog, PanelWidth.full),
 ];
 

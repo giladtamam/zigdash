@@ -65,9 +65,8 @@ class PanelGrid extends ConsumerWidget {
                 runSpacing: 8,
                 children: rows.map((p) {
                   final width = switch (p.width) {
-                    PanelWidth.full => maxW - 16,
-                    PanelWidth.half => (maxW - 24) / 2,
-                    PanelWidth.third => (maxW - 32) / 3,
+                    PanelWidth.full || PanelWidth.wide => maxW - 16,
+                    PanelWidth.small => (maxW - 24) / 2,
                   };
                   return SizedBox(
                     width: width,

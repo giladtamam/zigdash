@@ -550,16 +550,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.';
 
   @override
-  String get panelFormWidth => 'Width';
+  String get tileSize => 'Size';
 
   @override
-  String get panelFormWidthFull => 'Full';
+  String get tileSizeSmall => 'Small';
 
   @override
-  String get panelFormWidthHalf => 'Half';
+  String get tileSizeWide => 'Wide';
 
   @override
-  String get panelFormWidthThird => 'Third';
+  String get tileSizeFull => 'Full';
 
   @override
   String get panelFormQos => 'QoS';
@@ -824,18 +824,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'Move down';
-
-  @override
-  String get panelTileWidth => 'Width';
-
-  @override
-  String get panelTileWidthFull => 'Full';
-
-  @override
-  String get panelTileWidthHalf => 'Half';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'Delete panel';

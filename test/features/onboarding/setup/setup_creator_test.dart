@@ -150,8 +150,10 @@ class _FailingPanelRepo extends PanelRepo {
     String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
-    PanelWidth width = PanelWidth.half,
+    PanelWidth width = PanelWidth.small,
     int sortOrder = 0,
+    String? sectionId,
+    String? deviceIeee,
     required config,
   }) =>
       throw StateError('disk full');

@@ -552,16 +552,16 @@ class AppLocalizationsNb extends AppLocalizations {
       'Tomt = abonner på selve prefikset (Z2M-status). Samme som Publiseringsemne = bruk det.';
 
   @override
-  String get panelFormWidth => 'Bredde';
+  String get tileSize => 'Størrelse';
 
   @override
-  String get panelFormWidthFull => 'Full';
+  String get tileSizeSmall => 'Liten';
 
   @override
-  String get panelFormWidthHalf => 'Halv';
+  String get tileSizeWide => 'Bred';
 
   @override
-  String get panelFormWidthThird => 'Tredjedel';
+  String get tileSizeFull => 'Full';
 
   @override
   String get panelFormQos => 'QoS';
@@ -827,18 +827,6 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'Flytt ned';
-
-  @override
-  String get panelTileWidth => 'Bredde';
-
-  @override
-  String get panelTileWidthFull => 'Full';
-
-  @override
-  String get panelTileWidthHalf => 'Halv';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'Slett panel';

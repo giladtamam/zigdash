@@ -225,23 +225,23 @@ class PanelTile extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: Row(
                 children: [
-                  Text(l10n.panelTileWidth),
+                  Text(l10n.tileSize),
                   const SizedBox(width: 16),
                   Expanded(
                     child: SegmentedButton<PanelWidth>(
                       showSelectedIcon: false,
                       segments: [
                         ButtonSegment(
+                          value: PanelWidth.small,
+                          label: Text(l10n.tileSizeSmall),
+                        ),
+                        ButtonSegment(
+                          value: PanelWidth.wide,
+                          label: Text(l10n.tileSizeWide),
+                        ),
+                        ButtonSegment(
                           value: PanelWidth.full,
-                          label: Text(l10n.panelTileWidthFull),
-                        ),
-                        ButtonSegment(
-                          value: PanelWidth.half,
-                          label: Text(l10n.panelTileWidthHalf),
-                        ),
-                        ButtonSegment(
-                          value: PanelWidth.third,
-                          label: Text(l10n.panelTileWidthThird),
+                          label: Text(l10n.tileSizeFull),
                         ),
                       ],
                       selected: {panel.width},

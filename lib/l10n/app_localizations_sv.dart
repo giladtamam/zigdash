@@ -551,16 +551,16 @@ class AppLocalizationsSv extends AppLocalizations {
       'Tomt = prenumerera på själva prefixet (Z2M-status). Samma som Publiceringsämne = använd det.';
 
   @override
-  String get panelFormWidth => 'Bredd';
+  String get tileSize => 'Storlek';
 
   @override
-  String get panelFormWidthFull => 'Full';
+  String get tileSizeSmall => 'Liten';
 
   @override
-  String get panelFormWidthHalf => 'Halv';
+  String get tileSizeWide => 'Bred';
 
   @override
-  String get panelFormWidthThird => 'Tredjedel';
+  String get tileSizeFull => 'Hel';
 
   @override
   String get panelFormQos => 'QoS';
@@ -826,18 +826,6 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'Flytta ned';
-
-  @override
-  String get panelTileWidth => 'Bredd';
-
-  @override
-  String get panelTileWidthFull => 'Full';
-
-  @override
-  String get panelTileWidthHalf => 'Halv';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'Ta bort panel';

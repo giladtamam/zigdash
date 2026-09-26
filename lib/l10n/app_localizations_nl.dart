@@ -554,16 +554,16 @@ class AppLocalizationsNl extends AppLocalizations {
       'Leeg = op het voorvoegsel zelf abonneren (Z2M-status). Zelfde als Publicatie-topic = dat gebruiken.';
 
   @override
-  String get panelFormWidth => 'Breedte';
+  String get tileSize => 'Grootte';
 
   @override
-  String get panelFormWidthFull => 'Volledig';
+  String get tileSizeSmall => 'Klein';
 
   @override
-  String get panelFormWidthHalf => 'Half';
+  String get tileSizeWide => 'Breed';
 
   @override
-  String get panelFormWidthThird => 'Derde';
+  String get tileSizeFull => 'Volledig';
 
   @override
   String get panelFormQos => 'QoS';
@@ -829,18 +829,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'Naar beneden';
-
-  @override
-  String get panelTileWidth => 'Breedte';
-
-  @override
-  String get panelTileWidthFull => 'Volledig';
-
-  @override
-  String get panelTileWidthHalf => 'Half';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'Paneel verwijderen';

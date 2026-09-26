@@ -28,8 +28,10 @@ class PanelRepo {
     String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
-    PanelWidth width = PanelWidth.half,
+    PanelWidth width = PanelWidth.small,
     int sortOrder = 0,
+    String? sectionId,
+    String? deviceIeee,
     required PanelConfig config,
   }) async {
     final id = newId();
@@ -46,6 +48,8 @@ class PanelRepo {
       retain: Value(retain),
       width: width,
       sortOrder: Value(sortOrder),
+      sectionId: Value(sectionId),
+      deviceIeee: Value(deviceIeee),
       config: config.encode(),
       createdAt: now,
       updatedAt: now,
@@ -61,7 +65,7 @@ class PanelRepo {
     String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
-    PanelWidth width = PanelWidth.half,
+    PanelWidth width = PanelWidth.small,
     required PanelConfig config,
   }) async {
     await _dao.updateById(
@@ -96,6 +100,8 @@ class PanelRepo {
       retain: p.retain,
       width: p.width,
       sortOrder: p.sortOrder + 1,
+      sectionId: p.sectionId,
+      deviceIeee: p.deviceIeee,
       config: PanelConfig.decode(p.type, p.config),
     );
   }

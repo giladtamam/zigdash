@@ -555,16 +555,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Vacío = suscribirse al propio prefijo (estado Z2M). Igual que Tema de publicación = usar ese.';
 
   @override
-  String get panelFormWidth => 'Ancho';
+  String get tileSize => 'Tamaño';
 
   @override
-  String get panelFormWidthFull => 'Completo';
+  String get tileSizeSmall => 'Pequeño';
 
   @override
-  String get panelFormWidthHalf => 'Mitad';
+  String get tileSizeWide => 'Ancho';
 
   @override
-  String get panelFormWidthThird => 'Tercio';
+  String get tileSizeFull => 'Completo';
 
   @override
   String get panelFormQos => 'QoS';
@@ -830,18 +830,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get panelTileMoveDown => 'Bajar';
-
-  @override
-  String get panelTileWidth => 'Ancho';
-
-  @override
-  String get panelTileWidthFull => 'Completo';
-
-  @override
-  String get panelTileWidthHalf => 'Mitad';
-
-  @override
-  String get panelTileWidthThird => '⅓';
 
   @override
   String get panelTileDelete => 'Eliminar panel';

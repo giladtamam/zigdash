@@ -776,17 +776,17 @@ class _State extends ConsumerState<PanelFormScreen> {
             DropdownButtonFormField<PanelWidth>(
               key: ValueKey(_width),
               initialValue: _width,
-              decoration: InputDecoration(labelText: l10n.panelFormWidth),
+              decoration: InputDecoration(labelText: l10n.tileSize),
               items: [
                 DropdownMenuItem(
+                    value: PanelWidth.small,
+                    child: Text(l10n.tileSizeSmall)),
+                DropdownMenuItem(
+                    value: PanelWidth.wide,
+                    child: Text(l10n.tileSizeWide)),
+                DropdownMenuItem(
                     value: PanelWidth.full,
-                    child: Text(l10n.panelFormWidthFull)),
-                DropdownMenuItem(
-                    value: PanelWidth.half,
-                    child: Text(l10n.panelFormWidthHalf)),
-                DropdownMenuItem(
-                    value: PanelWidth.third,
-                    child: Text(l10n.panelFormWidthThird)),
+                    child: Text(l10n.tileSizeFull)),
               ],
               onChanged: (v) => v == null ? null : setState(() => _width = v),
             ),
