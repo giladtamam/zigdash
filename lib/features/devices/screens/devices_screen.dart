@@ -210,47 +210,51 @@ class _DeviceHealthTile extends StatelessWidget {
       onTap: onTap,
       leading: cls == null ? null : Icon(deviceClassIcon(cls)),
       title: Text(health.friendlyName),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!onDashboard)
-            Chip(
-              label: Text(l10n.addTileNotOnDashboard,
-                  style: theme.textTheme.labelSmall),
-              visualDensity: VisualDensity.compact,
-            ),
-          if (online != null)
-            _OnlineIndicator(
+      trailing: online == null
+          ? null
+          : _OnlineIndicator(
               online: online,
               labelOnline: l10n.devicesOnline,
               labelOffline: l10n.devicesOffline,
             ),
-        ],
-      ),
-      subtitle: Row(
+      // Wraps at large text sizes instead of overflowing.
+      subtitle: Wrap(
+        spacing: 12,
+        runSpacing: 2,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          if (d != null && deviceModelLabel(d) != null) ...[
-            Flexible(
-              child: Text(deviceModelLabel(d)!,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall),
+          if (!onDashboard)
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                child: Text(l10n.addTileNotOnDashboard,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSecondaryContainer)),
+              ),
             ),
-            const SizedBox(width: 12),
-          ],
-          // Battery
-          const Icon(Icons.battery_4_bar, size: 16),
-          const SizedBox(width: 2),
-          Text(
-            battery != null ? '$battery%' : '—',
-            style: Theme.of(context).textTheme.bodySmall,
+          if (d != null && deviceModelLabel(d) != null)
+            Text(deviceModelLabel(d)!, style: theme.textTheme.bodySmall),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.battery_4_bar, size: 16),
+              const SizedBox(width: 2),
+              Text(battery != null ? '$battery%' : '—',
+                  style: theme.textTheme.bodySmall),
+            ],
           ),
-          const SizedBox(width: 12),
-          // Link quality
-          const Icon(Icons.wifi, size: 16),
-          const SizedBox(width: 2),
-          Text(
-            lq != null ? '$lq' : '—',
-            style: Theme.of(context).textTheme.bodySmall,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.wifi, size: 16),
+              const SizedBox(width: 2),
+              Text(lq != null ? '$lq' : '—',
+                  style: theme.textTheme.bodySmall),
+            ],
           ),
         ],
       ),
