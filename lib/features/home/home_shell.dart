@@ -6,6 +6,7 @@ import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../data/database/database.dart';
 import '../../data/repositories/connection_repo.dart';
+import '../../data/repositories/dashboard_repo.dart';
 import '../../data/repositories/section_repo.dart';
 import '../dashboards/edit_mode.dart';
 import '../devices/device_registry.dart';
@@ -38,7 +39,16 @@ class HomeShell extends ConsumerWidget {
     final l10n = context.l10n;
     final newDevices =
         ref.watch(unassignedCountProvider(connectionId)).valueOrNull ?? 0;
-    final editing = ref.watch(editModeProvider);
+    // Edit mode belongs to a dashboard of this home that still exists.
+    final editingId = ref.watch(editModeProvider);
+    final editing = editingId != null &&
+            ref
+                    .watch(dashboardsForConnectionProvider(connectionId))
+                    .valueOrNull
+                    ?.any((d) => d.id == editingId) ==
+                true
+        ? editingId
+        : null;
     return Scaffold(
       body: child,
       // In Edit mode the bar offers the two ways to add, instead of the tabs.

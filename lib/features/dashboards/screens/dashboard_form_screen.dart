@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/utils/material_icon.dart';
 import '../../../data/repositories/dashboard_repo.dart';
+import '../edit_mode.dart';
 
 const _swatches = <Color>[
   Color(0xFF3B82F6), // blue (default)
@@ -230,6 +231,7 @@ class _State extends ConsumerState<DashboardFormScreen> {
                     ),
                   );
                   if (ok != true) return;
+                  ref.read(editModeProvider.notifier).exit();
                   await ref.read(dashboardRepoProvider).delete(widget.dashboardId!);
                   if (!context.mounted) return;
                   context.pop();

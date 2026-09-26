@@ -30,9 +30,10 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
   /// Set from the ⋮ menu; otherwise the home's base topic.
   String? _baseOverride;
 
+  /// Read, not watched: callbacks use it too; build watches the dashboards.
   String get _base => _baseOverride ??
       z2mBase(ref
-          .watch(dashboardsForConnectionProvider(widget.connectionId))
+          .read(dashboardsForConnectionProvider(widget.connectionId))
           .valueOrNull
           ?.firstOrNull
           ?.topicPrefix);
@@ -83,6 +84,7 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    ref.watch(dashboardsForConnectionProvider(widget.connectionId));
     final args = (connectionId: widget.connectionId, base: _base);
     final healthAsync = ref.watch(deviceHealthProvider(args));
 
