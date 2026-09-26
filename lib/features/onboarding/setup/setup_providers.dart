@@ -1,14 +1,12 @@
-import 'dart:ui' show Locale, PlatformDispatcher;
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/app_l10n.dart';
 import '../../../data/database/daos/device_registry_dao.dart';
 import '../../../data/database/database.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
-import '../../../l10n/app_localizations.dart';
 import '../../settings/providers/settings_controller.dart';
 import '../../connections/diagnostics/connect_diagnostics_provider.dart';
 import '../../connections/discovery/broker_scan_providers.dart';
@@ -35,7 +33,7 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
       sections: ref.watch(sectionRepoProvider),
       panels: ref.watch(panelRepoProvider),
       registry: DeviceRegistryDao(ref.watch(appDatabaseProvider)),
-      l10n: _appL10n(ref.read(settingsControllerProvider).locale),
+      l10n: appL10n(ref.read(settingsControllerProvider).locale),
     ),
     onCreated: (result) =>
         ref.read(firstRunProvider).finish(result.connectionId),
@@ -51,12 +49,3 @@ final setupStateProvider = StreamProvider.autoDispose<SetupState>((ref) async* {
   yield coordinator.state;
   yield* coordinator.states;
 });
-
-/// The app's strings in the chosen language, else the phone's, else English
-/// — for names setup writes into the database (home, sections).
-AppLocalizations _appL10n(Locale? chosen) {
-  final code = (chosen ?? PlatformDispatcher.instance.locale).languageCode;
-  final supported =
-      AppLocalizations.supportedLocales.any((l) => l.languageCode == code);
-  return lookupAppLocalizations(Locale(supported ? code : 'en'));
-}

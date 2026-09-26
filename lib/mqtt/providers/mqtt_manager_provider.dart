@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/storage/secure_storage.dart';
 import '../../data/last_known/last_known_store.dart';
+import '../../features/onboarding/demo_home.dart' show demoValues;
+import '../../features/onboarding/demo_service.dart' show isDemoConnection;
 import '../../data/repositories/connection_repo.dart';
 import '../broker_config.dart';
 import '../endpoint.dart';
@@ -64,6 +66,10 @@ final mqttManagerProvider =
   // Last-known values first, so tiles are never empty when the broker is
   // unreachable; then keep saving what arrives. A store failure never
   // blocks connecting.
+  // The demo never connects: its tiles show canned values as current.
+  if (isDemoConnection(conn.host)) {
+    manager.seedLastKnown(demoValues(DateTime.now()));
+  }
   final store = ref.read(lastKnownStoreProvider);
   try {
     manager.seedLastKnown(await store
@@ -74,8 +80,9 @@ final mqttManagerProvider =
       manager.messages.listen((m) => store.record(connectionId, m));
   ref.onDispose(saving.cancel);
 
-  // Fire-and-forget connect — UI watches status$ to observe progress.
-  manager.connect();
+  // Fire-and-forget connect — UI watches status$ to observe progress. The
+  // demo has no broker: it stays offline, quietly, without a status line.
+  if (!isDemoConnection(conn.host)) manager.connect();
 
   return manager;
 });
