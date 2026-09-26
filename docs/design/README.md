@@ -30,7 +30,7 @@ People who find the listing install the app, but few come back. The redesign is 
 |---|---|---|
 | First run | One door with four discovery outcomes: one broker, several, none, or broker without Zigbee2MQTT. A device review list, then straight to the dashboard. The demo appears only on the none-found and no-Zigbee2MQTT outcomes, with a persistent connect bar. | [ia.md](ia.md), First-run section below |
 | Structure | Dashboards stay primary, with no rooms. A broker is a "home", switched in the header. The bottom bar is Dashboards, Devices and Scenes. Settings sits in the header. | [ia.md](ia.md), [ADR 0001](../adr/0001-dashboards-not-rooms.md) |
-| Adding tiles | "Add tile" is device-first. Each device gets one composite device tile, in 7 classes plus a generic fallback. A new reading tile shows numeric sensors. The 15 raw types sit under "Custom MQTT tile" with a form that leads with the topic. | Adding tiles section below |
+| Adding tiles | "Add tile" is device-first. Each device gets one composite device tile, in 8 classes plus a generic fallback. A new reading tile shows numeric sensors. The 15 raw types sit under "Custom MQTT tile" with a form that leads with the topic. | Adding tiles section below |
 | Visual direction | 2.0 is **Signal**: a warm ground, amber fill when on, squircle tiles and a bold display face. It takes the tablet layout from Wall Panel. Calm Material is the interim look until 2.0. | [Claude Design canvas](https://claude.ai/artifact/Gt1x8Q8TpDfY2VMVqNqF5w) |
 | Tokens | Amber is a harmonized accent over dynamic color. Fonts are Space Grotesk, IBM Plex Sans and IBM Plex Sans Hebrew. There are six state roles. Radii are 28, 18, 12 and 20. The grid has 2, 3 or 4 columns. Icons are Material Symbols Rounded. | [tokens.md](tokens.md), [ADR 0002](../adr/0002-amber-is-a-harmonized-accent.md) |
 | Screens | There are nine Signal boards, each with a per-screen note. The dashboard, dark offline, welcome and dark tablet boards from the direction round complete the set. | [screens.md](screens.md) |
@@ -54,6 +54,7 @@ People who find the listing install the app, but few come back. The redesign is 
 
 - **Add tile** opens a searchable device list. Devices not on any dashboard come first. Picking a device adds its recommended tile, which can be changed before saving.
 - **Device tiles:** the icon is the quick action, the body holds the controls, and long-press edits the tile. The first release covers these classes:
+  - color light (added while planning 1.12)
   - light
   - switch or plug
   - cover
@@ -63,7 +64,7 @@ People who find the listing install the app, but few come back. The redesign is 
   - leak or smoke
   - a generic fallback
 
-  Thermostats and color lights come later.
+  Thermostats come later.
 - **Reading tile:** a numeric value with its unit, for temperature, humidity or power.
 - **Custom MQTT tile:** the 15 existing types. The form leads with name and topic and offers "Pick a device". A live preview comes before the payload fields. Payloads and JSON path collapse under Advanced.
 - **New devices** are never auto-added. Edit mode shows a card counting unassigned devices, and the Devices tab carries a badge.
@@ -89,7 +90,7 @@ People who find the listing install the app, but few come back. The redesign is 
 
 These are in scope for 2.0 but not designed yet. They get decided in the phase that needs them.
 
-- **Thermostat and color-light tiles** need their own control design.
+- **Thermostat tiles** need their own control design. Color lights were designed for 1.12 in [dashboard-1.12.md](dashboard-1.12.md).
 - **Wall-tablet kiosk presentation** covers always-on use, screen dimming and hidden chrome. The layout is set, the presentation is not.
 - **Motion** for tile state changes and banner transitions uses M3 easing and spring tokens.
 - **Launcher icon and Play feature graphic** in the Signal identity.

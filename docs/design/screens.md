@@ -106,5 +106,5 @@ These five boards are in the interim Calm Material look, not Signal. They sit in
 ## Not mocked here
 
 - **Custom MQTT tile form.** It keeps the current fields, reordered topic-first, and needs no new layout decision.
-- **Thermostat and color-light tiles.** They are deferred on the map and need their own control design.
+- **Thermostat tiles.** They are deferred and need their own control design. Color lights are on the 1.12 boards above.
 - **Kiosk presentation.** It stays on the map as fog, after phasing.
