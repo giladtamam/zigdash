@@ -132,7 +132,8 @@ class _AddTileScreenState extends ConsumerState<AddTileScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.dashAddTile)),
-      body: ListView(children: children),
+      // Keep the last rows clear of the system navigation bar.
+      body: SafeArea(top: false, child: ListView(children: children)),
     );
   }
 
