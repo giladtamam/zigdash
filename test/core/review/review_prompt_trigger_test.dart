@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/core/review/review_launcher.dart';
 import 'package:zigdash/core/review/review_prompt_controller.dart';
+import 'package:zigdash/core/review/command_confirmations.dart';
 import 'package:zigdash/core/review/review_prompt_trigger.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
@@ -26,7 +27,8 @@ Map<String, Object> _eligiblePrefs() => {
       ReviewPromptController.kLastSessionDay: '2020-01-03',
     };
 
-Future<(_FakeLauncher, StreamController<MqttStatus>)> _pump(
+Future<(_FakeLauncher, StreamController<MqttStatus>, StreamController<DateTime>)>
+    _pump(
   WidgetTester tester, {
   required Map<String, Object> prefsValues,
 }) async {
@@ -34,58 +36,73 @@ Future<(_FakeLauncher, StreamController<MqttStatus>)> _pump(
   final prefs = await SharedPreferences.getInstance();
   final launcher = _FakeLauncher();
   final status = StreamController<MqttStatus>.broadcast();
+  final confirmed = StreamController<DateTime>.broadcast();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
         reviewLauncherProvider.overrideWithValue(launcher),
         connectionStatusProvider.overrideWith((ref, id) => status.stream),
+        commandConfirmedProvider.overrideWith((ref, id) => confirmed.stream),
       ],
       child: const Center(child: ReviewPromptTrigger(connectionId: 'c1')),
     ),
   );
-  return (launcher, status);
+  return (launcher, status, confirmed);
 }
 
 void main() {
-  testWidgets('a connected status records a session and can prompt',
-      (tester) async {
-    final (launcher, status) = await _pump(tester, prefsValues: _eligiblePrefs());
-
-    status.add(MqttStatus.connecting);
-    await tester.pump();
-    expect(launcher.requests, 0, reason: 'connecting is not a session');
-
+  // First-run decision: a successful session is a calendar day on which the
+  // user sent a command and received a confirming state update.
+  testWidgets('being connected alone is not a session', (tester) async {
+    final (launcher, status, confirmed) =
+        await _pump(tester, prefsValues: _eligiblePrefs());
     status.add(MqttStatus.connected);
+    await tester.pump();
+    await tester.pump();
+    expect(launcher.requests, 0);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getInt(ReviewPromptController.kSessions), 3);
+    await status.close();
+    await confirmed.close();
+  });
+
+  testWidgets('a confirmed command records a session and can prompt',
+      (tester) async {
+    final (launcher, status, confirmed) =
+        await _pump(tester, prefsValues: _eligiblePrefs());
+
+    confirmed.add(DateTime.now());
     await tester.pump();
     await tester.pump();
     expect(launcher.requests, 1);
 
-    // Flapping later the same day must not re-prompt.
-    status.add(MqttStatus.reconnecting);
-    await tester.pump();
-    status.add(MqttStatus.connected);
+    // More confirmed commands the same day must not re-prompt.
+    confirmed.add(DateTime.now());
     await tester.pump();
     await tester.pump();
     expect(launcher.requests, 1);
     await status.close();
+    await confirmed.close();
   });
 
   testWidgets('does nothing while the policy is not met', (tester) async {
-    final (launcher, status) = await _pump(tester, prefsValues: {});
-    status.add(MqttStatus.connected);
+    final (launcher, status, confirmed) = await _pump(tester, prefsValues: {});
+    confirmed.add(DateTime.now());
     await tester.pump();
     await tester.pump();
     expect(launcher.requests, 0);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getInt(ReviewPromptController.kSessions), 1);
     await status.close();
+    await confirmed.close();
   });
 
   testWidgets('renders nothing visible', (tester) async {
-    final (_, status) = await _pump(tester, prefsValues: {});
+    final (_, status, confirmed) = await _pump(tester, prefsValues: {});
     expect(find.byType(SizedBox), findsOneWidget);
     expect(tester.getSize(find.byType(SizedBox)), Size.zero);
     await status.close();
+    await confirmed.close();
   });
 }

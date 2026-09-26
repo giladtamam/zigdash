@@ -140,6 +140,15 @@ class MqttManager {
 
   final Map<String, _SubEntry> _subs = {};
 
+  final _commandsSent = StreamController<String>.broadcast();
+  final _messages = StreamController<MqttRxMessage>.broadcast();
+
+  /// Topics of commands published through [publish], as they are sent.
+  Stream<String> get commandsSent => _commandsSent.stream;
+
+  /// Every message received on this connection's subscriptions.
+  Stream<MqttRxMessage> get messages => _messages.stream;
+
   // Guarded status emit. After [dispose] every call becomes a no-op so a
   // late-firing reconnect timer or an async tail of an in-flight connect()
   // cannot crash with "Cannot add new events after calling close".
@@ -292,6 +301,8 @@ class MqttManager {
     _subs.clear();
     await _endpoint.close();
     await _status.close();
+    await _commandsSent.close();
+    await _messages.close();
   }
 
   /// Ref-counted. Returns a broadcast stream filtered to topics matching [pattern].
@@ -391,6 +402,7 @@ class MqttManager {
     final builder = mc.MqttClientPayloadBuilder()..addUTF8String(payload);
     try {
       client.publishMessage(topic, qos, builder.payload!, retain: retain);
+      if (!_commandsSent.isClosed) _commandsSent.add(topic);
     } catch (e) {
       // mqtt_client's MQTT 3.1 encoding rejects extended UTF-8 in topics
       // with InvalidTopicException. We swallow here so a misconfigured panel
@@ -459,6 +471,7 @@ class MqttManager {
   }
 
   void _fanOut(MqttRxMessage message) {
+    if (!_messages.isClosed) _messages.add(message);
     for (final entry in _subs.values) {
       if (topicMatches(entry.pattern, message.topic)) {
         entry.subject.add(message);
