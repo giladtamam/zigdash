@@ -1,0 +1,1 @@
+Corrige les tableaux de bord créés par la nouvelle configuration de la 1.11.0 : leurs tuiles n'affichaient aucun état et leurs commandes ne faisaient rien. Les tuiles existantes sont réparées automatiquement à l'ouverture de l'app.

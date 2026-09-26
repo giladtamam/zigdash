@@ -1,0 +1,1 @@
+Åtgärdar instrumentpaneler som skapades med den nya installationen i 1.11.0: deras rutor visade ingen status och reglagen gjorde ingenting. Befintliga rutor repareras automatiskt när du öppnar appen.

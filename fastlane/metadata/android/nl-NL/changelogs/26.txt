@@ -1,0 +1,1 @@
+Herstelt dashboards die met de nieuwe installatie in 1.11.0 zijn gemaakt: hun tegels toonden geen status en hun bediening deed niets. Bestaande tegels worden automatisch hersteld wanneer je de app opent.
