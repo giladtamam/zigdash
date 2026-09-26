@@ -1,0 +1,1 @@
+Retter tilkobling til strenge MQTT-brokere (for eksempel aedes) som avviste ZigDash-tilkoblingen. Kant-til-kant-visning på alle Android-versjoner. Mindre rettelser.
