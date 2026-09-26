@@ -1709,5 +1709,76 @@ class AppLocalizationsNb extends AppLocalizations {
   String get devicesNewDot => 'Nye enheter';
 
   @override
-  String get dashReorderTiles => 'Endre rekkefølge på fliser';
+  String get editEditing => 'Redigerer';
+
+  @override
+  String get editDashboard => 'Dashbord';
+
+  @override
+  String get editDone => 'Ferdig';
+
+  @override
+  String get editAddSection => 'Legg til seksjon';
+
+  @override
+  String get editSectionName => 'Navn på seksjon';
+
+  @override
+  String get editRenameSection => 'Gi nytt navn';
+
+  @override
+  String get editDeleteSection => 'Slett seksjon';
+
+  @override
+  String get editDeleteSectionBody => 'Hva skal skje med flisene?';
+
+  @override
+  String get editKeepTiles => 'Behold flisene, fjern seksjonen';
+
+  @override
+  String get editDeleteTiles => 'Slett flisene også';
+
+  @override
+  String get editMoveToSection => 'Flytt til seksjon';
+
+  @override
+  String get editEditTile => 'Rediger flis';
+
+  @override
+  String get editRemove => 'Fjern fra dashbordet';
+
+  @override
+  String get editRemoved => 'Flis fjernet';
+
+  @override
+  String get editUndo => 'Angre';
+
+  @override
+  String get editReplaceWithDevice => 'Erstatt med enhetsflis';
+
+  @override
+  String get editMoveEarlier => 'Flytt fremover';
+
+  @override
+  String get editMoveLater => 'Flytt bakover';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter er ikke på noe dashbord',
+      one: '1 enhet er ikke på noe dashbord',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Flisvalg';
+
+  @override
+  String get editSave => 'Lagre';
+
+  @override
+  String get editCancel => 'Avbryt';
 }

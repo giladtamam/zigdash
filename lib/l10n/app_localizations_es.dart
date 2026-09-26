@@ -1717,5 +1717,76 @@ class AppLocalizationsEs extends AppLocalizations {
   String get devicesNewDot => 'Dispositivos nuevos';
 
   @override
-  String get dashReorderTiles => 'Reordenar mosaicos';
+  String get editEditing => 'Editando';
+
+  @override
+  String get editDashboard => 'Panel';
+
+  @override
+  String get editDone => 'Listo';
+
+  @override
+  String get editAddSection => 'Añadir sección';
+
+  @override
+  String get editSectionName => 'Nombre de la sección';
+
+  @override
+  String get editRenameSection => 'Renombrar sección';
+
+  @override
+  String get editDeleteSection => 'Eliminar sección';
+
+  @override
+  String get editDeleteSectionBody => '¿Qué pasa con sus mosaicos?';
+
+  @override
+  String get editKeepTiles => 'Conservar mosaicos, quitar sección';
+
+  @override
+  String get editDeleteTiles => 'Eliminar también los mosaicos';
+
+  @override
+  String get editMoveToSection => 'Mover a sección';
+
+  @override
+  String get editEditTile => 'Editar mosaico';
+
+  @override
+  String get editRemove => 'Quitar del panel';
+
+  @override
+  String get editRemoved => 'Mosaico quitado';
+
+  @override
+  String get editUndo => 'Deshacer';
+
+  @override
+  String get editReplaceWithDevice => 'Sustituir por mosaico de dispositivo';
+
+  @override
+  String get editMoveEarlier => 'Mover antes';
+
+  @override
+  String get editMoveLater => 'Mover después';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivos no están en ningún panel',
+      one: '1 dispositivo no está en ningún panel',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Opciones del mosaico';
+
+  @override
+  String get editSave => 'Guardar';
+
+  @override
+  String get editCancel => 'Cancelar';
 }

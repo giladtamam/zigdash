@@ -1708,5 +1708,76 @@ class AppLocalizationsSv extends AppLocalizations {
   String get devicesNewDot => 'Nya enheter';
 
   @override
-  String get dashReorderTiles => 'Ändra ordning på rutor';
+  String get editEditing => 'Redigerar';
+
+  @override
+  String get editDashboard => 'Panel';
+
+  @override
+  String get editDone => 'Klar';
+
+  @override
+  String get editAddSection => 'Lägg till sektion';
+
+  @override
+  String get editSectionName => 'Sektionens namn';
+
+  @override
+  String get editRenameSection => 'Byt namn på sektion';
+
+  @override
+  String get editDeleteSection => 'Ta bort sektion';
+
+  @override
+  String get editDeleteSectionBody => 'Vad ska hända med rutorna?';
+
+  @override
+  String get editKeepTiles => 'Behåll rutorna, ta bort sektionen';
+
+  @override
+  String get editDeleteTiles => 'Ta bort rutorna också';
+
+  @override
+  String get editMoveToSection => 'Flytta till sektion';
+
+  @override
+  String get editEditTile => 'Redigera ruta';
+
+  @override
+  String get editRemove => 'Ta bort från panelen';
+
+  @override
+  String get editRemoved => 'Ruta borttagen';
+
+  @override
+  String get editUndo => 'Ångra';
+
+  @override
+  String get editReplaceWithDevice => 'Ersätt med enhetsruta';
+
+  @override
+  String get editMoveEarlier => 'Flytta framåt';
+
+  @override
+  String get editMoveLater => 'Flytta bakåt';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter finns inte på någon panel',
+      one: '1 enhet finns inte på någon panel',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Rutalternativ';
+
+  @override
+  String get editSave => 'Spara';
+
+  @override
+  String get editCancel => 'Avbryt';
 }

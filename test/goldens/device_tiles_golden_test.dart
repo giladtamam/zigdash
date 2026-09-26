@@ -8,7 +8,10 @@ import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
+import 'package:zigdash/features/dashboards/edit_mode.dart';
 import 'package:zigdash/features/devices/device_profile.dart';
+import 'package:zigdash/features/devices/device_registry.dart';
+import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/devices/device_state_refresher.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
@@ -174,6 +177,20 @@ const _variants = [
   GoldenVariant(name: 'light en 2x', size: Size(412, 2600), textScale: 2),
 ];
 
+class _Editing extends EditModeController {
+  @override
+  String? build() => 'd1';
+}
+
+List<Override> _editOverrides() => [
+      ..._overrides(),
+      editModeProvider.overrideWith(_Editing.new),
+      unassignedDevicesProvider.overrideWith((ref, _) => const AsyncValue.data([
+            Z2mDevice(
+                friendlyName: 'new_plug', type: 'Router', ieeeAddress: '0x77'),
+          ])),
+    ];
+
 void main() {
   goldenTest(
     'device tiles by class',
@@ -184,6 +201,24 @@ void main() {
       overrides: _overrides,
       screen: () => Scaffold(
         appBar: AppBar(title: Text(_dashboard.name)),
+        body: PanelGrid(connectionId: 'c1', dashboard: _dashboard),
+      ),
+    ),
+  );
+
+  goldenTest(
+    'edit mode',
+    fileName: 'edit_mode_phone',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: const [
+        GoldenVariant(name: 'light en', size: _tall),
+        GoldenVariant(name: 'dark en', size: _tall, brightness: Brightness.dark),
+        GoldenVariant(name: 'light he', size: _tall, locale: Locale('he')),
+      ],
+      overrides: _editOverrides,
+      screen: () => Scaffold(
+        appBar: AppBar(title: const Text('Editing')),
         body: PanelGrid(connectionId: 'c1', dashboard: _dashboard),
       ),
     ),

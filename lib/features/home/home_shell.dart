@@ -6,7 +6,10 @@ import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../data/database/database.dart';
 import '../../data/repositories/connection_repo.dart';
+import '../../data/repositories/section_repo.dart';
+import '../dashboards/edit_mode.dart';
 import '../devices/device_registry.dart';
+import '../panels/widgets/edit_grid.dart' show askSectionName;
 
 /// The navigation shell of one home (docs/design/dashboard-1.12.md §6):
 /// Dashboards, Devices and Scenes in the bottom bar, all showing the current
@@ -35,9 +38,13 @@ class HomeShell extends ConsumerWidget {
     final l10n = context.l10n;
     final newDevices =
         ref.watch(unassignedCountProvider(connectionId)).valueOrNull ?? 0;
+    final editing = ref.watch(editModeProvider);
     return Scaffold(
       body: child,
-      bottomNavigationBar: NavigationBar(
+      // In Edit mode the bar offers the two ways to add, instead of the tabs.
+      bottomNavigationBar: editing != null && indexOf(location) == 0
+          ? _EditBar(connectionId: connectionId, dashboardId: editing)
+          : NavigationBar(
         selectedIndex: indexOf(location),
         onDestinationSelected: (i) => context.go(switch (i) {
           1 => Routes.homeDevices(connectionId),
@@ -75,6 +82,47 @@ class HomeShell extends ConsumerWidget {
   }
 }
 
+class _EditBar extends ConsumerWidget {
+  const _EditBar({required this.connectionId, required this.dashboardId});
+
+  final String connectionId;
+  final String dashboardId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return BottomAppBar(
+      child: Row(
+        children: [
+          Expanded(
+            child: FilledButton.icon(
+              icon: const Icon(Icons.add),
+              label: Text(l10n.dashAddTile),
+              onPressed: () => context.push(
+                  '/connections/$connectionId/dashboards/$dashboardId/add'),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.segment),
+              label: Text(l10n.editAddSection),
+              onPressed: () async {
+                final name = await askSectionName(context);
+                if (name == null) return;
+                final repo = ref.read(sectionRepoProvider);
+                final count = (await repo.getByDashboard(dashboardId)).length;
+                await repo.create(
+                    dashboardId: dashboardId, name: name, sortOrder: count);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// The header title of a home's screens: the home's name, opening the home
 /// switcher when there are two or more homes.
 class HomeTitle extends ConsumerWidget {
@@ -95,10 +143,16 @@ class HomeTitle extends ConsumerWidget {
     return PopupMenuButton<String>(
       tooltip: context.l10n.homeSwitch,
       position: PopupMenuPosition.under,
-      onSelected: (v) => switch (v) {
-        '__add__' => context.push(Routes.setup),
-        '__manage__' => context.push(Routes.connections),
-        _ => context.go(Routes.homeDashboards(v)),
+      onSelected: (v) {
+        ref.read(editModeProvider.notifier).exit();
+        switch (v) {
+          case '__add__':
+            context.push(Routes.setup);
+          case '__manage__':
+            context.push(Routes.connections);
+          default:
+            context.go(Routes.homeDashboards(v));
+        }
       },
       itemBuilder: (ctx) => [
         for (final h in homes)

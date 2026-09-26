@@ -2,19 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
-import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../../mqtt/json_path.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
-import '../services/auto_close_config_publisher.dart';
-import '../services/automation_config_publisher.dart';
+import '../../dashboards/edit_mode.dart';
 import 'auto_close_panel.dart';
 import 'button_panel.dart';
 import 'combo_panel.dart';
@@ -32,6 +29,7 @@ import 'text_input_panel.dart';
 import 'scene_panel.dart';
 import 'schedule_panel.dart';
 import 'text_log_panel.dart';
+import 'tile_actions_sheet.dart';
 import 'toggle_panel.dart';
 
 enum PanelSubscriptionMode { none, readOnly, interactive }
@@ -187,110 +185,10 @@ class PanelTile extends ConsumerWidget {
   final Panel panel;
   final bool locked;
 
+  /// Long-press: enter Edit mode with this tile's options open.
   void _openOptions(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final repo = ref.read(panelRepoProvider);
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (sheetCtx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.edit),
-              title: Text(l10n.panelTileEdit),
-              onTap: () {
-                Navigator.pop(sheetCtx);
-                context.push(
-                  '/connections/$connectionId/dashboards/$dashboardId/panels/${panel.id}/edit',
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.copy_all_outlined),
-              title: Text(l10n.panelTileDuplicate),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                await repo.duplicate(panel.id);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.arrow_upward),
-              title: Text(l10n.panelTileMoveUp),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                await repo.move(dashboardId, panel.id, -1);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.arrow_downward),
-              title: Text(l10n.panelTileMoveDown),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                await repo.move(dashboardId, panel.id, 1);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [
-                  Text(l10n.tileSize),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: SegmentedButton<PanelWidth>(
-                      showSelectedIcon: false,
-                      segments: [
-                        ButtonSegment(
-                          value: PanelWidth.small,
-                          label: Text(l10n.tileSizeSmall),
-                        ),
-                        ButtonSegment(
-                          value: PanelWidth.wide,
-                          label: Text(l10n.tileSizeWide),
-                        ),
-                        ButtonSegment(
-                          value: PanelWidth.full,
-                          label: Text(l10n.tileSizeFull),
-                        ),
-                      ],
-                      selected: {panel.width},
-                      onSelectionChanged: (sel) async {
-                        Navigator.pop(sheetCtx);
-                        await repo.setWidth(panel.id, sel.first);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.delete_outline),
-              title: Text(l10n.panelTileDelete),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                if (panel.type == PanelType.schedule) {
-                  await ref
-                      .read(automationConfigPublisherProvider)
-                      .clearConfig(
-                        connectionId: connectionId,
-                        panelId: panel.id,
-                      );
-                } else if (panel.type == PanelType.autoClose) {
-                  await ref
-                      .read(autoCloseConfigPublisherProvider)
-                      .clearConfig(
-                        connectionId: connectionId,
-                        panelId: panel.id,
-                      );
-                }
-                await repo.delete(panel.id);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+    ref.read(editModeProvider.notifier).enter(dashboardId);
+    showTileActions(context, ref, connectionId: connectionId, panel: panel);
   }
 
   @override

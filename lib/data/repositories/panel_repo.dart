@@ -136,6 +136,73 @@ class PanelRepo {
     }
   }
 
+  /// Puts [panelId] into [sectionId] (null: no section), before
+  /// [beforeId] or after [afterId] — or last in the section when neither is
+  /// given — and rewrites the dashboard's order. The grid shows each
+  /// section's tiles in this order.
+  Future<void> moveTile(
+    String dashboardId,
+    String panelId, {
+    required String? sectionId,
+    String? beforeId,
+    String? afterId,
+  }) async {
+    final list = await _dao.getByDashboard(dashboardId);
+    final moving = list.where((p) => p.id == panelId).firstOrNull;
+    if (moving == null || panelId == beforeId || panelId == afterId) return;
+    final rest = [...list]..remove(moving);
+    var at = rest.length;
+    if (beforeId != null) {
+      final i = rest.indexWhere((p) => p.id == beforeId);
+      if (i >= 0) at = i;
+    } else if (afterId != null) {
+      final i = rest.indexWhere((p) => p.id == afterId);
+      if (i >= 0) at = i + 1;
+    } else {
+      final last = rest.lastIndexWhere((p) => p.sectionId == sectionId);
+      if (last >= 0) at = last + 1;
+    }
+    rest.insert(at, moving);
+    await _dao.transaction(() async {
+      for (var i = 0; i < rest.length; i++) {
+        final p = rest[i];
+        await _dao.updateById(
+          p.id,
+          PanelsCompanion(
+            sortOrder: Value(i),
+            sectionId: p.id == panelId ? Value(sectionId) : const Value.absent(),
+            updatedAt: Value(DateTime.now()),
+          ),
+        );
+      }
+    });
+  }
+
+  /// Moves [panelId] one place earlier (-1) or later (+1) among the tiles
+  /// of its own section — the non-drag path for screen readers.
+  Future<void> moveWithinSection(
+      String dashboardId, String panelId, int delta) async {
+    final list = await _dao.getByDashboard(dashboardId);
+    final moving = list.where((p) => p.id == panelId).firstOrNull;
+    if (moving == null) return;
+    final section =
+        list.where((p) => p.sectionId == moving.sectionId).toList();
+    final i = section.indexOf(moving);
+    final j = i + delta;
+    if (j < 0 || j >= section.length) return;
+    await moveTile(
+      dashboardId,
+      panelId,
+      sectionId: moving.sectionId,
+      beforeId: delta < 0 ? section[j].id : null,
+      afterId: delta > 0 ? section[j].id : null,
+    );
+  }
+
+  /// Puts a removed tile back exactly as it was (Undo).
+  Future<void> restore(Panel panel) =>
+      _dao.insertRow(panel.toCompanion(true));
+
   Future<void> reorder(String dashboardId, List<String> panelIds) async {
     for (var i = 0; i < panelIds.length; i++) {
       await _dao.updateById(

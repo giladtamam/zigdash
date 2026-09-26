@@ -9,16 +9,15 @@ import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
-import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/backup_service.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
-import '../../../data/repositories/panel_repo.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../devices/device_registry.dart';
 import '../../devices/device_tiles.dart';
 import '../../home/home_shell.dart';
+import '../edit_mode.dart';
 import '../../onboarding/demo_banner.dart';
 import '../../panels/widgets/panel_grid.dart';
 import '../widgets/connection_status_banner.dart';
@@ -111,40 +110,6 @@ class _DashboardsTabbed extends ConsumerWidget {
   final List<Dashboard> dashboards;
   final MqttStatus connectionStatus;
 
-  static const _panelTypeLabels = <PanelType, String>{
-    PanelType.toggle: 'Toggle',
-    PanelType.slider: 'Slider',
-    PanelType.cover: 'Cover',
-    PanelType.multiState: 'Multi-State',
-    PanelType.combo: 'Combo',
-    PanelType.radio: 'Radio',
-    PanelType.button: 'Button',
-    PanelType.led: 'LED',
-    PanelType.nodeStatus: 'Node Status',
-    PanelType.progress: 'Progress',
-    PanelType.textInput: 'Text Input',
-    PanelType.textLog: 'Text Log',
-    PanelType.schedule: 'Schedule',
-    PanelType.scene: 'Scene',
-    PanelType.autoClose: 'Auto-Close',
-    PanelType.device: 'Device',
-    PanelType.reading: 'Reading',
-  };
-
-  void _openReorderSheet(
-      BuildContext context, WidgetRef ref, String dashboardId) {
-    final repo = ref.read(panelRepoProvider);
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (sheetCtx) => _PanelReorderSheet(
-        dashboardId: dashboardId,
-        repo: repo,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Reopen the dashboard last used in this home.
@@ -155,36 +120,55 @@ class _DashboardsTabbed extends ConsumerWidget {
       length: dashboards.length,
       initialIndex: initial < 0 ? 0 : initial,
       child: Builder(builder: (tabCtx) {
-        return Scaffold(
-          appBar: AppBar(
+        final l10n = context.l10n;
+        final editingId = ref.watch(editModeProvider);
+        final editing = dashboards.where((d) => d.id == editingId).firstOrNull;
+        final edit = ref.read(editModeProvider.notifier);
+        Dashboard current() =>
+            dashboards[DefaultTabController.of(tabCtx).index];
+        return PopScope(
+          // System back leaves Edit mode first.
+          canPop: editing == null,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) edit.exit();
+          },
+          child: Scaffold(
+          appBar: editing != null
+              ? AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Text(l10n.editEditing),
+                  actions: [
+                    TextButton.icon(
+                      icon: const Icon(Icons.tune),
+                      label: Text(l10n.editDashboard),
+                      onPressed: () => tabCtx.push(
+                          '/connections/$connectionId/dashboards/'
+                          '${editing.id}/edit'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 8),
+                      child: FilledButton(
+                        onPressed: edit.exit,
+                        child: Text(l10n.editDone),
+                      ),
+                    ),
+                  ],
+                )
+              : AppBar(
             title: HomeTitle(connectionId: connectionId),
             actions: [
-              Builder(builder: (innerCtx) {
-                final idx = DefaultTabController.of(innerCtx).index;
-                return IconButton(
-                  icon: const Icon(Icons.edit_outlined),
-                  tooltip: context.l10n.dashEditDashboard,
-                  onPressed: () {
-                    final d = dashboards[idx];
-                    innerCtx.push(
-                      '/connections/$connectionId/dashboards/${d.id}/edit',
-                    );
-                  },
-                );
-              }),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                tooltip: l10n.dashEditDashboard,
+                onPressed: () {
+                  final d = current();
+                  if (!d.locked) edit.enter(d.id);
+                },
+              ),
               const SettingsAction(),
-              Builder(builder: (innerCtx) {
-                final idx = DefaultTabController.of(innerCtx).index;
-                final d = dashboards[idx];
-                return _DashboardMenu(
-                  connectionId: connectionId,
-                  onReorder: d.locked
-                      ? null
-                      : () => _openReorderSheet(innerCtx, ref, d.id),
-                );
-              }),
+              _DashboardMenu(connectionId: connectionId),
             ],
-            bottom: dashboards.length < 2
+            bottom: dashboards.length < 2 || editing != null
                 ? null
                 : TabBar(
               isScrollable: dashboards.length > 3,
@@ -212,6 +196,10 @@ class _DashboardsTabbed extends ConsumerWidget {
               ),
               Expanded(
                 child: TabBarView(
+                  // Edit mode works on one dashboard: no swiping away.
+                  physics: editing != null
+                      ? const NeverScrollableScrollPhysics()
+                      : null,
                   children: dashboards.map((d) {
                     final dashboardTheme = Theme.of(tabCtx).copyWith(
                       colorScheme: ColorScheme.fromSeed(
@@ -231,18 +219,17 @@ class _DashboardsTabbed extends ConsumerWidget {
               ),
             ],
           ),
-          floatingActionButton: Builder(builder: (innerCtx) {
-            final idx = DefaultTabController.of(innerCtx).index;
-            return FloatingActionButton.extended(
-              onPressed: () {
-                final d = dashboards[idx];
-                innerCtx.push(
-                    '/connections/$connectionId/dashboards/${d.id}/add');
-              },
-              icon: const Icon(Icons.add),
-              label: Text(innerCtx.l10n.dashAddTile),
-            );
-          }),
+          // In Edit mode the bottom bar offers Add tile and Add section.
+          floatingActionButton: editing != null
+              ? null
+              : FloatingActionButton.extended(
+                  onPressed: () => tabCtx.push(
+                      '/connections/$connectionId/dashboards/'
+                      '${current().id}/add'),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.dashAddTile),
+                ),
+          ),
         );
       }),
     );
@@ -438,10 +425,9 @@ Future<void> openCustomTilePicker(BuildContext context,
 /// App-bar overflow menu offering JSON export/import of this connection's
 /// dashboards (backup / copy-to-another-device).
 class _DashboardMenu extends ConsumerWidget {
-  const _DashboardMenu({required this.connectionId, this.onReorder});
+  const _DashboardMenu({required this.connectionId});
 
   final String connectionId;
-  final VoidCallback? onReorder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -453,8 +439,6 @@ class _DashboardMenu extends ConsumerWidget {
         switch (v) {
           case 'addDashboard':
             context.push('/connections/$connectionId/dashboards/form');
-          case 'reorder':
-            onReorder?.call();
           case 'addHome':
             context.push(Routes.setup);
           case 'export':
@@ -465,8 +449,6 @@ class _DashboardMenu extends ConsumerWidget {
       },
       itemBuilder: (_) => [
         PopupMenuItem(value: 'addDashboard', child: Text(l10n.dashAddDashboard)),
-        if (onReorder != null)
-          PopupMenuItem(value: 'reorder', child: Text(l10n.dashReorderTiles)),
         if (homes < 2)
           PopupMenuItem(value: 'addHome', child: Text(l10n.homeAdd)),
         const PopupMenuDivider(),
@@ -564,119 +546,3 @@ class _DashboardMenu extends ConsumerWidget {
   }
 }
 
-class _PanelReorderSheet extends ConsumerStatefulWidget {
-  const _PanelReorderSheet({required this.dashboardId, required this.repo});
-
-  final String dashboardId;
-  final PanelRepo repo;
-
-  @override
-  ConsumerState<_PanelReorderSheet> createState() => _PanelReorderSheetState();
-}
-
-class _PanelReorderSheetState extends ConsumerState<_PanelReorderSheet> {
-  late List<Panel> _panels;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    final panels = await widget.repo.getByDashboard(widget.dashboardId);
-    if (mounted) {
-      setState(() => _panels = panels);
-    }
-  }
-
-  // onReorderItem already adjusts newIndex for the removed item.
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(() {
-      final item = _panels.removeAt(oldIndex);
-      _panels.insert(newIndex, item);
-    });
-  }
-
-  Future<void> _save() async {
-    await widget.repo.reorder(
-      widget.dashboardId,
-      _panels.map((p) => p.id).toList(),
-    );
-    if (mounted) Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_panels.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(32),
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    return DraggableScrollableSheet(
-      initialChildSize: 0.6,
-      minChildSize: 0.3,
-      maxChildSize: 0.9,
-      expand: false,
-      builder: (ctx, scrollController) => Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
-              children: [
-                Text(
-                  'Reorder panels',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                FilledButton(onPressed: _save, child: const Text('Done')),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-          Expanded(
-            child: ReorderableListView.builder(
-              itemCount: _panels.length,
-              onReorderItem: _onReorder,
-              buildDefaultDragHandles: true,
-              itemBuilder: (ctx, i) {
-                final p = _panels[i];
-                return ListTile(
-                  key: ValueKey(p.id),
-                  leading: const Icon(Icons.drag_handle),
-                  title: Text(p.name),
-                  subtitle: Text(
-                    _DashboardsTabbed._panelTypeLabels[p.type] ?? p.type.name,
-                  ),
-                  trailing: Icon(_panelTypeIcon(p.type), size: 24),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-IconData _panelTypeIcon(PanelType type) => switch (type) {
-      PanelType.toggle => Icons.toggle_on,
-      PanelType.slider => Icons.tune,
-      PanelType.cover => Icons.blinds_closed,
-      PanelType.button => Icons.send,
-      PanelType.led => Icons.circle,
-      PanelType.nodeStatus => Icons.cloud_done,
-      PanelType.progress => Icons.battery_5_bar,
-      PanelType.multiState => Icons.view_week,
-      PanelType.combo => Icons.arrow_drop_down_circle_outlined,
-      PanelType.radio => Icons.radio_button_checked,
-      PanelType.textInput => Icons.keyboard,
-      PanelType.textLog => Icons.notes,
-      PanelType.schedule => Icons.schedule,
-      PanelType.scene => Icons.auto_awesome,
-      PanelType.autoClose => Icons.timer_outlined,
-      PanelType.device => Icons.devices_other,
-      PanelType.reading => Icons.speed,
-    };

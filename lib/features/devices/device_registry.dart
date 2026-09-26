@@ -122,19 +122,31 @@ final dismissedIeeesProvider =
         DeviceRegistryDao(ref.watch(appDatabaseProvider))
             .watchDismissed(connectionId));
 
-/// How many of a home's devices are on no dashboard and not dismissed: the
-/// Devices dot. Zero until the device list arrives.
-final unassignedCountProvider =
-    Provider.autoDispose.family<AsyncValue<int>, String>((ref, connectionId) {
+/// A home's devices on no dashboard and not dismissed: the Edit-mode card
+/// and the Devices dot. Empty until the device list arrives.
+final unassignedDevicesProvider = Provider.autoDispose
+    .family<AsyncValue<List<Z2mDevice>>, String>((ref, connectionId) {
   final dashboards =
       ref.watch(dashboardsForConnectionProvider(connectionId)).valueOrNull;
   final first = dashboards?.firstOrNull;
-  if (first == null) return const AsyncValue.data(0);
+  if (first == null) return const AsyncValue.data([]);
   final devices = ref.watch(bridgeDevicesStreamProvider(
       (connectionId: connectionId, base: z2mBase(first.topicPrefix))));
   final linked = ref.watch(linkedIeeesProvider(connectionId)).valueOrNull;
   final dismissed = ref.watch(dismissedIeeesProvider(connectionId)).valueOrNull;
-  if (linked == null || dismissed == null) return const AsyncValue.data(0);
-  return devices.whenData(
-      (d) => unassignedDevices(d, linked, dismissed).length);
+  if (linked == null || dismissed == null) return const AsyncValue.data([]);
+  return devices.whenData((d) => unassignedDevices(d, linked, dismissed));
 });
+
+/// How many devices the Devices dot counts.
+final unassignedCountProvider =
+    Provider.autoDispose.family<AsyncValue<int>, String>((ref, connectionId) =>
+        ref
+            .watch(unassignedDevicesProvider(connectionId))
+            .whenData((d) => d.length));
+
+/// Dismisses [devices] in a home: they stop counting as new.
+Future<void> dismissDevices(
+        WidgetRef ref, String connectionId, Iterable<Z2mDevice> devices) =>
+    DeviceRegistryDao(ref.read(appDatabaseProvider))
+        .dismiss(connectionId, devices.map((d) => d.ieeeAddress).whereType());

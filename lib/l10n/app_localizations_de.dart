@@ -1718,5 +1718,76 @@ class AppLocalizationsDe extends AppLocalizations {
   String get devicesNewDot => 'Neue Geräte';
 
   @override
-  String get dashReorderTiles => 'Kacheln anordnen';
+  String get editEditing => 'Bearbeiten';
+
+  @override
+  String get editDashboard => 'Dashboard';
+
+  @override
+  String get editDone => 'Fertig';
+
+  @override
+  String get editAddSection => 'Bereich hinzufügen';
+
+  @override
+  String get editSectionName => 'Name des Bereichs';
+
+  @override
+  String get editRenameSection => 'Bereich umbenennen';
+
+  @override
+  String get editDeleteSection => 'Bereich löschen';
+
+  @override
+  String get editDeleteSectionBody => 'Was soll mit seinen Kacheln passieren?';
+
+  @override
+  String get editKeepTiles => 'Kacheln behalten, Bereich entfernen';
+
+  @override
+  String get editDeleteTiles => 'Kacheln auch löschen';
+
+  @override
+  String get editMoveToSection => 'In Bereich verschieben';
+
+  @override
+  String get editEditTile => 'Kachel bearbeiten';
+
+  @override
+  String get editRemove => 'Vom Dashboard entfernen';
+
+  @override
+  String get editRemoved => 'Kachel entfernt';
+
+  @override
+  String get editUndo => 'Rückgängig';
+
+  @override
+  String get editReplaceWithDevice => 'Durch Gerätekachel ersetzen';
+
+  @override
+  String get editMoveEarlier => 'Nach vorne';
+
+  @override
+  String get editMoveLater => 'Nach hinten';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Geräte sind auf keinem Dashboard',
+      one: '1 Gerät ist auf keinem Dashboard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Kacheloptionen';
+
+  @override
+  String get editSave => 'Speichern';
+
+  @override
+  String get editCancel => 'Abbrechen';
 }

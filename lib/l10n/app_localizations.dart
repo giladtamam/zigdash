@@ -3182,11 +3182,137 @@ abstract class AppLocalizations {
   /// **'New devices'**
   String get devicesNewDot;
 
-  /// No description provided for @dashReorderTiles.
+  /// No description provided for @editEditing.
   ///
   /// In en, this message translates to:
-  /// **'Reorder tiles'**
-  String get dashReorderTiles;
+  /// **'Editing'**
+  String get editEditing;
+
+  /// No description provided for @editDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get editDashboard;
+
+  /// No description provided for @editDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get editDone;
+
+  /// No description provided for @editAddSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add section'**
+  String get editAddSection;
+
+  /// No description provided for @editSectionName.
+  ///
+  /// In en, this message translates to:
+  /// **'Section name'**
+  String get editSectionName;
+
+  /// No description provided for @editRenameSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename section'**
+  String get editRenameSection;
+
+  /// No description provided for @editDeleteSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete section'**
+  String get editDeleteSection;
+
+  /// No description provided for @editDeleteSectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'What should happen to its tiles?'**
+  String get editDeleteSectionBody;
+
+  /// No description provided for @editKeepTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep tiles, remove section'**
+  String get editKeepTiles;
+
+  /// No description provided for @editDeleteTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete tiles too'**
+  String get editDeleteTiles;
+
+  /// No description provided for @editMoveToSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to section'**
+  String get editMoveToSection;
+
+  /// No description provided for @editEditTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit tile'**
+  String get editEditTile;
+
+  /// No description provided for @editRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from dashboard'**
+  String get editRemove;
+
+  /// No description provided for @editRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Tile removed'**
+  String get editRemoved;
+
+  /// No description provided for @editUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get editUndo;
+
+  /// No description provided for @editReplaceWithDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace with device tile'**
+  String get editReplaceWithDevice;
+
+  /// No description provided for @editMoveEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Move earlier'**
+  String get editMoveEarlier;
+
+  /// No description provided for @editMoveLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Move later'**
+  String get editMoveLater;
+
+  /// No description provided for @editUnassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 device isn\'t on any dashboard} other{{count} devices aren\'t on any dashboard}}'**
+  String editUnassigned(int count);
+
+  /// No description provided for @editTileActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tile options'**
+  String get editTileActions;
+
+  /// No description provided for @editSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get editSave;
+
+  /// No description provided for @editCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get editCancel;
 }
 
 class _AppLocalizationsDelegate

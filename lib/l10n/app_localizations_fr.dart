@@ -1720,5 +1720,76 @@ class AppLocalizationsFr extends AppLocalizations {
   String get devicesNewDot => 'Nouveaux appareils';
 
   @override
-  String get dashReorderTiles => 'Réorganiser les tuiles';
+  String get editEditing => 'Modification';
+
+  @override
+  String get editDashboard => 'Tableau de bord';
+
+  @override
+  String get editDone => 'Terminé';
+
+  @override
+  String get editAddSection => 'Ajouter une section';
+
+  @override
+  String get editSectionName => 'Nom de la section';
+
+  @override
+  String get editRenameSection => 'Renommer la section';
+
+  @override
+  String get editDeleteSection => 'Supprimer la section';
+
+  @override
+  String get editDeleteSectionBody => 'Que faire de ses tuiles ?';
+
+  @override
+  String get editKeepTiles => 'Garder les tuiles, retirer la section';
+
+  @override
+  String get editDeleteTiles => 'Supprimer aussi les tuiles';
+
+  @override
+  String get editMoveToSection => 'Déplacer vers une section';
+
+  @override
+  String get editEditTile => 'Modifier la tuile';
+
+  @override
+  String get editRemove => 'Retirer du tableau de bord';
+
+  @override
+  String get editRemoved => 'Tuile retirée';
+
+  @override
+  String get editUndo => 'Annuler';
+
+  @override
+  String get editReplaceWithDevice => 'Remplacer par une tuile d’appareil';
+
+  @override
+  String get editMoveEarlier => 'Avancer';
+
+  @override
+  String get editMoveLater => 'Reculer';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count appareils ne sont sur aucun tableau de bord',
+      one: '1 appareil n’est sur aucun tableau de bord',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Options de la tuile';
+
+  @override
+  String get editSave => 'Enregistrer';
+
+  @override
+  String get editCancel => 'Annuler';
 }

@@ -1715,5 +1715,76 @@ class AppLocalizationsNl extends AppLocalizations {
   String get devicesNewDot => 'Nieuwe apparaten';
 
   @override
-  String get dashReorderTiles => 'Tegels herschikken';
+  String get editEditing => 'Bewerken';
+
+  @override
+  String get editDashboard => 'Dashboard';
+
+  @override
+  String get editDone => 'Klaar';
+
+  @override
+  String get editAddSection => 'Sectie toevoegen';
+
+  @override
+  String get editSectionName => 'Naam van sectie';
+
+  @override
+  String get editRenameSection => 'Sectie hernoemen';
+
+  @override
+  String get editDeleteSection => 'Sectie verwijderen';
+
+  @override
+  String get editDeleteSectionBody => 'Wat moet er met de tegels gebeuren?';
+
+  @override
+  String get editKeepTiles => 'Tegels houden, sectie weghalen';
+
+  @override
+  String get editDeleteTiles => 'Tegels ook verwijderen';
+
+  @override
+  String get editMoveToSection => 'Naar sectie verplaatsen';
+
+  @override
+  String get editEditTile => 'Tegel bewerken';
+
+  @override
+  String get editRemove => 'Van dashboard verwijderen';
+
+  @override
+  String get editRemoved => 'Tegel verwijderd';
+
+  @override
+  String get editUndo => 'Ongedaan maken';
+
+  @override
+  String get editReplaceWithDevice => 'Vervangen door apparaattegel';
+
+  @override
+  String get editMoveEarlier => 'Naar voren';
+
+  @override
+  String get editMoveLater => 'Naar achteren';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count apparaten staan op geen dashboard',
+      one: '1 apparaat staat op geen dashboard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Tegelopties';
+
+  @override
+  String get editSave => 'Opslaan';
+
+  @override
+  String get editCancel => 'Annuleren';
 }

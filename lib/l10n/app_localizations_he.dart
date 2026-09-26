@@ -1694,5 +1694,76 @@ class AppLocalizationsHe extends AppLocalizations {
   String get devicesNewDot => 'מכשירים חדשים';
 
   @override
-  String get dashReorderTiles => 'סידור אריחים';
+  String get editEditing => 'עריכה';
+
+  @override
+  String get editDashboard => 'לוח בקרה';
+
+  @override
+  String get editDone => 'סיום';
+
+  @override
+  String get editAddSection => 'הוספת מקטע';
+
+  @override
+  String get editSectionName => 'שם המקטע';
+
+  @override
+  String get editRenameSection => 'שינוי שם המקטע';
+
+  @override
+  String get editDeleteSection => 'מחיקת המקטע';
+
+  @override
+  String get editDeleteSectionBody => 'מה לעשות עם האריחים שבו?';
+
+  @override
+  String get editKeepTiles => 'להשאיר את האריחים ולהסיר את המקטע';
+
+  @override
+  String get editDeleteTiles => 'למחוק גם את האריחים';
+
+  @override
+  String get editMoveToSection => 'העברה למקטע';
+
+  @override
+  String get editEditTile => 'עריכת האריח';
+
+  @override
+  String get editRemove => 'הסרה מהלוח';
+
+  @override
+  String get editRemoved => 'האריח הוסר';
+
+  @override
+  String get editUndo => 'ביטול';
+
+  @override
+  String get editReplaceWithDevice => 'החלפה באריח מכשיר';
+
+  @override
+  String get editMoveEarlier => 'הזזה קדימה';
+
+  @override
+  String get editMoveLater => 'הזזה אחורה';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count מכשירים לא נמצאים בשום לוח',
+      one: 'מכשיר אחד לא נמצא בשום לוח',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'אפשרויות האריח';
+
+  @override
+  String get editSave => 'שמירה';
+
+  @override
+  String get editCancel => 'ביטול';
 }

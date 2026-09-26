@@ -1704,5 +1704,76 @@ class AppLocalizationsEn extends AppLocalizations {
   String get devicesNewDot => 'New devices';
 
   @override
-  String get dashReorderTiles => 'Reorder tiles';
+  String get editEditing => 'Editing';
+
+  @override
+  String get editDashboard => 'Dashboard';
+
+  @override
+  String get editDone => 'Done';
+
+  @override
+  String get editAddSection => 'Add section';
+
+  @override
+  String get editSectionName => 'Section name';
+
+  @override
+  String get editRenameSection => 'Rename section';
+
+  @override
+  String get editDeleteSection => 'Delete section';
+
+  @override
+  String get editDeleteSectionBody => 'What should happen to its tiles?';
+
+  @override
+  String get editKeepTiles => 'Keep tiles, remove section';
+
+  @override
+  String get editDeleteTiles => 'Delete tiles too';
+
+  @override
+  String get editMoveToSection => 'Move to section';
+
+  @override
+  String get editEditTile => 'Edit tile';
+
+  @override
+  String get editRemove => 'Remove from dashboard';
+
+  @override
+  String get editRemoved => 'Tile removed';
+
+  @override
+  String get editUndo => 'Undo';
+
+  @override
+  String get editReplaceWithDevice => 'Replace with device tile';
+
+  @override
+  String get editMoveEarlier => 'Move earlier';
+
+  @override
+  String get editMoveLater => 'Move later';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices aren\'t on any dashboard',
+      one: '1 device isn\'t on any dashboard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Tile options';
+
+  @override
+  String get editSave => 'Save';
+
+  @override
+  String get editCancel => 'Cancel';
 }

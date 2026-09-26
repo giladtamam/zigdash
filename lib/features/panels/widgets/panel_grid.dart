@@ -5,7 +5,9 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
+import '../../dashboards/edit_mode.dart';
 import '../models/grid_layout.dart';
+import 'edit_grid.dart';
 import 'panel_tile.dart';
 
 /// Renders a dashboard's tiles on a column grid (2 / 3 / 4 columns by window
@@ -25,13 +27,14 @@ class PanelGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final panelsAsync = ref.watch(panelsForDashboardProvider(dashboard.id));
+    final editing = ref.watch(editModeProvider) == dashboard.id;
 
     return panelsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) =>
           Center(child: Text(context.l10n.dashLoadFailed(e.toString()))),
       data: (rows) {
-        if (rows.isEmpty) {
+        if (rows.isEmpty && !editing) {
           final theme = Theme.of(context);
           return Center(
             child: Padding(
@@ -70,14 +73,31 @@ class PanelGrid extends ConsumerWidget {
             final minHeight = minTileHeight(width);
             final columnWidth =
                 (width - 16 - (columns - 1) * _GridRow.gap) / columns;
-            Widget tile(Panel p) => PanelTile(
+            Widget tile(Panel p) {
+              final t = PanelTile(
+                connectionId: connectionId,
+                dashboardId: dashboard.id,
+                topicPrefix: dashboard.topicPrefix,
+                panel: p,
+                locked: dashboard.locked,
+              );
+              return editing
+                  ? EditableTile(
+                      key: ValueKey(p.id),
+                      connectionId: connectionId,
+                      panel: p,
+                      child: t,
+                    )
+                  : t;
+            }
+
+            final children = <Widget>[
+              if (editing)
+                UnassignedDevicesCard(
                   connectionId: connectionId,
                   dashboardId: dashboard.id,
-                  topicPrefix: dashboard.topicPrefix,
-                  panel: p,
-                  locked: dashboard.locked,
-                );
-            final children = <Widget>[];
+                ),
+            ];
             void addTiles(List<Panel> tiles) {
               for (final row in packRows(tiles, (p) => p.width, columns)) {
                 children.add(_GridRow(
@@ -98,11 +118,18 @@ class PanelGrid extends ConsumerWidget {
                 for (final p in rows)
                   if (p.sectionId == section.id) p,
               ];
-              children.add(_SectionHeader(name: section.name));
+              children.add(editing
+                  ? EditableSectionHeader(
+                      key: ValueKey(section.id),
+                      section: section,
+                      sections: sections,
+                    )
+                  : _SectionHeader(name: section.name));
               addTiles(tiles);
             }
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
+              // Room below the last row for the Edit-mode bar and the FAB.
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 88),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: children,
