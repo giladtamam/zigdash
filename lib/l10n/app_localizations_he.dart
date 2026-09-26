@@ -1019,6 +1019,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get a11yMoreOptions => 'אפשרויות נוספות';
 
   @override
+  String get a11yRefresh => 'רענון';
+
+  @override
   String get a11yDeleteConnection => 'מחיקת חיבור';
 
   @override

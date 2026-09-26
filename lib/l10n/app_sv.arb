@@ -361,6 +361,7 @@
   "a11yDeleteOption": "Ta bort alternativ",
   "a11yPanelOptions": "Panelalternativ",
   "a11yMoreOptions": "Fler alternativ",
+  "a11yRefresh": "Uppdatera",
   "a11yDeleteConnection": "Ta bort anslutning",
 
   "controlNotConnected": "Inte ansluten – ändringen skickades inte",

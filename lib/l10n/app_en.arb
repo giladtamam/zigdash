@@ -355,6 +355,8 @@
   "a11yDeleteOption": "Delete option",
   "a11yPanelOptions": "Panel options",
   "a11yMoreOptions": "More options",
+  "a11yRefresh": "Refresh",
+  "@a11yRefresh": {"description": "Screen-reader label for icon-only refresh buttons."},
   "a11yDeleteConnection": "Delete connection",
 
   "controlNotConnected": "Not connected — change not sent",

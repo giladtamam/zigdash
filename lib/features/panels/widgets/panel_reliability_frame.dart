@@ -25,8 +25,9 @@ class PanelReliabilityFrame extends StatelessWidget {
       if (!controlsEnabled) l10n.reliabilityControlsUnavailable,
     ].join(', ');
 
+    // Not a container: the stale/unavailable note merges into the tile's
+    // node (see PanelTile) so it is read together with the name and value.
     return Semantics(
-      container: true,
       label: semanticsLabel.isEmpty ? null : semanticsLabel,
       child: Stack(
         children: [

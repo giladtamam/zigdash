@@ -76,9 +76,10 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                FilledButton.tonal(
+                IconButton.filledTonal(
                   onPressed: _refresh,
-                  child: const Icon(Icons.refresh),
+                  tooltip: l10n.a11yRefresh,
+                  icon: const Icon(Icons.refresh),
                 ),
               ],
             ),

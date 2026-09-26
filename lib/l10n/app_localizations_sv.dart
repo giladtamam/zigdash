@@ -1027,6 +1027,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get a11yMoreOptions => 'Fler alternativ';
 
   @override
+  String get a11yRefresh => 'Uppdatera';
+
+  @override
   String get a11yDeleteConnection => 'Ta bort anslutning';
 
   @override

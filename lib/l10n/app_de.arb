@@ -361,6 +361,7 @@
   "a11yDeleteOption": "Option löschen",
   "a11yPanelOptions": "Panel-Optionen",
   "a11yMoreOptions": "Weitere Optionen",
+  "a11yRefresh": "Aktualisieren",
   "a11yDeleteConnection": "Verbindung löschen",
 
   "controlNotConnected": "Nicht verbunden – Änderung nicht gesendet",

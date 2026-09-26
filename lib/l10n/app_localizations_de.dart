@@ -1035,6 +1035,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get a11yMoreOptions => 'Weitere Optionen';
 
   @override
+  String get a11yRefresh => 'Aktualisieren';
+
+  @override
   String get a11yDeleteConnection => 'Verbindung löschen';
 
   @override

@@ -1031,6 +1031,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get a11yMoreOptions => 'Meer opties';
 
   @override
+  String get a11yRefresh => 'Vernieuwen';
+
+  @override
   String get a11yDeleteConnection => 'Verbinding verwijderen';
 
   @override
