@@ -162,6 +162,7 @@ Decided in "Decide migration of existing dashboards and what setup generates".
 
 - **Existing dashboards are not restructured.** Every panel stays a custom MQTT tile in its order, with no section, sized per section 3. Nothing is converted automatically.
 - **Auto-link** runs at the first connect after the upgrade. A custom tile whose topic is `<base>/<friendly name>` (or its `/set` topic) of a known device gets that device's `deviceIeee`. Devices already on a dashboard then don't raise the new-device dot.
+- **Seamless upgrade.** An update changes the UI only: existing users are never asked to do anything. The migration and auto-link run silently, and no dialog, card or badge appears just because of the upgrade. Devices that already exist at the first connect after the upgrade and are on no dashboard are recorded as seen, silently, in `device_dismissals`. They stay listed in the Devices tab with their "Not on a dashboard" marker, but don't light the dot or the Edit-mode card. Only devices paired after the upgrade do.
 - **Conversion** is offered per tile, never in bulk. A linked custom tile's badge offers "Replace with device tile", which keeps position, section and size and can be undone.
 - **Setup from 1.12** creates device tiles, not raw panels, and groups them into sections in this order:
   1. Lights
