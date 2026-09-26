@@ -1,0 +1,1 @@
+Behebt Dashboards, die mit der neuen Einrichtung in 1.11.0 erstellt wurden: Ihre Kacheln zeigten keinen Zustand und ihre Steuerungen reagierten nicht. Vorhandene Kacheln werden beim Öffnen der App automatisch repariert.

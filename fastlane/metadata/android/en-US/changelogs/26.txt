@@ -1,0 +1,1 @@
+Fixes dashboards created by the new setup in 1.11.0: their tiles showed no state and their controls did nothing. Existing tiles are repaired automatically when you open the app.

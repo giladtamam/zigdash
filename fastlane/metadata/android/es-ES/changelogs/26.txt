@@ -1,0 +1,1 @@
+Corrige los paneles creados con la nueva configuración de la 1.11.0: sus mosaicos no mostraban el estado y sus controles no hacían nada. Los mosaicos existentes se reparan automáticamente al abrir la app.

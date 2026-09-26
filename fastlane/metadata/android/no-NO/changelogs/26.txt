@@ -1,0 +1,1 @@
+Retter dashbord som ble laget med det nye oppsettet i 1.11.0: flisene viste ingen status, og kontrollene gjorde ingenting. Eksisterende fliser repareres automatisk når du åpner appen.
