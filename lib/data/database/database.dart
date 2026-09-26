@@ -55,6 +55,18 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(panels, panels.sectionId);
             await m.addColumn(panels, panels.deviceIeee);
             await m.createIndex(panelsDeviceIeee);
+            // 1.11 setup stored the device's full topic as both prefix and
+            // topic, so its tiles used '<device>/<device>'. Rewrite them to
+            // the suffixes setup meant: 'set' for controls, '' to read.
+            await customStatement(
+              "UPDATE panels SET subscribe_topic = '' "
+              'WHERE subscribe_topic = topic_prefix_override',
+            );
+            await customStatement(
+              'UPDATE panels SET topic = CASE WHEN type IN '
+              "('toggle', 'slider', 'cover') THEN 'set' ELSE '' END "
+              'WHERE topic = topic_prefix_override',
+            );
             // Before 1.12 foreign keys were off, so deletes never cascaded
             // and left rows behind. Drop them before enforcement starts.
             await customStatement(

@@ -93,6 +93,23 @@ void main() {
           createdAt: 0,
           updatedAt: 0,
         ));
+    // Tiles as 1.11 setup wrote them: full device topic as prefix and topic.
+    for (final (id, type) in [('setup-toggle', 'toggle'), ('setup-led', 'led')]) {
+      await old.into(old.panels).insert(v5.PanelsCompanion.insert(
+            id: id,
+            dashboardId: 'd1',
+            name: id,
+            type: type,
+            topic: 'zigbee2mqtt/lamp',
+            subscribeTopic: const Value('zigbee2mqtt/lamp'),
+            topicPrefixOverride: const Value('zigbee2mqtt/lamp'),
+            width: 'half',
+            sortOrder: const Value(100),
+            config: '{}',
+            createdAt: 0,
+            updatedAt: 0,
+          ));
+    }
     // A tile left behind by a pre-1.12 dashboard delete (no cascades then).
     await old.into(old.panels).insert(v5.PanelsCompanion.insert(
           id: 'orphan',
@@ -111,7 +128,13 @@ void main() {
     addTearDown(db.close);
     await verifier.migrateAndValidate(db, 6);
 
-    final panels = await PanelDao(db).getByDashboard('d1');
+    final all = await PanelDao(db).getByDashboard('d1');
+    final toggle = all.firstWhere((p) => p.id == 'setup-toggle');
+    expect((toggle.topic, toggle.subscribeTopic), ('set', ''));
+    final led = all.firstWhere((p) => p.id == 'setup-led');
+    expect((led.topic, led.subscribeTopic), ('', ''));
+
+    final panels = all.where((p) => !p.id.startsWith('setup-')).toList();
     expect(panels.map((p) => p.id), [
       for (var i = 0; i < _v5Types.length; i++) 'p$i',
     ]);
@@ -126,7 +149,7 @@ void main() {
       expect(p.sectionId, isNull);
       expect(p.deviceIeee, isNull);
     }
-    expect(await db.select(db.panels).get(), hasLength(_v5Types.length),
+    expect(await db.select(db.panels).get(), hasLength(_v5Types.length + 2),
         reason: 'the orphaned tile is dropped');
     expect(await db.select(db.scenes).get(), hasLength(1));
     expect(await db.select(db.sections).get(), isEmpty);
