@@ -73,9 +73,12 @@ void main() {
     // --- The demo dashboard opens directly, marked as demo ---
     expect(find.text("You're in demo mode"), findsOneWidget);
     expect(find.text('Connect your home'), findsOneWidget);
-    expect(find.byType(NavigationBar), findsNothing);
-    expect(find.text('Living Room Light'), findsOneWidget);
-    expect(find.text('Living Room Cover'), findsOneWidget);
-    expect(find.text('Front Door'), findsOneWidget);
+    // 1.12: the demo home sits in the home shell (Dashboards / Devices /
+    // Scenes) with sectioned device tiles.
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.text('Lights'), findsOneWidget);
+    expect(find.text('Desk lamp'), findsOneWidget);
+    expect(find.text('Bedroom blinds'), findsOneWidget);
+    expect(find.text('Front door'), findsOneWidget);
   });
 }
