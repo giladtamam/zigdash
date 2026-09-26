@@ -1,0 +1,1 @@
+Behebt die Verbindung zu strikten MQTT-Brokern (z. B. aedes), die ZigDash abgewiesen haben. Randlose Darstellung auf allen Android-Versionen. Kleinere Korrekturen.

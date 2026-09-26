@@ -1,0 +1,1 @@
+Åtgärdar anslutning till strikta MQTT-brokers (till exempel aedes) som avvisade ZigDash-anslutningen. Kant-till-kant-layout på alla Android-versioner. Mindre rättelser.
