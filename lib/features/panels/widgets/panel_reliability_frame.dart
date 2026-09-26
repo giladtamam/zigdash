@@ -29,7 +29,10 @@ class PanelReliabilityFrame extends StatelessWidget {
     // node (see PanelTile) so it is read together with the name and value.
     return Semantics(
       label: semanticsLabel.isEmpty ? null : semanticsLabel,
+      // Passthrough so a grid row's height reaches the card: tiles in a row
+      // share the tallest tile's height.
       child: Stack(
+        fit: StackFit.passthrough,
         children: [
           AbsorbPointer(
             absorbing: !controlsEnabled,

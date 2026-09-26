@@ -10,14 +10,16 @@ import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
+import 'package:zigdash/data/repositories/section_repo.dart';
 
 /// Builds a [Panel] row with defaults, so tests read like fixtures.
 Panel _panel(
   String id,
   String name,
   PanelType type,
-  PanelWidth width,
-) =>
+  PanelWidth width, {
+  String? sectionId,
+}) =>
     Panel(
       id: id,
       dashboardId: 'd1',
@@ -32,6 +34,16 @@ Panel _panel(
       sortOrder: 0,
       config: PanelConfig.defaultFor(type).encode(),
       mergeFlags: 0,
+      createdAt: DateTime(2026, 8, 5),
+      updatedAt: DateTime(2026, 8, 5),
+      sectionId: sectionId,
+    );
+
+Section _section(String id, String name) => Section(
+      id: id,
+      dashboardId: 'd1',
+      name: name,
+      sortOrder: 0,
       createdAt: DateTime(2026, 8, 5),
       updatedAt: DateTime(2026, 8, 5),
     );
@@ -55,8 +67,12 @@ Dashboard _dashboard() => Dashboard(
 /// stream yields null so tiles render in a deterministic "no data" state.
 List<Override> _overrides({
   required List<Panel> panels,
+  List<Section> sections = const [],
 }) =>
     [
+      sectionsForDashboardProvider.overrideWith(
+        (ref, _) => Stream<List<Section>>.value(sections),
+      ),
       panelsForDashboardProvider.overrideWith(
         (ref, _) => Stream<List<Panel>>.value(panels),
       ),
@@ -76,8 +92,12 @@ List<Override> _overrides({
       ),
     ];
 
-Widget _wrap({required List<Panel> panels}) => ProviderScope(
-      overrides: _overrides(panels: panels),
+Widget _wrap({
+  required List<Panel> panels,
+  List<Section> sections = const [],
+}) =>
+    ProviderScope(
+      overrides: _overrides(panels: panels, sections: sections),
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -125,7 +145,7 @@ void main() {
     expect(find.text('Kitchen Plug'), findsOneWidget);
   });
 
-  testWidgets('small / wide / full sizes map to the expected tile widths',
+  testWidgets('sizes span 1, 2 and all columns of a 3-column grid',
       (tester) async {
     tester.view.physicalSize = const Size(800, 600);
     tester.view.devicePixelRatio = 1.0;
@@ -139,16 +159,38 @@ void main() {
     ]));
     await tester.pumpAndSettle();
 
-    double cardWidth(String name) => tester
-        .getSize(find.ancestor(
+    Rect card(String name) => tester.getRect(find.ancestor(
           of: find.text(name),
           matching: find.byType(Card),
-        ))
-        .width;
+        ));
 
-    // Grid padding 8 per side; spacing 8 between items.
-    expect(cardWidth('Full'), closeTo(800 - 16, 0.5));
-    expect(cardWidth('Small'), closeTo((800 - 24) / 2, 0.5));
-    expect(cardWidth('Wide'), closeTo(800 - 16, 0.5));
+    // 800 dp is medium: 3 columns of (800 - 16 padding - 2 × 8 gap) / 3.
+    const column = (800 - 16 - 16) / 3;
+    expect(card('Full').width, closeTo(800 - 16, 0.5));
+    expect(card('Small').width, closeTo(column, 0.5));
+    expect(card('Wide').width, closeTo(2 * column + 8, 0.5));
+    // Small and Wide share the second row, at the same height.
+    expect(card('Small').top, card('Wide').top);
+    expect(card('Small').height, card('Wide').height);
+  });
+
+  testWidgets('tiles with no section come first, then each section',
+      (tester) async {
+    await tester.pumpWidget(_wrap(
+      sections: [_section('s1', 'Lights'), _section('s2', 'Sensors')],
+      panels: [
+        _panel('p1', 'Door', PanelType.led, PanelWidth.small, sectionId: 's2'),
+        _panel('p2', 'Lamp', PanelType.toggle, PanelWidth.small,
+            sectionId: 's1'),
+        _panel('p3', 'Log', PanelType.textLog, PanelWidth.full),
+      ],
+    ));
+    await tester.pumpAndSettle();
+
+    double top(String text) => tester.getTopLeft(find.text(text)).dy;
+    expect(top('Log'), lessThan(top('Lights')));
+    expect(top('Lights'), lessThan(top('Lamp')));
+    expect(top('Lamp'), lessThan(top('Sensors')));
+    expect(top('Sensors'), lessThan(top('Door')));
   });
 }

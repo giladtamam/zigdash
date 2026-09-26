@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
+import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/widgets/panel_grid.dart';
@@ -38,6 +39,9 @@ Future<void> _pump(WidgetTester tester, List<Panel> panels, Object? value) {
   return tester.pumpWidget(
     ProviderScope(
       overrides: [
+        sectionsForDashboardProvider.overrideWith(
+          (ref, _) => Stream<List<Section>>.value(const []),
+        ),
         panelsForDashboardProvider.overrideWith(
           (ref, _) => Stream<List<Panel>>.value(panels),
         ),
