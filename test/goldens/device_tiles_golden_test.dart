@@ -143,7 +143,7 @@ final _dashboard = Dashboard(
   name: 'My Home',
   topicPrefix: 'zigbee2mqtt',
   colorSeed: 0xFF3B82F6,
-  iconCodepoint: 0xE88A,
+  iconCodepoint: 0xe318,
   locked: false,
   sortOrder: 0,
   createdAt: _stamp,

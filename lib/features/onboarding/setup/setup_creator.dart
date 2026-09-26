@@ -86,7 +86,7 @@ class SetupCreator implements SetupStore {
     String base = 'zigbee2mqtt',
     String dashboardName = 'Home',
     int dashboardColor = 0xFF00696B,
-    int dashboardIcon = 0xe88a, // Icons.home codepoint
+    int dashboardIcon = 0xe318, // Icons.home in Flutter's MaterialIcons font
     required List<ReviewRow> selected,
     List<ReviewRow> notSelected = const [],
   }) async {

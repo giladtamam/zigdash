@@ -16,6 +16,7 @@ const _swatches = <Color>[
 ];
 
 const _icons = <IconData>[
+  Icons.home,
   Icons.dashboard,
   Icons.lightbulb,
   Icons.bed,

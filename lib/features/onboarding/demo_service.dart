@@ -59,7 +59,7 @@ class DemoService extends Notifier<bool> {
       connectionId: connId,
       name: 'My Home',
       colorSeed: 0xFF3B82F6,
-      iconCodepoint: 0xE88A,
+      iconCodepoint: 0xe318, // Icons.home
       createdAt: now,
       updatedAt: now,
     ));

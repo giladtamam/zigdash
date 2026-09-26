@@ -68,6 +68,12 @@ class AppDatabase extends _$AppDatabase {
               "('toggle', 'slider', 'cover') THEN 'set' ELSE '' END "
               'WHERE topic = topic_prefix_override',
             );
+            // 1.11 setup and the demo stored 0xe88a, the web font's home,
+            // which in Flutter's font is a "?" bubble (never pickable).
+            await customStatement(
+              'UPDATE dashboards SET icon_codepoint = 58136 '
+              'WHERE icon_codepoint = 59530',
+            );
             // Before 1.12 foreign keys were off, so deletes never cascaded
             // and left rows behind. Drop them before enforcement starts.
             await customStatement(

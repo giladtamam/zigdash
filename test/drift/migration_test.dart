@@ -61,7 +61,7 @@ void main() {
           connectionId: 'c1',
           name: 'Home',
           colorSeed: 0,
-          iconCodepoint: 0,
+          iconCodepoint: 0xe88a, // as 1.11 setup stored it
           createdAt: 0,
           updatedAt: 0,
         ));
@@ -154,6 +154,8 @@ void main() {
     expect(await db.select(db.scenes).get(), hasLength(1));
     expect(await db.select(db.sections).get(), isEmpty);
     // Upgraded homes have not had their devices recorded as seen yet.
+    final dash = await db.select(db.dashboards).getSingle();
+    expect(dash.iconCodepoint, 0xe318, reason: 'the ? bubble becomes home');
     final home = await db.select(db.connections).getSingle();
     expect(home.devicesSeenAt, isNull);
   });
