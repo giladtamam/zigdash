@@ -18,6 +18,7 @@ import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../devices/device_registry.dart';
 import '../../devices/device_tiles.dart';
+import '../../home/home_shell.dart';
 import '../../onboarding/demo_banner.dart';
 import '../../panels/widgets/panel_grid.dart';
 import '../widgets/connection_status_banner.dart';
@@ -52,35 +53,21 @@ class DashboardsScreen extends ConsumerWidget {
 
     return dashboardsAsync.when(
       loading: () => Scaffold(
-        appBar: AppBar(
-            leading: const _HomesButton(), title: Text(connectionName)),
+        appBar: AppBar(title: HomeTitle(connectionId: connectionId)),
         body: const Center(child: CircularProgressIndicator()),
       ),
       error: (e, _) => Scaffold(
-        appBar: AppBar(
-            leading: const _HomesButton(), title: Text(connectionName)),
+        appBar: AppBar(title: HomeTitle(connectionId: connectionId)),
         body: Center(child: Text(context.l10n.dashLoadFailed(e.toString()))),
       ),
       data: (dashboards) {
         if (dashboards.isEmpty) {
           return Scaffold(
             appBar: AppBar(
-              leading: const _HomesButton(),
-              title: Text(connectionName),
+              title: HomeTitle(connectionId: connectionId),
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.auto_awesome),
-                  tooltip: context.l10n.scenesTitle,
-                  onPressed: () =>
-                      context.push('/connections/$connectionId/scenes'),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.devices_other),
-                  tooltip: context.l10n.devicesTitle,
-                  onPressed: () =>
-                      context.push('/connections/$connectionId/devices'),
-                ),
-                _BackupMenu(connectionId: connectionId),
+                const SettingsAction(),
+                _DashboardMenu(connectionId: connectionId),
               ],
             ),
             body: Column(
@@ -170,8 +157,7 @@ class _DashboardsTabbed extends ConsumerWidget {
       child: Builder(builder: (tabCtx) {
         return Scaffold(
           appBar: AppBar(
-            leading: const _HomesButton(),
-            title: Text(connectionName),
+            title: HomeTitle(connectionId: connectionId),
             actions: [
               Builder(builder: (innerCtx) {
                 final idx = DefaultTabController.of(innerCtx).index;
@@ -186,37 +172,21 @@ class _DashboardsTabbed extends ConsumerWidget {
                   },
                 );
               }),
+              const SettingsAction(),
               Builder(builder: (innerCtx) {
                 final idx = DefaultTabController.of(innerCtx).index;
                 final d = dashboards[idx];
-                if (d.locked) return const SizedBox.shrink();
-                return IconButton(
-                  icon: const Icon(Icons.reorder),
-                  tooltip: 'Reorder panels',
-                  onPressed: () => _openReorderSheet(innerCtx, ref, d.id),
+                return _DashboardMenu(
+                  connectionId: connectionId,
+                  onReorder: d.locked
+                      ? null
+                      : () => _openReorderSheet(innerCtx, ref, d.id),
                 );
               }),
-              IconButton(
-                icon: const Icon(Icons.add),
-                tooltip: context.l10n.dashAddDashboard,
-                onPressed: () =>
-                    tabCtx.push('/connections/$connectionId/dashboards/form'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.auto_awesome),
-                tooltip: context.l10n.scenesTitle,
-                onPressed: () =>
-                    tabCtx.push('/connections/$connectionId/scenes'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.devices_other),
-                tooltip: context.l10n.devicesTitle,
-                onPressed: () =>
-                    tabCtx.push('/connections/$connectionId/devices'),
-              ),
-              _BackupMenu(connectionId: connectionId),
             ],
-            bottom: TabBar(
+            bottom: dashboards.length < 2
+                ? null
+                : TabBar(
               isScrollable: dashboards.length > 3,
               onTap: (i) => store
                   .rememberDashboard(connectionId, dashboards[i].id)
@@ -467,24 +437,41 @@ Future<void> openCustomTilePicker(BuildContext context,
 
 /// App-bar overflow menu offering JSON export/import of this connection's
 /// dashboards (backup / copy-to-another-device).
-class _BackupMenu extends ConsumerWidget {
-  const _BackupMenu({required this.connectionId});
+class _DashboardMenu extends ConsumerWidget {
+  const _DashboardMenu({required this.connectionId, this.onReorder});
 
   final String connectionId;
+  final VoidCallback? onReorder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    // With one home the header has no switcher: "Add a home" lives here.
+    final homes = ref.watch(connectionsStreamProvider).valueOrNull?.length ?? 0;
     return PopupMenuButton<String>(
-      tooltip: context.l10n.a11yBackupMenu,
       onSelected: (v) {
-        if (v == 'export') _export(context, ref);
-        if (v == 'import') _import(context, ref);
+        switch (v) {
+          case 'addDashboard':
+            context.push('/connections/$connectionId/dashboards/form');
+          case 'reorder':
+            onReorder?.call();
+          case 'addHome':
+            context.push(Routes.setup);
+          case 'export':
+            _export(context, ref);
+          case 'import':
+            _import(context, ref);
+        }
       },
       itemBuilder: (_) => [
-        PopupMenuItem(
-            value: 'export', child: Text(context.l10n.dashExportMenu)),
-        PopupMenuItem(
-            value: 'import', child: Text(context.l10n.dashImportMenu)),
+        PopupMenuItem(value: 'addDashboard', child: Text(l10n.dashAddDashboard)),
+        if (onReorder != null)
+          PopupMenuItem(value: 'reorder', child: Text(l10n.dashReorderTiles)),
+        if (homes < 2)
+          PopupMenuItem(value: 'addHome', child: Text(l10n.homeAdd)),
+        const PopupMenuDivider(),
+        PopupMenuItem(value: 'export', child: Text(l10n.dashExportMenu)),
+        PopupMenuItem(value: 'import', child: Text(l10n.dashImportMenu)),
       ],
     );
   }
@@ -693,21 +680,3 @@ IconData _panelTypeIcon(PanelType type) => switch (type) {
       PanelType.device => Icons.devices_other,
       PanelType.reading => Icons.speed,
     };
-
-/// Leads to the broker list. The app opens straight on a home's dashboard,
-/// which sits outside the tab shell, so without this there is no way to
-/// another home or Settings. A normal back arrow when there is somewhere to
-/// go back to.
-class _HomesButton extends StatelessWidget {
-  const _HomesButton();
-
-  @override
-  Widget build(BuildContext context) {
-    if (Navigator.of(context).canPop()) return const BackButton();
-    return IconButton(
-      tooltip: context.l10n.connectionsTitle,
-      icon: const Icon(Icons.home_work_outlined),
-      onPressed: () => context.go(Routes.connections),
-    );
-  }
-}

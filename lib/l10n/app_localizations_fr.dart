@@ -61,7 +61,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get languageHebrew => 'עברית';
 
   @override
-  String get connectionsTitle => 'Connexions';
+  String get connectionsTitle => 'Maisons';
 
   @override
   String connLoadFailed(Object error) {
@@ -1700,4 +1700,25 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deviceNotResponding => 'Ne répond pas';
+
+  @override
+  String get homeAdd => 'Ajouter une maison';
+
+  @override
+  String get homeManage => 'Gérer les maisons';
+
+  @override
+  String get homeSwitch => 'Changer de maison';
+
+  @override
+  String get navDevices => 'Appareils';
+
+  @override
+  String get navScenes => 'Scènes';
+
+  @override
+  String get devicesNewDot => 'Nouveaux appareils';
+
+  @override
+  String get dashReorderTiles => 'Réorganiser les tuiles';
 }

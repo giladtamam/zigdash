@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @connectionsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Connections'**
+  /// **'Homes'**
   String get connectionsTitle;
 
   /// No description provided for @connLoadFailed.
@@ -3145,6 +3145,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not responding'**
   String get deviceNotResponding;
+
+  /// No description provided for @homeAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a home'**
+  String get homeAdd;
+
+  /// No description provided for @homeManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage homes'**
+  String get homeManage;
+
+  /// No description provided for @homeSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch home'**
+  String get homeSwitch;
+
+  /// No description provided for @navDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get navDevices;
+
+  /// No description provided for @navScenes.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenes'**
+  String get navScenes;
+
+  /// No description provided for @devicesNewDot.
+  ///
+  /// In en, this message translates to:
+  /// **'New devices'**
+  String get devicesNewDot;
+
+  /// No description provided for @dashReorderTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder tiles'**
+  String get dashReorderTiles;
 }
 
 class _AppLocalizationsDelegate

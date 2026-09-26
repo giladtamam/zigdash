@@ -15,6 +15,15 @@ class Routes {
   static const devices = '/connections/:id/devices';
   static const scenes = '/connections/:id/scenes';
 
+  /// Opens the first home, or setup when there is none.
+  static const start = '/start';
+
+  static String homeDevices(String connectionId) =>
+      '/connections/$connectionId/devices';
+
+  static String homeScenes(String connectionId) =>
+      '/connections/$connectionId/scenes';
+
   /// The dashboards of home (connection) [connectionId].
   static String homeDashboards(String connectionId) =>
       '/connections/$connectionId/dashboards';

@@ -61,7 +61,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get languageHebrew => 'עברית';
 
   @override
-  String get connectionsTitle => 'Verbindingen';
+  String get connectionsTitle => 'Huizen';
 
   @override
   String connLoadFailed(Object error) {
@@ -1695,4 +1695,25 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get deviceNotResponding => 'Reageert niet';
+
+  @override
+  String get homeAdd => 'Huis toevoegen';
+
+  @override
+  String get homeManage => 'Huizen beheren';
+
+  @override
+  String get homeSwitch => 'Ander huis';
+
+  @override
+  String get navDevices => 'Apparaten';
+
+  @override
+  String get navScenes => 'Scènes';
+
+  @override
+  String get devicesNewDot => 'Nieuwe apparaten';
+
+  @override
+  String get dashReorderTiles => 'Tegels herschikken';
 }

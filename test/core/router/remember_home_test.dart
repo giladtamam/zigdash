@@ -10,7 +10,7 @@ import 'package:zigdash/features/settings/providers/settings_controller.dart';
 
 void main() {
   testWidgets('a remembered home that no longer exists is forgotten and the '
-      'app falls back to the list', (tester) async {
+      'app falls back to the first home', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     await LastDashboardStore(prefs).rememberDashboard('gone', 'd1');
@@ -30,8 +30,8 @@ void main() {
                   RememberHome(connectionId: s.pathParameters['id']!),
             ),
             GoRoute(
-              path: Routes.connections,
-              builder: (_, __) => const Text('connections list'),
+              path: Routes.start,
+              builder: (_, __) => const Text('start'),
             ),
           ],
         ),
@@ -39,9 +39,9 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('connections list'), findsOneWidget);
+    expect(find.text('start'), findsOneWidget);
     final store = LastDashboardStore(prefs);
-    expect(store.startLocation, Routes.connections);
+    expect(store.startLocation, Routes.start);
     expect(store.lastDashboardOf('gone'), isNull);
   });
 }

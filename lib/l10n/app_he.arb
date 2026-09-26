@@ -17,7 +17,7 @@
   "languageSystem": "מערכת",
   "languageEnglish": "English",
   "languageHebrew": "עברית",
-  "connectionsTitle": "חיבורים",
+  "connectionsTitle": "בתים",
   "connLoadFailed": "טעינה נכשלה: {error}",
   "@connLoadFailed": {
     "placeholders": {
@@ -649,5 +649,12 @@
   "deviceClassMotion": "תנועה",
   "deviceClassClimate": "חיישן אקלים",
   "deviceClassGeneric": "מכשיר",
-  "deviceNotResponding": "לא מגיב"
+  "deviceNotResponding": "לא מגיב",
+  "homeAdd": "הוספת בית",
+  "homeManage": "ניהול בתים",
+  "homeSwitch": "החלפת בית",
+  "navDevices": "מכשירים",
+  "navScenes": "סצנות",
+  "devicesNewDot": "מכשירים חדשים",
+  "dashReorderTiles": "סידור אריחים"
 }

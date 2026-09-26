@@ -8,6 +8,7 @@ import '../../discovery/providers/discovery_provider.dart';
 import '../device_health.dart';
 import '../devices_providers.dart';
 import '../z2m_bridge.dart';
+import '../../home/home_shell.dart';
 
 class DevicesScreen extends ConsumerStatefulWidget {
   const DevicesScreen({super.key, required this.connectionId});
@@ -56,7 +57,8 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.devicesTitle),
+        title: HomeTitle(connectionId: widget.connectionId),
+        actions: const [SettingsAction()],
       ),
       body: Column(
         children: [

@@ -11,8 +11,8 @@ void main() {
   });
 
   // First-run decision: home after first run is the last-used dashboard.
-  test('with no remembered home the app opens on the connections list', () {
-    expect(LastDashboardStore(prefs).startLocation, Routes.connections);
+  test('with no remembered home the app opens the first home', () {
+    expect(LastDashboardStore(prefs).startLocation, Routes.start);
   });
 
   test('a remembered home opens its dashboards, across restarts', () async {
@@ -20,13 +20,13 @@ void main() {
     expect(LastDashboardStore(prefs).startLocation, '/connections/c1/dashboards');
   });
 
-  test('forgetting the remembered home falls back to the list', () async {
+  test('forgetting the remembered home falls back to the first home', () async {
     final store = LastDashboardStore(prefs);
     await store.remember('c1');
     await store.forget('c2');
     expect(store.startLocation, '/connections/c1/dashboards');
     await store.forget('c1');
-    expect(store.startLocation, Routes.connections);
+    expect(store.startLocation, Routes.start);
   });
 
   test('the last dashboard of each home is remembered', () async {

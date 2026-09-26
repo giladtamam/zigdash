@@ -17,7 +17,7 @@
   "languageSystem": "System",
   "languageEnglish": "English",
   "languageHebrew": "עברית",
-  "connectionsTitle": "Connections",
+  "connectionsTitle": "Homes",
   "connLoadFailed": "Failed to load: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },
   "connAddBroker": "Add broker",
@@ -585,5 +585,12 @@
   "deviceClassMotion": "Motion",
   "deviceClassClimate": "Climate sensor",
   "deviceClassGeneric": "Device",
-  "deviceNotResponding": "Not responding"
+  "deviceNotResponding": "Not responding",
+  "homeAdd": "Add a home",
+  "homeManage": "Manage homes",
+  "homeSwitch": "Switch home",
+  "navDevices": "Devices",
+  "navScenes": "Scenes",
+  "devicesNewDot": "New devices",
+  "dashReorderTiles": "Reorder tiles"
 }

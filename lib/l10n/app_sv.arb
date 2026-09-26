@@ -23,7 +23,7 @@
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
   "languageFrench": "Français",
-  "connectionsTitle": "Anslutningar",
+  "connectionsTitle": "Hem",
   "connLoadFailed": "Kunde inte ladda: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },
   "connAddBroker": "Lägg till broker",
@@ -580,5 +580,12 @@
   "deviceClassMotion": "Rörelse",
   "deviceClassClimate": "Klimatsensor",
   "deviceClassGeneric": "Enhet",
-  "deviceNotResponding": "Svarar inte"
+  "deviceNotResponding": "Svarar inte",
+  "homeAdd": "Lägg till ett hem",
+  "homeManage": "Hantera hem",
+  "homeSwitch": "Byt hem",
+  "navDevices": "Enheter",
+  "navScenes": "Scener",
+  "devicesNewDot": "Nya enheter",
+  "dashReorderTiles": "Ändra ordning på rutor"
 }

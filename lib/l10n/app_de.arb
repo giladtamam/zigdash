@@ -23,7 +23,7 @@
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
   "languageFrench": "Français",
-  "connectionsTitle": "Verbindungen",
+  "connectionsTitle": "Zuhause",
   "connLoadFailed": "Laden fehlgeschlagen: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },
   "connAddBroker": "Broker hinzufügen",
@@ -580,5 +580,12 @@
   "deviceClassMotion": "Bewegung",
   "deviceClassClimate": "Klimasensor",
   "deviceClassGeneric": "Gerät",
-  "deviceNotResponding": "Reagiert nicht"
+  "deviceNotResponding": "Reagiert nicht",
+  "homeAdd": "Zuhause hinzufügen",
+  "homeManage": "Zuhause verwalten",
+  "homeSwitch": "Zuhause wechseln",
+  "navDevices": "Geräte",
+  "navScenes": "Szenen",
+  "devicesNewDot": "Neue Geräte",
+  "dashReorderTiles": "Kacheln anordnen"
 }

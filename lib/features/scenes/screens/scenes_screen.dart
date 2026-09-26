@@ -11,6 +11,7 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../panels/models/panel_config.dart';
 import '../models/scene.dart';
 import '../scenes_providers.dart';
+import '../../home/home_shell.dart';
 
 /// Lists a connection's scenes. Tap a scene to activate it (publishes every
 /// saved device action); the FAB creates a new one by capturing device state.
@@ -116,7 +117,10 @@ class ScenesScreen extends ConsumerWidget {
     final scenesAsync = ref.watch(scenesForConnectionProvider(connectionId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.scenesTitle)),
+      appBar: AppBar(
+        title: HomeTitle(connectionId: connectionId),
+        actions: const [SettingsAction()],
+      ),
       body: scenesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(e.toString())),

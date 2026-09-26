@@ -23,7 +23,7 @@
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
   "languageFrench": "Français",
-  "connectionsTitle": "Verbindingen",
+  "connectionsTitle": "Huizen",
   "connLoadFailed": "Laden mislukt: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },
   "connAddBroker": "Broker toevoegen",
@@ -580,5 +580,12 @@
   "deviceClassMotion": "Beweging",
   "deviceClassClimate": "Klimaatsensor",
   "deviceClassGeneric": "Apparaat",
-  "deviceNotResponding": "Reageert niet"
+  "deviceNotResponding": "Reageert niet",
+  "homeAdd": "Huis toevoegen",
+  "homeManage": "Huizen beheren",
+  "homeSwitch": "Ander huis",
+  "navDevices": "Apparaten",
+  "navScenes": "Scènes",
+  "devicesNewDot": "Nieuwe apparaten",
+  "dashReorderTiles": "Tegels herschikken"
 }

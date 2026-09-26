@@ -27,6 +27,14 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.navSettings)),
       body: ListView(
         children: [
+          // Homes are edited in the broker list until 1.13's Settings.
+          ListTile(
+            leading: const Icon(Icons.home_work_outlined),
+            title: Text(l10n.connectionsTitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(Routes.connections),
+          ),
+          const Divider(height: 1),
           _SectionHeader(l10n.settingsAppearance),
           RadioGroup<ThemeMode>(
             groupValue: settings.themeMode,

@@ -23,7 +23,7 @@
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
   "languageFrench": "Français",
-  "connectionsTitle": "Conexiones",
+  "connectionsTitle": "Casas",
   "connLoadFailed": "No se pudo cargar: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },
   "connAddBroker": "Añadir broker",
@@ -580,5 +580,12 @@
   "deviceClassMotion": "Movimiento",
   "deviceClassClimate": "Sensor de clima",
   "deviceClassGeneric": "Dispositivo",
-  "deviceNotResponding": "No responde"
+  "deviceNotResponding": "No responde",
+  "homeAdd": "Añadir una casa",
+  "homeManage": "Gestionar casas",
+  "homeSwitch": "Cambiar de casa",
+  "navDevices": "Dispositivos",
+  "navScenes": "Escenas",
+  "devicesNewDot": "Dispositivos nuevos",
+  "dashReorderTiles": "Reordenar mosaicos"
 }

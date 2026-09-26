@@ -65,7 +65,7 @@ void main() {
     expect(find.text('Find my setup'), findsOneWidget);
   });
 
-  testWidgets('with first run done and no home remembered, the list opens',
+  testWidgets('with first run done and no homes left, setup opens',
       (tester) async {
     final c = await containerWithPrefs({'onboarding_complete': true});
     addTearDown(c.dispose);
@@ -73,8 +73,7 @@ void main() {
     await tester.pumpWidget(app(c));
     await tester.pumpAndSettle();
 
-    expect(find.text('Connections'), findsOneWidget);
-    expect(find.text('Find my setup'), findsNothing);
+    expect(find.text('Find my setup'), findsOneWidget);
   });
 
   testWidgets('the retired onboarding address leads to the start location',
@@ -86,7 +85,8 @@ void main() {
 
     c.read(routerProvider).go(Routes.onboarding);
     await tester.pumpAndSettle();
-    expect(find.text('Connections'), findsOneWidget);
+    // The start location: the first home, or setup with none.
+    expect(find.text('Find my setup'), findsOneWidget);
   });
 
   testWidgets('finishing first run mid-session releases the app',
@@ -101,6 +101,6 @@ void main() {
     c.read(routerProvider).go(Routes.connections);
     await tester.pumpAndSettle();
 
-    expect(find.text('Connections'), findsOneWidget);
+    expect(find.text('Homes'), findsOneWidget);
   });
 }

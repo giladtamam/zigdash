@@ -23,7 +23,7 @@
   "languageNorwegian": "Norsk",
   "languageSpanish": "Español",
   "languageFrench": "Français",
-  "connectionsTitle": "Tilkoblinger",
+  "connectionsTitle": "Hjem",
   "connLoadFailed": "Kunne ikke laste inn: {error}",
   "@connLoadFailed": { "placeholders": { "error": {} } },
   "connAddBroker": "Legg til broker",
@@ -580,5 +580,12 @@
   "deviceClassMotion": "Bevegelse",
   "deviceClassClimate": "Klimasensor",
   "deviceClassGeneric": "Enhet",
-  "deviceNotResponding": "Svarer ikke"
+  "deviceNotResponding": "Svarer ikke",
+  "homeAdd": "Legg til et hjem",
+  "homeManage": "Administrer hjem",
+  "homeSwitch": "Bytt hjem",
+  "navDevices": "Enheter",
+  "navScenes": "Scener",
+  "devicesNewDot": "Nye enheter",
+  "dashReorderTiles": "Endre rekkefølge på fliser"
 }

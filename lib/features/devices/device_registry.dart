@@ -5,6 +5,8 @@ import '../../data/database/database.dart';
 import '../../data/database/tables/panels.dart';
 import '../discovery/models/z2m_device.dart';
 import '../discovery/providers/discovery_provider.dart';
+import '../../data/repositories/dashboard_repo.dart';
+import 'device_tiles.dart';
 import '../panels/providers/panel_value_provider.dart';
 
 /// Keeps a home's tiles in step with its Zigbee2MQTT device list. Runs on
@@ -113,3 +115,26 @@ final linkedIeeesProvider =
     StreamProvider.autoDispose.family<Set<String>, String>((ref, connectionId) =>
         DeviceRegistryDao(ref.watch(appDatabaseProvider))
             .watchLinkedIeees(connectionId));
+
+/// IEEE addresses dismissed in a home.
+final dismissedIeeesProvider =
+    StreamProvider.autoDispose.family<Set<String>, String>((ref, connectionId) =>
+        DeviceRegistryDao(ref.watch(appDatabaseProvider))
+            .watchDismissed(connectionId));
+
+/// How many of a home's devices are on no dashboard and not dismissed: the
+/// Devices dot. Zero until the device list arrives.
+final unassignedCountProvider =
+    Provider.autoDispose.family<AsyncValue<int>, String>((ref, connectionId) {
+  final dashboards =
+      ref.watch(dashboardsForConnectionProvider(connectionId)).valueOrNull;
+  final first = dashboards?.firstOrNull;
+  if (first == null) return const AsyncValue.data(0);
+  final devices = ref.watch(bridgeDevicesStreamProvider(
+      (connectionId: connectionId, base: z2mBase(first.topicPrefix))));
+  final linked = ref.watch(linkedIeeesProvider(connectionId)).valueOrNull;
+  final dismissed = ref.watch(dismissedIeeesProvider(connectionId)).valueOrNull;
+  if (linked == null || dismissed == null) return const AsyncValue.data(0);
+  return devices.whenData(
+      (d) => unassignedDevices(d, linked, dismissed).length);
+});

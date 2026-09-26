@@ -17,7 +17,7 @@
   "languageSystem": "Système",
   "languageEnglish": "English",
   "languageHebrew": "עברית",
-  "connectionsTitle": "Connexions",
+  "connectionsTitle": "Maisons",
   "connLoadFailed": "Échec du chargement : {error}",
   "connAddBroker": "Ajouter un broker",
   "connEmpty": "Aucune connexion pour l'instant.\nAppuyez sur « Ajouter un broker » pour pointer ZigDash vers votre serveur MQTT.",
@@ -505,5 +505,12 @@
   "deviceClassMotion": "Mouvement",
   "deviceClassClimate": "Capteur climatique",
   "deviceClassGeneric": "Appareil",
-  "deviceNotResponding": "Ne répond pas"
+  "deviceNotResponding": "Ne répond pas",
+  "homeAdd": "Ajouter une maison",
+  "homeManage": "Gérer les maisons",
+  "homeSwitch": "Changer de maison",
+  "navDevices": "Appareils",
+  "navScenes": "Scènes",
+  "devicesNewDot": "Nouveaux appareils",
+  "dashReorderTiles": "Réorganiser les tuiles"
 }

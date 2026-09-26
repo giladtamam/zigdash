@@ -21,7 +21,7 @@ class LastDashboardStore {
   /// Where the app opens: the remembered home's dashboards, or the list.
   String get startLocation {
     final id = _prefs.getString(_key);
-    return id == null ? Routes.connections : Routes.homeDashboards(id);
+    return id == null ? Routes.start : Routes.homeDashboards(id);
   }
 
   Future<void> remember(String connectionId) async {
@@ -87,7 +87,7 @@ class _RememberHomeState extends ConsumerState<RememberHome> {
         return;
       }
       await store.forget(id);
-      if (mounted) context.go(Routes.connections);
+      if (mounted) context.go(Routes.start);
     } catch (_) {
       // Remembering the home is a convenience; never break the screen.
     }
