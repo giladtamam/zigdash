@@ -6,6 +6,7 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/router/routes.dart';
 import '../../../data/repositories/connection_repo.dart';
+import '../../../data/last_known/last_known_store.dart';
 import '../widgets/connection_tile.dart';
 
 class ConnectionsListScreen extends ConsumerWidget {
@@ -47,6 +48,11 @@ class ConnectionsListScreen extends ConsumerWidget {
                   final store = ref.read(lastDashboardStoreProvider);
                   await repo.delete(c.id);
                   await store.forget(c.id);
+                  // Its last-known values go with it.
+                  await ref.read(lastKnownStoreProvider).keepOnly({
+                    for (final r in rows)
+                      if (r.id != c.id) r.id,
+                  });
                 },
               );
             },

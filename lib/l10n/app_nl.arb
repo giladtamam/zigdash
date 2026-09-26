@@ -608,5 +608,13 @@
   "editUnassigned": "{count, plural, =1{1 apparaat staat op geen dashboard} other{{count} apparaten staan op geen dashboard}}",
   "editTileActions": "Tegelopties",
   "editSave": "Opslaan",
-  "editCancel": "Annuleren"
+  "editCancel": "Annuleren",
+  "ageJustNow": "Zojuist",
+  "ageMinutes": "{n} min geleden",
+  "ageHours": "{n} u geleden",
+  "statusCantReach": "Broker niet bereikbaar",
+  "statusWhy": "Waarom?",
+  "statusWhyTitle": "Je broker reageert niet",
+  "statusWhyBody": "ZigDash blijft het zelf proberen. Tot die tijd tonen tegels hun laatst bekende waarden, gedimd en met hun leeftijd. Controleer of de broker aan staat en deze telefoon op hetzelfde netwerk zit, of test de verbinding in de instellingen.",
+  "statusSettings": "Verbindingsinstellingen"
 }

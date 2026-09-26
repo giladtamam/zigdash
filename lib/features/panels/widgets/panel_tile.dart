@@ -58,6 +58,16 @@ class PanelReliabilityPolicy {
   }) : subscriptionMode = PanelSubscriptionMode.interactive,
        controlGate = PanelControlGate.connected;
 
+  /// Device tiles: live state, but never blocked while disconnected — the
+  /// sheet opens to read last-known values, and a command sent offline
+  /// reports "Not connected" instead of being swallowed.
+  const PanelReliabilityPolicy.deviceTile()
+    : this._(
+        subscriptionMode: PanelSubscriptionMode.interactive,
+        controlGate: PanelControlGate.always,
+        jsonPathSource: PanelJsonPathSource.none,
+      );
+
   const PanelReliabilityPolicy.readOnlySubscription()
     : this._(
         subscriptionMode: PanelSubscriptionMode.readOnly,
@@ -123,9 +133,7 @@ PanelReliabilityPolicy panelReliabilityPolicy(PanelType type) => switch (type) {
   PanelType.progress ||
   PanelType.textLog => const PanelReliabilityPolicy.readOnlySubscription(),
   PanelType.autoClose => const PanelReliabilityPolicy.autoClose(),
-  PanelType.device => const PanelReliabilityPolicy.interactiveSubscription(
-    jsonPathSource: PanelJsonPathSource.none,
-  ),
+  PanelType.device => const PanelReliabilityPolicy.deviceTile(),
   PanelType.reading => const PanelReliabilityPolicy.readOnlySubscription(),
 };
 
@@ -351,6 +359,7 @@ class PanelTile extends ConsumerWidget {
           stale: stale,
           controlsEnabled: controlsEnabled,
           valueLabel: panelReliabilityValueLabel(config, snapshot?.value),
+          receivedAt: snapshot?.receivedAt,
           child: widget,
         ),
       ),

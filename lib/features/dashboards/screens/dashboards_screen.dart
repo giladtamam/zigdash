@@ -74,6 +74,7 @@ class DashboardsScreen extends ConsumerWidget {
                 ConnectionStatusBanner(
                   status: connectionStatus,
                   onReconnect: () => _reconnectNow(context, ref, connectionId),
+                  onSettings: () => context.push('/connections/$connectionId/edit'),
                 ),
                 const Expanded(child: _EmptyState()),
               ],
@@ -193,6 +194,7 @@ class _DashboardsTabbed extends ConsumerWidget {
               ConnectionStatusBanner(
                 status: connectionStatus,
                 onReconnect: () => _reconnectNow(tabCtx, ref, connectionId),
+                onSettings: () => tabCtx.push('/connections/$connectionId/edit'),
               ),
               Expanded(
                 child: TabBarView(

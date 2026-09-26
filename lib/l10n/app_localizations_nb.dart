@@ -1781,4 +1781,33 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get editCancel => 'Avbryt';
+
+  @override
+  String get ageJustNow => 'Akkurat nå';
+
+  @override
+  String ageMinutes(int n) {
+    return 'for $n min siden';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'for $n t siden';
+  }
+
+  @override
+  String get statusCantReach => 'Får ikke kontakt med brokeren';
+
+  @override
+  String get statusWhy => 'Hvorfor?';
+
+  @override
+  String get statusWhyTitle => 'Brokeren svarer ikke';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash prøver igjen selv. Til da viser flisene sine siste kjente verdier, dempet og med alder. Sjekk at brokeren er på og at telefonen er på samme nett, eller test tilkoblingen i innstillingene.';
+
+  @override
+  String get statusSettings => 'Tilkoblingsinnstillinger';
 }

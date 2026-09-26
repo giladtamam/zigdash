@@ -1790,4 +1790,33 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get editCancel => 'Abbrechen';
+
+  @override
+  String get ageJustNow => 'Gerade eben';
+
+  @override
+  String ageMinutes(int n) {
+    return 'vor $n Min.';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'vor $n Std.';
+  }
+
+  @override
+  String get statusCantReach => 'Broker nicht erreichbar';
+
+  @override
+  String get statusWhy => 'Warum?';
+
+  @override
+  String get statusWhyTitle => 'Dein Broker antwortet nicht';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash versucht es selbst weiter. Bis dahin zeigen die Kacheln ihre letzten bekannten Werte, abgeblendet und mit Alter. Prüfe, ob der Broker läuft und das Handy im selben Netz ist, oder teste die Verbindung in ihren Einstellungen.';
+
+  @override
+  String get statusSettings => 'Verbindungseinstellungen';
 }

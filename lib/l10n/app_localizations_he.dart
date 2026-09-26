@@ -1766,4 +1766,33 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get editCancel => 'ביטול';
+
+  @override
+  String get ageJustNow => 'עכשיו';
+
+  @override
+  String ageMinutes(int n) {
+    return 'לפני $n דק׳';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'לפני $n שע׳';
+  }
+
+  @override
+  String get statusCantReach => 'אין גישה ל‑broker';
+
+  @override
+  String get statusWhy => 'למה?';
+
+  @override
+  String get statusWhyTitle => 'ה‑broker לא עונה';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash ממשיכה לנסות לבד. עד אז האריחים מציגים את הערכים הידועים האחרונים, מעומעמים ועם הגיל שלהם. בדקו שה‑broker פועל ושהטלפון באותה רשת, או בדקו את החיבור בהגדרות שלו.';
+
+  @override
+  String get statusSettings => 'הגדרות חיבור';
 }

@@ -1789,4 +1789,33 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get editCancel => 'Cancelar';
+
+  @override
+  String get ageJustNow => 'Ahora mismo';
+
+  @override
+  String ageMinutes(int n) {
+    return 'hace $n min';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'hace $n h';
+  }
+
+  @override
+  String get statusCantReach => 'No se puede contactar con el broker';
+
+  @override
+  String get statusWhy => '¿Por qué?';
+
+  @override
+  String get statusWhyTitle => 'Tu broker no responde';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash sigue intentándolo solo. Mientras tanto, los mosaicos muestran sus últimos valores conocidos, atenuados y con su antigüedad. Comprueba que el broker esté encendido y el teléfono en la misma red, o prueba la conexión en sus ajustes.';
+
+  @override
+  String get statusSettings => 'Ajustes de conexión';
 }

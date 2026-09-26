@@ -1787,4 +1787,33 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get editCancel => 'Annuleren';
+
+  @override
+  String get ageJustNow => 'Zojuist';
+
+  @override
+  String ageMinutes(int n) {
+    return '$n min geleden';
+  }
+
+  @override
+  String ageHours(int n) {
+    return '$n u geleden';
+  }
+
+  @override
+  String get statusCantReach => 'Broker niet bereikbaar';
+
+  @override
+  String get statusWhy => 'Waarom?';
+
+  @override
+  String get statusWhyTitle => 'Je broker reageert niet';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash blijft het zelf proberen. Tot die tijd tonen tegels hun laatst bekende waarden, gedimd en met hun leeftijd. Controleer of de broker aan staat en deze telefoon op hetzelfde netwerk zit, of test de verbinding in de instellingen.';
+
+  @override
+  String get statusSettings => 'Verbindingsinstellingen';
 }

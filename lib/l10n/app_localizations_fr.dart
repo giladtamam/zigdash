@@ -1792,4 +1792,33 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get editCancel => 'Annuler';
+
+  @override
+  String get ageJustNow => 'À l’instant';
+
+  @override
+  String ageMinutes(int n) {
+    return 'il y a $n min';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'il y a $n h';
+  }
+
+  @override
+  String get statusCantReach => 'Broker injoignable';
+
+  @override
+  String get statusWhy => 'Pourquoi ?';
+
+  @override
+  String get statusWhyTitle => 'Votre broker ne répond pas';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash réessaie tout seul. En attendant, les tuiles affichent leurs dernières valeurs connues, estompées, avec leur âge. Vérifiez que le broker est allumé et que ce téléphone est sur le même réseau, ou testez la connexion dans ses réglages.';
+
+  @override
+  String get statusSettings => 'Réglages de connexion';
 }

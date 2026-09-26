@@ -608,5 +608,13 @@
   "editUnassigned": "{count, plural, =1{1 dispositivo no está en ningún panel} other{{count} dispositivos no están en ningún panel}}",
   "editTileActions": "Opciones del mosaico",
   "editSave": "Guardar",
-  "editCancel": "Cancelar"
+  "editCancel": "Cancelar",
+  "ageJustNow": "Ahora mismo",
+  "ageMinutes": "hace {n} min",
+  "ageHours": "hace {n} h",
+  "statusCantReach": "No se puede contactar con el broker",
+  "statusWhy": "¿Por qué?",
+  "statusWhyTitle": "Tu broker no responde",
+  "statusWhyBody": "ZigDash sigue intentándolo solo. Mientras tanto, los mosaicos muestran sus últimos valores conocidos, atenuados y con su antigüedad. Comprueba que el broker esté encendido y el teléfono en la misma red, o prueba la conexión en sus ajustes.",
+  "statusSettings": "Ajustes de conexión"
 }

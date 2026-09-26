@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/storage/secure_storage.dart';
+import '../../data/last_known/last_known_store.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../broker_config.dart';
 import '../endpoint.dart';
@@ -59,6 +60,19 @@ final mqttManagerProvider =
     registry.unregister(manager);
     manager.dispose();
   });
+
+  // Last-known values first, so tiles are never empty when the broker is
+  // unreachable; then keep saving what arrives. A store failure never
+  // blocks connecting.
+  final store = ref.read(lastKnownStoreProvider);
+  try {
+    manager.seedLastKnown(await store
+        .load(connectionId)
+        .timeout(const Duration(seconds: 2)));
+  } catch (_) {}
+  final saving =
+      manager.messages.listen((m) => store.record(connectionId, m));
+  ref.onDispose(saving.cancel);
 
   // Fire-and-forget connect — UI watches status$ to observe progress.
   manager.connect();

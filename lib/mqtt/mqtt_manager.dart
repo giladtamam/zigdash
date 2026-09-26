@@ -140,6 +140,21 @@ class MqttManager {
 
   final Map<String, _SubEntry> _subs = {};
 
+  /// Values saved from earlier sessions, by exact topic, until live data
+  /// replaces them. They carry connection generation -1, so readers treat
+  /// them as last known, never fresh.
+  final Map<String, MqttRxMessage> _lastKnown = {};
+
+  /// Seeds saved values (loaded before [connect]). A later subscription to
+  /// an exact topic starts with its saved value.
+  void seedLastKnown(Iterable<MqttRxMessage> messages) {
+    for (final m in messages) {
+      _lastKnown[m.topic] = m;
+      final entry = _subs[m.topic];
+      if (entry != null && !entry.subject.hasValue) entry.subject.add(m);
+    }
+  }
+
   final _commandsSent = StreamController<String>.broadcast();
   final _messages = StreamController<MqttRxMessage>.broadcast();
 
@@ -326,6 +341,8 @@ class MqttManager {
           print('[MqttManager] subscribe failed for pattern "$pattern": $e');
         }
       }
+      final saved = _lastKnown[pattern];
+      if (saved != null) e.subject.add(saved);
       return e;
     });
     entry.refs++;
@@ -471,6 +488,7 @@ class MqttManager {
   }
 
   void _fanOut(MqttRxMessage message) {
+    _lastKnown.remove(message.topic);
     if (!_messages.isClosed) _messages.add(message);
     for (final entry in _subs.values) {
       if (topicMatches(entry.pattern, message.topic)) {

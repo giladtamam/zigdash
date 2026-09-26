@@ -608,5 +608,13 @@
   "editUnassigned": "{count, plural, =1{1 Gerät ist auf keinem Dashboard} other{{count} Geräte sind auf keinem Dashboard}}",
   "editTileActions": "Kacheloptionen",
   "editSave": "Speichern",
-  "editCancel": "Abbrechen"
+  "editCancel": "Abbrechen",
+  "ageJustNow": "Gerade eben",
+  "ageMinutes": "vor {n} Min.",
+  "ageHours": "vor {n} Std.",
+  "statusCantReach": "Broker nicht erreichbar",
+  "statusWhy": "Warum?",
+  "statusWhyTitle": "Dein Broker antwortet nicht",
+  "statusWhyBody": "ZigDash versucht es selbst weiter. Bis dahin zeigen die Kacheln ihre letzten bekannten Werte, abgeblendet und mit Alter. Prüfe, ob der Broker läuft und das Handy im selben Netz ist, oder teste die Verbindung in ihren Einstellungen.",
+  "statusSettings": "Verbindungseinstellungen"
 }

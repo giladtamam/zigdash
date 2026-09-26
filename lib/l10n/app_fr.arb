@@ -533,5 +533,13 @@
   "editUnassigned": "{count, plural, =1{1 appareil n’est sur aucun tableau de bord} other{{count} appareils ne sont sur aucun tableau de bord}}",
   "editTileActions": "Options de la tuile",
   "editSave": "Enregistrer",
-  "editCancel": "Annuler"
+  "editCancel": "Annuler",
+  "ageJustNow": "À l’instant",
+  "ageMinutes": "il y a {n} min",
+  "ageHours": "il y a {n} h",
+  "statusCantReach": "Broker injoignable",
+  "statusWhy": "Pourquoi ?",
+  "statusWhyTitle": "Votre broker ne répond pas",
+  "statusWhyBody": "ZigDash réessaie tout seul. En attendant, les tuiles affichent leurs dernières valeurs connues, estompées, avec leur âge. Vérifiez que le broker est allumé et que ce téléphone est sur le même réseau, ou testez la connexion dans ses réglages.",
+  "statusSettings": "Réglages de connexion"
 }

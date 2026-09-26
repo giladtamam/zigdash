@@ -1780,4 +1780,33 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get editCancel => 'Avbryt';
+
+  @override
+  String get ageJustNow => 'Nyss';
+
+  @override
+  String ageMinutes(int n) {
+    return 'för $n min sedan';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'för $n tim sedan';
+  }
+
+  @override
+  String get statusCantReach => 'Når inte din broker';
+
+  @override
+  String get statusWhy => 'Varför?';
+
+  @override
+  String get statusWhyTitle => 'Din broker svarar inte';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash fortsätter försöka själv. Tills dess visar rutorna sina senast kända värden, nedtonade och med ålder. Kontrollera att brokern är på och att telefonen är på samma nätverk, eller testa anslutningen i dess inställningar.';
+
+  @override
+  String get statusSettings => 'Anslutningsinställningar';
 }

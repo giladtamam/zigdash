@@ -677,5 +677,13 @@
   "editUnassigned": "{count, plural, =1{מכשיר אחד לא נמצא בשום לוח} other{{count} מכשירים לא נמצאים בשום לוח}}",
   "editTileActions": "אפשרויות האריח",
   "editSave": "שמירה",
-  "editCancel": "ביטול"
+  "editCancel": "ביטול",
+  "ageJustNow": "עכשיו",
+  "ageMinutes": "לפני {n} דק׳",
+  "ageHours": "לפני {n} שע׳",
+  "statusCantReach": "אין גישה ל‑broker",
+  "statusWhy": "למה?",
+  "statusWhyTitle": "ה‑broker לא עונה",
+  "statusWhyBody": "ZigDash ממשיכה לנסות לבד. עד אז האריחים מציגים את הערכים הידועים האחרונים, מעומעמים ועם הגיל שלהם. בדקו שה‑broker פועל ושהטלפון באותה רשת, או בדקו את החיבור בהגדרות שלו.",
+  "statusSettings": "הגדרות חיבור"
 }

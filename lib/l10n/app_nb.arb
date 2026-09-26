@@ -608,5 +608,13 @@
   "editUnassigned": "{count, plural, =1{1 enhet er ikke på noe dashbord} other{{count} enheter er ikke på noe dashbord}}",
   "editTileActions": "Flisvalg",
   "editSave": "Lagre",
-  "editCancel": "Avbryt"
+  "editCancel": "Avbryt",
+  "ageJustNow": "Akkurat nå",
+  "ageMinutes": "for {n} min siden",
+  "ageHours": "for {n} t siden",
+  "statusCantReach": "Får ikke kontakt med brokeren",
+  "statusWhy": "Hvorfor?",
+  "statusWhyTitle": "Brokeren svarer ikke",
+  "statusWhyBody": "ZigDash prøver igjen selv. Til da viser flisene sine siste kjente verdier, dempet og med alder. Sjekk at brokeren er på og at telefonen er på samme nett, eller test tilkoblingen i innstillingene.",
+  "statusSettings": "Tilkoblingsinnstillinger"
 }

@@ -614,5 +614,15 @@
   "@editUnassigned": {"placeholders": {"count": {"type": "int"}}},
   "editTileActions": "Tile options",
   "editSave": "Save",
-  "editCancel": "Cancel"
+  "editCancel": "Cancel",
+  "ageJustNow": "Just now",
+  "ageMinutes": "{n} min ago",
+  "@ageMinutes": {"placeholders": {"n": {"type": "int"}}},
+  "ageHours": "{n} h ago",
+  "@ageHours": {"placeholders": {"n": {"type": "int"}}},
+  "statusCantReach": "Can't reach your broker",
+  "statusWhy": "Why?",
+  "statusWhyTitle": "Your broker isn't answering",
+  "statusWhyBody": "ZigDash keeps trying on its own. Until it's back, tiles show their last known values, dimmed, with their age. Check that the broker is on and this phone is on the same network, or test the connection in its settings.",
+  "statusSettings": "Connection settings"
 }

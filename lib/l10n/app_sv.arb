@@ -608,5 +608,13 @@
   "editUnassigned": "{count, plural, =1{1 enhet finns inte på någon panel} other{{count} enheter finns inte på någon panel}}",
   "editTileActions": "Rutalternativ",
   "editSave": "Spara",
-  "editCancel": "Avbryt"
+  "editCancel": "Avbryt",
+  "ageJustNow": "Nyss",
+  "ageMinutes": "för {n} min sedan",
+  "ageHours": "för {n} tim sedan",
+  "statusCantReach": "Når inte din broker",
+  "statusWhy": "Varför?",
+  "statusWhyTitle": "Din broker svarar inte",
+  "statusWhyBody": "ZigDash fortsätter försöka själv. Tills dess visar rutorna sina senast kända värden, nedtonade och med ålder. Kontrollera att brokern är på och att telefonen är på samma nätverk, eller testa anslutningen i dess inställningar.",
+  "statusSettings": "Anslutningsinställningar"
 }

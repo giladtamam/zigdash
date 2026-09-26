@@ -3313,6 +3313,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get editCancel;
+
+  /// No description provided for @ageJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get ageJustNow;
+
+  /// No description provided for @ageMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min ago'**
+  String ageMinutes(int n);
+
+  /// No description provided for @ageHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} h ago'**
+  String ageHours(int n);
+
+  /// No description provided for @statusCantReach.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach your broker'**
+  String get statusCantReach;
+
+  /// No description provided for @statusWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'Why?'**
+  String get statusWhy;
+
+  /// No description provided for @statusWhyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your broker isn\'t answering'**
+  String get statusWhyTitle;
+
+  /// No description provided for @statusWhyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash keeps trying on its own. Until it\'s back, tiles show their last known values, dimmed, with their age. Check that the broker is on and this phone is on the same network, or test the connection in its settings.'**
+  String get statusWhyBody;
+
+  /// No description provided for @statusSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection settings'**
+  String get statusSettings;
 }
 
 class _AppLocalizationsDelegate

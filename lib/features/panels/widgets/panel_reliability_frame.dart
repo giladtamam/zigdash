@@ -9,6 +9,8 @@ class PanelReliabilityFrame extends StatelessWidget {
     required this.controlsEnabled,
     required this.child,
     this.valueLabel,
+    this.receivedAt,
+    this.now,
   });
 
   final bool stale;
@@ -16,11 +18,22 @@ class PanelReliabilityFrame extends StatelessWidget {
   final Widget child;
   final String? valueLabel;
 
+  /// When the shown value arrived; a stale tile shows its age.
+  final DateTime? receivedAt;
+
+  /// Clock for the age (tests).
+  final DateTime Function()? now;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final at = receivedAt;
+    final chip = at == null
+        ? l10n.reliabilityLastKnown
+        : formatValueAge(context, at, (now ?? DateTime.now)());
     final semanticsLabel = [
       if (stale) l10n.reliabilityLastKnown,
+      if (stale && at != null) chip,
       if (stale && valueLabel != null) valueLabel!,
       if (!controlsEnabled) l10n.reliabilityControlsUnavailable,
     ].join(', ');
@@ -52,7 +65,7 @@ class PanelReliabilityFrame extends StatelessWidget {
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
                     label: Text(
-                      l10n.reliabilityLastKnown,
+                      chip,
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
@@ -63,4 +76,15 @@ class PanelReliabilityFrame extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A value's age for a stale tile: "Just now", "12 min ago", "2 h ago", or
+/// the date once it is a day old.
+String formatValueAge(BuildContext context, DateTime at, DateTime now) {
+  final l10n = context.l10n;
+  final age = now.difference(at);
+  if (age.inMinutes < 1) return l10n.ageJustNow;
+  if (age.inHours < 1) return l10n.ageMinutes(age.inMinutes);
+  if (age.inDays < 1) return l10n.ageHours(age.inHours);
+  return MaterialLocalizations.of(context).formatShortMonthDay(at);
 }
