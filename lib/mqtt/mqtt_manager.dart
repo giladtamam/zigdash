@@ -59,13 +59,33 @@ class MqttManager {
 
   // MQTT 3.1 caps client identifiers at 23 chars and some broker builds
   // (notably the Mosquitto shipped on SMLIGHT SMHUB) reject longer IDs with
-  // a "protocol error" disconnect even when negotiated as 3.1.1. Compose a
-  // stable 23-char ID from the connection's UUID without the dashes.
+  // a "protocol error" disconnect even when negotiated as 3.1.1.
+  //
+  // The ID must also be unique per running client, not just per connection.
+  // Two installs holding the same connection row (Android Auto Backup restored
+  // onto a second phone or wall tablet, or two browser tabs of the web build)
+  // used to send the same ID; the broker drops the older session on every
+  // CONNECT, each side auto-reconnects, and both loop forever. Sessions are
+  // clean, so a stable ID buys nothing: keep the connection tail for broker
+  // logs and add a per-manager random part.
+  //
+  // Shape: "zd-" + 10 hex (connection) + 8 hex (instance) = 21 chars. The
+  // "zd-" prefix is unchanged so prefix-based broker ACLs keep working.
+  static final Random _idRandom = Random.secure();
+
   static String _shortClientId(String connectionId) {
-    final clean = connectionId.replaceAll('-', '');
-    final tail = clean.length > 15 ? clean.substring(clean.length - 15) : clean;
-    return 'zd-$tail'; // "zd-" (3) + 15 hex = 18 chars, well under 23
+    final clean = connectionId.replaceAll('-', '').toLowerCase();
+    final tail = clean.length > 10 ? clean.substring(clean.length - 10) : clean;
+    final rnd = _idRandom;
+    final instance = List.generate(
+      8,
+      (_) => rnd.nextInt(16).toRadixString(16),
+    ).join();
+    return 'zd-$tail$instance';
   }
+
+  /// Visible for tests: the client identifier this manager sends in CONNECT.
+  String get clientId => _clientId;
 
   final BrokerConfig config;
   final String password;
