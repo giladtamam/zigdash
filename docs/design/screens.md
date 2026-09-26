@@ -44,7 +44,7 @@ Screens already covered by the direction round live on the same canvas: the Sign
 ![Scenes](screens/D-scenes.png)
 
 - **What changed.** Scenes are cards with one Activate button. The active scene shows in amber.
-- **Scope.** Scenes are read from Zigbee2MQTT and not edited in ZigDash. A note says so, so nobody looks for an editor.
+- **Scope.** Scenes are ZigDash's own: captured from device states in the app, stored on the phone, and activated by publishing every action. They can also be added to a dashboard as a tile. (An earlier version of this note said scenes come from Zigbee2MQTT; the shipped feature is the app's own scenes, confirmed while charting 1.12.) The board's footnote about Zigbee2MQTT is outdated.
 
 ## Settings, homes
 
