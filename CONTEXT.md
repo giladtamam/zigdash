@@ -20,6 +20,8 @@
 
 **Unassigned device** — a device reported by the bridge that is on no dashboard in its home. Surfaced as a prompt, never added automatically.
 
+**Tile size** — how much of a dashboard row a tile takes: **Small** (one grid column), **Wide** (two columns) or **Full** (the whole row). Columns are 2 on phones, 3 on medium windows, 4 on tablets, so a Small tile stays small on a tablet. Code today: `PanelWidth` (full/half/third).
+
 **Section** — a titled group of tiles inside a dashboard (e.g. Lights, Covers). Generated dashboards are sectioned by device type.
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.
