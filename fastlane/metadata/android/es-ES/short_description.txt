@@ -1,1 +1,1 @@
-Panel Zigbee2MQTT con detección automática. Sin anuncios, sin nube, open source.
+Panel Zigbee2MQTT: detección automática de dispositivos. Local, privado, libre.

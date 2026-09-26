@@ -1,1 +1,1 @@
-Zigbee2MQTT-dashboard met apparaatdetectie. Geen ads, geen cloud, open source.
+Zigbee2MQTT-dashboard met apparaatdetectie. Lokaal, privé, open source.

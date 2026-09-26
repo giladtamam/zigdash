@@ -344,8 +344,7 @@ class MqttManager {
     // `connected`, so failed-candidate disconnects don't trigger a reconnect.
     client.connectionMessage = mc.MqttConnectMessage()
         .withClientIdentifier(_clientId)
-        .startClean()
-        .withWillQos(mc.MqttQos.atLeastOnce);
+        .startClean();
     return client;
   }
 

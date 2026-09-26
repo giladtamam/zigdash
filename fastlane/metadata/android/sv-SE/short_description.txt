@@ -1,1 +1,1 @@
-Zigbee2MQTT-dashboard som hittar enheter automatiskt. Reklamfri, öppen källkod.
+Zigbee2MQTT-dashboard som hittar enheter själv. Lokalt, privat, öppen källkod.

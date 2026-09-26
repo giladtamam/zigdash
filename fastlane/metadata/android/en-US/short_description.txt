@@ -1,1 +1,1 @@
-Zigbee & MQTT smart home dashboard. Auto-discovers Zigbee2MQTT devices. No ads.
+Zigbee2MQTT dashboard: auto-discovers your devices. Local, private, open source.

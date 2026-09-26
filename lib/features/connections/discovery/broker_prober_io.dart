@@ -41,8 +41,7 @@ class SocketMqttProber implements HostProber {
     final id = 'zigdash-scan-${DateTime.now().microsecondsSinceEpoch & 0xffffff}';
     client.connectionMessage = mc.MqttConnectMessage()
         .withClientIdentifier(id)
-        .startClean()
-        .withWillQos(mc.MqttQos.atLeastOnce);
+        .startClean();
 
     try {
       await client.connect();

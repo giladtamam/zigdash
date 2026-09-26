@@ -1,1 +1,1 @@
-Zigbee2MQTT-Dashboard mit Geräteerkennung. Werbefrei, quelloffen, ohne Cloud.
+Zigbee2MQTT-Dashboard mit Geräteerkennung. Lokal, privat, quelloffen.

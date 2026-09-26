@@ -270,9 +270,9 @@ class ConnectDiagnostics {
     client.keepAlivePeriod = 5;
     client.connectTimeoutPeriod = budget.inMilliseconds;
     client.autoReconnect = false; // diagnostics run one shot
-    // No will: the manager sets withWillQos() which emits a will flag with an
-    // empty topic — a spec violation strict brokers (e.g. aedes) reject by
-    // dropping the connection, and a probe connection has no use for a will.
+    // No will. Setting withWillQos() without a will topic emits a CONNECT that
+    // strict brokers (e.g. aedes) reject ("Will QoS must be zero when Will Flag
+    // is 0"); the manager and prober were fixed to match this in 1.9.3.
     client.connectionMessage = mc.MqttConnectMessage()
         .withClientIdentifier(clientId)
         .startClean();
