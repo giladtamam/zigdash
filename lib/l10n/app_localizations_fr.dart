@@ -1602,4 +1602,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deviceMore => 'Plus';
+
+  @override
+  String get sectionLights => 'Lumières';
+
+  @override
+  String get sectionSwitchesCovers => 'Interrupteurs et volets';
+
+  @override
+  String get sectionSensors => 'Capteurs';
+
+  @override
+  String get sectionOther => 'Autres';
+
+  @override
+  String get homeFirstName => 'Ma maison';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'Maison $number';
+  }
 }

@@ -474,5 +474,11 @@
   "deviceControls": "Commandes",
   "deviceBattery": "Batterie {percent} %",
   "deviceToggle": "Allumer ou éteindre",
-  "deviceMore": "Plus"
+  "deviceMore": "Plus",
+  "sectionLights": "Lumières",
+  "sectionSwitchesCovers": "Interrupteurs et volets",
+  "sectionSensors": "Capteurs",
+  "sectionOther": "Autres",
+  "homeFirstName": "Ma maison",
+  "homeNumberedName": "Maison {number}"
 }

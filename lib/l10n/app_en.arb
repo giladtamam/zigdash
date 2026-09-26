@@ -552,5 +552,12 @@
   "deviceBattery": "Battery {percent}%",
   "@deviceBattery": {"placeholders": {"percent": {"type": "int"}}},
   "deviceToggle": "Turn on or off",
-  "deviceMore": "More"
+  "deviceMore": "More",
+  "sectionLights": "Lights",
+  "sectionSwitchesCovers": "Switches and covers",
+  "sectionSensors": "Sensors",
+  "sectionOther": "Other",
+  "homeFirstName": "My Home",
+  "homeNumberedName": "Home {number}",
+  "@homeNumberedName": {"placeholders": {"number": {"type": "int"}}}
 }

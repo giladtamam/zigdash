@@ -549,5 +549,11 @@
   "deviceControls": "Controles",
   "deviceBattery": "Batería {percent} %",
   "deviceToggle": "Encender o apagar",
-  "deviceMore": "Más"
+  "deviceMore": "Más",
+  "sectionLights": "Luces",
+  "sectionSwitchesCovers": "Interruptores y persianas",
+  "sectionSensors": "Sensores",
+  "sectionOther": "Otros",
+  "homeFirstName": "Mi casa",
+  "homeNumberedName": "Casa {number}"
 }

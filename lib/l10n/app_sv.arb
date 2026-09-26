@@ -549,5 +549,11 @@
   "deviceControls": "Reglage",
   "deviceBattery": "Batteri {percent} %",
   "deviceToggle": "Slå på eller av",
-  "deviceMore": "Mer"
+  "deviceMore": "Mer",
+  "sectionLights": "Belysning",
+  "sectionSwitchesCovers": "Brytare och persienner",
+  "sectionSensors": "Sensorer",
+  "sectionOther": "Övrigt",
+  "homeFirstName": "Mitt hem",
+  "homeNumberedName": "Hem {number}"
 }

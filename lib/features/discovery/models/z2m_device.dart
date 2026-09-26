@@ -75,6 +75,14 @@ class Z2mDevice {
   /// payloads and hand-built fixtures omit the flag and mean "works fine".
   final bool supported;
 
+  /// The device's IEEE address, its stable identity across renames. Null
+  /// only in hand-built fixtures.
+  final String? ieeeAddress;
+
+  /// `definition.exposes` as received, for device-tile classification
+  /// (keeps categories, endpoints and nesting that [exposes] flattens away).
+  final List<Object?> rawExposes;
+
   const Z2mDevice({
     required this.friendlyName,
     required this.type,
@@ -82,6 +90,8 @@ class Z2mDevice {
     this.model,
     this.exposes = const [],
     this.supported = true,
+    this.ieeeAddress,
+    this.rawExposes = const [],
   });
 }
 
@@ -120,6 +130,8 @@ List<Z2mDevice> parseBridgeDevices(String jsonString) {
         model: model,
         exposes: exposes,
         supported: supported,
+        ieeeAddress: map['ieee_address'] as String?,
+        rawExposes: rawExposes,
       ));
     }
 

@@ -2959,6 +2959,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get deviceMore;
+
+  /// No description provided for @sectionLights.
+  ///
+  /// In en, this message translates to:
+  /// **'Lights'**
+  String get sectionLights;
+
+  /// No description provided for @sectionSwitchesCovers.
+  ///
+  /// In en, this message translates to:
+  /// **'Switches and covers'**
+  String get sectionSwitchesCovers;
+
+  /// No description provided for @sectionSensors.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensors'**
+  String get sectionSensors;
+
+  /// No description provided for @sectionOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get sectionOther;
+
+  /// No description provided for @homeFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'My Home'**
+  String get homeFirstName;
+
+  /// No description provided for @homeNumberedName.
+  ///
+  /// In en, this message translates to:
+  /// **'Home {number}'**
+  String homeNumberedName(int number);
 }
 
 class _AppLocalizationsDelegate

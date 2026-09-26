@@ -618,5 +618,11 @@
   "deviceControls": "פקדים",
   "deviceBattery": "סוללה {percent}%",
   "deviceToggle": "הפעלה או כיבוי",
-  "deviceMore": "עוד"
+  "deviceMore": "עוד",
+  "sectionLights": "תאורה",
+  "sectionSwitchesCovers": "מתגים ותריסים",
+  "sectionSensors": "חיישנים",
+  "sectionOther": "אחר",
+  "homeFirstName": "הבית שלי",
+  "homeNumberedName": "בית {number}"
 }

@@ -549,5 +549,11 @@
   "deviceControls": "Steuerung",
   "deviceBattery": "Batterie {percent} %",
   "deviceToggle": "Ein- oder ausschalten",
-  "deviceMore": "Mehr"
+  "deviceMore": "Mehr",
+  "sectionLights": "Licht",
+  "sectionSwitchesCovers": "Schalter und Rollos",
+  "sectionSensors": "Sensoren",
+  "sectionOther": "Sonstiges",
+  "homeFirstName": "Mein Zuhause",
+  "homeNumberedName": "Zuhause {number}"
 }

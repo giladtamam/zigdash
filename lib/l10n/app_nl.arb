@@ -549,5 +549,11 @@
   "deviceControls": "Bediening",
   "deviceBattery": "Batterij {percent}%",
   "deviceToggle": "Aan- of uitzetten",
-  "deviceMore": "Meer"
+  "deviceMore": "Meer",
+  "sectionLights": "Verlichting",
+  "sectionSwitchesCovers": "Schakelaars en rolluiken",
+  "sectionSensors": "Sensoren",
+  "sectionOther": "Overig",
+  "homeFirstName": "Mijn huis",
+  "homeNumberedName": "Huis {number}"
 }

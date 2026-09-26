@@ -1598,4 +1598,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get deviceMore => 'Más';
+
+  @override
+  String get sectionLights => 'Luces';
+
+  @override
+  String get sectionSwitchesCovers => 'Interruptores y persianas';
+
+  @override
+  String get sectionSensors => 'Sensores';
+
+  @override
+  String get sectionOther => 'Otros';
+
+  @override
+  String get homeFirstName => 'Mi casa';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'Casa $number';
+  }
 }

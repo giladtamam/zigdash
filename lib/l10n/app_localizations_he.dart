@@ -1576,4 +1576,24 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get deviceMore => 'עוד';
+
+  @override
+  String get sectionLights => 'תאורה';
+
+  @override
+  String get sectionSwitchesCovers => 'מתגים ותריסים';
+
+  @override
+  String get sectionSensors => 'חיישנים';
+
+  @override
+  String get sectionOther => 'אחר';
+
+  @override
+  String get homeFirstName => 'הבית שלי';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'בית $number';
+  }
 }

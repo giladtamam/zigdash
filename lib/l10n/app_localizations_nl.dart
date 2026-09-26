@@ -1597,4 +1597,24 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get deviceMore => 'Meer';
+
+  @override
+  String get sectionLights => 'Verlichting';
+
+  @override
+  String get sectionSwitchesCovers => 'Schakelaars en rolluiken';
+
+  @override
+  String get sectionSensors => 'Sensoren';
+
+  @override
+  String get sectionOther => 'Overig';
+
+  @override
+  String get homeFirstName => 'Mijn huis';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'Huis $number';
+  }
 }

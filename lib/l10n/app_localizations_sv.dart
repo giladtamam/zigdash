@@ -1589,4 +1589,24 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get deviceMore => 'Mer';
+
+  @override
+  String get sectionLights => 'Belysning';
+
+  @override
+  String get sectionSwitchesCovers => 'Brytare och persienner';
+
+  @override
+  String get sectionSensors => 'Sensorer';
+
+  @override
+  String get sectionOther => 'Övrigt';
+
+  @override
+  String get homeFirstName => 'Mitt hem';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'Hem $number';
+  }
 }

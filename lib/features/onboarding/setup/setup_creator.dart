@@ -1,9 +1,16 @@
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
+import 'package:flutter/widgets.dart' show Locale;
+
+import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/panel_repo.dart';
+import '../../../data/repositories/section_repo.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../devices/device_profile.dart';
 import '../../discovery/models/device_panel_suggestion.dart';
 import '../../panels/models/panel_config.dart';
+import '../demo_service.dart' show isDemoConnection;
 import 'recommendation_policy.dart';
 
 /// The outcome of the idempotent setup-creation operation.
@@ -47,14 +54,20 @@ class SetupCreator implements SetupStore {
   SetupCreator({
     required ConnectionRepo connections,
     required DashboardRepo dashboards,
+    required SectionRepo sections,
     required PanelRepo panels,
+    AppLocalizations? l10n,
   })  : _connections = connections,
         _dashboards = dashboards,
-        _panels = panels;
+        _sections = sections,
+        _panels = panels,
+        _l10n = l10n ?? lookupAppLocalizations(const Locale('en'));
 
   final ConnectionRepo _connections;
   final DashboardRepo _dashboards;
+  final SectionRepo _sections;
   final PanelRepo _panels;
+  final AppLocalizations _l10n;
 
   SetupResult? _done;
 
@@ -78,7 +91,7 @@ class SetupCreator implements SetupStore {
     String? dashboardId;
     try {
       connectionId = await _connections.create(
-        name: host,
+        name: await _homeName(),
         host: host,
         port: port,
         protocol: protocol,
@@ -93,23 +106,7 @@ class SetupCreator implements SetupStore {
         colorSeed: dashboardColor,
         iconCodepoint: dashboardIcon,
       );
-      var count = 0;
-      for (final row in selected) {
-        final s = row.suggestion;
-        await _panels.create(
-          dashboardId: dashboardId,
-          name: s.name,
-          type: s.type,
-          // Suffixes under the device's prefix, as the panel form stores
-          // them: PanelTile composes prefix + suffix.
-          topic: s.publishTopicSuffix,
-          subscribeTopic: s.subscribeTopicSuffix,
-          topicPrefixOverride: s.topicPrefixOverride,
-          sortOrder: count,
-          config: panelConfigFor(s),
-        );
-        count++;
-      }
+      final count = await _createTiles(dashboardId, base, selected);
       return _done = SetupResult(
         connectionId: connectionId,
         dashboardId: dashboardId,
@@ -132,6 +129,125 @@ class SetupCreator implements SetupStore {
     }
   }
 }
+
+extension on SetupCreator {
+  /// "My Home" for the first real home, then "Home 2", "Home 3"…; the host
+  /// stays visible in the Homes list.
+  Future<String> _homeName() async {
+    final homes = (await _connections.watchAll().first)
+        .where((c) => !isDemoConnection(c.host))
+        .length;
+    return homes == 0 ? _l10n.homeFirstName : _l10n.homeNumberedName(homes + 1);
+  }
+
+  /// One device tile per selected device, grouped into sections by class
+  /// (Lights; Switches and covers; Sensors; Other), each section created
+  /// only when it has tiles. A device without an IEEE address (hand-built
+  /// fixtures only) falls back to its raw suggested panel.
+  Future<int> _createTiles(
+    String dashboardId,
+    String base,
+    List<ReviewRow> selected,
+  ) async {
+    final groups = <_Group, List<ReviewRow>>{};
+    for (final row in selected) {
+      final group = row.device.ieeeAddress == null
+          ? _Group.none
+          : _groupOf(classifyExposes(row.device.rawExposes).deviceClass);
+      (groups[group] ??= []).add(row);
+    }
+    var count = 0;
+    var sectionOrder = 0;
+    for (final group in _Group.values) {
+      final rows = groups[group];
+      if (rows == null) continue;
+      final sectionId = group == _Group.none
+          ? null
+          : await _sections.create(
+              dashboardId: dashboardId,
+              name: switch (group) {
+                _Group.lights => _l10n.sectionLights,
+                _Group.switches => _l10n.sectionSwitchesCovers,
+                _Group.sensors => _l10n.sectionSensors,
+                _Group.other || _Group.none => _l10n.sectionOther,
+              },
+              sortOrder: sectionOrder++,
+            );
+      for (final row in rows) {
+        if (row.device.ieeeAddress == null) {
+          await _createSuggested(dashboardId, row.suggestion, count);
+        } else {
+          await _createDevice(dashboardId, base, row, sectionId, count);
+        }
+        count++;
+      }
+    }
+    return count;
+  }
+
+  Future<void> _createDevice(
+    String dashboardId,
+    String base,
+    ReviewRow row,
+    String? sectionId,
+    int sortOrder,
+  ) {
+    final device = row.device;
+    final profile = classifyExposes(device.rawExposes);
+    final model = [?device.vendor, ?device.model].join(' ');
+    return _panels.create(
+      dashboardId: dashboardId,
+      name: device.friendlyName,
+      type: PanelType.device,
+      topic: 'set',
+      subscribeTopic: '',
+      topicPrefixOverride: '$base/${device.friendlyName}',
+      width: switch (profile.deviceClass) {
+        DeviceClass.colorLight || DeviceClass.cover => PanelWidth.wide,
+        _ => PanelWidth.small,
+      },
+      sortOrder: sortOrder,
+      sectionId: sectionId,
+      deviceIeee: device.ieeeAddress,
+      config: DeviceTileConfig(
+        profile: profile,
+        model: model.isEmpty ? null : model,
+      ),
+    );
+  }
+
+  Future<void> _createSuggested(
+    String dashboardId,
+    PanelSuggestion s,
+    int sortOrder,
+  ) =>
+      _panels.create(
+        dashboardId: dashboardId,
+        name: s.name,
+        type: s.type,
+        // Suffixes under the device's prefix, as the panel form stores
+        // them: PanelTile composes prefix + suffix.
+        topic: s.publishTopicSuffix,
+        subscribeTopic: s.subscribeTopicSuffix,
+        topicPrefixOverride: s.topicPrefixOverride,
+        sortOrder: sortOrder,
+        config: panelConfigFor(s),
+      );
+}
+
+/// Setup's sections, in dashboard order.
+enum _Group { lights, switches, sensors, other, none }
+
+_Group _groupOf(DeviceClass c) => switch (c) {
+      DeviceClass.colorLight || DeviceClass.light => _Group.lights,
+      DeviceClass.switchPlug || DeviceClass.cover => _Group.switches,
+      DeviceClass.leakSmoke ||
+      DeviceClass.contact ||
+      DeviceClass.motion ||
+      DeviceClass.climate =>
+        _Group.sensors,
+      DeviceClass.generic => _Group.other,
+    };
 
 /// Maps a panel suggestion to its type-specific config. Unknown/unsupported
 /// mappings fall back to the panel type's default config.

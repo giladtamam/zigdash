@@ -7,6 +7,7 @@ import 'package:zigdash/app.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/data/repositories/dashboard_repo.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
+import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics_provider.dart';
 import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
@@ -41,6 +42,7 @@ void main() {
             creator: SetupCreator(
               connections: ref.watch(connectionRepoProvider),
               dashboards: ref.watch(dashboardRepoProvider),
+              sections: ref.watch(sectionRepoProvider),
               panels: ref.watch(panelRepoProvider),
             ),
           );
