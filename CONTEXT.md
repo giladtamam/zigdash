@@ -30,6 +30,6 @@
 
 **Demo mode** — a sample connection and dashboard with no real broker, marked as demo on screen and removed when real setup completes.
 
-**Last-known value** — a panel's most recent received value while its broker is unreachable; shown, but marked stale.
+**Last-known value** — a tile's most recent received value, kept on the phone across restarts, shown when the value is not fresh (broker unreachable, or not yet reported since connecting) and marked stale with its age. Never leaves the device, not even in Android backups.
 
 **Successful session** — a calendar day on which the user sent a command and received a confirming state update. Counted locally for the rating prompt; nothing leaves the device.
