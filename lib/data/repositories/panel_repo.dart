@@ -106,6 +106,15 @@ class PanelRepo {
     );
   }
 
+  /// Links a tile to a device by IEEE address, or unlinks it (null).
+  Future<void> setDevice(String id, String? ieee) => _dao.updateById(
+        id,
+        PanelsCompanion(
+          deviceIeee: Value(ieee),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+
   Future<void> setWidth(String id, PanelWidth width) => _dao.updateById(
         id,
         PanelsCompanion(

@@ -1945,4 +1945,40 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get scenesSelect => 'Select a scene to edit';
+
+  @override
+  String get panelFormTopic => 'Topic';
+
+  @override
+  String get panelFormPickDevice => 'Pick a device';
+
+  @override
+  String get panelFormStateTopic => 'State topic';
+
+  @override
+  String get panelFormCommandTopic => 'Command topic';
+
+  @override
+  String get panelFormCommandTopicDerived =>
+      'Filled from the state topic until you change it.';
+
+  @override
+  String panelFormLinkedTo(Object device) {
+    return 'Linked to $device';
+  }
+
+  @override
+  String get panelFormOpenDevice => 'Open device';
+
+  @override
+  String get panelFormUnlink => 'Unlink';
+
+  @override
+  String get panelFormValueChoices => 'Values from this device';
+
+  @override
+  String get panelFormAdvanced => 'Advanced';
+
+  @override
+  String get panelFormAdvancedSubtitle => 'Prefix override, QoS, retain';
 }

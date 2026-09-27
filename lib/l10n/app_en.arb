@@ -667,5 +667,17 @@
   "homeSwitchTo": "Switch to this home",
   "homeDelete": "Delete home",
   "devicesSelect": "Select a device",
-  "scenesSelect": "Select a scene to edit"
+  "scenesSelect": "Select a scene to edit",
+  "panelFormTopic": "Topic",
+  "panelFormPickDevice": "Pick a device",
+  "panelFormStateTopic": "State topic",
+  "panelFormCommandTopic": "Command topic",
+  "panelFormCommandTopicDerived": "Filled from the state topic until you change it.",
+  "panelFormLinkedTo": "Linked to {device}",
+  "@panelFormLinkedTo": {"placeholders": {"device": {}}},
+  "panelFormOpenDevice": "Open device",
+  "panelFormUnlink": "Unlink",
+  "panelFormValueChoices": "Values from this device",
+  "panelFormAdvanced": "Advanced",
+  "panelFormAdvancedSubtitle": "Prefix override, QoS, retain"
 }

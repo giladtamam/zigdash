@@ -3,6 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/routes.dart';
+import '../../devices/device_profile.dart';
+import '../../devices/device_tiles.dart';
+import '../../devices/devices_providers.dart';
+import '../../discovery/models/z2m_device.dart';
+import '../../discovery/providers/discovery_provider.dart';
+import '../widgets/device_tile_panel.dart' show deviceClassIcon;
 import '../../../data/database/tables/panels.dart';
 import '../../../mqtt/json_path.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -14,6 +21,7 @@ import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
 
 part 'panel_form_screen.fields.dart';
+part 'panel_form_screen.topics.dart';
 
 enum SliderPreset { brightness, position }
 
@@ -148,6 +156,14 @@ class _State extends ConsumerState<PanelFormScreen> {
   bool _loaded = false;
   bool _saving = false;
   String? _topicPrefixHint;
+
+  /// The device this tile shows (`panels.deviceIeee`), set by "Pick a
+  /// device" or kept from the tile; null for a plain MQTT tile.
+  String? _deviceIeee;
+
+  /// The command topic was typed by the user: stop deriving it from the
+  /// state topic.
+  bool _commandEdited = false;
 
   bool get _isEdit => widget.panelId != null;
 
@@ -301,6 +317,8 @@ class _State extends ConsumerState<PanelFormScreen> {
     _topic.text = p.topic;
     _subscribeTopic.text = p.subscribeTopic ?? '';
     _topicPrefixOverride.text = p.topicPrefixOverride ?? '';
+    _deviceIeee = p.deviceIeee;
+    _commandEdited = p.topic != commandFor(p.subscribeTopic ?? p.topic);
     _width = p.width;
     _retain = p.retain;
     _qos = p.qos;
@@ -582,6 +600,7 @@ class _State extends ConsumerState<PanelFormScreen> {
           config: _buildConfig(),
         );
         panelId = widget.panelId!;
+        await repo.setDevice(panelId, _deviceIeee);
       } else {
         panelId = await repo.create(
           dashboardId: widget.dashboardId,
@@ -593,6 +612,7 @@ class _State extends ConsumerState<PanelFormScreen> {
           qos: _qos,
           retain: _retain,
           width: _width,
+          deviceIeee: _deviceIeee,
           config: _buildConfig(),
         );
       }
@@ -731,80 +751,7 @@ class _State extends ConsumerState<PanelFormScreen> {
                   v == null || v.trim().isEmpty ? l10n.fieldRequired : null,
             ),
             const SizedBox(height: 12),
-            if (_type != PanelType.scene)
-              ExpansionTile(
-                tilePadding: EdgeInsets.zero,
-                initiallyExpanded: _isEdit,
-                title: Text('MQTT Settings', style: Theme.of(context).textTheme.titleSmall),
-                children: [
-                  if (_topicPrefixHint != null &&
-                      _topicPrefixHint!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        l10n.panelFormDashboardPrefix(_topicPrefixHint!),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                      ),
-                    ),
-                  TextFormField(
-                    controller: _topicPrefixOverride,
-                    decoration: InputDecoration(
-                      labelText: l10n.panelFormTopicPrefixOverride,
-                      hintText: l10n.panelFormTopicPrefixOverrideHint,
-                      helperText: l10n.panelFormTopicPrefixOverrideHelper,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  if (!_isReadOnly)
-                    TextFormField(
-                      controller: _topic,
-                      decoration: InputDecoration(
-                        labelText: l10n.panelFormPublishTopic,
-                        hintText: l10n.panelFormPublishTopicHint,
-                        helperText: l10n.panelFormPublishTopicHelper,
-                      ),
-                    ),
-                  if (!_isWriteOnly) ...[
-                    if (!_isReadOnly) const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _subscribeTopic,
-                      decoration: InputDecoration(
-                        labelText: _isReadOnly
-                            ? l10n.panelFormTopicSuffix
-                            : l10n.panelFormSubscribeTopic,
-                        hintText: '',
-                        helperText: _isReadOnly
-                            ? l10n.panelFormSubscribeTopicHelperReadOnly
-                            : l10n.panelFormSubscribeTopicHelper,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<int>(
-                    key: ValueKey('qos-$_qos'),
-                    initialValue: _qos,
-                    decoration: InputDecoration(labelText: l10n.panelFormQos),
-                    items: [
-                      DropdownMenuItem(
-                          value: 0, child: Text(l10n.panelFormQos0)),
-                      DropdownMenuItem(
-                          value: 1, child: Text(l10n.panelFormQos1)),
-                      DropdownMenuItem(
-                          value: 2, child: Text(l10n.panelFormQos2)),
-                    ],
-                    onChanged: (v) =>
-                        v == null ? null : setState(() => _qos = v),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(l10n.panelFormRetain),
-                    value: _retain,
-                    onChanged: (v) => setState(() => _retain = v),
-                  ),
-                ],
-              ),
+            if (_type != PanelType.scene) ..._topicBlock(),
             const SizedBox(height: 12),
             if (_loaded) _buildLivePreview(),
             ..._typeSpecificFields(),
@@ -826,6 +773,7 @@ class _State extends ConsumerState<PanelFormScreen> {
               ],
               onChanged: (v) => v == null ? null : setState(() => _width = v),
             ),
+            if (_type != PanelType.scene) _advanced(),
           ],
         ),
       ),

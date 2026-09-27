@@ -3601,6 +3601,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a scene to edit'**
   String get scenesSelect;
+
+  /// No description provided for @panelFormTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get panelFormTopic;
+
+  /// No description provided for @panelFormPickDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a device'**
+  String get panelFormPickDevice;
+
+  /// No description provided for @panelFormStateTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'State topic'**
+  String get panelFormStateTopic;
+
+  /// No description provided for @panelFormCommandTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Command topic'**
+  String get panelFormCommandTopic;
+
+  /// No description provided for @panelFormCommandTopicDerived.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled from the state topic until you change it.'**
+  String get panelFormCommandTopicDerived;
+
+  /// No description provided for @panelFormLinkedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked to {device}'**
+  String panelFormLinkedTo(Object device);
+
+  /// No description provided for @panelFormOpenDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Open device'**
+  String get panelFormOpenDevice;
+
+  /// No description provided for @panelFormUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get panelFormUnlink;
+
+  /// No description provided for @panelFormValueChoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Values from this device'**
+  String get panelFormValueChoices;
+
+  /// No description provided for @panelFormAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get panelFormAdvanced;
+
+  /// No description provided for @panelFormAdvancedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefix override, QoS, retain'**
+  String get panelFormAdvancedSubtitle;
 }
 
 class _AppLocalizationsDelegate
