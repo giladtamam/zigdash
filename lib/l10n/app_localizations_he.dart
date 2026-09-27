@@ -1795,4 +1795,108 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get statusSettings => 'הגדרות חיבור';
+
+  @override
+  String get deviceAddToDashboard => 'Add to a dashboard';
+
+  @override
+  String get deviceDismiss => 'Dismiss';
+
+  @override
+  String get devicesFilterAll => 'All';
+
+  @override
+  String devicesFilterAttention(int count) {
+    return 'Needs attention · $count';
+  }
+
+  @override
+  String devicesFilterUnassigned(int count) {
+    return 'Not on a dashboard · $count';
+  }
+
+  @override
+  String get devicesNoMatch => 'No devices match';
+
+  @override
+  String get deviceBatteryLow => 'Battery low';
+
+  @override
+  String get deviceLinkWeak => 'Weak';
+
+  @override
+  String get deviceUnsupported => 'Not supported by Zigbee2MQTT';
+
+  @override
+  String get deviceInterviewFailed => 'Pairing didn\'t finish';
+
+  @override
+  String get deviceNoReport => 'No report yet';
+
+  @override
+  String get devicesAvailabilityOff =>
+      'Zigbee2MQTT availability is off, so offline devices show as Not responding.';
+
+  @override
+  String get devicesAvailabilityHow => 'How to turn it on';
+
+  @override
+  String get devicesDotBattery => 'Battery low';
+
+  @override
+  String get deviceDetails => 'Device details';
+
+  @override
+  String get deviceGone => 'This device is no longer in Zigbee2MQTT.';
+
+  @override
+  String get deviceControlTitle => 'Control';
+
+  @override
+  String get deviceReadingsTitle => 'Readings';
+
+  @override
+  String get deviceHealthTitle => 'Health';
+
+  @override
+  String get deviceOnDashboards => 'On dashboards';
+
+  @override
+  String get deviceUnsupportedBody =>
+      'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.';
+
+  @override
+  String get deviceAddReadingTile => 'Add as reading tile';
+
+  @override
+  String get deviceAddReadingTo => 'Add to which dashboard?';
+
+  @override
+  String deviceAddedTo(Object dashboard) {
+    return 'Added to $dashboard';
+  }
+
+  @override
+  String get deviceLinkQuality => 'Link quality';
+
+  @override
+  String get deviceLinkGood => 'Good';
+
+  @override
+  String get devicePowerSource => 'Power source';
+
+  @override
+  String get devicePowerBattery => 'Battery';
+
+  @override
+  String get devicePowerMains => 'Mains';
+
+  @override
+  String get deviceLastHeard => 'Last heard';
+
+  @override
+  String get deviceAvailability => 'Availability';
+
+  @override
+  String get deviceAvailabilityOff => 'Off in Zigbee2MQTT';
 }

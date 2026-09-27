@@ -10,6 +10,7 @@ import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/devices/device_health.dart';
 import 'package:zigdash/features/devices/device_registry.dart';
 import 'package:zigdash/features/devices/devices_providers.dart';
+import 'package:zigdash/features/devices/z2m_bridge.dart';
 import 'package:zigdash/features/devices/screens/devices_screen.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
@@ -101,12 +102,28 @@ List<Override> _overrides() => [
       discoveredDevicesProvider.overrideWith((ref, _) async => _devices),
       linkedIeeesProvider
           .overrideWith((ref, _) => Stream.value({'0x6ce4a4fffe6d2f80'})),
-      deviceHealthProvider.overrideWith((ref, _) => Stream.value(const [
-            DeviceHealth(friendlyName: '0xc4d7fdbbfeba0000', linkQuality: 68),
-            DeviceHealth(friendlyName: 'garden_relay', linkQuality: 76),
-            DeviceHealth(
-                friendlyName: 'front_door', battery: 91, linkQuality: 120),
-          ])),
+      deviceHealthProvider.overrideWith((ref, _) => Stream.value(
+            deviceHealthFrom(_devices, states: {
+              '0xc4d7fdbbfeba0000': (
+                payload: '{"state":"ON","brightness":180,"linkquality":68}',
+                at: DateTime(2026, 9, 26)
+              ),
+              'garden_relay': (
+                payload: '{"state":"OFF","linkquality":76}',
+                at: DateTime(2026, 9, 26)
+              ),
+              'front_door': (
+                payload: '{"contact":true,"battery":91,"linkquality":120}',
+                at: DateTime(2026, 9, 26)
+              ),
+            }),
+          )),
+      availabilityConfigProvider.overrideWith(
+          (ref, _) => Stream.value(AvailabilityConfig.unknown)),
+      batteryAlertsProvider.overrideWith((ref, _) => Stream.value(const {})),
+      batteryWatchProvider.overrideWith((ref, _) {}),
+      unassignedDevicesProvider
+          .overrideWith((ref, _) => const AsyncValue.data([])),
       sectionsForDashboardProvider
           .overrideWith((ref, _) => Stream.value(const <Section>[])),
       panelsForDashboardProvider

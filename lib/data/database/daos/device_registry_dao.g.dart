@@ -10,6 +10,8 @@ mixin _$DeviceRegistryDaoMixin on DatabaseAccessor<AppDatabase> {
   $PanelsTable get panels => attachedDatabase.panels;
   $DeviceDismissalsTable get deviceDismissals =>
       attachedDatabase.deviceDismissals;
+  $DeviceHealthFlagsTable get deviceHealthFlags =>
+      attachedDatabase.deviceHealthFlags;
   DeviceRegistryDaoManager get managers => DeviceRegistryDaoManager(this);
 }
 
@@ -28,5 +30,10 @@ class DeviceRegistryDaoManager {
       $$DeviceDismissalsTableTableManager(
         _db.attachedDatabase,
         _db.deviceDismissals,
+      );
+  $$DeviceHealthFlagsTableTableManager get deviceHealthFlags =>
+      $$DeviceHealthFlagsTableTableManager(
+        _db.attachedDatabase,
+        _db.deviceHealthFlags,
       );
 }

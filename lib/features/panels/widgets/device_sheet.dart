@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/routes.dart';
 import '../../../data/database/database.dart';
 import '../../devices/device_profile.dart';
 import '../../devices/device_state.dart';
@@ -65,7 +67,6 @@ class DeviceSheet extends ConsumerWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final profile = config.profile;
-    final cls = profile.deviceClass;
     final payload = ref
         .watch(panelValueProvider(PanelStreamKey(
           connectionId: connectionId,
@@ -74,21 +75,103 @@ class DeviceSheet extends ConsumerWidget {
         )))
         .valueOrNull;
     final state = DeviceState(profile, decodeDeviceState(payload));
+    final ieee = panel.deviceIeee;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(
+                deviceClassIcon(profile.deviceClass, alarm: state.alarm),
+                size: 32),
+            title: Text(panel.name, style: theme.textTheme.titleLarge),
+            subtitle: Text([
+              deviceStateLine(state, l10n),
+              ?config.model,
+            ].join(' · ')),
+          ),
+          if (ieee != null)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                icon: const Icon(Icons.info_outline),
+                label: Text(l10n.deviceDetails),
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.push(Routes.homeDevice(connectionId, ieee));
+                },
+              ),
+            ),
+          DeviceControls(
+            connectionId: connectionId,
+            publishTopic: publishTopic,
+            profile: profile,
+            state: state,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A device's controls and values, as in its tile's sheet: switches (one per
+/// endpoint), brightness, white, colour, cover actions and position, the
+/// writable exposes of a generic device, then readings and battery. With
+/// [readings] false only the controls are drawn (the device page lists
+/// values in its own card).
+class DeviceControls extends ConsumerWidget {
+  const DeviceControls({
+    super.key,
+    required this.connectionId,
+    required this.publishTopic,
+    required this.profile,
+    required this.state,
+    this.readings = true,
+  });
+
+  final String connectionId;
+  final String publishTopic;
+  final DeviceProfile profile;
+  final DeviceState state;
+  final bool readings;
+
+  /// Whether [DeviceControls] draws anything besides readings for [profile].
+  static bool hasControls(DeviceProfile profile) =>
+      profile.switches.isNotEmpty ||
+      profile.brightness != null ||
+      profile.colorTemp != null ||
+      profile.deviceClass == DeviceClass.cover ||
+      genericControls(profile).isNotEmpty;
+
+  /// A generic device's settable exposes that are not already switches.
+  static List<DeviceFeature> genericControls(DeviceProfile profile) =>
+      profile.deviceClass != DeviceClass.generic
+          ? const []
+          : [
+              for (final f in profile.normal)
+                if (f.settable &&
+                    f.type != 'composite' &&
+                    !profile.switches.contains(f) &&
+                    (f.type == 'binary' ||
+                        (f.type == 'numeric' && f.min != null && f.max != null) ||
+                        (f.type == 'enum' && (f.values?.isNotEmpty ?? false))))
+                  f,
+            ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final cls = profile.deviceClass;
 
     Future<void> send(Map<String, Object?> command) => sendDeviceCommand(
         context, ref, connectionId, publishTopic, command);
 
-    final children = <Widget>[
-      ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: Icon(deviceClassIcon(cls, alarm: state.alarm), size: 32),
-        title: Text(panel.name, style: theme.textTheme.titleLarge),
-        subtitle: Text([
-          deviceStateLine(state, l10n),
-          ?config.model,
-        ].join(' · ')),
-      ),
-    ];
+    final children = <Widget>[];
 
     final switches = profile.switches;
     for (final (i, f) in switches.indexed) {
@@ -201,8 +284,73 @@ class DeviceSheet extends ConsumerWidget {
       }
     }
 
-    final readings = profile.readings;
-    for (final f in readings) {
+    for (final f in genericControls(profile)) {
+      final v = state.values[f.property];
+      final label = _humanize(f.property);
+      switch (f.type) {
+        case 'binary':
+          children.add(SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(label),
+            value: v != null && v == (f.valueOn ?? true),
+            onChanged: (on) => send({
+              f.property: on ? (f.valueOn ?? true) : (f.valueOff ?? false),
+            }),
+          ));
+        case 'numeric':
+          children.add(_Labeled(
+            label: label,
+            trailing: v is num ? formatReading(v, f.unit) : '—',
+            child: CommitSlider(
+              label: label,
+              value: v is num ? v.toDouble() : null,
+              min: f.min!.toDouble(),
+              max: f.max!.toDouble(),
+              format: (x) => formatReading(x.round(), f.unit),
+              onChanged: (x) => send({f.property: x.round()}),
+            ),
+          ));
+        case 'enum':
+          final values = f.values!;
+          children.add(_Labeled(
+            label: label,
+            child: values.length <= 4
+                ? SegmentedButton<String>(
+                    segments: [
+                      for (final o in values)
+                        ButtonSegment(value: o, label: Text(_humanize(o))),
+                    ],
+                    selected: {if (values.contains('$v')) '$v'},
+                    emptySelectionAllowed: true,
+                    showSelectedIcon: false,
+                    onSelectionChanged: (sel) {
+                      if (sel.isNotEmpty) send({f.property: sel.first});
+                    },
+                  )
+                : DropdownMenu<String>(
+                    initialSelection: values.contains('$v') ? '$v' : null,
+                    expandedInsets: EdgeInsets.zero,
+                    dropdownMenuEntries: [
+                      for (final o in values)
+                        DropdownMenuEntry(value: o, label: _humanize(o)),
+                    ],
+                    onSelected: (o) {
+                      if (o != null) send({f.property: o});
+                    },
+                  ),
+          ));
+      }
+    }
+
+    if (!readings) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: children,
+      );
+    }
+
+    for (final f in profile.readings) {
       final v = state.reading(f);
       children.add(ListTile(
         contentPadding: EdgeInsets.zero,
@@ -243,13 +391,10 @@ class DeviceSheet extends ConsumerWidget {
       ));
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: children,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: children,
     );
   }
 
@@ -269,10 +414,13 @@ class DeviceSheet extends ConsumerWidget {
     return endpoint[0].toUpperCase() + endpoint.substring(1);
   }
 
-  static String _humanize(String property) {
-    final s = property.replaceAll('_', ' ');
-    return s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
-  }
+  static String _humanize(String property) => humanizeProperty(property);
+}
+
+/// `device_temperature` → "Device temperature".
+String humanizeProperty(String property) {
+  final s = property.replaceAll('_', ' ');
+  return s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }
 
 class _Labeled extends StatelessWidget {

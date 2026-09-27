@@ -83,6 +83,15 @@ class Z2mDevice {
   /// (keeps categories, endpoints and nesting that [exposes] flattens away).
   final List<Object?> rawExposes;
 
+  /// `power_source`, e.g. "Battery" or "Mains (single phase)".
+  final String? powerSource;
+
+  /// `interview_state` (Zigbee2MQTT 2.3+): PENDING, IN_PROGRESS, SUCCESSFUL
+  /// or FAILED. Null on older bridges.
+  final String? interviewState;
+
+  bool get interviewFailed => interviewState == 'FAILED';
+
   const Z2mDevice({
     required this.friendlyName,
     required this.type,
@@ -92,6 +101,8 @@ class Z2mDevice {
     this.supported = true,
     this.ieeeAddress,
     this.rawExposes = const [],
+    this.powerSource,
+    this.interviewState,
   });
 }
 
@@ -132,6 +143,8 @@ List<Z2mDevice> parseBridgeDevices(String jsonString) {
         supported: supported,
         ieeeAddress: map['ieee_address'] as String?,
         rawExposes: rawExposes,
+        powerSource: map['power_source'] as String?,
+        interviewState: map['interview_state'] as String?,
       ));
     }
 

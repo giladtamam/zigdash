@@ -10,6 +10,7 @@ import '../../data/repositories/dashboard_repo.dart';
 import '../../data/repositories/section_repo.dart';
 import '../dashboards/edit_mode.dart';
 import '../devices/device_registry.dart';
+import '../devices/devices_providers.dart';
 import '../panels/widgets/edit_grid.dart' show askSectionName;
 
 /// The navigation shell of one home (docs/design/dashboard-1.12.md §6):
@@ -39,6 +40,18 @@ class HomeShell extends ConsumerWidget {
     final l10n = context.l10n;
     final newDevices =
         ref.watch(unassignedCountProvider(connectionId)).valueOrNull ?? 0;
+    // Battery readings feed the dot while the home is open.
+    final base = ref.watch(homeBaseTopicProvider(connectionId));
+    if (base != null) {
+      ref.watch(batteryWatchProvider((connectionId: connectionId, base: base)));
+    }
+    final lowBatteries =
+        ref.watch(batteryAlertsProvider(connectionId)).valueOrNull?.length ?? 0;
+    final dot = newDevices > 0 || lowBatteries > 0;
+    final dotReason = [
+      if (newDevices > 0) l10n.devicesNewDot,
+      if (lowBatteries > 0) l10n.devicesDotBattery,
+    ].join(', ');
     // Edit mode belongs to a dashboard of this home that still exists.
     final editingId = ref.watch(editModeProvider);
     final editing = editingId != null &&
@@ -69,17 +82,15 @@ class HomeShell extends ConsumerWidget {
           ),
           NavigationDestination(
             icon: Badge(
-              isLabelVisible: newDevices > 0,
+              isLabelVisible: dot,
               child: const Icon(Icons.devices_other_outlined),
             ),
             selectedIcon: Badge(
-              isLabelVisible: newDevices > 0,
+              isLabelVisible: dot,
               child: const Icon(Icons.devices_other),
             ),
             label: l10n.navDevices,
-            tooltip: newDevices > 0
-                ? '${l10n.navDevices}, ${l10n.devicesNewDot}'
-                : null,
+            tooltip: dot ? '${l10n.navDevices}, $dotReason' : null,
           ),
           NavigationDestination(
             icon: const Icon(Icons.auto_awesome_outlined),

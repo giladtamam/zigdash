@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/routes.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -16,7 +17,8 @@ import '../services/automation_config_publisher.dart';
 
 /// The Edit-mode actions of one tile (docs/design/dashboard-1.12.md §7):
 /// size, move to section, edit, duplicate, replace with a device tile
-/// (custom tiles linked to a device), and remove with Undo.
+/// (custom tiles linked to a device), device details (linked tiles), and
+/// remove with Undo.
 Future<void> showTileActions(
   BuildContext context,
   WidgetRef ref, {
@@ -84,6 +86,16 @@ Future<void> showTileActions(
               await repo.duplicate(panel.id);
             },
           ),
+          if (panel.deviceIeee != null)
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: Text(l10n.deviceDetails),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                context.push(
+                    Routes.homeDevice(connectionId, panel.deviceIeee!));
+              },
+            ),
           if (panel.type != PanelType.device && panel.deviceIeee != null)
             ListTile(
               leading: const Icon(Icons.auto_fix_high),

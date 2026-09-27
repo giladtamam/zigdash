@@ -103,3 +103,47 @@ BridgeEvent parseBridgeEvent(String raw) {
     return const BridgeEvent(type: BridgeEventType.unknown);
   }
 }
+
+/// Whether Zigbee2MQTT tracks availability, from the retained `bridge/info`
+/// `config`: the global `availability.enabled` switch (a bare `true` on
+/// older bridges) and per-device `devices.<ieee>.availability` overrides.
+/// Availability messages count only for devices this says are tracked, so a
+/// retained message left from before availability was turned off is ignored.
+class AvailabilityConfig {
+  const AvailabilityConfig({this.enabled = false, this.perDevice = const {}});
+
+  /// Nothing known yet: availability is not counted.
+  static const unknown = AvailabilityConfig();
+
+  final bool enabled;
+
+  /// IEEE address → tracked, for devices with their own setting.
+  final Map<String, bool> perDevice;
+
+  bool tracks(String? ieee) => perDevice[ieee] ?? enabled;
+
+  /// True when any device is tracked.
+  bool get any => enabled || perDevice.values.any((v) => v);
+}
+
+AvailabilityConfig parseAvailabilityConfig(String bridgeInfo) {
+  try {
+    final info = jsonDecode(bridgeInfo);
+    final config = info is Map ? info['config'] : null;
+    if (config is! Map) return AvailabilityConfig.unknown;
+    final a = config['availability'];
+    final enabled = a == true || (a is Map && a['enabled'] == true);
+    final perDevice = <String, bool>{};
+    final devices = config['devices'];
+    if (devices is Map) {
+      devices.forEach((ieee, options) {
+        final v = options is Map ? options['availability'] : null;
+        if (v == null) return;
+        perDevice[ieee as String] = v != false;
+      });
+    }
+    return AvailabilityConfig(enabled: enabled, perDevice: perDevice);
+  } catch (_) {
+    return AvailabilityConfig.unknown;
+  }
+}

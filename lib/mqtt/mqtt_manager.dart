@@ -145,6 +145,20 @@ class MqttManager {
   /// them as last known, never fresh.
   final Map<String, MqttRxMessage> _lastKnown = {};
 
+  /// The newest message per topic received in this app session.
+  final Map<String, MqttRxMessage> _latest = {};
+
+  /// The newest message for every topic starting with [prefix]: this
+  /// session's live messages, else saved last-known values. Lets a
+  /// wildcard subscriber start from what is already known, since only
+  /// exact-topic subscriptions replay.
+  List<MqttRxMessage> latestUnder(String prefix) => [
+        for (final m in _latest.values)
+          if (m.topic.startsWith(prefix)) m,
+        for (final m in _lastKnown.values)
+          if (m.topic.startsWith(prefix) && !_latest.containsKey(m.topic)) m,
+      ];
+
   /// Seeds saved values (loaded before [connect]). A later subscription to
   /// an exact topic starts with its saved value.
   void seedLastKnown(Iterable<MqttRxMessage> messages) {
@@ -489,6 +503,7 @@ class MqttManager {
 
   void _fanOut(MqttRxMessage message) {
     _lastKnown.remove(message.topic);
+    _latest[message.topic] = message;
     if (!_messages.isClosed) _messages.add(message);
     for (final entry in _subs.values) {
       if (topicMatches(entry.pattern, message.topic)) {

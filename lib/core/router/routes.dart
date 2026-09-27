@@ -21,6 +21,10 @@ class Routes {
   static String homeDevices(String connectionId) =>
       '/connections/$connectionId/devices';
 
+  /// The device page, by IEEE address so it follows renames.
+  static String homeDevice(String connectionId, String ieee) =>
+      '/connections/$connectionId/devices/$ieee';
+
   static String homeScenes(String connectionId) =>
       '/connections/$connectionId/scenes';
 

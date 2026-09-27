@@ -3361,6 +3361,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connection settings'**
   String get statusSettings;
+
+  /// No description provided for @deviceAddToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to a dashboard'**
+  String get deviceAddToDashboard;
+
+  /// No description provided for @deviceDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get deviceDismiss;
+
+  /// No description provided for @devicesFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get devicesFilterAll;
+
+  /// No description provided for @devicesFilterAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention · {count}'**
+  String devicesFilterAttention(int count);
+
+  /// No description provided for @devicesFilterUnassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on a dashboard · {count}'**
+  String devicesFilterUnassigned(int count);
+
+  /// No description provided for @devicesNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices match'**
+  String get devicesNoMatch;
+
+  /// No description provided for @deviceBatteryLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get deviceBatteryLow;
+
+  /// No description provided for @deviceLinkWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get deviceLinkWeak;
+
+  /// No description provided for @deviceUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Not supported by Zigbee2MQTT'**
+  String get deviceUnsupported;
+
+  /// No description provided for @deviceInterviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing didn\'t finish'**
+  String get deviceInterviewFailed;
+
+  /// No description provided for @deviceNoReport.
+  ///
+  /// In en, this message translates to:
+  /// **'No report yet'**
+  String get deviceNoReport;
+
+  /// No description provided for @devicesAvailabilityOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT availability is off, so offline devices show as Not responding.'**
+  String get devicesAvailabilityOff;
+
+  /// No description provided for @devicesAvailabilityHow.
+  ///
+  /// In en, this message translates to:
+  /// **'How to turn it on'**
+  String get devicesAvailabilityHow;
+
+  /// No description provided for @devicesDotBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get devicesDotBattery;
+
+  /// No description provided for @deviceDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Device details'**
+  String get deviceDetails;
+
+  /// No description provided for @deviceGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This device is no longer in Zigbee2MQTT.'**
+  String get deviceGone;
+
+  /// No description provided for @deviceControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Control'**
+  String get deviceControlTitle;
+
+  /// No description provided for @deviceReadingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Readings'**
+  String get deviceReadingsTitle;
+
+  /// No description provided for @deviceHealthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get deviceHealthTitle;
+
+  /// No description provided for @deviceOnDashboards.
+  ///
+  /// In en, this message translates to:
+  /// **'On dashboards'**
+  String get deviceOnDashboards;
+
+  /// No description provided for @deviceUnsupportedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.'**
+  String get deviceUnsupportedBody;
+
+  /// No description provided for @deviceAddReadingTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add as reading tile'**
+  String get deviceAddReadingTile;
+
+  /// No description provided for @deviceAddReadingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to which dashboard?'**
+  String get deviceAddReadingTo;
+
+  /// No description provided for @deviceAddedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {dashboard}'**
+  String deviceAddedTo(Object dashboard);
+
+  /// No description provided for @deviceLinkQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Link quality'**
+  String get deviceLinkQuality;
+
+  /// No description provided for @deviceLinkGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get deviceLinkGood;
+
+  /// No description provided for @devicePowerSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Power source'**
+  String get devicePowerSource;
+
+  /// No description provided for @devicePowerBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get devicePowerBattery;
+
+  /// No description provided for @devicePowerMains.
+  ///
+  /// In en, this message translates to:
+  /// **'Mains'**
+  String get devicePowerMains;
+
+  /// No description provided for @deviceLastHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'Last heard'**
+  String get deviceLastHeard;
+
+  /// No description provided for @deviceAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get deviceAvailability;
+
+  /// No description provided for @deviceAvailabilityOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off in Zigbee2MQTT'**
+  String get deviceAvailabilityOff;
 }
 
 class _AppLocalizationsDelegate

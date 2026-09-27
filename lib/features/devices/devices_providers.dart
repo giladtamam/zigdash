@@ -1,4 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../data/database/daos/device_registry_dao.dart';
+import '../../data/database/database.dart';
+import '../../mqtt/mqtt_manager.dart';
+import '../discovery/models/z2m_device.dart';
+import 'device_profile.dart';
+import 'device_state_refresher.dart';
 
 import '../../data/repositories/connection_repo.dart';
 import '../../data/repositories/dashboard_repo.dart';
@@ -40,48 +49,177 @@ final homeBaseTopicProvider =
 typedef DeviceHealthArgs = ({String connectionId, String base});
 typedef BridgeEventArgs = ({String connectionId, String base});
 
-/// Streams a continuously-updated list of [DeviceHealth] for all devices
-/// under [base].  Subscribes to `$base/#` for state and availability updates.
-final deviceHealthProvider = StreamProvider.autoDispose
-    .family<List<DeviceHealth>, DeviceHealthArgs>((ref, args) async* {
-  final connectionId = args.connectionId;
-  final base = args.base;
-
-  // Resolve MQTT manager.
-  final mgr = await ref.read(mqttManagerProvider(connectionId).future);
-
-  // Fetch the device list (reuse discovery provider).
-  final devices = await ref
-      .watch(discoveredDevicesProvider((connectionId: connectionId, base: base)).future);
-
-  final stateByName = <String, String>{};
-  final availabilityByName = <String, String>{};
-
-  // Yield initial snapshot immediately (before any state arrives).
-  yield deviceHealthFrom(devices, stateByName, availabilityByName);
-
-  final pattern = '$base/#';
-  final stream = mgr.subscribe(pattern);
-  ref.onDispose(() => mgr.unsubscribe(pattern));
-
+/// Whether the bridge tracks availability, from retained `bridge/info`.
+final availabilityConfigProvider = StreamProvider.autoDispose
+    .family<AvailabilityConfig, DeviceHealthArgs>((ref, args) async* {
+  final mgr = await ref.read(mqttManagerProvider(args.connectionId).future);
+  final topic = '${args.base}/bridge/info';
+  final stream = mgr.subscribe(topic);
+  ref.onDispose(() => mgr.unsubscribe(topic));
+  yield AvailabilityConfig.unknown;
   await for (final msg in stream) {
-    final topic = msg.topic;
-    // Strip the "$base/" prefix to get "rest".
-    if (topic.length <= base.length + 1) continue;
-    final rest = topic.substring(base.length + 1);
-
-    if (rest.startsWith('bridge')) continue;
-
-    if (rest.endsWith('/availability')) {
-      final name = rest.substring(0, rest.length - '/availability'.length);
-      availabilityByName[name] = msg.payload;
-    } else if (!rest.contains('/')) {
-      stateByName[rest] = msg.payload;
-    }
-
-    yield deviceHealthFrom(devices, stateByName, availabilityByName);
+    yield parseAvailabilityConfig(msg.payload);
   }
 });
+
+/// A home's devices with their health, live (devices-tablet-1.13.md §2).
+///
+/// Starts from what is already known (this session's messages, else the
+/// last-known store), then follows `$base/#`. Devices with no state yet are
+/// asked for it once per connection; one that stays silent past
+/// [deviceResponseTimeout] reads "Not responding".
+final deviceHealthProvider = StreamProvider.autoDispose
+    .family<List<DeviceHealth>, DeviceHealthArgs>((ref, args) {
+  final base = args.base;
+  final out = StreamController<List<DeviceHealth>>();
+  final states = <String, ({String payload, DateTime at})>{};
+  final availability = <String, String>{};
+  final stale = <String>{};
+  var generation = -2;
+  var devices = <Z2mDevice>[];
+  var config = AvailabilityConfig.unknown;
+  DeviceStateRefresher? refresher;
+  final timers = <Timer>[];
+
+  Set<String> silent() {
+    final now = DateTime.now();
+    return {
+      for (final d in devices)
+        if (!states.containsKey(d.friendlyName) &&
+            (refresher?.askedAt('$base/${d.friendlyName}')
+                    ?.add(deviceResponseTimeout)
+                    .isBefore(now) ??
+                false))
+          d.friendlyName,
+    };
+  }
+
+  void emit() {
+    if (out.isClosed) return;
+    out.add(deviceHealthFrom(devices,
+        states: states,
+        availability: availability,
+        tracked: config.tracks,
+        notResponding: silent(),
+        stale: stale));
+  }
+
+  void ask() {
+    final r = refresher;
+    if (r == null) return;
+    for (final d in devices) {
+      if (states.containsKey(d.friendlyName)) continue;
+      final topic = '$base/${d.friendlyName}';
+      if (r.askedAt(topic) != null) continue;
+      r.request(topic, classifyExposes(d.rawExposes));
+      timers.add(Timer(deviceResponseTimeout + const Duration(seconds: 1), emit));
+    }
+  }
+
+  void take(MqttRxMessage m) {
+    if (!m.topic.startsWith('$base/')) return;
+    final rest = m.topic.substring(base.length + 1);
+    if (rest.startsWith('bridge/')) return;
+    if (rest.endsWith('/availability')) {
+      availability[rest.substring(0, rest.length - 13)] = m.payload;
+    } else if (!rest.contains('/') && m.payload.isNotEmpty) {
+      states[rest] = (payload: m.payload, at: m.receivedAt);
+      if (m.connectionGeneration == generation) {
+        stale.remove(rest);
+      } else {
+        stale.add(rest);
+      }
+    }
+  }
+
+  ref.listen(
+      bridgeDevicesStreamProvider((connectionId: args.connectionId, base: base)),
+      (_, next) {
+    final d = next.valueOrNull;
+    if (d == null) return;
+    devices = d;
+    ask();
+    emit();
+  }, fireImmediately: true);
+  ref.listen(availabilityConfigProvider(args), (_, next) {
+    config = next.valueOrNull ?? AvailabilityConfig.unknown;
+    emit();
+  }, fireImmediately: true);
+  ref.listen(deviceStateRefresherProvider(args.connectionId), (_, next) {
+    refresher = next.valueOrNull;
+    ask();
+  }, fireImmediately: true);
+
+  () async {
+    final mgr = await ref.read(mqttManagerProvider(args.connectionId).future);
+    if (out.isClosed) return;
+    generation = mgr.connectionGeneration;
+    for (final m in mgr.latestUnder('$base/')) {
+      take(m);
+    }
+    emit();
+    final pattern = '$base/#';
+    final sub = mgr.subscribe(pattern).listen((m) {
+      generation = mgr.connectionGeneration;
+      take(m);
+      emit();
+    });
+    ref.onDispose(() {
+      sub.cancel();
+      mgr.unsubscribe(pattern);
+    });
+  }();
+
+  ref.onDispose(() {
+    for (final t in timers) {
+      t.cancel();
+    }
+    out.close();
+  });
+  return out.stream;
+});
+
+/// Watches a home's live messages while it is open and records battery
+/// readings for the Devices dot ([DeviceRegistryDao.observeBattery]). Uses
+/// the messages the app already receives, adding no subscription.
+final batteryWatchProvider =
+    Provider.autoDispose.family<void, DeviceHealthArgs>((ref, args) {
+  final dao = DeviceRegistryDao(ref.watch(appDatabaseProvider));
+  final base = args.base;
+  var byName = <String, String>{};
+  final lastLow = <String, bool>{};
+  ref.listen(
+      bridgeDevicesStreamProvider((connectionId: args.connectionId, base: base)),
+      (_, next) {
+    final d = next.valueOrNull;
+    if (d == null) return;
+    byName = {
+      for (final x in d)
+        if (x.ieeeAddress != null) x.friendlyName: x.ieeeAddress!,
+    };
+  }, fireImmediately: true);
+  StreamSubscription<MqttRxMessage>? sub;
+  ref.listen(mqttManagerProvider(args.connectionId), (_, next) {
+    sub?.cancel();
+    sub = next.valueOrNull?.messages.listen((m) {
+      if (!m.topic.startsWith('$base/')) return;
+      final ieee = byName[m.topic.substring(base.length + 1)];
+      if (ieee == null) return;
+      final state = parseState(m.payload);
+      final low = state == null ? null : batteryLowIn(state);
+      if (low == null || lastLow[ieee] == low) return;
+      lastLow[ieee] = low;
+      dao.observeBattery(args.connectionId, ieee, low).ignore();
+    });
+  }, fireImmediately: true);
+  ref.onDispose(() => sub?.cancel());
+});
+
+/// Devices whose battery went low while watched and whose page is unseen.
+final batteryAlertsProvider =
+    StreamProvider.autoDispose.family<Set<String>, String>((ref, connectionId) =>
+        DeviceRegistryDao(ref.watch(appDatabaseProvider))
+            .watchBatteryAlerts(connectionId));
 
 /// Streams a map of `friendlyName -> latest raw state JSON` for all devices
 /// under [base]. Used by the scene-capture flow to snapshot device state.

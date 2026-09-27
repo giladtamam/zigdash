@@ -56,3 +56,28 @@ Future<String> createDeviceTile(
     config: DeviceTileConfig(profile: profile, model: deviceModelLabel(device)),
   );
 }
+
+/// Creates a reading tile for one numeric [feature] of [device], linked to
+/// the device so it follows renames and counts as "on a dashboard".
+Future<String> createReadingTile(
+  PanelRepo panels, {
+  required String dashboardId,
+  required String base,
+  required Z2mDevice device,
+  required DeviceFeature feature,
+  required String name,
+  PanelWidth size = PanelWidth.small,
+  required int sortOrder,
+}) =>
+    panels.create(
+      dashboardId: dashboardId,
+      name: name,
+      type: PanelType.reading,
+      topic: '',
+      subscribeTopic: '',
+      topicPrefixOverride: '$base/${device.friendlyName}',
+      width: size,
+      sortOrder: sortOrder,
+      deviceIeee: device.ieeeAddress,
+      config: ReadingConfig(jsonPath: feature.property, unit: feature.unit),
+    );

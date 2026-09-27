@@ -14,6 +14,7 @@ import '../../features/panels/screens/panel_form_screen.dart';
 import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
 import '../../features/panels/screens/add_tile_screen.dart';
+import '../../features/devices/screens/device_page.dart';
 import '../../features/devices/screens/devices_screen.dart';
 import '../../features/home/home_shell.dart';
 import '../../features/scenes/screens/scenes_screen.dart';
@@ -161,6 +162,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: Routes.devices,
             pageBuilder: (_, state) => NoTransitionPage(
                 child: DevicesScreen(connectionId: state.pathParameters['id']!)),
+            routes: [
+              GoRoute(
+                parentNavigatorKey: rootKey,
+                path: ':ieee',
+                builder: (_, state) => DevicePage(
+                  connectionId: state.pathParameters['id']!,
+                  ieee: state.pathParameters['ieee']!,
+                ),
+              ),
+            ],
           ),
           GoRoute(
             path: Routes.scenes,
