@@ -80,6 +80,7 @@ People who find the listing install the app, but few come back. The redesign is 
 | Per-screen notes and exported images | [screens.md](screens.md), [screens/](screens/) |
 | Release 1.12 Dashboard build spec | [dashboard-1.12.md](dashboard-1.12.md) |
 | Release 1.13 Devices and tablet build spec | [devices-tablet-1.13.md](devices-tablet-1.13.md) |
+| Release 2.0 Signal build spec | [signal-2.0.md](signal-2.0.md) |
 | Research: Zigbee2MQTT health data (availability, battery, link quality) | [research/z2m-health-data.md](research/z2m-health-data.md) |
 | Research: classifying Zigbee2MQTT devices | [research/device-classes.md](research/device-classes.md) |
 | Phases, guardrails, store and community plan | [phasing.md](phasing.md) |
@@ -113,3 +114,4 @@ These are in scope for 2.0 but not designed yet. They get decided in the phase t
 - **1.12 Dashboard** is built on `release/1.12-dashboard` as specified in [dashboard-1.12.md](dashboard-1.12.md), version 1.12.0+27. It was checked against the reference SMHUB on 2026-09-26.
 - **1.11.1 and 1.12 are superseded** (decided 2026-09-27): neither ships. 1.13 contains both, and it fixes three bugs that 1.12 had. Its release notes cover everything since 1.11.
 - **1.13 Devices and tablet** is built on `release/1.13-devices-tablet` as specified in [devices-tablet-1.13.md](devices-tablet-1.13.md), version 1.13.0+28. It was checked on 2026-09-27 on the reference SMHUB and the phone, with the tablet layout emulated at 1280 × 800 dp. That check found four bugs, now fixed, and three of them are also in 1.12: tiles emptied after switching tabs, long-press tile actions that did nothing, and an Undo bar that never closed.
+- **2.0 Signal** is designed: [signal-2.0.md](signal-2.0.md), decided 2026-09-27, with boards in the "2.0" row of the canvas (version 13). The build waits for the community reaction round ([docs/growth/2.0-community-round.md](../growth/2.0-community-round.md)).
