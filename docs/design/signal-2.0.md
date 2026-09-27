@@ -124,9 +124,9 @@ Board: H-launcher.
 
 ## Found on the first device run (2.0.0-preview1, 2026-09-27)
 
-- **Material You on (the default) hides most of Signal:** surfaces, navigation and buttons take the wallpaper colors, and only the amber tiles, type and shapes remain. With it off, the app matches the boards. Open question for the user: should new installs default to Signal (Material You off, still offered in Settings)?
-- **The Devices "Weak" chip:** Icons.signal_cellular_alt_1_bar renders as a speck. Use a Symbols glyph.
-- **Device page header and Devices rows:** they use the scheme primary when a device is on. Use SignalColors.active and a filled icon, as the tiles do.
+- **Material You on hid most of Signal**, so its setting now defaults to off. The user decided this 2026-09-27 (ADR 0002 amendment). A choice made before is kept. *Done.*
+- **The Devices "Weak" chip** now uses the Symbols glyph. *Done.*
+- **Device page header and Devices rows** now use amber and a filled icon when a device is on. *Done.*
 
 ## Deferred, with a reason
 

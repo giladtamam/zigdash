@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/signal_colors.dart';
+import '../../../core/theme/signal_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -177,13 +179,17 @@ class _DeviceBody extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
           child: Row(
             children: [
+              // Signal: amber and a filled icon when on, as on the tiles.
               CircleAvatar(
                 radius: 28,
-                backgroundColor:
-                    on ? scheme.primary : scheme.surfaceContainerHighest,
-                foregroundColor: on ? scheme.onPrimary : scheme.onSurface,
-                child: Icon(
+                backgroundColor: on
+                    ? SignalColors.of(context).active
+                    : scheme.surfaceContainerHighest,
+                foregroundColor:
+                    on ? SignalColors.of(context).onActive : scheme.onSurface,
+                child: SignalIcon(
                     deviceClassIcon(profile.deviceClass, alarm: state.alarm),
+                    active: on,
                     size: 30),
               ),
               const SizedBox(width: 14),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../core/theme/signal_icons.dart';
 import '../../../core/theme/signal_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -329,8 +330,10 @@ class DeviceHealthRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                Icon(deviceClassIcon(profile.deviceClass, alarm: state.alarm),
-                    color: on ? scheme.primary : null),
+                SignalIcon(
+                    deviceClassIcon(profile.deviceClass, alarm: state.alarm),
+                    active: on,
+                    color: on ? SignalColors.of(context).active : null),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -386,7 +389,7 @@ class DeviceHealthRow extends StatelessWidget {
       return Icon(Icons.cloud_off, size: 20, color: scheme.error);
     }
     if (health.weakLink) {
-      return chip(Icons.signal_cellular_alt_1_bar, l10n.deviceLinkWeak,
+      return chip(Symbols.signalCellularAlt1Bar, l10n.deviceLinkWeak,
           scheme.surfaceContainerHighest, scheme.onSurfaceVariant);
     }
     return null;

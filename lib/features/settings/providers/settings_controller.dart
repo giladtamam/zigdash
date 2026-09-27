@@ -33,7 +33,9 @@ class SettingsController extends Notifier<AppSettings> {
     final code = _prefs.getString(_kLocale);
     return AppSettings(
       themeMode: _themeModeFromString(_prefs.getString(_kThemeMode)),
-      dynamicColor: _prefs.getBool(_kDynamicColor) ?? true,
+      // Signal by default (decided 2026-09-27); Material You is an option.
+      // A choice the user made before is kept.
+      dynamicColor: _prefs.getBool(_kDynamicColor) ?? false,
       locale: (code == null || code.isEmpty) ? null : Locale(code),
     );
   }
