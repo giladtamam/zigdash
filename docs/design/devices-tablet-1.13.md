@@ -139,6 +139,16 @@ Boards: G-tablet-dashboard, G-tablet-devices.
 6. The device check on the internal track (phone): TalkBack reads the rail or bar and the device page; Hebrew mirrors; strict-broker connect.
 7. CI is green, goldens included.
 
+## Decided in the build
+
+- **Value paths (§5.6)** stay with their type's fields, where the linked device's property choices sit, rather than under Advanced. Advanced holds the prefix override, QoS and retain.
+- **The state-topic hint (§5.2)** was rewritten (`panelFormStateTopicHelper`), since the old one referred to the "Publish topic".
+- **The battery part of the dot (§3)** watches the messages the app already receives, with no extra subscription: devices with a tile on screen, plus every device while the Devices tab or a device page is open. A battery-only device on no dashboard is seen only then.
+- **Rail labels (§7)** are always shown, including at text scale 2.0. The "hide labels if they clip" rule was not built, because the labels fit at 700 and 1280 dp.
+- **Wide readings at expanded width (§7)** apply to "Add as reading tile" on the device page. Add tile's "Reading" row keeps its form.
+- **The Coordinator** was already left out of `bridge/devices` parsing.
+- **Topic fields** always run left to right, also in Hebrew.
+
 ## Deferred, with a reason
 
 - **Thermostat tiles.** No test device.
@@ -146,3 +156,4 @@ Boards: G-tablet-dashboard, G-tablet-devices.
 - **Using `bridge/health` `leave_count`.** A rising count hints at a flaky device, but it is published every 10 minutes and needs history to read; revisit with real reports.
 - **PNG exports of the 1.13 boards.** The canvas is the source of truth; export on request.
 - **Kiosk presentation, Signal identity, motion.** Later phases.
+- **A drag test across a 4-column row and new accessibility widget tests (§9).** The 1.12 drag and "Move earlier / later" tests cover the row packing, which is the same at every column count. The rail and dot are covered by `home_shell_test.dart`.

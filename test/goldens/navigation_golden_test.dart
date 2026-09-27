@@ -49,8 +49,13 @@ final _dashboard = Dashboard(
   updatedAt: _stamp,
 );
 
-Map<String, Object?> _feature(String type, String p) =>
-    {'type': type, 'name': p, 'property': p, 'access': 7};
+Map<String, Object?> _feature(String type, String p) => {
+      'type': type,
+      'name': p,
+      'property': p,
+      'access': 7,
+      if (type == 'binary') ...{'value_on': 'ON', 'value_off': 'OFF'},
+    };
 
 final _devices = [
   Z2mDevice(

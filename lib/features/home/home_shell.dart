@@ -93,10 +93,12 @@ class HomeShell extends ConsumerWidget {
                   label: Text(l10n.navDashboards),
                 ),
                 NavigationRailDestination(
-                  icon: Tooltip(
-                    message: dot ? '${l10n.navDevices}, $dotReason' : '',
-                    child: devicesIcon(Icons.devices_other_outlined),
-                  ),
+                  icon: dot
+                      ? Tooltip(
+                          message: '${l10n.navDevices}, $dotReason',
+                          child: devicesIcon(Icons.devices_other_outlined),
+                        )
+                      : devicesIcon(Icons.devices_other_outlined),
                   selectedIcon: devicesIcon(Icons.devices_other),
                   label: Text(l10n.navDevices),
                 ),

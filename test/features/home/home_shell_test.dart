@@ -7,6 +7,7 @@ import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/devices/device_registry.dart';
+import 'package:zigdash/features/devices/devices_providers.dart';
 import 'package:zigdash/features/home/home_shell.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 
@@ -23,7 +24,8 @@ Connection _home(String id, String name) => Connection(
       updatedAt: _stamp,
     );
 
-Widget _app(List<Connection> homes, {int newDevices = 0}) {
+Widget _app(List<Connection> homes,
+    {int newDevices = 0, Set<String> lowBatteries = const {}}) {
   Widget page(String label, String id) => Scaffold(
         appBar: AppBar(title: HomeTitle(connectionId: id)),
         body: Text(label),
@@ -54,6 +56,9 @@ Widget _app(List<Connection> homes, {int newDevices = 0}) {
       connectionsStreamProvider.overrideWith((ref) => Stream.value(homes)),
       unassignedCountProvider
           .overrideWith((ref, _) => AsyncValue.data(newDevices)),
+      homeBaseTopicProvider.overrideWith((ref, _) => null),
+      batteryAlertsProvider
+          .overrideWith((ref, _) => Stream.value(lowBatteries)),
     ],
     child: MaterialApp.router(
       routerConfig: router,
@@ -96,5 +101,37 @@ void main() {
     await tester.pumpAndSettle();
     final badges = tester.widgetList<Badge>(find.byType(Badge));
     expect(badges.any((b) => b.isLabelVisible), isTrue);
+  });
+
+  testWidgets('a battery that went low also lights the dot, and says so',
+      (tester) async {
+    tester.view.physicalSize = const Size(412, 915);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+        _app([_home('c1', 'My Home')], lowBatteries: {'0x01'}));
+    await tester.pumpAndSettle();
+    final badges = tester.widgetList<Badge>(find.byType(Badge));
+    expect(badges.first.isLabelVisible, isTrue);
+    final devices = tester.widget<NavigationBar>(find.byType(NavigationBar))
+        .destinations[1] as NavigationDestination;
+    expect(devices.tooltip, 'Devices, Battery low');
+  });
+
+  testWidgets('from 600 dp a navigation rail replaces the bar, dot included',
+      (tester) async {
+    tester.view.physicalSize = const Size(700, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(_app([_home('c1', 'My Home')], newDevices: 1));
+    await tester.pumpAndSettle();
+    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
+    expect(
+        tester.widgetList<Badge>(find.byType(Badge)).first.isLabelVisible,
+        isTrue);
+    await tester.tap(find.text('Scenes'));
+    await tester.pumpAndSettle();
+    expect(find.text('scenes c1'), findsOneWidget);
   });
 }

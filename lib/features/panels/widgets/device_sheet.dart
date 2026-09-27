@@ -101,8 +101,9 @@ class DeviceSheet extends ConsumerWidget {
                 icon: const Icon(Icons.info_outline),
                 label: Text(l10n.deviceDetails),
                 onPressed: () {
+                  final router = GoRouter.of(context);
                   Navigator.pop(context);
-                  context.push(Routes.homeDevice(connectionId, ieee));
+                  router.push(Routes.homeDevice(connectionId, ieee));
                 },
               ),
             ),
