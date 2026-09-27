@@ -1811,167 +1811,171 @@ class AppLocalizationsSv extends AppLocalizations {
   String get statusSettings => 'Anslutningsinställningar';
 
   @override
-  String get deviceAddToDashboard => 'Add to a dashboard';
+  String get deviceAddToDashboard => 'Lägg till på en dashboard';
 
   @override
-  String get deviceDismiss => 'Dismiss';
+  String get deviceDismiss => 'Avfärda';
 
   @override
-  String get devicesFilterAll => 'All';
+  String get devicesFilterAll => 'Alla';
 
   @override
   String devicesFilterAttention(int count) {
-    return 'Needs attention · $count';
+    return 'Behöver åtgärd · $count';
   }
 
   @override
   String devicesFilterUnassigned(int count) {
-    return 'Not on a dashboard · $count';
+    return 'Inte på någon panel · $count';
   }
 
   @override
-  String get devicesNoMatch => 'No devices match';
+  String get devicesNoMatch => 'Inga enheter matchar';
 
   @override
-  String get deviceBatteryLow => 'Battery low';
+  String get deviceBatteryLow => 'Lågt batteri';
 
   @override
-  String get deviceLinkWeak => 'Weak';
+  String get deviceLinkWeak => 'Svag';
 
   @override
-  String get deviceUnsupported => 'Not supported by Zigbee2MQTT';
+  String get deviceUnsupported => 'Stöds inte av Zigbee2MQTT';
 
   @override
-  String get deviceInterviewFailed => 'Pairing didn\'t finish';
+  String get deviceInterviewFailed => 'Parkopplingen slutfördes inte';
 
   @override
-  String get deviceNoReport => 'No report yet';
+  String get deviceNoReport => 'Ingen rapport än';
 
   @override
   String get devicesAvailabilityOff =>
-      'Zigbee2MQTT availability is off, so offline devices show as Not responding.';
+      'Tillgänglighet är avstängd i Zigbee2MQTT, så offline-enheter visas som Svarar inte.';
 
   @override
-  String get devicesAvailabilityHow => 'How to turn it on';
+  String get devicesAvailabilityHow => 'Så slår du på den';
 
   @override
-  String get devicesDotBattery => 'Battery low';
+  String get devicesDotBattery => 'Lågt batteri';
 
   @override
-  String get deviceDetails => 'Device details';
+  String get deviceDetails => 'Enhetsdetaljer';
 
   @override
-  String get deviceGone => 'This device is no longer in Zigbee2MQTT.';
+  String get deviceGone => 'Den här enheten finns inte längre i Zigbee2MQTT.';
 
   @override
-  String get deviceControlTitle => 'Control';
+  String get deviceControlTitle => 'Styrning';
 
   @override
-  String get deviceReadingsTitle => 'Readings';
+  String get deviceReadingsTitle => 'Mätvärden';
 
   @override
-  String get deviceHealthTitle => 'Health';
+  String get deviceHealthTitle => 'Hälsa';
 
   @override
-  String get deviceOnDashboards => 'On dashboards';
+  String get deviceOnDashboards => 'På dashboards';
 
   @override
   String get deviceUnsupportedBody =>
-      'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.';
+      'Zigbee2MQTT stöder inte den här enheten än, så det finns inget att styra.';
 
   @override
-  String get deviceAddReadingTile => 'Add as reading tile';
+  String get deviceAddReadingTile => 'Lägg till som mätvärdesruta';
 
   @override
-  String get deviceAddReadingTo => 'Add to which dashboard?';
+  String get deviceAddReadingTo => 'Lägga till på vilken dashboard?';
 
   @override
   String deviceAddedTo(Object dashboard) {
-    return 'Added to $dashboard';
+    return 'Tillagd på $dashboard';
   }
 
   @override
-  String get deviceLinkQuality => 'Link quality';
+  String get deviceLinkQuality => 'Länkkvalitet';
 
   @override
-  String get deviceLinkGood => 'Good';
+  String get deviceLinkGood => 'Bra';
 
   @override
-  String get devicePowerSource => 'Power source';
+  String get devicePowerSource => 'Strömkälla';
 
   @override
-  String get devicePowerBattery => 'Battery';
+  String get devicePowerBattery => 'Batteri';
 
   @override
-  String get devicePowerMains => 'Mains';
+  String get devicePowerMains => 'Elnät';
 
   @override
-  String get deviceLastHeard => 'Last heard';
+  String get deviceLastHeard => 'Senast hörd';
 
   @override
-  String get deviceAvailability => 'Availability';
+  String get deviceAvailability => 'Tillgänglighet';
 
   @override
-  String get deviceAvailabilityOff => 'Off in Zigbee2MQTT';
+  String get deviceAvailabilityOff => 'Av i Zigbee2MQTT';
 
   @override
-  String get settingsPrivacy => 'Privacy policy';
+  String get settingsPrivacy => 'Integritetspolicy';
 
   @override
   String get settingsPrivacySubtitle =>
-      'No telemetry. Everything stays on this phone.';
+      'Ingen telemetri. Allt stannar på den här telefonen.';
 
   @override
-  String get homeCurrent => 'Current home';
+  String get homeCurrent => 'Nuvarande hem';
 
   @override
-  String get homeConnection => 'Connection';
+  String get homeConnection => 'Anslutning';
 
   @override
-  String get homeSwitchTo => 'Switch to this home';
+  String get homeSwitchTo => 'Byt till det här hemmet';
 
   @override
-  String get homeDelete => 'Delete home';
+  String get homeDelete => 'Ta bort hem';
 
   @override
-  String get devicesSelect => 'Select a device';
+  String get devicesSelect => 'Välj en enhet';
 
   @override
-  String get scenesSelect => 'Select a scene to edit';
+  String get scenesSelect => 'Välj en scen att redigera';
 
   @override
   String get panelFormTopic => 'Topic';
 
   @override
-  String get panelFormPickDevice => 'Pick a device';
+  String get panelFormPickDevice => 'Välj en enhet';
 
   @override
-  String get panelFormStateTopic => 'State topic';
+  String get panelFormStateTopic => 'Status-topic';
 
   @override
-  String get panelFormCommandTopic => 'Command topic';
+  String get panelFormCommandTopic => 'Kommando-topic';
 
   @override
   String get panelFormCommandTopicDerived =>
-      'Filled from the state topic until you change it.';
+      'Fylls i från status-topicen tills du ändrar den.';
 
   @override
   String panelFormLinkedTo(Object device) {
-    return 'Linked to $device';
+    return 'Kopplad till $device';
   }
 
   @override
-  String get panelFormOpenDevice => 'Open device';
+  String get panelFormOpenDevice => 'Öppna enhet';
 
   @override
-  String get panelFormUnlink => 'Unlink';
+  String get panelFormUnlink => 'Koppla från';
 
   @override
-  String get panelFormValueChoices => 'Values from this device';
+  String get panelFormValueChoices => 'Värden från den här enheten';
 
   @override
-  String get panelFormAdvanced => 'Advanced';
+  String get panelFormAdvanced => 'Avancerat';
 
   @override
-  String get panelFormAdvancedSubtitle => 'Prefix override, QoS, retain';
+  String get panelFormAdvancedSubtitle => 'Prefix-åsidosättning, QoS, retain';
+
+  @override
+  String get panelFormStateTopicHelper =>
+      'Tomt = själva prefixet (status för en Zigbee2MQTT-enhet).';
 }

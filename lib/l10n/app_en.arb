@@ -679,5 +679,6 @@
   "panelFormUnlink": "Unlink",
   "panelFormValueChoices": "Values from this device",
   "panelFormAdvanced": "Advanced",
-  "panelFormAdvancedSubtitle": "Prefix override, QoS, retain"
+  "panelFormAdvancedSubtitle": "Prefix override, QoS, retain",
+  "panelFormStateTopicHelper": "Blank = the prefix itself (a Zigbee2MQTT device's state)."
 }

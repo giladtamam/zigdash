@@ -53,12 +53,12 @@ extension _PanelFormTopics on _State {
       if (!_isWriteOnly) ...[
         TextFormField(
           controller: _subscribeTopic,
+          // Topics are left-to-right, also in Hebrew.
+          textDirection: TextDirection.ltr,
           decoration: InputDecoration(
             labelText: l10n.panelFormStateTopic,
             prefixText: lead,
-            helperText: _isReadOnly
-                ? l10n.panelFormSubscribeTopicHelperReadOnly
-                : l10n.panelFormSubscribeTopicHelper,
+            helperText: l10n.panelFormStateTopicHelper,
           ),
           onChanged: (v) {
             if (_isReadOnly || _commandEdited) return;
@@ -70,6 +70,7 @@ extension _PanelFormTopics on _State {
       if (!_isReadOnly) ...[
         TextFormField(
           controller: _topic,
+          textDirection: TextDirection.ltr,
           decoration: InputDecoration(
             labelText: l10n.panelFormCommandTopic,
             prefixText: lead,
@@ -233,6 +234,7 @@ extension _PanelFormTopics on _State {
           ),
         TextFormField(
           controller: _topicPrefixOverride,
+          textDirection: TextDirection.ltr,
           decoration: InputDecoration(
             labelText: l10n.panelFormTopicPrefixOverride,
             hintText: l10n.panelFormTopicPrefixOverrideHint,

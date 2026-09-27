@@ -1970,4 +1970,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelFormAdvancedSubtitle => 'Prefix override, QoS, retain';
+
+  @override
+  String get panelFormStateTopicHelper =>
+      'Blank = the prefix itself (a Zigbee2MQTT device\'s state).';
 }

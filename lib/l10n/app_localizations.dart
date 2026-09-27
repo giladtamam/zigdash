@@ -3667,6 +3667,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Prefix override, QoS, retain'**
   String get panelFormAdvancedSubtitle;
+
+  /// No description provided for @panelFormStateTopicHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank = the prefix itself (a Zigbee2MQTT device\'s state).'**
+  String get panelFormStateTopicHelper;
 }
 
 class _AppLocalizationsDelegate

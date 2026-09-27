@@ -1820,167 +1820,171 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statusSettings => 'Ajustes de conexión';
 
   @override
-  String get deviceAddToDashboard => 'Add to a dashboard';
+  String get deviceAddToDashboard => 'Añadir a un panel';
 
   @override
-  String get deviceDismiss => 'Dismiss';
+  String get deviceDismiss => 'Descartar';
 
   @override
-  String get devicesFilterAll => 'All';
+  String get devicesFilterAll => 'Todos';
 
   @override
   String devicesFilterAttention(int count) {
-    return 'Needs attention · $count';
+    return 'Requieren atención · $count';
   }
 
   @override
   String devicesFilterUnassigned(int count) {
-    return 'Not on a dashboard · $count';
+    return 'En ningún panel · $count';
   }
 
   @override
-  String get devicesNoMatch => 'No devices match';
+  String get devicesNoMatch => 'Ningún dispositivo coincide';
 
   @override
-  String get deviceBatteryLow => 'Battery low';
+  String get deviceBatteryLow => 'Batería baja';
 
   @override
-  String get deviceLinkWeak => 'Weak';
+  String get deviceLinkWeak => 'Débil';
 
   @override
-  String get deviceUnsupported => 'Not supported by Zigbee2MQTT';
+  String get deviceUnsupported => 'No compatible con Zigbee2MQTT';
 
   @override
-  String get deviceInterviewFailed => 'Pairing didn\'t finish';
+  String get deviceInterviewFailed => 'El emparejamiento no terminó';
 
   @override
-  String get deviceNoReport => 'No report yet';
+  String get deviceNoReport => 'Sin datos todavía';
 
   @override
   String get devicesAvailabilityOff =>
-      'Zigbee2MQTT availability is off, so offline devices show as Not responding.';
+      'La disponibilidad de Zigbee2MQTT está desactivada, así que los dispositivos desconectados aparecen como No responde.';
 
   @override
-  String get devicesAvailabilityHow => 'How to turn it on';
+  String get devicesAvailabilityHow => 'Cómo activarla';
 
   @override
-  String get devicesDotBattery => 'Battery low';
+  String get devicesDotBattery => 'Batería baja';
 
   @override
-  String get deviceDetails => 'Device details';
+  String get deviceDetails => 'Detalles del dispositivo';
 
   @override
-  String get deviceGone => 'This device is no longer in Zigbee2MQTT.';
+  String get deviceGone => 'Este dispositivo ya no está en Zigbee2MQTT.';
 
   @override
   String get deviceControlTitle => 'Control';
 
   @override
-  String get deviceReadingsTitle => 'Readings';
+  String get deviceReadingsTitle => 'Lecturas';
 
   @override
-  String get deviceHealthTitle => 'Health';
+  String get deviceHealthTitle => 'Estado';
 
   @override
-  String get deviceOnDashboards => 'On dashboards';
+  String get deviceOnDashboards => 'En paneles';
 
   @override
   String get deviceUnsupportedBody =>
-      'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.';
+      'Zigbee2MQTT aún no es compatible con este dispositivo, así que no hay nada que controlar.';
 
   @override
-  String get deviceAddReadingTile => 'Add as reading tile';
+  String get deviceAddReadingTile => 'Añadir como mosaico de lectura';
 
   @override
-  String get deviceAddReadingTo => 'Add to which dashboard?';
+  String get deviceAddReadingTo => '¿A qué panel añadirlo?';
 
   @override
   String deviceAddedTo(Object dashboard) {
-    return 'Added to $dashboard';
+    return 'Añadido a $dashboard';
   }
 
   @override
-  String get deviceLinkQuality => 'Link quality';
+  String get deviceLinkQuality => 'Calidad del enlace';
 
   @override
-  String get deviceLinkGood => 'Good';
+  String get deviceLinkGood => 'Buena';
 
   @override
-  String get devicePowerSource => 'Power source';
+  String get devicePowerSource => 'Alimentación';
 
   @override
-  String get devicePowerBattery => 'Battery';
+  String get devicePowerBattery => 'Batería';
 
   @override
-  String get devicePowerMains => 'Mains';
+  String get devicePowerMains => 'Red eléctrica';
 
   @override
-  String get deviceLastHeard => 'Last heard';
+  String get deviceLastHeard => 'Última señal';
 
   @override
-  String get deviceAvailability => 'Availability';
+  String get deviceAvailability => 'Disponibilidad';
 
   @override
-  String get deviceAvailabilityOff => 'Off in Zigbee2MQTT';
+  String get deviceAvailabilityOff => 'Desactivada en Zigbee2MQTT';
 
   @override
-  String get settingsPrivacy => 'Privacy policy';
+  String get settingsPrivacy => 'Política de privacidad';
 
   @override
   String get settingsPrivacySubtitle =>
-      'No telemetry. Everything stays on this phone.';
+      'Sin telemetría. Todo se queda en este teléfono.';
 
   @override
-  String get homeCurrent => 'Current home';
+  String get homeCurrent => 'Casa actual';
 
   @override
-  String get homeConnection => 'Connection';
+  String get homeConnection => 'Conexión';
 
   @override
-  String get homeSwitchTo => 'Switch to this home';
+  String get homeSwitchTo => 'Cambiar a esta casa';
 
   @override
-  String get homeDelete => 'Delete home';
+  String get homeDelete => 'Eliminar casa';
 
   @override
-  String get devicesSelect => 'Select a device';
+  String get devicesSelect => 'Elige un dispositivo';
 
   @override
-  String get scenesSelect => 'Select a scene to edit';
+  String get scenesSelect => 'Elige una escena para editar';
 
   @override
   String get panelFormTopic => 'Topic';
 
   @override
-  String get panelFormPickDevice => 'Pick a device';
+  String get panelFormPickDevice => 'Elegir un dispositivo';
 
   @override
-  String get panelFormStateTopic => 'State topic';
+  String get panelFormStateTopic => 'Topic de estado';
 
   @override
-  String get panelFormCommandTopic => 'Command topic';
+  String get panelFormCommandTopic => 'Topic de comando';
 
   @override
   String get panelFormCommandTopicDerived =>
-      'Filled from the state topic until you change it.';
+      'Se rellena a partir del topic de estado hasta que lo cambies.';
 
   @override
   String panelFormLinkedTo(Object device) {
-    return 'Linked to $device';
+    return 'Vinculado a $device';
   }
 
   @override
-  String get panelFormOpenDevice => 'Open device';
+  String get panelFormOpenDevice => 'Abrir dispositivo';
 
   @override
-  String get panelFormUnlink => 'Unlink';
+  String get panelFormUnlink => 'Desvincular';
 
   @override
-  String get panelFormValueChoices => 'Values from this device';
+  String get panelFormValueChoices => 'Valores de este dispositivo';
 
   @override
-  String get panelFormAdvanced => 'Advanced';
+  String get panelFormAdvanced => 'Avanzado';
 
   @override
-  String get panelFormAdvancedSubtitle => 'Prefix override, QoS, retain';
+  String get panelFormAdvancedSubtitle => 'Anular prefijo, QoS, retener';
+
+  @override
+  String get panelFormStateTopicHelper =>
+      'Vacío = el propio prefijo (estado de un dispositivo Zigbee2MQTT).';
 }

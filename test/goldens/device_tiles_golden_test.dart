@@ -20,7 +20,10 @@ import 'package:zigdash/features/devices/z2m_bridge.dart';
 import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
 import 'package:zigdash/features/home/home_shell.dart';
 import 'package:zigdash/features/home/list_detail.dart';
+import 'package:zigdash/features/panels/screens/panel_form_screen.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
+import 'package:zigdash/features/settings/screens/home_settings_screen.dart';
+import 'package:zigdash/features/settings/screens/language_screen.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
@@ -364,6 +367,73 @@ void main() {
   );
 
   goldenTest(
+    'device page',
+    fileName: 'device_page_phone',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: const [
+        GoldenVariant(name: 'color light, light en', size: _tall),
+        GoldenVariant(name: 'color light, light he', size: _tall, locale: Locale('he')),
+        GoldenVariant(name: 'color light, en 2x', size: Size(412, 2600), textScale: 2),
+      ],
+      overrides: _shellOverrides,
+      screen: () => const DevicePage(connectionId: 'c1', ieee: '0xbulb'),
+    ),
+  );
+
+  goldenTest(
+    'device page, low battery, dark',
+    fileName: 'device_page_battery_phone',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: const [
+        GoldenVariant(name: 'dark en', size: phone, brightness: Brightness.dark),
+        GoldenVariant(
+            name: 'dark he', size: phone, brightness: Brightness.dark, locale: Locale('he')),
+      ],
+      overrides: _shellOverrides,
+      screen: () => const DevicePage(connectionId: 'c1', ieee: '0xmotion'),
+    ),
+  );
+
+  goldenTest(
+    'settings: a home',
+    fileName: 'home_page_phone',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: phoneMatrix.take(3).toList(),
+      overrides: _shellOverrides,
+      screen: () => const HomeSettingsScreen(connectionId: 'c1'),
+    ),
+  );
+
+  goldenTest(
+    'settings: the language picker',
+    fileName: 'language_phone',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: phoneMatrix.take(3).toList(),
+      overrides: _shellOverrides,
+      screen: () => const LanguageScreen(),
+    ),
+  );
+
+  goldenTest(
+    'custom MQTT tile form',
+    fileName: 'custom_form_phone',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: [...phoneMatrix.take(3), phoneMatrix[4]],
+      overrides: () => [
+        ..._shellOverrides(),
+        dashboardRepoProvider.overrideWithValue(_OneDashboard()),
+      ],
+      screen: () => const PanelFormScreen(
+          connectionId: 'c1', dashboardId: 'd1', initialType: PanelType.toggle),
+    ),
+  );
+
+  goldenTest(
     'device tiles by class',
     fileName: 'device_tiles_phone',
     pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
@@ -394,4 +464,11 @@ void main() {
       ),
     ),
   );
+}
+
+class _OneDashboard implements DashboardRepo {
+  @override
+  Future<Dashboard?> getById(String id) async => _dashboard;
+  @override
+  dynamic noSuchMethod(Invocation i) => super.noSuchMethod(i);
 }

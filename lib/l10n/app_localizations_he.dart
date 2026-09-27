@@ -1797,167 +1797,170 @@ class AppLocalizationsHe extends AppLocalizations {
   String get statusSettings => 'הגדרות חיבור';
 
   @override
-  String get deviceAddToDashboard => 'Add to a dashboard';
+  String get deviceAddToDashboard => 'הוספה ללוח';
 
   @override
-  String get deviceDismiss => 'Dismiss';
+  String get deviceDismiss => 'הסתרה';
 
   @override
-  String get devicesFilterAll => 'All';
+  String get devicesFilterAll => 'הכול';
 
   @override
   String devicesFilterAttention(int count) {
-    return 'Needs attention · $count';
+    return 'דורשים תשומת לב · $count';
   }
 
   @override
   String devicesFilterUnassigned(int count) {
-    return 'Not on a dashboard · $count';
+    return 'לא בשום לוח · $count';
   }
 
   @override
-  String get devicesNoMatch => 'No devices match';
+  String get devicesNoMatch => 'אין מכשירים תואמים';
 
   @override
-  String get deviceBatteryLow => 'Battery low';
+  String get deviceBatteryLow => 'סוללה חלשה';
 
   @override
-  String get deviceLinkWeak => 'Weak';
+  String get deviceLinkWeak => 'חלש';
 
   @override
-  String get deviceUnsupported => 'Not supported by Zigbee2MQTT';
+  String get deviceUnsupported => 'לא נתמך ב‑Zigbee2MQTT';
 
   @override
-  String get deviceInterviewFailed => 'Pairing didn\'t finish';
+  String get deviceInterviewFailed => 'הצימוד לא הושלם';
 
   @override
-  String get deviceNoReport => 'No report yet';
+  String get deviceNoReport => 'אין דיווח עדיין';
 
   @override
   String get devicesAvailabilityOff =>
-      'Zigbee2MQTT availability is off, so offline devices show as Not responding.';
+      'הזמינות ב‑Zigbee2MQTT כבויה, ולכן מכשירים מנותקים מוצגים כ„לא מגיב”.';
 
   @override
-  String get devicesAvailabilityHow => 'How to turn it on';
+  String get devicesAvailabilityHow => 'איך להפעיל אותה';
 
   @override
-  String get devicesDotBattery => 'Battery low';
+  String get devicesDotBattery => 'סוללה חלשה';
 
   @override
-  String get deviceDetails => 'Device details';
+  String get deviceDetails => 'פרטי המכשיר';
 
   @override
-  String get deviceGone => 'This device is no longer in Zigbee2MQTT.';
+  String get deviceGone => 'המכשיר הזה כבר לא נמצא ב‑Zigbee2MQTT.';
 
   @override
-  String get deviceControlTitle => 'Control';
+  String get deviceControlTitle => 'שליטה';
 
   @override
-  String get deviceReadingsTitle => 'Readings';
+  String get deviceReadingsTitle => 'קריאות';
 
   @override
-  String get deviceHealthTitle => 'Health';
+  String get deviceHealthTitle => 'תקינות';
 
   @override
-  String get deviceOnDashboards => 'On dashboards';
+  String get deviceOnDashboards => 'בלוחות';
 
   @override
   String get deviceUnsupportedBody =>
-      'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.';
+      'Zigbee2MQTT עדיין לא תומך במכשיר הזה, אז אין מה לשלוט בו.';
 
   @override
-  String get deviceAddReadingTile => 'Add as reading tile';
+  String get deviceAddReadingTile => 'הוספה כאריח קריאה';
 
   @override
-  String get deviceAddReadingTo => 'Add to which dashboard?';
+  String get deviceAddReadingTo => 'להוסיף לאיזה לוח?';
 
   @override
   String deviceAddedTo(Object dashboard) {
-    return 'Added to $dashboard';
+    return 'נוסף ל‑$dashboard';
   }
 
   @override
-  String get deviceLinkQuality => 'Link quality';
+  String get deviceLinkQuality => 'איכות קישור';
 
   @override
-  String get deviceLinkGood => 'Good';
+  String get deviceLinkGood => 'טוב';
 
   @override
-  String get devicePowerSource => 'Power source';
+  String get devicePowerSource => 'מקור מתח';
 
   @override
-  String get devicePowerBattery => 'Battery';
+  String get devicePowerBattery => 'סוללה';
 
   @override
-  String get devicePowerMains => 'Mains';
+  String get devicePowerMains => 'חשמל';
 
   @override
-  String get deviceLastHeard => 'Last heard';
+  String get deviceLastHeard => 'נשמע לאחרונה';
 
   @override
-  String get deviceAvailability => 'Availability';
+  String get deviceAvailability => 'זמינות';
 
   @override
-  String get deviceAvailabilityOff => 'Off in Zigbee2MQTT';
+  String get deviceAvailabilityOff => 'כבויה ב‑Zigbee2MQTT';
 
   @override
-  String get settingsPrivacy => 'Privacy policy';
+  String get settingsPrivacy => 'מדיניות פרטיות';
 
   @override
-  String get settingsPrivacySubtitle =>
-      'No telemetry. Everything stays on this phone.';
+  String get settingsPrivacySubtitle => 'בלי טלמטריה. הכול נשאר בטלפון הזה.';
 
   @override
-  String get homeCurrent => 'Current home';
+  String get homeCurrent => 'הבית הנוכחי';
 
   @override
-  String get homeConnection => 'Connection';
+  String get homeConnection => 'חיבור';
 
   @override
-  String get homeSwitchTo => 'Switch to this home';
+  String get homeSwitchTo => 'מעבר לבית הזה';
 
   @override
-  String get homeDelete => 'Delete home';
+  String get homeDelete => 'מחיקת הבית';
 
   @override
-  String get devicesSelect => 'Select a device';
+  String get devicesSelect => 'בחרו מכשיר';
 
   @override
-  String get scenesSelect => 'Select a scene to edit';
+  String get scenesSelect => 'בחרו סצנה לעריכה';
 
   @override
   String get panelFormTopic => 'Topic';
 
   @override
-  String get panelFormPickDevice => 'Pick a device';
+  String get panelFormPickDevice => 'בחירת מכשיר';
 
   @override
-  String get panelFormStateTopic => 'State topic';
+  String get panelFormStateTopic => 'topic מצב';
 
   @override
-  String get panelFormCommandTopic => 'Command topic';
+  String get panelFormCommandTopic => 'topic פקודה';
 
   @override
   String get panelFormCommandTopicDerived =>
-      'Filled from the state topic until you change it.';
+      'ממולא מ‑topic המצב עד שתשנו אותו.';
 
   @override
   String panelFormLinkedTo(Object device) {
-    return 'Linked to $device';
+    return 'מקושר ל‑$device';
   }
 
   @override
-  String get panelFormOpenDevice => 'Open device';
+  String get panelFormOpenDevice => 'פתיחת המכשיר';
 
   @override
-  String get panelFormUnlink => 'Unlink';
+  String get panelFormUnlink => 'ביטול קישור';
 
   @override
-  String get panelFormValueChoices => 'Values from this device';
+  String get panelFormValueChoices => 'ערכים מהמכשיר הזה';
 
   @override
-  String get panelFormAdvanced => 'Advanced';
+  String get panelFormAdvanced => 'מתקדם';
 
   @override
-  String get panelFormAdvancedSubtitle => 'Prefix override, QoS, retain';
+  String get panelFormAdvancedSubtitle => 'עקיפת קידומת, QoS, retain';
+
+  @override
+  String get panelFormStateTopicHelper =>
+      'ריק = הקידומת עצמה (המצב של מכשיר Zigbee2MQTT).';
 }
