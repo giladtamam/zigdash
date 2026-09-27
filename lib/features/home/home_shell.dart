@@ -110,7 +110,10 @@ class HomeShell extends ConsumerWidget {
               ],
             ),
             const VerticalDivider(width: 1, thickness: 1),
-            Expanded(child: child),
+            // The page's route carries BlockSemantics, which hides whatever
+            // was painted before it in the same container, and the rail is.
+            // A container of its own keeps the rail reachable by TalkBack.
+            Expanded(child: Semantics(container: true, child: child)),
           ],
         ),
       );

@@ -128,12 +128,18 @@ extension _PanelFormTopics on _State {
         _ => null,
       };
 
-  /// The linked device's readable properties as value-path choices.
+  /// The linked device's readable, everyday properties as value-path
+  /// choices.
   Widget _valueChoices(Z2mDevice device) {
     final path = _valuePath!;
     final props = <String>{
       for (final f in classifyExposes(device.rawExposes).features)
-        if (f.readable && f.type != 'composite' && f.type != 'list') f.property,
+        // Everyday values only: settings like turbo_mode are not states.
+        if (f.readable &&
+            f.normal &&
+            f.type != 'composite' &&
+            f.type != 'list')
+          f.property,
     };
     if (props.isEmpty) return const SizedBox.shrink();
     return Padding(

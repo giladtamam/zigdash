@@ -528,6 +528,36 @@ void main() {
     });
   });
 
+  // Regression (found on the SMHUB, 1.13 device check): a tile off screen
+  // past the grace (another tab open) came back with no value, and since
+  // devices are asked for state once per connection it then read
+  // "Not responding".
+  test('a watcher returning after the grace gets this session\'s value', () {
+    fakeAsync((async) {
+      late _FakeClient client;
+      final manager = connectedManager((c) => client = c);
+      manager.connect();
+      async.flushMicrotasks();
+
+      final sub = manager.subscribe('zigbee2mqtt/cover').listen((_) {});
+      client.emit('zigbee2mqtt/cover', '{"position":37}');
+      async.flushMicrotasks();
+      sub.cancel();
+      manager.unsubscribe('zigbee2mqtt/cover');
+      async.elapse(MqttManager.releaseGrace + const Duration(seconds: 1));
+      expect(client.unsubscribed, ['zigbee2mqtt/cover']);
+
+      final again = <String>[];
+      manager
+          .subscribe('zigbee2mqtt/cover')
+          .listen((m) => again.add(m.payload));
+      async.flushMicrotasks();
+      expect(again, ['{"position":37}']);
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
   test('UNSUBSCRIBE bytes carry the QoS 1 flag (0xA2)', () {
     final msg = mc.MqttUnsubscribeMessage()
         .withMessageIdentifier(1)

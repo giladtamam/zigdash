@@ -140,6 +140,36 @@ void main() {
     expect(find.text("1 device isn't on any dashboard"), findsOneWidget);
   });
 
+  // Regression (1.13 device check): a long-press outside Edit mode enters
+  // it, which replaces the tile that opened the sheet; its actions then ran
+  // on a disposed ref and Remove did nothing.
+  testWidgets('long-press outside Edit mode, then Remove, removes the tile',
+      (tester) async {
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+
+    await tester.longPress(find.text('Desk lamp'));
+    await tester.pumpAndSettle();
+    expect(container.read(editModeProvider), 'd1');
+    await tester.tap(find.text('Remove from dashboard'));
+    await tester.pumpAndSettle();
+    expect(repo.calls, ['delete p1']);
+  });
+
+  testWidgets('the Undo offer times out', (tester) async {
+    container.read(editModeProvider.notifier).enter('d1');
+    await tester.pumpWidget(app());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Tile options').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Remove from dashboard'));
+    await tester.pumpAndSettle();
+    expect(find.text('Undo'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 6));
+    await tester.pumpAndSettle();
+    expect(find.text('Undo'), findsNothing);
+  });
+
   testWidgets('remove takes effect at once and Undo restores the tile',
       (tester) async {
     container.read(editModeProvider.notifier).enter('d1');

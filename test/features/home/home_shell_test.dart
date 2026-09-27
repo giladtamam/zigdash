@@ -127,6 +127,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
+    // TalkBack reaches the rail beside the page (regression: the page's
+    // route hid it).
+    expect(find.bySemanticsLabel(RegExp('^Scenes')), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('^Devices')), findsOneWidget);
     expect(
         tester.widgetList<Badge>(find.byType(Badge)).first.isLabelVisible,
         isTrue);

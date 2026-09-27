@@ -355,7 +355,11 @@ class MqttManager {
           print('[MqttManager] subscribe failed for pattern "$pattern": $e');
         }
       }
-      final saved = _lastKnown[pattern];
+      // A returning watcher starts from the newest value: this session's,
+      // else one saved from an earlier session. Without this, a tile that
+      // was off screen past the grace period came back empty, and since
+      // devices are asked for state once per connection, stayed empty.
+      final saved = _latest[pattern] ?? _lastKnown[pattern];
       if (saved != null) e.subject.add(saved);
       return e;
     });

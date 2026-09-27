@@ -26,7 +26,13 @@ Future<void> showTileActions(
   required Panel panel,
 }) {
   final l10n = context.l10n;
-  final repo = ref.read(panelRepoProvider);
+  // A long-press outside Edit mode enters it, which replaces the tile that
+  // opened this sheet: its ref and context are gone by the time an action
+  // runs. Everything used after the sheet closes outlives the tile.
+  final container = ProviderScope.containerOf(context, listen: false);
+  final host = Navigator.of(context, rootNavigator: true).context;
+  final router = GoRouter.maybeOf(context);
+  final repo = container.read(panelRepoProvider);
   final messenger = ScaffoldMessenger.of(context);
   return showModalBottomSheet<void>(
     context: context,
@@ -66,7 +72,7 @@ Future<void> showTileActions(
             title: Text(l10n.editMoveToSection),
             onTap: () async {
               Navigator.pop(sheetCtx);
-              await _moveToSection(context, ref, panel);
+              await _moveToSection(host, container, panel);
             },
           ),
           ListTile(
@@ -74,7 +80,7 @@ Future<void> showTileActions(
             title: Text(l10n.editEditTile),
             onTap: () {
               Navigator.pop(sheetCtx);
-              context.push('/connections/$connectionId/dashboards/'
+              router?.push('/connections/$connectionId/dashboards/'
                   '${panel.dashboardId}/panels/${panel.id}/edit');
             },
           ),
@@ -92,7 +98,7 @@ Future<void> showTileActions(
               title: Text(l10n.deviceDetails),
               onTap: () {
                 Navigator.pop(sheetCtx);
-                context.push(
+                router?.push(
                     Routes.homeDevice(connectionId, panel.deviceIeee!));
               },
             ),
@@ -103,7 +109,7 @@ Future<void> showTileActions(
               onTap: () async {
                 Navigator.pop(sheetCtx);
                 await _replaceWithDeviceTile(
-                    context, ref, messenger, connectionId, panel);
+                    host, container, messenger, connectionId, panel);
               },
             ),
           const Divider(height: 1),
@@ -114,7 +120,7 @@ Future<void> showTileActions(
                 style: TextStyle(color: Theme.of(sheetCtx).colorScheme.error)),
             onTap: () {
               Navigator.pop(sheetCtx);
-              removeTileWithUndo(ref, messenger, l10n.editRemoved,
+              removeTileWithUndo(container, messenger, l10n.editRemoved,
                   l10n.editUndo, connectionId, panel);
             },
           ),
@@ -128,7 +134,7 @@ Future<void> showTileActions(
 /// rule's retained config on the hub is cleared only once the snackbar
 /// closes without Undo, so Undo brings the rule back intact.
 Future<void> removeTileWithUndo(
-  WidgetRef ref,
+  ProviderContainer ref,
   ScaffoldMessengerState messenger,
   String removedLabel,
   String undoLabel,
@@ -144,6 +150,9 @@ Future<void> removeTileWithUndo(
       .showSnackBar(SnackBar(
         content: Text(removedLabel),
         duration: const Duration(seconds: 5),
+        // Flutter 3.47 keeps a snack bar with an action until dismissed; an
+        // Undo offer should time out (and the hub cleanup waits for it).
+        persist: false,
         action: SnackBarAction(
           label: undoLabel,
           onPressed: () {
@@ -163,7 +172,7 @@ Future<void> removeTileWithUndo(
 }
 
 Future<void> _moveToSection(
-    BuildContext context, WidgetRef ref, Panel panel) async {
+    BuildContext context, ProviderContainer ref, Panel panel) async {
   final l10n = context.l10n;
   final sections =
       await ref.read(sectionRepoProvider).getByDashboard(panel.dashboardId);
@@ -202,7 +211,7 @@ Future<void> _moveToSection(
 /// name, size, section and position; Undo swaps back.
 Future<void> _replaceWithDeviceTile(
   BuildContext context,
-  WidgetRef ref,
+  ProviderContainer ref,
   ScaffoldMessengerState messenger,
   String connectionId,
   Panel panel,
@@ -237,6 +246,8 @@ Future<void> _replaceWithDeviceTile(
   await repo.delete(panel.id);
   messenger.showSnackBar(SnackBar(
     content: Text(l10n.editReplaceWithDevice),
+    duration: const Duration(seconds: 5),
+    persist: false,
     action: SnackBarAction(
       label: l10n.editUndo,
       onPressed: () async {
