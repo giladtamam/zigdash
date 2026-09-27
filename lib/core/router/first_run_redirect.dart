@@ -8,7 +8,8 @@ const _firstRunLocations = {Routes.setup, Routes.guidedConnect, Routes.help};
 ///
 /// While [needsSetup] (no home yet and not in demo), every other location
 /// goes to setup. Afterwards, the retired onboarding address opens
-/// [startLocation], the last-used dashboard or the connections list.
+/// [startLocation], the last-used dashboard or the start screen (which
+/// opens a home, or setup when there is none).
 String? firstRunRedirect({
   required bool needsSetup,
   required String location,

@@ -170,7 +170,7 @@ class HomeTitle extends ConsumerWidget {
           case '__add__':
             context.push(Routes.setup);
           case '__manage__':
-            context.push(Routes.connections);
+            context.push(Routes.settings);
           default:
             context.go(Routes.homeDashboards(v));
         }

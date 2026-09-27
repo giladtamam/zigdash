@@ -3553,6 +3553,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Off in Zigbee2MQTT'**
   String get deviceAvailabilityOff;
+
+  /// No description provided for @settingsPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacy;
+
+  /// No description provided for @settingsPrivacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No telemetry. Everything stays on this phone.'**
+  String get settingsPrivacySubtitle;
+
+  /// No description provided for @homeCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current home'**
+  String get homeCurrent;
+
+  /// No description provided for @homeConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get homeConnection;
+
+  /// No description provided for @homeSwitchTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to this home'**
+  String get homeSwitchTo;
+
+  /// No description provided for @homeDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete home'**
+  String get homeDelete;
 }
 
 class _AppLocalizationsDelegate

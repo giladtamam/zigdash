@@ -3,10 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../panels/widgets/device_tile_panel.dart' show ltr;
+import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/router/routes.dart';
+import '../../../data/database/database.dart';
+import '../../../data/repositories/connection_repo.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../mqtt/mqtt_status.dart';
+import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../providers/settings_controller.dart';
+import 'language_screen.dart';
 
 /// App version + build number, e.g. "1.3.2 (10)".
 final appVersionProvider = FutureProvider<String>((ref) async {
@@ -14,6 +23,11 @@ final appVersionProvider = FutureProvider<String>((ref) async {
   return '${info.version} (${info.buildNumber})';
 });
 
+/// The published privacy policy (the one the store listing links).
+final privacyPolicyUrl = Uri.parse('https://giladtamam.github.io/zigdash/PRIVACY');
+
+/// Settings (devices-tablet-1.13.md §6): Homes, Appearance and About on one
+/// page. Homes are listed here; each opens its own page.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -22,131 +36,140 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final settings = ref.watch(settingsControllerProvider);
     final ctrl = ref.read(settingsControllerProvider.notifier);
+    final homes =
+        ref.watch(connectionsStreamProvider).valueOrNull ?? const <Connection>[];
+    final current = ref.watch(lastDashboardStoreProvider).lastConnectionId;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navSettings)),
-      body: ListView(
-        children: [
-          // Homes are edited in the broker list until 1.13's Settings.
-          ListTile(
-            leading: const Icon(Icons.home_work_outlined),
-            title: Text(l10n.connectionsTitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push(Routes.connections),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: ListView(
+            children: [
+              _SectionHeader(l10n.connectionsTitle),
+              for (final h in homes)
+                _HomeRow(home: h, current: h.id == current),
+              ListTile(
+                leading: Icon(Icons.add,
+                    color: Theme.of(context).colorScheme.primary),
+                title: Text(l10n.homeAdd,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary)),
+                onTap: () => context.push(Routes.setup),
+              ),
+              const Divider(),
+              _SectionHeader(l10n.settingsAppearance),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: SegmentedButton<ThemeMode>(
+                  segments: [
+                    ButtonSegment(
+                        value: ThemeMode.system, label: Text(l10n.themeSystem)),
+                    ButtonSegment(
+                        value: ThemeMode.light, label: Text(l10n.themeLight)),
+                    ButtonSegment(
+                        value: ThemeMode.dark, label: Text(l10n.themeDark)),
+                  ],
+                  selected: {settings.themeMode},
+                  onSelectionChanged: (s) => ctrl.setThemeMode(s.first),
+                ),
+              ),
+              SwitchListTile(
+                title: Text(l10n.settingsDynamicColor),
+                subtitle: Text(l10n.settingsDynamicColorSubtitle),
+                value: settings.dynamicColor,
+                onChanged: ctrl.setDynamicColor,
+              ),
+              ListTile(
+                leading: const Icon(Icons.translate),
+                title: Text(l10n.settingsLanguage),
+                subtitle: Text(languageLabel(settings.locale, l10n)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(Routes.settingsLanguage),
+              ),
+              const Divider(),
+              _SectionHeader(l10n.settingsAbout),
+              ListTile(
+                leading: const Icon(Icons.star_outline),
+                title: Text(l10n.settingsRateApp),
+                subtitle: Text(l10n.settingsRateAppSubtitle),
+                onTap: () async {
+                  final review = InAppReview.instance;
+                  if (await review.isAvailable()) {
+                    await review.requestReview();
+                  } else {
+                    await review.openStoreListing();
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.help_outline),
+                title: Text(l10n.settingsHelp),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(Routes.help),
+              ),
+              ListTile(
+                leading: const Icon(Icons.shield_outlined),
+                title: Text(l10n.settingsPrivacy),
+                subtitle: Text(l10n.settingsPrivacySubtitle),
+                trailing: const Icon(Icons.open_in_new),
+                onTap: () => launchUrl(privacyPolicyUrl,
+                    mode: LaunchMode.externalApplication),
+              ),
+              ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: Text(l10n.settingsVersion),
+                trailing: Text(
+                  ltr(ref.watch(appVersionProvider).valueOrNull ?? '…'),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
+              ),
+            ],
           ),
-          const Divider(height: 1),
-          _SectionHeader(l10n.settingsAppearance),
-          RadioGroup<ThemeMode>(
-            groupValue: settings.themeMode,
-            onChanged: (v) {
-              if (v != null) ctrl.setThemeMode(v);
-            },
-            child: Column(
-              children: [
-                RadioListTile<ThemeMode>(
-                  title: Text(l10n.themeSystem),
-                  value: ThemeMode.system,
-                ),
-                RadioListTile<ThemeMode>(
-                  title: Text(l10n.themeLight),
-                  value: ThemeMode.light,
-                ),
-                RadioListTile<ThemeMode>(
-                  title: Text(l10n.themeDark),
-                  value: ThemeMode.dark,
-                ),
-              ],
-            ),
-          ),
-          SwitchListTile(
-            title: Text(l10n.settingsDynamicColor),
-            subtitle: Text(l10n.settingsDynamicColorSubtitle),
-            value: settings.dynamicColor,
-            onChanged: ctrl.setDynamicColor,
-          ),
-          const Divider(),
-          _SectionHeader(l10n.settingsLanguage),
-          RadioGroup<String?>(
-            groupValue: settings.locale?.languageCode,
-            onChanged: (code) =>
-                ctrl.setLocale(code == null ? null : Locale(code)),
-            child: Column(
-              children: [
-                RadioListTile<String?>(
-                  title: Text(l10n.languageSystem),
-                  value: null,
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageEnglish),
-                  value: 'en',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageHebrew),
-                  value: 'he',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageGerman),
-                  value: 'de',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageDutch),
-                  value: 'nl',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageSwedish),
-                  value: 'sv',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageNorwegian),
-                  value: 'nb',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageSpanish),
-                  value: 'es',
-                ),
-                RadioListTile<String?>(
-                  title: Text(l10n.languageFrench),
-                  value: 'fr',
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
-          _SectionHeader(l10n.settingsAbout),
-          ListTile(
-            leading: const Icon(Icons.star_outline),
-            title: Text(l10n.settingsRateApp),
-            subtitle: Text(l10n.settingsRateAppSubtitle),
-            onTap: () async {
-              final review = InAppReview.instance;
-              if (await review.isAvailable()) {
-                await review.requestReview();
-              } else {
-                await review.openStoreListing();
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help_outline),
-            title: Text(l10n.settingsHelp),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push(Routes.help),
-          ),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: Text(l10n.settingsVersion),
-            trailing: Text(
-              ref.watch(appVersionProvider).valueOrNull ?? '…',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
+
+/// One home: name, address, and for the current home its connection state.
+class _HomeRow extends ConsumerWidget {
+  const _HomeRow({required this.home, required this.current});
+
+  final Connection home;
+  final bool current;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final scheme = Theme.of(context).colorScheme;
+    final address = ltr('${home.host}:${home.port}');
+    final status = current
+        ? ref.watch(connectionStatusProvider(home.id)).valueOrNull
+        : null;
+    return ListTile(
+      leading: Icon(current ? Icons.home : Icons.home_outlined,
+          color: current ? scheme.primary : null),
+      title: Text(home.name),
+      subtitle: Text(status == null
+          ? address
+          : '$address · ${homeStatusLabel(status, l10n)}'),
+      trailing: current
+          ? Icon(Icons.check, color: scheme.primary, semanticLabel: l10n.homeCurrent)
+          : const Icon(Icons.chevron_right),
+      onTap: () => context.push(Routes.settingsHome(home.id)),
+    );
+  }
+}
+
+String homeStatusLabel(MqttStatus s, AppLocalizations l10n) => switch (s) {
+      MqttStatus.connected => l10n.statusConnected,
+      MqttStatus.connecting => l10n.statusConnecting,
+      _ => l10n.statusCantReach,
+    };
 
 class _SectionHeader extends StatelessWidget {
   const _SectionHeader(this.text);
@@ -155,10 +178,16 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 4),
-      child: Text(text,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: scheme.primary)),
+    return Semantics(
+      header: true,
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 4),
+        child: Text(text,
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(color: scheme.primary)),
+      ),
     );
   }
 }

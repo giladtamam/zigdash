@@ -46,7 +46,7 @@ Widget _app(List<Connection> homes, {int newDevices = 0}) {
       ),
       GoRoute(path: Routes.setup, builder: (_, __) => const Text('setup')),
       GoRoute(
-          path: Routes.connections, builder: (_, __) => const Text('homes')),
+          path: Routes.settings, builder: (_, __) => const Text('homes')),
     ],
   );
   return ProviderScope(

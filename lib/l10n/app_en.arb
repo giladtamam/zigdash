@@ -659,5 +659,11 @@
   "devicePowerMains": "Mains",
   "deviceLastHeard": "Last heard",
   "deviceAvailability": "Availability",
-  "deviceAvailabilityOff": "Off in Zigbee2MQTT"
+  "deviceAvailabilityOff": "Off in Zigbee2MQTT",
+  "settingsPrivacy": "Privacy policy",
+  "settingsPrivacySubtitle": "No telemetry. Everything stays on this phone.",
+  "homeCurrent": "Current home",
+  "homeConnection": "Connection",
+  "homeSwitchTo": "Switch to this home",
+  "homeDelete": "Delete home"
 }

@@ -10,6 +10,9 @@ class Routes {
   static const connectionEdit = '/connections/:id/edit';
   static const dashboards = '/dashboards';
   static const settings = '/settings';
+  static const settingsLanguage = '/settings/language';
+  static String settingsHome(String connectionId) =>
+      '/settings/home/$connectionId';
   static const help = '/help';
   static const deviceDiscovery = '/connections/:id/dashboards/:dashboardId/discover';
   static const devices = '/connections/:id/devices';

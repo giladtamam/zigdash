@@ -101,6 +101,8 @@ void main() {
     c.read(routerProvider).go(Routes.connections);
     await tester.pumpAndSettle();
 
+    // The old homes list's address opens Settings, which lists homes.
+    expect(find.text('Settings'), findsOneWidget);
     expect(find.text('Homes'), findsOneWidget);
   });
 }

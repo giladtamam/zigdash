@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/data/database/database.dart';
+import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
+import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
@@ -118,13 +120,33 @@ Widget _dashboardScreen() => Scaffold(
 
 late SharedPreferences _prefs;
 
+Connection _home(String id, String name, String host) => Connection(
+      id: id,
+      name: name,
+      host: host,
+      port: 1883,
+      protocol: MqttProtocol.tcp,
+      keepAliveSeconds: 60,
+      autoConnect: true,
+      createdAt: DateTime(2026, 9, 27),
+      updatedAt: DateTime(2026, 9, 27),
+    );
+
 List<Override> _settingsOverrides() => [
   sharedPreferencesProvider.overrideWithValue(_prefs),
+  connectionsStreamProvider.overrideWith((ref) => Stream.value([
+        _home('c1', 'My Home', '192.168.68.55'),
+        _home('c2', 'Cabin', 'cabin.example'),
+      ])),
+  connectionStatusProvider
+      .overrideWith((ref, _) => Stream.value(MqttStatus.connected)),
+  appVersionProvider.overrideWith((ref) async => '1.13.0 (28)'),
 ];
 
 void main() {
   setUpAll(() async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues(
+        {'last_dashboard_connection': 'c1'});
     _prefs = await SharedPreferences.getInstance();
   });
 

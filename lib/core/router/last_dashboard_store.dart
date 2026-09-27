@@ -24,6 +24,9 @@ class LastDashboardStore {
     return id == null ? Routes.start : Routes.homeDashboards(id);
   }
 
+  /// The home the app opens on (the one used last), if any.
+  String? get lastConnectionId => _prefs.getString(_key);
+
   Future<void> remember(String connectionId) async {
     if (_prefs.getString(_key) == connectionId) return;
     await _prefs.setString(_key, connectionId);

@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/database/tables/panels.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
-import '../../features/connections/screens/connections_list_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
 import '../../features/onboarding/setup/setup_screen.dart';
 import '../../features/dashboards/screens/dashboard_form_screen.dart';
@@ -20,6 +19,8 @@ import '../../features/home/home_shell.dart';
 import '../../features/scenes/screens/scenes_screen.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
+import '../../features/settings/screens/home_settings_screen.dart';
+import '../../features/settings/screens/language_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import 'first_run_redirect.dart';
 import 'last_dashboard_store.dart';
@@ -204,10 +205,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.dashboards,
         redirect: (_, __) => Routes.start,
       ),
-      // Manage homes (the broker list) until 1.13 Settings.
+      // Homes are managed in Settings from 1.13; the old list's address
+      // opens it. The connection form keeps its addresses.
       GoRoute(
         path: Routes.connections,
-        pageBuilder: (_, __) => _slideUp(const ConnectionsListScreen()),
+        redirect: (_, state) =>
+            state.uri.path == Routes.connections ? Routes.settings : null,
         routes: [
           GoRoute(
             path: 'form',
@@ -223,6 +226,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.settings,
         pageBuilder: (_, __) => _slideUp(const SettingsScreen()),
+        routes: [
+          GoRoute(
+            path: 'language',
+            builder: (_, __) => const LanguageScreen(),
+          ),
+          GoRoute(
+            path: 'home/:id',
+            builder: (_, state) => HomeSettingsScreen(
+                connectionId: state.pathParameters['id']!),
+          ),
+        ],
       ),
     ],
   );

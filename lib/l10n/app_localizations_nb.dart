@@ -1914,4 +1914,23 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get deviceAvailabilityOff => 'Off in Zigbee2MQTT';
+
+  @override
+  String get settingsPrivacy => 'Privacy policy';
+
+  @override
+  String get settingsPrivacySubtitle =>
+      'No telemetry. Everything stays on this phone.';
+
+  @override
+  String get homeCurrent => 'Current home';
+
+  @override
+  String get homeConnection => 'Connection';
+
+  @override
+  String get homeSwitchTo => 'Switch to this home';
+
+  @override
+  String get homeDelete => 'Delete home';
 }
