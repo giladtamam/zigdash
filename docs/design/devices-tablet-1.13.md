@@ -49,7 +49,7 @@ Board: G-devices-tab.
 The dot shows when either is true for the current home:
 
 1. **New device** (1.12 rule, unchanged): paired after `devicesSeenAt`, on no dashboard, not dismissed.
-2. **Battery went low while this install watched.** On each state message with battery data, compare with `device_health_flags`:
+2. **Battery went low while this install watched.** On each state message, compute `low` from whichever of `battery_low` and `battery` the message carries (either one saying low makes it low). A message with neither, such as one with only `linkquality`, leaves the row untouched. Then compare with `device_health_flags`:
    - no row yet → insert `batteryLow` = current, `acknowledged` = true (a first report never lights the dot, so upgrading never brings one);
    - `batteryLow` false → true → set `acknowledged` = false (dot on);
    - true → false → set `batteryLow` false (dot off).
@@ -104,7 +104,7 @@ Boards: G-settings, G-home-page, G-language.
 
 Boards: G-tablet-dashboard, G-tablet-devices.
 
-- **Window class decides chrome and columns.** Compact (< 600 dp): bottom bar, 2 columns (1 at text scale ≥ 1.6). Medium (600–839): rail, 3 columns. Expanded (≥ 840): rail, 4 columns, list-detail. The grid's caller passes the **window** width to `gridColumns` and `minTileHeight`; the functions are unchanged. Without this, a 600–679 dp window would drop from 3 columns to 2 when the rail takes 80 dp.
+- **Window class decides chrome and columns.** Compact (< 600 dp): bottom bar, 2 columns (1 at text scale ≥ 1.6). Medium (600–839): rail, 3 columns. Expanded (≥ 840): rail, 4 columns, list-detail. The grid's only caller, `panel_grid.dart` (Edit mode renders through it too), passes the **window** width to `gridColumns` and `minTileHeight` instead of `constraints.maxWidth`; the functions are unchanged. Without this, a 600–679 dp window would drop from 3 columns to 2 when the rail takes 80 dp.
 - **Rail.** `NavigationRail` with labels, the same three destinations and the same dot, top-aligned below the header height. No FAB. At text scale 2.0 labels hide if they would clip, and tooltips remain.
 - **Edit mode at medium and expanded.** The rail stays. "Add tile" and "Add section" become buttons in the Edit header instead of replacing the bar.
 - **Dashboard switching.** At medium and expanded, two or more dashboards show as a chip row under the header, in place of the tab strip. Compact keeps the 1.12 tab strip.
@@ -122,11 +122,11 @@ Boards: G-tablet-dashboard, G-tablet-devices.
 ## 9. Tests and goldens
 
 - **Migration test** 6 → 7 on a 1.12 fixture database: every panel, section, dismissal and home survives; `z2mBaseTopic` is null. Backup round trip for format 3, and a restore of a format-2 backup.
-- **Health unit tests:** availability counted only with `bridge/info` enabled (a stale retained offline message is ignored when disabled); battery low from `battery_low` and from ≤ 20; the dot's transition table (first report, false → true, true → false, acknowledge); interview FAILED and unsupported.
+- **Health unit tests:** availability counted only with `bridge/info` enabled (a stale retained offline message is ignored when disabled); battery low from `battery_low` alone and from `battery` ≤ 20 alone; the dot's transition table (first report, false → true, true → false, acknowledge, and a message without battery fields leaving the row alone); interview FAILED and unsupported.
 - **Base topic:** every reader prefers `z2mBaseTopic`; null keeps the 1.12 derivation.
 - **Custom form:** "Pick a device" topic writing for the three prefix cases; existing tiles keep their values; Advanced opens when in use.
 - **Window classes:** columns at 599, 600, 679, 839 and 840 dp with the rail; a drag across a 4-column row in Edit mode.
-- **Goldens.** The phone matrix (light/dark, English/Hebrew, text 1.0/2.0) adds: the Devices tab with filters and a low-battery row, the device page (color light; contact sensor with low battery, dark), Settings, the home page, the language picker and the Custom MQTT tile form. `tabletMatrix` adds: the dashboard with rail and chips, Edit mode, Devices list-detail, Scenes list-detail and Settings. A medium portrait variant (700 × 1000) adds the dashboard.
+- **Goldens.** The phone matrix (light/dark, English/Hebrew, text 1.0/2.0) adds: the Devices tab with filters and a low-battery row, the device page (color light; contact sensor with low battery, dark), Settings, the home page, the language picker and the Custom MQTT tile form. `tabletMatrix` adds: the dashboard with rail and chips, Edit mode, Devices list-detail, Scenes list-detail and Settings. Its Hebrew variants are the check that the rail sits on the right and the list pane on the start side. A medium portrait variant (700 × 1000) adds the dashboard.
 - **Accessibility widget tests:** the rail and dot semantics, filter chip labels with counts, the device page cards' headings.
 
 ## 10. Exit checks
