@@ -70,7 +70,7 @@ void main() {
           connectionId: 'c1',
           name: 'Home',
           colorSeed: 0,
-          iconCodepoint: 0xe318,
+          iconCodepoint: 0xe88a, // a 1.12 preview's "?" bubble
           createdAt: 0,
           updatedAt: 0,
         ));
@@ -110,6 +110,8 @@ void main() {
     expect(await db.select(db.sections).get(), hasLength(1));
     expect(await db.select(db.deviceDismissals).get(), hasLength(1));
     expect(await db.select(db.deviceHealthFlags).get(), isEmpty);
+    final dash = await db.select(db.dashboards).getSingle();
+    expect(dash.iconCodepoint, 0xe318, reason: 'the ? bubble becomes home');
   });
 
   test('every 1.11 panel survives 5 → 7 with order, config and size',

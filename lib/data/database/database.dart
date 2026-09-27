@@ -100,6 +100,13 @@ class AppDatabase extends _$AppDatabase {
         // run with enforcement on; SQLite leaves it off per connection.
         beforeOpen: (_) async {
           await customStatement('PRAGMA foreign_keys = ON');
+          // The "?" bubble repair also runs on every open: 1.12 previews
+          // reached schema 6 before the migration had it. Idempotent, and
+          // 0xe88a was never pickable, so no user choice is overwritten.
+          await customStatement(
+            'UPDATE dashboards SET icon_codepoint = 58136 '
+            'WHERE icon_codepoint = 59530',
+          );
         },
       );
 

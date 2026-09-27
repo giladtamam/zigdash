@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,16 @@ import 'language_screen.dart';
 final appVersionProvider = FutureProvider<String>((ref) async {
   final info = await PackageInfo.fromPlatform();
   return '${info.version} (${info.buildNumber})';
+});
+
+/// Whether the platform offers wallpaper colors (Android 12 and later).
+/// Unknown (no plugin, e.g. in tests) counts as available.
+final dynamicColorAvailableProvider = FutureProvider<bool>((ref) async {
+  try {
+    return await DynamicColorPlugin.getCorePalette() != null;
+  } catch (_) {
+    return true;
+  }
 });
 
 /// The published privacy policy (the one the store listing links).
@@ -75,12 +86,13 @@ class SettingsScreen extends ConsumerWidget {
                   onSelectionChanged: (s) => ctrl.setThemeMode(s.first),
                 ),
               ),
-              SwitchListTile(
-                title: Text(l10n.settingsDynamicColor),
-                subtitle: Text(l10n.settingsDynamicColorSubtitle),
-                value: settings.dynamicColor,
-                onChanged: ctrl.setDynamicColor,
-              ),
+              if (ref.watch(dynamicColorAvailableProvider).valueOrNull ?? true)
+                SwitchListTile(
+                  title: Text(l10n.settingsDynamicColor),
+                  subtitle: Text(l10n.settingsDynamicColorSubtitle),
+                  value: settings.dynamicColor,
+                  onChanged: ctrl.setDynamicColor,
+                ),
               ListTile(
                 leading: const Icon(Icons.translate),
                 title: Text(l10n.settingsLanguage),

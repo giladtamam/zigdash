@@ -148,6 +148,9 @@ Boards: G-tablet-dashboard, G-tablet-devices.
 - **Wide readings at expanded width (§7)** apply to "Add as reading tile" on the device page. Add tile's "Reading" row keeps its form.
 - **The Coordinator** was already left out of `bridge/devices` parsing.
 - **Topic fields** always run left to right, also in Hebrew.
+- **"Colors from wallpaper"** appears when the platform offers a wallpaper palette (`DynamicColorPlugin.getCorePalette()`), which is Android 12 and later.
+- **The "?" icon repair** from the 1.12 migration also runs on every database open. 1.12 previews had reached schema 6 before the migration included it. It is idempotent, and 0xe88a was never pickable, so no user choice is overwritten.
+- **Undo bars** close after 5 s. Flutter 3.47 keeps any snack bar with an action open until it is dismissed.
 
 ## Deferred, with a reason
 
