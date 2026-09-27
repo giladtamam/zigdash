@@ -35,8 +35,8 @@ abstract final class SignalPalette {
   static const onHealthyLight = Color(0xFF1F6F43);
   static const healthyDark = Color(0xFF1E3326);
   static const onHealthyDark = Color(0xFF8FD6A8);
-  static const offlineLight = Color(0xFF8A826F);
-  static const offlineDark = Color(0xFF7D7566);
+  static const offlineLight = Color(0xFF6A6252);
+  static const offlineDark = Color(0xFF9E9583);
 }
 
 /// Corner radii (tokens.md, Shape).

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/dashboard_accent.dart';
+import '../wall_display.dart';
 import '../../../core/theme/signal_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -132,14 +133,24 @@ class _DashboardsTabbed extends ConsumerWidget {
         Dashboard current() =>
             dashboards[DefaultTabController.of(tabCtx).index];
         final wide = WindowClass.of(context).hasRail;
-        return PopScope(
+        final chromeHidden = ref.watch(wallChromeHiddenProvider);
+        return AnimatedBuilder(
+          animation: DefaultTabController.of(tabCtx),
+          builder: (_, child) => WallDisplayScope(
+            dashboardId: current().id,
+            active: editing == null,
+            child: child!,
+          ),
+          child: PopScope(
           // System back leaves Edit mode first.
           canPop: editing == null,
           onPopInvokedWithResult: (didPop, _) {
             if (!didPop) edit.exit();
           },
           child: Scaffold(
-          appBar: editing != null
+          appBar: chromeHidden && editing == null
+              ? null
+              : editing != null
               ? AppBar(
                   automaticallyImplyLeading: false,
                   title: Text(l10n.editEditing),
@@ -188,7 +199,7 @@ class _DashboardsTabbed extends ConsumerWidget {
                 },
               ),
               const SettingsAction(),
-              _DashboardMenu(connectionId: connectionId),
+              _DashboardMenu(connectionId: connectionId, current: current),
             ],
             bottom: dashboards.length < 2 || editing != null
                 ? null
@@ -250,7 +261,7 @@ class _DashboardsTabbed extends ConsumerWidget {
             ],
           ),
           // In Edit mode the bottom bar offers Add tile and Add section.
-          floatingActionButton: editing != null
+          floatingActionButton: editing != null || chromeHidden
               ? null
               : FloatingActionButton.extended(
                   onPressed: () => tabCtx.push(
@@ -260,6 +271,7 @@ class _DashboardsTabbed extends ConsumerWidget {
                   label: Text(l10n.dashAddTile),
                 ),
           ),
+        ),
         );
       }),
     );
@@ -535,9 +547,12 @@ Future<void> openCustomTilePicker(BuildContext context,
 /// App-bar overflow menu offering JSON export/import of this connection's
 /// dashboards (backup / copy-to-another-device).
 class _DashboardMenu extends ConsumerWidget {
-  const _DashboardMenu({required this.connectionId});
+  const _DashboardMenu({required this.connectionId, this.current});
 
   final String connectionId;
+
+  /// The dashboard on screen, for its Wall display switch.
+  final Dashboard Function()? current;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -555,9 +570,18 @@ class _DashboardMenu extends ConsumerWidget {
             _export(context, ref);
           case 'import':
             _import(context, ref);
+          case 'wall':
+            final d = current?.call();
+            if (d != null) ref.read(wallDisplayProvider(d.id).notifier).toggle();
         }
       },
       itemBuilder: (_) => [
+        if (current != null)
+          CheckedPopupMenuItem(
+            value: 'wall',
+            checked: ref.read(wallDisplayProvider(current!().id)),
+            child: Text(l10n.dashWallDisplay),
+          ),
         PopupMenuItem(value: 'addDashboard', child: Text(l10n.dashAddDashboard)),
         if (homes < 2)
           PopupMenuItem(value: 'addHome', child: Text(l10n.homeAdd)),

@@ -737,5 +737,6 @@
   "panelFormValueChoices": "ערכים מהמכשיר הזה",
   "panelFormAdvanced": "מתקדם",
   "panelFormAdvancedSubtitle": "עקיפת קידומת, QoS, retain",
-  "panelFormStateTopicHelper": "ריק = הקידומת עצמה (המצב של מכשיר Zigbee2MQTT)."
+  "panelFormStateTopicHelper": "ריק = הקידומת עצמה (המצב של מכשיר Zigbee2MQTT).",
+  "dashWallDisplay": "תצוגת קיר"
 }

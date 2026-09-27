@@ -1974,4 +1974,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'Blank = the prefix itself (a Zigbee2MQTT device\'s state).';
+
+  @override
+  String get dashWallDisplay => 'Wall display';
 }

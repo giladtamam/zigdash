@@ -3673,6 +3673,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blank = the prefix itself (a Zigbee2MQTT device\'s state).'**
   String get panelFormStateTopicHelper;
+
+  /// No description provided for @dashWallDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display'**
+  String get dashWallDisplay;
 }
 
 class _AppLocalizationsDelegate

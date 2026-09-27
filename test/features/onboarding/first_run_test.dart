@@ -1,4 +1,5 @@
 import 'package:drift/native.dart';
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,6 +73,53 @@ void main() {
     expect(c.read(onboardingProvider).needsOnboarding, isFalse);
     expect(c.read(lastDashboardStoreProvider).startLocation,
         '/connections/$realId/dashboards');
+  });
+
+  group('tablets default to dark at the end of first run (signal-2.0.md §5)',
+      () {
+    ProviderContainer on(double shortestSide, ProviderContainer base) =>
+        ProviderContainer(parent: base, overrides: [
+          firstRunProvider.overrideWith(
+              (ref) => FirstRun(ref, shortestSide: () => shortestSide)),
+        ]);
+
+    test('a fresh tablet install ends in dark', () async {
+      final t = on(800, c);
+      addTearDown(t.dispose);
+      await t.read(firstRunProvider).finish(await _insertConnection(db, host: 'h'));
+      expect(t.read(settingsControllerProvider).themeMode, ThemeMode.dark);
+    });
+
+    test('the demo on a tablet ends in dark too', () async {
+      final t = on(800, c);
+      addTearDown(t.dispose);
+      await t.read(firstRunProvider).startDemo();
+      expect(t.read(settingsControllerProvider).themeMode, ThemeMode.dark);
+    });
+
+    test('a phone keeps System', () async {
+      final t = on(412, c);
+      addTearDown(t.dispose);
+      await t.read(firstRunProvider).finish(await _insertConnection(db, host: 'h'));
+      expect(t.read(settingsControllerProvider).themeMode, ThemeMode.system);
+    });
+
+    test('an upgrader (first run already done) keeps what they had', () async {
+      await c.read(onboardingProvider.notifier).completeOnboarding();
+      final t = on(800, c);
+      addTearDown(t.dispose);
+      await t.read(firstRunProvider).finish(await _insertConnection(db, host: 'h'));
+      expect(t.read(settingsControllerProvider).themeMode, ThemeMode.system);
+    });
+
+    test('a theme already chosen is kept', () async {
+      await c.read(settingsControllerProvider.notifier)
+          .setThemeMode(ThemeMode.light);
+      final t = on(800, c);
+      addTearDown(t.dispose);
+      await t.read(firstRunProvider).finish(await _insertConnection(db, host: 'h'));
+      expect(t.read(settingsControllerProvider).themeMode, ThemeMode.light);
+    });
   });
 
   test('finishing first run without a demo just completes it', () async {

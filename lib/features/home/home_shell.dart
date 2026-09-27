@@ -11,6 +11,7 @@ import '../../data/repositories/dashboard_repo.dart';
 import '../../data/repositories/section_repo.dart';
 import '../dashboards/edit_mode.dart';
 import '../devices/device_registry.dart';
+import '../dashboards/wall_display.dart';
 import '../devices/devices_providers.dart';
 import '../panels/widgets/edit_grid.dart' show askSectionName;
 
@@ -64,6 +65,8 @@ class HomeShell extends ConsumerWidget {
         ? editingId
         : null;
     final selected = indexOf(location);
+    // A wall display hides the navigation until the screen is touched.
+    final chromeHidden = ref.watch(wallChromeHiddenProvider) && selected == 0;
     void go(int i) => context.go(switch (i) {
           1 => Routes.homeDevices(connectionId),
           2 => Routes.homeScenes(connectionId),
@@ -76,6 +79,7 @@ class HomeShell extends ConsumerWidget {
 
     // Medium and expanded windows: a navigation rail, which stays in Edit
     // mode (Add tile and Add section move into the Edit header).
+    if (chromeHidden) return Scaffold(body: child);
     if (WindowClass.of(context).hasRail) {
       return Scaffold(
         body: Row(

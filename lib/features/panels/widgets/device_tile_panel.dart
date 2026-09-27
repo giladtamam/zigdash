@@ -136,13 +136,25 @@ class DeviceTilePanel extends ConsumerWidget {
     final fgVariant = filled ? fg : scheme.onSurfaceVariant;
     const shape = RoundedSuperellipseBorder(
         borderRadius: BorderRadiusDirectional.all(Radius.circular(SignalRadii.tile)));
-    return Card(
-      color: alarming
-          ? roles.attention
-          : anyOn
-              ? roles.active
-              : null,
-      shape: filled ? shape : null,
+    // The fill cross-fades on a state change (M3 standard timing), instantly
+    // when the system asks for no animations (signal-2.0.md §6).
+    final idleColor = theme.cardTheme.color ?? roles.idle;
+    return TweenAnimationBuilder<Color?>(
+      tween: ColorTween(
+          end: alarming
+              ? roles.attention
+              : anyOn
+                  ? roles.active
+                  : idleColor),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 200),
+      curve: Curves.easeInOutCubicEmphasized,
+      builder: (context, fill, child) => Card(
+        color: fill,
+        shape: filled ? shape : null,
+        child: child,
+      ),
       child: Semantics(
         customSemanticsActions: {
           CustomSemanticsAction(label: l10n.deviceControls): openSheet,

@@ -668,5 +668,6 @@
   "panelFormValueChoices": "Värden från den här enheten",
   "panelFormAdvanced": "Avancerat",
   "panelFormAdvancedSubtitle": "Prefix-åsidosättning, QoS, retain",
-  "panelFormStateTopicHelper": "Tomt = själva prefixet (status för en Zigbee2MQTT-enhet)."
+  "panelFormStateTopicHelper": "Tomt = själva prefixet (status för en Zigbee2MQTT-enhet).",
+  "dashWallDisplay": "Väggskärm"
 }

@@ -1991,4 +1991,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'Vide = le préfixe lui-même (état d’un appareil Zigbee2MQTT).';
+
+  @override
+  String get dashWallDisplay => 'Affichage mural';
 }

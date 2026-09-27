@@ -1987,4 +1987,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'Vacío = el propio prefijo (estado de un dispositivo Zigbee2MQTT).';
+
+  @override
+  String get dashWallDisplay => 'Pantalla de pared';
 }

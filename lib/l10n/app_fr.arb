@@ -593,5 +593,6 @@
   "panelFormValueChoices": "Valeurs de cet appareil",
   "panelFormAdvanced": "Avancé",
   "panelFormAdvancedSubtitle": "Remplacement du préfixe, QoS, retain",
-  "panelFormStateTopicHelper": "Vide = le préfixe lui-même (état d’un appareil Zigbee2MQTT)."
+  "panelFormStateTopicHelper": "Vide = le préfixe lui-même (état d’un appareil Zigbee2MQTT).",
+  "dashWallDisplay": "Affichage mural"
 }

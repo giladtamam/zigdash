@@ -1988,4 +1988,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'Leer = das Präfix selbst (Status eines Zigbee2MQTT-Geräts).';
+
+  @override
+  String get dashWallDisplay => 'Wandanzeige';
 }

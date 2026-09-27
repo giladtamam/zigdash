@@ -668,5 +668,6 @@
   "panelFormValueChoices": "Werte von diesem Gerät",
   "panelFormAdvanced": "Erweitert",
   "panelFormAdvancedSubtitle": "Präfix-Überschreibung, QoS, Retain",
-  "panelFormStateTopicHelper": "Leer = das Präfix selbst (Status eines Zigbee2MQTT-Geräts)."
+  "panelFormStateTopicHelper": "Leer = das Präfix selbst (Status eines Zigbee2MQTT-Geräts).",
+  "dashWallDisplay": "Wandanzeige"
 }

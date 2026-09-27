@@ -668,5 +668,6 @@
   "panelFormValueChoices": "Valores de este dispositivo",
   "panelFormAdvanced": "Avanzado",
   "panelFormAdvancedSubtitle": "Anular prefijo, QoS, retener",
-  "panelFormStateTopicHelper": "Vacío = el propio prefijo (estado de un dispositivo Zigbee2MQTT)."
+  "panelFormStateTopicHelper": "Vacío = el propio prefijo (estado de un dispositivo Zigbee2MQTT).",
+  "dashWallDisplay": "Pantalla de pared"
 }

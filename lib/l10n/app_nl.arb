@@ -668,5 +668,6 @@
   "panelFormValueChoices": "Waarden van dit apparaat",
   "panelFormAdvanced": "Geavanceerd",
   "panelFormAdvancedSubtitle": "Prefix overschrijven, QoS, retain",
-  "panelFormStateTopicHelper": "Leeg = het voorvoegsel zelf (status van een Zigbee2MQTT-apparaat)."
+  "panelFormStateTopicHelper": "Leeg = het voorvoegsel zelf (status van een Zigbee2MQTT-apparaat).",
+  "dashWallDisplay": "Wandweergave"
 }

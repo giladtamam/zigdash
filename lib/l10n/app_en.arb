@@ -680,5 +680,6 @@
   "panelFormValueChoices": "Values from this device",
   "panelFormAdvanced": "Advanced",
   "panelFormAdvancedSubtitle": "Prefix override, QoS, retain",
-  "panelFormStateTopicHelper": "Blank = the prefix itself (a Zigbee2MQTT device's state)."
+  "panelFormStateTopicHelper": "Blank = the prefix itself (a Zigbee2MQTT device's state).",
+  "dashWallDisplay": "Wall display"
 }

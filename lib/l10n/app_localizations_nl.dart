@@ -1985,4 +1985,7 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'Leeg = het voorvoegsel zelf (status van een Zigbee2MQTT-apparaat).';
+
+  @override
+  String get dashWallDisplay => 'Wandweergave';
 }

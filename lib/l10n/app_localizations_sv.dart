@@ -1978,4 +1978,7 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'Tomt = själva prefixet (status för en Zigbee2MQTT-enhet).';
+
+  @override
+  String get dashWallDisplay => 'Väggskärm';
 }

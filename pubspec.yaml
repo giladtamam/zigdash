@@ -59,6 +59,7 @@ dependencies:
   in_app_review: ^2.0.12
   # Setup guides open in the browser.
   url_launcher: ^6.3.0
+  wakelock_plus: ^1.3.3
 
 dev_dependencies:
   flutter_test:

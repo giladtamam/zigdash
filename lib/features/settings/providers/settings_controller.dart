@@ -43,6 +43,12 @@ class SettingsController extends Notifier<AppSettings> {
     await _prefs.setString(_kThemeMode, _themeModeToString(mode));
   }
 
+  /// Sets [mode] only when the user has never chosen a theme.
+  Future<void> setThemeModeIfUnset(ThemeMode mode) async {
+    if (_prefs.containsKey(_kThemeMode)) return;
+    await setThemeMode(mode);
+  }
+
   Future<void> setDynamicColor(bool enabled) async {
     state = state.copyWith(dynamicColor: enabled);
     await _prefs.setBool(_kDynamicColor, enabled);

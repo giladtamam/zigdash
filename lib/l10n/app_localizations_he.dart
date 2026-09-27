@@ -1963,4 +1963,7 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get panelFormStateTopicHelper =>
       'ריק = הקידומת עצמה (המצב של מכשיר Zigbee2MQTT).';
+
+  @override
+  String get dashWallDisplay => 'תצוגת קיר';
 }
