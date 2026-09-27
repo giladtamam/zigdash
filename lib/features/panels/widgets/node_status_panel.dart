@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/signal_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
@@ -36,7 +37,7 @@ class NodeStatusPanel extends ConsumerWidget {
         if (v == null) return (Icons.help_outline, scheme.outline, context.l10n.panelNodeStatusUnknown);
         final online = v.toString() == config.onlinePayload;
         return online
-            ? (Icons.cloud_done, Colors.green.shade600, context.l10n.panelNodeStatusOnline)
+            ? (Icons.cloud_done, SignalColors.of(context).onHealthy, context.l10n.panelNodeStatusOnline)
             : (Icons.cloud_off, scheme.error, context.l10n.panelNodeStatusOffline);
       },
     );

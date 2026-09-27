@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/core/theme/signal_colors.dart';
+import 'package:zigdash/core/theme/signal_icons.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
@@ -124,7 +126,7 @@ void main() {
     expect(find.text('Living room bulb'), findsOneWidget);
     expect(_text('On · 100% · 2000 K'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.lightbulb_outline));
+    await tester.tap(find.byIcon(Symbols.lightbulb));
     await tester.pumpAndSettle();
     expect(mgr.sent.single.$1, 'zigbee2mqtt/0xc4d7fdbbfeba0000/set');
     expect(mgr.sent.single.$2, {'state': 'TOGGLE'});
@@ -138,7 +140,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Waiting for first report'), findsOneWidget);
-    await tester.tap(find.byIcon(Icons.lightbulb_outline));
+    await tester.tap(find.byIcon(Symbols.lightbulb));
     await tester.pumpAndSettle();
     expect(mgr.sent.single.$2, {'state': 'TOGGLE'});
   });
@@ -175,7 +177,7 @@ void main() {
     });
   });
 
-  testWidgets('a leak alarm fills the tile with the error colour',
+  testWidgets('a leak alarm fills the tile with the attention colour',
       (tester) async {
     await tester.pumpWidget(_wrap(
       _device([
@@ -188,8 +190,8 @@ void main() {
 
     expect(_text('Leak detected · 15%'), findsOneWidget);
     final card = tester.widget<Card>(find.byType(Card));
-    final scheme = Theme.of(tester.element(find.byType(Card))).colorScheme;
-    expect(card.color, scheme.errorContainer);
+    expect(card.color,
+        SignalColors.of(tester.element(find.byType(Card))).attention);
   });
 
   testWidgets('climate leads with the temperature', (tester) async {
@@ -237,7 +239,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_text('1 on · 1 off'), findsOneWidget);
-    await tester.tap(find.byIcon(Icons.power_settings_new).last);
+    await tester.tap(find.byIcon(Symbols.powerSettingsNew).last);
     await tester.pumpAndSettle();
     expect(mgr.sent.single.$2, {'state_l2': 'ON'});
   });

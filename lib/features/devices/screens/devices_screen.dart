@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../../core/theme/signal_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -622,7 +623,9 @@ class _PairedEntryTile extends StatelessWidget {
       contentPadding: EdgeInsetsDirectional.zero,
       leading: Icon(
         entry.ready ? Icons.check_circle : Icons.hourglass_top,
-        color: entry.ready ? Colors.green : Colors.orange,
+        color: entry.ready
+            ? SignalColors.of(context).onHealthy
+            : SignalColors.of(context).onAttention,
       ),
       title: Text(
         entry.ready

@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
+
+import '../../../core/theme/signal_colors.dart';
+import '../../../core/theme/signal_icons.dart';
+import '../../../core/theme/tokens.dart';
+import '../../../core/utils/window_class.dart';import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
@@ -120,21 +124,34 @@ class DeviceTilePanel extends ConsumerWidget {
     final line = deviceStateLine(state, l10n, notResponding: silent);
     final color = cls == DeviceClass.colorLight ? state.lightColor : null;
 
+    // Signal (signal-2.0.md §4): amber and borderless when on, the attention
+    // container during an alarm, the idle tile with its hairline otherwise.
+    final roles = SignalColors.of(context);
+    final filled = alarming || anyOn;
+    final fg = alarming
+        ? roles.onAttention
+        : anyOn
+            ? roles.onActive
+            : scheme.onSurface;
+    final fgVariant = filled ? fg : scheme.onSurfaceVariant;
+    const shape = RoundedSuperellipseBorder(
+        borderRadius: BorderRadiusDirectional.all(Radius.circular(SignalRadii.tile)));
     return Card(
       color: alarming
-          ? scheme.errorContainer
+          ? roles.attention
           : anyOn
-              ? scheme.primaryContainer
+              ? roles.active
               : null,
+      shape: filled ? shape : null,
       child: Semantics(
         customSemanticsActions: {
           CustomSemanticsAction(label: l10n.deviceControls): openSheet,
         },
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          customBorder: shape,
           onTap: openSheet,
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -146,16 +163,17 @@ class DeviceTilePanel extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsetsDirectional.only(end: 8),
                           child: _QuickAction(
-                            icon: deviceClassIcon(cls),
+                            icon: deviceClassIcon(cls, alarm: state.alarm),
                             on: state.isOn(f),
                             tooltip: l10n.deviceToggle,
                             onPressed: () => toggle(f),
                           ),
                         )
                     else
-                      Icon(
+                      SignalIcon(
                         deviceClassIcon(cls, alarm: state.alarm),
-                        color: alarming ? scheme.error : scheme.onSurfaceVariant,
+                        active: filled,
+                        color: fgVariant,
                       ),
                     const Spacer(),
                     if (color != null)
@@ -174,28 +192,42 @@ class DeviceTilePanel extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 if (big != null)
-                  Text(big, style: theme.textTheme.headlineMedium),
+                  Text(big,
+                      style: theme.textTheme.headlineMedium?.copyWith(color: fg)),
                 Text(
                   panel.name,
-                  style: theme.textTheme.titleSmall,
+                  style: theme.textTheme.titleMedium?.copyWith(color: fg),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   line,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: state.batteryLow ? scheme.error : null,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: state.batteryLow && !filled
+                        ? roles.onAttention
+                        : fgVariant,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (cls == DeviceClass.colorLight && profile.brightness != null)
-                  _InlineBrightness(
+                  // On amber, the slider is drawn in ink so it stays visible.
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: filled ? fg : null,
+                      thumbColor: filled ? fg : null,
+                      inactiveTrackColor: filled ? fg.withValues(alpha: 0.24) : null,
+                    ),
+                    child: IconTheme.merge(
+                      data: IconThemeData(color: fgVariant),
+                      child: _InlineBrightness(
                     state: state,
                     onChanged: (pct) => sendDeviceCommand(
                         context, ref, connectionId, publishTopic,
                         DeviceCommand.brightnessPercent(
                             profile.brightness!, pct)),
+                  ),
+                    ),
                   ),
                 if (cls == DeviceClass.cover)
                   _CoverControls(
@@ -329,17 +361,19 @@ String formatReading(num v, String? unit) {
 /// Isolates [s] as a left-to-right run (U+2066 … U+2069).
 String ltr(String s) => '\u2066$s\u2069';
 
+/// A device class's app icon, from the Symbols subset (ADR 0005). Draw it
+/// with [SignalIcon] so it fills when the device is on.
 IconData deviceClassIcon(DeviceClass cls, {bool? alarm}) => switch (cls) {
-      DeviceClass.colorLight || DeviceClass.light => Icons.lightbulb_outline,
-      DeviceClass.switchPlug => Icons.power_settings_new,
-      DeviceClass.cover => Icons.blinds,
+      DeviceClass.colorLight || DeviceClass.light => Symbols.lightbulb,
+      DeviceClass.switchPlug => Symbols.powerSettingsNew,
+      DeviceClass.cover => Symbols.blinds,
       DeviceClass.leakSmoke =>
-        alarm == true ? Icons.water_damage : Icons.water_drop_outlined,
+        alarm == true ? Symbols.waterDamage : Symbols.waterDrop,
       DeviceClass.contact =>
-        alarm == false ? Icons.door_front_door_outlined : Icons.sensor_door_outlined,
-      DeviceClass.motion => Icons.sensors,
-      DeviceClass.climate => Icons.thermostat,
-      DeviceClass.generic => Icons.device_unknown_outlined,
+        alarm == false ? Symbols.doorFront : Symbols.sensorDoor,
+      DeviceClass.motion => Symbols.sensors,
+      DeviceClass.climate => Symbols.thermostat,
+      DeviceClass.generic => Symbols.deviceUnknown,
     };
 
 class _QuickAction extends StatelessWidget {
@@ -357,21 +391,39 @@ class _QuickAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A squircle, ink with an amber icon when on and raised with an ink
+    // icon otherwise (signal-2.0.md §4). Unknown state still switches: the
+    // command toggles (or turns on) without knowing the current state.
+    final roles = SignalColors.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final isOn = on == true;
+    final size = SignalSpacing.quickAction[WindowClass.of(context).index];
     return Semantics(
       toggled: on ?? false,
-      child: on == true
-          ? IconButton.filled(
-              onPressed: onPressed,
-              tooltip: tooltip,
-              icon: Icon(icon),
-            )
-          : IconButton.filledTonal(
-              // Unknown state still switches: the command toggles (or turns
-              // on) without knowing the current state.
-              onPressed: onPressed,
-              tooltip: tooltip,
-              icon: Icon(icon),
+      child: Tooltip(
+        message: tooltip,
+        child: Material(
+          color: isOn ? roles.onActive : roles.raised,
+          shape: const RoundedSuperellipseBorder(
+              borderRadius: BorderRadiusDirectional.all(
+                  Radius.circular(SignalRadii.quickAction))),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onPressed,
+            child: SizedBox.square(
+              dimension: size,
+              child: Center(
+                child: SignalIcon(
+                  icon,
+                  active: isOn,
+                  size: size * 0.5,
+                  color: isOn ? roles.active : scheme.onSurface,
+                ),
+              ),
             ),
+          ),
+        ),
+      ),
     );
   }
 }

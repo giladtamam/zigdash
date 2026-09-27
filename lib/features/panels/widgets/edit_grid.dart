@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
+
+import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/dashboard_accent.dart';import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -262,7 +264,9 @@ class _EditableSectionHeaderState extends ConsumerState<EditableSectionHeader>
           Expanded(
             child: Semantics(
               header: true,
-              child: Text(s.name, style: theme.textTheme.titleSmall),
+              child: Text(sectionLabelText(context, s.name),
+                  style: sectionLabelStyle(context)
+                      .copyWith(color: DashboardAccent.of(context))),
             ),
           ),
           IconButton(

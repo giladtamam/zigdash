@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'core/theme/font_licenses.dart';
 import 'features/settings/providers/settings_controller.dart';
 
 Future<void> main() async {
@@ -15,6 +16,7 @@ Future<void> main() async {
     // Android 15 enforces it. Scaffold/NavigationBar consume the insets.
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
+  registerFontLicenses();
   final prefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(

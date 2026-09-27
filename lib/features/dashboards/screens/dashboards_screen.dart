@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/dashboard_accent.dart';
+import '../../../core/theme/signal_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -229,12 +231,12 @@ class _DashboardsTabbed extends ConsumerWidget {
                       ? const NeverScrollableScrollPhysics()
                       : null,
                   children: dashboards.map((d) {
-                    final dashboardTheme = Theme.of(tabCtx).copyWith(
-                      colorScheme: ColorScheme.fromSeed(
-                        seedColor: Color(d.colorSeed),
-                        brightness: Theme.of(tabCtx).brightness,
-                      ),
-                    );
+                    // The dashboard's colour is an accent only (Signal).
+                    final base = Theme.of(tabCtx);
+                    final dashboardTheme = base.copyWith(extensions: [
+                      ...base.extensions.values,
+                      DashboardAccent.fromSeed(d.colorSeed, base.brightness),
+                    ]);
                     return Theme(
                       data: dashboardTheme,
                       child: PanelGrid(
@@ -329,7 +331,9 @@ class _StatusChip extends StatelessWidget {
             height: 8,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: ok ? Colors.green.shade700 : theme.colorScheme.error,
+              color: ok
+                  ? SignalColors.of(context).onHealthy
+                  : theme.colorScheme.error,
             ),
           ),
           const SizedBox(width: 6),
@@ -488,7 +492,7 @@ Future<void> openCustomTilePicker(BuildContext context,
                   style: const TextStyle(fontWeight: FontWeight.w600)),
             ),
             ListTile(
-              leading: const Icon(Icons.circle, color: Colors.green),
+              leading: Icon(Icons.circle, color: SignalColors.of(sheetCtx).onHealthy),
               title: Text(sheetCtx.l10n.panelPickerLedTitle),
               subtitle: Text(sheetCtx.l10n.panelPickerLedSubtitle),
               onTap: () => Navigator.pop(sheetCtx, 'led'),

@@ -196,7 +196,7 @@ extension _PanelFormFields on _State {
               height: 16,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: cs.outline.withValues(alpha: 0.3),
                 border: Border.all(color: cs.outline, width: 1.5),
               ),
             ),

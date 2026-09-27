@@ -188,9 +188,10 @@ void main() {
     await tester.pumpAndSettle();
 
     double top(String text) => tester.getTopLeft(find.text(text)).dy;
-    expect(top('Log'), lessThan(top('Lights')));
-    expect(top('Lights'), lessThan(top('Lamp')));
-    expect(top('Lamp'), lessThan(top('Sensors')));
-    expect(top('Sensors'), lessThan(top('Door')));
+    // Section labels are uppercased in Signal (not in Hebrew).
+    expect(top('Log'), lessThan(top('LIGHTS')));
+    expect(top('LIGHTS'), lessThan(top('Lamp')));
+    expect(top('Lamp'), lessThan(top('SENSORS')));
+    expect(top('SENSORS'), lessThan(top('Door')));
   });
 }

@@ -82,6 +82,31 @@ flutter:
   generate: true
   assets:
     - docs/USER_GUIDE.md
+    - assets/fonts/licenses/
+  # Signal type (docs/design/signal-2.0.md §2): bundled subsets, cut by
+  # tool/fonts/build_fonts.py. Never fetched at runtime.
+  fonts:
+    - family: SpaceGrotesk
+      fonts:
+        - asset: assets/fonts/SpaceGrotesk-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/SpaceGrotesk-Bold.ttf
+          weight: 700
+    - family: IBMPlexSans
+      fonts:
+        - asset: assets/fonts/IBMPlexSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSans-SemiBold.ttf
+          weight: 600
+    - family: IBMPlexSansHebrew
+      fonts:
+        - asset: assets/fonts/IBMPlexSansHebrew-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSansHebrew-SemiBold.ttf
+          weight: 600
+    - family: MaterialSymbolsRounded
+      fonts:
+        - asset: assets/fonts/MaterialSymbolsRounded-subset.ttf
 
 # Launcher icon generation: `dart run flutter_launcher_icons`.
 # Source PNGs are produced by `dart run tool/gen_icon.dart`.

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/dashboard_accent.dart';import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
@@ -196,7 +198,9 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
       child: Semantics(
         header: true,
-        child: Text(name, style: Theme.of(context).textTheme.titleSmall),
+        child: Text(sectionLabelText(context, name),
+            style: sectionLabelStyle(context)
+                .copyWith(color: DashboardAccent.of(context))),
       ),
     );
   }
