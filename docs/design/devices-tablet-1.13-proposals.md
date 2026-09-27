@@ -1,6 +1,6 @@
 # 1.13 Devices and tablet — proposals (draft)
 
-Status: **proposed, not approved.** These are the recommendations from the 1.13 design map (2026-09-27), kept here so they survive outside the gitignored wayfinder/ folder. The build spec replaces this file once the user accepts or overrides them. Health facts: [research/z2m-health-data.md](research/z2m-health-data.md).
+Status: **accepted by the user on 2026-09-27.** These are the decisions from the 1.13 design map (2026-09-27), kept here so they survive outside the gitignored wayfinder/ folder. The build spec replaces this file once the user accepts or overrides them. Health facts: [research/z2m-health-data.md](research/z2m-health-data.md).
 
 ## Decide the Devices tab: rows, filters, the tab dot
 
