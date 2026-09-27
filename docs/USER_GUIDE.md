@@ -125,10 +125,12 @@ is encrypted end‑to‑end by Tailscale. Full setup steps: `docs/tailscale-remo
 
 ## 7. Settings
 
-**Settings** tab:
+**Settings** (the gear in the header):
+- **Homes** — every broker you use, as a home. Tap one to rename it, edit its connection, set its **Zigbee2MQTT base topic** (if yours is not `zigbee2mqtt`), switch to it, or delete it. **Add a home** runs setup again.
 - **Appearance** — Theme: System / Light / Dark.
 - **Use Material You colors** — on Android 12+, themes the app from your wallpaper palette; otherwise uses the app's brand color.
-- **Language** — System / English / עברית (Hebrew). Hebrew automatically switches the whole UI to right‑to‑left.
+- **Language** — System, or one of the app's languages. Hebrew switches the whole UI to right‑to‑left.
+- **About** — rate ZigDash, this guide, the privacy policy and the version.
 
 All settings persist across restarts.
 
@@ -161,6 +163,27 @@ The panel isn't receiving the value it expects. Check the **subscribe topic** an
 **JSON path** match your device's actual MQTT messages. Use a tool like MQTT
 Explorer (or the project's `bin/smoke.dart`) to see the real topic/payload, then
 set the JSON path to the right field (e.g. `state`, `position`, `battery`).
+
+**Q: Why don't my devices show Online or Offline?**
+Zigbee2MQTT only reports whether a device is online when its **availability**
+feature is on, and it is off by default. Without it, ZigDash never guesses: a
+device that ignores a state request shows **Not responding**, and battery devices
+show their last report. To turn availability on:
+- In the Zigbee2MQTT web interface: **Settings → Availability**, turn it on, save and restart Zigbee2MQTT; or
+- in `configuration.yaml` add:
+  ```yaml
+  availability:
+    enabled: true
+  ```
+  and restart Zigbee2MQTT.
+
+Afterwards the **Devices** tab shows Offline devices under **Needs attention**,
+and each device page shows its availability.
+
+**Q: What does the dot on Devices mean?**
+A new device joined your network and is not on a dashboard yet, or a battery
+went low. Open the device (or add it to a dashboard, or dismiss it) and the dot
+goes away.
 
 **Q: Tapping a control doesn't do anything.**
 - Confirm the connection is **Connected** (a control publish is dropped while disconnected).
