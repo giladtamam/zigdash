@@ -3589,6 +3589,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete home'**
   String get homeDelete;
+
+  /// No description provided for @devicesSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a device'**
+  String get devicesSelect;
+
+  /// No description provided for @scenesSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a scene to edit'**
+  String get scenesSelect;
 }
 
 class _AppLocalizationsDelegate

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
+import '../../core/utils/window_class.dart';
 import '../../data/database/database.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../data/repositories/dashboard_repo.dart';
@@ -62,18 +63,65 @@ class HomeShell extends ConsumerWidget {
                 true
         ? editingId
         : null;
-    return Scaffold(
-      body: child,
-      // In Edit mode the bar offers the two ways to add, instead of the tabs.
-      bottomNavigationBar: editing != null && indexOf(location) == 0
-          ? _EditBar(connectionId: connectionId, dashboardId: editing)
-          : NavigationBar(
-        selectedIndex: indexOf(location),
-        onDestinationSelected: (i) => context.go(switch (i) {
+    final selected = indexOf(location);
+    void go(int i) => context.go(switch (i) {
           1 => Routes.homeDevices(connectionId),
           2 => Routes.homeScenes(connectionId),
           _ => Routes.homeDashboards(connectionId),
-        }),
+        });
+    Widget devicesIcon(IconData icon) => Badge(
+          isLabelVisible: dot,
+          child: Icon(icon),
+        );
+
+    // Medium and expanded windows: a navigation rail, which stays in Edit
+    // mode (Add tile and Add section move into the Edit header).
+    if (WindowClass.of(context).hasRail) {
+      return Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: selected,
+              onDestinationSelected: go,
+              labelType: NavigationRailLabelType.all,
+              groupAlignment: -1,
+              minWidth: 88,
+              destinations: [
+                NavigationRailDestination(
+                  icon: const Icon(Icons.dashboard_outlined),
+                  selectedIcon: const Icon(Icons.dashboard),
+                  label: Text(l10n.navDashboards),
+                ),
+                NavigationRailDestination(
+                  icon: Tooltip(
+                    message: dot ? '${l10n.navDevices}, $dotReason' : '',
+                    child: devicesIcon(Icons.devices_other_outlined),
+                  ),
+                  selectedIcon: devicesIcon(Icons.devices_other),
+                  label: Text(l10n.navDevices),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.auto_awesome_outlined),
+                  selectedIcon: const Icon(Icons.auto_awesome),
+                  label: Text(l10n.navScenes),
+                ),
+              ],
+            ),
+            const VerticalDivider(width: 1, thickness: 1),
+            Expanded(child: child),
+          ],
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: child,
+      // In Edit mode the bar offers the two ways to add, instead of the tabs.
+      bottomNavigationBar: editing != null && selected == 0
+          ? _EditBar(connectionId: connectionId, dashboardId: editing)
+          : NavigationBar(
+        selectedIndex: selected,
+        onDestinationSelected: go,
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.dashboard_outlined),
@@ -81,14 +129,8 @@ class HomeShell extends ConsumerWidget {
             label: l10n.navDashboards,
           ),
           NavigationDestination(
-            icon: Badge(
-              isLabelVisible: dot,
-              child: const Icon(Icons.devices_other_outlined),
-            ),
-            selectedIcon: Badge(
-              isLabelVisible: dot,
-              child: const Icon(Icons.devices_other),
-            ),
+            icon: devicesIcon(Icons.devices_other_outlined),
+            selectedIcon: devicesIcon(Icons.devices_other),
             label: l10n.navDevices,
             tooltip: dot ? '${l10n.navDevices}, $dotReason' : null,
           ),
@@ -98,8 +140,8 @@ class HomeShell extends ConsumerWidget {
             label: l10n.navScenes,
           ),
         ],
-      ),
-    );
+            ),
+          );
   }
 }
 
@@ -128,20 +170,23 @@ class _EditBar extends ConsumerWidget {
             child: OutlinedButton.icon(
               icon: const Icon(Icons.segment),
               label: Text(l10n.editAddSection),
-              onPressed: () async {
-                final name = await askSectionName(context);
-                if (name == null) return;
-                final repo = ref.read(sectionRepoProvider);
-                final count = (await repo.getByDashboard(dashboardId)).length;
-                await repo.create(
-                    dashboardId: dashboardId, name: name, sortOrder: count);
-              },
+              onPressed: () => addSection(context, ref, dashboardId),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+/// Asks for a name and appends a section to [dashboardId].
+Future<void> addSection(
+    BuildContext context, WidgetRef ref, String dashboardId) async {
+  final name = await askSectionName(context);
+  if (name == null) return;
+  final repo = ref.read(sectionRepoProvider);
+  final count = (await repo.getByDashboard(dashboardId)).length;
+  await repo.create(dashboardId: dashboardId, name: name, sortOrder: count);
 }
 
 /// The header title of a home's screens: the home's name, opening the home

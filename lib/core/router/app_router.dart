@@ -14,9 +14,8 @@ import '../../features/discovery/models/device_panel_suggestion.dart';
 import '../../features/discovery/screens/device_picker_screen.dart';
 import '../../features/panels/screens/add_tile_screen.dart';
 import '../../features/devices/screens/device_page.dart';
-import '../../features/devices/screens/devices_screen.dart';
 import '../../features/home/home_shell.dart';
-import '../../features/scenes/screens/scenes_screen.dart';
+import '../../features/home/list_detail.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/settings/screens/home_settings_screen.dart';
@@ -162,7 +161,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: Routes.devices,
             pageBuilder: (_, state) => NoTransitionPage(
-                child: DevicesScreen(connectionId: state.pathParameters['id']!)),
+                child: DevicesDestination(
+                    connectionId: state.pathParameters['id']!)),
             routes: [
               GoRoute(
                 parentNavigatorKey: rootKey,
@@ -177,7 +177,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: Routes.scenes,
             pageBuilder: (_, state) => NoTransitionPage(
-                child: ScenesScreen(connectionId: state.pathParameters['id']!)),
+                child: ScenesDestination(
+                    connectionId: state.pathParameters['id']!)),
             routes: [
               GoRoute(
                 parentNavigatorKey: rootKey,

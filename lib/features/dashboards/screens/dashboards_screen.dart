@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/window_class.dart';
+import '../../settings/screens/settings_screen.dart' show homeStatusLabel;
 import '../../../core/review/review_prompt_trigger.dart';
 import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/router/routes.dart';
@@ -127,6 +129,7 @@ class _DashboardsTabbed extends ConsumerWidget {
         final edit = ref.read(editModeProvider.notifier);
         Dashboard current() =>
             dashboards[DefaultTabController.of(tabCtx).index];
+        final wide = WindowClass.of(context).hasRail;
         return PopScope(
           // System back leaves Edit mode first.
           canPop: editing == null,
@@ -139,6 +142,21 @@ class _DashboardsTabbed extends ConsumerWidget {
                   automaticallyImplyLeading: false,
                   title: Text(l10n.editEditing),
                   actions: [
+                    // With a rail there is no bottom bar: add from here.
+                    if (wide) ...[
+                      TextButton.icon(
+                        icon: const Icon(Icons.add),
+                        label: Text(l10n.dashAddTile),
+                        onPressed: () => tabCtx.push(
+                            '/connections/$connectionId/dashboards/'
+                            '${editing.id}/add'),
+                      ),
+                      TextButton.icon(
+                        icon: const Icon(Icons.segment),
+                        label: Text(l10n.editAddSection),
+                        onPressed: () => addSection(tabCtx, ref, editing.id),
+                      ),
+                    ],
                     TextButton.icon(
                       icon: const Icon(Icons.tune),
                       label: Text(l10n.editDashboard),
@@ -158,6 +176,7 @@ class _DashboardsTabbed extends ConsumerWidget {
               : AppBar(
             title: HomeTitle(connectionId: connectionId),
             actions: [
+              if (wide) _StatusChip(status: connectionStatus),
               IconButton(
                 icon: const Icon(Icons.edit_outlined),
                 tooltip: l10n.dashEditDashboard,
@@ -171,7 +190,14 @@ class _DashboardsTabbed extends ConsumerWidget {
             ],
             bottom: dashboards.length < 2 || editing != null
                 ? null
-                : TabBar(
+                : wide
+                    ? _DashboardChips(
+                        dashboards: dashboards,
+                        onPick: (i) => store
+                            .rememberDashboard(connectionId, dashboards[i].id)
+                            .ignore(),
+                      )
+                    : TabBar(
               isScrollable: dashboards.length > 3,
               onTap: (i) => store
                   .rememberDashboard(connectionId, dashboards[i].id)
@@ -234,6 +260,84 @@ class _DashboardsTabbed extends ConsumerWidget {
           ),
         );
       }),
+    );
+  }
+}
+
+/// Dashboard switching with a rail: a chip per dashboard under the header.
+class _DashboardChips extends StatelessWidget implements PreferredSizeWidget {
+  const _DashboardChips({required this.dashboards, required this.onPick});
+
+  final List<Dashboard> dashboards;
+  final ValueChanged<int> onPick;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(52);
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = DefaultTabController.of(context);
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) => Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        child: Row(
+          children: [
+            for (final (i, d) in dashboards.indexed)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: ChoiceChip(
+                  avatar: controller.index == i
+                      ? null
+                      : Icon(materialIcon(d.iconCodepoint), size: 18),
+                  label: Text(d.name),
+                  selected: controller.index == i,
+                  onSelected: (_) {
+                    controller.animateTo(i);
+                    onPick(i);
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+      ),
+    );
+  }
+}
+
+/// The connection state at the end of a wide header.
+class _StatusChip extends StatelessWidget {
+  const _StatusChip({required this.status});
+
+  final MqttStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ok = status == MqttStatus.connected;
+    return Padding(
+      padding: const EdgeInsetsDirectional.only(end: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: ok ? Colors.green.shade700 : theme.colorScheme.error,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(homeStatusLabel(status, context.l10n),
+              style: theme.textTheme.labelLarge
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        ],
+      ),
     );
   }
 }

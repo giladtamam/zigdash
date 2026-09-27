@@ -2,9 +2,25 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:alchemist/alchemist.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/data/database/database.dart';
+import 'package:zigdash/data/database/tables/connections.dart';
+import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/data/repositories/dashboard_repo.dart';
+import 'package:zigdash/features/scenes/scenes_providers.dart';
+import 'package:zigdash/features/dashboards/screens/dashboards_screen.dart';
+import 'package:zigdash/features/devices/device_health.dart';
+import 'package:zigdash/features/devices/devices_providers.dart';
+import 'package:zigdash/features/devices/screens/device_page.dart';
+import 'package:zigdash/features/devices/z2m_bridge.dart';
+import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
+import 'package:zigdash/features/home/home_shell.dart';
+import 'package:zigdash/features/home/list_detail.dart';
+import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
@@ -191,7 +207,162 @@ List<Override> _editOverrides() => [
           ])),
     ];
 
+// Tablet and medium windows (devices-tablet-1.13.md §7): the rail, dashboard
+// chips, 4 or 3 columns, Edit mode with the header buttons, and Devices and
+// Scenes as list-detail.
+
+late SharedPreferences _prefs;
+
+final _homes = [
+  Connection(
+    id: 'c1',
+    name: 'My Home',
+    host: '192.168.68.55',
+    port: 1883,
+    protocol: MqttProtocol.tcp,
+    keepAliveSeconds: 60,
+    autoConnect: true,
+    createdAt: _stamp,
+    updatedAt: _stamp,
+  ),
+];
+
+final _upstairs = Dashboard(
+  id: 'd2',
+  connectionId: 'c1',
+  name: 'Upstairs',
+  topicPrefix: 'zigbee2mqtt',
+  colorSeed: 0xFF3B82F6,
+  iconCodepoint: 0xe318,
+  locked: false,
+  sortOrder: 1,
+  createdAt: _stamp,
+  updatedAt: _stamp,
+);
+
+final _devices = [
+  for (final (id, name, _, _, exposes, _) in _tiles)
+    Z2mDevice(
+      friendlyName: name,
+      type: 'Router',
+      ieeeAddress: '0x$id',
+      rawExposes: exposes,
+      powerSource: id == 'door' || id == 'motion' ? 'Battery' : 'Mains (single phase)',
+    ),
+];
+
+final _health = deviceHealthFrom(_devices, states: {
+  for (final (_, name, _, _, _, state) in _tiles)
+    if (state != null)
+      name: (payload: json.encode({...state, 'linkquality': 96}), at: _stamp),
+});
+
+class _Idle extends EditModeController {
+  @override
+  String? build() => null;
+}
+
+List<Override> _shellOverrides({bool editing = false}) => [
+      ..._overrides(),
+      appDatabaseProvider.overrideWith((ref) {
+        final db = AppDatabase.test(NativeDatabase.memory());
+        ref.onDispose(db.close);
+        return db;
+      }),
+      sharedPreferencesProvider.overrideWithValue(_prefs),
+      editModeProvider.overrideWith(editing ? _Editing.new : _Idle.new),
+      connectionsStreamProvider.overrideWith((ref) => Stream.value(_homes)),
+      connectionByIdProvider.overrideWith((ref, _) async => _homes.single),
+      dashboardsForConnectionProvider
+          .overrideWith((ref, _) => Stream.value([_dashboard, _upstairs])),
+      mqttManagerProvider.overrideWith((ref, _) => Completer<Never>().future),
+      bridgeDevicesStreamProvider.overrideWith((ref, _) => Stream.value(_devices)),
+      deviceHealthProvider.overrideWith((ref, _) => Stream.value(_health)),
+      availabilityConfigProvider.overrideWith(
+          (ref, _) => Stream.value(AvailabilityConfig.unknown)),
+      batteryWatchProvider.overrideWith((ref, _) {}),
+      batteryAlertsProvider.overrideWith((ref, _) => Stream.value(const {})),
+      homeDeviceSyncProvider.overrideWith((ref, _) {}),
+      linkedIeeesProvider.overrideWith(
+          (ref, _) => Stream.value({for (final d in _devices) d.ieeeAddress!})),
+      unassignedDevicesProvider.overrideWith((ref, _) => editing
+          ? const AsyncValue.data([
+              Z2mDevice(friendlyName: 'new_plug', type: 'Router', ieeeAddress: '0x77'),
+            ])
+          : const AsyncValue.data([])),
+      unassignedCountProvider.overrideWith((ref, _) => const AsyncValue.data(0)),
+      deviceTilesProvider.overrideWith((ref, key) => Stream.value([
+            for (final p in _panels)
+              if (p.deviceIeee == key.ieee)
+                (p, _dashboard, _sections.firstWhere((x) => x.id == p.sectionId)),
+          ])),
+      scenesForConnectionProvider
+          .overrideWith((ref, _) => Stream.value(const <Scene>[])),
+    ];
+
+const _medium = Size(700, 1000);
+const _tabletVariants = [
+  ...tabletMatrix,
+  GoldenVariant(name: 'medium light en', size: _medium),
+];
+
+Widget _home(String location, Widget child) =>
+    HomeShell(connectionId: 'c1', location: location, child: child);
+
 void main() {
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+    _prefs = await SharedPreferences.getInstance();
+  });
+
+  goldenTest(
+    'tablet dashboard with the rail and chips',
+    fileName: 'dashboard_shell_tablet',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: _tabletVariants,
+      overrides: _shellOverrides,
+      screen: () => _home('/connections/c1/dashboards',
+          const DashboardsScreen(connectionId: 'c1')),
+    ),
+  );
+
+  goldenTest(
+    'tablet edit mode',
+    fileName: 'edit_mode_tablet',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: tabletMatrix.take(2).toList(),
+      overrides: () => _shellOverrides(editing: true),
+      screen: () => _home('/connections/c1/dashboards',
+          const DashboardsScreen(connectionId: 'c1')),
+    ),
+  );
+
+  goldenTest(
+    'tablet devices list-detail',
+    fileName: 'devices_tablet',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: tabletMatrix,
+      overrides: _shellOverrides,
+      screen: () => _home('/connections/c1/devices',
+          const DevicesDestination(connectionId: 'c1', initialIeee: '0xmotion')),
+    ),
+  );
+
+  goldenTest(
+    'tablet scenes list-detail',
+    fileName: 'scenes_tablet',
+    pumpBeforeTest: pumpNTimes(10, const Duration(milliseconds: 50)),
+    builder: () => goldenMatrix(
+      variants: tabletMatrix.take(1).toList(),
+      overrides: _shellOverrides,
+      screen: () => _home('/connections/c1/scenes',
+          const ScenesDestination(connectionId: 'c1')),
+    ),
+  );
+
   goldenTest(
     'device tiles by class',
     fileName: 'device_tiles_phone',

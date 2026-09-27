@@ -38,10 +38,15 @@ class SceneFormScreen extends ConsumerStatefulWidget {
     super.key,
     required this.connectionId,
     this.sceneId,
+    this.onDone,
   });
 
   final String connectionId;
   final String? sceneId;
+
+  /// Called after saving or closing instead of popping the route, when the
+  /// form is the detail pane of list-detail.
+  final VoidCallback? onDone;
 
   @override
   ConsumerState<SceneFormScreen> createState() => _State();
@@ -67,6 +72,8 @@ class _State extends ConsumerState<SceneFormScreen> {
   @override
   void initState() {
     super.initState();
+    _base = ref.read(homeBaseTopicProvider(widget.connectionId)) ?? _base;
+    _baseController.text = _base;
     if (_isEdit) {
       _load();
     } else {
@@ -195,7 +202,9 @@ class _State extends ConsumerState<SceneFormScreen> {
           actions: captured,
         );
       }
-      if (mounted) context.pop();
+      if (!mounted) return;
+      final done = widget.onDone;
+      done != null ? done() : context.pop();
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -225,6 +234,14 @@ class _State extends ConsumerState<SceneFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: widget.onDone == null,
+        leading: widget.onDone == null
+            ? null
+            : IconButton(
+                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+                icon: const Icon(Icons.close),
+                onPressed: widget.onDone,
+              ),
         title: Text(_isEdit ? l10n.sceneFormEditTitle : l10n.sceneFormNewTitle),
         actions: [
           TextButton(

@@ -665,5 +665,7 @@
   "homeCurrent": "Current home",
   "homeConnection": "Connection",
   "homeSwitchTo": "Switch to this home",
-  "homeDelete": "Delete home"
+  "homeDelete": "Delete home",
+  "devicesSelect": "Select a device",
+  "scenesSelect": "Select a scene to edit"
 }

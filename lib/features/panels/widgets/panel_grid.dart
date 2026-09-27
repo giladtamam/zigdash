@@ -66,11 +66,14 @@ class PanelGrid extends ConsumerWidget {
         final grid = LayoutBuilder(
           builder: (ctx, constraints) {
             final width = constraints.maxWidth;
+            // The window decides the columns, not the space the rail leaves:
+            // a 600 dp window keeps its 3 columns when the rail appears.
+            final window = MediaQuery.sizeOf(ctx).width;
             final columns = gridColumns(
-              width,
+              window,
               textScale: MediaQuery.textScalerOf(ctx).scale(1),
             );
-            final minHeight = minTileHeight(width);
+            final minHeight = minTileHeight(window);
             final columnWidth =
                 (width - 16 - (columns - 1) * _GridRow.gap) / columns;
             Widget tile(Panel p) {

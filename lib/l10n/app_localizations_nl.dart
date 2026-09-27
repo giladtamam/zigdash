@@ -1939,4 +1939,10 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get homeDelete => 'Delete home';
+
+  @override
+  String get devicesSelect => 'Select a device';
+
+  @override
+  String get scenesSelect => 'Select a scene to edit';
 }

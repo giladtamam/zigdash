@@ -455,9 +455,13 @@ class _HealthCard extends ConsumerWidget {
             ],
             Expanded(child: Text(k)),
             Flexible(
-              child: Text(v,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(color: color ?? scheme.onSurfaceVariant)),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: Text(v,
+                    textAlign: TextAlign.end,
+                    style:
+                        TextStyle(color: color ?? scheme.onSurfaceVariant)),
+              ),
             ),
           ]),
         );
