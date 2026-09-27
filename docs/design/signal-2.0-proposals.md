@@ -1,6 +1,6 @@
 # 2.0 Signal — proposals (draft)
 
-Status: **proposed, not approved.** Recommendations from the 2.0 design map (2026-09-27), kept here so they survive outside the gitignored wayfinder/ folder. The build spec replaces this file once the user accepts or overrides them. Base: [tokens.md](tokens.md), [ADR 0002](../adr/0002-amber-is-a-harmonized-accent.md), the Signal boards.
+Status: **accepted by the user on 2026-09-27.** Decisions from the 2.0 design map (2026-09-27), kept here so they survive outside the gitignored wayfinder/ folder. The build spec replaces this file once the user accepts or overrides them. Base: [tokens.md](tokens.md), [ADR 0002](../adr/0002-amber-is-a-harmonized-accent.md), the Signal boards.
 
 ## Run the community reaction round
 
