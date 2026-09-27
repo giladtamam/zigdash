@@ -15,10 +15,12 @@ Status: **proposed, not approved.** Recommendations from the 2.0 design map (202
 
 
 
-1. **Use Flutter's built-in Material Icons, Rounded variants, not the Symbols font.** They live in the same MaterialIcons font the app already ships, so stored code points stay valid and nothing migrates. The outlined/filled pairs (e.g. lightbulb_outline_rounded / lightbulb_rounded) give the filled-when-active cue.
-2. **Device-class icons and app chrome** switch to the Rounded variants through one icon table; filled when active, outlined when idle.
-3. **User-picked icons** keep their stored code point. The icon picker offers Rounded variants from now on; old picks keep drawing as they were (no forced change).
-4. **Record the deviation** from tokens.md (Symbols → Material Icons Rounded) in an ADR: no new font (~3–4 MB saved), no code-point migration, same look at 400 weight. What is lost: variable weight/grade axes and a few newer glyphs.
+Facts checked 2026-09-27 in Flutter 3.47's icons.dart: every glyph has `_rounded` (filled) and `_outlined`, but only a few (e.g. lightbulb) have `_outline_rounded`. The device-class icons (toggle_on, roller_shades, sensor_door, directions_walk, thermostat, power_settings_new, devices_other, water_drop) do not. So Flutter's built-in font cannot give "rounded outline when idle, rounded filled when active" without mixing corner styles.
+
+1. **App icons (device classes, navigation, chrome): a subset of Material Symbols Rounded,** bundled as our own font file (not the material_symbols_icons package), cut with fonttools to only the glyphs the app uses (~60) while keeping the variable FILL axis. Idle draws FILL 0, active FILL 1: the filled-when-active cue from tokens.md. Expected size: tens of KB, since we subset the font ourselves rather than relying on tree-shaking.
+2. **User-picked icons** (dashboards, scenes, toggle/button tiles) stay MaterialIcons code points in the database. `materialIcon()` draws each through a generated table from regular to `_rounded` (built from icons.dart by a tool/ script), so every stored icon renders Rounded with nothing migrated. Code points missing from the table draw unchanged.
+3. **The icon picker** offers the Rounded glyphs; what it stores stays a MaterialIcons code point.
+4. **ADR 0005** records this split and the subset recipe (tool/fonts/).
 
 ## Decide the theme architecture
 
@@ -34,12 +36,12 @@ Status: **proposed, not approved.** Recommendations from the 2.0 design map (202
 
 
 
-1. **Bundle the TTFs in assets/fonts/, never google_fonts at runtime** — runtime fetching calls Google's servers, which the no-telemetry rule rules out. All three are SIL OFL; ship their licence files and list them in the app's licences page.
-2. **Weights:** Space Grotesk 500 and 700; Plex Sans 400, 600; Plex Sans Hebrew 400, 600. Six files.
-3. **Subset** with fonttools pyftsubset to Latin + Latin-1 Supplement + Latin Extended-A + General Punctuation + the digits/units the app shows (°, µ, ³) and, for Plex Hebrew, the Hebrew block. Budget: ≤ 450 KB total; a tool script in tool/fonts/ reproduces the subset.
-4. **Fallback:** anything outside the subsets (Cyrillic device names, emoji) falls back to the platform font through fontFamilyFallback; nothing renders as tofu.
-5. **Hebrew:** Plex Sans Hebrew for body and display; section labels not uppercased or tracked in Hebrew (tokens.md).
-6. **Text scale:** unchanged rules; tiles grow, never truncate, to 200%.
+1. **Bundle the TTFs in assets/fonts/, never google_fonts at runtime.** Runtime fetching calls Google's servers, which the no-telemetry rule rules out. All three fonts are SIL OFL; ship their licence files and register them with LicenseRegistry, so they appear on the licences page.
+2. **Weights:** Space Grotesk 500 and 700; Plex Sans 400 and 600; Plex Sans Hebrew 400 and 600. Six files.
+3. **Subset** with fonttools pyftsubset to Latin, Latin-1 Supplement, Latin Extended-A, General Punctuation, and the digits and units the app shows (°, µ, ³). Plex Hebrew also keeps the Hebrew block. Budget: ≤ 450 KB total. A script in tool/fonts/ reproduces the subset, and the same script cuts the Material Symbols subset (ticket 02). fonttools is not installed here; `pip install --user fonttools` needs no sudo.
+4. **Fallback:** anything outside the subsets (Cyrillic device names, emoji) falls back to the platform font through fontFamilyFallback. Nothing renders as tofu.
+5. **Hebrew:** Plex Sans Hebrew for body and display. Section labels are not uppercased or tracked in Hebrew (tokens.md).
+6. **Text scale:** unchanged rules. Tiles grow, never truncate, up to 200%.
 
 ## Decide Signal tile anatomy and states
 
@@ -56,8 +58,10 @@ Status: **proposed, not approved.** Recommendations from the 2.0 design map (202
 
 
 
-1. **Only for fresh installs.** An upgrader keeps exactly what they had (System stays System): the seamless-update rule.
-2. **Tablet** = shortest side ≥ 600 dp at first launch. The choice is stored as the theme setting (Dark), visible and changeable in Settings, not a hidden rule.
+Fact: SettingsController writes no theme key until the user changes it, so "no key" cannot tell a fresh install from an upgrader who never opened Settings.
+
+1. **Only for fresh installs, defined as setup not yet completed** (`onboarding_complete` absent). When first-run setup or the demo completes on a tablet, write ThemeMode.dark into the theme setting. Upgraders already have `onboarding_complete` and keep exactly what they had: the seamless-update rule.
+2. **Tablet** means the shortest side is ≥ 600 dp at that moment. The choice is an ordinary saved setting, visible and changeable in Settings, not a hidden rule.
 3. Phones: System, as today.
 
 ## Decide motion
@@ -73,8 +77,8 @@ Status: **proposed, not approved.** Recommendations from the 2.0 design map (202
 
 
 
-1. **Thermostats: out of 2.0.** Still no test device; they get the generic tile (writable numeric → slider on the device page) meanwhile. Revisit when a TRV is on the SMHUB.
-2. **Kiosk: a minimal 'Wall display' toggle in 2.0,** per dashboard's ⋮ menu: keep the screen on while this dashboard is open (wakelock) and hide the header/rail until tapped. No dimming schedule, no lock-down. It rides on the tablet layout already built.
+1. **Thermostats: out of 2.0.** There is still no test device. Meanwhile they get the generic tile, and the device page shows a writable number as a slider. Revisit when a TRV is on the SMHUB.
+2. **Kiosk: a minimal "Wall display" toggle in 2.0,** in each dashboard's ⋮ menu. It keeps the screen on while that dashboard is open and hides the header and rail until the screen is tapped. No dimming schedule, no lock-down. It adds one plugin, `wakelock_plus`, the only new dependency in the phase. It builds on the tablet layout that already exists.
 3. Full kiosk (dimming, launcher replacement, admin lock) stays out of scope.
 
 ## Decide the accessibility and contrast pass
@@ -90,9 +94,9 @@ Status: **proposed, not approved.** Recommendations from the 2.0 design map (202
 
 
 
-1. **Icon:** an amber squircle tile with an ink 'signal' glyph (three arcs over a dot) on the ivory ground; adaptive foreground/background layers; a monochrome layer for themed icons.
-2. **Feature graphic:** ivory ground, a phone and tablet frame showing the Signal dashboard, the ZigDash wordmark in Space Grotesk; no text beyond the name and a 4-word tagline (localized).
-3. **Drawn on the canvas** in a '2.0 assets' row; exported with flutter_launcher_icons from the final SVG.
+1. **Icon:** an amber squircle tile holding an ink "signal" glyph (three arcs over a dot), on the ivory ground. Adaptive foreground and background layers, plus a monochrome layer for Android 13+ themed icons.
+2. **Feature graphic:** ivory ground, phone and tablet frames showing the Signal dashboard, and the ZigDash wordmark in Space Grotesk. No text beyond the name and a four-word tagline (localized).
+3. **Drawn on the canvas** in a "2.0 assets" row. Export each layer as a 1024 px PNG (flutter_launcher_icons takes PNGs, not SVG), then generate the launcher icons with flutter_launcher_icons.
 
 ## Plan store screenshots and launch posts
 
