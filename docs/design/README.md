@@ -111,4 +111,4 @@ These are in scope for 2.0 but not designed yet. They get decided in the phase t
 
 - **1.10 Foundations** and **1.11 First run** shipped. **1.11.1** fixes tiles created by the 1.11.0 setup (a doubled topic).
 - **1.12 Dashboard** is built on `release/1.12-dashboard` as specified in [dashboard-1.12.md](dashboard-1.12.md), version 1.12.0+27. It was checked against the reference SMHUB on 2026-09-26.
-- **1.13 Devices and tablet** is built on `release/1.13-devices-tablet` as specified in [devices-tablet-1.13.md](devices-tablet-1.13.md), version 1.13.0+28. It has not been checked on hardware yet.
+- **1.13 Devices and tablet** is built on `release/1.13-devices-tablet` as specified in [devices-tablet-1.13.md](devices-tablet-1.13.md), version 1.13.0+28. It was checked on 2026-09-27 on the reference SMHUB and the phone, with the tablet layout emulated at 1280 × 800 dp. That check found four bugs, now fixed, and three of them are also in 1.12: tiles emptied after switching tabs, long-press tile actions that did nothing, and an Undo bar that never closed.
