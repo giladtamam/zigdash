@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/core/storage/secure_storage.dart';
+import 'package:zigdash/data/database/daos/connection_dao.dart';
 import 'package:zigdash/data/database/daos/dashboard_dao.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
 import 'package:zigdash/data/database/daos/section_dao.dart';
@@ -9,13 +11,24 @@ import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/backup_service.dart';
+import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/data/repositories/dashboard_repo.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 
+class _MemSecure implements SecureStore {
+  @override
+  Future<void> writePassword(String id, String pw) async {}
+  @override
+  Future<String?> readPassword(String id) async => null;
+  @override
+  Future<void> deletePassword(String id) async {}
+}
+
 void main() {
   late AppDatabase db;
+  late ConnectionRepo homes;
   late DashboardRepo dashboards;
   late SectionRepo sections;
   late PanelRepo panels;
@@ -40,9 +53,43 @@ void main() {
     dashboards = DashboardRepo(DashboardDao(db));
     sections = SectionRepo(SectionDao(db));
     panels = PanelRepo(PanelDao(db));
-    backup = BackupService(dashboards, sections, panels);
+    homes = ConnectionRepo(ConnectionDao(db), _MemSecure());
+    backup = BackupService(dashboards, sections, panels, homes);
   });
   tearDown(() => db.close());
+
+  test('format 3 carries the base topic to a home that has none', () async {
+    final source = await connection('c1');
+    await homes.setBaseTopic(source, ' z2m-garage ');
+    await dashboards.create(
+        connectionId: source, name: 'Home', colorSeed: 0, iconCodepoint: 0);
+    final raw = await backup.exportConnection(source);
+    expect(json.decode(raw)['version'], 3);
+    expect(json.decode(raw)['z2mBaseTopic'], 'z2m-garage');
+
+    final empty = await connection('c2');
+    await backup.importToConnection(empty, raw);
+    expect((await homes.getById(empty))!.z2mBaseTopic, 'z2m-garage');
+
+    final set = await connection('c3');
+    await homes.setBaseTopic(set, 'mine');
+    await backup.importToConnection(set, raw);
+    expect((await homes.getById(set))!.z2mBaseTopic, 'mine');
+  });
+
+  test('a format 2 backup leaves the base topic unset', () async {
+    final target = await connection('c1');
+    await backup.importToConnection(
+        target, json.encode({'version': 2, 'dashboards': []}));
+    expect((await homes.getById(target))!.z2mBaseTopic, isNull);
+  });
+
+  test('clearing the base topic stores null', () async {
+    final id = await connection('c1');
+    await homes.setBaseTopic(id, 'x');
+    await homes.setBaseTopic(id, '  ');
+    expect((await homes.getById(id))!.z2mBaseTopic, isNull);
+  });
 
   test('a 1.11 (format 1) backup imports with half and third as Small',
       () async {
@@ -76,7 +123,7 @@ void main() {
     expect(rows.every((p) => p.sectionId == null), isTrue);
   });
 
-  test('format 2 round-trips sections, sizes and device links', () async {
+  test('format 3 round-trips sections, sizes and device links', () async {
     final source = await connection('c1');
     final dashId = await dashboards.create(
       connectionId: source,
@@ -107,7 +154,7 @@ void main() {
     );
 
     final exported = await backup.exportConnection(source);
-    expect(json.decode(exported)['version'], 2);
+    expect(json.decode(exported)['version'], 3);
 
     final target = await connection('c2');
     await backup.importToConnection(target, exported);

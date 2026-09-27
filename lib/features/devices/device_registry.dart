@@ -5,8 +5,7 @@ import '../../data/database/database.dart';
 import '../../data/database/tables/panels.dart';
 import '../discovery/models/z2m_device.dart';
 import '../discovery/providers/discovery_provider.dart';
-import '../../data/repositories/dashboard_repo.dart';
-import 'device_tiles.dart';
+import 'devices_providers.dart';
 import '../panels/providers/panel_value_provider.dart';
 
 /// Keeps a home's tiles in step with its Zigbee2MQTT device list. Runs on
@@ -126,12 +125,10 @@ final dismissedIeeesProvider =
 /// and the Devices dot. Empty until the device list arrives.
 final unassignedDevicesProvider = Provider.autoDispose
     .family<AsyncValue<List<Z2mDevice>>, String>((ref, connectionId) {
-  final dashboards =
-      ref.watch(dashboardsForConnectionProvider(connectionId)).valueOrNull;
-  final first = dashboards?.firstOrNull;
-  if (first == null) return const AsyncValue.data([]);
+  final base = ref.watch(homeBaseTopicProvider(connectionId));
+  if (base == null) return const AsyncValue.data([]);
   final devices = ref.watch(bridgeDevicesStreamProvider(
-      (connectionId: connectionId, base: z2mBase(first.topicPrefix))));
+      (connectionId: connectionId, base: base)));
   final linked = ref.watch(linkedIeeesProvider(connectionId)).valueOrNull;
   final dismissed = ref.watch(dismissedIeeesProvider(connectionId)).valueOrNull;
   if (linked == null || dismissed == null) return const AsyncValue.data([]);

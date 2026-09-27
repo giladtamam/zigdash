@@ -87,6 +87,27 @@ class ConnectionRepo {
     }
   }
 
+  Future<void> rename(String id, String name) => _dao.updateById(
+        id,
+        ConnectionsCompanion(
+          name: Value(name),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+
+  /// Sets the home's Zigbee2MQTT base topic; null or blank clears it, which
+  /// brings back the derivation from its dashboards.
+  Future<void> setBaseTopic(String id, String? topic) {
+    final t = topic?.trim();
+    return _dao.updateById(
+      id,
+      ConnectionsCompanion(
+        z2mBaseTopic: Value(t == null || t.isEmpty ? null : t),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
   Future<void> delete(String id) async {
     await _dao.deleteById(id);
     await _secure.deletePassword(id);

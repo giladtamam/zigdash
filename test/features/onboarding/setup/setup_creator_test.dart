@@ -162,6 +162,8 @@ void main() {
     );
     final panels = await PanelDao(db).getByDashboard(result.dashboardId);
     expect(panels.single.topicPrefixOverride, 'z2m/lamp');
+    final home = await db.select(db.connections).getSingle();
+    expect(home.z2mBaseTopic, 'z2m', reason: 'the corrected base is the home');
   });
 
   group('device tiles from bridge/devices', () {

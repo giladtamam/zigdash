@@ -6,7 +6,9 @@ import 'device_profile.dart';
 
 /// The Zigbee2MQTT base topic for a dashboard: its topic prefix, or the
 /// Zigbee2MQTT default when a hand-made dashboard left it empty.
-String z2mBase(String? dashboardPrefix) {
+String z2mBase(String? dashboardPrefix, {String? homeBase}) {
+  final set = homeBase?.trim() ?? '';
+  if (set.isNotEmpty) return set;
   final p = dashboardPrefix?.trim() ?? '';
   return p.isEmpty ? 'zigbee2mqtt' : p;
 }

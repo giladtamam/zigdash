@@ -105,6 +105,11 @@ class SetupCreator implements SetupStore {
         password: password,
         autoConnect: true,
       );
+      // A base topic the user corrected in setup belongs to the home, so
+      // Devices and later dashboards find the bridge too.
+      if (base.trim() != 'zigbee2mqtt') {
+        await _connections.setBaseTopic(connectionId, base);
+      }
       dashboardId = await _dashboards.create(
         connectionId: connectionId,
         name: dashboardName,

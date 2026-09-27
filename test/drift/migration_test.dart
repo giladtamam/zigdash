@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart' hide isNull;
+import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
@@ -8,6 +8,7 @@ import 'package:zigdash/features/panels/models/panel_config.dart';
 
 import 'generated/schema.dart';
 import 'generated/schema_v5.dart' as v5;
+import 'generated/schema_v6.dart' as v6;
 
 /// The 15 panel types a 1.11 database can hold.
 const _v5Types = [
@@ -36,14 +37,82 @@ void main() {
 
   setUpAll(() => verifier = SchemaVerifier(GeneratedHelper()));
 
-  test('schema 5 → 6 matches the declared schema', () async {
+  test('schema 5 → 7 matches the declared schema', () async {
     final connection = await verifier.startAt(5);
     final db = AppDatabase.test(connection);
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 6);
+    await verifier.migrateAndValidate(db, 7);
   });
 
-  test('every 1.11 panel survives 5 → 6 with order, config and size',
+  test('schema 6 → 7 matches the declared schema', () async {
+    final connection = await verifier.startAt(6);
+    final db = AppDatabase.test(connection);
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 7);
+  });
+
+  test('a 1.12 home keeps everything through 6 → 7, base topic unset',
+      () async {
+    final schema = await verifier.schemaAt(6);
+    final old = v6.DatabaseAtV6(schema.newConnection());
+    await old.into(old.connections).insert(v6.ConnectionsCompanion.insert(
+          id: 'c1',
+          name: 'home',
+          host: '192.168.68.55',
+          port: 1883,
+          protocol: 'tcp',
+          devicesSeenAt: const Value(5),
+          createdAt: 0,
+          updatedAt: 0,
+        ));
+    await old.into(old.dashboards).insert(v6.DashboardsCompanion.insert(
+          id: 'd1',
+          connectionId: 'c1',
+          name: 'Home',
+          colorSeed: 0,
+          iconCodepoint: 0xe318,
+          createdAt: 0,
+          updatedAt: 0,
+        ));
+    await old.into(old.sections).insert(v6.SectionsCompanion.insert(
+        id: 's1',
+        dashboardId: 'd1',
+        name: 'Lights',
+        createdAt: 0,
+        updatedAt: 0));
+    await old.into(old.panels).insert(v6.PanelsCompanion.insert(
+          id: 'p1',
+          dashboardId: 'd1',
+          name: 'Bulb',
+          type: 'device',
+          topic: 'zigbee2mqtt/bulb',
+          width: 'wide',
+          sectionId: const Value('s1'),
+          deviceIeee: const Value('0x01'),
+          config: '{"ieee":"0x01"}',
+          createdAt: 0,
+          updatedAt: 0,
+        ));
+    await old.into(old.deviceDismissals).insert(v6.DeviceDismissalsCompanion
+        .insert(connectionId: 'c1', ieee: '0x02', dismissedAt: 0));
+    await old.close();
+
+    final db = AppDatabase.test(schema.newConnection());
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 7);
+
+    final home = await db.select(db.connections).getSingle();
+    expect(home.z2mBaseTopic, isNull);
+    expect(home.devicesSeenAt, isNotNull);
+    final tile = await db.select(db.panels).getSingle();
+    expect((tile.sectionId, tile.deviceIeee, tile.width),
+        ('s1', '0x01', PanelWidth.wide));
+    expect(await db.select(db.sections).get(), hasLength(1));
+    expect(await db.select(db.deviceDismissals).get(), hasLength(1));
+    expect(await db.select(db.deviceHealthFlags).get(), isEmpty);
+  });
+
+  test('every 1.11 panel survives 5 → 7 with order, config and size',
       () async {
     final schema = await verifier.schemaAt(5);
     final old = v5.DatabaseAtV5(schema.newConnection());
@@ -126,7 +195,7 @@ void main() {
 
     final db = AppDatabase.test(schema.newConnection());
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 6);
+    await verifier.migrateAndValidate(db, 7);
 
     final all = await PanelDao(db).getByDashboard('d1');
     final toggle = all.firstWhere((p) => p.id == 'setup-toggle');

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/panels/models/panel_config.dart';
 import '../database/database.dart';
 import '../database/tables/panels.dart';
+import 'connection_repo.dart';
 import 'dashboard_repo.dart';
 import 'panel_repo.dart';
 import 'section_repo.dart';
@@ -16,20 +17,25 @@ import 'section_repo.dart';
 ///
 /// Format 2 (1.12) adds sections, device links and the Small / Wide / Full
 /// sizes. Format 1 backups still import: half and third become Small.
+/// Format 3 (1.13) adds the home's Zigbee2MQTT base topic, applied on import
+/// only when the target home has none set.
 /// Last-known values are never part of a backup.
 class BackupService {
-  BackupService(this._dashboards, this._sections, this._panels);
+  BackupService(this._dashboards, this._sections, this._panels, this._homes);
 
+  final ConnectionRepo _homes;
   final DashboardRepo _dashboards;
   final SectionRepo _sections;
   final PanelRepo _panels;
 
-  static const int formatVersion = 2;
+  static const int formatVersion = 3;
 
   Future<String> exportConnection(String connectionId) async {
     final dashboards = await _dashboards.getByConnection(connectionId);
+    final home = await _homes.getById(connectionId);
     final out = <String, dynamic>{
       'version': formatVersion,
+      if (home?.z2mBaseTopic != null) 'z2mBaseTopic': home!.z2mBaseTopic,
       'dashboards': [
         for (final d in dashboards) await _exportDashboard(d),
       ],
@@ -80,6 +86,13 @@ class BackupService {
       throw const FormatException('Not a ZigDash backup (missing dashboards)');
     }
     final dashboards = doc['dashboards'] as List;
+    final base = doc['z2mBaseTopic'];
+    if (base is String && base.trim().isNotEmpty) {
+      final home = await _homes.getById(connectionId);
+      if (home != null && home.z2mBaseTopic == null) {
+        await _homes.setBaseTopic(connectionId, base);
+      }
+    }
     for (final d in dashboards.cast<Map<String, dynamic>>()) {
       final dashboardId = await _dashboards.create(
         connectionId: connectionId,
@@ -145,5 +158,6 @@ final backupServiceProvider = Provider<BackupService>((ref) {
     ref.watch(dashboardRepoProvider),
     ref.watch(sectionRepoProvider),
     ref.watch(panelRepoProvider),
+    ref.watch(connectionRepoProvider),
   );
 });

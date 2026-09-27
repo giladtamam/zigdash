@@ -12,6 +12,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../devices/device_profile.dart';
 import '../../devices/device_registry.dart';
 import '../../devices/device_tiles.dart';
+import '../../devices/devices_providers.dart';
 import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../widgets/device_tile_panel.dart' show deviceClassIcon;
@@ -53,7 +54,10 @@ class _AddTileScreenState extends ConsumerState<AddTileScreen> {
     final devicesAsync = d == null
         ? const AsyncValue<List<Z2mDevice>>.loading()
         : ref.watch(bridgeDevicesStreamProvider(
-            (connectionId: widget.connectionId, base: z2mBase(d.topicPrefix))));
+            (connectionId: widget.connectionId,
+                base: z2mBase(d.topicPrefix,
+                    homeBase: ref.watch(
+                        baseTopicOverrideProvider(widget.connectionId))))));
     final linked =
         ref.watch(linkedIeeesProvider(widget.connectionId)).valueOrNull ??
             const <String>{};
@@ -241,7 +245,8 @@ class _AddDeviceSheetState extends ConsumerState<AddDeviceSheet> {
     await createDeviceTile(
       ref.read(panelRepoProvider),
       dashboardId: dashboard.id,
-      base: z2mBase(dashboard.topicPrefix),
+      base: z2mBase(dashboard.topicPrefix,
+          homeBase: ref.read(baseTopicOverrideProvider(dashboard.connectionId))),
       device: widget.device,
       name: name.isEmpty ? widget.device.friendlyName : name,
       size: _size,

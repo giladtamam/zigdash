@@ -1,9 +1,41 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/repositories/connection_repo.dart';
+import '../../data/repositories/dashboard_repo.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
 import '../discovery/providers/discovery_provider.dart';
 import 'device_health.dart';
+import 'device_tiles.dart';
 import 'z2m_bridge.dart';
+
+/// The base topic set for a home in Settings, or null when none is set
+/// (or the homes have not loaded yet).
+final baseTopicOverrideProvider =
+    Provider.autoDispose.family<String?, String>((ref, connectionId) {
+  final homes = ref.watch(connectionsStreamProvider).valueOrNull;
+  final set = homes
+      ?.where((c) => c.id == connectionId)
+      .firstOrNull
+      ?.z2mBaseTopic
+      ?.trim();
+  return set == null || set.isEmpty ? null : set;
+});
+
+/// A home's Zigbee2MQTT base topic: the one set in Settings, else derived
+/// from its first dashboard's topic prefix (the pre-1.13 rule). Null until
+/// the homes and dashboards have loaded, or while the home has no dashboard
+/// and no base topic set.
+final homeBaseTopicProvider =
+    Provider.autoDispose.family<String?, String>((ref, connectionId) {
+  if (ref.watch(connectionsStreamProvider).valueOrNull == null) return null;
+  final set = ref.watch(baseTopicOverrideProvider(connectionId));
+  if (set != null) return set;
+  final first = ref
+      .watch(dashboardsForConnectionProvider(connectionId))
+      .valueOrNull
+      ?.firstOrNull;
+  return first == null ? null : z2mBase(first.topicPrefix);
+});
 
 typedef DeviceHealthArgs = ({String connectionId, String base});
 typedef BridgeEventArgs = ({String connectionId, String base});

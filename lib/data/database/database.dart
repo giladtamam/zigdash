@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'tables/connections.dart';
 import 'tables/dashboards.dart';
 import 'tables/device_dismissals.dart';
+import 'tables/device_health_flags.dart';
 import 'tables/panels.dart';
 import 'tables/scenes.dart';
 import 'tables/sections.dart';
@@ -18,13 +19,14 @@ part 'database.g.dart';
   Scenes,
   Sections,
   DeviceDismissals,
+  DeviceHealthFlags,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_open());
   AppDatabase.test(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -88,6 +90,10 @@ class AppDatabase extends _$AppDatabase {
               'DELETE FROM scenes WHERE connection_id NOT IN '
               '(SELECT id FROM connections)',
             );
+          }
+          if (from < 7) {
+            await m.addColumn(connections, connections.z2mBaseTopic);
+            await m.createTable(deviceHealthFlags);
           }
         },
         // The schema's cascades (home → dashboards → sections, tiles) only

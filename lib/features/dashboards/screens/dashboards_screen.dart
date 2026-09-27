@@ -15,7 +15,7 @@ import '../../../data/repositories/dashboard_repo.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../devices/device_registry.dart';
-import '../../devices/device_tiles.dart';
+import '../../devices/devices_providers.dart';
 import '../../home/home_shell.dart';
 import '../edit_mode.dart';
 import '../../onboarding/demo_banner.dart';
@@ -39,10 +39,10 @@ class DashboardsScreen extends ConsumerWidget {
             MqttStatus.connecting;
 
     // Link tiles to devices and follow renames while this home is open.
-    final first = dashboardsAsync.valueOrNull?.firstOrNull;
-    if (first != null) {
+    final base = ref.watch(homeBaseTopicProvider(connectionId));
+    if (base != null) {
       ref.watch(homeDeviceSyncProvider(
-          (connectionId: connectionId, base: z2mBase(first.topicPrefix))));
+          (connectionId: connectionId, base: base)));
     }
 
     final connectionName = connectionAsync.maybeWhen(

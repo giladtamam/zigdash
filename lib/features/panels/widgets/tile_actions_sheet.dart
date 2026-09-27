@@ -9,6 +9,7 @@ import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
 import '../../devices/device_tiles.dart';
+import '../../devices/devices_providers.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
@@ -197,7 +198,8 @@ Future<void> _replaceWithDeviceTile(
   final l10n = context.l10n;
   final dashboard =
       await ref.read(dashboardRepoProvider).getById(panel.dashboardId);
-  final base = z2mBase(dashboard?.topicPrefix);
+  final base = z2mBase(dashboard?.topicPrefix,
+      homeBase: ref.read(baseTopicOverrideProvider(connectionId)));
   final devices = await ref
       .read(bridgeDevicesStreamProvider(
               (connectionId: connectionId, base: base))

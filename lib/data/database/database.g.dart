@@ -130,6 +130,17 @@ class $ConnectionsTable extends Connections
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _z2mBaseTopicMeta = const VerificationMeta(
+    'z2mBaseTopic',
+  );
+  @override
+  late final GeneratedColumn<String> z2mBaseTopic = GeneratedColumn<String>(
+    'z2m_base_topic',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -165,6 +176,7 @@ class $ConnectionsTable extends Connections
     homeDashboardId,
     remoteHost,
     devicesSeenAt,
+    z2mBaseTopic,
     createdAt,
     updatedAt,
   ];
@@ -257,6 +269,15 @@ class $ConnectionsTable extends Connections
         ),
       );
     }
+    if (data.containsKey('z2m_base_topic')) {
+      context.handle(
+        _z2mBaseTopicMeta,
+        z2mBaseTopic.isAcceptableOrUnknown(
+          data['z2m_base_topic']!,
+          _z2mBaseTopicMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -328,6 +349,10 @@ class $ConnectionsTable extends Connections
         DriftSqlType.dateTime,
         data['${effectivePrefix}devices_seen_at'],
       ),
+      z2mBaseTopic: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}z2m_base_topic'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -364,6 +389,11 @@ class Connection extends DataClass implements Insertable<Connection> {
   /// after 1.12 setup or upgrade). Null until then; only devices paired
   /// later count as new.
   final DateTime? devicesSeenAt;
+
+  /// The Zigbee2MQTT base topic set for this home (Settings › home, or the
+  /// setup retry). Null keeps the pre-1.13 derivation from a dashboard's
+  /// topic prefix; see `homeBaseTopic`.
+  final String? z2mBaseTopic;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Connection({
@@ -378,6 +408,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     this.homeDashboardId,
     this.remoteHost,
     this.devicesSeenAt,
+    this.z2mBaseTopic,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -407,6 +438,9 @@ class Connection extends DataClass implements Insertable<Connection> {
     if (!nullToAbsent || devicesSeenAt != null) {
       map['devices_seen_at'] = Variable<DateTime>(devicesSeenAt);
     }
+    if (!nullToAbsent || z2mBaseTopic != null) {
+      map['z2m_base_topic'] = Variable<String>(z2mBaseTopic);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -433,6 +467,9 @@ class Connection extends DataClass implements Insertable<Connection> {
       devicesSeenAt: devicesSeenAt == null && nullToAbsent
           ? const Value.absent()
           : Value(devicesSeenAt),
+      z2mBaseTopic: z2mBaseTopic == null && nullToAbsent
+          ? const Value.absent()
+          : Value(z2mBaseTopic),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -457,6 +494,7 @@ class Connection extends DataClass implements Insertable<Connection> {
       homeDashboardId: serializer.fromJson<String?>(json['homeDashboardId']),
       remoteHost: serializer.fromJson<String?>(json['remoteHost']),
       devicesSeenAt: serializer.fromJson<DateTime?>(json['devicesSeenAt']),
+      z2mBaseTopic: serializer.fromJson<String?>(json['z2mBaseTopic']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -478,6 +516,7 @@ class Connection extends DataClass implements Insertable<Connection> {
       'homeDashboardId': serializer.toJson<String?>(homeDashboardId),
       'remoteHost': serializer.toJson<String?>(remoteHost),
       'devicesSeenAt': serializer.toJson<DateTime?>(devicesSeenAt),
+      'z2mBaseTopic': serializer.toJson<String?>(z2mBaseTopic),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -495,6 +534,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     Value<String?> homeDashboardId = const Value.absent(),
     Value<String?> remoteHost = const Value.absent(),
     Value<DateTime?> devicesSeenAt = const Value.absent(),
+    Value<String?> z2mBaseTopic = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Connection(
@@ -513,6 +553,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     devicesSeenAt: devicesSeenAt.present
         ? devicesSeenAt.value
         : this.devicesSeenAt,
+    z2mBaseTopic: z2mBaseTopic.present ? z2mBaseTopic.value : this.z2mBaseTopic,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -539,6 +580,9 @@ class Connection extends DataClass implements Insertable<Connection> {
       devicesSeenAt: data.devicesSeenAt.present
           ? data.devicesSeenAt.value
           : this.devicesSeenAt,
+      z2mBaseTopic: data.z2mBaseTopic.present
+          ? data.z2mBaseTopic.value
+          : this.z2mBaseTopic,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -558,6 +602,7 @@ class Connection extends DataClass implements Insertable<Connection> {
           ..write('homeDashboardId: $homeDashboardId, ')
           ..write('remoteHost: $remoteHost, ')
           ..write('devicesSeenAt: $devicesSeenAt, ')
+          ..write('z2mBaseTopic: $z2mBaseTopic, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -577,6 +622,7 @@ class Connection extends DataClass implements Insertable<Connection> {
     homeDashboardId,
     remoteHost,
     devicesSeenAt,
+    z2mBaseTopic,
     createdAt,
     updatedAt,
   );
@@ -595,6 +641,7 @@ class Connection extends DataClass implements Insertable<Connection> {
           other.homeDashboardId == this.homeDashboardId &&
           other.remoteHost == this.remoteHost &&
           other.devicesSeenAt == this.devicesSeenAt &&
+          other.z2mBaseTopic == this.z2mBaseTopic &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -611,6 +658,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
   final Value<String?> homeDashboardId;
   final Value<String?> remoteHost;
   final Value<DateTime?> devicesSeenAt;
+  final Value<String?> z2mBaseTopic;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
@@ -626,6 +674,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     this.homeDashboardId = const Value.absent(),
     this.remoteHost = const Value.absent(),
     this.devicesSeenAt = const Value.absent(),
+    this.z2mBaseTopic = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -642,6 +691,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     this.homeDashboardId = const Value.absent(),
     this.remoteHost = const Value.absent(),
     this.devicesSeenAt = const Value.absent(),
+    this.z2mBaseTopic = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -664,6 +714,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     Expression<String>? homeDashboardId,
     Expression<String>? remoteHost,
     Expression<DateTime>? devicesSeenAt,
+    Expression<String>? z2mBaseTopic,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -680,6 +731,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
       if (homeDashboardId != null) 'home_dashboard_id': homeDashboardId,
       if (remoteHost != null) 'remote_host': remoteHost,
       if (devicesSeenAt != null) 'devices_seen_at': devicesSeenAt,
+      if (z2mBaseTopic != null) 'z2m_base_topic': z2mBaseTopic,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -698,6 +750,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     Value<String?>? homeDashboardId,
     Value<String?>? remoteHost,
     Value<DateTime?>? devicesSeenAt,
+    Value<String?>? z2mBaseTopic,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -714,6 +767,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
       homeDashboardId: homeDashboardId ?? this.homeDashboardId,
       remoteHost: remoteHost ?? this.remoteHost,
       devicesSeenAt: devicesSeenAt ?? this.devicesSeenAt,
+      z2mBaseTopic: z2mBaseTopic ?? this.z2mBaseTopic,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -758,6 +812,9 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
     if (devicesSeenAt.present) {
       map['devices_seen_at'] = Variable<DateTime>(devicesSeenAt.value);
     }
+    if (z2mBaseTopic.present) {
+      map['z2m_base_topic'] = Variable<String>(z2mBaseTopic.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -784,6 +841,7 @@ class ConnectionsCompanion extends UpdateCompanion<Connection> {
           ..write('homeDashboardId: $homeDashboardId, ')
           ..write('remoteHost: $remoteHost, ')
           ..write('devicesSeenAt: $devicesSeenAt, ')
+          ..write('z2mBaseTopic: $z2mBaseTopic, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -3669,6 +3727,394 @@ class DeviceDismissalsCompanion extends UpdateCompanion<DeviceDismissal> {
   }
 }
 
+class $DeviceHealthFlagsTable extends DeviceHealthFlags
+    with TableInfo<$DeviceHealthFlagsTable, DeviceHealthFlag> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DeviceHealthFlagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES connections (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _ieeeMeta = const VerificationMeta('ieee');
+  @override
+  late final GeneratedColumn<String> ieee = GeneratedColumn<String>(
+    'ieee',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _batteryLowMeta = const VerificationMeta(
+    'batteryLow',
+  );
+  @override
+  late final GeneratedColumn<bool> batteryLow = GeneratedColumn<bool>(
+    'battery_low',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("battery_low" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _acknowledgedMeta = const VerificationMeta(
+    'acknowledged',
+  );
+  @override
+  late final GeneratedColumn<bool> acknowledged = GeneratedColumn<bool>(
+    'acknowledged',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("acknowledged" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _changedAtMeta = const VerificationMeta(
+    'changedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> changedAt = GeneratedColumn<DateTime>(
+    'changed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    connectionId,
+    ieee,
+    batteryLow,
+    acknowledged,
+    changedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'device_health_flags';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DeviceHealthFlag> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('ieee')) {
+      context.handle(
+        _ieeeMeta,
+        ieee.isAcceptableOrUnknown(data['ieee']!, _ieeeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ieeeMeta);
+    }
+    if (data.containsKey('battery_low')) {
+      context.handle(
+        _batteryLowMeta,
+        batteryLow.isAcceptableOrUnknown(data['battery_low']!, _batteryLowMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_batteryLowMeta);
+    }
+    if (data.containsKey('acknowledged')) {
+      context.handle(
+        _acknowledgedMeta,
+        acknowledged.isAcceptableOrUnknown(
+          data['acknowledged']!,
+          _acknowledgedMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_acknowledgedMeta);
+    }
+    if (data.containsKey('changed_at')) {
+      context.handle(
+        _changedAtMeta,
+        changedAt.isAcceptableOrUnknown(data['changed_at']!, _changedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_changedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {connectionId, ieee};
+  @override
+  DeviceHealthFlag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DeviceHealthFlag(
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      ieee: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ieee'],
+      )!,
+      batteryLow: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}battery_low'],
+      )!,
+      acknowledged: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}acknowledged'],
+      )!,
+      changedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}changed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $DeviceHealthFlagsTable createAlias(String alias) {
+    return $DeviceHealthFlagsTable(attachedDatabase, alias);
+  }
+}
+
+class DeviceHealthFlag extends DataClass
+    implements Insertable<DeviceHealthFlag> {
+  final String connectionId;
+  final String ieee;
+  final bool batteryLow;
+  final bool acknowledged;
+  final DateTime changedAt;
+  const DeviceHealthFlag({
+    required this.connectionId,
+    required this.ieee,
+    required this.batteryLow,
+    required this.acknowledged,
+    required this.changedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['connection_id'] = Variable<String>(connectionId);
+    map['ieee'] = Variable<String>(ieee);
+    map['battery_low'] = Variable<bool>(batteryLow);
+    map['acknowledged'] = Variable<bool>(acknowledged);
+    map['changed_at'] = Variable<DateTime>(changedAt);
+    return map;
+  }
+
+  DeviceHealthFlagsCompanion toCompanion(bool nullToAbsent) {
+    return DeviceHealthFlagsCompanion(
+      connectionId: Value(connectionId),
+      ieee: Value(ieee),
+      batteryLow: Value(batteryLow),
+      acknowledged: Value(acknowledged),
+      changedAt: Value(changedAt),
+    );
+  }
+
+  factory DeviceHealthFlag.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DeviceHealthFlag(
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      ieee: serializer.fromJson<String>(json['ieee']),
+      batteryLow: serializer.fromJson<bool>(json['batteryLow']),
+      acknowledged: serializer.fromJson<bool>(json['acknowledged']),
+      changedAt: serializer.fromJson<DateTime>(json['changedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'connectionId': serializer.toJson<String>(connectionId),
+      'ieee': serializer.toJson<String>(ieee),
+      'batteryLow': serializer.toJson<bool>(batteryLow),
+      'acknowledged': serializer.toJson<bool>(acknowledged),
+      'changedAt': serializer.toJson<DateTime>(changedAt),
+    };
+  }
+
+  DeviceHealthFlag copyWith({
+    String? connectionId,
+    String? ieee,
+    bool? batteryLow,
+    bool? acknowledged,
+    DateTime? changedAt,
+  }) => DeviceHealthFlag(
+    connectionId: connectionId ?? this.connectionId,
+    ieee: ieee ?? this.ieee,
+    batteryLow: batteryLow ?? this.batteryLow,
+    acknowledged: acknowledged ?? this.acknowledged,
+    changedAt: changedAt ?? this.changedAt,
+  );
+  DeviceHealthFlag copyWithCompanion(DeviceHealthFlagsCompanion data) {
+    return DeviceHealthFlag(
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      ieee: data.ieee.present ? data.ieee.value : this.ieee,
+      batteryLow: data.batteryLow.present
+          ? data.batteryLow.value
+          : this.batteryLow,
+      acknowledged: data.acknowledged.present
+          ? data.acknowledged.value
+          : this.acknowledged,
+      changedAt: data.changedAt.present ? data.changedAt.value : this.changedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeviceHealthFlag(')
+          ..write('connectionId: $connectionId, ')
+          ..write('ieee: $ieee, ')
+          ..write('batteryLow: $batteryLow, ')
+          ..write('acknowledged: $acknowledged, ')
+          ..write('changedAt: $changedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(connectionId, ieee, batteryLow, acknowledged, changedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DeviceHealthFlag &&
+          other.connectionId == this.connectionId &&
+          other.ieee == this.ieee &&
+          other.batteryLow == this.batteryLow &&
+          other.acknowledged == this.acknowledged &&
+          other.changedAt == this.changedAt);
+}
+
+class DeviceHealthFlagsCompanion extends UpdateCompanion<DeviceHealthFlag> {
+  final Value<String> connectionId;
+  final Value<String> ieee;
+  final Value<bool> batteryLow;
+  final Value<bool> acknowledged;
+  final Value<DateTime> changedAt;
+  final Value<int> rowid;
+  const DeviceHealthFlagsCompanion({
+    this.connectionId = const Value.absent(),
+    this.ieee = const Value.absent(),
+    this.batteryLow = const Value.absent(),
+    this.acknowledged = const Value.absent(),
+    this.changedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DeviceHealthFlagsCompanion.insert({
+    required String connectionId,
+    required String ieee,
+    required bool batteryLow,
+    required bool acknowledged,
+    required DateTime changedAt,
+    this.rowid = const Value.absent(),
+  }) : connectionId = Value(connectionId),
+       ieee = Value(ieee),
+       batteryLow = Value(batteryLow),
+       acknowledged = Value(acknowledged),
+       changedAt = Value(changedAt);
+  static Insertable<DeviceHealthFlag> custom({
+    Expression<String>? connectionId,
+    Expression<String>? ieee,
+    Expression<bool>? batteryLow,
+    Expression<bool>? acknowledged,
+    Expression<DateTime>? changedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (connectionId != null) 'connection_id': connectionId,
+      if (ieee != null) 'ieee': ieee,
+      if (batteryLow != null) 'battery_low': batteryLow,
+      if (acknowledged != null) 'acknowledged': acknowledged,
+      if (changedAt != null) 'changed_at': changedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DeviceHealthFlagsCompanion copyWith({
+    Value<String>? connectionId,
+    Value<String>? ieee,
+    Value<bool>? batteryLow,
+    Value<bool>? acknowledged,
+    Value<DateTime>? changedAt,
+    Value<int>? rowid,
+  }) {
+    return DeviceHealthFlagsCompanion(
+      connectionId: connectionId ?? this.connectionId,
+      ieee: ieee ?? this.ieee,
+      batteryLow: batteryLow ?? this.batteryLow,
+      acknowledged: acknowledged ?? this.acknowledged,
+      changedAt: changedAt ?? this.changedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (ieee.present) {
+      map['ieee'] = Variable<String>(ieee.value);
+    }
+    if (batteryLow.present) {
+      map['battery_low'] = Variable<bool>(batteryLow.value);
+    }
+    if (acknowledged.present) {
+      map['acknowledged'] = Variable<bool>(acknowledged.value);
+    }
+    if (changedAt.present) {
+      map['changed_at'] = Variable<DateTime>(changedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DeviceHealthFlagsCompanion(')
+          ..write('connectionId: $connectionId, ')
+          ..write('ieee: $ieee, ')
+          ..write('batteryLow: $batteryLow, ')
+          ..write('acknowledged: $acknowledged, ')
+          ..write('changedAt: $changedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3680,6 +4126,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DeviceDismissalsTable deviceDismissals = $DeviceDismissalsTable(
     this,
   );
+  late final $DeviceHealthFlagsTable deviceHealthFlags =
+      $DeviceHealthFlagsTable(this);
   late final Index panelsDeviceIeee = Index(
     'panels_device_ieee',
     'CREATE INDEX panels_device_ieee ON panels (device_ieee)',
@@ -3695,6 +4143,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     panels,
     scenes,
     deviceDismissals,
+    deviceHealthFlags,
     panelsDeviceIeee,
   ];
   @override
@@ -3741,6 +4190,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [TableUpdate('device_dismissals', kind: UpdateKind.delete)],
     ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'connections',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('device_health_flags', kind: UpdateKind.delete)],
+    ),
   ]);
 }
 
@@ -3757,6 +4213,7 @@ typedef $$ConnectionsTableCreateCompanionBuilder =
       Value<String?> homeDashboardId,
       Value<String?> remoteHost,
       Value<DateTime?> devicesSeenAt,
+      Value<String?> z2mBaseTopic,
       required DateTime createdAt,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -3774,6 +4231,7 @@ typedef $$ConnectionsTableUpdateCompanionBuilder =
       Value<String?> homeDashboardId,
       Value<String?> remoteHost,
       Value<DateTime?> devicesSeenAt,
+      Value<String?> z2mBaseTopic,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -3845,6 +4303,30 @@ final class $$ConnectionsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$DeviceHealthFlagsTable, List<DeviceHealthFlag>>
+  _deviceHealthFlagsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.deviceHealthFlags,
+        aliasName: $_aliasNameGenerator(
+          db.connections.id,
+          db.deviceHealthFlags.connectionId,
+        ),
+      );
+
+  $$DeviceHealthFlagsTableProcessedTableManager get deviceHealthFlagsRefs {
+    final manager = $$DeviceHealthFlagsTableTableManager(
+      $_db,
+      $_db.deviceHealthFlags,
+    ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _deviceHealthFlagsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$ConnectionsTableFilterComposer
@@ -3909,6 +4391,11 @@ class $$ConnectionsTableFilterComposer
 
   ColumnFilters<DateTime> get devicesSeenAt => $composableBuilder(
     column: $table.devicesSeenAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get z2mBaseTopic => $composableBuilder(
+    column: $table.z2mBaseTopic,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3996,6 +4483,31 @@ class $$ConnectionsTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> deviceHealthFlagsRefs(
+    Expression<bool> Function($$DeviceHealthFlagsTableFilterComposer f) f,
+  ) {
+    final $$DeviceHealthFlagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.deviceHealthFlags,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DeviceHealthFlagsTableFilterComposer(
+            $db: $db,
+            $table: $db.deviceHealthFlags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableOrderingComposer
@@ -4062,6 +4574,11 @@ class $$ConnectionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get z2mBaseTopic => $composableBuilder(
+    column: $table.z2mBaseTopic,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -4122,6 +4639,11 @@ class $$ConnectionsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get devicesSeenAt => $composableBuilder(
     column: $table.devicesSeenAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get z2mBaseTopic => $composableBuilder(
+    column: $table.z2mBaseTopic,
     builder: (column) => column,
   );
 
@@ -4205,6 +4727,32 @@ class $$ConnectionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> deviceHealthFlagsRefs<T extends Object>(
+    Expression<T> Function($$DeviceHealthFlagsTableAnnotationComposer a) f,
+  ) {
+    final $$DeviceHealthFlagsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.deviceHealthFlags,
+          getReferencedColumn: (t) => t.connectionId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DeviceHealthFlagsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.deviceHealthFlags,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableTableManager
@@ -4224,6 +4772,7 @@ class $$ConnectionsTableTableManager
             bool dashboardsRefs,
             bool scenesRefs,
             bool deviceDismissalsRefs,
+            bool deviceHealthFlagsRefs,
           })
         > {
   $$ConnectionsTableTableManager(_$AppDatabase db, $ConnectionsTable table)
@@ -4250,6 +4799,7 @@ class $$ConnectionsTableTableManager
                 Value<String?> homeDashboardId = const Value.absent(),
                 Value<String?> remoteHost = const Value.absent(),
                 Value<DateTime?> devicesSeenAt = const Value.absent(),
+                Value<String?> z2mBaseTopic = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -4265,6 +4815,7 @@ class $$ConnectionsTableTableManager
                 homeDashboardId: homeDashboardId,
                 remoteHost: remoteHost,
                 devicesSeenAt: devicesSeenAt,
+                z2mBaseTopic: z2mBaseTopic,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -4282,6 +4833,7 @@ class $$ConnectionsTableTableManager
                 Value<String?> homeDashboardId = const Value.absent(),
                 Value<String?> remoteHost = const Value.absent(),
                 Value<DateTime?> devicesSeenAt = const Value.absent(),
+                Value<String?> z2mBaseTopic = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
@@ -4297,6 +4849,7 @@ class $$ConnectionsTableTableManager
                 homeDashboardId: homeDashboardId,
                 remoteHost: remoteHost,
                 devicesSeenAt: devicesSeenAt,
+                z2mBaseTopic: z2mBaseTopic,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -4314,6 +4867,7 @@ class $$ConnectionsTableTableManager
                 dashboardsRefs = false,
                 scenesRefs = false,
                 deviceDismissalsRefs = false,
+                deviceHealthFlagsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -4321,6 +4875,7 @@ class $$ConnectionsTableTableManager
                     if (dashboardsRefs) db.dashboards,
                     if (scenesRefs) db.scenes,
                     if (deviceDismissalsRefs) db.deviceDismissals,
+                    if (deviceHealthFlagsRefs) db.deviceHealthFlags,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -4388,6 +4943,27 @@ class $$ConnectionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (deviceHealthFlagsRefs)
+                        await $_getPrefetchedData<
+                          Connection,
+                          $ConnectionsTable,
+                          DeviceHealthFlag
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ConnectionsTableReferences
+                              ._deviceHealthFlagsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ConnectionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).deviceHealthFlagsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -4412,6 +4988,7 @@ typedef $$ConnectionsTableProcessedTableManager =
         bool dashboardsRefs,
         bool scenesRefs,
         bool deviceDismissalsRefs,
+        bool deviceHealthFlagsRefs,
       })
     >;
 typedef $$DashboardsTableCreateCompanionBuilder =
@@ -6780,6 +7357,348 @@ typedef $$DeviceDismissalsTableProcessedTableManager =
       DeviceDismissal,
       PrefetchHooks Function({bool connectionId})
     >;
+typedef $$DeviceHealthFlagsTableCreateCompanionBuilder =
+    DeviceHealthFlagsCompanion Function({
+      required String connectionId,
+      required String ieee,
+      required bool batteryLow,
+      required bool acknowledged,
+      required DateTime changedAt,
+      Value<int> rowid,
+    });
+typedef $$DeviceHealthFlagsTableUpdateCompanionBuilder =
+    DeviceHealthFlagsCompanion Function({
+      Value<String> connectionId,
+      Value<String> ieee,
+      Value<bool> batteryLow,
+      Value<bool> acknowledged,
+      Value<DateTime> changedAt,
+      Value<int> rowid,
+    });
+
+final class $$DeviceHealthFlagsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DeviceHealthFlagsTable,
+          DeviceHealthFlag
+        > {
+  $$DeviceHealthFlagsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ConnectionsTable _connectionIdTable(_$AppDatabase db) =>
+      db.connections.createAlias(
+        $_aliasNameGenerator(
+          db.deviceHealthFlags.connectionId,
+          db.connections.id,
+        ),
+      );
+
+  $$ConnectionsTableProcessedTableManager get connectionId {
+    final $_column = $_itemColumn<String>('connection_id')!;
+
+    final manager = $$ConnectionsTableTableManager(
+      $_db,
+      $_db.connections,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_connectionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DeviceHealthFlagsTableFilterComposer
+    extends Composer<_$AppDatabase, $DeviceHealthFlagsTable> {
+  $$DeviceHealthFlagsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get ieee => $composableBuilder(
+    column: $table.ieee,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get batteryLow => $composableBuilder(
+    column: $table.batteryLow,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get acknowledged => $composableBuilder(
+    column: $table.acknowledged,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get changedAt => $composableBuilder(
+    column: $table.changedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ConnectionsTableFilterComposer get connectionId {
+    final $$ConnectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DeviceHealthFlagsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DeviceHealthFlagsTable> {
+  $$DeviceHealthFlagsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get ieee => $composableBuilder(
+    column: $table.ieee,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get batteryLow => $composableBuilder(
+    column: $table.batteryLow,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get acknowledged => $composableBuilder(
+    column: $table.acknowledged,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get changedAt => $composableBuilder(
+    column: $table.changedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ConnectionsTableOrderingComposer get connectionId {
+    final $$ConnectionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DeviceHealthFlagsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DeviceHealthFlagsTable> {
+  $$DeviceHealthFlagsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get ieee =>
+      $composableBuilder(column: $table.ieee, builder: (column) => column);
+
+  GeneratedColumn<bool> get batteryLow => $composableBuilder(
+    column: $table.batteryLow,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get acknowledged => $composableBuilder(
+    column: $table.acknowledged,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get changedAt =>
+      $composableBuilder(column: $table.changedAt, builder: (column) => column);
+
+  $$ConnectionsTableAnnotationComposer get connectionId {
+    final $$ConnectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DeviceHealthFlagsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DeviceHealthFlagsTable,
+          DeviceHealthFlag,
+          $$DeviceHealthFlagsTableFilterComposer,
+          $$DeviceHealthFlagsTableOrderingComposer,
+          $$DeviceHealthFlagsTableAnnotationComposer,
+          $$DeviceHealthFlagsTableCreateCompanionBuilder,
+          $$DeviceHealthFlagsTableUpdateCompanionBuilder,
+          (DeviceHealthFlag, $$DeviceHealthFlagsTableReferences),
+          DeviceHealthFlag,
+          PrefetchHooks Function({bool connectionId})
+        > {
+  $$DeviceHealthFlagsTableTableManager(
+    _$AppDatabase db,
+    $DeviceHealthFlagsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DeviceHealthFlagsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DeviceHealthFlagsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DeviceHealthFlagsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> connectionId = const Value.absent(),
+                Value<String> ieee = const Value.absent(),
+                Value<bool> batteryLow = const Value.absent(),
+                Value<bool> acknowledged = const Value.absent(),
+                Value<DateTime> changedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DeviceHealthFlagsCompanion(
+                connectionId: connectionId,
+                ieee: ieee,
+                batteryLow: batteryLow,
+                acknowledged: acknowledged,
+                changedAt: changedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String connectionId,
+                required String ieee,
+                required bool batteryLow,
+                required bool acknowledged,
+                required DateTime changedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => DeviceHealthFlagsCompanion.insert(
+                connectionId: connectionId,
+                ieee: ieee,
+                batteryLow: batteryLow,
+                acknowledged: acknowledged,
+                changedAt: changedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DeviceHealthFlagsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({connectionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (connectionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.connectionId,
+                                referencedTable:
+                                    $$DeviceHealthFlagsTableReferences
+                                        ._connectionIdTable(db),
+                                referencedColumn:
+                                    $$DeviceHealthFlagsTableReferences
+                                        ._connectionIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DeviceHealthFlagsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DeviceHealthFlagsTable,
+      DeviceHealthFlag,
+      $$DeviceHealthFlagsTableFilterComposer,
+      $$DeviceHealthFlagsTableOrderingComposer,
+      $$DeviceHealthFlagsTableAnnotationComposer,
+      $$DeviceHealthFlagsTableCreateCompanionBuilder,
+      $$DeviceHealthFlagsTableUpdateCompanionBuilder,
+      (DeviceHealthFlag, $$DeviceHealthFlagsTableReferences),
+      DeviceHealthFlag,
+      PrefetchHooks Function({bool connectionId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6796,4 +7715,6 @@ class $AppDatabaseManager {
       $$ScenesTableTableManager(_db, _db.scenes);
   $$DeviceDismissalsTableTableManager get deviceDismissals =>
       $$DeviceDismissalsTableTableManager(_db, _db.deviceDismissals);
+  $$DeviceHealthFlagsTableTableManager get deviceHealthFlags =>
+      $$DeviceHealthFlagsTableTableManager(_db, _db.deviceHealthFlags);
 }
