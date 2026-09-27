@@ -122,6 +122,12 @@ Board: H-launcher.
 5. The device check on the internal track includes the TalkBack script, a strict-broker connect, a tablet layout check, and a Wall display check.
 6. CI is green, goldens included.
 
+## Found on the first device run (2.0.0-preview1, 2026-09-27)
+
+- **Material You on (the default) hides most of Signal:** surfaces, navigation and buttons take the wallpaper colors, and only the amber tiles, type and shapes remain. With it off, the app matches the boards. Open question for the user: should new installs default to Signal (Material You off, still offered in Settings)?
+- **The Devices "Weak" chip:** Icons.signal_cellular_alt_1_bar renders as a speck. Use a Symbols glyph.
+- **Device page header and Devices rows:** they use the scheme primary when a device is on. Use SignalColors.active and a filled icon, as the tiles do.
+
 ## Deferred, with a reason
 
 - **Thermostat tiles.** There is no test device. Generic tiles cover TRVs meanwhile.
