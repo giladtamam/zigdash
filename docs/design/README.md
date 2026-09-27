@@ -79,6 +79,8 @@ People who find the listing install the app, but few come back. The redesign is 
 | Design tokens | [tokens.md](tokens.md) |
 | Per-screen notes and exported images | [screens.md](screens.md), [screens/](screens/) |
 | Release 1.12 Dashboard build spec | [dashboard-1.12.md](dashboard-1.12.md) |
+| Release 1.13 Devices and tablet build spec | [devices-tablet-1.13.md](devices-tablet-1.13.md) |
+| Research: Zigbee2MQTT health data (availability, battery, link quality) | [research/z2m-health-data.md](research/z2m-health-data.md) |
 | Research: classifying Zigbee2MQTT devices | [research/device-classes.md](research/device-classes.md) |
 | Phases, guardrails, store and community plan | [phasing.md](phasing.md) |
 | Decision records | [docs/adr/](../adr/) |
@@ -109,4 +111,4 @@ These are in scope for 2.0 but not designed yet. They get decided in the phase t
 
 - **1.10 Foundations** and **1.11 First run** shipped. **1.11.1** fixes tiles created by the 1.11.0 setup (a doubled topic).
 - **1.12 Dashboard** is built on `release/1.12-dashboard` as specified in [dashboard-1.12.md](dashboard-1.12.md), version 1.12.0+27. It was checked against the reference SMHUB on 2026-09-26.
-- **Next: 1.13 Devices and tablet.** The device page, Settings with homes, the navigation rail, and the tablet layout.
+- **1.13 Devices and tablet** is designed: [devices-tablet-1.13.md](devices-tablet-1.13.md), decided 2026-09-27, boards in the "1.13" row of the canvas (version 11). The build goes on `release/1.13-devices-tablet`.

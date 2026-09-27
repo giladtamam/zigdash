@@ -97,14 +97,23 @@ These five boards are in the interim Calm Material look, not Signal. They sit in
 
 ![Devices tab](screens/1.12/devices-tab.png)
 
-- **Devices tab stopgap.** Today's health list, with a "Not on a dashboard" marker and tap-to-add. The device page comes in 1.13.
+- **Devices tab stopgap.** Today's health list, with a "Not on a dashboard" marker and tap-to-add. Replaced in 1.13 (below).
 
 ![Home switcher](screens/1.12/home-switcher.png)
 
 - **Home switcher.** The home name opens the menu at two or more homes. "Manage homes" opens the Homes list until 1.13 Settings.
 
+## 1.13 Devices and tablet boards (interim look A)
+
+Nine boards in the "1.13" row of the canvas (version 11), built as specified in [devices-tablet-1.13.md](devices-tablet-1.13.md). They are not exported as images; the canvas is the source of truth.
+
+- **Devices tab.** Filter chips with counts, attention rows first, a health signal only when it matters, and the availability footnote.
+- **Device page, light and dark.** A color light's controls, health and dashboards; a contact sensor with a low battery, its readings and "Add as reading tile".
+- **Custom MQTT tile form.** Name, then the topics with "Pick a device" and the prefix as a lead-in, the live preview, payloads, and Advanced last.
+- **Settings, home page, language picker.** Homes inline, a page per home with the base topic, a segmented theme control, and one Language row.
+- **Tablet dashboard and tablet Devices.** The navigation rail, dashboard chips, four columns and a Wide reading tile; Devices as list-detail with the device page beside the list.
+
 ## Not mocked here
 
-- **Custom MQTT tile form.** It keeps the current fields, reordered topic-first, and needs no new layout decision.
 - **Thermostat tiles.** They are deferred and need their own control design. Color lights are on the 1.12 boards above.
 - **Kiosk presentation.** It stays on the map as fog, after phasing.

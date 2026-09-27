@@ -28,6 +28,12 @@
 
 **Not responding** — a device tile's state when the device ignored its state request (`/get`) for 15 seconds after connecting. Zigbee2MQTT availability is off by default, so this is often the only sign a device has dropped off the Zigbee network. The tile still sends commands.
 
+**Device page** — the page for one device, reached from the Devices tab, a device tile's sheet or Edit mode: full controls, readings, health, and the dashboards it is on. Routed by IEEE address, so it follows renames. From 1.13.
+
+**Needs attention** — a device whose battery is low, which availability reports offline (only when the bridge has availability turned on), which is not responding, or whose interview failed or is unsupported. Weak link quality is shown but does not count.
+
+**Last heard** — when the app last received a state message from a device, taken from the last-known store. Used instead of Zigbee2MQTT's `last_seen`, which is off by default.
+
 **Edit mode** — the one mode in which a dashboard is rearranged: tiles show a grip and an edit badge, controls are inert, and changes save as they happen.
 
 **Generated dashboard** — a dashboard created from discovered devices during setup, then editable like any other.
