@@ -109,29 +109,31 @@ flutter:
       fonts:
         - asset: assets/fonts/MaterialSymbolsRounded-subset.ttf
 
-# Launcher icon generation: `dart run flutter_launcher_icons`.
-# Source PNGs are produced by `dart run tool/gen_icon.dart`.
+# Launcher icon: the Signal tile grid (docs/design/signal-2.0.md §9).
+# tool/icons/render_signal_icon.sh renders tool/icons/signal/*.svg to
+# assets/icon/*.png and runs flutter_launcher_icons.
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#3B82F6"
+  adaptive_icon_background: "#F6F3EC"
   adaptive_icon_foreground: "assets/icon/foreground.png"
+  adaptive_icon_monochrome: "assets/icon/monochrome.png"
   remove_alpha_ios: true
   web:
     generate: true
     image_path: "assets/icon/icon.png"
-    background_color: "#3B82F6"
-    theme_color: "#3B82F6"
+    background_color: "#F6F3EC"
+    theme_color: "#F6F3EC"
 
 # Native splash: `dart run flutter_native_splash:create`.
-# Brand background with the dashboard-tiles logo centered (light + dark same).
+# Signal ground (ivory; near-black in dark) with the tile-grid logo centered.
 flutter_native_splash:
-  color: "#3B82F6"
-  color_dark: "#3B82F6"
+  color: "#F6F3EC"
+  color_dark: "#15130F"
   image: assets/icon/foreground.png
   android_12:
-    color: "#3B82F6"
-    color_dark: "#3B82F6"
+    color: "#F6F3EC"
+    color_dark: "#15130F"
     image: assets/icon/foreground.png
   web: false

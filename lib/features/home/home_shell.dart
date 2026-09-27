@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
+import '../../core/theme/signal_icons.dart';
 import '../../core/utils/window_class.dart';
 import '../../data/database/database.dart';
 import '../../data/repositories/connection_repo.dart';
@@ -72,9 +73,9 @@ class HomeShell extends ConsumerWidget {
           2 => Routes.homeScenes(connectionId),
           _ => Routes.homeDashboards(connectionId),
         });
-    Widget devicesIcon(IconData icon) => Badge(
+    Widget devicesIcon(IconData icon, {bool active = false}) => Badge(
           isLabelVisible: dot,
-          child: Icon(icon),
+          child: SignalIcon(icon, active: active),
         );
 
     // Medium and expanded windows: a navigation rail, which stays in Edit
@@ -92,23 +93,23 @@ class HomeShell extends ConsumerWidget {
               minWidth: 88,
               destinations: [
                 NavigationRailDestination(
-                  icon: const Icon(Icons.dashboard_outlined),
-                  selectedIcon: const Icon(Icons.dashboard),
+                  icon: const SignalIcon(Symbols.dashboard),
+                  selectedIcon: const SignalIcon(Symbols.dashboard, active: true),
                   label: Text(l10n.navDashboards),
                 ),
                 NavigationRailDestination(
                   icon: dot
                       ? Tooltip(
                           message: '${l10n.navDevices}, $dotReason',
-                          child: devicesIcon(Icons.devices_other_outlined),
+                          child: devicesIcon(Symbols.devicesOther),
                         )
-                      : devicesIcon(Icons.devices_other_outlined),
-                  selectedIcon: devicesIcon(Icons.devices_other),
+                      : devicesIcon(Symbols.devicesOther),
+                  selectedIcon: devicesIcon(Symbols.devicesOther, active: true),
                   label: Text(l10n.navDevices),
                 ),
                 NavigationRailDestination(
-                  icon: const Icon(Icons.auto_awesome_outlined),
-                  selectedIcon: const Icon(Icons.auto_awesome),
+                  icon: const SignalIcon(Symbols.autoAwesome),
+                  selectedIcon: const SignalIcon(Symbols.autoAwesome, active: true),
                   label: Text(l10n.navScenes),
                 ),
               ],
@@ -133,19 +134,19 @@ class HomeShell extends ConsumerWidget {
         onDestinationSelected: go,
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.dashboard_outlined),
-            selectedIcon: const Icon(Icons.dashboard),
+            icon: const SignalIcon(Symbols.dashboard),
+            selectedIcon: const SignalIcon(Symbols.dashboard, active: true),
             label: l10n.navDashboards,
           ),
           NavigationDestination(
-            icon: devicesIcon(Icons.devices_other_outlined),
-            selectedIcon: devicesIcon(Icons.devices_other),
+            icon: devicesIcon(Symbols.devicesOther),
+            selectedIcon: devicesIcon(Symbols.devicesOther, active: true),
             label: l10n.navDevices,
             tooltip: dot ? '${l10n.navDevices}, $dotReason' : null,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.auto_awesome_outlined),
-            selectedIcon: const Icon(Icons.auto_awesome),
+            icon: const SignalIcon(Symbols.autoAwesome),
+            selectedIcon: const SignalIcon(Symbols.autoAwesome, active: true),
             label: l10n.navScenes,
           ),
         ],
