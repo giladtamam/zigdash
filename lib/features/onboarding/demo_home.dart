@@ -84,7 +84,14 @@ final List<_DemoDevice> _devices = [
   (name: 'Laundry leak', group: 2, exposes: [_binary('water_leak'), _battery], state: {'water_leak': false, 'battery': 78}),
 ];
 
-String _topic(String name) => '$demoBase/${name.toLowerCase().replaceAll(' ', '_')}';
+/// A demo device's topic. Zigbee2MQTT friendly names may hold spaces, and
+/// the demo uses them, so the Devices tab reads "Front door".
+String _topic(String name) => '$demoBase/$name';
+
+/// The topic demo homes made before 2.0 used ("front_door"). Their tiles
+/// still subscribe to it, so the demo keeps publishing values there too.
+String _legacyTopic(String name) =>
+    '$demoBase/${name.toLowerCase().replaceAll(' ', '_')}';
 
 String _ieee(int order) => '0xdemo${order.toString().padLeft(12, '0')}';
 
@@ -144,7 +151,17 @@ List<MqttRxMessage> demoValues(DateTime now) {
         connectionGeneration: demoGeneration,
       );
   return [
-    for (final d in _devices) message(_topic(d.name), d.state),
+    for (final d in _devices) ...[
+      message(_topic(d.name), d.state),
+      message(_legacyTopic(d.name), d.state),
+      message('${_topic(d.name)}/availability', {'state': 'online'}),
+    ],
+    // Availability on, so the Devices tab shows every device online.
+    message('$demoBase/bridge/info', {
+      'config': {
+        'availability': {'enabled': true},
+      },
+    }),
     message('$demoBase/bridge/devices', [
       for (final (i, d) in _devices.indexed)
         {
@@ -154,7 +171,7 @@ List<MqttRxMessage> demoValues(DateTime now) {
           'supported': true,
           'interview_completed': true,
           'power_source': d.group == 2 ? 'Battery' : 'Mains (single phase)',
-          'definition': {'vendor': 'Demo', 'model': 'Demo', 'exposes': d.exposes},
+          'definition': {'exposes': d.exposes},
         },
     ]),
   ];

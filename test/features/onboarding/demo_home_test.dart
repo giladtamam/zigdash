@@ -8,6 +8,7 @@ import 'package:zigdash/data/database/daos/section_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/features/devices/device_health.dart';
+import 'package:zigdash/features/devices/z2m_bridge.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/onboarding/demo_home.dart';
 import 'package:zigdash/features/onboarding/demo_service.dart';
@@ -93,6 +94,25 @@ void main() {
         ),
     });
     expect(rows.where((r) => r.needsAttention).map((r) => r.device.friendlyName),
-        ['front_door']);
+        ['Front door']);
+    expect(rows.every((r) => r.device.vendor == null), isTrue,
+        reason: 'no made-up vendor on the device page');
+  });
+
+  test('demo homes made before 2.0 keep their values', () {
+    // Their tiles subscribe to snake_case topics.
+    final topics = {for (final m in demoValues(DateTime(2026))) m.topic};
+    for (final t in ['desk_lamp', 'front_door', 'kitchen_plug', 'laundry_leak']) {
+      expect(topics, contains('$demoBase/$t'));
+    }
+  });
+
+  test('the demo reports availability, so every device reads online', () {
+    final values = {
+      for (final m in demoValues(DateTime(2026))) m.topic: m.payload,
+    };
+    expect(parseAvailabilityConfig(values['$demoBase/bridge/info']!).enabled,
+        isTrue);
+    expect(values['$demoBase/Front door/availability'], '{"state":"online"}');
   });
 }
