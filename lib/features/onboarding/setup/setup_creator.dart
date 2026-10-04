@@ -1,3 +1,4 @@
+import '../../../core/theme/dashboard_accent.dart';
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -85,7 +86,7 @@ class SetupCreator implements SetupStore {
     String? password,
     String base = 'zigbee2mqtt',
     String dashboardName = 'Home',
-    int dashboardColor = 0xFF00696B,
+    int dashboardColor = defaultDashboardSeed,
     int dashboardIcon = 0xe318, // Icons.home in Flutter's MaterialIcons font
     required List<ReviewRow> selected,
     List<ReviewRow> notSelected = const [],

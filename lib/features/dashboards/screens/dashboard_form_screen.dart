@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/theme/dashboard_accent.dart';
 import '../../../core/utils/material_icon.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../edit_mode.dart';
 
 const _swatches = <Color>[
-  Color(0xFF3B82F6), // blue (default)
+  Color(defaultDashboardSeed), // warm ink (default)
+  Color(0xFF3B82F6), // blue
   Color(0xFFF59E0B), // amber
   Color(0xFFEF4444), // red
   Color(0xFF10B981), // emerald

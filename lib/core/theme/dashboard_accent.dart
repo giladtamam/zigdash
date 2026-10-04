@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// The colour a new dashboard starts with: Signal's warm ink, so its accent
+/// (section labels, tab indicator) stays the quiet warm grey the 2.0 boards
+/// show. Users can still pick any swatch.
+const defaultDashboardSeed = 0xFF5B5446;
+
 /// A dashboard's own colour, as an accent only (signal-2.0.md §1): section
 /// labels and the tab indicator. It no longer re-seeds the scheme or the
 /// active fill. Toned for the brightness so it stays readable on the ground.

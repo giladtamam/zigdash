@@ -2,6 +2,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/core/theme/dashboard_accent.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
 import 'package:zigdash/data/database/daos/section_dao.dart';
 import 'package:zigdash/data/database/database.dart';
@@ -30,6 +31,8 @@ void main() {
 
     final dash = (await db.select(db.dashboards).get())
         .singleWhere((d) => d.connectionId == connId);
+    expect(dash.colorSeed, defaultDashboardSeed,
+        reason: 'the warm Signal accent, not the 1.x blue');
     final sections = await SectionDao(db).getByDashboard(dash.id);
     expect(sections.map((s) => s.name),
         ['Lights', 'Switches and covers', 'Sensors']);

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/dashboard_accent.dart';
 import '../../core/utils/uuid.dart';
 import '../../data/database/database.dart';
 import '../../data/database/daos/connection_dao.dart';
@@ -60,7 +61,7 @@ class DemoService extends Notifier<bool> {
       id: dashId,
       connectionId: connId,
       name: 'My Home',
-      colorSeed: 0xFF3B82F6,
+      colorSeed: defaultDashboardSeed,
       iconCodepoint: 0xe318, // Icons.home
       createdAt: now,
       updatedAt: now,
