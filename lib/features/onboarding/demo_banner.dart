@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/build/store_capture.dart';
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../data/repositories/connection_repo.dart';
@@ -17,7 +18,7 @@ class DemoBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final connection = ref.watch(connectionByIdProvider(connectionId));
-    if (!isDemoConnection(connection.valueOrNull?.host)) {
+    if (storeCapture || !isDemoConnection(connection.valueOrNull?.host)) {
       return const SizedBox.shrink();
     }
     final l10n = context.l10n;
