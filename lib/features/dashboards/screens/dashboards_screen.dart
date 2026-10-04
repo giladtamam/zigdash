@@ -24,6 +24,7 @@ import '../../devices/devices_providers.dart';
 import '../../home/home_shell.dart';
 import '../edit_mode.dart';
 import '../../onboarding/demo_banner.dart';
+import '../../onboarding/demo_service.dart' show isDemoConnection;
 import '../../panels/widgets/panel_grid.dart';
 import '../widgets/connection_status_banner.dart';
 
@@ -133,6 +134,9 @@ class _DashboardsTabbed extends ConsumerWidget {
         Dashboard current() =>
             dashboards[DefaultTabController.of(tabCtx).index];
         final wide = WindowClass.of(context).hasRail;
+        // The demo has no broker and stays quiet about it (demo_home.dart).
+        final demo = isDemoConnection(
+            ref.watch(connectionByIdProvider(connectionId)).valueOrNull?.host);
         final chromeHidden = ref.watch(wallChromeHiddenProvider);
         return AnimatedBuilder(
           animation: DefaultTabController.of(tabCtx),
@@ -189,7 +193,7 @@ class _DashboardsTabbed extends ConsumerWidget {
               : AppBar(
             title: HomeTitle(connectionId: connectionId),
             actions: [
-              if (wide) _StatusChip(status: connectionStatus),
+              if (wide && !demo) _StatusChip(status: connectionStatus),
               IconButton(
                 icon: const Icon(Icons.edit_outlined),
                 tooltip: l10n.dashEditDashboard,
