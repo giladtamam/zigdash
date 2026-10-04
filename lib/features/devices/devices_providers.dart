@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/daos/device_registry_dao.dart';
 import '../../data/database/database.dart';
 import '../../mqtt/mqtt_manager.dart';
+import '../onboarding/demo_home.dart' show demoGeneration;
 import '../discovery/models/z2m_device.dart';
 import 'device_profile.dart';
 import 'device_state_refresher.dart';
@@ -124,7 +125,9 @@ final deviceHealthProvider = StreamProvider.autoDispose
       availability[rest.substring(0, rest.length - 13)] = m.payload;
     } else if (!rest.contains('/') && m.payload.isNotEmpty) {
       states[rest] = (payload: m.payload, at: m.receivedAt);
-      if (m.connectionGeneration == generation) {
+      // Demo values are current, never last known (see demo_home.dart).
+      if (m.connectionGeneration == generation ||
+          m.connectionGeneration == demoGeneration) {
         stale.remove(rest);
       } else {
         stale.add(rest);

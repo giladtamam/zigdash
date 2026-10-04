@@ -6,6 +6,8 @@ import 'package:zigdash/data/database/daos/panel_dao.dart';
 import 'package:zigdash/data/database/daos/section_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
+import 'package:zigdash/features/devices/device_health.dart';
+import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/onboarding/demo_home.dart';
 import 'package:zigdash/features/onboarding/demo_service.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
@@ -49,5 +51,45 @@ void main() {
       );
       expect(snap.freshness, PanelFreshness.fresh, reason: t.name);
     }
+  });
+
+  test('the demo devices fill the Devices tab, one needing attention',
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final c = ProviderContainer(overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
+      appDatabaseProvider.overrideWithValue(db),
+    ]);
+    addTearDown(c.dispose);
+    await c.read(demoServiceProvider.notifier).activate();
+
+    final values = {
+      for (final m in demoValues(DateTime(2026))) m.topic: m,
+    };
+    final devices =
+        parseBridgeDevices(values['$demoBase/bridge/devices']!.payload);
+    expect(devices, hasLength(8));
+
+    // Each tile links to its device: same IEEE address, same topic.
+    final tiles = (await db.select(db.panels).get())
+        .where((p) => p.type == PanelType.device);
+    for (final t in tiles) {
+      final d = devices.singleWhere((d) => d.ieeeAddress == t.deviceIeee,
+          orElse: () => fail('no bridge device for ${t.name}'));
+      expect('$demoBase/${d.friendlyName}', t.topicPrefixOverride);
+    }
+
+    final rows = deviceHealthFrom(devices, states: {
+      for (final d in devices)
+        d.friendlyName: (
+          payload: values['$demoBase/${d.friendlyName}']!.payload,
+          at: DateTime(2026),
+        ),
+    });
+    expect(rows.where((r) => r.needsAttention).map((r) => r.device.friendlyName),
+        ['front_door']);
   });
 }

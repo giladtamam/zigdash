@@ -79,12 +79,14 @@ final List<_DemoDevice> _devices = [
     exposes: [_numeric('temperature', '°C'), _numeric('humidity', '%'), _battery],
     state: {'temperature': 21.4, 'humidity': 48, 'battery': 87},
   ),
-  (name: 'Front door', group: 2, exposes: [_binary('contact'), _battery], state: {'contact': true, 'battery': 91}),
+  (name: 'Front door', group: 2, exposes: [_binary('contact'), _battery], state: {'contact': true, 'battery': 15}),
   (name: 'Hallway motion', group: 2, exposes: [_binary('occupancy'), _battery], state: {'occupancy': false, 'battery': 64}),
   (name: 'Laundry leak', group: 2, exposes: [_binary('water_leak'), _battery], state: {'water_leak': false, 'battery': 78}),
 ];
 
 String _topic(String name) => '$demoBase/${name.toLowerCase().replaceAll(' ', '_')}';
+
+String _ieee(int order) => '0xdemo${order.toString().padLeft(12, '0')}';
 
 /// Creates the demo dashboard's sections and device tiles.
 Future<void> seedDemoDashboard({
@@ -110,7 +112,7 @@ Future<void> seedDemoDashboard({
       device: Z2mDevice(
         friendlyName: friendly,
         type: 'EndDevice',
-        ieeeAddress: '0xdemo${order.toString().padLeft(12, '0')}',
+        ieeeAddress: _ieee(order),
         rawExposes: d.exposes,
       ),
       name: d.name,
@@ -131,13 +133,29 @@ Future<void> seedDemoDashboard({
   );
 }
 
-/// The demo's device states, as current values for its tiles.
-List<MqttRxMessage> demoValues(DateTime now) => [
-      for (final d in _devices)
-        MqttRxMessage(
-          topic: _topic(d.name),
-          payload: json.encode(d.state),
-          receivedAt: now,
-          connectionGeneration: demoGeneration,
-        ),
-    ];
+/// The demo's device states, as current values for its tiles, and the
+/// bridge's device list, so the Devices tab and device pages have the demo
+/// devices too.
+List<MqttRxMessage> demoValues(DateTime now) {
+  MqttRxMessage message(String topic, Object payload) => MqttRxMessage(
+        topic: topic,
+        payload: json.encode(payload),
+        receivedAt: now,
+        connectionGeneration: demoGeneration,
+      );
+  return [
+    for (final d in _devices) message(_topic(d.name), d.state),
+    message('$demoBase/bridge/devices', [
+      for (final (i, d) in _devices.indexed)
+        {
+          'friendly_name': _topic(d.name).substring(demoBase.length + 1),
+          'ieee_address': _ieee(i),
+          'type': d.group == 2 ? 'EndDevice' : 'Router',
+          'supported': true,
+          'interview_completed': true,
+          'power_source': d.group == 2 ? 'Battery' : 'Mains (single phase)',
+          'definition': {'vendor': 'Demo', 'model': 'Demo', 'exposes': d.exposes},
+        },
+    ]),
+  ];
+}
