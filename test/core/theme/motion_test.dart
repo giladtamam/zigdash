@@ -38,7 +38,8 @@ void main() {
       final lines = f.readAsLinesSync();
       for (var i = 0; i < lines.length; i++) {
         if (!animated.hasMatch(lines[i])) continue;
-        // The duration argument follows within the next few lines.
+        // The duration argument follows within 8 lines; one written further
+        // down (a long AnimationController(...) call) is not checked.
         for (var j = i; j < lines.length && j <= i + 8; j++) {
           if (lines[j].contains('duration:')) {
             if (!lines[j].contains('SignalMotion.of(')) {
