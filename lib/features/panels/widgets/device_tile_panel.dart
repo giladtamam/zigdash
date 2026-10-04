@@ -20,6 +20,7 @@ import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import 'control_action.dart';
 import 'device_sheet.dart';
+import '../../../core/theme/motion.dart';
 
 /// Decodes a Zigbee2MQTT state payload; anything else reads as "no state".
 Map<String, Object?> decodeDeviceState(Object? payload) {
@@ -146,9 +147,7 @@ class DeviceTilePanel extends ConsumerWidget {
               : anyOn
                   ? roles.active
                   : idleColor),
-      duration: MediaQuery.disableAnimationsOf(context)
-          ? Duration.zero
-          : const Duration(milliseconds: 200),
+      duration: SignalMotion.of(context, SignalMotion.stateChange),
       curve: Curves.easeInOutCubicEmphasized,
       builder: (context, fill, child) => Card(
         color: fill,

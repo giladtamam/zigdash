@@ -6,6 +6,7 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../../../core/theme/motion.dart';
 
 class NodeStatusPanel extends ConsumerWidget {
   const NodeStatusPanel({
@@ -48,7 +49,7 @@ class NodeStatusPanel extends ConsumerWidget {
         child: Row(
           children: [
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
+              duration: SignalMotion.of(context, SignalMotion.stateChange),
               child: Icon(icon, key: ValueKey(icon), color: color, size: 28),
             ),
             const SizedBox(width: 12),
@@ -62,7 +63,7 @@ class NodeStatusPanel extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                   AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
+                    duration: SignalMotion.of(context, SignalMotion.stateChange),
                     child: Text(
                       label,
                       key: ValueKey(label),

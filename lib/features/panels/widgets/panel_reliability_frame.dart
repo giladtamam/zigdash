@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/theme/motion.dart';
 
 class PanelReliabilityFrame extends StatelessWidget {
   const PanelReliabilityFrame({
@@ -51,7 +52,7 @@ class PanelReliabilityFrame extends StatelessWidget {
             absorbing: !controlsEnabled,
             child: AnimatedOpacity(
               opacity: stale ? 0.62 : 1,
-              duration: const Duration(milliseconds: 180),
+              duration: SignalMotion.of(context, const Duration(milliseconds: 180)),
               child: child,
             ),
           ),

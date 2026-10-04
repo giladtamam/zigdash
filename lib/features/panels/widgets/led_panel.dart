@@ -5,6 +5,7 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../../../core/theme/motion.dart';
 
 class LedPanel extends ConsumerWidget {
   const LedPanel({
@@ -60,7 +61,7 @@ class LedPanel extends ConsumerWidget {
         child: Row(
           children: [
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
+              duration: SignalMotion.of(context, SignalMotion.stateChange),
               child: Container(
                 key: ValueKey(isOn),
                 width: 20,
@@ -91,7 +92,7 @@ class LedPanel extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                   AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
+                    duration: SignalMotion.of(context, SignalMotion.stateChange),
                     child: Text(
                       stateLabel,
                       key: ValueKey(stateLabel),

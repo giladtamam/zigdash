@@ -8,6 +8,7 @@ import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import 'control_action.dart';
+import '../../../core/theme/motion.dart';
 
 class TogglePanel extends ConsumerWidget {
   const TogglePanel({
@@ -72,7 +73,7 @@ class TogglePanel extends ConsumerWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
+                      duration: SignalMotion.of(context, SignalMotion.stateChange),
                       child: Text(
                         valueAsync.when(
                           loading: () => '…',
