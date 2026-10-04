@@ -128,6 +128,14 @@ Board: H-launcher.
 - **The Devices "Weak" chip** now uses the Symbols glyph. *Done.*
 - **Device page header and Devices rows** now use amber and a filled icon when a device is on. *Done.*
 
+## Decided while building (2026-10-04)
+
+- **Store screenshots (§10):** emulators of popular devices, a Pixel 8 phone and a Pixel Tablet (2560 × 1600 at 320 dpi, the 1280 × 800 dp tablet above), run by `tool/store/capture.sh`. Phone, 6 shots: dashboard, a light's controls, Devices, a device page, dashboard in dark, Edit mode. Tablet, 2 shots (`tenInchScreenshots`): the dark wall dashboard and Devices as list-detail. The capture build hides the demo bar (`ZIGDASH_STORE_CAPTURE`). Captured once, after the golden review.
+- **Demo devices:** the demo publishes a Zigbee2MQTT device list, availability, and human friendly names, so the Devices tab and device pages look like a real home. The front door's battery is 15%, so one device needs attention. Demo homes from before 2.0 keep their old snake_case topics.
+- **Default dashboard colour:** new dashboards (demo, setup, form) start with Signal's warm ink (`defaultDashboardSeed`), not 1.x blue or M3 teal. Stored colours are untouched.
+- **Leak and smoke pulse (§6):** the attention fill eases a third of the way toward the tile surface and back, 1 s each way. It holds steady with animations off, and the contrast test covers its far end.
+- **Reduced motion (§6):** every animated panel takes its duration from `SignalMotion.of`, and a guard test enforces it.
+
 ## Deferred, with a reason
 
 - **Thermostat tiles.** There is no test device. Generic tiles cover TRVs meanwhile.
