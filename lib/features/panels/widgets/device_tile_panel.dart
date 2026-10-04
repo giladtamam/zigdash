@@ -149,11 +149,17 @@ class DeviceTilePanel extends ConsumerWidget {
                   : idleColor),
       duration: SignalMotion.of(context, SignalMotion.stateChange),
       curve: Curves.easeInOutCubicEmphasized,
-      builder: (context, fill, child) => Card(
-        color: fill,
-        shape: filled ? shape : null,
-        child: child,
-      ),
+      builder: (context, fill, child) => alarming
+          ? _AlarmPulse(
+              from: fill!,
+              to: roles.attentionPulse,
+              builder: (pulse) => Card(color: pulse, shape: shape, child: child),
+            )
+          : Card(
+              color: fill,
+              shape: filled ? shape : null,
+              child: child,
+            ),
       child: Semantics(
         customSemanticsActions: {
           CustomSemanticsAction(label: l10n.deviceControls): openSheet,
@@ -386,6 +392,53 @@ IconData deviceClassIcon(DeviceClass cls, {bool? alarm}) => switch (cls) {
       DeviceClass.climate => Symbols.thermostat,
       DeviceClass.generic => Symbols.deviceUnknown,
     };
+
+/// A leak or smoke alarm's fill, pulsing slowly between [from] and [to]
+/// (2 s, signal-2.0.md §6). Steady at [from] when the system turns
+/// animations off. Nothing else in the app loops.
+class _AlarmPulse extends StatefulWidget {
+  const _AlarmPulse({required this.from, required this.to, required this.builder});
+
+  final Color from;
+  final Color to;
+  final Widget Function(Color fill) builder;
+
+  @override
+  State<_AlarmPulse> createState() => _AlarmPulseState();
+}
+
+class _AlarmPulseState extends State<_AlarmPulse>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(vsync: this);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final half = SignalMotion.of(context, SignalMotion.alarmPulseHalf);
+    if (half == Duration.zero) {
+      _controller
+        ..stop()
+        ..value = 0;
+    } else if (!_controller.isAnimating) {
+      _controller
+        ..duration = half
+        ..repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) => widget.builder(Color.lerp(widget.from,
+            widget.to, Curves.easeInOutSine.transform(_controller.value))!),
+      );
+}
 
 class _QuickAction extends StatelessWidget {
   const _QuickAction({

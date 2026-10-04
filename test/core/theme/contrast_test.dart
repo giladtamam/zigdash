@@ -43,6 +43,8 @@ void main() {
           'onSurfaceVariant/idle': (s.onSurfaceVariant, r.idle, 4.5),
           'onActive/active': (r.onActive, r.active, 4.5),
           'onAttention/attention': (r.onAttention, r.attention, 4.5),
+          'onAttention/attentionPulse (alarm pulse)':
+              (r.onAttention, r.attentionPulse, 4.5),
           'onAttention/idle (battery text)': (r.onAttention, r.idle, 4.5),
           'onStale/stale': (r.onStale, r.stale, 4.5),
           'onHealthy/healthy': (r.onHealthy, r.healthy, 4.5),

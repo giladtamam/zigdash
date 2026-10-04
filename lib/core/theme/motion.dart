@@ -12,6 +12,9 @@ abstract final class SignalMotion {
   /// Emphasized M3 duration for containers.
   static const emphasized = Duration(milliseconds: 500);
 
+  /// Half of a leak or smoke alarm's 2 s pulse: out, then back.
+  static const alarmPulseHalf = Duration(seconds: 1);
+
   /// [duration], or zero when animations are off (TalkBack users, "Remove
   /// animations" in Android accessibility settings).
   static Duration of(BuildContext context, Duration duration) =>

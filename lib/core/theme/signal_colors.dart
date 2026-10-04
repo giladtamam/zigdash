@@ -40,6 +40,10 @@ class SignalColors extends ThemeExtension<SignalColors> {
   final Color attention;
   final Color onAttention;
 
+  /// The far end of a leak or smoke alarm's slow pulse (signal-2.0.md §6):
+  /// the attention fill eased a third of the way toward the tile surface.
+  Color get attentionPulse => Color.lerp(attention, idle, 0.3)!;
+
   /// A device reports unavailable: outline and muted text.
   final Color offline;
 

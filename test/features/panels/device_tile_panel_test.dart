@@ -72,7 +72,9 @@ Panel _device(List<Object?> exposes, {String name = 'Living room bulb'}) => Pane
       deviceIeee: '0xc4d7fdbbfeba0000',
     );
 
-Widget _wrap(Panel panel, {Object? state, _Recorder? mgr}) => ProviderScope(
+Widget _wrap(Panel panel,
+        {Object? state, _Recorder? mgr, bool animations = true}) =>
+    ProviderScope(
       overrides: [
         connectionStatusProvider
             .overrideWith((ref, _) => Stream.value(MqttStatus.connected)),
@@ -89,6 +91,10 @@ Widget _wrap(Panel panel, {Object? state, _Recorder? mgr}) => ProviderScope(
             state == null ? const Stream.empty() : Stream.value(json.encode(state))),
       ],
       child: MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(disableAnimations: !animations),
+          child: child!,
+        ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
@@ -177,21 +183,49 @@ void main() {
     });
   });
 
-  testWidgets('a leak alarm fills the tile with the attention colour',
-      (tester) async {
-    await tester.pumpWidget(_wrap(
-      _device([
+  Panel leak() => _device([
         {'type': 'binary', 'name': 'water_leak', 'property': 'water_leak', 'access': 1, 'value_on': true, 'value_off': false},
         {'type': 'numeric', 'name': 'battery', 'property': 'battery', 'access': 1, 'unit': '%', 'category': 'diagnostic'},
-      ], name: 'Laundry leak'),
-      state: {'water_leak': true, 'battery': 15},
-    ));
+      ], name: 'Laundry leak');
+
+  testWidgets('a leak alarm fills the tile with the attention colour',
+      (tester) async {
+    // Animations off: the fill holds steady, so the tile settles.
+    await tester.pumpWidget(_wrap(leak(),
+        state: {'water_leak': true, 'battery': 15}, animations: false));
     await tester.pumpAndSettle();
 
     expect(_text('Leak detected · 15%'), findsOneWidget);
     final card = tester.widget<Card>(find.byType(Card));
     expect(card.color,
         SignalColors.of(tester.element(find.byType(Card))).attention);
+  });
+
+  testWidgets('a leak alarm pulses slowly (signal-2.0.md §6)', (tester) async {
+    await tester.pumpWidget(
+        _wrap(leak(), state: {'water_leak': true, 'battery': 15}));
+    await tester.pump(); // the alarm arrives; the pulse starts now
+    final roles = SignalColors.of(tester.element(find.byType(Card)));
+    Matcher near(Color c) => predicate<Color?>(
+        (f) => f != null &&
+            (f.r - c.r).abs() + (f.g - c.g).abs() + (f.b - c.b).abs() < 0.01,
+        'close to $c');
+    Color? fill() => tester.widget<Card>(find.byType(Card)).color;
+
+    // A second in, the fill reaches the far end of the pulse...
+    await tester.pump(const Duration(seconds: 1));
+    expect(fill(), near(roles.attentionPulse));
+    // ...and a second later it is back at the attention fill.
+    await tester.pump(const Duration(seconds: 1));
+    expect(fill(), near(roles.attention));
+    expect(tester.hasRunningAnimations, isTrue, reason: 'it keeps pulsing');
+  });
+
+  testWidgets('a dry leak sensor does not pulse', (tester) async {
+    await tester.pumpWidget(
+        _wrap(leak(), state: {'water_leak': false, 'battery': 80}));
+    await tester.pumpAndSettle();
+    expect(tester.hasRunningAnimations, isFalse);
   });
 
   testWidgets('climate leads with the temperature', (tester) async {
