@@ -136,6 +136,17 @@ Board: H-launcher.
 - **Leak and smoke pulse (§6):** the attention fill eases a third of the way toward the tile surface and back, 1 s each way. It holds steady with animations off, and the contrast test covers its far end.
 - **Reduced motion (§6):** every animated panel takes its duration from `SignalMotion.of`, and a guard test enforces it.
 
+## Emulator check (2.0.0+29 debug, Pixel 8 emulator, 2026-10-05)
+
+Against Mosquitto 2.1.2 and `tool/e2e/z2m_sim.py` on the host (10.0.2.2):
+
+- **Upgrade from 1.13.0+28:** a home set up in 1.13 survives the install of 2.0 over it, connects, and opens in Signal with Material You off (the ADR 0002 amendment). *Pass.*
+- **Upgraders' consent card:** shown on the upgraded home, including one with no dashboards yet (fixed here: the empty screen had no card). No thanks records "no", and the Settings switch reads off. *Pass.*
+- **Opt-out on device:** switching it on queues `app_started`; switching off within two seconds deletes it before the 30 s send. *Pass.*
+- **Fresh install with consent:** setup steps, `app_started` and `feature_used` arrive in Aptabase (Debug view). *Pass.*
+
+Still for a physical phone (exit check 5): TalkBack script, a password-protected broker, the tablet layout, Wall display.
+
 ## Deferred, with a reason
 
 - **Thermostat tiles.** There is no test device. Generic tiles cover TRVs meanwhile.

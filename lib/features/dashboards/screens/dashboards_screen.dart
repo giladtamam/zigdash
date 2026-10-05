@@ -83,6 +83,7 @@ class DashboardsScreen extends ConsumerWidget {
                   onReconnect: () => _reconnectNow(context, ref, connectionId),
                   onSettings: () => context.push('/connections/$connectionId/edit'),
                 ),
+                AnalyticsConsentCard(connectionId: connectionId),
                 const Expanded(child: _EmptyState()),
               ],
             ),
