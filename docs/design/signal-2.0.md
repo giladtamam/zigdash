@@ -147,6 +147,18 @@ Against Mosquitto 2.1.2 and `tool/e2e/z2m_sim.py` on the host (10.0.2.2):
 
 Still for a physical phone (exit check 5): TalkBack script, a password-protected broker, the tablet layout, Wall display.
 
+## Release-build smoke test (2.0.0+29 release APK, 2026-10-05)
+
+Signed with the new upload key, on a Pixel 8 emulator, against Mosquitto with a password listener and `tool/e2e/z2m_sim.py`:
+
+- Fresh install: the consent box shows unticked, and "What's shared" opens the browser. Leaving it unticked records "no", and no card appears later. *Pass.*
+- Manual connect with a username and password: the ladder passes and finds 4 devices. *Pass.*
+- Devices shows live state. A device page toggle reaches Zigbee2MQTT (`{"state": "OFF"}`) and the page follows. *Pass.*
+- **Bug found and fixed:** "Add to a dashboard" on a home with no dashboard was a disabled dead end (also in 1.13). Add now creates a dashboard. *Pass after the fix.*
+- A dashboard tile switches the light (`{"state": "ON"}`) and turns amber. *Pass.*
+
+Also run: `bin/e2e_real_broker.dart` over TCP, WebSocket and a broker restart; the three `integration_test/` flows on the emulator. All pass.
+
 ## Deferred, with a reason
 
 - **Thermostat tiles.** There is no test device. Generic tiles cover TRVs meanwhile.
