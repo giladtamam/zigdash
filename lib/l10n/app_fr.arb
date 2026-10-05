@@ -603,5 +603,6 @@
   "analyticsNoThanks": "Non merci",
   "settingsAnalytics": "Partager des données d'utilisation anonymes",
   "settingsAnalyticsSubtitle": "Étapes de configuration et fonctions utilisées. Jamais vos appareils, topics ou broker.",
-  "settingsPrivacySubtitleOptIn": "Données d'utilisation anonymes, uniquement si vous l'acceptez."
+  "settingsPrivacySubtitleOptIn": "Données d'utilisation anonymes, uniquement si vous l'acceptez.",
+  "dashDefaultName": "Maison"
 }

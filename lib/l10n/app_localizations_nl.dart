@@ -2019,4 +2019,7 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get settingsPrivacySubtitleOptIn =>
       'Anonieme gebruiksgegevens alleen als je daarvoor kiest.';
+
+  @override
+  String get dashDefaultName => 'Thuis';
 }

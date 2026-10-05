@@ -678,5 +678,6 @@
   "analyticsNoThanks": "Nei takk",
   "settingsAnalytics": "Del anonyme bruksdata",
   "settingsAnalyticsSubtitle": "Oppsettsteg og funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.",
-  "settingsPrivacySubtitleOptIn": "Anonyme bruksdata bare hvis du velger det."
+  "settingsPrivacySubtitleOptIn": "Anonyme bruksdata bare hvis du velger det.",
+  "dashDefaultName": "Hjem"
 }

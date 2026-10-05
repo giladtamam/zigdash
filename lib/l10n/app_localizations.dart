@@ -3733,6 +3733,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Anonymous usage data only if you opt in.'**
   String get settingsPrivacySubtitleOptIn;
+
+  /// No description provided for @dashDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get dashDefaultName;
 }
 
 class _AppLocalizationsDelegate

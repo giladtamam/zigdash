@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/analytics/analytics.dart';
+import '../../../core/theme/dashboard_accent.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
@@ -240,14 +241,24 @@ class _AddDeviceSheetState extends ConsumerState<AddDeviceSheet> {
     super.dispose();
   }
 
-  Future<void> _add(Dashboard dashboard, int sortOrder) async {
+  /// Adds the tile to [dashboard], or, when the home has no dashboard yet
+  /// (a home set up by hand starts empty), to a new one created here, so
+  /// "Add to a dashboard" is never a dead end.
+  Future<void> _add(Dashboard? dashboard, int sortOrder) async {
     setState(() => _saving = true);
     final name = _name.text.trim();
+    final dashboardId = dashboard?.id ??
+        await ref.read(dashboardRepoProvider).create(
+              connectionId: widget.connectionId,
+              name: context.l10n.dashDefaultName,
+              colorSeed: defaultDashboardSeed,
+              iconCodepoint: Icons.home.codePoint,
+            );
     await createDeviceTile(
       ref.read(panelRepoProvider),
-      dashboardId: dashboard.id,
-      base: z2mBase(dashboard.topicPrefix,
-          homeBase: ref.read(baseTopicOverrideProvider(dashboard.connectionId))),
+      dashboardId: dashboardId,
+      base: z2mBase(dashboard?.topicPrefix,
+          homeBase: ref.read(baseTopicOverrideProvider(widget.connectionId))),
       device: widget.device,
       name: name.isEmpty ? widget.device.friendlyName : name,
       size: _size,
@@ -263,10 +274,11 @@ class _AddDeviceSheetState extends ConsumerState<AddDeviceSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final dashboards =
+    final loaded =
         ref.watch(dashboardsForConnectionProvider(widget.connectionId))
-                .valueOrNull ??
-            const <Dashboard>[];
+            .valueOrNull;
+    final dashboards = loaded ?? const <Dashboard>[];
+    final noDashboards = loaded != null && loaded.isEmpty;
     _dashboardId ??= dashboards.firstOrNull?.id;
     final dashboardId = _dashboardId;
     final dashboard = dashboards.where((d) => d.id == dashboardId).firstOrNull;
@@ -363,7 +375,8 @@ class _AddDeviceSheetState extends ConsumerState<AddDeviceSheet> {
           ],
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: dashboard == null || _saving
+            // Disabled only while the home's dashboards are still loading.
+            onPressed: _saving || (dashboard == null && !noDashboards)
                 ? null
                 : () => _add(dashboard, sortOrder),
             child: Text(l10n.addTileAdd),

@@ -2026,4 +2026,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsPrivacySubtitleOptIn =>
       'Données d\'utilisation anonymes, uniquement si vous l\'acceptez.';
+
+  @override
+  String get dashDefaultName => 'Maison';
 }

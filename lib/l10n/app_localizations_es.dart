@@ -2021,4 +2021,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get settingsPrivacySubtitleOptIn =>
       'Datos de uso anónimos, solo si lo aceptas.';
+
+  @override
+  String get dashDefaultName => 'Casa';
 }

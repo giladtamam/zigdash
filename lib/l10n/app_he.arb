@@ -747,5 +747,6 @@
   "analyticsNoThanks": "לא תודה",
   "settingsAnalytics": "שיתוף נתוני שימוש אנונימיים",
   "settingsAnalyticsSubtitle": "שלבי הגדרה ותכונות בשימוש. אף פעם לא המכשירים, הנושאים או הברוקר שלך.",
-  "settingsPrivacySubtitleOptIn": "נתוני שימוש אנונימיים רק אם בחרת בכך."
+  "settingsPrivacySubtitleOptIn": "נתוני שימוש אנונימיים רק אם בחרת בכך.",
+  "dashDefaultName": "בית"
 }

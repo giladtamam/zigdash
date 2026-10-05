@@ -2,8 +2,13 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/data/database/daos/dashboard_dao.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
+import 'package:zigdash/core/theme/dashboard_accent.dart';
+import 'package:zigdash/features/devices/devices_providers.dart';
+import 'package:zigdash/features/devices/device_profile.dart';
 import 'package:zigdash/data/database/database.dart';
+import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/dashboard_repo.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
@@ -182,5 +187,50 @@ void main() {
       'section': 's1',
       'ieee': '0xc4d7fdbbfeba0000',
     });
+  });
+
+  testWidgets(
+      'adding to a home with no dashboard creates one instead of a dead end',
+      (tester) async {
+    await db.into(db.connections).insert(ConnectionsCompanion.insert(
+          id: 'c1',
+          name: 'localhost',
+          host: 'localhost',
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+          createdAt: _stamp,
+          updatedAt: _stamp,
+        ));
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        panelRepoProvider.overrideWithValue(repo),
+        dashboardRepoProvider.overrideWithValue(DashboardRepo(DashboardDao(db))),
+        dashboardsForConnectionProvider
+            .overrideWith((ref, _) => Stream.value(const <Dashboard>[])),
+        baseTopicOverrideProvider.overrideWith((ref, _) => null),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: AddDeviceSheet(
+            connectionId: 'c1',
+            device: _dev('living_light', '0x1'),
+            deviceClass: DeviceClass.light,
+          ),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    final add = find.widgetWithText(FilledButton, 'Add');
+    expect(tester.widget<FilledButton>(add).onPressed, isNotNull);
+    await tester.tap(add);
+    await tester.pumpAndSettle();
+
+    final dash = await db.select(db.dashboards).getSingle();
+    expect((dash.connectionId, dash.name, dash.colorSeed),
+        ('c1', 'Home', defaultDashboardSeed));
+    expect(repo.created.single['prefix'], 'zigbee2mqtt/living_light');
   });
 }

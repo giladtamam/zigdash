@@ -1997,4 +1997,7 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get settingsPrivacySubtitleOptIn =>
       'נתוני שימוש אנונימיים רק אם בחרת בכך.';
+
+  @override
+  String get dashDefaultName => 'בית';
 }

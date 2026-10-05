@@ -678,5 +678,6 @@
   "analyticsNoThanks": "Nein danke",
   "settingsAnalytics": "Anonyme Nutzungsdaten teilen",
   "settingsAnalyticsSubtitle": "Einrichtungsschritte und genutzte Funktionen. Nie deine Geräte, Topics oder dein Broker.",
-  "settingsPrivacySubtitleOptIn": "Anonyme Nutzungsdaten nur mit deiner Zustimmung."
+  "settingsPrivacySubtitleOptIn": "Anonyme Nutzungsdaten nur mit deiner Zustimmung.",
+  "dashDefaultName": "Zuhause"
 }

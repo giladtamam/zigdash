@@ -678,5 +678,6 @@
   "analyticsNoThanks": "Nee, bedankt",
   "settingsAnalytics": "Anonieme gebruiksgegevens delen",
   "settingsAnalyticsSubtitle": "Installatiestappen en gebruikte functies. Nooit je apparaten, topics of broker.",
-  "settingsPrivacySubtitleOptIn": "Anonieme gebruiksgegevens alleen als je daarvoor kiest."
+  "settingsPrivacySubtitleOptIn": "Anonieme gebruiksgegevens alleen als je daarvoor kiest.",
+  "dashDefaultName": "Thuis"
 }

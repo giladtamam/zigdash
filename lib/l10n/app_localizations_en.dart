@@ -2008,4 +2008,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsPrivacySubtitleOptIn =>
       'Anonymous usage data only if you opt in.';
+
+  @override
+  String get dashDefaultName => 'Home';
 }
