@@ -12,7 +12,9 @@ import 'package:zigdash/features/settings/providers/settings_controller.dart';
 /// but the mini broker must listen on an interface the NAT alias reaches
 /// (127.0.0.1 works: 10.0.2.2 maps to the host loopback).
 ///
-/// Run with a broker reachable from the device:
+/// Run with a broker and the Zigbee2MQTT simulator on the host:
+///   mosquitto -p 1883 &   # anonymous, on 127.0.0.1
+///   python3 tool/e2e/z2m_sim.py --host localhost --port 1883 &
 ///   flutter test integration_test/setup_flow_test.dart -d DEVICE
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -46,29 +48,28 @@ void main() {
     // --- Scan: the host's broker (10.0.2.2). With exactly one broker found
     // setup continues on its own; with several, pick the first. ---
     await tester.tap(find.text('Find my setup'));
-    final inReview = await waitFor(
-      tester,
-      () {
-        final picker = find.text('Possible connection found');
-        if (tester.any(picker) && !tester.any(find.byType(CircularProgressIndicator))) {
-          tester.tap(picker.first);
-        }
-        return tester.any(find.textContaining('devices found'));
-      },
-      const Duration(milliseconds: 500),
-    );
+    var inReview = false;
+    for (var i = 0; i < 60 && !inReview; i++) {
+      await tester.pump(const Duration(milliseconds: 500));
+      final picker = find.text('Possible connection found');
+      if (tester.any(picker) &&
+          !tester.any(find.byType(CircularProgressIndicator))) {
+        await tester.tap(picker.first);
+      }
+      inReview = tester.any(find.textContaining('devices found'));
+    }
     expect(inReview, isTrue,
         reason: 'review screen with discovered device count');
 
-    // The mini broker's three devices: lamp-style controls preselected.
-    expect(find.text('office_light'), findsOneWidget);
+    // The simulator's devices (tool/e2e/z2m_sim.py): the light preselected.
+    expect(find.text('living_light'), findsOneWidget);
     expect(find.textContaining('Create dashboard with'), findsOneWidget);
 
     // --- Create the first dashboard: it opens directly, no "ready" screen ---
     await tester.tap(find.textContaining('Create dashboard with'));
     final onDashboards = await waitFor(
       tester,
-      () => tester.any(find.text('office_light')) &&
+      () => tester.any(find.text('living_light')) &&
           !tester.any(find.textContaining('Create dashboard with')),
       const Duration(seconds: 1),
     );

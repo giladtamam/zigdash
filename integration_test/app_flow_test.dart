@@ -66,7 +66,12 @@ void main() {
     // --- The demo, from the dead end. From here the app owns MQTT timers,
     // so pumpAndSettle is unsafe; use bounded pumps. ---
     await tester.tap(find.text('Try demo'));
-    for (var i = 0; i < 6; i++) {
+    // Bounded wait: a debug build on an emulator can take several seconds.
+    for (var i = 0;
+        i < 50 &&
+            (find.text('LIGHTS').evaluate().isEmpty ||
+                find.text('Waiting for first report').evaluate().isNotEmpty);
+        i++) {
       await tester.pump(const Duration(milliseconds: 200));
     }
 
@@ -76,8 +81,11 @@ void main() {
     // 1.12: the demo home sits in the home shell (Dashboards / Devices /
     // Scenes) with sectioned device tiles.
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Lights'), findsOneWidget);
+    // 2.0: section labels are drawn uppercase (signal-2.0.md §2).
+    expect(find.text('LIGHTS'), findsOneWidget);
     expect(find.text('Desk lamp'), findsOneWidget);
+    // Demo values read as current, not as waiting for a first report.
+    expect(find.text('Waiting for first report'), findsNothing);
     expect(find.text('Bedroom blinds'), findsOneWidget);
     expect(find.text('Front door'), findsOneWidget);
   });
