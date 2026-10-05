@@ -1966,4 +1966,35 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get dashWallDisplay => 'תצוגת קיר';
+
+  @override
+  String get analyticsSetupCheckbox =>
+      'שיתוף נתוני שימוש אנונימיים לשיפור ההגדרה';
+
+  @override
+  String get analyticsWhatsShared => 'מה משותף';
+
+  @override
+  String get analyticsCardTitle => 'לעזור לשפר את ZigDash?';
+
+  @override
+  String get analyticsCardBody =>
+      'שיתוף נתוני שימוש אנונימיים: אילו שלבי הגדרה נכשלים ובאילו תכונות משתמשים. אף פעם לא המכשירים, הנושאים או הברוקר שלך.';
+
+  @override
+  String get analyticsShare => 'שיתוף';
+
+  @override
+  String get analyticsNoThanks => 'לא תודה';
+
+  @override
+  String get settingsAnalytics => 'שיתוף נתוני שימוש אנונימיים';
+
+  @override
+  String get settingsAnalyticsSubtitle =>
+      'שלבי הגדרה ותכונות בשימוש. אף פעם לא המכשירים, הנושאים או הברוקר שלך.';
+
+  @override
+  String get settingsPrivacySubtitleOptIn =>
+      'נתוני שימוש אנונימיים רק אם בחרת בכך.';
 }

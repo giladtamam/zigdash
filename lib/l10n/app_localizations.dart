@@ -3679,6 +3679,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wall display'**
   String get dashWallDisplay;
+
+  /// No description provided for @analyticsSetupCheckbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data to help improve setup'**
+  String get analyticsSetupCheckbox;
+
+  /// No description provided for @analyticsWhatsShared.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s shared'**
+  String get analyticsWhatsShared;
+
+  /// No description provided for @analyticsCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help improve ZigDash?'**
+  String get analyticsCardTitle;
+
+  /// No description provided for @analyticsCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data: which setup steps fail and which features get used. Never your devices, topics or broker.'**
+  String get analyticsCardBody;
+
+  /// No description provided for @analyticsShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get analyticsShare;
+
+  /// No description provided for @analyticsNoThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'No thanks'**
+  String get analyticsNoThanks;
+
+  /// No description provided for @settingsAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data'**
+  String get settingsAnalytics;
+
+  /// No description provided for @settingsAnalyticsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup steps and features used. Never your devices, topics or broker.'**
+  String get settingsAnalyticsSubtitle;
+
+  /// No description provided for @settingsPrivacySubtitleOptIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous usage data only if you opt in.'**
+  String get settingsPrivacySubtitleOptIn;
 }
 
 class _AppLocalizationsDelegate

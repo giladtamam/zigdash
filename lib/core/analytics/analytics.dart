@@ -18,6 +18,11 @@ const analyticsKey = String.fromEnvironment('ZIGDASH_ANALYTICS_KEY');
 final analyticsAvailableProvider =
     Provider<bool>((ref) => analyticsKey.isNotEmpty && !storeCapture);
 
+/// The privacy policy's section listing every event (opened by "What's
+/// shared").
+final usageDataPolicyUrl = Uri.parse(
+    'https://giladtamam.github.io/zigdash/PRIVACY#anonymous-usage-data');
+
 enum AnalyticsConsent { unasked, granted, declined }
 
 const _kConsent = 'analytics_consent';
@@ -151,8 +156,11 @@ class Analytics {
 
 final analyticsProvider = Provider<Analytics>((ref) {
   final sink = ref.watch(analyticsSinkProvider);
-  final on = ref.watch(analyticsAvailableProvider) &&
-      ref.watch(analyticsConsentProvider) == AnalyticsConsent.granted;
+  // A build without a key never touches the SDK or its queue.
+  if (!ref.watch(analyticsAvailableProvider)) {
+    return Analytics(sink, enabled: false);
+  }
+  final on = ref.watch(analyticsConsentProvider) == AnalyticsConsent.granted;
   if (on) {
     sink.start();
   } else {

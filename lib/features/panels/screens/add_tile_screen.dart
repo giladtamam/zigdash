@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
@@ -253,6 +254,8 @@ class _AddDeviceSheetState extends ConsumerState<AddDeviceSheet> {
       sectionId: _sectionId,
       sortOrder: sortOrder,
     );
+    ref.read(analyticsProvider)
+        .track(FeatureUsed(Feature.tileAdded, tile: widget.deviceClass));
     if (mounted) Navigator.pop(context, true);
   }
 

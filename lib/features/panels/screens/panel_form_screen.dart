@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../devices/device_profile.dart';
@@ -615,6 +616,8 @@ class _State extends ConsumerState<PanelFormScreen> {
           deviceIeee: _deviceIeee,
           config: _buildConfig(),
         );
+        ref.read(analyticsProvider)
+            .track(FeatureUsed(Feature.tileAdded, tile: _type));
       }
       if (_type == PanelType.schedule) {
         final effectivePrefix = prefixOverride ?? _topicPrefixHint;

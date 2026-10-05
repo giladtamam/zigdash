@@ -669,5 +669,14 @@
   "panelFormAdvanced": "Erweitert",
   "panelFormAdvancedSubtitle": "Präfix-Überschreibung, QoS, Retain",
   "panelFormStateTopicHelper": "Leer = das Präfix selbst (Status eines Zigbee2MQTT-Geräts).",
-  "dashWallDisplay": "Wandanzeige"
+  "dashWallDisplay": "Wandanzeige",
+  "analyticsSetupCheckbox": "Anonyme Nutzungsdaten teilen, um die Einrichtung zu verbessern",
+  "analyticsWhatsShared": "Was geteilt wird",
+  "analyticsCardTitle": "ZigDash verbessern helfen?",
+  "analyticsCardBody": "Anonyme Nutzungsdaten teilen: welche Einrichtungsschritte scheitern und welche Funktionen genutzt werden. Nie deine Geräte, Topics oder dein Broker.",
+  "analyticsShare": "Teilen",
+  "analyticsNoThanks": "Nein danke",
+  "settingsAnalytics": "Anonyme Nutzungsdaten teilen",
+  "settingsAnalyticsSubtitle": "Einrichtungsschritte und genutzte Funktionen. Nie deine Geräte, Topics oder dein Broker.",
+  "settingsPrivacySubtitleOptIn": "Anonyme Nutzungsdaten nur mit deiner Zustimmung."
 }

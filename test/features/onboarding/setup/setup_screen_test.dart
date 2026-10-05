@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/onboarding/first_run.dart';
+import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
 import 'package:zigdash/features/connections/discovery/broker_probe.dart';
@@ -106,6 +109,7 @@ Future<SetupCoordinator> _pump(
   Z2mFetchResult Function(String base)? fetchFor,
   Locale? locale,
   _FakeFirstRun? firstRun,
+  List<Override> extra = const [],
 }) async {
   final coordinator = SetupCoordinator(
     scan: scan ??
@@ -126,6 +130,7 @@ Future<SetupCoordinator> _pump(
           return coordinator;
         }),
         firstRunProvider.overrideWithValue(firstRun ?? _FakeFirstRun()),
+        ...extra,
       ],
       child: MaterialApp.router(
         locale: locale,
@@ -384,4 +389,79 @@ void main() {
     expect(mystery.value, isFalse);
     expect(mystery.onChanged, isNull); // disabled for screen readers
   });
+
+  group('usage data consent on the first screen (ADR 0006)', () {
+    Future<(SharedPreferences, _SinkSpy)> analyticsOverrides(
+        List<Override> out, {bool available = true}) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final sink = _SinkSpy();
+      out.addAll([
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        analyticsSinkProvider.overrideWithValue(sink),
+        analyticsAvailableProvider.overrideWithValue(available),
+      ]);
+      return (prefs, sink);
+    }
+
+    testWidgets('an unticked box is a no, and nothing is sent',
+        (tester) async {
+      final extra = <Override>[];
+      final (prefs, sink) = await analyticsOverrides(extra);
+      await _pump(tester, extra: extra);
+      expect(find.text('Share anonymous usage data to help improve setup'),
+          findsOneWidget);
+      expect(tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
+          isFalse);
+
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      await tester.pump();
+      expect(prefs.getBool('analytics_consent'), isFalse);
+      expect(sink.sent, isEmpty);
+    });
+
+    testWidgets('ticking it shares the setup steps from the first one',
+        (tester) async {
+      final extra = <Override>[];
+      final (prefs, sink) = await analyticsOverrides(extra);
+      await _pump(tester, extra: extra);
+      await tester.tap(find.byType(CheckboxListTile));
+      await tester.pump();
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+
+      expect(prefs.getBool('analytics_consent'), isTrue);
+      expect(sink.sent.map((e) => e['step']),
+          containsAllInOrder(['started', 'scan_found', 'review']));
+    });
+
+    testWidgets('a build without a key asks nothing', (tester) async {
+      final extra = <Override>[];
+      await analyticsOverrides(extra, available: false);
+      await _pump(tester, extra: extra);
+      expect(find.byType(CheckboxListTile), findsNothing);
+    });
+  });
+}
+
+class _SinkSpy implements AnalyticsSink {
+  bool running = false;
+  final sent = <Map<String, String>>[];
+
+  @override
+  Future<void> start() async => running = true;
+
+  @override
+  Future<void> stop() async {
+    running = false;
+    sent.clear();
+  }
+
+  @override
+  void send(String name, Map<String, String> props) {
+    if (running) sent.add(props);
+  }
 }

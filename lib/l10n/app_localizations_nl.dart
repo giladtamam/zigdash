@@ -1988,4 +1988,35 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get dashWallDisplay => 'Wandweergave';
+
+  @override
+  String get analyticsSetupCheckbox =>
+      'Anonieme gebruiksgegevens delen om de installatie te verbeteren';
+
+  @override
+  String get analyticsWhatsShared => 'Wat wordt gedeeld';
+
+  @override
+  String get analyticsCardTitle => 'ZigDash helpen verbeteren?';
+
+  @override
+  String get analyticsCardBody =>
+      'Anonieme gebruiksgegevens delen: welke installatiestappen mislukken en welke functies worden gebruikt. Nooit je apparaten, topics of broker.';
+
+  @override
+  String get analyticsShare => 'Delen';
+
+  @override
+  String get analyticsNoThanks => 'Nee, bedankt';
+
+  @override
+  String get settingsAnalytics => 'Anonieme gebruiksgegevens delen';
+
+  @override
+  String get settingsAnalyticsSubtitle =>
+      'Installatiestappen en gebruikte functies. Nooit je apparaten, topics of broker.';
+
+  @override
+  String get settingsPrivacySubtitleOptIn =>
+      'Anonieme gebruiksgegevens alleen als je daarvoor kiest.';
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
@@ -11,6 +12,7 @@ import 'recommendation_policy.dart';
 import 'setup_candidate.dart';
 import 'setup_coordinator.dart';
 import 'setup_error_guidance.dart';
+import 'setup_analytics.dart';
 import 'setup_providers.dart';
 
 /// The discovery-first onboarding flow: renders [SetupCoordinator] state and
@@ -26,15 +28,23 @@ class SetupScreen extends ConsumerWidget {
     final l10n = context.l10n;
 
     // No "ready" screen: a finished setup opens its dashboard directly.
-    ref.listen(setupStateProvider, (_, next) {
+    ref.listen(setupStateProvider, (previous, next) {
       final s = next.valueOrNull;
+      if (s == null) return;
+      final step = setupStepFor(previous?.valueOrNull, s);
+      if (step != null) ref.read(analyticsProvider).track(step);
       if (s is SetupComplete) {
         context.go(Routes.homeDashboards(s.result.connectionId));
       }
     });
 
-    void manual() => context.push(Routes.guidedConnect);
+    void manual() {
+      ref.read(analyticsProvider).track(const SetupStep(SetupStepKind.manual));
+      context.push(Routes.guidedConnect);
+    }
+
     Future<void> tryDemo() async {
+      ref.read(analyticsProvider).track(const SetupStep(SetupStepKind.demo));
       final id = await ref.read(firstRunProvider).startDemo();
       if (context.mounted) context.go(Routes.homeDashboards(id));
     }
@@ -121,14 +131,37 @@ String _guidanceText(AppLocalizations l10n, String key) => switch (key) {
       _ => l10n.setupErrUnknownAction,
     };
 
-class _Welcome extends StatelessWidget {
+/// The first setup screen. With an analytics key in the build and no choice
+/// made yet, it carries the one consent question for new installs: an
+/// unticked box, recorded either way when the user moves on (ADR 0006).
+class _Welcome extends ConsumerStatefulWidget {
   const _Welcome({required this.onFind, required this.onManual});
   final VoidCallback onFind;
   final VoidCallback onManual;
 
   @override
+  ConsumerState<_Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends ConsumerState<_Welcome> {
+  bool _share = false;
+
+  bool get _asking =>
+      ref.watch(analyticsAvailableProvider) &&
+      ref.watch(analyticsConsentProvider) == AnalyticsConsent.unasked;
+
+  Future<void> _then(VoidCallback next) async {
+    if (_asking) {
+      await ref.read(analyticsConsentProvider.notifier).set(_share);
+    }
+    next();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    void onFind() => _then(widget.onFind);
+    void onManual() => _then(widget.onManual);
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
@@ -147,6 +180,24 @@ class _Welcome extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
+        if (_asking) ...[
+          const SizedBox(height: 24),
+          CheckboxListTile(
+            value: _share,
+            onChanged: (v) => setState(() => _share = v ?? false),
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.analyticsSetupCheckbox),
+          ),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              onPressed: () => launchUrl(usageDataPolicyUrl,
+                  mode: LaunchMode.externalApplication),
+              child: Text(l10n.analyticsWhatsShared),
+            ),
+          ),
+        ],
       ],
     );
   }

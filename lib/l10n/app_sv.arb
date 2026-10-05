@@ -669,5 +669,14 @@
   "panelFormAdvanced": "Avancerat",
   "panelFormAdvancedSubtitle": "Prefix-åsidosättning, QoS, retain",
   "panelFormStateTopicHelper": "Tomt = själva prefixet (status för en Zigbee2MQTT-enhet).",
-  "dashWallDisplay": "Väggskärm"
+  "dashWallDisplay": "Väggskärm",
+  "analyticsSetupCheckbox": "Dela anonym användningsdata för att förbättra installationen",
+  "analyticsWhatsShared": "Vad som delas",
+  "analyticsCardTitle": "Hjälpa till att förbättra ZigDash?",
+  "analyticsCardBody": "Dela anonym användningsdata: vilka installationssteg som misslyckas och vilka funktioner som används. Aldrig dina enheter, topics eller din broker.",
+  "analyticsShare": "Dela",
+  "analyticsNoThanks": "Nej tack",
+  "settingsAnalytics": "Dela anonym användningsdata",
+  "settingsAnalyticsSubtitle": "Installationssteg och använda funktioner. Aldrig dina enheter, topics eller din broker.",
+  "settingsPrivacySubtitleOptIn": "Anonym användningsdata bara om du väljer det."
 }

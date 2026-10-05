@@ -681,5 +681,14 @@
   "panelFormAdvanced": "Advanced",
   "panelFormAdvancedSubtitle": "Prefix override, QoS, retain",
   "panelFormStateTopicHelper": "Blank = the prefix itself (a Zigbee2MQTT device's state).",
-  "dashWallDisplay": "Wall display"
+  "dashWallDisplay": "Wall display",
+  "analyticsSetupCheckbox": "Share anonymous usage data to help improve setup",
+  "analyticsWhatsShared": "What's shared",
+  "analyticsCardTitle": "Help improve ZigDash?",
+  "analyticsCardBody": "Share anonymous usage data: which setup steps fail and which features get used. Never your devices, topics or broker.",
+  "analyticsShare": "Share",
+  "analyticsNoThanks": "No thanks",
+  "settingsAnalytics": "Share anonymous usage data",
+  "settingsAnalyticsSubtitle": "Setup steps and features used. Never your devices, topics or broker.",
+  "settingsPrivacySubtitleOptIn": "Anonymous usage data only if you opt in."
 }

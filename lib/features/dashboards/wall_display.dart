@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../settings/providers/settings_controller.dart';
+import '../../core/analytics/analytics.dart';
 
 /// Keeps the screen on; a seam so tests need no platform channel.
 class ScreenWake {
@@ -25,6 +26,7 @@ class WallDisplaySetting extends FamilyNotifier<bool, String> {
 
   Future<void> toggle() async {
     state = !state;
+    if (state) ref.read(analyticsProvider).track(const FeatureUsed(Feature.wallDisplay));
     await ref.read(sharedPreferencesProvider).setBool(_key, state);
   }
 }

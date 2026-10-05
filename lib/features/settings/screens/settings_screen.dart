@@ -6,6 +6,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../panels/widgets/device_tile_panel.dart' show ltr;
 import '../../../core/router/last_dashboard_store.dart';
@@ -121,10 +122,22 @@ class SettingsScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(Routes.help),
               ),
+              if (ref.watch(analyticsAvailableProvider))
+                SwitchListTile(
+                  secondary: const Icon(Icons.insights_outlined),
+                  title: Text(l10n.settingsAnalytics),
+                  subtitle: Text(l10n.settingsAnalyticsSubtitle),
+                  value: ref.watch(analyticsConsentProvider) ==
+                      AnalyticsConsent.granted,
+                  onChanged: (on) =>
+                      ref.read(analyticsConsentProvider.notifier).set(on),
+                ),
               ListTile(
                 leading: const Icon(Icons.shield_outlined),
                 title: Text(l10n.settingsPrivacy),
-                subtitle: Text(l10n.settingsPrivacySubtitle),
+                subtitle: Text(ref.watch(analyticsAvailableProvider)
+                    ? l10n.settingsPrivacySubtitleOptIn
+                    : l10n.settingsPrivacySubtitle),
                 trailing: const Icon(Icons.open_in_new),
                 onTap: () => launchUrl(privacyPolicyUrl,
                     mode: LaunchMode.externalApplication),

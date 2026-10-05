@@ -669,5 +669,14 @@
   "panelFormAdvanced": "Avansert",
   "panelFormAdvancedSubtitle": "Prefiksoverstyring, QoS, retain",
   "panelFormStateTopicHelper": "Tomt = selve prefikset (status for en Zigbee2MQTT-enhet).",
-  "dashWallDisplay": "Veggskjerm"
+  "dashWallDisplay": "Veggskjerm",
+  "analyticsSetupCheckbox": "Del anonyme bruksdata for å forbedre oppsettet",
+  "analyticsWhatsShared": "Hva som deles",
+  "analyticsCardTitle": "Hjelpe til å forbedre ZigDash?",
+  "analyticsCardBody": "Del anonyme bruksdata: hvilke oppsettsteg som mislykkes og hvilke funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.",
+  "analyticsShare": "Del",
+  "analyticsNoThanks": "Nei takk",
+  "settingsAnalytics": "Del anonyme bruksdata",
+  "settingsAnalyticsSubtitle": "Oppsettsteg og funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.",
+  "settingsPrivacySubtitleOptIn": "Anonyme bruksdata bare hvis du velger det."
 }

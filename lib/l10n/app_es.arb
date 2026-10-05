@@ -669,5 +669,14 @@
   "panelFormAdvanced": "Avanzado",
   "panelFormAdvancedSubtitle": "Anular prefijo, QoS, retener",
   "panelFormStateTopicHelper": "Vacío = el propio prefijo (estado de un dispositivo Zigbee2MQTT).",
-  "dashWallDisplay": "Pantalla de pared"
+  "dashWallDisplay": "Pantalla de pared",
+  "analyticsSetupCheckbox": "Compartir datos de uso anónimos para mejorar la configuración",
+  "analyticsWhatsShared": "Qué se comparte",
+  "analyticsCardTitle": "¿Ayudar a mejorar ZigDash?",
+  "analyticsCardBody": "Compartir datos de uso anónimos: qué pasos de configuración fallan y qué funciones se usan. Nunca tus dispositivos, topics ni tu broker.",
+  "analyticsShare": "Compartir",
+  "analyticsNoThanks": "No, gracias",
+  "settingsAnalytics": "Compartir datos de uso anónimos",
+  "settingsAnalyticsSubtitle": "Pasos de configuración y funciones usadas. Nunca tus dispositivos, topics ni tu broker.",
+  "settingsPrivacySubtitleOptIn": "Datos de uso anónimos, solo si lo aceptas."
 }

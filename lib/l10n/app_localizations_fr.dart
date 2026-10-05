@@ -1994,4 +1994,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dashWallDisplay => 'Affichage mural';
+
+  @override
+  String get analyticsSetupCheckbox =>
+      'Partager des données d\'utilisation anonymes pour améliorer la configuration';
+
+  @override
+  String get analyticsWhatsShared => 'Ce qui est partagé';
+
+  @override
+  String get analyticsCardTitle => 'Aider à améliorer ZigDash ?';
+
+  @override
+  String get analyticsCardBody =>
+      'Partager des données d\'utilisation anonymes : les étapes de configuration qui échouent et les fonctions utilisées. Jamais vos appareils, topics ou broker.';
+
+  @override
+  String get analyticsShare => 'Partager';
+
+  @override
+  String get analyticsNoThanks => 'Non merci';
+
+  @override
+  String get settingsAnalytics =>
+      'Partager des données d\'utilisation anonymes';
+
+  @override
+  String get settingsAnalyticsSubtitle =>
+      'Étapes de configuration et fonctions utilisées. Jamais vos appareils, topics ou broker.';
+
+  @override
+  String get settingsPrivacySubtitleOptIn =>
+      'Données d\'utilisation anonymes, uniquement si vous l\'acceptez.';
 }

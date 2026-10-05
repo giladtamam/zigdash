@@ -669,5 +669,14 @@
   "panelFormAdvanced": "Geavanceerd",
   "panelFormAdvancedSubtitle": "Prefix overschrijven, QoS, retain",
   "panelFormStateTopicHelper": "Leeg = het voorvoegsel zelf (status van een Zigbee2MQTT-apparaat).",
-  "dashWallDisplay": "Wandweergave"
+  "dashWallDisplay": "Wandweergave",
+  "analyticsSetupCheckbox": "Anonieme gebruiksgegevens delen om de installatie te verbeteren",
+  "analyticsWhatsShared": "Wat wordt gedeeld",
+  "analyticsCardTitle": "ZigDash helpen verbeteren?",
+  "analyticsCardBody": "Anonieme gebruiksgegevens delen: welke installatiestappen mislukken en welke functies worden gebruikt. Nooit je apparaten, topics of broker.",
+  "analyticsShare": "Delen",
+  "analyticsNoThanks": "Nee, bedankt",
+  "settingsAnalytics": "Anonieme gebruiksgegevens delen",
+  "settingsAnalyticsSubtitle": "Installatiestappen en gebruikte functies. Nooit je apparaten, topics of broker.",
+  "settingsPrivacySubtitleOptIn": "Anonieme gebruiksgegevens alleen als je daarvoor kiest."
 }

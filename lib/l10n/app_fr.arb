@@ -594,5 +594,14 @@
   "panelFormAdvanced": "Avancé",
   "panelFormAdvancedSubtitle": "Remplacement du préfixe, QoS, retain",
   "panelFormStateTopicHelper": "Vide = le préfixe lui-même (état d’un appareil Zigbee2MQTT).",
-  "dashWallDisplay": "Affichage mural"
+  "dashWallDisplay": "Affichage mural",
+  "analyticsSetupCheckbox": "Partager des données d'utilisation anonymes pour améliorer la configuration",
+  "analyticsWhatsShared": "Ce qui est partagé",
+  "analyticsCardTitle": "Aider à améliorer ZigDash ?",
+  "analyticsCardBody": "Partager des données d'utilisation anonymes : les étapes de configuration qui échouent et les fonctions utilisées. Jamais vos appareils, topics ou broker.",
+  "analyticsShare": "Partager",
+  "analyticsNoThanks": "Non merci",
+  "settingsAnalytics": "Partager des données d'utilisation anonymes",
+  "settingsAnalyticsSubtitle": "Étapes de configuration et fonctions utilisées. Jamais vos appareils, topics ou broker.",
+  "settingsPrivacySubtitleOptIn": "Données d'utilisation anonymes, uniquement si vous l'acceptez."
 }

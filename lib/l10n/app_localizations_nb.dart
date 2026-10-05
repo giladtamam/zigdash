@@ -1982,4 +1982,35 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get dashWallDisplay => 'Veggskjerm';
+
+  @override
+  String get analyticsSetupCheckbox =>
+      'Del anonyme bruksdata for å forbedre oppsettet';
+
+  @override
+  String get analyticsWhatsShared => 'Hva som deles';
+
+  @override
+  String get analyticsCardTitle => 'Hjelpe til å forbedre ZigDash?';
+
+  @override
+  String get analyticsCardBody =>
+      'Del anonyme bruksdata: hvilke oppsettsteg som mislykkes og hvilke funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.';
+
+  @override
+  String get analyticsShare => 'Del';
+
+  @override
+  String get analyticsNoThanks => 'Nei takk';
+
+  @override
+  String get settingsAnalytics => 'Del anonyme bruksdata';
+
+  @override
+  String get settingsAnalyticsSubtitle =>
+      'Oppsettsteg og funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.';
+
+  @override
+  String get settingsPrivacySubtitleOptIn =>
+      'Anonyme bruksdata bare hvis du velger det.';
 }

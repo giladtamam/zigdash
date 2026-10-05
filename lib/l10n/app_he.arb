@@ -738,5 +738,14 @@
   "panelFormAdvanced": "מתקדם",
   "panelFormAdvancedSubtitle": "עקיפת קידומת, QoS, retain",
   "panelFormStateTopicHelper": "ריק = הקידומת עצמה (המצב של מכשיר Zigbee2MQTT).",
-  "dashWallDisplay": "תצוגת קיר"
+  "dashWallDisplay": "תצוגת קיר",
+  "analyticsSetupCheckbox": "שיתוף נתוני שימוש אנונימיים לשיפור ההגדרה",
+  "analyticsWhatsShared": "מה משותף",
+  "analyticsCardTitle": "לעזור לשפר את ZigDash?",
+  "analyticsCardBody": "שיתוף נתוני שימוש אנונימיים: אילו שלבי הגדרה נכשלים ובאילו תכונות משתמשים. אף פעם לא המכשירים, הנושאים או הברוקר שלך.",
+  "analyticsShare": "שיתוף",
+  "analyticsNoThanks": "לא תודה",
+  "settingsAnalytics": "שיתוף נתוני שימוש אנונימיים",
+  "settingsAnalyticsSubtitle": "שלבי הגדרה ותכונות בשימוש. אף פעם לא המכשירים, הנושאים או הברוקר שלך.",
+  "settingsPrivacySubtitleOptIn": "נתוני שימוש אנונימיים רק אם בחרת בכך."
 }
