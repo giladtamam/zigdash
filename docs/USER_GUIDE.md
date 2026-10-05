@@ -197,8 +197,11 @@ layout to right‑to‑left.
 **Q: Are my broker password and data sent anywhere?**
 No. ZigDash stores everything **on your device** (settings/dashboards in a local
 database, passwords in the OS secure keystore) and talks **only** to the broker you
-configure. There's no analytics, no ads, no account, and no developer server. See
-the privacy policy for details.
+configure. Your broker password, devices, topics and values never leave the phone.
+There are no ads and no account. If you opt in (on the first setup screen, or in
+Settings › About), ZigDash also sends anonymous usage data: which setup steps
+fail and which features get used. You can turn it off any time; the privacy
+policy lists exactly what is sent.
 
 **Q: Does the schedule run when my phone is off?**
 Yes — schedules are executed by your always‑on hub (e.g. Node‑RED), not the phone.

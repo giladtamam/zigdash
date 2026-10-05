@@ -29,7 +29,7 @@ AUSGEREIFT – HANDY UND TABLET
 • Responsives Panel-Raster (volle, halbe, drittel Breite), Dashboard-Sperre, Backup/Wiederherstellung als portables JSON, Szenen.
 
 100 % PRIVAT. KEINE CLOUD.
-• Keine Werbung. Keine Analyse. Kein Konto. Kein Entwicklerserver.
+• Keine Werbung. Kein Konto. Anonyme Nutzungsdaten nur mit deiner Zustimmung.
 • Deine Daten bleiben auf deinem Gerät und deinem MQTT-Broker, sonst nirgends.
 • Open Source (MIT). Der Code ist öffentlich und prüfbar.
 

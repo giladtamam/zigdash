@@ -29,7 +29,7 @@ GENOMARBETAD – MOBIL OCH SURFPLATTA
 • Responsivt panelrutnät (hel, halv, tredjedels bredd), dashboardlås, säkerhetskopiering/återställning som portabel JSON, scener.
 
 100 % PRIVAT. INGET MOLN.
-• Ingen reklam. Ingen analys. Inget konto. Ingen utvecklarserver.
+• Ingen reklam. Inget konto. Anonym användningsdata bara om du väljer det.
 • Dina data finns på din enhet och din MQTT-broker, ingen annanstans.
 • Öppen källkod (MIT). Koden är offentlig och granskningsbar.
 

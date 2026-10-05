@@ -29,7 +29,7 @@ VERZORGD – TELEFOON EN TABLET
 • Responsief paneelraster (volle, halve, derde breedte), dashboardvergrendeling, back-up/herstel als draagbare JSON, scènes.
 
 100% PRIVÉ. GEEN CLOUD.
-• Geen advertenties. Geen analytics. Geen account. Geen server van de ontwikkelaar.
+• Geen advertenties. Geen account. Anonieme gebruiksgegevens alleen als je daarvoor kiest.
 • Je gegevens staan op je apparaat en je MQTT-broker, nergens anders.
 • Open source (MIT). De code is openbaar en controleerbaar.
 

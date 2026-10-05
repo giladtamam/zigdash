@@ -58,7 +58,7 @@ POLISHED — PHONE & TABLET
 ━━━━━━━━━━━━━━━━━━━━━━
 
 100% PRIVATE. NO CLOUD.
-• No ads. No analytics. No account. No developer server.
+• No ads. No account. Anonymous usage data only if you opt in.
 • Your data lives on your device and your MQTT broker — nowhere else.
 • Open source (MIT). The code is public and auditable.
 

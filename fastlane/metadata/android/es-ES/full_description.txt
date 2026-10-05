@@ -29,7 +29,7 @@ PULIDO PARA MÓVIL Y TABLET
 • Cuadrícula adaptable (ancho completo, mitad, tercio), bloqueo del panel, copia de seguridad y restauración en JSON portable, escenas.
 
 100 % PRIVADO. SIN NUBE.
-• Sin anuncios. Sin analíticas. Sin cuenta. Sin servidor del desarrollador.
+• Sin anuncios. Sin cuenta. Datos de uso anónimos solo si lo aceptas.
 • Tus datos viven en tu dispositivo y en tu bróker MQTT, en ningún otro sitio.
 • Código abierto (MIT). El código es público y auditable.
 

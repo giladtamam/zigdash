@@ -25,7 +25,7 @@ ZigDash sends only these events. Every property value comes from an enum or a bu
 |---|---|---|
 | `app_started` | Once per launch, after consent | `form`: phone, tablet · `theme`: system, light, dark · `material_you`: on, off · `homes`: 0, 1, 2+ · `tiles`: 0, 1–10, 11–30, 31+ · `demo`: yes, no |
 | `setup_step` | Each first-run setup step | `step`: started, scan_found, scan_empty, needs_login, login_rejected, failed, review, complete, manual, demo · `error`: the setup error kind (when failed) · `devices`: 0, 1–5, 6–20, 21+ (at review and complete) |
-| `feature_used` | First use of a feature in a session | `feature`: devices_tab, device_page, scenes, edit_mode, wall_display, tile_added, home_switched, backup · `tile`: the tile's device class or panel type (when tile_added) |
+| `feature_used` | First use of a feature in a session | `feature`: devices_tab, device_page, scenes, edit_mode, wall_display, tile_added · `tile`: the tile's device class or panel type (when tile_added) |
 
 Never sent: broker hosts, ports or credentials, topics, device names, IEEE addresses, home and dashboard names, MQTT payloads, error messages, or last-known values (ADR 0004).
 

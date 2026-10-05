@@ -29,7 +29,7 @@ GJENNOMFØRT – MOBIL OG NETTBRETT
 • Responsivt panelrutenett (full, halv, tredjedels bredde), dashbordlås, sikkerhetskopi/gjenoppretting som portabel JSON, scener.
 
 100 % PRIVAT. INGEN SKY.
-• Ingen reklame. Ingen analyse. Ingen konto. Ingen utviklerserver.
+• Ingen reklame. Ingen konto. Anonyme bruksdata bare hvis du velger det.
 • Dataene dine bor på enheten din og MQTT-brokeren din, ingen andre steder.
 • Åpen kildekode (MIT). Koden er offentlig og kan ettergås.
 
