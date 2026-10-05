@@ -22,7 +22,7 @@ People who find the listing install the app, but few come back. The redesign is 
 3. **Devices first, MQTT second.** Users pick devices. Raw topics stay one tap away under "Custom MQTT tile".
 4. **Show the last known value.** When the broker is unreachable, tiles keep their last values, marked stale, under a slim status line.
 5. **One way to edit.** One Edit mode replaces the per-screen toolbar icons.
-6. **Protected.** Material You dynamic color, Hebrew right-to-left, all eight locales, system font scaling, the 15 panel types, and no telemetry.
+6. **Protected.** Material You dynamic color, Hebrew right-to-left, all eight locales, system font scaling, the 15 panel types, and no telemetry without consent (ADR 0006: anonymous usage data, opt-in only).
 
 ## Decisions
 
@@ -105,7 +105,7 @@ These are in scope for 2.0 but not designed yet. They get decided in the phase t
 - iOS and other platforms.
 - A Flutter rewrite or leaving Material 3.
 - New features beyond UX: widgets, automations, rooms.
-- In-app analytics or A/B tests, which the no-telemetry rule excludes.
+- A/B tests, and any analytics beyond ADR 0006's opt-in anonymous events.
 - Paid design tooling.
 
 ## Status
