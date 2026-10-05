@@ -102,5 +102,5 @@ giladtamam1@gmail.com
 
 ## Privacy policy URL
 Host store/PRIVACY.md publicly and use that URL, e.g. via GitHub Pages:
-https://giladtamam.github.io/zigdash/PRIVACY  (after enabling Pages)
+https://gitlab.com/tamamg/zigdash/-/blob/main/store/PRIVACY.md  (what Play Console links)
 or the file URL: https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md
