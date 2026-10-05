@@ -67,8 +67,15 @@ boot() {
   "$emulator" -avd "$(avd_for "$1")" -port "$port" -no-window -no-audio \
     -no-boot-anim -no-snapshot -gpu swiftshader_indirect >/dev/null 2>&1 &
   emu_pid=$!
-  "$adb" -s "$serial" wait-for-device
+  # Give up after 5 minutes, or at once if the emulator exits (a stale
+  # multiinstance.lock from a crashed run stops it from starting).
+  local waited=0
   until [[ "$("$adb" -s "$serial" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == 1 ]]; do
+    if ! kill -0 "$emu_pid" 2>/dev/null; then
+      echo "emulator $(avd_for "$1") exited; remove ~/.android/avd/$(avd_for "$1").avd/*.lock and retry" >&2
+      exit 1
+    fi
+    (( waited += 2 )); (( waited < 300 )) || { echo "emulator did not boot in 5 min" >&2; exit 1; }
     sleep 2
   done
   # A clean status bar: 10:00, full battery and signal, no notifications.
