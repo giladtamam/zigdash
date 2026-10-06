@@ -1,1 +1,1 @@
-Zigbee2MQTT-dashboard met apparaatdetectie. Lokaal, privé, open source.
+Voor je Zigbee2MQTT (vereist): een dashboard dat zichzelf bouwt. Geen cloud.

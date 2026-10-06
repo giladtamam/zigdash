@@ -1,5 +1,7 @@
 ZigDash est le dashboard MQTT conçu pour Zigbee2MQTT : il détecte vos appareils Zigbee automatiquement, votre tableau de bord domotique se construit donc tout seul. Pas de cloud, pas de pub, pas de compte : gratuit et open source. Pilotez lumières, volets, interrupteurs et capteurs depuis votre téléphone ou une tablette murale, et automatisez sur votre hub, même quand le téléphone est éteint.
 
+Nécessite un Zigbee2MQTT actif et un broker MQTT sur votre réseau. Pas encore de Zigbee2MQTT ? L'app inclut une maison de démo pour découvrir.
+
 DÉTECTION AUTOMATIQUE POUR ZIGBEE2MQTT
 • Scannez votre bridge Zigbee2MQTT et créez un panneau pour chaque appareil d'un seul geste, sans câbler les topics à la main.
 • Extraction par chemin JSON sur chaque panneau : ZigDash comprend les vrais messages Zigbee2MQTT dès le départ.

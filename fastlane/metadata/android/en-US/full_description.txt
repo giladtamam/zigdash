@@ -1,6 +1,8 @@
 ZigDash is the MQTT dashboard built for Zigbee2MQTT — control your Zigbee smart home from your phone. It discovers your devices automatically, so your dashboard builds itself. No cloud, no ads, no account: free and open source.
  Control lights, shutters, switches and sensors from your phone or a wall-mounted tablet — and automate on your hub, even when your phone is off.
 
+Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQTT yet? The app includes a demo home to look around.
+
    ━━━━━━━━━━━━━━━━━━━━━━
 
    AUTO-DISCOVERY FOR ZIGBEE2MQTT

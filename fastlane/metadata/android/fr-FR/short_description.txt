@@ -1,1 +1,1 @@
-Dashboard Zigbee2MQTT : détection auto des appareils. Local, privé, open source.
+Pour votre Zigbee2MQTT (requis) : un dashboard qui se construit seul.

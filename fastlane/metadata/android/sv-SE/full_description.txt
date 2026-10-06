@@ -1,5 +1,7 @@
 ZigDash är MQTT-dashboarden byggd för Zigbee2MQTT: den hittar dina Zigbee-enheter automatiskt, så din smarta hem-dashboard bygger sig själv. Inget moln, ingen reklam, inget konto: gratis och öppen källkod. Styr lampor, rullgardiner, brytare och sensorer från mobilen eller en väggmonterad surfplatta, och automatisera på din hubb även när mobilen är avstängd.
 
+Kräver ett körande Zigbee2MQTT och en MQTT-broker i ditt nätverk. Inget Zigbee2MQTT än? Appen har ett demohem att titta runt i.
+
 AUTOMATISK IDENTIFIERING FÖR ZIGBEE2MQTT
 • Skanna din Zigbee2MQTT-bridge och skapa en panel för varje enhet med ett tryck, utan att koppla topics manuellt.
 • JSON-sökvägsextraktion i varje panel, så ZigDash förstår riktiga Zigbee2MQTT-meddelanden direkt.

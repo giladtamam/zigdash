@@ -1,1 +1,1 @@
-Zigbee2MQTT-dashbord som finner enheter selv. Lokalt, privat, åpen kildekode.
+For ditt Zigbee2MQTT (påkrevd): et dashbord som bygger seg selv. Ingen sky.
