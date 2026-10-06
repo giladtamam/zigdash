@@ -39,7 +39,7 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
    POLISHED — PHONE & TABLET
    • Material 3 with light, dark, and system themes; Android 12+ Material You dynamic color.
    • Phone and tablet, portrait and landscape — ideal as a wall panel or wall-mounted home automation dashboard.
-   • Available in English, French, German, Spanish, Dutch, Swedish, Norwegian and Hebrew (עברית), with automatic RTL.
+   • Available in English, French, German, Spanish, Dutch, Swedish, Norwegian, Russian, Polish, Portuguese (Brazil) and Hebrew (עברית), with automatic RTL.
    • Responsive panel grid (full, half, third width), dashboard lock, backup/restore as portable JSON, scenes.
 
    ━━━━━━━━━━━━━━━━━━━━━━

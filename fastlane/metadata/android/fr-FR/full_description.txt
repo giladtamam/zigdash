@@ -27,7 +27,7 @@ AUTOMATISATION : FONCTIONNE TÉLÉPHONE ÉTEINT
 SOIGNÉ : TÉLÉPHONE ET TABLETTE
 • Material 3 avec thèmes clair, sombre et système ; couleurs dynamiques Material You sur Android 12+.
 • Téléphone et tablette, portrait et paysage : idéal en dashboard domotique mural.
-• Disponible en français, anglais, allemand, espagnol, néerlandais, suédois, norvégien et hébreu, avec RTL automatique.
+• Disponible en français, anglais, allemand, espagnol, néerlandais, suédois, norvégien, russe, polonais, portugais et hébreu, avec RTL automatique.
 • Grille de panneaux réactive (pleine, demie, tiers de largeur), verrouillage du dashboard, sauvegarde/restauration en JSON portable, scènes.
 
 100 % PRIVÉ. SANS CLOUD.

@@ -4,7 +4,7 @@
 # spec's 1280x800 dp tablet). Each locale runs on a fresh install, from the
 # demo home, with the demo bar hidden (ZIGDASH_STORE_CAPTURE).
 #
-#   tool/store/capture.sh                 all forms, en fr de es he
+#   tool/store/capture.sh                 all forms, en fr de es he ru pl pt
 #   tool/store/capture.sh phone en        one form, one locale
 #   STORE_ROOT=/tmp/shots tool/store/...  write somewhere other than fastlane
 #
@@ -24,14 +24,15 @@ store_root="${STORE_ROOT:-$root/fastlane/metadata/android}"
 app_id="com.giladtamam.zigdash"
 
 forms=(phone tablet)
-locales=(en fr de es he)
+locales=(en fr de es he ru pl pt)
 if [[ $# -ge 1 ]]; then forms=("$1"); fi
 if [[ $# -ge 2 ]]; then locales=("${@:2}"); fi
 
 play_locale() {
   case "$1" in
     en) echo en-US ;; fr) echo fr-FR ;; de) echo de-DE ;;
-    es) echo es-ES ;; he) echo iw-IL ;; *) echo "$1" ;;
+    es) echo es-ES ;; he) echo iw-IL ;; ru) echo ru-RU ;;
+    pl) echo pl-PL ;; pt) echo pt-BR ;; *) echo "$1" ;;
   esac
 }
 

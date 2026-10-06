@@ -20,6 +20,9 @@ taglines=(
   "no-NO|ltr|Zigbee-hjemmet ditt, med ett blikk."
   "sv-SE|ltr|Ditt Zigbee-hem i en blick."
   "iw-IL|rtl|הבית החכם שלכם, במבט אחד."
+  "ru-RU|ltr|Ваш дом на Zigbee — с одного взгляда."
+  "pl-PL|ltr|Twój dom Zigbee w jednym spojrzeniu."
+  "pt-BR|ltr|Sua casa Zigbee, num piscar de olhos."
 )
 icon="$(cat tool/icons/signal/icon.svg | sed 's/width="1024" height="1024"/width="84" height="84"/')"
 
