@@ -12,6 +12,9 @@ import 'app_localizations_fr.dart';
 import 'app_localizations_he.dart';
 import 'app_localizations_nb.dart';
 import 'app_localizations_nl.dart';
+import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_sv.dart';
 
 // ignore_for_file: type=lint
@@ -107,6 +110,9 @@ abstract class AppLocalizations {
     Locale('he'),
     Locale('nb'),
     Locale('nl'),
+    Locale('pl'),
+    Locale('pt'),
+    Locale('ru'),
     Locale('sv'),
   ];
 
@@ -3739,6 +3745,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home'**
   String get dashDefaultName;
+
+  /// No description provided for @dashExportSaveFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save file'**
+  String get dashExportSaveFile;
+
+  /// No description provided for @dashExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved'**
+  String get dashExportSaved;
+
+  /// No description provided for @dashImportChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose file'**
+  String get dashImportChooseFile;
+
+  /// No description provided for @dashImportFileUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read that file'**
+  String get dashImportFileUnreadable;
 }
 
 class _AppLocalizationsDelegate
@@ -3759,6 +3789,9 @@ class _AppLocalizationsDelegate
     'he',
     'nb',
     'nl',
+    'pl',
+    'pt',
+    'ru',
     'sv',
   ].contains(locale.languageCode);
 
@@ -3783,6 +3816,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsNb();
     case 'nl':
       return AppLocalizationsNl();
+    case 'pl':
+      return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
     case 'sv':
       return AppLocalizationsSv();
   }

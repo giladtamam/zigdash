@@ -15,6 +15,9 @@ const appLanguages = {
   'nb': 'Norsk bokmål',
   'es': 'Español',
   'fr': 'Français',
+  'pt': 'Português (Brasil)',
+  'ru': 'Русский',
+  'pl': 'Polski',
 };
 
 /// "System (English)" or the chosen language's own name.

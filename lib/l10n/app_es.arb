@@ -679,5 +679,9 @@
   "settingsAnalytics": "Compartir datos de uso anónimos",
   "settingsAnalyticsSubtitle": "Pasos de configuración y funciones usadas. Nunca tus dispositivos, topics ni tu broker.",
   "settingsPrivacySubtitleOptIn": "Datos de uso anónimos, solo si lo aceptas.",
-  "dashDefaultName": "Casa"
+  "dashDefaultName": "Casa",
+  "dashExportSaveFile": "Guardar archivo",
+  "dashExportSaved": "Copia guardada",
+  "dashImportChooseFile": "Elegir archivo",
+  "dashImportFileUnreadable": "No se pudo leer ese archivo"
 }

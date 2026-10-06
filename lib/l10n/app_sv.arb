@@ -679,5 +679,9 @@
   "settingsAnalytics": "Dela anonym användningsdata",
   "settingsAnalyticsSubtitle": "Installationssteg och använda funktioner. Aldrig dina enheter, topics eller din broker.",
   "settingsPrivacySubtitleOptIn": "Anonym användningsdata bara om du väljer det.",
-  "dashDefaultName": "Hem"
+  "dashDefaultName": "Hem",
+  "dashExportSaveFile": "Spara fil",
+  "dashExportSaved": "Säkerhetskopian sparades",
+  "dashImportChooseFile": "Välj fil",
+  "dashImportFileUnreadable": "Det gick inte att läsa filen"
 }

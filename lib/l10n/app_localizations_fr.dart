@@ -2029,4 +2029,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'Maison';
+
+  @override
+  String get dashExportSaveFile => 'Enregistrer le fichier';
+
+  @override
+  String get dashExportSaved => 'Sauvegarde enregistrée';
+
+  @override
+  String get dashImportChooseFile => 'Choisir un fichier';
+
+  @override
+  String get dashImportFileUnreadable => 'Impossible de lire ce fichier';
 }

@@ -679,5 +679,9 @@
   "settingsAnalytics": "Anonieme gebruiksgegevens delen",
   "settingsAnalyticsSubtitle": "Installatiestappen en gebruikte functies. Nooit je apparaten, topics of broker.",
   "settingsPrivacySubtitleOptIn": "Anonieme gebruiksgegevens alleen als je daarvoor kiest.",
-  "dashDefaultName": "Thuis"
+  "dashDefaultName": "Thuis",
+  "dashExportSaveFile": "Bestand opslaan",
+  "dashExportSaved": "Back-up opgeslagen",
+  "dashImportChooseFile": "Bestand kiezen",
+  "dashImportFileUnreadable": "Dat bestand kon niet worden gelezen"
 }

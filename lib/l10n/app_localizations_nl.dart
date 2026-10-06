@@ -2022,4 +2022,16 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'Thuis';
+
+  @override
+  String get dashExportSaveFile => 'Bestand opslaan';
+
+  @override
+  String get dashExportSaved => 'Back-up opgeslagen';
+
+  @override
+  String get dashImportChooseFile => 'Bestand kiezen';
+
+  @override
+  String get dashImportFileUnreadable => 'Dat bestand kon niet worden gelezen';
 }

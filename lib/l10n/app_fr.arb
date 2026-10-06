@@ -604,5 +604,9 @@
   "settingsAnalytics": "Partager des données d'utilisation anonymes",
   "settingsAnalyticsSubtitle": "Étapes de configuration et fonctions utilisées. Jamais vos appareils, topics ou broker.",
   "settingsPrivacySubtitleOptIn": "Données d'utilisation anonymes, uniquement si vous l'acceptez.",
-  "dashDefaultName": "Maison"
+  "dashDefaultName": "Maison",
+  "dashExportSaveFile": "Enregistrer le fichier",
+  "dashExportSaved": "Sauvegarde enregistrée",
+  "dashImportChooseFile": "Choisir un fichier",
+  "dashImportFileUnreadable": "Impossible de lire ce fichier"
 }

@@ -2000,4 +2000,16 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'בית';
+
+  @override
+  String get dashExportSaveFile => 'שמירת קובץ';
+
+  @override
+  String get dashExportSaved => 'הגיבוי נשמר';
+
+  @override
+  String get dashImportChooseFile => 'בחירת קובץ';
+
+  @override
+  String get dashImportFileUnreadable => 'לא ניתן לקרוא את הקובץ';
 }

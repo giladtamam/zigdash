@@ -679,5 +679,9 @@
   "settingsAnalytics": "Del anonyme bruksdata",
   "settingsAnalyticsSubtitle": "Oppsettsteg og funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.",
   "settingsPrivacySubtitleOptIn": "Anonyme bruksdata bare hvis du velger det.",
-  "dashDefaultName": "Hjem"
+  "dashDefaultName": "Hjem",
+  "dashExportSaveFile": "Lagre fil",
+  "dashExportSaved": "Sikkerhetskopien er lagret",
+  "dashImportChooseFile": "Velg fil",
+  "dashImportFileUnreadable": "Kunne ikke lese filen"
 }

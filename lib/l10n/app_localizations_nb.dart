@@ -2016,4 +2016,16 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'Hjem';
+
+  @override
+  String get dashExportSaveFile => 'Lagre fil';
+
+  @override
+  String get dashExportSaved => 'Sikkerhetskopien er lagret';
+
+  @override
+  String get dashImportChooseFile => 'Velg fil';
+
+  @override
+  String get dashImportFileUnreadable => 'Kunne ikke lese filen';
 }

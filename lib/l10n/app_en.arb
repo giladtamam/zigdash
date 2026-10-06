@@ -691,5 +691,9 @@
   "settingsAnalytics": "Share anonymous usage data",
   "settingsAnalyticsSubtitle": "Setup steps and features used. Never your devices, topics or broker.",
   "settingsPrivacySubtitleOptIn": "Anonymous usage data only if you opt in.",
-  "dashDefaultName": "Home"
+  "dashDefaultName": "Home",
+  "dashExportSaveFile": "Save file",
+  "dashExportSaved": "Backup saved",
+  "dashImportChooseFile": "Choose file",
+  "dashImportFileUnreadable": "Couldn't read that file"
 }

@@ -14,6 +14,7 @@ import '../../../core/router/last_dashboard_store.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
+import '../../../data/repositories/backup_files.dart';
 import '../../../data/repositories/backup_service.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -623,7 +624,7 @@ class _DashboardMenu extends ConsumerWidget {
             onPressed: () => Navigator.pop(ctx),
             child: Text(l10n.dashExportClose),
           ),
-          FilledButton.icon(
+          TextButton.icon(
             icon: const Icon(Icons.copy),
             label: Text(l10n.dashExportCopy),
             onPressed: () async {
@@ -631,6 +632,23 @@ class _DashboardMenu extends ConsumerWidget {
               if (ctx.mounted) Navigator.pop(ctx);
               messenger.showSnackBar(
                 SnackBar(content: Text(l10n.dashExportCopied)),
+              );
+            },
+          ),
+          // A .json file through Android's file picker: Drive, Downloads, a
+          // USB stick (asked for in a Play review).
+          FilledButton.icon(
+            icon: const Icon(Icons.save_alt),
+            label: Text(l10n.dashExportSaveFile),
+            onPressed: () async {
+              final home =
+                  ref.read(connectionByIdProvider(connectionId)).valueOrNull;
+              final saved = await ref.read(backupFilesProvider).save(
+                  backupFileName(home?.name ?? '', DateTime.now()), json);
+              if (!saved) return;
+              if (ctx.mounted) Navigator.pop(ctx);
+              messenger.showSnackBar(
+                SnackBar(content: Text(l10n.dashExportSaved)),
               );
             },
           ),
@@ -659,6 +677,20 @@ class _DashboardMenu extends ConsumerWidget {
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(l10n.cancel),
+          ),
+          // Fills the box from a saved .json backup; Import still confirms.
+          TextButton.icon(
+            icon: const Icon(Icons.file_open_outlined),
+            label: Text(l10n.dashImportChooseFile),
+            onPressed: () async {
+              try {
+                final text = await ref.read(backupFilesProvider).open();
+                if (text != null) controller.text = text;
+              } on FormatException {
+                messenger.showSnackBar(
+                    SnackBar(content: Text(l10n.dashImportFileUnreadable)));
+              }
+            },
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),

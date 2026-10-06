@@ -2015,4 +2015,16 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'Hem';
+
+  @override
+  String get dashExportSaveFile => 'Spara fil';
+
+  @override
+  String get dashExportSaved => 'Säkerhetskopian sparades';
+
+  @override
+  String get dashImportChooseFile => 'Välj fil';
+
+  @override
+  String get dashImportFileUnreadable => 'Det gick inte att läsa filen';
 }

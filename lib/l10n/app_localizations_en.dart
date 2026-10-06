@@ -2011,4 +2011,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'Home';
+
+  @override
+  String get dashExportSaveFile => 'Save file';
+
+  @override
+  String get dashExportSaved => 'Backup saved';
+
+  @override
+  String get dashImportChooseFile => 'Choose file';
+
+  @override
+  String get dashImportFileUnreadable => 'Couldn\'t read that file';
 }

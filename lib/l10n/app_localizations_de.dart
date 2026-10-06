@@ -2025,4 +2025,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get dashDefaultName => 'Zuhause';
+
+  @override
+  String get dashExportSaveFile => 'Datei speichern';
+
+  @override
+  String get dashExportSaved => 'Sicherung gespeichert';
+
+  @override
+  String get dashImportChooseFile => 'Datei wählen';
+
+  @override
+  String get dashImportFileUnreadable =>
+      'Die Datei konnte nicht gelesen werden';
 }
