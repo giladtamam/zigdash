@@ -39,3 +39,19 @@ The 7-day mean for Sep 21 to 27 is **11.2%**. With about 100 monthly users, one 
 ## Next reading
 
 Around 2026-11-01, 4 weeks after 1.13 reached 100%, record the same table. Then compare the Sep 21–27 mean with the last full week before 2.0 ships. Outreach on 2026-10-04 (Z2M Discussion #33283, the HA thread update, Reddit, awesome-mqtt #166) will also lift acquisitions in that window, so read it as 1.13 and outreach together.
+
+## All-time new users (read 2026-10-08)
+
+Play Console › Statistics › User acquisition › New users, monthly, all countries:
+
+| Month | New users |
+|---|---|
+| May 2026 | 17 |
+| Jun 2026 | 2 |
+| Jul 2026 | 7 |
+| Aug 2026 | 51 |
+| Sep 2026 | 181 |
+| Oct 1–7 2026 | 58 |
+| **Total** | **316** |
+
+Forecast for the Play "1,000+ downloads" badge: around 2027-01-01 at October's ~8 a day; early December 2026 if the 2.0 launch adds ~150 and the pace reaches ~10 a day. Re-read with the 2026-11-01 table.
