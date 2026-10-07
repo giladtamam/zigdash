@@ -21,7 +21,7 @@ final analyticsAvailableProvider =
 /// The privacy policy's section listing every event (opened by "What's
 /// shared").
 final usageDataPolicyUrl = Uri.parse(
-    'https://gitlab.com/tamamg/zigdash/-/blob/main/store/PRIVACY.md#anonymous-usage-data');
+    'https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md#anonymous-usage-data');
 
 enum AnalyticsConsent { unasked, granted, declined }
 

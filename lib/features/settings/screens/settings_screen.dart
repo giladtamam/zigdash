@@ -38,7 +38,7 @@ final dynamicColorAvailableProvider = FutureProvider<bool>((ref) async {
 /// The published privacy policy: the same page the Play listing links.
 /// (The GitHub Pages address was never enabled and returned 404.)
 final privacyPolicyUrl =
-    Uri.parse('https://gitlab.com/tamamg/zigdash/-/blob/main/store/PRIVACY.md');
+    Uri.parse('https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md');
 
 /// Settings (devices-tablet-1.13.md §6): Homes, Appearance and About on one
 /// page. Homes are listed here; each opens its own page.
