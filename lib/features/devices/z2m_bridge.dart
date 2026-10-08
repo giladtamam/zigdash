@@ -15,14 +15,17 @@ class BridgeRequest {
 /// Build a permit_join request.
 ///
 /// [enable] = true → starts pairing for [time] seconds (default 254).
-/// [enable] = false → stops pairing; [time] is omitted from the payload.
+/// [enable] = false → stops pairing with `time: 0`.
+///
+/// Zigbee2MQTT 2.x reads only `time` and rejects a payload without it
+/// ("Invalid payload"), so stopping must send `time: 0`. 1.x reads `value`,
+/// so both keys are sent.
 BridgeRequest permitJoinRequest(
   String base, {
   required bool enable,
   int time = 254,
 }) {
-  final Map<String, dynamic> body = {'value': enable};
-  if (enable) body['time'] = time;
+  final body = <String, dynamic>{'value': enable, 'time': enable ? time : 0};
   return BridgeRequest(
     topic: '$base/bridge/request/permit_join',
     payload: jsonEncode(body),
