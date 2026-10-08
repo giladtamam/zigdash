@@ -998,6 +998,20 @@ class AppLocalizationsPt extends AppLocalizations {
       'O que você gostaria que o ZigDash fizesse, e por quê?';
 
   @override
+  String get settingsReportProblem => 'Relatar um problema';
+
+  @override
+  String get settingsReportProblemSubtitle =>
+      'Algo quebrado ou confuso? Me conte.';
+
+  @override
+  String get reportProblemEmailSubject => 'ZigDash: relato de problema';
+
+  @override
+  String get reportProblemEmailPrompt =>
+      'O que aconteceu e o que você esperava? O modelo do dispositivo e a versão do Zigbee2MQTT ajudam.';
+
+  @override
   String get settingsBuyCoffee => 'Me pague um café';
 
   @override

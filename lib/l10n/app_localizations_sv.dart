@@ -993,6 +993,20 @@ class AppLocalizationsSv extends AppLocalizations {
       'Vad vill du att ZigDash ska kunna, och varför?';
 
   @override
+  String get settingsReportProblem => 'Rapportera ett problem';
+
+  @override
+  String get settingsReportProblemSubtitle =>
+      'Är något trasigt eller förvirrande? Berätta.';
+
+  @override
+  String get reportProblemEmailSubject => 'ZigDash: problemrapport';
+
+  @override
+  String get reportProblemEmailPrompt =>
+      'Vad hände, och vad förväntade du dig? Enhetsmodell och Zigbee2MQTT-version hjälper.';
+
+  @override
   String get settingsBuyCoffee => 'Bjud mig på en kaffe';
 
   @override

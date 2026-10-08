@@ -349,6 +349,10 @@
   "featureRequestEmailSubtitle": "Privat, direkt an den Entwickler.",
   "featureRequestEmailSubject": "ZigDash: Funktionswunsch",
   "featureRequestEmailPrompt": "Was soll ZigDash können, und warum?",
+  "settingsReportProblem": "Problem melden",
+  "settingsReportProblemSubtitle": "Etwas kaputt oder unklar? Sag es mir.",
+  "reportProblemEmailSubject": "ZigDash: Problembericht",
+  "reportProblemEmailPrompt": "Was ist passiert, und was hast du erwartet? Gerätemodell und Zigbee2MQTT-Version helfen.",
   "settingsBuyCoffee": "Spendiere mir einen Kaffee",
   "settingsBuyCoffeeSubtitle": "Kostenlos & Open Source — Trinkgeld hält den Kaffee am Fließen.",
 

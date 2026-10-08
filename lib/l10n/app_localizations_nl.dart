@@ -998,6 +998,20 @@ class AppLocalizationsNl extends AppLocalizations {
       'Wat zou je willen dat ZigDash doet, en waarom?';
 
   @override
+  String get settingsReportProblem => 'Probleem melden';
+
+  @override
+  String get settingsReportProblemSubtitle =>
+      'Werkt iets niet of is iets onduidelijk? Laat het me weten.';
+
+  @override
+  String get reportProblemEmailSubject => 'ZigDash: probleemmelding';
+
+  @override
+  String get reportProblemEmailPrompt =>
+      'Wat gebeurde er, en wat verwachtte je? Het apparaatmodel en de Zigbee2MQTT-versie helpen.';
+
+  @override
   String get settingsBuyCoffee => 'Trakteer me op een koffie';
 
   @override

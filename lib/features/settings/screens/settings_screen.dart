@@ -40,22 +40,30 @@ final dynamicColorAvailableProvider = FutureProvider<bool>((ref) async {
 final privacyPolicyUrl =
     Uri.parse('https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md');
 
-/// Where feature requests go: a GitHub issue (public, votable) or an email to
+/// Where feature requests and problem reports go: a GitHub issue (public, votable) or an email to
 /// the developer (private). The app only opens a browser or mail app; it
 /// sends nothing itself.
 const featureRequestEmail = 'giladtamam1@gmail.com';
 
 /// A new GitHub issue from the feature-request template, with the app version
 /// filled in.
-Uri featureRequestGithubUrl(String version) => Uri.https(
+Uri featureRequestGithubUrl(String version) =>
+    _githubIssueUrl('feature_request.yml', version);
+
+/// A new GitHub issue from the bug-report template, with the app version
+/// filled in.
+Uri problemReportGithubUrl(String version) =>
+    _githubIssueUrl('bug_report.yml', version);
+
+Uri _githubIssueUrl(String template, String version) => Uri.https(
       'github.com',
       '/giladtamam/zigdash/issues/new',
-      {'template': 'feature_request.yml', 'version': version},
+      {'template': template, 'version': version},
     );
 
 /// A new email to [featureRequestEmail] with [subject] and a body that asks
 /// [prompt] and ends with the app version.
-Uri featureRequestMailUrl({
+Uri feedbackMailUrl({
   required String version,
   required String subject,
   required String prompt,
@@ -150,7 +158,13 @@ class SettingsScreen extends ConsumerWidget {
                 leading: const Icon(Icons.lightbulb_outline),
                 title: Text(l10n.settingsFeatureRequest),
                 subtitle: Text(l10n.settingsFeatureRequestSubtitle),
-                onTap: () => _requestFeature(context, ref),
+                onTap: () => _sendFeedback(context, ref, problem: false),
+              ),
+              ListTile(
+                leading: const Icon(Icons.bug_report_outlined),
+                title: Text(l10n.settingsReportProblem),
+                subtitle: Text(l10n.settingsReportProblemSubtitle),
+                onTap: () => _sendFeedback(context, ref, problem: true),
               ),
               ListTile(
                 leading: const Icon(Icons.help_outline),
@@ -196,8 +210,13 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-/// Asks where to send a feature request, then opens GitHub or the mail app.
-Future<void> _requestFeature(BuildContext context, WidgetRef ref) async {
+/// Asks where to send a feature request or a problem report ([problem]),
+/// then opens GitHub or the mail app.
+Future<void> _sendFeedback(
+  BuildContext context,
+  WidgetRef ref, {
+  required bool problem,
+}) async {
   final l10n = context.l10n;
   final version = ref.read(appVersionProvider).valueOrNull ?? '';
   final url = await showModalBottomSheet<Uri>(
@@ -211,8 +230,11 @@ Future<void> _requestFeature(BuildContext context, WidgetRef ref) async {
             leading: const Icon(Icons.forum_outlined),
             title: Text(l10n.featureRequestGithub),
             subtitle: Text(l10n.featureRequestGithubSubtitle),
-            onTap: () =>
-                Navigator.pop(ctx, featureRequestGithubUrl(version)),
+            onTap: () => Navigator.pop(
+                ctx,
+                problem
+                    ? problemReportGithubUrl(version)
+                    : featureRequestGithubUrl(version)),
           ),
           ListTile(
             leading: const Icon(Icons.mail_outline),
@@ -220,10 +242,14 @@ Future<void> _requestFeature(BuildContext context, WidgetRef ref) async {
             subtitle: Text(l10n.featureRequestEmailSubtitle),
             onTap: () => Navigator.pop(
                 ctx,
-                featureRequestMailUrl(
+                feedbackMailUrl(
                   version: version,
-                  subject: l10n.featureRequestEmailSubject,
-                  prompt: l10n.featureRequestEmailPrompt,
+                  subject: problem
+                      ? l10n.reportProblemEmailSubject
+                      : l10n.featureRequestEmailSubject,
+                  prompt: problem
+                      ? l10n.reportProblemEmailPrompt
+                      : l10n.featureRequestEmailPrompt,
                 )),
           ),
         ],

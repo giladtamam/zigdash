@@ -1910,6 +1910,30 @@ abstract class AppLocalizations {
   /// **'What would you like ZigDash to do, and why?'**
   String get featureRequestEmailPrompt;
 
+  /// No description provided for @settingsReportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get settingsReportProblem;
+
+  /// No description provided for @settingsReportProblemSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Something broken or confusing? Tell me.'**
+  String get settingsReportProblemSubtitle;
+
+  /// No description provided for @reportProblemEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash problem report'**
+  String get reportProblemEmailSubject;
+
+  /// No description provided for @reportProblemEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened, and what did you expect? Your device model and Zigbee2MQTT version help.'**
+  String get reportProblemEmailPrompt;
+
   /// No description provided for @settingsBuyCoffee.
   ///
   /// In en, this message translates to:

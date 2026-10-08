@@ -1,0 +1,35 @@
+name: Problem report
+description: Something in ZigDash is broken or confusing. The app's Settings › Report a problem opens this.
+title: "Problem: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+  - type: textarea
+    id: steps
+    attributes:
+      label: How can I see it happen?
+      placeholder: "1. Open …  2. Tap …"
+  - type: input
+    id: device
+    attributes:
+      label: Zigbee device (if it's about one)
+      placeholder: e.g. SONOFF MINI-ZBRBS
+  - type: input
+    id: z2m
+    attributes:
+      label: Zigbee2MQTT version and broker
+      placeholder: e.g. 2.13.0, Mosquitto on an SMLIGHT SMHUB
+  - type: input
+    id: version
+    attributes:
+      label: ZigDash version
+      description: Filled in when you come from the app.

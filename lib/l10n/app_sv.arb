@@ -349,6 +349,10 @@
   "featureRequestEmailSubtitle": "Privat, direkt till utvecklaren.",
   "featureRequestEmailSubject": "ZigDash: funktionsönskemål",
   "featureRequestEmailPrompt": "Vad vill du att ZigDash ska kunna, och varför?",
+  "settingsReportProblem": "Rapportera ett problem",
+  "settingsReportProblemSubtitle": "Är något trasigt eller förvirrande? Berätta.",
+  "reportProblemEmailSubject": "ZigDash: problemrapport",
+  "reportProblemEmailPrompt": "Vad hände, och vad förväntade du dig? Enhetsmodell och Zigbee2MQTT-version hjälper.",
   "settingsBuyCoffee": "Bjud mig på en kaffe",
   "settingsBuyCoffeeSubtitle": "Gratis & öppen källkod — dricks håller kaffet varmt.",
 

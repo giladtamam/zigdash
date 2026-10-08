@@ -999,6 +999,20 @@ class AppLocalizationsRu extends AppLocalizations {
       'Что вы хотели бы видеть в ZigDash и зачем?';
 
   @override
+  String get settingsReportProblem => 'Сообщить о проблеме';
+
+  @override
+  String get settingsReportProblemSubtitle =>
+      'Что-то не работает или непонятно? Напишите.';
+
+  @override
+  String get reportProblemEmailSubject => 'ZigDash: сообщение о проблеме';
+
+  @override
+  String get reportProblemEmailPrompt =>
+      'Что произошло и чего вы ожидали? Модель устройства и версия Zigbee2MQTT помогут.';
+
+  @override
   String get settingsBuyCoffee => 'Угостить кофе';
 
   @override
