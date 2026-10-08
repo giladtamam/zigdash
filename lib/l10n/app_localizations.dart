@@ -1862,6 +1862,54 @@ abstract class AppLocalizations {
   /// **'Enjoying it? A quick review helps others find it.'**
   String get settingsRateAppSubtitle;
 
+  /// No description provided for @settingsFeatureRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a feature'**
+  String get settingsFeatureRequest;
+
+  /// No description provided for @settingsFeatureRequestSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what would make ZigDash better.'**
+  String get settingsFeatureRequestSubtitle;
+
+  /// No description provided for @featureRequestGithub.
+  ///
+  /// In en, this message translates to:
+  /// **'On GitHub'**
+  String get featureRequestGithub;
+
+  /// No description provided for @featureRequestGithubSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Public: others can see it and vote for it.'**
+  String get featureRequestGithubSubtitle;
+
+  /// No description provided for @featureRequestEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'By email'**
+  String get featureRequestEmail;
+
+  /// No description provided for @featureRequestEmailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Private, straight to the developer.'**
+  String get featureRequestEmailSubtitle;
+
+  /// No description provided for @featureRequestEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash feature request'**
+  String get featureRequestEmailSubject;
+
+  /// No description provided for @featureRequestEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like ZigDash to do, and why?'**
+  String get featureRequestEmailPrompt;
+
   /// No description provided for @settingsBuyCoffee.
   ///
   /// In en, this message translates to:

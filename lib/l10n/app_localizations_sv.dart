@@ -966,6 +966,33 @@ class AppLocalizationsSv extends AppLocalizations {
       'Gillar du den? En snabb recension hjälper andra att hitta appen.';
 
   @override
+  String get settingsFeatureRequest => 'Föreslå en funktion';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Berätta vad som skulle göra ZigDash bättre.';
+
+  @override
+  String get featureRequestGithub => 'På GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Offentligt: andra kan se det och rösta.';
+
+  @override
+  String get featureRequestEmail => 'Via e-post';
+
+  @override
+  String get featureRequestEmailSubtitle => 'Privat, direkt till utvecklaren.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: funktionsönskemål';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'Vad vill du att ZigDash ska kunna, och varför?';
+
+  @override
   String get settingsBuyCoffee => 'Bjud mig på en kaffe';
 
   @override

@@ -958,6 +958,32 @@ class AppLocalizationsHe extends AppLocalizations {
       'נהנים? ביקורת קצרה עוזרת לאחרים למצוא את האפליקציה.';
 
   @override
+  String get settingsFeatureRequest => 'בקשת תכונה';
+
+  @override
+  String get settingsFeatureRequestSubtitle => 'ספרו לי מה ישפר את ZigDash.';
+
+  @override
+  String get featureRequestGithub => 'ב-GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'ציבורי: אחרים יכולים לראות ולהצביע.';
+
+  @override
+  String get featureRequestEmail => 'במייל';
+
+  @override
+  String get featureRequestEmailSubtitle => 'פרטי, ישירות למפתח.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: בקשת תכונה';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'מה הייתם רוצים ש-ZigDash יעשה, ולמה?';
+
+  @override
   String get settingsBuyCoffee => 'קנו לי קפה';
 
   @override

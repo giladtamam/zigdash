@@ -970,6 +970,34 @@ class AppLocalizationsNl extends AppLocalizations {
       'Tevreden? Een korte review helpt anderen de app te vinden.';
 
   @override
+  String get settingsFeatureRequest => 'Functie aanvragen';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Vertel me wat ZigDash beter zou maken.';
+
+  @override
+  String get featureRequestGithub => 'Op GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Openbaar: anderen kunnen het zien en erop stemmen.';
+
+  @override
+  String get featureRequestEmail => 'Per e-mail';
+
+  @override
+  String get featureRequestEmailSubtitle =>
+      'Privé, rechtstreeks naar de ontwikkelaar.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: functieverzoek';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'Wat zou je willen dat ZigDash doet, en waarom?';
+
+  @override
   String get settingsBuyCoffee => 'Trakteer me op een koffie';
 
   @override

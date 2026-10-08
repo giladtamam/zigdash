@@ -972,6 +972,33 @@ class AppLocalizationsRu extends AppLocalizations {
       'Нравится? Короткий отзыв поможет другим найти приложение.';
 
   @override
+  String get settingsFeatureRequest => 'Предложить функцию';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Расскажите, что сделает ZigDash лучше.';
+
+  @override
+  String get featureRequestGithub => 'На GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Публично: другие увидят и смогут проголосовать.';
+
+  @override
+  String get featureRequestEmail => 'По почте';
+
+  @override
+  String get featureRequestEmailSubtitle => 'Лично, напрямую разработчику.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: предложение функции';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'Что вы хотели бы видеть в ZigDash и зачем?';
+
+  @override
   String get settingsBuyCoffee => 'Угостить кофе';
 
   @override

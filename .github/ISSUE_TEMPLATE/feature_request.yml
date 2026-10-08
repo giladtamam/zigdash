@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest something ZigDash should do. The app's Settings › Request a feature opens this.
+title: "Feature: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. Add a 👍 to existing requests you'd like too; that's how I pick what to build next.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like ZigDash to do?
+      placeholder: e.g. Show the outside temperature next to the home name.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help you?
+      description: What you do today without it, or which device or setup it is for.
+  - type: input
+    id: version
+    attributes:
+      label: ZigDash version
+      description: Filled in when you come from the app.

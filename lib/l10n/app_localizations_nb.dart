@@ -967,6 +967,33 @@ class AppLocalizationsNb extends AppLocalizations {
       'Liker du den? En rask anmeldelse hjelper andre med å finne appen.';
 
   @override
+  String get settingsFeatureRequest => 'Foreslå en funksjon';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Fortell meg hva som ville gjort ZigDash bedre.';
+
+  @override
+  String get featureRequestGithub => 'På GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Offentlig: andre kan se det og stemme.';
+
+  @override
+  String get featureRequestEmail => 'På e-post';
+
+  @override
+  String get featureRequestEmailSubtitle => 'Privat, rett til utvikleren.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: funksjonsønske';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'Hva vil du at ZigDash skal kunne, og hvorfor?';
+
+  @override
   String get settingsBuyCoffee => 'Kjøp meg en kaffe';
 
   @override

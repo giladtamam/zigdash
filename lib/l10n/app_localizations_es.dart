@@ -972,6 +972,34 @@ class AppLocalizationsEs extends AppLocalizations {
       '¿Te gusta? Una reseña rápida ayuda a otros a encontrarla.';
 
   @override
+  String get settingsFeatureRequest => 'Proponer una función';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Cuéntame qué haría mejor a ZigDash.';
+
+  @override
+  String get featureRequestGithub => 'En GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Público: otros pueden verlo y votarlo.';
+
+  @override
+  String get featureRequestEmail => 'Por correo';
+
+  @override
+  String get featureRequestEmailSubtitle =>
+      'Privado, directo al desarrollador.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: solicitud de función';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      '¿Qué te gustaría que hiciera ZigDash y por qué?';
+
+  @override
   String get settingsBuyCoffee => 'Invítame un café';
 
   @override

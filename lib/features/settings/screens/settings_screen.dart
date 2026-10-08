@@ -40,6 +40,34 @@ final dynamicColorAvailableProvider = FutureProvider<bool>((ref) async {
 final privacyPolicyUrl =
     Uri.parse('https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md');
 
+/// Where feature requests go: a GitHub issue (public, votable) or an email to
+/// the developer (private). The app only opens a browser or mail app; it
+/// sends nothing itself.
+const featureRequestEmail = 'giladtamam1@gmail.com';
+
+/// A new GitHub issue from the feature-request template, with the app version
+/// filled in.
+Uri featureRequestGithubUrl(String version) => Uri.https(
+      'github.com',
+      '/giladtamam/zigdash/issues/new',
+      {'template': 'feature_request.yml', 'version': version},
+    );
+
+/// A new email to [featureRequestEmail] with [subject] and a body that asks
+/// [prompt] and ends with the app version.
+Uri featureRequestMailUrl({
+  required String version,
+  required String subject,
+  required String prompt,
+}) =>
+    Uri(
+      scheme: 'mailto',
+      path: featureRequestEmail,
+      // Uri's queryParameters encode spaces as '+', which mail apps show.
+      query: 'subject=${Uri.encodeComponent(subject)}'
+          '&body=${Uri.encodeComponent('$prompt\n\n\n— ZigDash $version')}',
+    );
+
 /// Settings (devices-tablet-1.13.md §6): Homes, Appearance and About on one
 /// page. Homes are listed here; each opens its own page.
 class SettingsScreen extends ConsumerWidget {
@@ -119,6 +147,12 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.lightbulb_outline),
+                title: Text(l10n.settingsFeatureRequest),
+                subtitle: Text(l10n.settingsFeatureRequestSubtitle),
+                onTap: () => _requestFeature(context, ref),
+              ),
+              ListTile(
                 leading: const Icon(Icons.help_outline),
                 title: Text(l10n.settingsHelp),
                 trailing: const Icon(Icons.chevron_right),
@@ -160,6 +194,44 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Asks where to send a feature request, then opens GitHub or the mail app.
+Future<void> _requestFeature(BuildContext context, WidgetRef ref) async {
+  final l10n = context.l10n;
+  final version = ref.read(appVersionProvider).valueOrNull ?? '';
+  final url = await showModalBottomSheet<Uri>(
+    context: context,
+    showDragHandle: true,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.forum_outlined),
+            title: Text(l10n.featureRequestGithub),
+            subtitle: Text(l10n.featureRequestGithubSubtitle),
+            onTap: () =>
+                Navigator.pop(ctx, featureRequestGithubUrl(version)),
+          ),
+          ListTile(
+            leading: const Icon(Icons.mail_outline),
+            title: Text(l10n.featureRequestEmail),
+            subtitle: Text(l10n.featureRequestEmailSubtitle),
+            onTap: () => Navigator.pop(
+                ctx,
+                featureRequestMailUrl(
+                  version: version,
+                  subject: l10n.featureRequestEmailSubject,
+                  prompt: l10n.featureRequestEmailPrompt,
+                )),
+          ),
+        ],
+      ),
+    ),
+  );
+  if (url == null) return;
+  await launchUrl(url, mode: LaunchMode.externalApplication);
 }
 
 /// One home: name, address, and for the current home its connection state.
