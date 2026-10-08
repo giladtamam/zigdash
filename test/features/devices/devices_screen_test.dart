@@ -98,7 +98,46 @@ Widget _app({
   );
 }
 
+/// The Devices tab for a home with no devices; [missing] says whether
+/// Zigbee2MQTT's device list never arrived.
+Widget _emptyApp({required bool missing}) => ProviderScope(
+      overrides: [
+        connectionsStreamProvider.overrideWith((ref) => Stream.value(const [])),
+        bridgeDevicesMissingProvider.overrideWith((ref, _) async => missing),
+        deviceHealthProvider
+            .overrideWith((ref, _) => Stream.value(const <DeviceHealth>[])),
+        availabilityConfigProvider
+            .overrideWith((ref, _) => Stream.value(AvailabilityConfig.unknown)),
+        linkedIeeesProvider
+            .overrideWith((ref, _) => Stream.value(const <String>{})),
+        unassignedDevicesProvider
+            .overrideWith((ref, _) => const AsyncValue.data(<Z2mDevice>[])),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const DevicesScreen(connectionId: 'c1'),
+      ),
+    );
+
 void main() {
+  testWidgets('no devices: says so plainly when the list arrived empty',
+      (tester) async {
+    await tester.pumpWidget(_emptyApp(missing: false));
+    await tester.pumpAndSettle();
+    expect(find.text('No devices found.'), findsOneWidget);
+    expect(find.text('Restart Zigbee2MQTT'), findsNothing);
+  });
+
+  testWidgets('device list never arrived: explains it and offers a restart',
+      (tester) async {
+    await tester.pumpWidget(_emptyApp(missing: true));
+    await tester.pumpAndSettle();
+    expect(find.textContaining("hasn't sent its device list"), findsOneWidget);
+    expect(find.text('Restart Zigbee2MQTT'), findsOneWidget);
+    expect(find.text('No devices found.'), findsNothing);
+  });
+
   testWidgets('attention first, with filter counts; unassigned marked',
       (tester) async {
     await tester.pumpWidget(_app());

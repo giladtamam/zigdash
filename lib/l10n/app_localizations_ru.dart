@@ -1085,6 +1085,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get devicesNone => 'Устройства не найдены.';
 
   @override
+  String get devicesListMissing =>
+      'Zigbee2MQTT не прислал список устройств. Так бывает после перезапуска MQTT-брокера.';
+
+  @override
+  String get devicesRestartZ2m => 'Перезапустить Zigbee2MQTT';
+
+  @override
+  String get devicesRestartingZ2m =>
+      'Zigbee2MQTT перезапускается. Устройства появятся через несколько секунд.';
+
+  @override
   String get devicesBattery => 'Батарея';
 
   @override

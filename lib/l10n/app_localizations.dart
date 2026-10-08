@@ -2066,6 +2066,24 @@ abstract class AppLocalizations {
   /// **'No devices found.'**
   String get devicesNone;
 
+  /// No description provided for @devicesListMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT hasn\'t sent its device list. This can happen after the MQTT broker restarts.'**
+  String get devicesListMissing;
+
+  /// No description provided for @devicesRestartZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Zigbee2MQTT'**
+  String get devicesRestartZ2m;
+
+  /// No description provided for @devicesRestartingZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Restarting Zigbee2MQTT. Your devices should appear in a few seconds.'**
+  String get devicesRestartingZ2m;
+
   /// No description provided for @devicesBattery.
   ///
   /// In en, this message translates to:

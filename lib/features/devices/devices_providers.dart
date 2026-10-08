@@ -262,6 +262,17 @@ final bridgeEventsProvider = StreamProvider.autoDispose
   }
 });
 
+/// Asks Zigbee2MQTT to restart, so it publishes its device list again.
+Future<void> restartZigbee2mqtt(
+  WidgetRef ref,
+  String connectionId,
+  String base,
+) async {
+  final mgr = await ref.read(mqttManagerProvider(connectionId).future);
+  final request = restartRequest(base);
+  mgr.publish(request.topic, request.payload, '');
+}
+
 /// Sets permit-join on or off for the given connection + base topic.
 Future<void> setPermitJoin(
   WidgetRef ref,

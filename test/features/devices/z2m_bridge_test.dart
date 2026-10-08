@@ -38,6 +38,14 @@ void main() {
     });
   });
 
+  group('restartRequest', () {
+    test('targets bridge/request/restart under the base topic', () {
+      final req = restartRequest(base);
+      expect(req.topic, equals('zigbee2mqtt/bridge/request/restart'));
+      expect(jsonDecode(req.payload), isA<Map<String, dynamic>>());
+    });
+  });
+
   group('renameRequest', () {
     test('produces correct topic', () {
       final req = renameRequest(base, 'old_name', 'new_name');

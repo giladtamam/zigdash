@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../discovery/models/z2m_device.dart';
+import '../../discovery/providers/discovery_provider.dart';
 import '../../home/home_shell.dart';
 import '../../panels/screens/add_tile_screen.dart' show showAddDeviceSheet;
 import '../../panels/widgets/device_tile_panel.dart'
@@ -195,7 +196,7 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
           ),
         ),
         data: (rows) {
-          if (rows.isEmpty) return Center(child: Text(l10n.devicesNone));
+          if (rows.isEmpty) return _NoDevices(args: args);
           bool unassigned(DeviceHealth h) =>
               h.device.ieeeAddress != null &&
               !linked.contains(h.device.ieeeAddress);
@@ -410,6 +411,55 @@ String deviceHealthLine(
   final at = health.lastHeard;
   if (!health.stale || at == null) return line;
   return '$line · ${formatValueAge(context, at, DateTime.now())}';
+}
+
+/// The empty list. When Zigbee2MQTT never sent its device list (a broker
+/// restart drops it), says so and offers to restart Zigbee2MQTT instead of
+/// claiming there are no devices.
+class _NoDevices extends ConsumerStatefulWidget {
+  const _NoDevices({required this.args});
+
+  final DiscoveryArgs args;
+
+  @override
+  ConsumerState<_NoDevices> createState() => _NoDevicesState();
+}
+
+class _NoDevicesState extends ConsumerState<_NoDevices> {
+  bool _restarting = false;
+
+  Future<void> _restart() async {
+    setState(() => _restarting = true);
+    await restartZigbee2mqtt(ref, widget.args.connectionId, widget.args.base);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final missing =
+        ref.watch(bridgeDevicesMissingProvider(widget.args)).valueOrNull ??
+            false;
+    if (!missing) return Center(child: Text(l10n.devicesNone));
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.devicesListMissing, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            if (_restarting)
+              Text(l10n.devicesRestartingZ2m, textAlign: TextAlign.center)
+            else
+              FilledButton(
+                onPressed: _restart,
+                child: Text(l10n.devicesRestartZ2m),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _AvailabilityNote extends StatelessWidget {

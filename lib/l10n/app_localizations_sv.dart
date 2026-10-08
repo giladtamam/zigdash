@@ -1079,6 +1079,17 @@ class AppLocalizationsSv extends AppLocalizations {
   String get devicesNone => 'Inga enheter hittades.';
 
   @override
+  String get devicesListMissing =>
+      'Zigbee2MQTT har inte skickat sin enhetslista. Det kan hända när MQTT-brokern har startats om.';
+
+  @override
+  String get devicesRestartZ2m => 'Starta om Zigbee2MQTT';
+
+  @override
+  String get devicesRestartingZ2m =>
+      'Zigbee2MQTT startas om. Dina enheter bör visas om några sekunder.';
+
+  @override
   String get devicesBattery => 'Batteri';
 
   @override

@@ -1074,6 +1074,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get devicesNone => 'No devices found.';
 
   @override
+  String get devicesListMissing =>
+      'Zigbee2MQTT hasn\'t sent its device list. This can happen after the MQTT broker restarts.';
+
+  @override
+  String get devicesRestartZ2m => 'Restart Zigbee2MQTT';
+
+  @override
+  String get devicesRestartingZ2m =>
+      'Restarting Zigbee2MQTT. Your devices should appear in a few seconds.';
+
+  @override
   String get devicesBattery => 'Battery';
 
   @override

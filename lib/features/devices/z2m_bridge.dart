@@ -32,6 +32,11 @@ BridgeRequest permitJoinRequest(
   );
 }
 
+/// Build a request that restarts Zigbee2MQTT. On start it publishes its
+/// retained `bridge/devices` list again, which a broker restart can lose.
+BridgeRequest restartRequest(String base) =>
+    BridgeRequest(topic: '$base/bridge/request/restart', payload: '{}');
+
 /// Build a device rename request.
 BridgeRequest renameRequest(String base, String from, String to) {
   return BridgeRequest(
