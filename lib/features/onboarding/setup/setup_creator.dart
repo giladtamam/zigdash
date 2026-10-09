@@ -38,7 +38,7 @@ abstract class SetupStore {
     String? username,
     String? password,
     String base,
-    String dashboardName,
+    String? dashboardName,
     int dashboardColor,
     int dashboardIcon,
     required List<ReviewRow> selected,
@@ -61,12 +61,12 @@ class SetupCreator implements SetupStore {
     required PanelRepo panels,
     DeviceRegistryDao? registry,
     AppLocalizations? l10n,
-  })  : _connections = connections,
-        _registry = registry,
-        _dashboards = dashboards,
-        _sections = sections,
-        _panels = panels,
-        _l10n = l10n ?? lookupAppLocalizations(const Locale('en'));
+  }) : _connections = connections,
+       _registry = registry,
+       _dashboards = dashboards,
+       _sections = sections,
+       _panels = panels,
+       _l10n = l10n ?? lookupAppLocalizations(const Locale('en'));
 
   final ConnectionRepo _connections;
   final DashboardRepo _dashboards;
@@ -85,7 +85,7 @@ class SetupCreator implements SetupStore {
     String? username,
     String? password,
     String base = 'zigbee2mqtt',
-    String dashboardName = 'Home',
+    String? dashboardName,
     int dashboardColor = defaultDashboardSeed,
     int dashboardIcon = 0xe318, // Icons.home in Flutter's MaterialIcons font
     required List<ReviewRow> selected,
@@ -95,7 +95,6 @@ class SetupCreator implements SetupStore {
     if (done != null) return done;
 
     String? connectionId;
-    String? dashboardId;
     try {
       connectionId = await _connections.create(
         name: await _homeName(),
@@ -111,9 +110,48 @@ class SetupCreator implements SetupStore {
       if (base.trim() != 'zigbee2mqtt') {
         await _connections.setBaseTopic(connectionId, base);
       }
+      return _done = await createDashboard(
+        connectionId: connectionId,
+        base: base,
+        dashboardName: dashboardName,
+        dashboardColor: dashboardColor,
+        dashboardIcon: dashboardIcon,
+        selected: selected,
+        notSelected: notSelected,
+      );
+    } catch (_) {
+      // Roll back; createDashboard already removed its own dashboard. The
+      // delete is best-effort so the original error surfaces.
+      if (connectionId != null) {
+        try {
+          await _connections.delete(connectionId);
+        } catch (_) {}
+      }
+      rethrow;
+    }
+  }
+}
+
+extension SetupDashboard on SetupCreator {
+  /// Builds a home's first dashboard on an existing connection: a dashboard
+  /// named [dashboardName] (the localized "Home" by default) with one tile
+  /// per [selected] device, in sections by device class. Used by setup after
+  /// it saves the connection, and by the manual connect path, which saves
+  /// the connection itself. On failure the dashboard is removed again.
+  Future<SetupResult> createDashboard({
+    required String connectionId,
+    String base = 'zigbee2mqtt',
+    String? dashboardName,
+    int dashboardColor = defaultDashboardSeed,
+    int dashboardIcon = 0xe318, // Icons.home in Flutter's MaterialIcons font
+    required List<ReviewRow> selected,
+    List<ReviewRow> notSelected = const [],
+  }) async {
+    String? dashboardId;
+    try {
       dashboardId = await _dashboards.create(
         connectionId: connectionId,
-        name: dashboardName,
+        name: dashboardName ?? _l10n.dashDefaultName,
         topicPrefix: base,
         colorSeed: dashboardColor,
         iconCodepoint: dashboardIcon,
@@ -128,22 +166,15 @@ class SetupCreator implements SetupStore {
         ]);
         await registry.markDevicesSeen(connectionId);
       }
-      return _done = SetupResult(
+      return SetupResult(
         connectionId: connectionId,
         dashboardId: dashboardId,
         panelCount: count,
       );
     } catch (_) {
-      // Roll back in reverse order; deletes are best-effort so the original
-      // error surfaces, not a cleanup one.
       if (dashboardId != null) {
         try {
           await _dashboards.delete(dashboardId);
-        } catch (_) {}
-      }
-      if (connectionId != null) {
-        try {
-          await _connections.delete(connectionId);
         } catch (_) {}
       }
       rethrow;
@@ -212,48 +243,45 @@ extension on SetupCreator {
     ReviewRow row,
     String? sectionId,
     int sortOrder,
-  ) =>
-      createDeviceTile(
-        _panels,
-        dashboardId: dashboardId,
-        base: base,
-        device: row.device,
-        sectionId: sectionId,
-        sortOrder: sortOrder,
-      );
+  ) => createDeviceTile(
+    _panels,
+    dashboardId: dashboardId,
+    base: base,
+    device: row.device,
+    sectionId: sectionId,
+    sortOrder: sortOrder,
+  );
 
   Future<void> _createSuggested(
     String dashboardId,
     PanelSuggestion s,
     int sortOrder,
-  ) =>
-      _panels.create(
-        dashboardId: dashboardId,
-        name: s.name,
-        type: s.type,
-        // Suffixes under the device's prefix, as the panel form stores
-        // them: PanelTile composes prefix + suffix.
-        topic: s.publishTopicSuffix,
-        subscribeTopic: s.subscribeTopicSuffix,
-        topicPrefixOverride: s.topicPrefixOverride,
-        sortOrder: sortOrder,
-        config: panelConfigFor(s),
-      );
+  ) => _panels.create(
+    dashboardId: dashboardId,
+    name: s.name,
+    type: s.type,
+    // Suffixes under the device's prefix, as the panel form stores
+    // them: PanelTile composes prefix + suffix.
+    topic: s.publishTopicSuffix,
+    subscribeTopic: s.subscribeTopicSuffix,
+    topicPrefixOverride: s.topicPrefixOverride,
+    sortOrder: sortOrder,
+    config: panelConfigFor(s),
+  );
 }
 
 /// Setup's sections, in dashboard order.
 enum _Group { lights, switches, sensors, other, none }
 
 _Group _groupOf(DeviceClass c) => switch (c) {
-      DeviceClass.colorLight || DeviceClass.light => _Group.lights,
-      DeviceClass.switchPlug || DeviceClass.cover => _Group.switches,
-      DeviceClass.leakSmoke ||
-      DeviceClass.contact ||
-      DeviceClass.motion ||
-      DeviceClass.climate =>
-        _Group.sensors,
-      DeviceClass.generic => _Group.other,
-    };
+  DeviceClass.colorLight || DeviceClass.light => _Group.lights,
+  DeviceClass.switchPlug || DeviceClass.cover => _Group.switches,
+  DeviceClass.leakSmoke ||
+  DeviceClass.contact ||
+  DeviceClass.motion ||
+  DeviceClass.climate => _Group.sensors,
+  DeviceClass.generic => _Group.other,
+};
 
 /// Maps a panel suggestion to its type-specific config. Unknown/unsupported
 /// mappings fall back to the panel type's default config.

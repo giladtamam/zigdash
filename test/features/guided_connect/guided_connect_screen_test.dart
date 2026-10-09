@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,8 @@ import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics_provider.dart';
+import 'package:zigdash/features/discovery/models/z2m_device.dart';
+import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
 import 'package:zigdash/features/guided_connect/guided_connect_screen.dart';
 import 'package:zigdash/features/onboarding/first_run.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
@@ -91,6 +95,39 @@ DiagnosticsReport _failedReport() => const DiagnosticsReport(
       connected: false,
       candidatesTried: 1,
     );
+
+/// The two devices behind [_successReport], as Zigbee2MQTT publishes them
+/// on `bridge/devices`, parsed by the app's own parser.
+final _devicesOverride = discoveredDevicesProvider.overrideWith(
+  (ref, args) async => parseBridgeDevices(jsonEncode([
+    for (final (name, ieee) in [('office_light', '0x01'), ('lamp', '0x02')])
+      {
+        'friendly_name': name,
+        'ieee_address': ieee,
+        'type': 'Router',
+        'supported': true,
+        'definition': {
+          'model': 'LED1545G12',
+          'vendor': 'IKEA',
+          'exposes': [
+            {
+              'type': 'light',
+              'features': [
+                {
+                  'type': 'binary',
+                  'name': 'state',
+                  'property': 'state',
+                  'access': 7,
+                  'value_on': 'ON',
+                  'value_off': 'OFF',
+                },
+              ],
+            },
+          ],
+        },
+      },
+  ])),
+);
 
 DiagnosticsReport _successReport({int count = 2}) => DiagnosticsReport(
       steps: [
@@ -245,7 +282,10 @@ void main() {
     addTearDown(db.close);
     final fake = _FakeDiagnostics([_successReport()]);
 
-    await tester.pumpWidget(_wrap(db: db, diagnostics: fake));
+    await tester.pumpWidget(_wrap(
+        db: db,
+        diagnostics: fake,
+        extraOverrides: {'devices': _devicesOverride}));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Test & connect'));
@@ -263,6 +303,42 @@ void main() {
     expect(find.text('STUB_DASHBOARDS'), findsOneWidget);
     // Manual entry also finishes first run with the saved home.
     expect(_firstRun.finished, hasLength(1));
+
+    // …and builds the first dashboard from the devices, as setup does,
+    // instead of opening an empty home.
+    final dashboards = await db.select(db.dashboards).get();
+    expect(dashboards, hasLength(1));
+    final tiles = await db.select(db.panels).get();
+    expect(tiles, hasLength(2));
+    // Unmount here so drift's stream-close timer runs inside the test.
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets('continue still opens the home when devices cannot be read',
+      (tester) async {
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final fake = _FakeDiagnostics([_successReport()]);
+
+    await tester.pumpWidget(_wrap(
+      db: db,
+      diagnostics: fake,
+      extraOverrides: {
+        'devices': discoveredDevicesProvider
+            .overrideWith((ref, args) async => throw StateError('offline')),
+      },
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Test & connect'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue to dashboard'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('STUB_DASHBOARDS'), findsOneWidget);
+    expect(await db.select(db.dashboards).get(), isEmpty);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
   });
 
   testWidgets('zero devices flags the state and offers pairing',

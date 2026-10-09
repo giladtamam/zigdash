@@ -76,7 +76,7 @@ class _FakeStore implements SetupStore {
     String? username,
     String? password,
     String base = 'zigbee2mqtt',
-    String dashboardName = 'Home',
+    String? dashboardName,
     int dashboardColor = 0,
     int dashboardIcon = 0,
     required List<ReviewRow> selected,
