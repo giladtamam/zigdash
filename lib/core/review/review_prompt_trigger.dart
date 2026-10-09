@@ -1,19 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../mqtt/mqtt_status.dart';
-import '../../mqtt/providers/mqtt_manager_provider.dart';
+import 'command_confirmations.dart';
 import 'review_prompt_controller.dart';
 
 /// Invisible widget that reports a successful session to
-/// [ReviewPromptController] whenever [connectionId] is connected while it is
-/// mounted. Mount it only where a dashboard is actually on screen, so
-/// "connected + dashboards exist" is guaranteed by placement.
+/// [ReviewPromptController] when a command sent on [connectionId] is
+/// confirmed by the device's state update, while a dashboard is on screen.
+/// Being connected alone does not count.
 ///
-/// Uses `listenManual` from `initState` (like [AppLifecycleReconnector]) so
-/// the subscription is created once, not on every rebuild, and
-/// `fireImmediately` covers the case where the connection is already up when
-/// the screen opens.
+/// Uses `listenManual` from `initState` so the subscription is created once,
+/// not on every rebuild.
 class ReviewPromptTrigger extends ConsumerStatefulWidget {
   const ReviewPromptTrigger({super.key, required this.connectionId});
 
@@ -29,13 +26,14 @@ class _ReviewPromptTriggerState extends ConsumerState<ReviewPromptTrigger> {
   void initState() {
     super.initState();
     ref.listenManual(
-      connectionStatusProvider(widget.connectionId),
+      commandConfirmedProvider(widget.connectionId),
       (_, next) {
-        if (next.valueOrNull == MqttStatus.connected) {
+        // Only a fresh confirmation; not a loading or error state that
+        // still carries an earlier value.
+        if (next is AsyncData<DateTime>) {
           ref.read(reviewPromptControllerProvider).recordSuccessfulSession();
         }
       },
-      fireImmediately: true,
     );
   }
 

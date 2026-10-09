@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
+import 'package:typed_data/typed_data.dart' as typed;
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/endpoint.dart';
@@ -77,8 +78,16 @@ class _FakeClient extends mc.MqttClient {
   @override
   mc.Subscription? subscribe(String topic, mc.MqttQos qosLevel) => null;
 
+  final unsubscribed = <String>[];
+
+  /// Protocol version in effect while unsubscribe ran (decides the header).
+  final unsubscribeProtocol = <int>[];
+
   @override
-  void unsubscribe(String topic, {expectAcknowledge = false}) {}
+  void unsubscribe(String topic, {expectAcknowledge = false}) {
+    unsubscribed.add(topic);
+    unsubscribeProtocol.add(mc.Protocol.version);
+  }
 }
 
 void main() {
@@ -440,5 +449,127 @@ void main() {
       manager.dispose();
       async.flushMicrotasks();
     });
+  });
+
+  MqttManager connectedManager(void Function(_FakeClient) onClient) =>
+      MqttManager(
+        config: const BrokerConfig(
+          id: 'conn-1',
+          host: localHost,
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+        ),
+        password: '',
+        clientFactory: (config, clientId, {host}) {
+          final c = _FakeClient(host ?? config.host, _Behavior.succeed);
+          onClient(c);
+          return c;
+        },
+      );
+
+  // Regression: mqtt_client sends UNSUBSCRIBE without the QoS 1 flag in MQTT
+  // 3.1 mode and Mosquitto 2 drops the connection for it. The UNSUBSCRIBE
+  // also waits out the release grace period (aedes race).
+  test('last release sends UNSUBSCRIBE after the grace, in 3.1.1 framing', () {
+    fakeAsync((async) {
+      late _FakeClient client;
+      final manager = connectedManager((c) => client = c);
+      manager.connect();
+      async.flushMicrotasks();
+      final before = mc.Protocol.version;
+
+      final sub = manager.subscribe('zigbee2mqtt/lamp').listen((_) {});
+      manager.subscribe('zigbee2mqtt/lamp').listen((_) {});
+      manager.unsubscribe('zigbee2mqtt/lamp');
+      sub.cancel();
+      manager.unsubscribe('zigbee2mqtt/lamp');
+
+      async.elapse(MqttManager.releaseGrace - const Duration(milliseconds: 1));
+      expect(client.unsubscribed, isEmpty, reason: 'still in the grace period');
+
+      async.elapse(const Duration(milliseconds: 2));
+      expect(client.unsubscribed, ['zigbee2mqtt/lamp']);
+      expect(client.unsubscribeProtocol,
+          [mc.MqttClientConstants.mqttV311ProtocolVersion]);
+      expect(mc.Protocol.version, before);
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a watcher returning within the grace reuses the subscription', () {
+    fakeAsync((async) {
+      late _FakeClient client;
+      final manager = connectedManager((c) => client = c);
+      manager.connect();
+      async.flushMicrotasks();
+
+      final first = <String>[];
+      final sub =
+          manager.subscribe('zigbee2mqtt/lamp').listen((m) => first.add(m.payload));
+      client.emit('zigbee2mqtt/lamp', 'ON');
+      async.flushMicrotasks();
+      sub.cancel();
+      manager.unsubscribe('zigbee2mqtt/lamp');
+
+      async.elapse(const Duration(seconds: 1));
+      final again = <String>[];
+      manager.subscribe('zigbee2mqtt/lamp').listen((m) => again.add(m.payload));
+      async.flushMicrotasks();
+      expect(again, ['ON'], reason: 'last value replayed');
+
+      async.elapse(const Duration(seconds: 10));
+      expect(client.unsubscribed, isEmpty);
+      client.emit('zigbee2mqtt/lamp', 'OFF');
+      async.flushMicrotasks();
+      expect(again, ['ON', 'OFF']);
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  // Regression (found on the SMHUB, 1.13 device check): a tile off screen
+  // past the grace (another tab open) came back with no value, and since
+  // devices are asked for state once per connection it then read
+  // "Not responding".
+  test('a watcher returning after the grace gets this session\'s value', () {
+    fakeAsync((async) {
+      late _FakeClient client;
+      final manager = connectedManager((c) => client = c);
+      manager.connect();
+      async.flushMicrotasks();
+
+      final sub = manager.subscribe('zigbee2mqtt/cover').listen((_) {});
+      client.emit('zigbee2mqtt/cover', '{"position":37}');
+      async.flushMicrotasks();
+      sub.cancel();
+      manager.unsubscribe('zigbee2mqtt/cover');
+      async.elapse(MqttManager.releaseGrace + const Duration(seconds: 1));
+      expect(client.unsubscribed, ['zigbee2mqtt/cover']);
+
+      final again = <String>[];
+      manager
+          .subscribe('zigbee2mqtt/cover')
+          .listen((m) => again.add(m.payload));
+      async.flushMicrotasks();
+      expect(again, ['{"position":37}']);
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('UNSUBSCRIBE bytes carry the QoS 1 flag (0xA2)', () {
+    final msg = mc.MqttUnsubscribeMessage()
+        .withMessageIdentifier(1)
+        .fromTopic('zigbee2mqtt/lamp');
+    final saved = mc.Protocol.version;
+    mc.Protocol.version = mc.MqttClientConstants.mqttV311ProtocolVersion;
+    final buf = mc.MqttByteBuffer(typed.Uint8Buffer());
+    try {
+      msg.writeTo(buf);
+    } finally {
+      mc.Protocol.version = saved;
+    }
+    expect(buf.buffer![0], 0xA2);
   });
 }

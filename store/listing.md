@@ -58,7 +58,7 @@ POLISHED — PHONE & TABLET
 ━━━━━━━━━━━━━━━━━━━━━━
 
 100% PRIVATE. NO CLOUD.
-• No ads. No analytics. No account. No developer server.
+• No ads. No account. Anonymous usage data only if you opt in.
 • Your data lives on your device and your MQTT broker — nowhere else.
 • Open source (MIT). The code is public and auditable.
 
@@ -101,6 +101,5 @@ material you, material 3, hebrew, עברית
 giladtamam1@gmail.com
 
 ## Privacy policy URL
-Host store/PRIVACY.md publicly and use that URL, e.g. via GitHub Pages:
-https://giladtamam.github.io/zigdash/PRIVACY  (after enabling Pages)
-or the file URL: https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md
+https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md (the app and Play Console link here from 2.0.1).
+2.0.0 (build 29) still links https://gitlab.com/tamamg/zigdash/-/blob/main/store/PRIVACY.md, so keep that copy in sync until 2.0.1 is out.

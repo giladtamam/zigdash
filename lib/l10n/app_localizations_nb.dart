@@ -18,36 +18,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get appTitle => 'ZigDash';
 
   @override
-  String get onboardingWelcomeTitle => 'Velkommen til ZigDash';
-
-  @override
-  String get onboardingWelcomeSubtitle =>
-      'Det private, lokale dashbordet ditt for Zigbee2MQTT.\nIngen sky. Ingen sporing. Bare kontroll.';
-
-  @override
-  String get onboardingBrokerTitle => 'Koble til brokeren din';
-
-  @override
-  String get onboardingBrokerSubtitle =>
-      'Pek ZigDash mot MQTT-brokeren din for å snakke direkte med Zigbee-enhetene dine. Fungerer med Mosquitto, SMLIGHT og alle MQTT-servere.';
-
-  @override
-  String get onboardingDashboardTitle => 'Bygg dashbordene dine';
-
-  @override
-  String get onboardingDashboardSubtitle =>
-      'Lag egne dashbord med brytere, glidebrytere, persienner og mer. Ordne paneler slik du vil – alt lagres lokalt på enheten din.';
-
-  @override
-  String get onboardingSkip => 'Hopp over';
-
-  @override
-  String get onboardingNext => 'Neste';
-
-  @override
-  String get onboardingGetStarted => 'Kom i gang';
-
-  @override
   String get onboardingDemo => 'Prøv demo';
 
   @override
@@ -91,7 +61,7 @@ class AppLocalizationsNb extends AppLocalizations {
   String get languageHebrew => 'עברית';
 
   @override
-  String get connectionsTitle => 'Tilkoblinger';
+  String get connectionsTitle => 'Hjem';
 
   @override
   String connLoadFailed(Object error) {
@@ -540,6 +510,12 @@ class AppLocalizationsNb extends AppLocalizations {
   String get panelTypeAutoClose => 'Auto-lukk';
 
   @override
+  String get panelTypeDevice => 'Enhet';
+
+  @override
+  String get panelTypeReading => 'Måling';
+
+  @override
   String get panelFormName => 'Navn';
 
   @override
@@ -582,16 +558,16 @@ class AppLocalizationsNb extends AppLocalizations {
       'Tomt = abonner på selve prefikset (Z2M-status). Samme som Publiseringsemne = bruk det.';
 
   @override
-  String get panelFormWidth => 'Bredde';
+  String get tileSize => 'Størrelse';
 
   @override
-  String get panelFormWidthFull => 'Full';
+  String get tileSizeSmall => 'Liten';
 
   @override
-  String get panelFormWidthHalf => 'Halv';
+  String get tileSizeWide => 'Bred';
 
   @override
-  String get panelFormWidthThird => 'Tredjedel';
+  String get tileSizeFull => 'Full';
 
   @override
   String get panelFormQos => 'QoS';
@@ -859,18 +835,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get panelTileMoveDown => 'Flytt ned';
 
   @override
-  String get panelTileWidth => 'Bredde';
-
-  @override
-  String get panelTileWidthFull => 'Full';
-
-  @override
-  String get panelTileWidthHalf => 'Halv';
-
-  @override
-  String get panelTileWidthThird => '⅓';
-
-  @override
   String get panelTileDelete => 'Slett panel';
 
   @override
@@ -963,7 +927,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'Ingen paneler ennå.\nTrykk på + for å legge til en Bryter, Glidebryter eller Knapp.';
+      'Ingen fliser ennå.\nTrykk på Legg til flis for å legge enhetene dine her.';
 
   @override
   String get panelsOffline => 'Offline – viser siste verdier';
@@ -1003,6 +967,47 @@ class AppLocalizationsNb extends AppLocalizations {
       'Liker du den? En rask anmeldelse hjelper andre med å finne appen.';
 
   @override
+  String get settingsFeatureRequest => 'Foreslå en funksjon';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Fortell meg hva som ville gjort ZigDash bedre.';
+
+  @override
+  String get featureRequestGithub => 'På GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Offentlig: andre kan se det og stemme.';
+
+  @override
+  String get featureRequestEmail => 'På e-post';
+
+  @override
+  String get featureRequestEmailSubtitle => 'Privat, rett til utvikleren.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash: funksjonsønske';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'Hva vil du at ZigDash skal kunne, og hvorfor?';
+
+  @override
+  String get settingsReportProblem => 'Rapporter et problem';
+
+  @override
+  String get settingsReportProblemSubtitle =>
+      'Er noe ødelagt eller forvirrende? Si fra.';
+
+  @override
+  String get reportProblemEmailSubject => 'ZigDash: problemrapport';
+
+  @override
+  String get reportProblemEmailPrompt =>
+      'Hva skjedde, og hva forventet du? Enhetsmodell og Zigbee2MQTT-versjon hjelper.';
+
+  @override
   String get settingsBuyCoffee => 'Kjøp meg en kaffe';
 
   @override
@@ -1026,6 +1031,9 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get a11yMoreOptions => 'Flere alternativer';
+
+  @override
+  String get a11yRefresh => 'Oppdater';
 
   @override
   String get a11yDeleteConnection => 'Slett tilkobling';
@@ -1111,6 +1119,17 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get devicesNone => 'Fant ingen enheter.';
+
+  @override
+  String get devicesListMissing =>
+      'Zigbee2MQTT har ikke sendt enhetslisten sin. Det kan skje etter at MQTT-brokeren er startet på nytt.';
+
+  @override
+  String get devicesRestartZ2m => 'Start Zigbee2MQTT på nytt';
+
+  @override
+  String get devicesRestartingZ2m =>
+      'Zigbee2MQTT startes på nytt. Enhetene dine bør dukke opp om noen sekunder.';
 
   @override
   String get devicesBattery => 'Batteri';
@@ -1356,9 +1375,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get guidedSaveFailed => 'Kunne ikke lagre tilkoblingen. Prøv igjen.';
 
   @override
-  String get onboardingConnectBroker => 'Koble til min broker';
-
-  @override
   String get setupWelcomeTitle => 'Velkommen til ZigDash';
 
   @override
@@ -1397,7 +1413,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupGuideSmlight =>
-      'SMLIGHT / SMHUB: åpne enhetens webgrensesnitt, aktiver MQTT-brokeren og sjekk at Zigbee2MQTT vises som tilkoblet.';
+      'SMLIGHT / SMHUB: åpne webgrensesnittet, gå til Settings > MQTT, slå på Allow External slik at telefonen når brokeren, og sjekk at Zigbee2MQTT kjører.';
 
   @override
   String get setupTryAgain => 'Prøv igjen';
@@ -1538,4 +1554,537 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupErrUnknownAction => 'Prøv igjen';
+
+  @override
+  String get setupNoZ2mTitle =>
+      'Brokeren din fungerer, men Zigbee2MQTT publiserer ikke her';
+
+  @override
+  String setupNoZ2mBody(String base) {
+    return 'Vi lyttet på $base/bridge og hørte ingenting.';
+  }
+
+  @override
+  String get setupBaseTopicQuestion => 'Bruker du et annet basistema?';
+
+  @override
+  String get setupGuidesTitle => 'Sett opp Zigbee2MQTT';
+
+  @override
+  String get setupTryDemoMeanwhile => 'Prøv demoen i mellomtiden';
+
+  @override
+  String get demoBannerText => 'Du er i demomodus';
+
+  @override
+  String get demoBannerAction => 'Koble til hjemmet ditt';
+
+  @override
+  String get deviceOn => 'På';
+
+  @override
+  String get deviceOff => 'Av';
+
+  @override
+  String get deviceOpen => 'Åpen';
+
+  @override
+  String get deviceClosed => 'Lukket';
+
+  @override
+  String get deviceMotion => 'Bevegelse';
+
+  @override
+  String get deviceClear => 'Rolig';
+
+  @override
+  String get deviceLeakDetected => 'Lekkasje oppdaget';
+
+  @override
+  String get deviceSmokeDetected => 'Røyk oppdaget';
+
+  @override
+  String get deviceGasDetected => 'Gass oppdaget';
+
+  @override
+  String get deviceWaiting => 'Venter på første rapport';
+
+  @override
+  String deviceEndpointsOnOff(int on, int off) {
+    return '$on på · $off av';
+  }
+
+  @override
+  String get deviceBrightness => 'Lysstyrke';
+
+  @override
+  String get deviceWhite => 'Hvit';
+
+  @override
+  String get deviceColor => 'Farge';
+
+  @override
+  String get deviceHue => 'Nyanse';
+
+  @override
+  String get devicePosition => 'Posisjon';
+
+  @override
+  String get deviceControls => 'Kontroller';
+
+  @override
+  String deviceBattery(int percent) {
+    return 'Batteri $percent %';
+  }
+
+  @override
+  String get deviceToggle => 'Slå på eller av';
+
+  @override
+  String get deviceMore => 'Mer';
+
+  @override
+  String get sectionLights => 'Lys';
+
+  @override
+  String get sectionSwitchesCovers => 'Brytere og persienner';
+
+  @override
+  String get sectionSensors => 'Sensorer';
+
+  @override
+  String get sectionOther => 'Annet';
+
+  @override
+  String get homeFirstName => 'Mitt hjem';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'Hjem $number';
+  }
+
+  @override
+  String get dashAddTile => 'Legg til flis';
+
+  @override
+  String get addTileSearch => 'Søk etter enheter';
+
+  @override
+  String get addTileNotOnDashboard => 'Ikke på noe dashbord';
+
+  @override
+  String get addTileAllDevices => 'Alle enheter';
+
+  @override
+  String get addTileReading => 'Måling';
+
+  @override
+  String get addTileReadingSubtitle => 'Én verdi fra en enhet eller et topic';
+
+  @override
+  String get addTileCustom => 'Egendefinert MQTT-flis';
+
+  @override
+  String get addTileCustomSubtitle =>
+      'Hvilken som helst flistype, satt opp med topic';
+
+  @override
+  String get addTileNoDevices =>
+      'Ingen enheter å vise. Koble til brokeren, eller par en enhet i Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Legg til';
+
+  @override
+  String get addTileName => 'Navn';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'f.eks. $model';
+  }
+
+  @override
+  String get addTileSection => 'Seksjon';
+
+  @override
+  String get addTileNoSection => 'Ingen seksjon';
+
+  @override
+  String get addTileSize => 'Størrelse';
+
+  @override
+  String get deviceClassColorLight => 'Fargelys';
+
+  @override
+  String get deviceClassLight => 'Lys';
+
+  @override
+  String get deviceClassSwitch => 'Bryter eller plugg';
+
+  @override
+  String get deviceClassCover => 'Persienne';
+
+  @override
+  String get deviceClassLeak => 'Lekkasje eller røyk';
+
+  @override
+  String get deviceClassContact => 'Kontakt';
+
+  @override
+  String get deviceClassMotion => 'Bevegelse';
+
+  @override
+  String get deviceClassClimate => 'Klimasensor';
+
+  @override
+  String get deviceClassGeneric => 'Enhet';
+
+  @override
+  String get deviceNotResponding => 'Svarer ikke';
+
+  @override
+  String get homeAdd => 'Legg til et hjem';
+
+  @override
+  String get homeManage => 'Administrer hjem';
+
+  @override
+  String get homeSwitch => 'Bytt hjem';
+
+  @override
+  String get navDevices => 'Enheter';
+
+  @override
+  String get navScenes => 'Scener';
+
+  @override
+  String get devicesNewDot => 'Nye enheter';
+
+  @override
+  String get editEditing => 'Redigerer';
+
+  @override
+  String get editDashboard => 'Dashbord';
+
+  @override
+  String get editDone => 'Ferdig';
+
+  @override
+  String get editAddSection => 'Legg til seksjon';
+
+  @override
+  String get editSectionName => 'Navn på seksjon';
+
+  @override
+  String get editRenameSection => 'Gi nytt navn';
+
+  @override
+  String get editDeleteSection => 'Slett seksjon';
+
+  @override
+  String get editDeleteSectionBody => 'Hva skal skje med flisene?';
+
+  @override
+  String get editKeepTiles => 'Behold flisene, fjern seksjonen';
+
+  @override
+  String get editDeleteTiles => 'Slett flisene også';
+
+  @override
+  String get editMoveToSection => 'Flytt til seksjon';
+
+  @override
+  String get editEditTile => 'Rediger flis';
+
+  @override
+  String get editRemove => 'Fjern fra dashbordet';
+
+  @override
+  String get editRemoved => 'Flis fjernet';
+
+  @override
+  String get editUndo => 'Angre';
+
+  @override
+  String get editReplaceWithDevice => 'Erstatt med enhetsflis';
+
+  @override
+  String get editMoveEarlier => 'Flytt fremover';
+
+  @override
+  String get editMoveLater => 'Flytt bakover';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter er ikke på noe dashbord',
+      one: '1 enhet er ikke på noe dashbord',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Flisvalg';
+
+  @override
+  String get editSave => 'Lagre';
+
+  @override
+  String get editCancel => 'Avbryt';
+
+  @override
+  String get ageJustNow => 'Akkurat nå';
+
+  @override
+  String ageMinutes(int n) {
+    return 'for $n min siden';
+  }
+
+  @override
+  String ageHours(int n) {
+    return 'for $n t siden';
+  }
+
+  @override
+  String get statusCantReach => 'Får ikke kontakt med brokeren';
+
+  @override
+  String get statusWhy => 'Hvorfor?';
+
+  @override
+  String get statusWhyTitle => 'Brokeren svarer ikke';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash prøver igjen selv. Til da viser flisene sine siste kjente verdier, dempet og med alder. Sjekk at brokeren er på og at telefonen er på samme nett, eller test tilkoblingen i innstillingene.';
+
+  @override
+  String get statusSettings => 'Tilkoblingsinnstillinger';
+
+  @override
+  String get deviceAddToDashboard => 'Legg til på et dashbord';
+
+  @override
+  String get deviceDismiss => 'Avvis';
+
+  @override
+  String get devicesFilterAll => 'Alle';
+
+  @override
+  String devicesFilterAttention(int count) {
+    return 'Trenger tilsyn · $count';
+  }
+
+  @override
+  String devicesFilterUnassigned(int count) {
+    return 'Ikke på noe dashbord · $count';
+  }
+
+  @override
+  String get devicesNoMatch => 'Ingen enheter samsvarer';
+
+  @override
+  String get deviceBatteryLow => 'Lavt batteri';
+
+  @override
+  String get deviceLinkWeak => 'Svak';
+
+  @override
+  String get deviceUnsupported => 'Støttes ikke av Zigbee2MQTT';
+
+  @override
+  String get deviceInterviewFailed => 'Paringen ble ikke fullført';
+
+  @override
+  String get deviceNoReport => 'Ingen rapport ennå';
+
+  @override
+  String get devicesAvailabilityOff =>
+      'Tilgjengelighet er av i Zigbee2MQTT, så frakoblede enheter vises som Svarer ikke.';
+
+  @override
+  String get devicesAvailabilityHow => 'Slik slår du den på';
+
+  @override
+  String get devicesDotBattery => 'Lavt batteri';
+
+  @override
+  String get deviceDetails => 'Enhetsdetaljer';
+
+  @override
+  String get deviceGone => 'Denne enheten finnes ikke lenger i Zigbee2MQTT.';
+
+  @override
+  String get deviceControlTitle => 'Styring';
+
+  @override
+  String get deviceReadingsTitle => 'Målinger';
+
+  @override
+  String get deviceHealthTitle => 'Helse';
+
+  @override
+  String get deviceOnDashboards => 'På dashbord';
+
+  @override
+  String get deviceUnsupportedBody =>
+      'Zigbee2MQTT støtter ikke denne enheten ennå, så det er ingenting å styre.';
+
+  @override
+  String get deviceAddReadingTile => 'Legg til som målingsflis';
+
+  @override
+  String get deviceAddReadingTo => 'Legge til på hvilket dashbord?';
+
+  @override
+  String deviceAddedTo(Object dashboard) {
+    return 'Lagt til på $dashboard';
+  }
+
+  @override
+  String get deviceLinkQuality => 'Koblingskvalitet';
+
+  @override
+  String get deviceLinkGood => 'God';
+
+  @override
+  String get devicePowerSource => 'Strømkilde';
+
+  @override
+  String get devicePowerBattery => 'Batteri';
+
+  @override
+  String get devicePowerMains => 'Strømnett';
+
+  @override
+  String get deviceLastHeard => 'Sist hørt';
+
+  @override
+  String get deviceAvailability => 'Tilgjengelighet';
+
+  @override
+  String get deviceAvailabilityOff => 'Av i Zigbee2MQTT';
+
+  @override
+  String get settingsPrivacy => 'Personvernerklæring';
+
+  @override
+  String get settingsPrivacySubtitle =>
+      'Ingen telemetri. Alt blir på denne telefonen.';
+
+  @override
+  String get homeCurrent => 'Nåværende hjem';
+
+  @override
+  String get homeConnection => 'Tilkobling';
+
+  @override
+  String get homeSwitchTo => 'Bytt til dette hjemmet';
+
+  @override
+  String get homeDelete => 'Slett hjem';
+
+  @override
+  String get devicesSelect => 'Velg en enhet';
+
+  @override
+  String get scenesSelect => 'Velg en scene å redigere';
+
+  @override
+  String get panelFormTopic => 'Topic';
+
+  @override
+  String get panelFormPickDevice => 'Velg en enhet';
+
+  @override
+  String get panelFormStateTopic => 'Status-topic';
+
+  @override
+  String get panelFormCommandTopic => 'Kommando-topic';
+
+  @override
+  String get panelFormCommandTopicDerived =>
+      'Fylles ut fra status-topicet til du endrer det.';
+
+  @override
+  String panelFormLinkedTo(Object device) {
+    return 'Koblet til $device';
+  }
+
+  @override
+  String get panelFormOpenDevice => 'Åpne enhet';
+
+  @override
+  String get panelFormUnlink => 'Koble fra';
+
+  @override
+  String get panelFormValueChoices => 'Verdier fra denne enheten';
+
+  @override
+  String get panelFormAdvanced => 'Avansert';
+
+  @override
+  String get panelFormAdvancedSubtitle => 'Prefiksoverstyring, QoS, retain';
+
+  @override
+  String get panelFormStateTopicHelper =>
+      'Tomt = selve prefikset (status for en Zigbee2MQTT-enhet).';
+
+  @override
+  String get dashWallDisplay => 'Veggskjerm';
+
+  @override
+  String get dashWallDisplayOn =>
+      'Veggvisning på: skjermen holdes på, og feltene skjules etter 10 sekunder uten berøring. Trykk for å hente dem tilbake.';
+
+  @override
+  String get dashWallDisplayOff => 'Veggvisning av.';
+
+  @override
+  String get analyticsSetupCheckbox =>
+      'Del anonyme bruksdata for å forbedre oppsettet';
+
+  @override
+  String get analyticsWhatsShared => 'Hva som deles';
+
+  @override
+  String get analyticsCardTitle => 'Hjelpe til å forbedre ZigDash?';
+
+  @override
+  String get analyticsCardBody =>
+      'Del anonyme bruksdata: hvilke oppsettsteg som mislykkes og hvilke funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.';
+
+  @override
+  String get analyticsShare => 'Del';
+
+  @override
+  String get analyticsNoThanks => 'Nei takk';
+
+  @override
+  String get settingsAnalytics => 'Del anonyme bruksdata';
+
+  @override
+  String get settingsAnalyticsSubtitle =>
+      'Oppsettsteg og funksjoner som brukes. Aldri enhetene, topicene eller brokeren din.';
+
+  @override
+  String get settingsPrivacySubtitleOptIn =>
+      'Anonyme bruksdata bare hvis du velger det.';
+
+  @override
+  String get dashDefaultName => 'Hjem';
+
+  @override
+  String get dashExportSaveFile => 'Lagre fil';
+
+  @override
+  String get dashExportSaved => 'Sikkerhetskopien er lagret';
+
+  @override
+  String get dashImportChooseFile => 'Velg fil';
+
+  @override
+  String get dashImportFileUnreadable => 'Kunne ikke lese filen';
 }

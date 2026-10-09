@@ -1,0 +1,1 @@
+Para o seu Zigbee2MQTT (obrigatório): um painel que se monta sozinho. Sem nuvem.

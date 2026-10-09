@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -10,13 +11,24 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../panels/models/panel_config.dart';
 import '../models/scene.dart';
 import '../scenes_providers.dart';
+import '../../home/home_shell.dart';
 
 /// Lists a connection's scenes. Tap a scene to activate it (publishes every
 /// saved device action); the FAB creates a new one by capturing device state.
 class ScenesScreen extends ConsumerWidget {
-  const ScenesScreen({super.key, required this.connectionId});
+  const ScenesScreen({
+    super.key,
+    required this.connectionId,
+    this.onEdit,
+    this.selectedId,
+  });
 
   final String connectionId;
+
+  /// Opens a scene's editor in the detail pane (list-detail) instead of
+  /// pushing it; null for a new scene.
+  final ValueChanged<String?>? onEdit;
+  final String? selectedId;
 
   Future<void> _activate(
     BuildContext context,
@@ -87,7 +99,7 @@ class ScenesScreen extends ConsumerWidget {
             for (final d in dashboards)
               ListTile(
                 leading: Icon(
-                  IconData(d.iconCodepoint, fontFamily: 'MaterialIcons'),
+                  materialIcon(d.iconCodepoint),
                 ),
                 title: Text(d.name),
                 onTap: () => Navigator.pop(sheetCtx, d),
@@ -102,7 +114,7 @@ class ScenesScreen extends ConsumerWidget {
           name: scene.name,
           type: PanelType.scene,
           topic: '',
-          width: PanelWidth.half,
+          width: PanelWidth.small,
           config: SceneConfig(sceneId: scene.id),
         );
     messenger.showSnackBar(
@@ -115,7 +127,10 @@ class ScenesScreen extends ConsumerWidget {
     final scenesAsync = ref.watch(scenesForConnectionProvider(connectionId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.scenesTitle)),
+      appBar: AppBar(
+        title: HomeTitle(connectionId: connectionId),
+        actions: const [SettingsAction()],
+      ),
       body: scenesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(e.toString())),
@@ -138,18 +153,24 @@ class ScenesScreen extends ConsumerWidget {
                   backgroundColor: Color(scene.colorSeed),
                   foregroundColor: Colors.white,
                   child: Icon(
-                    IconData(scene.iconCodepoint, fontFamily: 'MaterialIcons'),
+                    materialIcon(scene.iconCodepoint),
                   ),
                 ),
+                selected: scene.id == selectedId,
                 title: Text(scene.name),
                 subtitle: Text(l10n.sceneActionsCount(count)),
                 onTap: () => _activate(context, ref, scene),
                 trailing: PopupMenuButton<String>(
                   onSelected: (v) {
                     if (v == 'edit') {
-                      context.push(
-                        '/connections/$connectionId/scenes/${scene.id}/edit',
-                      );
+                      final edit = onEdit;
+                      if (edit != null) {
+                        edit(scene.id);
+                      } else {
+                        context.push(
+                          '/connections/$connectionId/scenes/${scene.id}/edit',
+                        );
+                      }
                     } else if (v == 'delete') {
                       _confirmDelete(context, ref, scene);
                     } else if (v == 'dashboard') {
@@ -171,7 +192,9 @@ class ScenesScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/connections/$connectionId/scenes/new'),
+        onPressed: () => onEdit != null
+            ? onEdit!(null)
+            : context.push('/connections/$connectionId/scenes/new'),
         icon: const Icon(Icons.add),
         label: Text(l10n.scenesNewButton),
       ),

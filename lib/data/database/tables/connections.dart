@@ -13,6 +13,16 @@ class Connections extends Table {
   BoolColumn get autoConnect => boolean().withDefault(const Constant(false))();
   TextColumn get homeDashboardId => text().nullable()();
   TextColumn get remoteHost => text().nullable()();
+
+  /// When the home's existing devices were recorded as seen (first connect
+  /// after 1.12 setup or upgrade). Null until then; only devices paired
+  /// later count as new.
+  DateTimeColumn get devicesSeenAt => dateTime().nullable()();
+
+  /// The Zigbee2MQTT base topic set for this home (Settings › home, or the
+  /// setup retry). Null keeps the pre-1.13 derivation from a dashboard's
+  /// topic prefix; see `homeBaseTopic`.
+  TextColumn get z2mBaseTopic => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 

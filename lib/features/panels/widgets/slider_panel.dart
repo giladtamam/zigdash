@@ -52,22 +52,31 @@ class _SliderPanelState extends ConsumerState<SliderPanel> {
   }
 
   Future<void> _publish(double v) async {
-    await runControlAction(context, ref, widget.connectionId, (mgr) => mgr.publish(
-      widget.publishTopic,
-      widget.config.valueTemplate,
-      v.round(),
-      qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
-      retain: widget.panel.retain,
-    ));
+    await runControlAction(
+      context,
+      ref,
+      widget.connectionId,
+      (mgr) => mgr.publish(
+        widget.publishTopic,
+        widget.config.valueTemplate,
+        v.round(),
+        qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
+        retain: widget.panel.retain,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final valueAsync = ref.watch(panelValueProvider(PanelStreamKey(
-      connectionId: widget.connectionId,
-      topic: widget.subscribeTopic,
-      jsonPath: widget.config.jsonPath,
-    )));
+    final valueAsync = ref.watch(
+      panelValueProvider(
+        PanelStreamKey(
+          connectionId: widget.connectionId,
+          topic: widget.subscribeTopic,
+          jsonPath: widget.config.jsonPath,
+        ),
+      ),
+    );
 
     final receivedValue = valueAsync.maybeWhen(
       data: (v) {
@@ -78,10 +87,10 @@ class _SliderPanelState extends ConsumerState<SliderPanel> {
       orElse: () => null,
     );
 
-    final liveValue = _draggingValue ??
-        receivedValue ??
-        widget.config.min;
-    final clamped = liveValue.clamp(widget.config.min, widget.config.max).toDouble();
+    final liveValue = _draggingValue ?? receivedValue ?? widget.config.min;
+    final clamped = liveValue
+        .clamp(widget.config.min, widget.config.max)
+        .toDouble();
 
     return Card(
       child: Padding(
@@ -93,10 +102,12 @@ class _SliderPanelState extends ConsumerState<SliderPanel> {
             Row(
               children: [
                 Expanded(
-                  child: Text(widget.panel.name,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    widget.panel.name,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Text(
                   clamped.round().toString(),
@@ -104,15 +115,26 @@ class _SliderPanelState extends ConsumerState<SliderPanel> {
                 ),
               ],
             ),
-            Slider(
-              value: clamped,
-              min: widget.config.min,
-              max: widget.config.max,
-              divisions: widget.config.step > 0
-                  ? ((widget.config.max - widget.config.min) / widget.config.step).round()
-                  : null,
-              onChanged: _onChanged,
-              onChangeEnd: _onChangeEnd,
+            // Merged so the slider node itself carries the panel name.
+            MergeSemantics(
+              child: Semantics(
+                label: widget.panel.name,
+                child: Slider(
+                  // Announce the panel's own number (e.g. brightness 180), not the
+                  // default percentage of the track.
+                  semanticFormatterCallback: (v) => v.round().toString(),
+                  value: clamped,
+                  min: widget.config.min,
+                  max: widget.config.max,
+                  divisions: widget.config.step > 0
+                      ? ((widget.config.max - widget.config.min) /
+                                widget.config.step)
+                            .round()
+                      : null,
+                  onChanged: _onChanged,
+                  onChangeEnd: _onChangeEnd,
+                ),
+              ),
             ),
           ],
         ),

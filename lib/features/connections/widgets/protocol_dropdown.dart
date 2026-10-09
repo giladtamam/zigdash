@@ -26,7 +26,10 @@ class ProtocolDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<MqttProtocol>(
-      value: value,
+      // initialValue is read once; the key rebuilds the field when the parent
+      // changes the protocol (e.g. discovery fills the form).
+      key: ValueKey(value),
+      initialValue: value,
       decoration: InputDecoration(labelText: context.l10n.connProtocol),
       items: MqttProtocol.values
           .map((p) => DropdownMenuItem(value: p, child: Text(_labels[p]!)))

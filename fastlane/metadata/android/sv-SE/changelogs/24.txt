@@ -1,0 +1,1 @@
+Inga fler avbrott när samma hem finns på två enheter, som en telefon och en väggplatta. Att lämna en instrumentpanel kopplar inte längre bort från Mosquitto 2-brokers, även SMLIGHT-hubbar. WebSocket-anslutningar fungerar nu. TalkBack läser upp namn och status för varje ruta, och reglage sitt värde. Material You-färger når även kort och ark. Innehåller 1.9.3.

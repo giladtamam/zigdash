@@ -22,7 +22,7 @@ People who find the listing install the app, but few come back. The redesign is 
 3. **Devices first, MQTT second.** Users pick devices. Raw topics stay one tap away under "Custom MQTT tile".
 4. **Show the last known value.** When the broker is unreachable, tiles keep their last values, marked stale, under a slim status line.
 5. **One way to edit.** One Edit mode replaces the per-screen toolbar icons.
-6. **Protected.** Material You dynamic color, Hebrew right-to-left, all eight locales, system font scaling, the 16 panel behaviors, and no telemetry.
+6. **Protected.** Material You dynamic color, Hebrew right-to-left, all eight locales, system font scaling, the 15 panel types, and no telemetry without consent (ADR 0006: anonymous usage data, opt-in only).
 
 ## Decisions
 
@@ -30,7 +30,7 @@ People who find the listing install the app, but few come back. The redesign is 
 |---|---|---|
 | First run | One door with four discovery outcomes: one broker, several, none, or broker without Zigbee2MQTT. A device review list, then straight to the dashboard. The demo appears only on the none-found and no-Zigbee2MQTT outcomes, with a persistent connect bar. | [ia.md](ia.md), First-run section below |
 | Structure | Dashboards stay primary, with no rooms. A broker is a "home", switched in the header. The bottom bar is Dashboards, Devices and Scenes. Settings sits in the header. | [ia.md](ia.md), [ADR 0001](../adr/0001-dashboards-not-rooms.md) |
-| Adding tiles | "Add tile" is device-first. Each device gets one composite device tile, in 7 classes plus a generic fallback. A new reading tile shows numeric sensors. The 16 raw types sit under "Custom MQTT tile" with a form that leads with the topic. | Adding tiles section below |
+| Adding tiles | "Add tile" is device-first. Each device gets one composite device tile, in 8 classes plus a generic fallback. A new reading tile shows numeric sensors. The 15 raw types sit under "Custom MQTT tile" with a form that leads with the topic. | Adding tiles section below |
 | Visual direction | 2.0 is **Signal**: a warm ground, amber fill when on, squircle tiles and a bold display face. It takes the tablet layout from Wall Panel. Calm Material is the interim look until 2.0. | [Claude Design canvas](https://claude.ai/artifact/Gt1x8Q8TpDfY2VMVqNqF5w) |
 | Tokens | Amber is a harmonized accent over dynamic color. Fonts are Space Grotesk, IBM Plex Sans and IBM Plex Sans Hebrew. There are six state roles. Radii are 28, 18, 12 and 20. The grid has 2, 3 or 4 columns. Icons are Material Symbols Rounded. | [tokens.md](tokens.md), [ADR 0002](../adr/0002-amber-is-a-harmonized-accent.md) |
 | Screens | There are nine Signal boards, each with a per-screen note. The dashboard, dark offline, welcome and dark tablet boards from the direction round complete the set. | [screens.md](screens.md) |
@@ -54,6 +54,7 @@ People who find the listing install the app, but few come back. The redesign is 
 
 - **Add tile** opens a searchable device list. Devices not on any dashboard come first. Picking a device adds its recommended tile, which can be changed before saving.
 - **Device tiles:** the icon is the quick action, the body holds the controls, and long-press edits the tile. The first release covers these classes:
+  - color light (added while planning 1.12)
   - light
   - switch or plug
   - cover
@@ -63,9 +64,9 @@ People who find the listing install the app, but few come back. The redesign is 
   - leak or smoke
   - a generic fallback
 
-  Thermostats and color lights come later.
+  Thermostats come later.
 - **Reading tile:** a numeric value with its unit, for temperature, humidity or power.
-- **Custom MQTT tile:** the 16 existing types. The form leads with name and topic and offers "Pick a device". A live preview comes before the payload fields. Payloads and JSON path collapse under Advanced.
+- **Custom MQTT tile:** the 15 existing types. The form leads with name and topic and offers "Pick a device". A live preview comes before the payload fields. Payloads and JSON path collapse under Advanced.
 - **New devices** are never auto-added. Edit mode shows a card counting unassigned devices, and the Devices tab carries a badge.
 
 ## Where everything lives
@@ -77,6 +78,11 @@ People who find the listing install the app, but few come back. The redesign is 
 | Information architecture diagram | [ia.md](ia.md) |
 | Design tokens | [tokens.md](tokens.md) |
 | Per-screen notes and exported images | [screens.md](screens.md), [screens/](screens/) |
+| Release 1.12 Dashboard build spec | [dashboard-1.12.md](dashboard-1.12.md) |
+| Release 1.13 Devices and tablet build spec | [devices-tablet-1.13.md](devices-tablet-1.13.md) |
+| Release 2.0 Signal build spec | [signal-2.0.md](signal-2.0.md) |
+| Research: Zigbee2MQTT health data (availability, battery, link quality) | [research/z2m-health-data.md](research/z2m-health-data.md) |
+| Research: classifying Zigbee2MQTT devices | [research/device-classes.md](research/device-classes.md) |
 | Phases, guardrails, store and community plan | [phasing.md](phasing.md) |
 | Decision records | [docs/adr/](../adr/) |
 | Research: reference smart-home UIs | [research/reference-ui-benchmark.md](research/reference-ui-benchmark.md) |
@@ -87,7 +93,7 @@ People who find the listing install the app, but few come back. The redesign is 
 
 These are in scope for 2.0 but not designed yet. They get decided in the phase that needs them.
 
-- **Thermostat and color-light tiles** need their own control design.
+- **Thermostat tiles** need their own control design. Color lights were designed for 1.12 in [dashboard-1.12.md](dashboard-1.12.md).
 - **Wall-tablet kiosk presentation** covers always-on use, screen dimming and hidden chrome. The layout is set, the presentation is not.
 - **Motion** for tile state changes and banner transitions uses M3 easing and spring tokens.
 - **Launcher icon and Play feature graphic** in the Signal identity.
@@ -99,13 +105,14 @@ These are in scope for 2.0 but not designed yet. They get decided in the phase t
 - iOS and other platforms.
 - A Flutter rewrite or leaving Material 3.
 - New features beyond UX: widgets, automations, rooms.
-- In-app analytics or A/B tests, which the no-telemetry rule excludes.
+- A/B tests, and any analytics beyond ADR 0006's opt-in anonymous events.
 - Paid design tooling.
 
-## Next: release 1.10, Foundations
+## Status
 
-1. Install Flutter 3.47 for ZigDash only, move Java to 17, migrate to RadioGroup, and bump dynamic_color to ^1.9.0.
-2. Add a GitHub Actions workflow for analyze and test.
-3. Add the alchemist golden harness and record baselines of today's UI.
-4. Fix the three accessibility defects and the MQTT client-id takeover loop.
-5. Ship through the internal track and the device check, then 100% production.
+- **1.10 Foundations** and **1.11 First run** shipped. **1.11.1** fixes tiles created by the 1.11.0 setup (a doubled topic).
+- **1.12 Dashboard** is built on `release/1.12-dashboard` as specified in [dashboard-1.12.md](dashboard-1.12.md), version 1.12.0+27. It was checked against the reference SMHUB on 2026-09-26.
+- **1.11.1 and 1.12 are superseded** (decided 2026-09-27): neither ships. 1.13 contains both, and it fixes three bugs that 1.12 had. Its release notes cover everything since 1.11.
+- **1.13 Devices and tablet** is built on `release/1.13-devices-tablet` as specified in [devices-tablet-1.13.md](devices-tablet-1.13.md), version 1.13.0+28. It was checked on 2026-09-27 on the reference SMHUB and the phone, with the tablet layout emulated at 1280 × 800 dp. That check found four bugs, now fixed, and three of them are also in 1.12: tiles emptied after switching tabs, long-press tile actions that did nothing, and an Undo bar that never closed.
+- **2.0 Signal** is designed: [signal-2.0.md](signal-2.0.md), decided 2026-09-27, with boards in the "2.0" row of the canvas (version 13). The build waits for the community reaction round ([docs/growth/2.0-community-round.md](../growth/2.0-community-round.md)).
+- **Release plan (decided 2026-09-27):** 1.13 runs for about 4 weeks after approval before 2.0 ships, so its retention effect can be read on its own. Record DAU/MAU and monthly user loss in Play Console when 1.13 reaches 100% and again 4 weeks later. Meanwhile the community round runs and 2.0 is finished: remaining screens, the one-time golden re-baseline and review, the TalkBack, Hebrew and dynamic-color passes, and store screenshots. 2.0 targets late October 2026. Urgent 1.13 problems get a 1.13.x fix.

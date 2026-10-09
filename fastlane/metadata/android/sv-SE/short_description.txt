@@ -1,1 +1,1 @@
-Zigbee2MQTT-dashboard som hittar enheter själv. Lokalt, privat, öppen källkod.
+För ditt Zigbee2MQTT (krävs): en dashboard som bygger sig själv. Inget moln.

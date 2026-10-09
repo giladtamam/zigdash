@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
+import '../../../core/theme/motion.dart';
 
 class ProgressPanel extends ConsumerWidget {
   const ProgressPanel({
@@ -61,7 +62,7 @@ class ProgressPanel extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis),
                 ),
                 AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
+                  duration: SignalMotion.of(context, SignalMotion.stateChange),
                   child: Text(
                     valueLabel,
                     key: ValueKey(valueLabel),
@@ -73,7 +74,7 @@ class ProgressPanel extends ConsumerWidget {
             const SizedBox(height: 8),
             TweenAnimationBuilder<double>(
               tween: Tween<double>(end: fraction ?? 0.0),
-              duration: const Duration(milliseconds: 200),
+              duration: SignalMotion.of(context, SignalMotion.stateChange),
               builder: (context, animatedFraction, _) {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(4),

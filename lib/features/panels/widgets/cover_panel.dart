@@ -53,29 +53,42 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
   }
 
   Future<void> _publishRaw(String payload) async {
-    await runControlAction(context, ref, widget.connectionId, (mgr) => mgr.publish(
-      widget.publishTopic,
-      payload,
-      '',
-      qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
-      retain: widget.panel.retain,
-    ));
+    await runControlAction(
+      context,
+      ref,
+      widget.connectionId,
+      (mgr) => mgr.publish(
+        widget.publishTopic,
+        payload,
+        '',
+        qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
+        retain: widget.panel.retain,
+      ),
+    );
   }
 
   Future<void> _publishPosition(double v) async {
-    await runControlAction(context, ref, widget.connectionId, (mgr) => mgr.publish(
-      widget.publishTopic,
-      widget.config.positionTemplate,
-      v.round(),
-      qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
-      retain: widget.panel.retain,
-    ));
+    await runControlAction(
+      context,
+      ref,
+      widget.connectionId,
+      (mgr) => mgr.publish(
+        widget.publishTopic,
+        widget.config.positionTemplate,
+        v.round(),
+        qos: mc.MqttQos.values[widget.panel.qos.clamp(0, 2)],
+        retain: widget.panel.retain,
+      ),
+    );
   }
 
   void _onSliderChanged(double v) {
     setState(() => _draggingValue = v);
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 200), () => _publishPosition(v));
+    _debounce = Timer(
+      const Duration(milliseconds: 200),
+      () => _publishPosition(v),
+    );
   }
 
   void _onSliderEnd(double v) {
@@ -87,11 +100,15 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
   @override
   Widget build(BuildContext context) {
     // One subscription, whole payload (jsonPath null → raw string).
-    final valueAsync = ref.watch(panelValueProvider(PanelStreamKey(
-      connectionId: widget.connectionId,
-      topic: widget.subscribeTopic,
-      jsonPath: null,
-    )));
+    final valueAsync = ref.watch(
+      panelValueProvider(
+        PanelStreamKey(
+          connectionId: widget.connectionId,
+          topic: widget.subscribeTopic,
+          jsonPath: null,
+        ),
+      ),
+    );
 
     final cfg = widget.config;
     String? state;
@@ -107,7 +124,9 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
       }
     });
 
-    final liveValue = (_draggingValue ?? position ?? 0).clamp(0, 100).toDouble();
+    final liveValue = (_draggingValue ?? position ?? 0)
+        .clamp(0, 100)
+        .toDouble();
     final scheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -120,10 +139,12 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
             Row(
               children: [
                 Expanded(
-                  child: Text(widget.panel.name,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    widget.panel.name,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Text(
                   position == null ? '—' : '${position!.round()} %',
@@ -138,9 +159,21 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
                 emptySelectionAllowed: true,
                 showSelectedIcon: false,
                 segments: [
-                  ButtonSegment(value: 'OPEN', label: Text(context.l10n.panelCoverOpen), icon: const Icon(Icons.keyboard_arrow_up)),
-                  ButtonSegment(value: 'STOP', label: Text(context.l10n.panelCoverStop), icon: const Icon(Icons.stop)),
-                  ButtonSegment(value: 'CLOSE', label: Text(context.l10n.panelCoverClose), icon: const Icon(Icons.keyboard_arrow_down)),
+                  ButtonSegment(
+                    value: 'OPEN',
+                    label: Text(context.l10n.panelCoverOpen),
+                    icon: const Icon(Icons.keyboard_arrow_up),
+                  ),
+                  ButtonSegment(
+                    value: 'STOP',
+                    label: Text(context.l10n.panelCoverStop),
+                    icon: const Icon(Icons.stop),
+                  ),
+                  ButtonSegment(
+                    value: 'CLOSE',
+                    label: Text(context.l10n.panelCoverClose),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                  ),
                 ],
                 selected: {if (state != null) state!},
                 onSelectionChanged: (sel) {
@@ -161,21 +194,30 @@ class _CoverPanelState extends ConsumerState<CoverPanel> {
                 spacing: 8,
                 runSpacing: 4,
                 children: cfg.presets
-                    .map((p) => ActionChip(
-                          label: Text('$p%'),
-                          onPressed: () => _publishPosition(p.toDouble()),
-                        ))
+                    .map(
+                      (p) => ActionChip(
+                        label: Text('$p%'),
+                        onPressed: () => _publishPosition(p.toDouble()),
+                      ),
+                    )
                     .toList(),
               ),
             if (cfg.showSlider) ...[
-              Slider(
-                value: liveValue,
-                min: 0,
-                max: 100,
-                divisions: 100,
-                label: '${liveValue.round()}',
-                onChanged: _onSliderChanged,
-                onChangeEnd: _onSliderEnd,
+              // Merged so the slider node itself carries the panel name.
+              MergeSemantics(
+                child: Semantics(
+                  label: widget.panel.name,
+                  child: Slider(
+                    value: liveValue,
+                    min: 0,
+                    max: 100,
+                    divisions: 100,
+                    label: '${liveValue.round()}',
+                    semanticFormatterCallback: (v) => '${v.round()}%',
+                    onChanged: _onSliderChanged,
+                    onChangeEnd: _onSliderEnd,
+                  ),
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

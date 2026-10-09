@@ -33,17 +33,6 @@ void main() {
     expect(prefs.getBool('onboarding_complete'), isTrue);
   });
 
-  test('skipOnboarding behaves like completeOnboarding', () async {
-    SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
-    final c = _containerWith(prefs);
-
-    await c.read(onboardingProvider.notifier).skipOnboarding();
-
-    expect(c.read(onboardingProvider).needsOnboarding, isFalse);
-    expect(prefs.getBool('onboarding_complete'), isTrue);
-  });
-
   test('enableDemo marks complete + demo and persists both', () async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();

@@ -1,153 +1,193 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/data/database/daos/device_registry_dao.dart';
 import 'package:zigdash/features/devices/device_health.dart';
+import 'package:zigdash/features/devices/z2m_bridge.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 
+const _door = Z2mDevice(
+    friendlyName: 'Back door', type: 'EndDevice', ieeeAddress: '0x01');
+const _bulb =
+    Z2mDevice(friendlyName: 'Hall bulb', type: 'Router', ieeeAddress: '0x02');
+
+({String payload, DateTime at}) _s(Map<String, Object?> state) =>
+    (payload: jsonEncode(state), at: DateTime(2026, 9, 27, 12));
+
+DeviceHealth _one(
+  Z2mDevice d, {
+  Map<String, Object?>? state,
+  String? availability,
+  bool tracked = false,
+  bool notResponding = false,
+}) =>
+    deviceHealthFrom(
+      [d],
+      states: {if (state != null) d.friendlyName: _s(state)},
+      availability: {if (availability != null) d.friendlyName: availability},
+      tracked: (_) => tracked,
+      notResponding: {if (notResponding) d.friendlyName},
+    ).single;
+
 void main() {
-  // Helpers to build a minimal Z2mDevice for tests
-  Z2mDevice device(String name) => Z2mDevice(
-        friendlyName: name,
-        type: 'EndDevice',
-      );
+  group('batteryLowIn', () {
+    test('battery_low alone decides', () {
+      expect(batteryLowIn({'battery_low': true}), isTrue);
+      expect(batteryLowIn({'battery_low': false}), isFalse);
+    });
+    test('battery alone decides at 20 %', () {
+      expect(batteryLowIn({'battery': 20}), isTrue);
+      expect(batteryLowIn({'battery': 21}), isFalse);
+    });
+    test('either field saying low is enough', () {
+      expect(batteryLowIn({'battery_low': false, 'battery': 8}), isTrue);
+      expect(batteryLowIn({'battery_low': true, 'battery': 80}), isTrue);
+    });
+    test('no battery fields → null, never "fine"', () {
+      expect(batteryLowIn({'linkquality': 120}), isNull);
+    });
+  });
 
   group('deviceHealthFrom', () {
-    test('returns one row per device', () {
-      final devices = [device('sensor_1'), device('sensor_2')];
-      final result = deviceHealthFrom(devices, {}, {});
-      expect(result.length, equals(2));
+    test('one row per device, in order, with no state before a report', () {
+      final rows = deviceHealthFrom([_door, _bulb]);
+      expect(rows.map((r) => r.friendlyName), ['Back door', 'Hall bulb']);
+      expect(rows.first.state, isNull);
+      expect(rows.first.needsAttention, isFalse,
+          reason: '"No report yet" is not attention');
     });
 
-    test('row friendlyName matches device', () {
-      final devices = [device('my_sensor')];
-      final result = deviceHealthFrom(devices, {}, {});
-      expect(result.first.friendlyName, equals('my_sensor'));
+    test('battery, link quality and last heard come from the state', () {
+      final h = _one(_door, state: {'battery': 8, 'linkquality': 112});
+      expect((h.battery, h.linkQuality), (8, 112));
+      expect(h.lastHeard, DateTime(2026, 9, 27, 12));
+      expect(h.lowBattery, isTrue);
+      expect(h.needsAttention, isTrue);
     });
 
-    test('device with full state: battery, linkQuality, lastSeen extracted', () {
-      final devices = [device('sensor_1')];
-      const stateJson =
-          '{"battery":87,"linkquality":120,"last_seen":"2026-05-23T10:00:00Z"}';
-      final result = deviceHealthFrom(
-        devices,
-        {'sensor_1': stateJson},
-        {},
-      );
-      final health = result.first;
-      expect(health.battery, equals(87));
-      expect(health.linkQuality, equals(120));
-      expect(health.lastSeen, equals('2026-05-23T10:00:00Z'));
+    test('weak link is shown but is not attention', () {
+      final h = _one(_door, state: {'linkquality': 12});
+      expect(h.weakLink, isTrue);
+      expect(h.needsAttention, isFalse);
     });
 
-    test('device with availability "online" string → online true', () {
-      final devices = [device('sensor_1')];
-      final result = deviceHealthFrom(
-        devices,
-        {'sensor_1': '{"battery":50,"linkquality":100}'},
-        {'sensor_1': 'online'},
-      );
-      expect(result.first.online, isTrue);
+    test('availability counts only when the bridge tracks the device', () {
+      const off = '{"state":"offline"}';
+      expect(_one(_bulb, availability: off).online, isNull,
+          reason: 'a retained message from before it was turned off');
+      expect(_one(_bulb, availability: off, tracked: true).online, isFalse);
+      expect(_one(_bulb, availability: off, tracked: true).needsAttention,
+          isTrue);
+      expect(_one(_bulb, availability: 'online', tracked: true).online, isTrue);
     });
 
-    test('device with availability "offline" string → online false', () {
-      final devices = [device('sensor_1')];
-      final result = deviceHealthFrom(
-        devices,
-        {},
-        {'sensor_1': 'offline'},
-      );
-      expect(result.first.online, isFalse);
-    });
-
-    test('device with availability JSON {"state":"online"} → online true', () {
-      final devices = [device('sensor_1')];
-      final result = deviceHealthFrom(
-        devices,
-        {},
-        {'sensor_1': '{"state":"online"}'},
-      );
-      expect(result.first.online, isTrue);
-    });
-
-    test('device with availability JSON {"state":"offline"} → online false',
-        () {
-      final devices = [device('sensor_1')];
-      final result = deviceHealthFrom(
-        devices,
-        {},
-        {'sensor_1': '{"state":"offline"}'},
-      );
-      expect(result.first.online, isFalse);
-    });
-
-    test('device with no state or availability → all fields null', () {
-      final devices = [device('lonely')];
-      final result = deviceHealthFrom(devices, {}, {});
-      final health = result.first;
-      expect(health.battery, isNull);
-      expect(health.linkQuality, isNull);
-      expect(health.lastSeen, isNull);
-      expect(health.online, isNull);
-    });
-
-    test('malformed state JSON → no throw, all state fields null', () {
-      final devices = [device('bad_device')];
+    test('not responding only while there is no state', () {
+      expect(_one(_bulb, notResponding: true).notResponding, isTrue);
       expect(
-        () => deviceHealthFrom(
-          devices,
-          {'bad_device': '{not valid json!!!'},
-          {'bad_device': 'online'},
-        ),
-        returnsNormally,
-      );
-      final result = deviceHealthFrom(
-        devices,
-        {'bad_device': '{not valid json!!!'},
-        {'bad_device': 'online'},
-      );
-      final health = result.first;
-      expect(health.battery, isNull);
-      expect(health.linkQuality, isNull);
-      expect(health.lastSeen, isNull);
-      // availability still parsed correctly
-      expect(health.online, isTrue);
+          _one(_bulb, state: {'state': 'ON'}, notResponding: true)
+              .notResponding,
+          isFalse);
     });
 
-    test('last_seen as numeric epoch is stringified', () {
-      final devices = [device('epoch_device')];
-      final result = deviceHealthFrom(
-        devices,
-        {'epoch_device': '{"last_seen":1716451200000}'},
-        {},
-      );
-      expect(result.first.lastSeen, equals('1716451200000'));
-    });
-
-    test('battery as float is rounded to int', () {
-      final devices = [device('float_bat')];
-      final result = deviceHealthFrom(
-        devices,
-        {'float_bat': '{"battery":85.7,"linkquality":200}'},
-        {},
-      );
-      expect(result.first.battery, equals(86));
-    });
-
-    test('rows are in same order as devices list', () {
-      final devices = [device('a'), device('b'), device('c')];
-      final result = deviceHealthFrom(devices, {}, {});
+    test('failed interview and unsupported devices need attention', () {
       expect(
-        result.map((h) => h.friendlyName).toList(),
-        equals(['a', 'b', 'c']),
-      );
+          _one(const Z2mDevice(
+                  friendlyName: 'x', type: 'Router', interviewState: 'FAILED'))
+              .needsAttention,
+          isTrue);
+      expect(
+          _one(const Z2mDevice(friendlyName: 'y', type: 'Router', supported: false))
+              .needsAttention,
+          isTrue);
     });
 
-    test('unknown availability string → online null', () {
-      final devices = [device('x')];
-      final result = deviceHealthFrom(
-        devices,
-        {},
-        {'x': 'some_random_string'},
-      );
-      expect(result.first.online, isNull);
+    test('malformed state never throws', () {
+      final rows = deviceHealthFrom([_door],
+          states: {'Back door': (payload: 'not json', at: DateTime(2026))});
+      expect(rows.single.state, isNull);
+    });
+
+    test('attention sorts first, then by name', () {
+      final rows = deviceHealthFrom([_bulb, _door],
+          states: {'Back door': _s({'battery': 5})})
+        ..sort(compareHealth);
+      expect(rows.map((r) => r.friendlyName), ['Back door', 'Hall bulb']);
+    });
+  });
+
+  group('parseAvailability', () {
+    test('2.x JSON and 1.x strings', () {
+      expect(parseAvailability('{"state":"online"}'), isTrue);
+      expect(parseAvailability('offline'), isFalse);
+      expect(parseAvailability('garbage'), isNull);
+    });
+  });
+
+  group('parseAvailabilityConfig', () {
+    test('off by default, as on the SMHUB (Z2M 2.13)', () {
+      final c = parseAvailabilityConfig(jsonEncode({
+        'config': {
+          'availability': {'enabled': false, 'active': {'timeout': 10}},
+        },
+      }));
+      expect(c.tracks('0x01'), isFalse);
+      expect(c.any, isFalse);
+    });
+    test('enabled globally, with a per-device opt-out', () {
+      final c = parseAvailabilityConfig(jsonEncode({
+        'config': {
+          'availability': {'enabled': true},
+          'devices': {
+            '0x02': {'availability': false},
+            '0x03': {'friendly_name': 'x'},
+          },
+        },
+      }));
+      expect(c.tracks('0x01'), isTrue);
+      expect(c.tracks('0x02'), isFalse);
+      expect(c.tracks('0x03'), isTrue);
+    });
+    test('off globally, one device opted in with its own timeout', () {
+      final c = parseAvailabilityConfig(jsonEncode({
+        'config': {
+          'devices': {
+            '0x02': {
+              'availability': {'timeout': 5},
+            },
+          },
+        },
+      }));
+      expect(c.tracks('0x01'), isFalse);
+      expect(c.tracks('0x02'), isTrue);
+      expect(c.any, isTrue);
+    });
+    test('older bridges: availability: true', () {
+      expect(
+          parseAvailabilityConfig('{"config":{"availability":true}}')
+              .tracks('0x01'),
+          isTrue);
+    });
+    test('unreadable info → not tracked', () {
+      expect(parseAvailabilityConfig('nope').any, isFalse);
+    });
+  });
+
+  group('nextBatteryFlag (the Devices dot)', () {
+    test('a first report is stored as seen, even when already low', () {
+      expect(nextBatteryFlag(null, true), (low: true, ack: true));
+      expect(nextBatteryFlag(null, false), (low: false, ack: true));
+    });
+    test('going low lights the dot', () {
+      expect(nextBatteryFlag((low: false, ack: true), true),
+          (low: true, ack: false));
+    });
+    test('recovering clears it', () {
+      expect(nextBatteryFlag((low: true, ack: false), false),
+          (low: false, ack: true));
+    });
+    test('no change writes nothing', () {
+      expect(nextBatteryFlag((low: true, ack: true), true), isNull);
+      expect(nextBatteryFlag((low: false, ack: true), false), isNull);
     });
   });
 }

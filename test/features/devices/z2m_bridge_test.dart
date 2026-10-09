@@ -30,11 +30,19 @@ void main() {
       expect(req.topic, equals('zigbee2mqtt/bridge/request/permit_join'));
     });
 
-    test('enable=false payload has value:false and no time key', () {
+    test('enable=false sends time:0, which Zigbee2MQTT 2.x requires', () {
       final req = permitJoinRequest(base, enable: false);
       final payload = jsonDecode(req.payload) as Map<String, dynamic>;
       expect(payload['value'], isFalse);
-      expect(payload.containsKey('time'), isFalse);
+      expect(payload['time'], equals(0));
+    });
+  });
+
+  group('restartRequest', () {
+    test('targets bridge/request/restart under the base topic', () {
+      final req = restartRequest(base);
+      expect(req.topic, equals('zigbee2mqtt/bridge/request/restart'));
+      expect(jsonDecode(req.payload), isA<Map<String, dynamic>>());
     });
   });
 

@@ -41,7 +41,8 @@ MQTT.
   phone and tablet in both orientations, eight languages (English, French, German,
   Spanish, Dutch, Swedish, Norwegian, Hebrew) with full RTL, responsive panel
   grid, dashboard lock, JSON backup/restore.
-- **100% private** — no ads, no analytics, no account, no developer server.
+- **Private** — no ads, no account. Anonymous usage data only if you opt in;
+  builds without an analytics key (F-Droid, your own) send nothing at all.
   Data lives on your device and your broker.
 
 ## Install

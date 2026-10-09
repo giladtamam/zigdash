@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:meta/meta.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 import 'package:rxdart/rxdart.dart';
 
@@ -29,6 +30,10 @@ class _SubEntry {
   final BehaviorSubject<MqttRxMessage> subject =
       BehaviorSubject<MqttRxMessage>();
   int refs = 0;
+
+  /// Pending wire UNSUBSCRIBE after the last watcher left (see
+  /// [MqttManager.releaseGrace]); cancelled if a watcher returns in time.
+  Timer? release;
 }
 
 /// Builds the platform [mc.MqttClient] for a candidate host. Defaults to the
@@ -59,13 +64,33 @@ class MqttManager {
 
   // MQTT 3.1 caps client identifiers at 23 chars and some broker builds
   // (notably the Mosquitto shipped on SMLIGHT SMHUB) reject longer IDs with
-  // a "protocol error" disconnect even when negotiated as 3.1.1. Compose a
-  // stable 23-char ID from the connection's UUID without the dashes.
+  // a "protocol error" disconnect even when negotiated as 3.1.1.
+  //
+  // The ID must also be unique per running client, not just per connection.
+  // Two installs holding the same connection row (Android Auto Backup restored
+  // onto a second phone or wall tablet, or two browser tabs of the web build)
+  // used to send the same ID; the broker drops the older session on every
+  // CONNECT, each side auto-reconnects, and both loop forever. Sessions are
+  // clean, so a stable ID buys nothing: keep the connection tail for broker
+  // logs and add a per-manager random part.
+  //
+  // Shape: "zd-" + 10 hex (connection) + 8 hex (instance) = 21 chars. The
+  // "zd-" prefix is unchanged so prefix-based broker ACLs keep working.
+  static final Random _idRandom = Random.secure();
+
   static String _shortClientId(String connectionId) {
-    final clean = connectionId.replaceAll('-', '');
-    final tail = clean.length > 15 ? clean.substring(clean.length - 15) : clean;
-    return 'zd-$tail'; // "zd-" (3) + 15 hex = 18 chars, well under 23
+    final clean = connectionId.replaceAll('-', '').toLowerCase();
+    final tail = clean.length > 10 ? clean.substring(clean.length - 10) : clean;
+    final rnd = _idRandom;
+    final instance = List.generate(
+      8,
+      (_) => rnd.nextInt(16).toRadixString(16),
+    ).join();
+    return 'zd-$tail$instance';
   }
+
+  /// Visible for tests: the client identifier this manager sends in CONNECT.
+  String get clientId => _clientId;
 
   final BrokerConfig config;
   final String password;
@@ -114,6 +139,44 @@ class MqttManager {
   String? get lastError => _lastError;
 
   final Map<String, _SubEntry> _subs = {};
+
+  /// Values saved from earlier sessions, by exact topic, until live data
+  /// replaces them. They carry connection generation -1, so readers treat
+  /// them as last known, never fresh.
+  final Map<String, MqttRxMessage> _lastKnown = {};
+
+  /// The newest message per topic received in this app session.
+  final Map<String, MqttRxMessage> _latest = {};
+
+  /// The newest message for every topic starting with [prefix]: this
+  /// session's live messages, else saved last-known values. Lets a
+  /// wildcard subscriber start from what is already known, since only
+  /// exact-topic subscriptions replay.
+  List<MqttRxMessage> latestUnder(String prefix) => [
+        for (final m in _latest.values)
+          if (m.topic.startsWith(prefix)) m,
+        for (final m in _lastKnown.values)
+          if (m.topic.startsWith(prefix) && !_latest.containsKey(m.topic)) m,
+      ];
+
+  /// Seeds saved values (loaded before [connect]). A later subscription to
+  /// an exact topic starts with its saved value.
+  void seedLastKnown(Iterable<MqttRxMessage> messages) {
+    for (final m in messages) {
+      _lastKnown[m.topic] = m;
+      final entry = _subs[m.topic];
+      if (entry != null && !entry.subject.hasValue) entry.subject.add(m);
+    }
+  }
+
+  final _commandsSent = StreamController<String>.broadcast();
+  final _messages = StreamController<MqttRxMessage>.broadcast();
+
+  /// Topics of commands published through [publish], as they are sent.
+  Stream<String> get commandsSent => _commandsSent.stream;
+
+  /// Every message received on this connection's subscriptions.
+  Stream<MqttRxMessage> get messages => _messages.stream;
 
   // Guarded status emit. After [dispose] every call becomes a no-op so a
   // late-firing reconnect timer or an async tail of an in-flight connect()
@@ -253,6 +316,9 @@ class MqttManager {
 
   Future<void> dispose() async {
     _disposed = true;
+    for (final e in _subs.values) {
+      e.release?.cancel();
+    }
     disconnect();
     // Iterate a copy: closing a subject runs listeners' onDone, which can
     // synchronously unsubscribe (and remove from _subs) — mutating the map
@@ -264,11 +330,20 @@ class MqttManager {
     _subs.clear();
     await _endpoint.close();
     await _status.close();
+    await _commandsSent.close();
+    await _messages.close();
   }
 
   /// Ref-counted. Returns a broadcast stream filtered to topics matching [pattern].
   /// First watcher triggers a wire SUBSCRIBE; subsequent watchers share it.
   Stream<MqttRxMessage> subscribe(String pattern) {
+    final pending = _subs[pattern];
+    if (pending != null && pending.release != null) {
+      // A watcher came back within the grace period: keep the live wire
+      // subscription and replay the last value from the subject.
+      pending.release!.cancel();
+      pending.release = null;
+    }
     final entry = _subs.putIfAbsent(pattern, () {
       final e = _SubEntry(pattern);
       final client = _client;
@@ -280,24 +355,65 @@ class MqttManager {
           print('[MqttManager] subscribe failed for pattern "$pattern": $e');
         }
       }
+      // A returning watcher starts from the newest value: this session's,
+      // else one saved from an earlier session. Without this, a tile that
+      // was off screen past the grace period came back empty, and since
+      // devices are asked for state once per connection, stayed empty.
+      final saved = _latest[pattern] ?? _lastKnown[pattern];
+      if (saved != null) e.subject.add(saved);
       return e;
     });
     entry.refs++;
     return entry.subject.stream;
   }
 
-  /// Decrements ref count; sends UNSUBSCRIBE only on the last release.
+  /// How long a topic stays subscribed after its last watcher leaves.
+  ///
+  /// Screens rebuild and tiles re-subscribe within a frame. Sending
+  /// UNSUBSCRIBE and SUBSCRIBE back to back loses live updates on aedes (the
+  /// broker in Node-RED's aedes node): it applies the UNSUBSCRIBE after the
+  /// new SUBSCRIBE. Waiting avoids that, keeps the last value for a returning
+  /// tile, and saves SUBSCRIBE churn when navigating back and forth.
+  static const releaseGrace = Duration(seconds: 3);
+
+  /// Decrements the ref count. After the last release the topic keeps its
+  /// wire subscription for [releaseGrace], then UNSUBSCRIBE is sent.
   void unsubscribe(String pattern) {
     final e = _subs[pattern];
-    if (e == null) return;
+    if (e == null || e.refs <= 0) return;
     e.refs--;
-    if (e.refs <= 0) {
+    if (e.refs > 0) return;
+    e.release?.cancel();
+    e.release = Timer(releaseGrace, () {
+      if (_subs[pattern] != e || e.refs > 0) return;
       final client = _client;
       if (client?.connectionStatus?.state == mc.MqttConnectionState.connected) {
-        client!.unsubscribe(pattern);
+        sendUnsubscribe(client!, pattern);
       }
       e.subject.close();
       _subs.remove(pattern);
+    });
+  }
+
+  /// Sends UNSUBSCRIBE with the QoS 1 flag the spec requires.
+  ///
+  /// mqtt_client only sets that flag in MQTT 3.1.1 mode, and ZigDash speaks
+  /// MQTT 3.1 (MQIsdp) for SMLIGHT brokers, so the packet went out as 0xA0
+  /// instead of 0xA2. Mosquitto 2 rejects that as a malformed packet and drops
+  /// the connection, so every tile leaving the screen forced a reconnect.
+  ///
+  /// The library picks the header from the global [mc.Protocol.version] while
+  /// it writes the packet, synchronously inside [mc.MqttClient.unsubscribe].
+  /// Switching it for exactly that call fixes the header and changes nothing
+  /// else: the rest of the UNSUBSCRIBE is identical in 3.1 and 3.1.1.
+  @visibleForTesting
+  static void sendUnsubscribe(mc.MqttClient client, String pattern) {
+    final saved = mc.Protocol.version;
+    mc.Protocol.version = mc.MqttClientConstants.mqttV311ProtocolVersion;
+    try {
+      client.unsubscribe(pattern);
+    } finally {
+      mc.Protocol.version = saved;
     }
   }
 
@@ -321,6 +437,7 @@ class MqttManager {
     final builder = mc.MqttClientPayloadBuilder()..addUTF8String(payload);
     try {
       client.publishMessage(topic, qos, builder.payload!, retain: retain);
+      if (!_commandsSent.isClosed) _commandsSent.add(topic);
     } catch (e) {
       // mqtt_client's MQTT 3.1 encoding rejects extended UTF-8 in topics
       // with InvalidTopicException. We swallow here so a misconfigured panel
@@ -389,6 +506,9 @@ class MqttManager {
   }
 
   void _fanOut(MqttRxMessage message) {
+    _lastKnown.remove(message.topic);
+    _latest[message.topic] = message;
+    if (!_messages.isClosed) _messages.add(message);
     for (final entry in _subs.values) {
       if (topicMatches(entry.pattern, message.topic)) {
         entry.subject.add(message);

@@ -61,6 +61,7 @@ DiagnosticsReport failAt(DiagnosticStep step, String key) => DiagnosticsReport(
 class _FakeCreator implements SetupStore {
   var calls = 0;
   Object? error;
+  String? lastBase;
   @override
   Future<SetupResult> create({
     required String host,
@@ -69,12 +70,14 @@ class _FakeCreator implements SetupStore {
     String? username,
     String? password,
     String base = 'zigbee2mqtt',
-    String dashboardName = 'Home',
+    String? dashboardName,
     int dashboardColor = 0,
     int dashboardIcon = 0,
     required List<ReviewRow> selected,
+    List<ReviewRow> notSelected = const [],
   }) async {
     calls++;
+    lastBase = base;
     if (error != null) throw error!;
     return SetupResult(
       connectionId: 'c1',
@@ -89,6 +92,8 @@ class _Harness {
     List<DiagnosticsReport>? reports,
     Stream<ProbeResult> Function(String ip)? scan,
     Z2mFetchResult fetch = const Z2mFetchResult(detected: true, devices: [_lamp, _plug]),
+    Z2mFetchResult Function(String base)? fetchFor,
+    Future<void> Function(SetupResult result)? onCreated,
     String? ip = '192.168.1.5',
   })  : diagnostics = _FakeDiagnostics(reports ?? [ok()]),
         creator = _FakeCreator() {
@@ -98,10 +103,16 @@ class _Harness {
               [const ProbeResult(host: '192.168.1.10', port: 1883)]),
       deviceIp: () async => ip,
       diagnostics: diagnostics,
-      fetchDevices: (config, password, base) async => fetch,
+      fetchDevices: (config, password, base) async {
+        fetchedBases.add(base);
+        return fetchFor?.call(base) ?? fetch;
+      },
       creator: creator,
+      onCreated: onCreated,
     );
   }
+
+  final fetchedBases = <String>[];
 
   late final SetupCoordinator coordinator;
   final _FakeDiagnostics diagnostics;
@@ -136,6 +147,18 @@ void main() {
       expect((h.coordinator.state as SetupScanning).done, isTrue);
     });
 
+    // First-run decision: one broker found → continue without a tap.
+    test('exactly one broker found → continues to review on its own',
+        () async {
+      final h = _Harness();
+      await h.coordinator.startScan();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(h.coordinator.state, isA<SetupReview>());
+      expect(h.diagnostics.calls, hasLength(1));
+    });
+
     test('no candidates found → SetupScanEmpty', () async {
       final h = _Harness(scan: (_) => const Stream.empty());
       await h.coordinator.startScan();
@@ -164,7 +187,10 @@ void main() {
       expect(h.coordinator.state, isA<SetupScanEmpty>());
       await h.coordinator.retry();
       await Future<void>.delayed(Duration.zero);
-      expect((h.coordinator.state as SetupScanning).candidates, hasLength(1));
+      await Future<void>.delayed(Duration.zero);
+      // The rescan found the one broker and continued with it.
+      expect(n, 2);
+      expect(h.coordinator.state, isA<SetupReview>());
     });
 
     test('cancel during scan returns to idle and stops the scan', () async {
@@ -252,6 +278,30 @@ void main() {
           SetupErrorKind.notZigbee2Mqtt);
     });
 
+    // First-run decision: "Your broker works, but Zigbee2MQTT isn't
+    // publishing here" offers a base-topic check with a one-tap retry.
+    test('no Zigbee2MQTT → retry with another base topic reaches review',
+        () async {
+      final h = _Harness(
+        reports: [ok(), ok()],
+        fetchFor: (base) => base == 'z2m'
+            ? const Z2mFetchResult(detected: true, devices: [_lamp])
+            : const Z2mFetchResult(detected: false, devices: []),
+      );
+      await h.coordinator.startScan();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+      expect((h.coordinator.state as SetupFailed).kind,
+          SetupErrorKind.notZigbee2Mqtt);
+
+      await h.coordinator.retryWithBase(' z2m ');
+
+      expect(h.fetchedBases, ['zigbee2mqtt', 'z2m']);
+      expect(h.coordinator.state, isA<SetupReview>());
+      await h.coordinator.createDashboard();
+      expect(h.creator.lastBase, 'z2m');
+    });
+
     test('Zigbee2MQTT detected but no devices → noDevices', () async {
       final h = _Harness(
           fetch: const Z2mFetchResult(detected: true, devices: []));
@@ -287,6 +337,45 @@ void main() {
       final s = h.coordinator.state;
       expect(s, isA<SetupComplete>());
       expect((s as SetupComplete).result.panelCount, 1);
+    });
+
+    // First-run decision: no separate "Creating…" screen; the review list
+    // stays on screen while saving.
+    test('saving keeps the reviewed devices in the state', () async {
+      final h = _Harness();
+      final states = <SetupState>[];
+      h.coordinator.states.listen(states.add);
+      await h.coordinator.startScan();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+      await h.coordinator.createDashboard();
+
+      final creating = states.whereType<SetupCreating>().single;
+      expect(creating.review.rows.map((r) => r.device.friendlyName),
+          containsAll(['lamp', 'plug']));
+    });
+
+    test('a successful setup runs the completion hook once', () async {
+      final seen = <SetupResult>[];
+      final h = _Harness(onCreated: (r) async => seen.add(r));
+      await h.coordinator.startScan();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+      await h.coordinator.createDashboard();
+
+      expect(h.coordinator.state, isA<SetupComplete>());
+      expect(seen.single.dashboardId, 'd1');
+    });
+
+    test('a failing completion hook does not undo a successful setup',
+        () async {
+      final h = _Harness(onCreated: (_) async => throw StateError('prefs'));
+      await h.coordinator.startScan();
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+      await h.coordinator.createDashboard();
+
+      expect(h.coordinator.state, isA<SetupComplete>());
     });
 
     test('save failure → SetupFailed(saveFailed), retry resumes at creation',

@@ -19,8 +19,8 @@ Screens already covered by the direction round live on the same canvas: the Sign
 
 ![Add tile](screens/D-add-tile.png)
 
-- **What changed.** The picker lists devices, not the 16 MQTT panel types (audit: jargon picker). "Not on a dashboard" comes first, then all devices with type and live state.
-- **Custom MQTT tile.** The 16 raw behaviors sit behind one row at the bottom and open the topic-first form. That form keeps today's fields in the new styling and is not mocked separately.
+- **What changed.** The picker lists devices, not the 15 MQTT panel types (audit: jargon picker). "Not on a dashboard" comes first, then all devices with type and live state.
+- **Custom MQTT tile.** The 15 raw panel types sit behind one row at the bottom and open the topic-first form. That form keeps today's fields in the new styling and is not mocked separately.
 - **Why.** New users think in devices. Power users keep every raw behavior one tap away.
 
 ## Devices
@@ -44,7 +44,7 @@ Screens already covered by the direction round live on the same canvas: the Sign
 ![Scenes](screens/D-scenes.png)
 
 - **What changed.** Scenes are cards with one Activate button. The active scene shows in amber.
-- **Scope.** Scenes are read from Zigbee2MQTT and not edited in ZigDash. A note says so, so nobody looks for an editor.
+- **Scope.** Scenes are ZigDash's own: captured from device states in the app, stored on the phone, and activated by publishing every action. They can also be added to a dashboard as a tile. (An earlier version of this note said scenes come from Zigbee2MQTT; the shipped feature is the app's own scenes, confirmed while charting 1.12.) The board's footnote about Zigbee2MQTT is outdated.
 
 ## Settings, homes
 
@@ -79,8 +79,41 @@ Screens already covered by the direction round live on the same canvas: the Sign
 - **Wide tiles.** Reading tiles can span two columns, so a temperature can be read from across the room.
 - **Theme.** Dark is the tablet default from the direction round. This board shows the light variant with the same layout.
 
+## 1.12 Dashboard boards (interim look A)
+
+These five boards are in the interim Calm Material look, not Signal. They sit in the "1.12" row of the canvas (version 9) and are built as specified in [dashboard-1.12.md](dashboard-1.12.md).
+
+![Device tiles](screens/1.12/tiles.png)
+
+- **Device tiles by class.** One board shows every class with the offline line, a stale tile with its age chip, a leak alarm and a generic tile waiting for its first report.
+
+![Color sheet](screens/1.12/color-sheet.png)
+
+- **Color light sheet.** Brightness, white temperature, eight presets and a hue slider. The swatch shows what the bulb reports (`color_mode`), and colors are sent as hex.
+
+![Edit mode](screens/1.12/edit-mode.png)
+
+- **Edit mode.** The unassigned-devices card, sections with grip and rename, tiles with grip and ⋯ badge, and the badge sheet with Size, Move to section, Edit tile and Remove.
+
+![Devices tab](screens/1.12/devices-tab.png)
+
+- **Devices tab stopgap.** Today's health list, with a "Not on a dashboard" marker and tap-to-add. Replaced in 1.13 (below).
+
+![Home switcher](screens/1.12/home-switcher.png)
+
+- **Home switcher.** The home name opens the menu at two or more homes. "Manage homes" opens the Homes list until 1.13 Settings.
+
+## 1.13 Devices and tablet boards (interim look A)
+
+Nine boards in the "1.13" row of the canvas (version 11), built as specified in [devices-tablet-1.13.md](devices-tablet-1.13.md). They are not exported as images; the canvas is the source of truth.
+
+- **Devices tab.** Filter chips with counts, attention rows first, a health signal only when it matters, and the availability footnote.
+- **Device page, light and dark.** A color light's controls, health and dashboards; a contact sensor with a low battery, its readings and "Add as reading tile".
+- **Custom MQTT tile form.** Name, then the topics with "Pick a device" and the prefix as a lead-in, the live preview, payloads, and Advanced last.
+- **Settings, home page, language picker.** Homes inline, a page per home with the base topic, a segmented theme control, and one Language row.
+- **Tablet dashboard and tablet Devices.** The navigation rail, dashboard chips, four columns and a Wide reading tile; Devices as list-detail with the device page beside the list.
+
 ## Not mocked here
 
-- **Custom MQTT tile form.** It keeps the current fields, reordered topic-first, and needs no new layout decision.
-- **Thermostat and color-light tiles.** They are deferred on the map and need their own control design.
+- **Thermostat tiles.** They are deferred and need their own control design. Color lights are on the 1.12 boards above.
 - **Kiosk presentation.** It stays on the map as fog, after phasing.

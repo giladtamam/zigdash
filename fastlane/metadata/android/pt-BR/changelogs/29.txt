@@ -1,0 +1,1 @@
+ZigDash 2.0: um visual novo. Cores quentes e calmas, em que âmbar significa ligado, novas fontes e ícones. Tablets começam no tema escuro e a "Tela de parede" mantém um painel na tela. O alarme de vazamento pulsa até secar. Novidades: português, russo e polonês, backup em arquivo .json e dados de uso anônimos só se você permitir. Seus blocos, casas e cores continuam como estão.

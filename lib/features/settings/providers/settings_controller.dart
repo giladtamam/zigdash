@@ -33,7 +33,9 @@ class SettingsController extends Notifier<AppSettings> {
     final code = _prefs.getString(_kLocale);
     return AppSettings(
       themeMode: _themeModeFromString(_prefs.getString(_kThemeMode)),
-      dynamicColor: _prefs.getBool(_kDynamicColor) ?? true,
+      // Signal by default (decided 2026-09-27); Material You is an option.
+      // A choice the user made before is kept.
+      dynamicColor: _prefs.getBool(_kDynamicColor) ?? false,
       locale: (code == null || code.isEmpty) ? null : Locale(code),
     );
   }
@@ -41,6 +43,12 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setThemeMode(ThemeMode mode) async {
     state = state.copyWith(themeMode: mode);
     await _prefs.setString(_kThemeMode, _themeModeToString(mode));
+  }
+
+  /// Sets [mode] only when the user has never chosen a theme.
+  Future<void> setThemeModeIfUnset(ThemeMode mode) async {
+    if (_prefs.containsKey(_kThemeMode)) return;
+    await setThemeMode(mode);
   }
 
   Future<void> setDynamicColor(bool enabled) async {

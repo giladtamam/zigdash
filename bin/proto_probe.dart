@@ -1,3 +1,6 @@
+// CLI probe tool: printing to stdout is its output.
+// ignore_for_file: avoid_print
+
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 import 'package:mqtt_client/mqtt_server_client.dart';
 

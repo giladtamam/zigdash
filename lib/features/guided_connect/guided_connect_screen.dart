@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/l10n_ext.dart';
+import '../../core/router/routes.dart';
 import '../../data/database/tables/connections.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../mqtt/broker_config.dart';
@@ -16,7 +17,17 @@ import '../connections/screens/broker_scan_sheet.dart';
 import '../connections/widgets/broker_fields.dart';
 import '../connections/widgets/diagnostics_ladder_view.dart';
 import '../connections/widgets/protocol_dropdown.dart';
+import '../../data/database/daos/device_registry_dao.dart';
+import '../../data/database/database.dart';
+import '../../data/repositories/dashboard_repo.dart';
+import '../../data/repositories/panel_repo.dart';
+import '../../data/repositories/section_repo.dart';
 import '../devices/devices_providers.dart';
+import '../discovery/models/z2m_device.dart';
+import '../discovery/providers/discovery_provider.dart';
+import '../onboarding/first_run.dart';
+import '../onboarding/setup/recommendation_policy.dart';
+import '../onboarding/setup/setup_creator.dart';
 
 enum _Phase { form, running, failed, success }
 
@@ -26,7 +37,8 @@ class GuidedConnectScreen extends ConsumerStatefulWidget {
   const GuidedConnectScreen({super.key});
 
   @override
-  ConsumerState<GuidedConnectScreen> createState() => _GuidedConnectScreenState();
+  ConsumerState<GuidedConnectScreen> createState() =>
+      _GuidedConnectScreenState();
 }
 
 class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
@@ -44,6 +56,7 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
   String _baseTopic = 'zigbee2mqtt';
   bool _pairingRequested = false;
   bool _saveFailed = false;
+  bool _building = false;
 
   @override
   void dispose() {
@@ -63,12 +76,14 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
   Future<void> _findBrokers() async {
     final result = await BrokerScanSheet.show(context);
     if (result == null || !mounted) return;
-    setState(() => applyScanResult(
-          host: _host,
-          port: _port,
-          onProtocol: (p) => _protocol = p,
-          result: result,
-        ));
+    setState(
+      () => applyScanResult(
+        host: _host,
+        port: _port,
+        onProtocol: (p) => _protocol = p,
+        result: result,
+      ),
+    );
   }
 
   Future<void> _start() async {
@@ -97,8 +112,11 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
     });
     final DiagnosticsReport report;
     try {
-      report =
-          await diagnostics.run(config: cfg, password: _password.text, base: base);
+      report = await diagnostics.run(
+        config: cfg,
+        password: _password.text,
+        base: base,
+      );
     } catch (_) {
       // The ladder reports per-step failures; an unexpected throw returns to
       // the form rather than wedging the running phase.
@@ -110,7 +128,7 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
     if (report.connected) {
       // Auto-save per the spec: on success the connection saves with
       // autoConnect on, then the success moment is shown.
-      final id = await _save(cfg);
+      final id = await _save(cfg, base);
       if (!mounted) return;
       if (id == null) {
         _showSaveFailed();
@@ -135,10 +153,10 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
     }
   }
 
-  Future<String?> _save(BrokerConfig cfg) async {
+  Future<String?> _save(BrokerConfig cfg, String base) async {
     try {
       final repo = ref.read(connectionRepoProvider);
-      return await repo.create(
+      final id = await repo.create(
         name: cfg.host,
         host: cfg.host,
         port: cfg.port,
@@ -147,15 +165,65 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
         password: _password.text.isEmpty ? null : _password.text,
         autoConnect: true,
       );
+      // A custom base topic belongs to the home, so Devices and later
+      // dashboards find the bridge too (as setup does).
+      if (base != 'zigbee2mqtt') await repo.setBaseTopic(id, base);
+      return id;
     } catch (_) {
       return null;
     }
   }
 
+  /// Builds the home's first dashboard from its devices, as setup does, so
+  /// "Continue to dashboard" does not land on an empty home. Best effort: if
+  /// the devices can't be read or nothing is worth a tile, the home opens
+  /// as it is.
+  Future<void> _buildFirstDashboard(String connectionId) async {
+    final base = _baseTopic;
+    // The language this screen shows, for the dashboard and section names.
+    final l10n = context.l10n;
+    try {
+      final hasDashboard =
+          (await ref.read(dashboardRepoProvider).getByConnection(connectionId))
+              .isNotEmpty;
+      if (hasDashboard) return;
+      // The provider is autoDispose: listen while reading, or it is disposed
+      // (unsubscribing) before the retained list arrives.
+      final args = (connectionId: connectionId, base: base);
+      final keepAlive =
+          ref.listenManual(discoveredDevicesProvider(args), (_, _) {});
+      final List<Z2mDevice> devices;
+      try {
+        devices = await ref.read(discoveredDevicesProvider(args).future);
+      } finally {
+        keepAlive.close();
+      }
+      final rows = recommendDevices(devices, base: base);
+      final selected = rows.where((r) => r.selected).toList();
+      if (selected.isEmpty) return;
+      final creator = SetupCreator(
+        connections: ref.read(connectionRepoProvider),
+        dashboards: ref.read(dashboardRepoProvider),
+        sections: ref.read(sectionRepoProvider),
+        panels: ref.read(panelRepoProvider),
+        registry: DeviceRegistryDao(ref.read(appDatabaseProvider)),
+        l10n: l10n,
+      );
+      await creator.createDashboard(
+        connectionId: connectionId,
+        base: base,
+        selected: selected,
+        notSelected: rows.where((r) => !r.selected).toList(),
+      );
+    } catch (_) {
+      // Opening the home without a dashboard is still a working result.
+    }
+  }
+
   void _showSaveFailed() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.guidedSaveFailed)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.guidedSaveFailed)));
   }
 
   Future<void> _startPairing() async {
@@ -164,9 +232,9 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
     setState(() => _pairingRequested = true);
     await setPermitJoin(ref, id, _baseTopic, enable: true);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.pairingEnabled)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.pairingEnabled)));
   }
 
   @override
@@ -206,9 +274,8 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                     labelText: l10n.connLocalHost,
                     hintText: l10n.connHostHint,
                   ),
-                  validator: (v) => v == null || v.trim().isEmpty
-                      ? l10n.fieldRequired
-                      : null,
+                  validator: (v) =>
+                      v == null || v.trim().isEmpty ? l10n.fieldRequired : null,
                 ),
               ),
               const SizedBox(width: 12),
@@ -369,11 +436,29 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
         ],
         const SizedBox(height: 24),
         FilledButton.icon(
-          onPressed: () {
-            final id = _savedConnectionId;
-            if (id != null) context.go('/connections/$id/dashboards');
-          },
-          icon: const Icon(Icons.dashboard_outlined),
+          onPressed: _building
+              ? null
+              : () async {
+                  final id = _savedConnectionId;
+                  if (id == null) return;
+                  setState(() => _building = true);
+                  if (!zeroDevices) await _buildFirstDashboard(id);
+                  if (!mounted) return;
+                  setState(() => _building = false);
+                  try {
+                    await ref.read(firstRunProvider).finish(id);
+                  } catch (_) {
+                    // The home is saved; bookkeeping failing must not strand the
+                    // user on this screen.
+                  }
+                  if (context.mounted) context.go(Routes.homeDashboards(id));
+                },
+          icon: _building
+              ? const SizedBox.square(
+                  dimension: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.dashboard_outlined),
           label: Text(l10n.continueToDashboard),
         ),
       ],
@@ -385,7 +470,10 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
 /// auto-saved connection's manager reports connected (pairing publishes over
 /// the live broker connection).
 class _PairingButton extends ConsumerWidget {
-  const _PairingButton({required this.savedConnectionId, required this.onPressed});
+  const _PairingButton({
+    required this.savedConnectionId,
+    required this.onPressed,
+  });
 
   final String? savedConnectionId;
   final VoidCallback onPressed;

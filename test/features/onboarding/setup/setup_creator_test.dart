@@ -1,18 +1,26 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/features/panels/models/panel_config.dart';
+import 'package:zigdash/features/devices/device_profile.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:zigdash/core/storage/secure_storage.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
 import 'package:zigdash/data/database/daos/dashboard_dao.dart';
+import 'package:zigdash/data/database/daos/device_registry_dao.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
+import 'package:zigdash/data/database/daos/section_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/data/repositories/dashboard_repo.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
+import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/onboarding/setup/recommendation_policy.dart';
 import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
+import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 
 class _MemSecure implements SecureStore {
   final _m = <String, String>{};
@@ -37,6 +45,7 @@ void main() {
     creator = SetupCreator(
       connections: ConnectionRepo(ConnectionDao(db), _MemSecure()),
       dashboards: DashboardRepo(DashboardDao(db)),
+      sections: SectionRepo(SectionDao(db)),
       panels: PanelRepo(PanelDao(db)),
     );
   });
@@ -72,6 +81,24 @@ void main() {
         containsAll(['zigbee2mqtt/lamp', 'zigbee2mqtt/shutter']));
   });
 
+  test('created tiles publish to <device>/set and read <device>', () async {
+    final result = await creator.create(
+      host: '192.168.1.10',
+      port: 1883,
+      protocol: MqttProtocol.tcp,
+      selected: selected,
+    );
+    final dash = await DashboardDao(db).getById(result.dashboardId);
+    final lamp = (await PanelDao(db).getByDashboard(result.dashboardId))
+        .firstWhere((p) => p.name == 'lamp');
+
+    // Composed exactly as PanelTile does.
+    final prefix = lamp.topicPrefixOverride ?? dash!.topicPrefix;
+    expect(composeTopic(prefix, lamp.topic), 'zigbee2mqtt/lamp/set');
+    expect(composeTopic(prefix, lamp.subscribeTopic ?? lamp.topic),
+        'zigbee2mqtt/lamp');
+  });
+
   test('a second create call returns the same result without duplicating',
       () async {
     final first = await creator.create(
@@ -97,6 +124,7 @@ void main() {
     final failing = SetupCreator(
       connections: ConnectionRepo(ConnectionDao(db), _MemSecure()),
       dashboards: DashboardRepo(DashboardDao(db)),
+      sections: SectionRepo(SectionDao(db)),
       panels: _FailingPanelRepo(PanelDao(db)),
     );
 
@@ -134,6 +162,140 @@ void main() {
     );
     final panels = await PanelDao(db).getByDashboard(result.dashboardId);
     expect(panels.single.topicPrefixOverride, 'z2m/lamp');
+    final home = await db.select(db.connections).getSingle();
+    expect(home.z2mBaseTopic, 'z2m', reason: 'the corrected base is the home');
+  });
+
+  group('device tiles from bridge/devices', () {
+    Z2mDevice device(String name, String ieee, List<Object?> exposes) =>
+        Z2mDevice(
+          friendlyName: name,
+          type: 'Router',
+          vendor: 'Tuya',
+          model: 'CK-BL702-AL-01',
+          ieeeAddress: ieee,
+          rawExposes: exposes,
+        );
+    final bulb = device('0xc4d7fdbbfeba0000', '0xc4d7fdbbfeba0000', [
+      {
+        'type': 'light',
+        'features': [
+          {'type': 'binary', 'name': 'state', 'property': 'state', 'access': 7},
+          {'type': 'composite', 'name': 'color_xy', 'property': 'color', 'access': 7},
+        ],
+      },
+    ]);
+    final plug = device('plug', '0x6ce4a4fffe6d2f80', [
+      {
+        'type': 'switch',
+        'features': [
+          {'type': 'binary', 'name': 'state', 'property': 'state', 'access': 7},
+        ],
+      },
+    ]);
+    final door = device('door', '0x01', [
+      {'type': 'binary', 'name': 'contact', 'property': 'contact', 'access': 1},
+    ]);
+    ReviewRow pick(Z2mDevice d) =>
+        recommendDevices([d]).single.copyWith(selected: true);
+
+    test('sections in order, one device tile each, sizes by class',
+        () async {
+      final result = await creator.create(
+        host: '192.168.68.55',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+        selected: [pick(door), pick(plug), pick(bulb)],
+      );
+
+      final sections = await SectionDao(db).getByDashboard(result.dashboardId);
+      expect(sections.map((s) => s.name),
+          ['Lights', 'Switches and covers', 'Sensors']);
+      final tiles = await PanelDao(db).getByDashboard(result.dashboardId);
+      expect(tiles.map((p) => p.type), everyElement(PanelType.device));
+      final byName = {for (final p in tiles) p.name: p};
+      final b = byName['0xc4d7fdbbfeba0000']!;
+      expect(b.sectionId, sections[0].id);
+      expect(b.width, PanelWidth.wide);
+      expect(b.deviceIeee, '0xc4d7fdbbfeba0000');
+      expect(composeTopic(b.topicPrefixOverride, b.topic),
+          'zigbee2mqtt/0xc4d7fdbbfeba0000/set');
+      expect(composeTopic(b.topicPrefixOverride, b.subscribeTopic!),
+          'zigbee2mqtt/0xc4d7fdbbfeba0000');
+      final cfg = PanelConfig.decode(b.type, b.config) as DeviceTileConfig;
+      expect(cfg.profile.deviceClass, DeviceClass.colorLight);
+      expect(cfg.model, 'Tuya CK-BL702-AL-01');
+      expect(byName['plug']!.sectionId, sections[1].id);
+      expect(byName['plug']!.width, PanelWidth.small);
+      expect(byName['door']!.sectionId, sections[2].id);
+    });
+
+    test('the first home is My Home, the next Home 2', () async {
+      final first = await creator.create(
+        host: '192.168.68.55',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+        selected: [pick(plug)],
+      );
+      final second = await SetupCreator(
+        connections: ConnectionRepo(ConnectionDao(db), _MemSecure()),
+        dashboards: DashboardRepo(DashboardDao(db)),
+        sections: SectionRepo(SectionDao(db)),
+        panels: PanelRepo(PanelDao(db)),
+      ).create(
+        host: '10.0.0.2',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+        selected: [pick(plug)],
+      );
+      final dao = ConnectionDao(db);
+      expect((await dao.getById(first.connectionId))!.name, 'My Home');
+      expect((await dao.getById(second.connectionId))!.name, 'Home 2');
+    });
+
+    test('devices left unticked are not new; the home is marked seen',
+        () async {
+      final registry = DeviceRegistryDao(db);
+      final withRegistry = SetupCreator(
+        connections: ConnectionRepo(ConnectionDao(db), _MemSecure()),
+        dashboards: DashboardRepo(DashboardDao(db)),
+        sections: SectionRepo(SectionDao(db)),
+        panels: PanelRepo(PanelDao(db)),
+        registry: registry,
+      );
+      final result = await withRegistry.create(
+        host: '192.168.68.55',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+        selected: [pick(bulb)],
+        notSelected: [pick(plug).copyWith(selected: false)],
+      );
+
+      expect(await registry.watchDismissed(result.connectionId).first,
+          {'0x6ce4a4fffe6d2f80'});
+      expect(await registry.devicesSeenAt(result.connectionId), isNotNull);
+    });
+
+    test('names are written in the app language', () async {
+      final hebrew = SetupCreator(
+        connections: ConnectionRepo(ConnectionDao(db), _MemSecure()),
+        dashboards: DashboardRepo(DashboardDao(db)),
+        sections: SectionRepo(SectionDao(db)),
+        panels: PanelRepo(PanelDao(db)),
+        l10n: lookupAppLocalizations(const Locale('he')),
+      );
+      final result = await hebrew.create(
+        host: '192.168.68.55',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+        selected: [pick(bulb)],
+      );
+      expect((await ConnectionDao(db).getById(result.connectionId))!.name,
+          'הבית שלי');
+      expect(
+          (await SectionDao(db).getByDashboard(result.dashboardId)).single.name,
+          'תאורה');
+    });
   });
 }
 
@@ -150,8 +312,10 @@ class _FailingPanelRepo extends PanelRepo {
     String? topicPrefixOverride,
     int qos = 1,
     bool retain = false,
-    PanelWidth width = PanelWidth.half,
+    PanelWidth width = PanelWidth.small,
     int sortOrder = 0,
+    String? sectionId,
+    String? deviceIeee,
     required config,
   }) =>
       throw StateError('disk full');

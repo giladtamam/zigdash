@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/router/routes.dart';
+import '../../devices/device_profile.dart';
+import '../../devices/device_tiles.dart';
+import '../../devices/devices_providers.dart';
+import '../../discovery/models/z2m_device.dart';
+import '../../discovery/providers/discovery_provider.dart';
+import '../widgets/device_tile_panel.dart' show deviceClassIcon;
 import '../../../data/database/tables/panels.dart';
 import '../../../mqtt/json_path.dart';
 import '../../../data/repositories/dashboard_repo.dart';
@@ -14,6 +22,7 @@ import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
 
 part 'panel_form_screen.fields.dart';
+part 'panel_form_screen.topics.dart';
 
 enum SliderPreset { brightness, position }
 
@@ -118,6 +127,13 @@ class _State extends ConsumerState<PanelFormScreen> {
   // Scene field — preserved across generic-form edits (no UI field here; scene
   // panels are created/edited from the Scenes screen).
   String _sceneId = '';
+  // Device tile config — preserved as loaded; its topics and exposes are
+  // managed from the device, so the form edits only name and size.
+  DeviceTileConfig? _deviceConfig;
+
+  // Reading fields
+  final _readingJsonPath = TextEditingController(text: 'temperature');
+  final _readingUnit = TextEditingController();
 
   // Schedule fields
   final _scheduleOpenTime = TextEditingController(text: '07:00');
@@ -142,6 +158,14 @@ class _State extends ConsumerState<PanelFormScreen> {
   bool _saving = false;
   String? _topicPrefixHint;
 
+  /// The device this tile shows (`panels.deviceIeee`), set by "Pick a
+  /// device" or kept from the tile; null for a plain MQTT tile.
+  String? _deviceIeee;
+
+  /// The command topic was typed by the user: stop deriving it from the
+  /// state topic.
+  bool _commandEdited = false;
+
   bool get _isEdit => widget.panelId != null;
 
   // Scene panels carry no MQTT topic of their own (they activate a saved
@@ -151,14 +175,17 @@ class _State extends ConsumerState<PanelFormScreen> {
       _type == PanelType.nodeStatus ||
       _type == PanelType.progress ||
       _type == PanelType.textLog ||
-      _type == PanelType.scene;
+      _type == PanelType.scene ||
+      _type == PanelType.device ||
+      _type == PanelType.reading;
 
   bool get _isWriteOnly =>
       _type == PanelType.button ||
       _type == PanelType.textInput ||
       _type == PanelType.schedule ||
       _type == PanelType.scene ||
-      _type == PanelType.autoClose;
+      _type == PanelType.autoClose ||
+      _type == PanelType.device;
 
   /// Returns the json-path text for the current panel type, or '' for types
   /// without a json-path field (button, textInput, cover, schedule, autoClose).
@@ -173,6 +200,7 @@ class _State extends ConsumerState<PanelFormScreen> {
         PanelType.radio =>
           _optionsJsonPath.text,
         PanelType.textLog => _textLogJsonPath.text,
+        PanelType.reading => _readingJsonPath.text,
         _ => '',
       };
 
@@ -192,6 +220,7 @@ class _State extends ConsumerState<PanelFormScreen> {
     _progressJsonPath.addListener(_onTopicChanged);
     _optionsJsonPath.addListener(_onTopicChanged);
     _textLogJsonPath.addListener(_onTopicChanged);
+    _readingJsonPath.addListener(_onTopicChanged);
     _type = widget.initialType ?? PanelType.toggle;
     _loadDashboardPrefix();
     if (_isEdit) {
@@ -289,6 +318,8 @@ class _State extends ConsumerState<PanelFormScreen> {
     _topic.text = p.topic;
     _subscribeTopic.text = p.subscribeTopic ?? '';
     _topicPrefixOverride.text = p.topicPrefixOverride ?? '';
+    _deviceIeee = p.deviceIeee;
+    _commandEdited = p.topic != commandFor(p.subscribeTopic ?? p.topic);
     _width = p.width;
     _retain = p.retain;
     _qos = p.qos;
@@ -352,6 +383,11 @@ class _State extends ConsumerState<PanelFormScreen> {
       _autoCloseEnabled = cfg.enabled;
     } else if (cfg is SceneConfig) {
       _sceneId = cfg.sceneId;
+    } else if (cfg is DeviceTileConfig) {
+      _deviceConfig = cfg;
+    } else if (cfg is ReadingConfig) {
+      _readingJsonPath.text = cfg.jsonPath;
+      _readingUnit.text = cfg.unit ?? '';
     }
     setState(() => _loaded = true);
   }
@@ -415,6 +451,14 @@ class _State extends ConsumerState<PanelFormScreen> {
         break;
       case PanelType.autoClose:
         _topic.text = '';
+        break;
+      case PanelType.device:
+        _topic.text = 'set';
+        _subscribeTopic.text = '';
+        break;
+      case PanelType.reading:
+        _topic.text = '';
+        _subscribeTopic.text = '';
         break;
     }
   }
@@ -500,6 +544,14 @@ class _State extends ConsumerState<PanelFormScreen> {
           delaySeconds: int.tryParse(_autoCloseDelaySeconds.text) ?? 60,
           enabled: _autoCloseEnabled,
         ),
+      PanelType.device => _deviceConfig ??
+          PanelConfig.defaultFor(PanelType.device) as DeviceTileConfig,
+      PanelType.reading => ReadingConfig(
+          jsonPath: _readingJsonPath.text.trim().isEmpty
+              ? 'value'
+              : _readingJsonPath.text.trim(),
+          unit: nullIfBlank(_readingUnit.text),
+        ),
     };
   }
 
@@ -549,6 +601,7 @@ class _State extends ConsumerState<PanelFormScreen> {
           config: _buildConfig(),
         );
         panelId = widget.panelId!;
+        await repo.setDevice(panelId, _deviceIeee);
       } else {
         panelId = await repo.create(
           dashboardId: widget.dashboardId,
@@ -560,8 +613,11 @@ class _State extends ConsumerState<PanelFormScreen> {
           qos: _qos,
           retain: _retain,
           width: _width,
+          deviceIeee: _deviceIeee,
           config: _buildConfig(),
         );
+        ref.read(analyticsProvider)
+            .track(FeatureUsed(Feature.tileAdded, tile: _type));
       }
       if (_type == PanelType.schedule) {
         final effectivePrefix = prefixOverride ?? _topicPrefixHint;
@@ -628,6 +684,7 @@ class _State extends ConsumerState<PanelFormScreen> {
       _scheduleOpenPayload, _scheduleClosePayload,
       _autoCloseTriggerPath, _autoCloseTriggerValue,
       _autoCloseClosePayload, _autoCloseDelaySeconds,
+      _readingJsonPath, _readingUnit,
     ]) {
       c.dispose();
     }
@@ -669,6 +726,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       PanelType.schedule => l10n.panelTypeSchedule,
       PanelType.scene => l10n.panelTypeScene,
       PanelType.autoClose => l10n.panelTypeAutoClose,
+      PanelType.device => l10n.panelTypeDevice,
+      PanelType.reading => l10n.panelTypeReading,
     };
 
     return Scaffold(
@@ -695,99 +754,29 @@ class _State extends ConsumerState<PanelFormScreen> {
                   v == null || v.trim().isEmpty ? l10n.fieldRequired : null,
             ),
             const SizedBox(height: 12),
-            if (_type != PanelType.scene)
-              ExpansionTile(
-                tilePadding: EdgeInsets.zero,
-                initiallyExpanded: _isEdit,
-                title: Text('MQTT Settings', style: Theme.of(context).textTheme.titleSmall),
-                children: [
-                  if (_topicPrefixHint != null &&
-                      _topicPrefixHint!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        l10n.panelFormDashboardPrefix(_topicPrefixHint!),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                      ),
-                    ),
-                  TextFormField(
-                    controller: _topicPrefixOverride,
-                    decoration: InputDecoration(
-                      labelText: l10n.panelFormTopicPrefixOverride,
-                      hintText: l10n.panelFormTopicPrefixOverrideHint,
-                      helperText: l10n.panelFormTopicPrefixOverrideHelper,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  if (!_isReadOnly)
-                    TextFormField(
-                      controller: _topic,
-                      decoration: InputDecoration(
-                        labelText: l10n.panelFormPublishTopic,
-                        hintText: l10n.panelFormPublishTopicHint,
-                        helperText: l10n.panelFormPublishTopicHelper,
-                      ),
-                    ),
-                  if (!_isWriteOnly) ...[
-                    if (!_isReadOnly) const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _subscribeTopic,
-                      decoration: InputDecoration(
-                        labelText: _isReadOnly
-                            ? l10n.panelFormTopicSuffix
-                            : l10n.panelFormSubscribeTopic,
-                        hintText: '',
-                        helperText: _isReadOnly
-                            ? l10n.panelFormSubscribeTopicHelperReadOnly
-                            : l10n.panelFormSubscribeTopicHelper,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<int>(
-                    value: _qos,
-                    decoration: InputDecoration(labelText: l10n.panelFormQos),
-                    items: [
-                      DropdownMenuItem(
-                          value: 0, child: Text(l10n.panelFormQos0)),
-                      DropdownMenuItem(
-                          value: 1, child: Text(l10n.panelFormQos1)),
-                      DropdownMenuItem(
-                          value: 2, child: Text(l10n.panelFormQos2)),
-                    ],
-                    onChanged: (v) =>
-                        v == null ? null : setState(() => _qos = v),
-                  ),
-                  SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(l10n.panelFormRetain),
-                    value: _retain,
-                    onChanged: (v) => setState(() => _retain = v),
-                  ),
-                ],
-              ),
+            if (_type != PanelType.scene) ..._topicBlock(),
             const SizedBox(height: 12),
             if (_loaded) _buildLivePreview(),
             ..._typeSpecificFields(),
             const SizedBox(height: 16),
             DropdownButtonFormField<PanelWidth>(
-              value: _width,
-              decoration: InputDecoration(labelText: l10n.panelFormWidth),
+              key: ValueKey(_width),
+              initialValue: _width,
+              decoration: InputDecoration(labelText: l10n.tileSize),
               items: [
                 DropdownMenuItem(
+                    value: PanelWidth.small,
+                    child: Text(l10n.tileSizeSmall)),
+                DropdownMenuItem(
+                    value: PanelWidth.wide,
+                    child: Text(l10n.tileSizeWide)),
+                DropdownMenuItem(
                     value: PanelWidth.full,
-                    child: Text(l10n.panelFormWidthFull)),
-                DropdownMenuItem(
-                    value: PanelWidth.half,
-                    child: Text(l10n.panelFormWidthHalf)),
-                DropdownMenuItem(
-                    value: PanelWidth.third,
-                    child: Text(l10n.panelFormWidthThird)),
+                    child: Text(l10n.tileSizeFull)),
               ],
               onChanged: (v) => v == null ? null : setState(() => _width = v),
             ),
+            if (_type != PanelType.scene) _advanced(),
           ],
         ),
       ),

@@ -1,0 +1,24 @@
+ZigDash to dashboard MQTT stworzony dla Zigbee2MQTT: steruj inteligentnym domem Zigbee z telefonu. Sam wykrywa Twoje urządzenia, więc dashboard buduje się automatycznie. Bez chmury, bez reklam, bez konta: za darmo i open source.
+
+Wymaga działającego Zigbee2MQTT i brokera MQTT w Twojej sieci. Nie masz jeszcze Zigbee2MQTT? Aplikacja ma dom demo do obejrzenia.
+
+AUTOWYKRYWANIE DLA ZIGBEE2MQTT
+• Przeskanuj mostek Zigbee2MQTT i jednym dotknięciem utwórz kafelek dla każdego urządzenia — bez ręcznego ustawiania tematów.
+• Światła, rolety, gniazdka, czujniki, sceny — każde urządzenie z własną stroną i stanem.
+
+DOWOLNY BROKER
+• TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Wyszukiwanie brokera w sieci lokalnej, hasło w bezpiecznym magazynie, automatyczne ponowne łączenie.
+• Obsługa Tailscale: zdalny dostęp bez przekierowania portów.
+
+AUTOMATYZACJA BEZ TELEFONU
+• Harmonogramy i reguły automatycznego wyłączania działają na Twoim hubie (Node-RED), nawet gdy telefon jest wyłączony.
+
+TELEFON I TABLET
+• Ciemny motyw na tablecie ściennym, tryb „Wyświetlacz ścienny”, Material You.
+• Języki: polski, angielski, niemiecki, francuski, hiszpański, rosyjski, portugalski, niderlandzki, szwedzki, norweski i hebrajski.
+• Kopia zapasowa dashboardów do pliku .json.
+
+PRYWATNOŚĆ
+• Bez reklam i konta. Anonimowe dane o użyciu tylko za Twoją zgodą.
+• Twoje dane zostają na urządzeniu i Twoim brokerze. Otwarty kod (MIT).

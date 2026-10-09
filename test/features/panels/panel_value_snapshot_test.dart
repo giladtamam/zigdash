@@ -20,7 +20,7 @@ class _FakeMqttManager extends MqttManager {
         password: '',
       );
 
-  final messages = BehaviorSubject<MqttRxMessage>();
+  final incoming = BehaviorSubject<MqttRxMessage>();
   final statuses = BehaviorSubject<MqttStatus>.seeded(MqttStatus.disconnected);
   int generation = 0;
 
@@ -31,14 +31,14 @@ class _FakeMqttManager extends MqttManager {
   Stream<MqttStatus> get status$ => statuses.stream;
 
   @override
-  Stream<MqttRxMessage> subscribe(String pattern) => messages.stream;
+  Stream<MqttRxMessage> subscribe(String pattern) => incoming.stream;
 
   @override
   void unsubscribe(String pattern) {}
 
   @override
   Future<void> dispose() async {
-    await messages.close();
+    await incoming.close();
     await statuses.close();
     await super.dispose();
   }
@@ -117,7 +117,7 @@ void main() {
 
       manager.generation = 1;
       manager.statuses.add(MqttStatus.connected);
-      manager.messages.add(_message(generation: 1));
+      manager.incoming.add(_message(generation: 1));
       await Future<void>.delayed(Duration.zero);
       expect(states.last.requireValue.value, 'on');
       expect(states.last.requireValue.freshness, PanelFreshness.fresh);
@@ -136,7 +136,7 @@ void main() {
       expect(states.last.requireValue.value, 'on');
       expect(states.last.requireValue.freshness, PanelFreshness.stale);
 
-      manager.messages.add(_message(generation: 2, payload: 'off'));
+      manager.incoming.add(_message(generation: 2, payload: 'off'));
       await Future<void>.delayed(Duration.zero);
       expect(states.last.requireValue.value, 'off');
       expect(states.last.requireValue.freshness, PanelFreshness.fresh);
@@ -168,7 +168,7 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       manager.generation = 1;
       manager.statuses.add(MqttStatus.connected);
-      manager.messages.add(
+      manager.incoming.add(
         MqttRxMessage(
           topic: 'device/state',
           payload: '{"state":{"power":"on"}}',

@@ -1,0 +1,1 @@
+Ingen flere frakoblinger når samme hjem er satt opp på to enheter, som en telefon og et nettbrett på veggen. Å forlate et dashbord kobler ikke lenger fra Mosquitto 2-brokere, også SMLIGHT-huber. WebSocket-tilkoblinger fungerer nå. TalkBack leser navn og tilstand for hver flis, og glidebrytere verdien. Material You-farger gjelder også kort og ark. Inkluderer 1.9.3.

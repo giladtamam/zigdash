@@ -9,11 +9,13 @@ import 'package:zigdash/features/connections/discovery/subnet.dart';
 class _FakeProber implements HostProber {
   _FakeProber(this.hits);
   final Map<String, bool> hits; // "host:port" -> needsAuth
+  final probed = <String>{};
   int active = 0;
   int maxActive = 0;
 
   @override
   Future<ProbeResult?> probe(String host, int port) async {
+    probed.add(host);
     active++;
     if (active > maxActive) maxActive = active;
     await Future<void>.delayed(const Duration(milliseconds: 3));
@@ -48,6 +50,27 @@ void main() {
     });
     test('empty on malformed ip', () {
       expect(candidateHosts('garbage'), isEmpty);
+    });
+  });
+
+  group('widerCandidateHosts', () {
+    test('covers the rest of the aligned /22, not the own /24', () {
+      final hosts = widerCandidateHosts('192.168.68.42');
+      expect(hosts.length, 256 + 256 + 255); // 69, 70, 71 minus broadcast
+      expect(hosts.first, '192.168.69.0');
+      expect(hosts, contains('192.168.71.254'));
+      expect(hosts, isNot(contains('192.168.71.255')));
+      expect(hosts.any((h) => h.startsWith('192.168.68.')), isFalse);
+    });
+    test('from a middle block, includes the first block but not .0', () {
+      final hosts = widerCandidateHosts('192.168.69.10');
+      expect(hosts, contains('192.168.68.55'));
+      expect(hosts, isNot(contains('192.168.68.0')));
+      expect(hosts.any((h) => h.startsWith('192.168.69.')), isFalse);
+    });
+    test('empty for public or malformed addresses', () {
+      expect(widerCandidateHosts('8.8.8.8'), isEmpty);
+      expect(widerCandidateHosts('garbage'), isEmpty);
     });
   });
 
@@ -88,6 +111,20 @@ void main() {
       await service.scan('192.168.7.42').toList();
       expect(prober.maxActive, lessThanOrEqualTo(8));
       expect(prober.maxActive, greaterThan(1)); // actually ran in parallel
+    });
+
+    test('finds a hub in another block of a /22 (mesh networks)', () async {
+      final prober = _FakeProber({'192.168.68.55:1883': false});
+      final service = BrokerScanService(prober: prober, ports: const [1883]);
+      final results = await service.scan('192.168.69.10').toList();
+      expect(results.map((r) => r.host), ['192.168.68.55']);
+    });
+
+    test('does not widen when the own /24 has a broker', () async {
+      final prober = _FakeProber({'192.168.7.210:1883': false});
+      final service = BrokerScanService(prober: prober, ports: const [1883]);
+      await service.scan('192.168.7.42').toList();
+      expect(prober.probed.every((h) => h.startsWith('192.168.7.')), isTrue);
     });
 
     test('no brokers found → empty, still closes', () async {

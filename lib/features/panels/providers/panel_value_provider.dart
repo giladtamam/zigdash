@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../mqtt/json_path.dart';
+import '../../onboarding/demo_home.dart' show demoGeneration;
 import '../../../mqtt/mqtt_manager.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
@@ -26,8 +27,9 @@ class PanelValueSnapshot {
     receivedAt: message.receivedAt,
     connectionGeneration: message.connectionGeneration,
     freshness:
-        status == MqttStatus.connected &&
-            message.connectionGeneration == currentGeneration
+        message.connectionGeneration == demoGeneration ||
+            (status == MqttStatus.connected &&
+                message.connectionGeneration == currentGeneration)
         ? PanelFreshness.fresh
         : PanelFreshness.stale,
   );

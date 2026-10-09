@@ -1,1 +1,1 @@
-Zigbee2MQTT-Dashboard mit Geräteerkennung. Lokal, privat, quelloffen.
+Für dein Zigbee2MQTT (erforderlich): ein Dashboard, das sich selbst baut.

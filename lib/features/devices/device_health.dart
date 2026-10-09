@@ -2,91 +2,148 @@ import 'dart:convert';
 
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 
-/// Per-device health snapshot derived from MQTT state + availability topics.
-class DeviceHealth {
-  final String friendlyName;
-  final int? battery; // 0-100; null if not reported
-  final num? linkQuality; // 0-255; null if not reported
-  final String? lastSeen; // raw string (ISO or epoch) if present
-  final bool? online; // from availability topic; null if unknown
+/// Battery at or below this percentage counts as low.
+const lowBatteryPercent = 20;
 
-  const DeviceHealth({
-    required this.friendlyName,
-    this.battery,
-    this.linkQuality,
-    this.lastSeen,
-    this.online,
-  });
+/// Link quality below this reads as "Weak". Shown, never counted as
+/// attention: it is the last hop of the last message and fluctuates.
+const weakLinkQuality = 30;
+
+/// Whether a state payload says the battery is low: `battery_low` true or
+/// `battery` ≤ [lowBatteryPercent], either one enough. Null when the payload
+/// carries neither field, so a message without battery data (say, only
+/// `linkquality`) never reads as "battery fine".
+bool? batteryLowIn(Map<String, dynamic> state) {
+  final flag = state['battery_low'];
+  final pct = state['battery'];
+  if (flag is! bool && pct is! num) return null;
+  return flag == true || (pct is num && pct <= lowBatteryPercent);
 }
 
-/// Build health rows for [devices].
+/// One device's health, from what Zigbee2MQTT actually reports
+/// (docs/design/devices-tablet-1.13.md §2).
+class DeviceHealth {
+  const DeviceHealth({
+    required this.device,
+    this.state,
+    this.lastHeard,
+    this.online,
+    this.notResponding = false,
+    this.stale = false,
+  });
+
+  final Z2mDevice device;
+
+  /// The last state payload, live or last-known; null before any report.
+  final Map<String, dynamic>? state;
+
+  /// When [state] arrived (survives restarts through the last-known store).
+  final DateTime? lastHeard;
+
+  /// From availability, and only for devices whose availability the bridge
+  /// tracks; null otherwise. Never inferred.
+  final bool? online;
+
+  /// A state request went unanswered while there is still no state.
+  final bool notResponding;
+
+  /// [state] is from before this connection (last known, not fresh).
+  final bool stale;
+
+  String get friendlyName => device.friendlyName;
+
+  int? get battery => switch (state?['battery']) {
+        final num b => b.round(),
+        _ => null,
+      };
+
+  num? get linkQuality => switch (state?['linkquality']) {
+        final num q => q,
+        _ => null,
+      };
+
+  bool get lowBattery => state != null && batteryLowIn(state!) == true;
+
+  bool get weakLink => (linkQuality ?? weakLinkQuality) < weakLinkQuality;
+
+  bool get offline => online == false;
+
+  bool get unsupported => !device.supported;
+
+  /// Low battery, offline (when tracked), not responding, a failed
+  /// interview or an unsupported device.
+  bool get needsAttention =>
+      lowBattery ||
+      offline ||
+      notResponding ||
+      device.interviewFailed ||
+      unsupported;
+}
+
+/// Parses an availability payload: Zigbee2MQTT 2.x JSON `{"state": …}` or a
+/// 1.x plain string. Null when unreadable.
+bool? parseAvailability(String payload) {
+  if (payload == 'online') return true;
+  if (payload == 'offline') return false;
+  try {
+    final decoded = jsonDecode(payload);
+    if (decoded is Map) {
+      final s = decoded['state'];
+      if (s == 'online') return true;
+      if (s == 'offline') return false;
+    }
+  } catch (_) {}
+  return null;
+}
+
+/// A state payload as a map, or null when it is not a JSON object.
+Map<String, dynamic>? parseState(String payload) {
+  try {
+    final decoded = jsonDecode(payload);
+    return decoded is Map<String, dynamic> ? decoded : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+/// Builds one [DeviceHealth] per device, in order. Never throws.
 ///
-/// [stateByName]        — friendlyName → last state JSON payload.
-/// [availabilityByName] — friendlyName → last availability payload.
-///
-/// Always returns one [DeviceHealth] per entry in [devices] (same order),
-/// even when state/availability are missing or malformed — never throws.
+/// [states] and [availability] are keyed by friendly name. [tracked] says
+/// whether the bridge tracks a device's availability (by IEEE); untracked
+/// devices get no online/offline, whatever the broker retained.
+/// [notResponding] names devices whose state request timed out.
 List<DeviceHealth> deviceHealthFrom(
-  List<Z2mDevice> devices,
-  Map<String, String> stateByName,
-  Map<String, String> availabilityByName,
-) {
-  return devices.map((dev) {
-    final name = dev.friendlyName;
+  List<Z2mDevice> devices, {
+  Map<String, ({String payload, DateTime at})> states = const {},
+  Map<String, String> availability = const {},
+  bool Function(String? ieee) tracked = _never,
+  Set<String> notResponding = const {},
+  Set<String> stale = const {},
+}) =>
+    [
+      for (final d in devices)
+        () {
+          final s = states[d.friendlyName];
+          final state = s == null ? null : parseState(s.payload);
+          final av = availability[d.friendlyName];
+          return DeviceHealth(
+            device: d,
+            state: state,
+            lastHeard: s?.at,
+            online: av != null && tracked(d.ieeeAddress)
+                ? parseAvailability(av)
+                : null,
+            notResponding:
+                state == null && notResponding.contains(d.friendlyName),
+            stale: state != null && stale.contains(d.friendlyName),
+          );
+        }(),
+    ];
 
-    // ---------- parse state JSON ----------
-    int? battery;
-    num? linkQuality;
-    String? lastSeen;
+bool _never(String? _) => false;
 
-    final stateRaw = stateByName[name];
-    if (stateRaw != null) {
-      try {
-        final state = jsonDecode(stateRaw);
-        if (state is Map<String, dynamic>) {
-          final batRaw = state['battery'];
-          if (batRaw is num) battery = batRaw.round();
-
-          final lqRaw = state['linkquality'];
-          if (lqRaw is num) linkQuality = lqRaw;
-
-          final lsRaw = state['last_seen'];
-          if (lsRaw != null) lastSeen = lsRaw.toString();
-        }
-      } catch (_) {
-        // malformed JSON → leave fields null
-      }
-    }
-
-    // ---------- parse availability ----------
-    bool? online;
-    final avRaw = availabilityByName[name];
-    if (avRaw != null) {
-      if (avRaw == 'online') {
-        online = true;
-      } else if (avRaw == 'offline') {
-        online = false;
-      } else {
-        // Try JSON {"state":"online"/"offline"}
-        try {
-          final decoded = jsonDecode(avRaw);
-          if (decoded is Map<String, dynamic>) {
-            final state = decoded['state'] as String?;
-            if (state == 'online') online = true;
-            if (state == 'offline') online = false;
-          }
-        } catch (_) {
-          // unrecognised format → online stays null
-        }
-      }
-    }
-
-    return DeviceHealth(
-      friendlyName: name,
-      battery: battery,
-      linkQuality: linkQuality,
-      lastSeen: lastSeen,
-      online: online,
-    );
-  }).toList();
+/// Needs attention first, then by name.
+int compareHealth(DeviceHealth a, DeviceHealth b) {
+  if (a.needsAttention != b.needsAttention) return a.needsAttention ? -1 : 1;
+  return a.friendlyName.toLowerCase().compareTo(b.friendlyName.toLowerCase());
 }

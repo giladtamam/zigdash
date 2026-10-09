@@ -19,6 +19,9 @@ class SceneRepo {
   Stream<List<Scene>> watchByConnection(String connectionId) =>
       _dao.watchByConnection(connectionId);
 
+  Future<List<Scene>> getByConnection(String connectionId) =>
+      _dao.getByConnection(connectionId);
+
   Future<Scene?> getById(String id) => _dao.getById(id);
 
   Future<String> create({

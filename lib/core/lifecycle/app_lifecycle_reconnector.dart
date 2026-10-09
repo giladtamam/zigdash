@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/last_known/last_known_store.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
 
 /// Forces every live [MqttManager] to reconnect when the app returns to the
@@ -37,6 +38,9 @@ class _AppLifecycleReconnectorState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       ref.read(mqttManagerRegistryProvider).reconnectAll();
+    } else if (state == AppLifecycleState.paused) {
+      // Save pending last-known values before Android may end the process.
+      ref.read(lastKnownStoreProvider).flush().ignore();
     }
   }
 

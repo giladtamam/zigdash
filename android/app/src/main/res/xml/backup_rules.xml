@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 11 and older: keep last-known tile values out of Auto Backup
+     (docs/adr/0004). Everything else keeps the default behaviour. -->
+<full-backup-content>
+    <exclude domain="root" path="app_flutter/last_known.sqlite" />
+    <exclude domain="root" path="app_flutter/last_known.sqlite-wal" />
+    <exclude domain="root" path="app_flutter/last_known.sqlite-shm" />
+    <exclude domain="root" path="app_flutter/last_known.sqlite-journal" />
+</full-backup-content>

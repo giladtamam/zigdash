@@ -18,36 +18,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'ZigDash';
 
   @override
-  String get onboardingWelcomeTitle => 'Welcome to ZigDash';
-
-  @override
-  String get onboardingWelcomeSubtitle =>
-      'Your private, local dashboard for Zigbee2MQTT.\nNo cloud. No tracking. Just control.';
-
-  @override
-  String get onboardingBrokerTitle => 'Connect your broker';
-
-  @override
-  String get onboardingBrokerSubtitle =>
-      'Point ZigDash at your MQTT broker to talk directly to your Zigbee devices. Works with Mosquitto, SMLIGHT, and any MQTT server.';
-
-  @override
-  String get onboardingDashboardTitle => 'Build your dashboards';
-
-  @override
-  String get onboardingDashboardSubtitle =>
-      'Create custom dashboards with toggles, sliders, covers, and more. Arrange panels your way — all stored on your device.';
-
-  @override
-  String get onboardingSkip => 'Skip';
-
-  @override
-  String get onboardingNext => 'Next';
-
-  @override
-  String get onboardingGetStarted => 'Get Started';
-
-  @override
   String get onboardingDemo => 'Try demo';
 
   @override
@@ -91,7 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageHebrew => 'עברית';
 
   @override
-  String get connectionsTitle => 'Connections';
+  String get connectionsTitle => 'Homes';
 
   @override
   String connLoadFailed(Object error) {
@@ -538,6 +508,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panelTypeAutoClose => 'Auto-close';
 
   @override
+  String get panelTypeDevice => 'Device';
+
+  @override
+  String get panelTypeReading => 'Reading';
+
+  @override
   String get panelFormName => 'Name';
 
   @override
@@ -580,16 +556,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.';
 
   @override
-  String get panelFormWidth => 'Width';
+  String get tileSize => 'Size';
 
   @override
-  String get panelFormWidthFull => 'Full';
+  String get tileSizeSmall => 'Small';
 
   @override
-  String get panelFormWidthHalf => 'Half';
+  String get tileSizeWide => 'Wide';
 
   @override
-  String get panelFormWidthThird => 'Third';
+  String get tileSizeFull => 'Full';
 
   @override
   String get panelFormQos => 'QoS';
@@ -856,18 +832,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panelTileMoveDown => 'Move down';
 
   @override
-  String get panelTileWidth => 'Width';
-
-  @override
-  String get panelTileWidthFull => 'Full';
-
-  @override
-  String get panelTileWidthHalf => 'Half';
-
-  @override
-  String get panelTileWidthThird => '⅓';
-
-  @override
   String get panelTileDelete => 'Delete panel';
 
   @override
@@ -958,7 +922,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get panelGridEmpty =>
-      'No panels yet.\nTap + to add a Toggle, Slider, or Button.';
+      'No tiles yet.\nTap Add tile to put your devices here.';
 
   @override
   String get panelsOffline => 'Offline — showing last values';
@@ -998,6 +962,48 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enjoying it? A quick review helps others find it.';
 
   @override
+  String get settingsFeatureRequest => 'Request a feature';
+
+  @override
+  String get settingsFeatureRequestSubtitle =>
+      'Tell me what would make ZigDash better.';
+
+  @override
+  String get featureRequestGithub => 'On GitHub';
+
+  @override
+  String get featureRequestGithubSubtitle =>
+      'Public: others can see it and vote for it.';
+
+  @override
+  String get featureRequestEmail => 'By email';
+
+  @override
+  String get featureRequestEmailSubtitle =>
+      'Private, straight to the developer.';
+
+  @override
+  String get featureRequestEmailSubject => 'ZigDash feature request';
+
+  @override
+  String get featureRequestEmailPrompt =>
+      'What would you like ZigDash to do, and why?';
+
+  @override
+  String get settingsReportProblem => 'Report a problem';
+
+  @override
+  String get settingsReportProblemSubtitle =>
+      'Something broken or confusing? Tell me.';
+
+  @override
+  String get reportProblemEmailSubject => 'ZigDash problem report';
+
+  @override
+  String get reportProblemEmailPrompt =>
+      'What happened, and what did you expect? Your device model and Zigbee2MQTT version help.';
+
+  @override
   String get settingsBuyCoffee => 'Buy me a coffee';
 
   @override
@@ -1021,6 +1027,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get a11yMoreOptions => 'More options';
+
+  @override
+  String get a11yRefresh => 'Refresh';
 
   @override
   String get a11yDeleteConnection => 'Delete connection';
@@ -1105,6 +1114,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get devicesNone => 'No devices found.';
+
+  @override
+  String get devicesListMissing =>
+      'Zigbee2MQTT hasn\'t sent its device list. This can happen after the MQTT broker restarts.';
+
+  @override
+  String get devicesRestartZ2m => 'Restart Zigbee2MQTT';
+
+  @override
+  String get devicesRestartingZ2m =>
+      'Restarting Zigbee2MQTT. Your devices should appear in a few seconds.';
 
   @override
   String get devicesBattery => 'Battery';
@@ -1352,9 +1372,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t save the connection. Please try again.';
 
   @override
-  String get onboardingConnectBroker => 'Connect my broker';
-
-  @override
   String get setupWelcomeTitle => 'Welcome to ZigDash';
 
   @override
@@ -1393,7 +1410,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupGuideSmlight =>
-      'SMLIGHT / SMHUB: open the device\'s web UI, enable the MQTT broker, and check that Zigbee2MQTT shows as connected.';
+      'SMLIGHT / SMHUB: open the device\'s web UI, go to Settings > MQTT, turn on Allow External so your phone can reach the broker, and check that Zigbee2MQTT shows as running.';
 
   @override
   String get setupTryAgain => 'Try again';
@@ -1534,4 +1551,536 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupErrUnknownAction => 'Try again';
+
+  @override
+  String get setupNoZ2mTitle =>
+      'Your broker works, but Zigbee2MQTT isn\'t publishing here';
+
+  @override
+  String setupNoZ2mBody(String base) {
+    return 'We listened on $base/bridge and heard nothing.';
+  }
+
+  @override
+  String get setupBaseTopicQuestion => 'Using a different base topic?';
+
+  @override
+  String get setupGuidesTitle => 'Set up Zigbee2MQTT';
+
+  @override
+  String get setupTryDemoMeanwhile => 'Try the demo meanwhile';
+
+  @override
+  String get demoBannerText => 'You\'re in demo mode';
+
+  @override
+  String get demoBannerAction => 'Connect your home';
+
+  @override
+  String get deviceOn => 'On';
+
+  @override
+  String get deviceOff => 'Off';
+
+  @override
+  String get deviceOpen => 'Open';
+
+  @override
+  String get deviceClosed => 'Closed';
+
+  @override
+  String get deviceMotion => 'Motion';
+
+  @override
+  String get deviceClear => 'Clear';
+
+  @override
+  String get deviceLeakDetected => 'Leak detected';
+
+  @override
+  String get deviceSmokeDetected => 'Smoke detected';
+
+  @override
+  String get deviceGasDetected => 'Gas detected';
+
+  @override
+  String get deviceWaiting => 'Waiting for first report';
+
+  @override
+  String deviceEndpointsOnOff(int on, int off) {
+    return '$on on · $off off';
+  }
+
+  @override
+  String get deviceBrightness => 'Brightness';
+
+  @override
+  String get deviceWhite => 'White';
+
+  @override
+  String get deviceColor => 'Color';
+
+  @override
+  String get deviceHue => 'Hue';
+
+  @override
+  String get devicePosition => 'Position';
+
+  @override
+  String get deviceControls => 'Controls';
+
+  @override
+  String deviceBattery(int percent) {
+    return 'Battery $percent%';
+  }
+
+  @override
+  String get deviceToggle => 'Turn on or off';
+
+  @override
+  String get deviceMore => 'More';
+
+  @override
+  String get sectionLights => 'Lights';
+
+  @override
+  String get sectionSwitchesCovers => 'Switches and covers';
+
+  @override
+  String get sectionSensors => 'Sensors';
+
+  @override
+  String get sectionOther => 'Other';
+
+  @override
+  String get homeFirstName => 'My Home';
+
+  @override
+  String homeNumberedName(int number) {
+    return 'Home $number';
+  }
+
+  @override
+  String get dashAddTile => 'Add tile';
+
+  @override
+  String get addTileSearch => 'Search devices';
+
+  @override
+  String get addTileNotOnDashboard => 'Not on a dashboard';
+
+  @override
+  String get addTileAllDevices => 'All devices';
+
+  @override
+  String get addTileReading => 'Reading';
+
+  @override
+  String get addTileReadingSubtitle => 'One value from a device or topic';
+
+  @override
+  String get addTileCustom => 'Custom MQTT tile';
+
+  @override
+  String get addTileCustomSubtitle => 'Any tile type, set up by topic';
+
+  @override
+  String get addTileNoDevices =>
+      'No devices to show. Connect to your broker, or pair a device in Zigbee2MQTT.';
+
+  @override
+  String get addTileAdd => 'Add';
+
+  @override
+  String get addTileName => 'Name';
+
+  @override
+  String addTileNameHint(String model) {
+    return 'e.g. $model';
+  }
+
+  @override
+  String get addTileSection => 'Section';
+
+  @override
+  String get addTileNoSection => 'No section';
+
+  @override
+  String get addTileSize => 'Size';
+
+  @override
+  String get deviceClassColorLight => 'Color light';
+
+  @override
+  String get deviceClassLight => 'Light';
+
+  @override
+  String get deviceClassSwitch => 'Switch or plug';
+
+  @override
+  String get deviceClassCover => 'Cover';
+
+  @override
+  String get deviceClassLeak => 'Leak or smoke';
+
+  @override
+  String get deviceClassContact => 'Contact';
+
+  @override
+  String get deviceClassMotion => 'Motion';
+
+  @override
+  String get deviceClassClimate => 'Climate sensor';
+
+  @override
+  String get deviceClassGeneric => 'Device';
+
+  @override
+  String get deviceNotResponding => 'Not responding';
+
+  @override
+  String get homeAdd => 'Add a home';
+
+  @override
+  String get homeManage => 'Manage homes';
+
+  @override
+  String get homeSwitch => 'Switch home';
+
+  @override
+  String get navDevices => 'Devices';
+
+  @override
+  String get navScenes => 'Scenes';
+
+  @override
+  String get devicesNewDot => 'New devices';
+
+  @override
+  String get editEditing => 'Editing';
+
+  @override
+  String get editDashboard => 'Dashboard';
+
+  @override
+  String get editDone => 'Done';
+
+  @override
+  String get editAddSection => 'Add section';
+
+  @override
+  String get editSectionName => 'Section name';
+
+  @override
+  String get editRenameSection => 'Rename section';
+
+  @override
+  String get editDeleteSection => 'Delete section';
+
+  @override
+  String get editDeleteSectionBody => 'What should happen to its tiles?';
+
+  @override
+  String get editKeepTiles => 'Keep tiles, remove section';
+
+  @override
+  String get editDeleteTiles => 'Delete tiles too';
+
+  @override
+  String get editMoveToSection => 'Move to section';
+
+  @override
+  String get editEditTile => 'Edit tile';
+
+  @override
+  String get editRemove => 'Remove from dashboard';
+
+  @override
+  String get editRemoved => 'Tile removed';
+
+  @override
+  String get editUndo => 'Undo';
+
+  @override
+  String get editReplaceWithDevice => 'Replace with device tile';
+
+  @override
+  String get editMoveEarlier => 'Move earlier';
+
+  @override
+  String get editMoveLater => 'Move later';
+
+  @override
+  String editUnassigned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices aren\'t on any dashboard',
+      one: '1 device isn\'t on any dashboard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get editTileActions => 'Tile options';
+
+  @override
+  String get editSave => 'Save';
+
+  @override
+  String get editCancel => 'Cancel';
+
+  @override
+  String get ageJustNow => 'Just now';
+
+  @override
+  String ageMinutes(int n) {
+    return '$n min ago';
+  }
+
+  @override
+  String ageHours(int n) {
+    return '$n h ago';
+  }
+
+  @override
+  String get statusCantReach => 'Can\'t reach your broker';
+
+  @override
+  String get statusWhy => 'Why?';
+
+  @override
+  String get statusWhyTitle => 'Your broker isn\'t answering';
+
+  @override
+  String get statusWhyBody =>
+      'ZigDash keeps trying on its own. Until it\'s back, tiles show their last known values, dimmed, with their age. Check that the broker is on and this phone is on the same network, or test the connection in its settings.';
+
+  @override
+  String get statusSettings => 'Connection settings';
+
+  @override
+  String get deviceAddToDashboard => 'Add to a dashboard';
+
+  @override
+  String get deviceDismiss => 'Dismiss';
+
+  @override
+  String get devicesFilterAll => 'All';
+
+  @override
+  String devicesFilterAttention(int count) {
+    return 'Needs attention · $count';
+  }
+
+  @override
+  String devicesFilterUnassigned(int count) {
+    return 'Not on a dashboard · $count';
+  }
+
+  @override
+  String get devicesNoMatch => 'No devices match';
+
+  @override
+  String get deviceBatteryLow => 'Battery low';
+
+  @override
+  String get deviceLinkWeak => 'Weak';
+
+  @override
+  String get deviceUnsupported => 'Not supported by Zigbee2MQTT';
+
+  @override
+  String get deviceInterviewFailed => 'Pairing didn\'t finish';
+
+  @override
+  String get deviceNoReport => 'No report yet';
+
+  @override
+  String get devicesAvailabilityOff =>
+      'Zigbee2MQTT availability is off, so offline devices show as Not responding.';
+
+  @override
+  String get devicesAvailabilityHow => 'How to turn it on';
+
+  @override
+  String get devicesDotBattery => 'Battery low';
+
+  @override
+  String get deviceDetails => 'Device details';
+
+  @override
+  String get deviceGone => 'This device is no longer in Zigbee2MQTT.';
+
+  @override
+  String get deviceControlTitle => 'Control';
+
+  @override
+  String get deviceReadingsTitle => 'Readings';
+
+  @override
+  String get deviceHealthTitle => 'Health';
+
+  @override
+  String get deviceOnDashboards => 'On dashboards';
+
+  @override
+  String get deviceUnsupportedBody =>
+      'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.';
+
+  @override
+  String get deviceAddReadingTile => 'Add as reading tile';
+
+  @override
+  String get deviceAddReadingTo => 'Add to which dashboard?';
+
+  @override
+  String deviceAddedTo(Object dashboard) {
+    return 'Added to $dashboard';
+  }
+
+  @override
+  String get deviceLinkQuality => 'Link quality';
+
+  @override
+  String get deviceLinkGood => 'Good';
+
+  @override
+  String get devicePowerSource => 'Power source';
+
+  @override
+  String get devicePowerBattery => 'Battery';
+
+  @override
+  String get devicePowerMains => 'Mains';
+
+  @override
+  String get deviceLastHeard => 'Last heard';
+
+  @override
+  String get deviceAvailability => 'Availability';
+
+  @override
+  String get deviceAvailabilityOff => 'Off in Zigbee2MQTT';
+
+  @override
+  String get settingsPrivacy => 'Privacy policy';
+
+  @override
+  String get settingsPrivacySubtitle =>
+      'No telemetry. Everything stays on this phone.';
+
+  @override
+  String get homeCurrent => 'Current home';
+
+  @override
+  String get homeConnection => 'Connection';
+
+  @override
+  String get homeSwitchTo => 'Switch to this home';
+
+  @override
+  String get homeDelete => 'Delete home';
+
+  @override
+  String get devicesSelect => 'Select a device';
+
+  @override
+  String get scenesSelect => 'Select a scene to edit';
+
+  @override
+  String get panelFormTopic => 'Topic';
+
+  @override
+  String get panelFormPickDevice => 'Pick a device';
+
+  @override
+  String get panelFormStateTopic => 'State topic';
+
+  @override
+  String get panelFormCommandTopic => 'Command topic';
+
+  @override
+  String get panelFormCommandTopicDerived =>
+      'Filled from the state topic until you change it.';
+
+  @override
+  String panelFormLinkedTo(Object device) {
+    return 'Linked to $device';
+  }
+
+  @override
+  String get panelFormOpenDevice => 'Open device';
+
+  @override
+  String get panelFormUnlink => 'Unlink';
+
+  @override
+  String get panelFormValueChoices => 'Values from this device';
+
+  @override
+  String get panelFormAdvanced => 'Advanced';
+
+  @override
+  String get panelFormAdvancedSubtitle => 'Prefix override, QoS, retain';
+
+  @override
+  String get panelFormStateTopicHelper =>
+      'Blank = the prefix itself (a Zigbee2MQTT device\'s state).';
+
+  @override
+  String get dashWallDisplay => 'Wall display';
+
+  @override
+  String get dashWallDisplayOn =>
+      'Wall display on: the screen stays on, and the bars hide after 10 seconds without a touch. Tap to bring them back.';
+
+  @override
+  String get dashWallDisplayOff => 'Wall display off.';
+
+  @override
+  String get analyticsSetupCheckbox =>
+      'Share anonymous usage data to help improve setup';
+
+  @override
+  String get analyticsWhatsShared => 'What\'s shared';
+
+  @override
+  String get analyticsCardTitle => 'Help improve ZigDash?';
+
+  @override
+  String get analyticsCardBody =>
+      'Share anonymous usage data: which setup steps fail and which features get used. Never your devices, topics or broker.';
+
+  @override
+  String get analyticsShare => 'Share';
+
+  @override
+  String get analyticsNoThanks => 'No thanks';
+
+  @override
+  String get settingsAnalytics => 'Share anonymous usage data';
+
+  @override
+  String get settingsAnalyticsSubtitle =>
+      'Setup steps and features used. Never your devices, topics or broker.';
+
+  @override
+  String get settingsPrivacySubtitleOptIn =>
+      'Anonymous usage data only if you opt in.';
+
+  @override
+  String get dashDefaultName => 'Home';
+
+  @override
+  String get dashExportSaveFile => 'Save file';
+
+  @override
+  String get dashExportSaved => 'Backup saved';
+
+  @override
+  String get dashImportChooseFile => 'Choose file';
+
+  @override
+  String get dashImportFileUnreadable => 'Couldn\'t read that file';
 }

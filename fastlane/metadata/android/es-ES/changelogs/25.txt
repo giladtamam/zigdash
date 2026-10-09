@@ -1,0 +1,1 @@
+Primer inicio más rápido: ZigDash abre con Encontrar mi instalación, se conecta solo si encuentra un bróker y te lleva directo a tu nuevo panel. Si el bróker funciona pero Zigbee2MQTT no publica, puedes revisar el tema base ahí mismo. La demo está marcada y desaparece al conectar tu hogar. La app abre ahora en el último panel usado.

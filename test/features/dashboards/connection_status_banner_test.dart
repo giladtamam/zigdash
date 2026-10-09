@@ -1,5 +1,3 @@
-import 'dart:ui' show SemanticsFlag;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/features/dashboards/widgets/connection_status_banner.dart';
@@ -8,7 +6,8 @@ import 'package:zigdash/mqtt/mqtt_status.dart';
 
 Widget _wrap(
   MqttStatus status, {
-  required VoidCallback onReconnect,
+  VoidCallback? onReconnect,
+  VoidCallback? onSettings,
   Locale locale = const Locale('en'),
 }) =>
     MaterialApp(
@@ -18,75 +17,61 @@ Widget _wrap(
       home: Scaffold(
         body: ConnectionStatusBanner(
           status: status,
-          onReconnect: onReconnect,
+          onReconnect: onReconnect ?? () {},
+          onSettings: onSettings,
+          lastError: 'Connection refused',
         ),
       ),
     );
 
 void main() {
-  testWidgets('connected renders no banner', (tester) async {
-    await tester.pumpWidget(
-      _wrap(MqttStatus.connected, onReconnect: () {}),
-    );
+  for (final status in [
+    MqttStatus.connected,
+    MqttStatus.connecting,
+    MqttStatus.disconnected,
+  ]) {
+    testWidgets('${status.name}: no line', (tester) async {
+      await tester.pumpWidget(_wrap(status));
+      expect(find.text("Can't reach your broker"), findsNothing);
+    });
+  }
 
-    expect(find.byType(Card), findsNothing);
-  });
+  for (final status in [MqttStatus.reconnecting, MqttStatus.error]) {
+    testWidgets('${status.name}: the slim line with Why?', (tester) async {
+      await tester.pumpWidget(_wrap(status));
+      expect(find.text("Can't reach your broker"), findsOneWidget);
+      expect(find.text('Why?'), findsOneWidget);
+    });
+  }
 
-  testWidgets('explicitly disconnected renders no banner', (tester) async {
-    await tester.pumpWidget(
-      _wrap(MqttStatus.disconnected, onReconnect: () {}),
-    );
+  testWidgets('Why? explains and offers Reconnect now and settings',
+      (tester) async {
+    var reconnects = 0, settings = 0;
+    await tester.pumpWidget(_wrap(MqttStatus.error,
+        onReconnect: () => reconnects++, onSettings: () => settings++));
 
-    expect(find.byType(Card), findsNothing);
-  });
-
-  testWidgets('reconnecting shows stale-values copy and reconnects once', (
-    tester,
-  ) async {
-    var reconnects = 0;
-    await tester.pumpWidget(
-      _wrap(MqttStatus.reconnecting, onReconnect: () => reconnects++),
-    );
-
-    expect(find.text('Reconnecting…'), findsOneWidget);
-    expect(find.text('Showing last known values'), findsOneWidget);
+    await tester.tap(find.text('Why?'));
+    await tester.pumpAndSettle();
+    expect(find.text("Your broker isn't answering"), findsOneWidget);
+    expect(find.text('Connection refused'), findsOneWidget);
     await tester.tap(find.text('Reconnect now'));
+    await tester.pumpAndSettle();
     expect(reconnects, 1);
+
+    await tester.tap(find.text('Why?'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Connection settings'));
+    await tester.pumpAndSettle();
+    expect(settings, 1);
   });
 
-  testWidgets('connecting shows progress without an action', (tester) async {
-    await tester.pumpWidget(
-      _wrap(MqttStatus.connecting, onReconnect: () {}),
-    );
-
-    expect(find.text('Connecting…'), findsOneWidget);
-    expect(find.text('Reconnect now'), findsNothing);
-  });
-
-  testWidgets('error explains automatic retry and offers immediate action', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      _wrap(MqttStatus.error, onReconnect: () {}),
-    );
-
-    expect(find.text('Connection failed'), findsOneWidget);
-    expect(find.text('Automatic retry will continue'), findsOneWidget);
-    expect(find.text('Reconnect now'), findsOneWidget);
-  });
-
-  testWidgets('visible banner is one live-region semantics node', (
-    tester,
-  ) async {
+  testWidgets('the line is one live-region semantics node', (tester) async {
     final handle = tester.ensureSemantics();
-    await tester.pumpWidget(
-      _wrap(MqttStatus.reconnecting, onReconnect: () {}),
-    );
-
+    await tester.pumpWidget(_wrap(MqttStatus.reconnecting));
     final liveRegions = find.bySemanticsIdentifier('connection-status-banner');
     expect(liveRegions, findsOneWidget);
     expect(
-      tester.getSemantics(liveRegions).hasFlag(SemanticsFlag.isLiveRegion),
+      tester.getSemantics(liveRegions).flagsCollection.isLiveRegion,
       isTrue,
     );
     handle.dispose();
@@ -94,14 +79,8 @@ void main() {
 
   testWidgets('layout remains usable in RTL', (tester) async {
     await tester.pumpWidget(
-      _wrap(
-        MqttStatus.reconnecting,
-        onReconnect: () {},
-        locale: const Locale('he'),
-      ),
-    );
-
+        _wrap(MqttStatus.reconnecting, locale: const Locale('he')));
     expect(tester.takeException(), isNull);
-    expect(find.byType(ConnectionStatusBanner), findsOneWidget);
+    expect(find.text('למה?'), findsOneWidget);
   });
 }

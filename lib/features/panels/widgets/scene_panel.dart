@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../../scenes/models/scene.dart';
 import '../../scenes/scenes_providers.dart';
@@ -33,7 +34,7 @@ class ScenePanel extends ConsumerWidget {
     final missing = scene == null;
     final color = scene != null ? Color(scene.colorSeed) : null;
     final icon = scene != null
-        ? IconData(scene.iconCodepoint, fontFamily: 'MaterialIcons')
+        ? materialIcon(scene.iconCodepoint)
         : Icons.help_outline;
 
     Future<void> activate() async {

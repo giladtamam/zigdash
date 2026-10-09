@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -11,7 +12,9 @@ import 'package:zigdash/features/settings/providers/settings_controller.dart';
 /// but the mini broker must listen on an interface the NAT alias reaches
 /// (127.0.0.1 works: 10.0.2.2 maps to the host loopback).
 ///
-/// Run with a broker reachable from the device:
+/// Run with a broker and the Zigbee2MQTT simulator on the host:
+///   mosquitto -p 1883 &   # anonymous, on 127.0.0.1
+///   python3 tool/e2e/z2m_sim.py --host localhost --port 1883 &
 ///   flutter test integration_test/setup_flow_test.dart -d DEVICE
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +31,7 @@ void main() {
     return false;
   }
 
-  testWidgets('setup: welcome → scan → candidate → review → create → ready',
+  testWidgets('setup: welcome → scan → review → create → dashboard',
       (tester) async {
     // Deterministic fresh state regardless of previous runs on the device.
     SharedPreferences.setMockInitialValues({});
@@ -39,56 +42,39 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // --- Onboarding → last page → "Connect my broker" → setup welcome ---
-    await tester.tap(find.text('Next'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Next'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Connect my broker'));
-    await tester.pumpAndSettle();
+    // --- A fresh install opens directly on setup: one door, no carousel ---
     expect(find.text('Find my setup'), findsOneWidget);
 
-    // --- Scan: the host's broker appears as a candidate (10.0.2.2) ---
+    // --- Scan: the host's broker (10.0.2.2). With exactly one broker found
+    // setup continues on its own; with several, pick the first. ---
     await tester.tap(find.text('Find my setup'));
-    final foundCandidate = await waitFor(
-      tester,
-      () => tester.any(find.text('Possible connection found')),
-      const Duration(milliseconds: 500),
-    );
-    expect(foundCandidate, isTrue,
-        reason: 'the host broker appears as a scan candidate');
-
-    // --- Select it → verify → device review ---
-    await tester.tap(find.text('Possible connection found').first);
-    final inReview = await waitFor(
-      tester,
-      () => tester.any(find.textContaining('devices found')),
-      const Duration(seconds: 1),
-    );
+    var inReview = false;
+    for (var i = 0; i < 60 && !inReview; i++) {
+      await tester.pump(const Duration(milliseconds: 500));
+      final picker = find.text('Possible connection found');
+      if (tester.any(picker) &&
+          !tester.any(find.byType(CircularProgressIndicator))) {
+        await tester.tap(picker.first);
+      }
+      inReview = tester.any(find.textContaining('devices found'));
+    }
     expect(inReview, isTrue,
         reason: 'review screen with discovered device count');
 
-    // The mini broker's three devices: lamp-style controls preselected.
-    expect(find.text('office_light'), findsOneWidget);
+    // The simulator's devices (tool/e2e/z2m_sim.py): the light preselected.
+    expect(find.text('living_light'), findsOneWidget);
     expect(find.textContaining('Create dashboard with'), findsOneWidget);
 
-    // --- Create the first dashboard ---
+    // --- Create the first dashboard: it opens directly, no "ready" screen ---
     await tester.tap(find.textContaining('Create dashboard with'));
-    final ready = await waitFor(
-      tester,
-      () => tester.any(find.text('Your dashboard is ready')),
-      const Duration(seconds: 1),
-    );
-    expect(ready, isTrue, reason: 'completion screen');
-
-    // --- Open the dashboard: panels were created from the selection ---
-    await tester.tap(find.text('Open dashboard'));
     final onDashboards = await waitFor(
       tester,
-      () => tester.any(find.text('office_light')),
+      () => tester.any(find.text('living_light')) &&
+          !tester.any(find.textContaining('Create dashboard with')),
       const Duration(seconds: 1),
     );
     expect(onDashboards, isTrue,
         reason: 'a created panel is visible on the new dashboard');
+    expect(find.text('Your dashboard is ready'), findsNothing);
   });
 }

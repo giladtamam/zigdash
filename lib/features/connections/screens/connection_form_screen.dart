@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
+import '../../onboarding/first_run.dart';
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../mqtt/broker_config.dart';
@@ -114,7 +115,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
           remoteHost: _remoteHost.text.trim().isEmpty ? null : _remoteHost.text.trim(),
         );
       } else {
-        await repo.create(
+        final id = await repo.create(
           name: _name.text.trim(),
           host: _host.text.trim(),
           port: port,
@@ -125,6 +126,11 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
           autoConnect: _autoConnect,
           remoteHost: _remoteHost.text.trim().isEmpty ? null : _remoteHost.text.trim(),
         );
+        // A new real home counts as completing setup: it ends first run and
+        // removes the demo home. Bookkeeping failures must not block saving.
+        try {
+          await ref.read(firstRunProvider).finish(id);
+        } catch (_) {}
       }
       if (mounted) context.pop();
     } finally {

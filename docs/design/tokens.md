@@ -16,7 +16,7 @@ Implementation shape (from the Flutter feasibility research): shape tokens on `T
 | ink variant (secondary text) | #5B5446 | #A79F90 |
 | amber (active fill) | #F5C878, ink on top | #F0A544, ink #1C1A16 on top |
 
-**With Material You on:** surfaces, navigation and buttons follow the wallpaper scheme. The **active** fill stays amber, harmonized toward the wallpaper's primary (max ~15° hue shift).
+**Material You is off by default** (amended 2026-09-27, ADR 0002). **With Material You on:** surfaces, navigation and buttons follow the wallpaper scheme. The **active** fill stays amber, harmonized toward the wallpaper's primary (max ~15° hue shift).
 
 **State roles** (`ThemeExtension`, each a container + on-container pair, all harmonized):
 

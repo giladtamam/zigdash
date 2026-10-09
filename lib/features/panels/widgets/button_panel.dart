@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
+import '../../../core/utils/material_icon.dart';
 import '../../../data/database/database.dart';
 import '../models/panel_config.dart';
 import 'control_action.dart';
@@ -45,7 +46,7 @@ class ButtonPanel extends ConsumerWidget {
             children: [
               Icon(
                 config.iconCodepoint != null
-                    ? IconData(config.iconCodepoint!, fontFamily: 'MaterialIcons')
+                    ? materialIcon(config.iconCodepoint!)
                     : Icons.send,
                 size: 28,
                 color: color,

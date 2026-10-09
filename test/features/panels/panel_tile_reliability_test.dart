@@ -126,6 +126,12 @@ AbsorbPointer _gate(WidgetTester tester) => tester.widget<AbsorbPointer>(
       .first,
 );
 
+/// The stale chip: it shows the value's age (a date for these fixtures).
+final _staleChip = find.descendant(
+  of: find.byType(PanelReliabilityFrame),
+  matching: find.byType(Chip),
+);
+
 void main() {
   test('every panel type has an intentional reliability policy', () {
     const expected = <PanelType, PanelReliabilityPolicy>{
@@ -146,6 +152,9 @@ void main() {
       PanelType.schedule: PanelReliabilityPolicy.publishOnly(),
       PanelType.scene: PanelReliabilityPolicy.publishOnly(),
       PanelType.autoClose: PanelReliabilityPolicy.autoClose(),
+      // Device tiles read the whole state payload and send /set commands.
+      PanelType.device: PanelReliabilityPolicy.deviceTile(),
+      PanelType.reading: PanelReliabilityPolicy.readOnlySubscription(),
     };
 
     expect(expected.keys, containsAll(PanelType.values));
@@ -199,14 +208,14 @@ void main() {
     statuses.add(MqttStatus.disconnected);
     await tester.pump();
 
-    expect(find.text('Last known'), findsOneWidget);
+    expect(_staleChip, findsOneWidget);
     expect(_gate(tester).absorbing, isTrue);
 
     manager.connected = true;
     statuses.add(MqttStatus.connected);
     await tester.pump();
 
-    expect(find.text('Last known'), findsOneWidget);
+    expect(_staleChip, findsOneWidget);
     expect(_gate(tester).absorbing, isFalse);
     final semanticsLabel = tester
         .getSemantics(find.byType(PanelReliabilityFrame))
@@ -235,7 +244,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Last known'), findsOneWidget);
+    expect(_staleChip, findsOneWidget);
     expect(_gate(tester).absorbing, isTrue);
   });
 
@@ -251,7 +260,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Last known'), findsNothing);
+    expect(_staleChip, findsNothing);
     expect(_gate(tester).absorbing, isFalse);
   });
 
@@ -267,7 +276,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Last known'), findsOneWidget);
+    expect(_staleChip, findsOneWidget);
     expect(_gate(tester).absorbing, isFalse);
   });
 
@@ -311,5 +320,30 @@ void main() {
     expect(label, isNot(contains('motor')));
     expect(label, isNot(contains('{')));
     semantics.dispose();
+  });
+
+  testWidgets('a stale value shows its age', (tester) async {
+    final now = DateTime(2026, 9, 27, 12);
+    Future<void> show(DateTime at) => tester.pumpWidget(MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: PanelReliabilityFrame(
+              stale: true,
+              controlsEnabled: true,
+              receivedAt: at,
+              now: () => now,
+              child: const SizedBox(width: 200, height: 100),
+            ),
+          ),
+        ));
+    await show(now.subtract(const Duration(seconds: 20)));
+    expect(find.text('Just now'), findsOneWidget);
+    await show(now.subtract(const Duration(minutes: 12)));
+    expect(find.text('12 min ago'), findsOneWidget);
+    await show(now.subtract(const Duration(hours: 2, minutes: 5)));
+    expect(find.text('2 h ago'), findsOneWidget);
+    await show(DateTime(2026, 9, 20));
+    expect(find.text('Sep 20'), findsOneWidget);
   });
 }

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Runs the Flutter SDK version pinned in .fvmrc, so ZigDash can move ahead of
+# the machine-wide SDK that other projects use.
+#
+# Resolution order:
+#   1. $ZIGDASH_FLUTTER (path to a flutter binary)
+#   2. fvm, if installed
+#   3. ~/development/flutter-<version>/bin/flutter
+#   4. flutter on PATH, only if it is the pinned version
+set -euo pipefail
+root="$(cd "$(dirname "$0")/.." && pwd)"
+version="$(sed -n 's/.*"flutter": *"\([^"]*\)".*/\1/p' "$root/.fvmrc")"
+
+if [[ -n "${ZIGDASH_FLUTTER:-}" ]]; then
+  exec "$ZIGDASH_FLUTTER" "$@"
+elif command -v fvm >/dev/null 2>&1; then
+  exec fvm flutter "$@"
+elif [[ -x "$HOME/development/flutter-$version/bin/flutter" ]]; then
+  exec "$HOME/development/flutter-$version/bin/flutter" "$@"
+elif command -v flutter >/dev/null 2>&1 &&
+     flutter --version 2>/dev/null | head -1 | grep -q "Flutter $version "; then
+  exec flutter "$@"
+fi
+
+echo "ZigDash needs Flutter $version. Install it with fvm, or clone it:" >&2
+echo "  git clone --depth 1 --branch $version https://github.com/flutter/flutter.git ~/development/flutter-$version" >&2
+exit 1

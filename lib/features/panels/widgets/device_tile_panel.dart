@@ -1,0 +1,613 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
+import '../../../core/theme/signal_colors.dart';
+import '../../../core/theme/signal_icons.dart';
+import '../../../core/theme/tokens.dart';
+import '../../../core/utils/window_class.dart';import 'package:flutter/semantics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/l10n/l10n_ext.dart';
+import '../../../data/database/database.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../../mqtt/mqtt_status.dart';
+import '../../../mqtt/providers/mqtt_manager_provider.dart';
+import '../../devices/device_profile.dart';
+import '../../devices/device_state_refresher.dart';
+import '../../devices/device_state.dart';
+import '../models/panel_config.dart';
+import '../providers/panel_value_provider.dart';
+import 'control_action.dart';
+import 'device_sheet.dart';
+import '../../../core/theme/motion.dart';
+
+/// Decodes a Zigbee2MQTT state payload; anything else reads as "no state".
+Map<String, Object?> decodeDeviceState(Object? payload) {
+  if (payload is Map) return payload.cast<String, Object?>();
+  if (payload is! String || payload.isEmpty) return const {};
+  try {
+    final v = json.decode(payload);
+    return v is Map ? v.cast<String, Object?>() : const {};
+  } catch (_) {
+    return const {};
+  }
+}
+
+/// Publishes a `/set` command for a device tile.
+Future<void> sendDeviceCommand(
+  BuildContext context,
+  WidgetRef ref,
+  String connectionId,
+  String publishTopic,
+  Map<String, Object?> command,
+) =>
+    runControlAction(
+      context,
+      ref,
+      connectionId,
+      (mgr) => mgr.publish(publishTopic, json.encode(command), ''),
+    );
+
+/// A whole device on the dashboard. The icon is the quick action (for
+/// classes that have one), the body opens the class's controls sheet.
+class DeviceTilePanel extends ConsumerWidget {
+  const DeviceTilePanel({
+    super.key,
+    required this.connectionId,
+    required this.publishTopic,
+    required this.subscribeTopic,
+    required this.panel,
+    required this.config,
+  });
+
+  final String connectionId;
+  final String publishTopic;
+  final String subscribeTopic;
+  final Panel panel;
+  final DeviceTileConfig config;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final profile = config.profile;
+    final payload = ref
+        .watch(panelValueProvider(PanelStreamKey(
+          connectionId: connectionId,
+          topic: subscribeTopic,
+          jsonPath: null,
+        )))
+        .valueOrNull;
+    final state = DeviceState(profile, decodeDeviceState(payload));
+    final cls = profile.deviceClass;
+
+    // Once per connection, ask the device for its state (Zigbee2MQTT does
+    // not retain it). Rebuilds on reconnect via the status watch.
+    final connected = ref.watch(connectionStatusProvider(connectionId)).valueOrNull ==
+        MqttStatus.connected;
+    final refresher =
+        ref.watch(deviceStateRefresherProvider(connectionId)).valueOrNull;
+    if (connected && refresher != null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => refresher.request(subscribeTopic, profile));
+    }
+    final alarming =
+        cls == DeviceClass.leakSmoke && state.alarm == true;
+
+    void openSheet() => showDeviceSheet(
+          context,
+          connectionId: connectionId,
+          publishTopic: publishTopic,
+          subscribeTopic: subscribeTopic,
+          panel: panel,
+          config: config,
+        );
+
+    Future<void> toggle(DeviceFeature f) => sendDeviceCommand(
+        context, ref, connectionId, publishTopic,
+        DeviceCommand.toggle(f, state.isOn(f)));
+
+    final switches = profile.switches;
+    final showsSwitches = cls == DeviceClass.light ||
+        cls == DeviceClass.colorLight ||
+        cls == DeviceClass.switchPlug ||
+        (cls == DeviceClass.generic && switches.isNotEmpty);
+    final anyOn = switches.any((f) => state.isOn(f) == true);
+
+    final silent = ref
+            .watch(deviceSilentProvider(
+                (connectionId: connectionId, topic: subscribeTopic)))
+            .valueOrNull ??
+        false;
+    final big = _bigValue(state, l10n);
+    final line = deviceStateLine(state, l10n, notResponding: silent);
+    final color = cls == DeviceClass.colorLight ? state.lightColor : null;
+
+    // Signal (signal-2.0.md §4): amber and borderless when on, the attention
+    // container during an alarm, the idle tile with its hairline otherwise.
+    final roles = SignalColors.of(context);
+    final filled = alarming || anyOn;
+    final fg = alarming
+        ? roles.onAttention
+        : anyOn
+            ? roles.onActive
+            : scheme.onSurface;
+    final fgVariant = filled ? fg : scheme.onSurfaceVariant;
+    const shape = RoundedSuperellipseBorder(
+        borderRadius: BorderRadiusDirectional.all(Radius.circular(SignalRadii.tile)));
+    // The fill cross-fades on a state change (M3 standard timing), instantly
+    // when the system asks for no animations (signal-2.0.md §6).
+    final idleColor = theme.cardTheme.color ?? roles.idle;
+    return TweenAnimationBuilder<Color?>(
+      tween: ColorTween(
+          end: alarming
+              ? roles.attention
+              : anyOn
+                  ? roles.active
+                  : idleColor),
+      duration: SignalMotion.of(context, SignalMotion.stateChange),
+      curve: Curves.easeInOutCubicEmphasized,
+      builder: (context, fill, child) => alarming
+          ? _AlarmPulse(
+              from: fill!,
+              to: roles.attentionPulse,
+              builder: (pulse) => Card(color: pulse, shape: shape, child: child),
+            )
+          : Card(
+              color: fill,
+              shape: filled ? shape : null,
+              child: child,
+            ),
+      child: Semantics(
+        customSemanticsActions: {
+          CustomSemanticsAction(label: l10n.deviceControls): openSheet,
+        },
+        child: InkWell(
+          customBorder: shape,
+          onTap: openSheet,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    if (showsSwitches && switches.isNotEmpty)
+                      for (final f in switches.take(3))
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 8),
+                          child: _QuickAction(
+                            icon: deviceClassIcon(cls, alarm: state.alarm),
+                            on: state.isOn(f),
+                            tooltip: l10n.deviceToggle,
+                            onPressed: () => toggle(f),
+                          ),
+                        )
+                    else
+                      SignalIcon(
+                        deviceClassIcon(cls, alarm: state.alarm),
+                        active: filled,
+                        color: fgVariant,
+                      ),
+                    const Spacer(),
+                    if (color != null)
+                      ExcludeSemantics(
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF000000 | color),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: scheme.outlineVariant),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (big != null)
+                  Text(big,
+                      style: theme.textTheme.headlineMedium?.copyWith(color: fg)),
+                Text(
+                  panel.name,
+                  style: theme.textTheme.titleMedium?.copyWith(color: fg),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  line,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: state.batteryLow && !filled
+                        ? roles.onAttention
+                        : fgVariant,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (cls == DeviceClass.colorLight && profile.brightness != null)
+                  // On amber, the slider is drawn in ink so it stays visible.
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: filled ? fg : null,
+                      thumbColor: filled ? fg : null,
+                      inactiveTrackColor: filled ? fg.withValues(alpha: 0.24) : null,
+                    ),
+                    child: IconTheme.merge(
+                      data: IconThemeData(color: fgVariant),
+                      child: _InlineBrightness(
+                    state: state,
+                    onChanged: (pct) => sendDeviceCommand(
+                        context, ref, connectionId, publishTopic,
+                        DeviceCommand.brightnessPercent(
+                            profile.brightness!, pct)),
+                  ),
+                    ),
+                  ),
+                if (cls == DeviceClass.cover)
+                  _CoverControls(
+                    state: state,
+                    onAction: (a) => sendDeviceCommand(context, ref,
+                        connectionId, publishTopic, DeviceCommand.cover(a)),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// The large number some classes lead with (climate, generic readings).
+  String? _bigValue(DeviceState state, AppLocalizations l10n) {
+    if (state.profile.deviceClass != DeviceClass.climate) return null;
+    final f = state.profile.readings.firstOrNull;
+    if (f == null) return null;
+    final v = state.reading(f);
+    return v == null ? '—' : formatReading(v, f.unit);
+  }
+}
+
+/// The state line under a device tile's name: state · main value · battery.
+/// Before any state: "Not responding" once the device ignored its state
+/// request, otherwise "Waiting for first report".
+String deviceStateLine(
+  DeviceState state,
+  AppLocalizations l10n, {
+  bool notResponding = false,
+}) {
+  if (!state.hasReported) {
+    return notResponding ? l10n.deviceNotResponding : l10n.deviceWaiting;
+  }
+  final profile = state.profile;
+  final parts = <String>[];
+  String onOff(bool? on) => on == null
+      ? '—'
+      : on
+          ? l10n.deviceOn
+          : l10n.deviceOff;
+  switch (profile.deviceClass) {
+    case DeviceClass.light:
+    case DeviceClass.colorLight:
+      final f = profile.switches.firstOrNull;
+      parts.add(onOff(f == null ? null : state.isOn(f)));
+      final pct = state.brightnessPercent;
+      if (pct != null && f != null && state.isOn(f) == true) {
+        parts.add(ltr('$pct%'));
+      }
+      final k = state.kelvin;
+      if (k != null && profile.deviceClass == DeviceClass.colorLight) {
+        // Nearest 100 K: bulbs report mireds, so exact kelvins read as noise.
+        parts.add(ltr('${(k / 100).round() * 100} K'));
+      }
+    case DeviceClass.switchPlug:
+    case DeviceClass.generic:
+      final sw = profile.switches;
+      if (sw.length > 1) {
+        final on = sw.where((f) => state.isOn(f) == true).length;
+        parts.add(l10n.deviceEndpointsOnOff(on, sw.length - on));
+      } else if (sw.length == 1) {
+        parts.add(onOff(state.isOn(sw.single)));
+      }
+      final r = profile.readings.firstOrNull;
+      final v = r == null ? null : state.reading(r);
+      if (v != null) parts.add(formatReading(v, r!.unit));
+    case DeviceClass.cover:
+      final s = state.values['state'];
+      if (s is String) {
+        parts.add(s.toUpperCase() == 'OPEN'
+            ? l10n.deviceOpen
+            : s.toUpperCase() == 'CLOSE' || s.toUpperCase() == 'CLOSED'
+                ? l10n.deviceClosed
+                : s);
+      }
+      final pos = state.position;
+      if (pos != null) parts.add(ltr('$pos%'));
+    case DeviceClass.contact:
+      final a = state.alarm;
+      parts.add(a == null
+          ? '—'
+          : a
+              ? l10n.deviceClosed
+              : l10n.deviceOpen);
+    case DeviceClass.motion:
+      final a = state.alarm;
+      parts.add(a == null
+          ? '—'
+          : a
+              ? l10n.deviceMotion
+              : l10n.deviceClear);
+    case DeviceClass.leakSmoke:
+      final a = state.alarm;
+      final p = profile.alarm?.property;
+      parts.add(a == null
+          ? '—'
+          : !a
+              ? l10n.deviceClear
+              : p == 'smoke'
+                  ? l10n.deviceSmokeDetected
+                  : p == 'gas'
+                      ? l10n.deviceGasDetected
+                      : l10n.deviceLeakDetected);
+    case DeviceClass.climate:
+      final rs = profile.readings.skip(1).take(1);
+      for (final f in rs) {
+        final v = state.reading(f);
+        if (v != null) parts.add(formatReading(v, f.unit));
+      }
+  }
+  final b = state.battery;
+  if (b != null) parts.add(ltr('$b%'));
+  return parts.isEmpty ? '—' : parts.join(' · ');
+}
+
+/// A reading with its unit: one decimal at most, no trailing ".0". Wrapped
+/// as a left-to-right run so "1200 W" never reorders in Hebrew.
+String formatReading(num v, String? unit) {
+  final text = v is int || v == v.roundToDouble()
+      ? v.round().toString()
+      : v.toStringAsFixed(1);
+  if (unit == null || unit.isEmpty) return ltr(text);
+  return ltr(unit == '°C' || unit == '°F' || unit == '%'
+      ? '$text$unit'
+      : '$text $unit');
+}
+
+/// Isolates [s] as a left-to-right run (U+2066 … U+2069).
+String ltr(String s) => '\u2066$s\u2069';
+
+/// A device class's app icon, from the Symbols subset (ADR 0005). Draw it
+/// with [SignalIcon] so it fills when the device is on.
+IconData deviceClassIcon(DeviceClass cls, {bool? alarm}) => switch (cls) {
+      DeviceClass.colorLight || DeviceClass.light => Symbols.lightbulb,
+      DeviceClass.switchPlug => Symbols.powerSettingsNew,
+      DeviceClass.cover => Symbols.blinds,
+      DeviceClass.leakSmoke =>
+        alarm == true ? Symbols.waterDamage : Symbols.waterDrop,
+      DeviceClass.contact =>
+        alarm == false ? Symbols.doorFront : Symbols.sensorDoor,
+      DeviceClass.motion => Symbols.sensors,
+      DeviceClass.climate => Symbols.thermostat,
+      DeviceClass.generic => Symbols.deviceUnknown,
+    };
+
+/// A leak or smoke alarm's fill, pulsing slowly between [from] and [to]
+/// (2 s, signal-2.0.md §6). Steady at [from] when the system turns
+/// animations off. Nothing else in the app loops.
+class _AlarmPulse extends StatefulWidget {
+  const _AlarmPulse({required this.from, required this.to, required this.builder});
+
+  final Color from;
+  final Color to;
+  final Widget Function(Color fill) builder;
+
+  @override
+  State<_AlarmPulse> createState() => _AlarmPulseState();
+}
+
+class _AlarmPulseState extends State<_AlarmPulse>
+    with SingleTickerProviderStateMixin {
+  late final _controller = AnimationController(vsync: this);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final half = SignalMotion.of(context, SignalMotion.alarmPulseHalf);
+    if (half == Duration.zero) {
+      _controller
+        ..stop()
+        ..value = 0;
+    } else if (!_controller.isAnimating) {
+      _controller
+        ..duration = half
+        ..repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) => widget.builder(Color.lerp(widget.from,
+            widget.to, Curves.easeInOutSine.transform(_controller.value))!),
+      );
+}
+
+class _QuickAction extends StatelessWidget {
+  const _QuickAction({
+    required this.icon,
+    required this.on,
+    required this.tooltip,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final bool? on;
+  final String tooltip;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    // A squircle, ink with an amber icon when on and raised with an ink
+    // icon otherwise (signal-2.0.md §4). Unknown state still switches: the
+    // command toggles (or turns on) without knowing the current state.
+    final roles = SignalColors.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final isOn = on == true;
+    final size = SignalSpacing.quickAction[WindowClass.of(context).index];
+    return Semantics(
+      toggled: on ?? false,
+      child: Tooltip(
+        message: tooltip,
+        child: Material(
+          color: isOn ? roles.onActive : roles.raised,
+          shape: const RoundedSuperellipseBorder(
+              borderRadius: BorderRadiusDirectional.all(
+                  Radius.circular(SignalRadii.quickAction))),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onPressed,
+            child: SizedBox.square(
+              dimension: size,
+              child: Center(
+                child: SignalIcon(
+                  icon,
+                  active: isOn,
+                  size: size * 0.5,
+                  color: isOn ? roles.active : scheme.onSurface,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InlineBrightness extends StatelessWidget {
+  const _InlineBrightness({required this.state, required this.onChanged});
+
+  final DeviceState state;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final pct = state.brightnessPercent;
+    return Row(
+      children: [
+        const Icon(Icons.brightness_6_outlined, size: 18),
+        Expanded(
+          child: CommitSlider(
+            label: context.l10n.deviceBrightness,
+            value: pct?.toDouble(),
+            onChanged: (v) => onChanged(v.round()),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CoverControls extends StatelessWidget {
+  const _CoverControls({required this.state, required this.onAction});
+
+  final DeviceState state;
+  final ValueChanged<String> onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final pos = state.position;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            IconButton.outlined(
+              tooltip: l10n.panelCoverOpen,
+              onPressed: () => onAction('OPEN'),
+              icon: const Icon(Icons.keyboard_arrow_up),
+            ),
+            IconButton.outlined(
+              tooltip: l10n.panelCoverStop,
+              onPressed: () => onAction('STOP'),
+              icon: const Icon(Icons.stop),
+            ),
+            IconButton.outlined(
+              tooltip: l10n.panelCoverClose,
+              onPressed: () => onAction('CLOSE'),
+              icon: const Icon(Icons.keyboard_arrow_down),
+            ),
+          ],
+        ),
+        if (pos != null)
+          Semantics(
+            label: l10n.devicePosition,
+            value: '$pos%',
+            child: LinearProgressIndicator(value: pos / 100),
+          ),
+      ],
+    );
+  }
+}
+
+/// A slider that shows the reported value, follows the finger while
+/// dragging, and sends once on release (not a command per frame). Disabled
+/// while the value is unknown.
+class CommitSlider extends StatefulWidget {
+  const CommitSlider({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    this.min = 0,
+    this.max = 100,
+    this.format,
+  });
+
+  final String label;
+  final double? value;
+  final double min;
+  final double max;
+  final String Function(double)? format;
+  final ValueChanged<double> onChanged;
+
+  @override
+  State<CommitSlider> createState() => _CommitSliderState();
+}
+
+class _CommitSliderState extends State<CommitSlider> {
+  double? _dragging;
+
+  @override
+  Widget build(BuildContext context) {
+    final v = (_dragging ?? widget.value ?? widget.min)
+        .clamp(widget.min, widget.max)
+        .toDouble();
+    return Semantics(
+      label: widget.label,
+      child: Slider(
+        value: v,
+        min: widget.min,
+        max: widget.max,
+        label: widget.format?.call(v),
+        onChanged: widget.value == null
+            ? null
+            : (x) => setState(() => _dragging = x),
+        onChangeEnd: (x) {
+          setState(() => _dragging = null);
+          widget.onChanged(x);
+        },
+      ),
+    );
+  }
+}

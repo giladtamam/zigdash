@@ -1,11 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/app_l10n.dart';
+import '../../../data/database/daos/device_registry_dao.dart';
+import '../../../data/database/database.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
+import '../../../data/repositories/section_repo.dart';
+import '../../settings/providers/settings_controller.dart';
 import '../../connections/diagnostics/connect_diagnostics_provider.dart';
 import '../../connections/discovery/broker_scan_providers.dart';
 import '../../connections/discovery/network_info.dart';
+import '../first_run.dart';
 import 'setup_coordinator.dart';
 import 'setup_creator.dart';
 import 'z2m_probe.dart';
@@ -24,8 +30,13 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
     creator: SetupCreator(
       connections: ref.watch(connectionRepoProvider),
       dashboards: ref.watch(dashboardRepoProvider),
+      sections: ref.watch(sectionRepoProvider),
       panels: ref.watch(panelRepoProvider),
+      registry: DeviceRegistryDao(ref.watch(appDatabaseProvider)),
+      l10n: appL10n(ref.read(settingsControllerProvider).locale),
     ),
+    onCreated: (result) =>
+        ref.read(firstRunProvider).finish(result.connectionId),
   );
   ref.onDispose(coordinator.dispose);
   return coordinator;

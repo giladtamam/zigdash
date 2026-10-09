@@ -11,14 +11,22 @@ ProviderContainer _containerWith(SharedPreferences prefs) => ProviderContainer(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('defaults when prefs empty: system theme, dynamic on, system locale', () async {
+  test('defaults when prefs empty: system theme, Signal colors, system locale',
+      () async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final c = _containerWith(prefs);
     final s = c.read(settingsControllerProvider);
     expect(s.themeMode, ThemeMode.system);
-    expect(s.dynamicColor, isTrue);
+    expect(s.dynamicColor, isFalse, reason: 'Signal is the default look');
     expect(s.locale, isNull);
+  });
+
+  test('someone who turned Material You on keeps it', () async {
+    SharedPreferences.setMockInitialValues({'dynamic_color': true});
+    final prefs = await SharedPreferences.getInstance();
+    expect(_containerWith(prefs).read(settingsControllerProvider).dynamicColor,
+        isTrue);
   });
 
   test('loads persisted values', () async {

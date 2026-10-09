@@ -57,15 +57,29 @@ class RadioPanel extends ConsumerWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis),
             const SizedBox(height: 4),
-            for (final o in config.options)
-              RadioListTile<String>(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(o.label),
-                value: o.match,
-                groupValue: current,
-                onChanged: (_) => _publish(context, ref, o),
+            RadioGroup<String>(
+              groupValue: current,
+              onChanged: (match) {
+                for (final o in config.options) {
+                  if (o.match == match) {
+                    _publish(context, ref, o);
+                    return;
+                  }
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final o in config.options)
+                    RadioListTile<String>(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      title: Text(o.label),
+                      value: o.match,
+                    ),
+                ],
               ),
+            ),
           ],
         ),
       ),

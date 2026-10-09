@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../first_run.dart';
 import 'recommendation_policy.dart';
 import 'setup_candidate.dart';
 import 'setup_coordinator.dart';
 import 'setup_error_guidance.dart';
+import 'setup_analytics.dart';
 import 'setup_providers.dart';
 
 /// The discovery-first onboarding flow: renders [SetupCoordinator] state and
@@ -23,46 +27,75 @@ class SetupScreen extends ConsumerWidget {
     final state = asyncState.valueOrNull ?? coordinator.state;
     final l10n = context.l10n;
 
+    // No "ready" screen: a finished setup opens its dashboard directly.
+    ref.listen(setupStateProvider, (previous, next) {
+      final s = next.valueOrNull;
+      if (s == null) return;
+      final step = setupStepFor(previous?.valueOrNull, s);
+      if (step != null) ref.read(analyticsProvider).track(step);
+      if (s is SetupComplete) {
+        context.go(Routes.homeDashboards(s.result.connectionId));
+      }
+    });
+
+    void manual() {
+      ref.read(analyticsProvider).track(const SetupStep(SetupStepKind.manual));
+      context.push(Routes.guidedConnect);
+    }
+
+    Future<void> tryDemo() async {
+      ref.read(analyticsProvider).track(const SetupStep(SetupStepKind.demo));
+      final id = await ref.read(firstRunProvider).startDemo();
+      if (context.mounted) context.go(Routes.homeDashboards(id));
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.setupWelcomeTitle)),
       body: SafeArea(
         child: switch (state) {
           SetupIdle() => _Welcome(
               onFind: coordinator.startScan,
-              onManual: () => context.go(Routes.guidedConnect),
+              onManual: manual,
             ),
           SetupScanning() => _Scanning(
               state: state,
               onSelect: coordinator.selectCandidate,
-              onManual: () => context.go(Routes.guidedConnect),
+              onManual: manual,
             ),
           SetupScanEmpty() => _ScanEmpty(
               onRetry: coordinator.retry,
-              onManual: () => context.go(Routes.guidedConnect),
+              onManual: manual,
+              onDemo: tryDemo,
             ),
           SetupVerifying() => const _Verifying(),
           SetupNeedsAuth() => _AuthPrompt(
               state: state,
               onSubmit: coordinator.submitCredentials,
             ),
+          SetupFailed(kind: SetupErrorKind.notZigbee2Mqtt) => _NoZigbee2Mqtt(
+              base: coordinator.base,
+              onRetry: coordinator.retryWithBase,
+              onDemo: tryDemo,
+              onManual: manual,
+            ),
           SetupFailed() => _Failure(
               state: state,
-              onRetry: state.kind == SetupErrorKind.notZigbee2Mqtt
-                  ? coordinator.startScan
-                  : coordinator.retry,
-              onManual: () => context.go(Routes.guidedConnect),
+              onRetry: coordinator.retry,
+              onManual: manual,
             ),
           SetupReview() => _Review(
               state: state,
               onToggle: coordinator.toggleDevice,
               onCreate: coordinator.createDashboard,
             ),
-          SetupCreating() => const _Creating(),
-          SetupComplete() => _Complete(
-              state: state,
-              onOpen: () => context.go(
-                  '/connections/${state.result.connectionId}/dashboards'),
+          SetupCreating() => _Review(
+              state: state.review,
+              busy: true,
+              onToggle: (_) {},
+              onCreate: () {},
             ),
+          // Navigation to the dashboard is under way (see ref.listen above).
+          SetupComplete() => const SizedBox.shrink(),
         },
       ),
     );
@@ -98,14 +131,37 @@ String _guidanceText(AppLocalizations l10n, String key) => switch (key) {
       _ => l10n.setupErrUnknownAction,
     };
 
-class _Welcome extends StatelessWidget {
+/// The first setup screen. With an analytics key in the build and no choice
+/// made yet, it carries the one consent question for new installs: an
+/// unticked box, recorded either way when the user moves on (ADR 0006).
+class _Welcome extends ConsumerStatefulWidget {
   const _Welcome({required this.onFind, required this.onManual});
   final VoidCallback onFind;
   final VoidCallback onManual;
 
   @override
+  ConsumerState<_Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends ConsumerState<_Welcome> {
+  bool _share = false;
+
+  bool get _asking =>
+      ref.watch(analyticsAvailableProvider) &&
+      ref.watch(analyticsConsentProvider) == AnalyticsConsent.unasked;
+
+  Future<void> _then(VoidCallback next) async {
+    if (_asking) {
+      await ref.read(analyticsConsentProvider.notifier).set(_share);
+    }
+    next();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    void onFind() => _then(widget.onFind);
+    void onManual() => _then(widget.onManual);
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
@@ -124,6 +180,24 @@ class _Welcome extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
+        if (_asking) ...[
+          const SizedBox(height: 24),
+          CheckboxListTile(
+            value: _share,
+            onChanged: (v) => setState(() => _share = v ?? false),
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.analyticsSetupCheckbox),
+          ),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              onPressed: () => launchUrl(usageDataPolicyUrl,
+                  mode: LaunchMode.externalApplication),
+              child: Text(l10n.analyticsWhatsShared),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -175,9 +249,14 @@ class _Scanning extends StatelessWidget {
 }
 
 class _ScanEmpty extends StatelessWidget {
-  const _ScanEmpty({required this.onRetry, required this.onManual});
+  const _ScanEmpty({
+    required this.onRetry,
+    required this.onManual,
+    required this.onDemo,
+  });
   final VoidCallback onRetry;
   final VoidCallback onManual;
+  final VoidCallback onDemo;
 
   @override
   Widget build(BuildContext context) {
@@ -194,11 +273,7 @@ class _ScanEmpty extends StatelessWidget {
         const SizedBox(height: 8),
         Text(l10n.setupNoCandidatesBody, style: theme.textTheme.bodyLarge),
         const SizedBox(height: 12),
-        Text(l10n.setupGuideHa, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 8),
-        Text(l10n.setupGuidePi, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 8),
-        Text(l10n.setupGuideSmlight, style: theme.textTheme.bodyMedium),
+        const _SetupGuides(),
         const SizedBox(height: 24),
         FilledButton.icon(
           onPressed: onRetry,
@@ -207,6 +282,83 @@ class _ScanEmpty extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
+        TextButton(onPressed: onDemo, child: Text(l10n.onboardingDemo)),
+      ],
+    );
+  }
+}
+
+/// "Your broker works, but Zigbee2MQTT isn't publishing here": check the base
+/// topic on the same broker, see setup guides, or try the demo meanwhile.
+class _NoZigbee2Mqtt extends StatefulWidget {
+  const _NoZigbee2Mqtt({
+    required this.base,
+    required this.onRetry,
+    required this.onDemo,
+    required this.onManual,
+  });
+  final String base;
+  final ValueChanged<String> onRetry;
+  final VoidCallback onDemo;
+  final VoidCallback onManual;
+
+  @override
+  State<_NoZigbee2Mqtt> createState() => _NoZigbee2MqttState();
+}
+
+class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
+  late final _baseController = TextEditingController(text: widget.base);
+
+  @override
+  void dispose() {
+    _baseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Semantics(
+          liveRegion: true,
+          child: Text(l10n.setupNoZ2mTitle, style: theme.textTheme.titleLarge),
+        ),
+        const SizedBox(height: 8),
+        Text(l10n.setupNoZ2mBody(widget.base),
+            style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 24),
+        Text(l10n.setupBaseTopicQuestion, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _baseController,
+                decoration: InputDecoration(labelText: l10n.discoverBaseTopic),
+                onSubmitted: widget.onRetry,
+              ),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: () => widget.onRetry(_baseController.text),
+              child: Text(l10n.retry),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text(l10n.setupGuidesTitle, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        const _SetupGuides(),
+        const SizedBox(height: 24),
+        OutlinedButton.icon(
+          onPressed: widget.onDemo,
+          icon: const Icon(Icons.play_circle_outline),
+          label: Text(l10n.setupTryDemoMeanwhile),
+        ),
+        TextButton(onPressed: widget.onManual, child: Text(l10n.setupManualEntry)),
       ],
     );
   }
@@ -353,10 +505,14 @@ class _Review extends StatelessWidget {
     required this.state,
     required this.onToggle,
     required this.onCreate,
+    this.busy = false,
   });
   final SetupReview state;
   final ValueChanged<String> onToggle;
   final VoidCallback onCreate;
+
+  /// Saving: the list stays up and the button shows progress.
+  final bool busy;
 
   @override
   Widget build(BuildContext context) {
@@ -393,8 +549,13 @@ class _Review extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16),
           child: FilledButton.icon(
-            onPressed: state.selectedCount > 0 ? onCreate : null,
-            icon: const Icon(Icons.dashboard_outlined),
+            onPressed: state.selectedCount > 0 && !busy ? onCreate : null,
+            icon: busy
+                ? const SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.dashboard_outlined),
             label: Text(l10n.setupCreateWithCount(state.selectedCount)),
           ),
         ),
@@ -443,57 +604,46 @@ class _DeviceRow extends StatelessWidget {
   }
 }
 
-class _Creating extends StatelessWidget {
-  const _Creating();
+/// Where Zigbee2MQTT usually runs, each opening its setup guide in the
+/// browser. Shown when nothing was found and when Zigbee2MQTT is missing.
+class _SetupGuides extends StatelessWidget {
+  const _SetupGuides();
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: 16),
-          Semantics(
-            liveRegion: true,
-            child: Text(context.l10n.setupCreatingTitle),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Complete extends StatelessWidget {
-  const _Complete({required this.state, required this.onOpen});
-  final SetupComplete state;
-  final VoidCallback onOpen;
+  static final _ha = Uri.parse(
+      'https://www.zigbee2mqtt.io/guide/installation/03_ha_addon.html');
+  static final _linux =
+      Uri.parse('https://www.zigbee2mqtt.io/guide/installation/01_linux.html');
+  static final _smlight =
+      Uri.parse('https://smlight.tech/support/manuals/books/smhub');
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    return ListView(
-      padding: const EdgeInsets.all(24),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 32),
-        Icon(Icons.check_circle, size: 56, color: theme.colorScheme.tertiary),
-        const SizedBox(height: 16),
-        Semantics(
-          liveRegion: true,
-          child: Text(l10n.setupReadyTitle,
-              textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
-        ),
-        const SizedBox(height: 8),
-        Text(l10n.setupReadyBody(state.result.panelCount),
-            textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
-        const SizedBox(height: 32),
-        FilledButton.icon(
-          onPressed: onOpen,
-          icon: const Icon(Icons.dashboard_outlined),
-          label: Text(l10n.setupOpenDashboard),
-        ),
+        _GuideLink(text: l10n.setupGuideHa, url: _ha),
+        _GuideLink(text: l10n.setupGuidePi, url: _linux),
+        _GuideLink(text: l10n.setupGuideSmlight, url: _smlight),
       ],
+    );
+  }
+}
+
+class _GuideLink extends StatelessWidget {
+  const _GuideLink({required this.text, required this.url});
+  final String text;
+  final Uri url;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(text, style: theme.textTheme.bodyMedium),
+      trailing: Icon(Icons.open_in_new,
+          size: 20, color: theme.colorScheme.primary),
+      onTap: () => launchUrl(url, mode: LaunchMode.externalApplication),
     );
   }
 }

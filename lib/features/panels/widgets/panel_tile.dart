@@ -2,34 +2,34 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
-import '../../../data/repositories/panel_repo.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../../mqtt/json_path.dart';
 import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
-import '../services/auto_close_config_publisher.dart';
-import '../services/automation_config_publisher.dart';
+import '../../dashboards/edit_mode.dart';
 import 'auto_close_panel.dart';
 import 'button_panel.dart';
 import 'combo_panel.dart';
 import 'cover_panel.dart';
+import 'device_tile_panel.dart';
 import 'led_panel.dart';
 import 'multi_state_panel.dart';
 import 'node_status_panel.dart';
 import 'panel_reliability_frame.dart';
 import 'progress_panel.dart';
 import 'radio_panel.dart';
+import 'reading_panel.dart';
 import 'slider_panel.dart';
 import 'text_input_panel.dart';
 import 'scene_panel.dart';
 import 'schedule_panel.dart';
 import 'text_log_panel.dart';
+import 'tile_actions_sheet.dart';
 import 'toggle_panel.dart';
 
 enum PanelSubscriptionMode { none, readOnly, interactive }
@@ -57,6 +57,16 @@ class PanelReliabilityPolicy {
     this.jsonPathSource = PanelJsonPathSource.config,
   }) : subscriptionMode = PanelSubscriptionMode.interactive,
        controlGate = PanelControlGate.connected;
+
+  /// Device tiles: live state, but never blocked while disconnected — the
+  /// sheet opens to read last-known values, and a command sent offline
+  /// reports "Not connected" instead of being swallowed.
+  const PanelReliabilityPolicy.deviceTile()
+    : this._(
+        subscriptionMode: PanelSubscriptionMode.interactive,
+        controlGate: PanelControlGate.always,
+        jsonPathSource: PanelJsonPathSource.none,
+      );
 
   const PanelReliabilityPolicy.readOnlySubscription()
     : this._(
@@ -88,6 +98,7 @@ class PanelReliabilityPolicy {
       ProgressConfig config => config.jsonPath,
       OptionsConfig config => config.jsonPath,
       TextLogConfig config => config.jsonPath,
+      ReadingConfig config => config.jsonPath,
       _ => null,
     };
   }
@@ -122,6 +133,8 @@ PanelReliabilityPolicy panelReliabilityPolicy(PanelType type) => switch (type) {
   PanelType.progress ||
   PanelType.textLog => const PanelReliabilityPolicy.readOnlySubscription(),
   PanelType.autoClose => const PanelReliabilityPolicy.autoClose(),
+  PanelType.device => const PanelReliabilityPolicy.deviceTile(),
+  PanelType.reading => const PanelReliabilityPolicy.readOnlySubscription(),
 };
 
 String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
@@ -129,6 +142,8 @@ String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
   return switch (config) {
     CoverConfig config => _coverReliabilityValueLabel(config, value),
     TextLogConfig() => _textLogReliabilityValueLabel(value),
+    // The tile reads its own state line; the raw payload is JSON.
+    DeviceTileConfig() => null,
     _ => value.toString(),
   };
 }
@@ -178,110 +193,10 @@ class PanelTile extends ConsumerWidget {
   final Panel panel;
   final bool locked;
 
+  /// Long-press: enter Edit mode with this tile's options open.
   void _openOptions(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final repo = ref.read(panelRepoProvider);
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (sheetCtx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.edit),
-              title: Text(l10n.panelTileEdit),
-              onTap: () {
-                Navigator.pop(sheetCtx);
-                context.push(
-                  '/connections/$connectionId/dashboards/$dashboardId/panels/${panel.id}/edit',
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.copy_all_outlined),
-              title: Text(l10n.panelTileDuplicate),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                await repo.duplicate(panel.id);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.arrow_upward),
-              title: Text(l10n.panelTileMoveUp),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                await repo.move(dashboardId, panel.id, -1);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.arrow_downward),
-              title: Text(l10n.panelTileMoveDown),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                await repo.move(dashboardId, panel.id, 1);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [
-                  Text(l10n.panelTileWidth),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: SegmentedButton<PanelWidth>(
-                      showSelectedIcon: false,
-                      segments: [
-                        ButtonSegment(
-                          value: PanelWidth.full,
-                          label: Text(l10n.panelTileWidthFull),
-                        ),
-                        ButtonSegment(
-                          value: PanelWidth.half,
-                          label: Text(l10n.panelTileWidthHalf),
-                        ),
-                        ButtonSegment(
-                          value: PanelWidth.third,
-                          label: Text(l10n.panelTileWidthThird),
-                        ),
-                      ],
-                      selected: {panel.width},
-                      onSelectionChanged: (sel) async {
-                        Navigator.pop(sheetCtx);
-                        await repo.setWidth(panel.id, sel.first);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.delete_outline),
-              title: Text(l10n.panelTileDelete),
-              onTap: () async {
-                Navigator.pop(sheetCtx);
-                if (panel.type == PanelType.schedule) {
-                  await ref
-                      .read(automationConfigPublisherProvider)
-                      .clearConfig(
-                        connectionId: connectionId,
-                        panelId: panel.id,
-                      );
-                } else if (panel.type == PanelType.autoClose) {
-                  await ref
-                      .read(autoCloseConfigPublisherProvider)
-                      .clearConfig(
-                        connectionId: connectionId,
-                        panelId: panel.id,
-                      );
-                }
-                await repo.delete(panel.id);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+    ref.read(editModeProvider.notifier).enter(dashboardId);
+    showTileActions(context, ref, connectionId: connectionId, panel: panel);
   }
 
   @override
@@ -416,20 +331,41 @@ class PanelTile extends ConsumerWidget {
             reliability.controlGate == PanelControlGate.autoClose &&
             connectionStatus == MqttStatus.connected,
       ),
+      PanelType.device => DeviceTilePanel(
+        connectionId: connectionId,
+        publishTopic: publishTopic,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as DeviceTileConfig,
+      ),
+      PanelType.reading => ReadingPanel(
+        connectionId: connectionId,
+        subscribeTopic: subscribeTopic,
+        panel: panel,
+        config: config as ReadingConfig,
+      ),
     };
 
-    return Semantics(
-      label: locked ? null : context.l10n.a11yPanelOptions,
-      button: !locked,
+    // "Panel options" is the long-press hint, not the tile's label: labelling
+    // the wrapper as a "Panel options" button hid the name and state of
+    // read-only tiles (LED, node status, progress, text log) from TalkBack.
+    // Read-only tiles merge into one node (name, state, long-press); tiles
+    // with controls keep each control as its own node.
+    final tile = Semantics(
+      onLongPressHint: locked ? null : context.l10n.a11yPanelOptions,
       child: GestureDetector(
         onLongPress: locked ? null : () => _openOptions(context, ref),
         child: PanelReliabilityFrame(
           stale: stale,
           controlsEnabled: controlsEnabled,
           valueLabel: panelReliabilityValueLabel(config, snapshot?.value),
+          receivedAt: snapshot?.receivedAt,
           child: widget,
         ),
       ),
     );
+    return reliability.subscriptionMode == PanelSubscriptionMode.readOnly
+        ? MergeSemantics(child: tile)
+        : Semantics(container: true, child: tile);
   }
 }

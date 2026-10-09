@@ -1,5 +1,7 @@
 ZigDash is het MQTT-dashboard gemaakt voor Zigbee2MQTT: het ontdekt je Zigbee-apparaten automatisch, zodat je smarthome-dashboard zichzelf opbouwt. Geen cloud, geen advertenties, geen account: gratis en open source. Bedien lampen, rolluiken, schakelaars en sensoren vanaf je telefoon of een wandtablet, en automatiseer op je hub, zelfs als je telefoon uit staat.
 
+Vereist een draaiende Zigbee2MQTT en een MQTT-broker in je netwerk. Nog geen Zigbee2MQTT? De app heeft een demohuis om rond te kijken.
+
 AUTOMATISCHE DETECTIE VOOR ZIGBEE2MQTT
 • Scan je Zigbee2MQTT-bridge en maak met één tik een paneel voor elk apparaat, zonder topics handmatig te koppelen.
 • JSON-pad-extractie op elk paneel, zodat ZigDash echte Zigbee2MQTT-berichten direct begrijpt.
@@ -25,11 +27,11 @@ AUTOMATISERING – WERKT OOK ALS JE TELEFOON UIT STAAT
 VERZORGD – TELEFOON EN TABLET
 • Material 3 met licht, donker en systeemthema; Material You dynamische kleuren op Android 12+.
 • Telefoon en tablet, staand en liggend, ideaal als wandgemonteerd domotica-dashboard.
-• Beschikbaar in het Nederlands, Engels, Frans, Duits, Spaans, Zweeds, Noors en Hebreeuws, met automatische RTL.
+• Beschikbaar in het Nederlands, Engels, Frans, Duits, Spaans, Zweeds, Noors, Russisch, Pools, Portugees en Hebreeuws, met automatische RTL.
 • Responsief paneelraster (volle, halve, derde breedte), dashboardvergrendeling, back-up/herstel als draagbare JSON, scènes.
 
 100% PRIVÉ. GEEN CLOUD.
-• Geen advertenties. Geen analytics. Geen account. Geen server van de ontwikkelaar.
+• Geen advertenties. Geen account. Anonieme gebruiksgegevens alleen als je daarvoor kiest.
 • Je gegevens staan op je apparaat en je MQTT-broker, nergens anders.
 • Open source (MIT). De code is openbaar en controleerbaar.
 

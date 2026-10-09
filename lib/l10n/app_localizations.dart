@@ -12,6 +12,9 @@ import 'app_localizations_fr.dart';
 import 'app_localizations_he.dart';
 import 'app_localizations_nb.dart';
 import 'app_localizations_nl.dart';
+import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_sv.dart';
 
 // ignore_for_file: type=lint
@@ -107,6 +110,9 @@ abstract class AppLocalizations {
     Locale('he'),
     Locale('nb'),
     Locale('nl'),
+    Locale('pl'),
+    Locale('pt'),
+    Locale('ru'),
     Locale('sv'),
   ];
 
@@ -127,60 +133,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ZigDash'**
   String get appTitle;
-
-  /// No description provided for @onboardingWelcomeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome to ZigDash'**
-  String get onboardingWelcomeTitle;
-
-  /// No description provided for @onboardingWelcomeSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your private, local dashboard for Zigbee2MQTT.\nNo cloud. No tracking. Just control.'**
-  String get onboardingWelcomeSubtitle;
-
-  /// No description provided for @onboardingBrokerTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect your broker'**
-  String get onboardingBrokerTitle;
-
-  /// No description provided for @onboardingBrokerSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Point ZigDash at your MQTT broker to talk directly to your Zigbee devices. Works with Mosquitto, SMLIGHT, and any MQTT server.'**
-  String get onboardingBrokerSubtitle;
-
-  /// No description provided for @onboardingDashboardTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Build your dashboards'**
-  String get onboardingDashboardTitle;
-
-  /// No description provided for @onboardingDashboardSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Create custom dashboards with toggles, sliders, covers, and more. Arrange panels your way — all stored on your device.'**
-  String get onboardingDashboardSubtitle;
-
-  /// No description provided for @onboardingSkip.
-  ///
-  /// In en, this message translates to:
-  /// **'Skip'**
-  String get onboardingSkip;
-
-  /// No description provided for @onboardingNext.
-  ///
-  /// In en, this message translates to:
-  /// **'Next'**
-  String get onboardingNext;
-
-  /// No description provided for @onboardingGetStarted.
-  ///
-  /// In en, this message translates to:
-  /// **'Get Started'**
-  String get onboardingGetStarted;
 
   /// No description provided for @onboardingDemo.
   ///
@@ -269,7 +221,7 @@ abstract class AppLocalizations {
   /// No description provided for @connectionsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Connections'**
+  /// **'Homes'**
   String get connectionsTitle;
 
   /// No description provided for @connLoadFailed.
@@ -1070,6 +1022,18 @@ abstract class AppLocalizations {
   /// **'Auto-close'**
   String get panelTypeAutoClose;
 
+  /// No description provided for @panelTypeDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get panelTypeDevice;
+
+  /// No description provided for @panelTypeReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get panelTypeReading;
+
   /// No description provided for @panelFormName.
   ///
   /// In en, this message translates to:
@@ -1142,29 +1106,29 @@ abstract class AppLocalizations {
   /// **'Blank = subscribe to the prefix itself (Z2M state). Same as Publish topic = use that.'**
   String get panelFormSubscribeTopicHelper;
 
-  /// No description provided for @panelFormWidth.
+  /// No description provided for @tileSize.
   ///
   /// In en, this message translates to:
-  /// **'Width'**
-  String get panelFormWidth;
+  /// **'Size'**
+  String get tileSize;
 
-  /// No description provided for @panelFormWidthFull.
+  /// No description provided for @tileSizeSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get tileSizeSmall;
+
+  /// No description provided for @tileSizeWide.
+  ///
+  /// In en, this message translates to:
+  /// **'Wide'**
+  String get tileSizeWide;
+
+  /// No description provided for @tileSizeFull.
   ///
   /// In en, this message translates to:
   /// **'Full'**
-  String get panelFormWidthFull;
-
-  /// No description provided for @panelFormWidthHalf.
-  ///
-  /// In en, this message translates to:
-  /// **'Half'**
-  String get panelFormWidthHalf;
-
-  /// No description provided for @panelFormWidthThird.
-  ///
-  /// In en, this message translates to:
-  /// **'Third'**
-  String get panelFormWidthThird;
+  String get tileSizeFull;
 
   /// No description provided for @panelFormQos.
   ///
@@ -1658,30 +1622,6 @@ abstract class AppLocalizations {
   /// **'Move down'**
   String get panelTileMoveDown;
 
-  /// No description provided for @panelTileWidth.
-  ///
-  /// In en, this message translates to:
-  /// **'Width'**
-  String get panelTileWidth;
-
-  /// No description provided for @panelTileWidthFull.
-  ///
-  /// In en, this message translates to:
-  /// **'Full'**
-  String get panelTileWidthFull;
-
-  /// No description provided for @panelTileWidthHalf.
-  ///
-  /// In en, this message translates to:
-  /// **'Half'**
-  String get panelTileWidthHalf;
-
-  /// No description provided for @panelTileWidthThird.
-  ///
-  /// In en, this message translates to:
-  /// **'⅓'**
-  String get panelTileWidthThird;
-
   /// No description provided for @panelTileDelete.
   ///
   /// In en, this message translates to:
@@ -1847,7 +1787,7 @@ abstract class AppLocalizations {
   /// No description provided for @panelGridEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No panels yet.\nTap + to add a Toggle, Slider, or Button.'**
+  /// **'No tiles yet.\nTap Add tile to put your devices here.'**
   String get panelGridEmpty;
 
   /// No description provided for @panelsOffline.
@@ -1922,6 +1862,78 @@ abstract class AppLocalizations {
   /// **'Enjoying it? A quick review helps others find it.'**
   String get settingsRateAppSubtitle;
 
+  /// No description provided for @settingsFeatureRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a feature'**
+  String get settingsFeatureRequest;
+
+  /// No description provided for @settingsFeatureRequestSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what would make ZigDash better.'**
+  String get settingsFeatureRequestSubtitle;
+
+  /// No description provided for @featureRequestGithub.
+  ///
+  /// In en, this message translates to:
+  /// **'On GitHub'**
+  String get featureRequestGithub;
+
+  /// No description provided for @featureRequestGithubSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Public: others can see it and vote for it.'**
+  String get featureRequestGithubSubtitle;
+
+  /// No description provided for @featureRequestEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'By email'**
+  String get featureRequestEmail;
+
+  /// No description provided for @featureRequestEmailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Private, straight to the developer.'**
+  String get featureRequestEmailSubtitle;
+
+  /// No description provided for @featureRequestEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash feature request'**
+  String get featureRequestEmailSubject;
+
+  /// No description provided for @featureRequestEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like ZigDash to do, and why?'**
+  String get featureRequestEmailPrompt;
+
+  /// No description provided for @settingsReportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get settingsReportProblem;
+
+  /// No description provided for @settingsReportProblemSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Something broken or confusing? Tell me.'**
+  String get settingsReportProblemSubtitle;
+
+  /// No description provided for @reportProblemEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash problem report'**
+  String get reportProblemEmailSubject;
+
+  /// No description provided for @reportProblemEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened, and what did you expect? Your device model and Zigbee2MQTT version help.'**
+  String get reportProblemEmailPrompt;
+
   /// No description provided for @settingsBuyCoffee.
   ///
   /// In en, this message translates to:
@@ -1969,6 +1981,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More options'**
   String get a11yMoreOptions;
+
+  /// Screen-reader label for icon-only refresh buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get a11yRefresh;
 
   /// No description provided for @a11yDeleteConnection.
   ///
@@ -2119,6 +2137,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No devices found.'**
   String get devicesNone;
+
+  /// No description provided for @devicesListMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT hasn\'t sent its device list. This can happen after the MQTT broker restarts.'**
+  String get devicesListMissing;
+
+  /// No description provided for @devicesRestartZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Zigbee2MQTT'**
+  String get devicesRestartZ2m;
+
+  /// No description provided for @devicesRestartingZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Restarting Zigbee2MQTT. Your devices should appear in a few seconds.'**
+  String get devicesRestartingZ2m;
 
   /// No description provided for @devicesBattery.
   ///
@@ -2540,12 +2576,6 @@ abstract class AppLocalizations {
   /// **'Couldn\'t save the connection. Please try again.'**
   String get guidedSaveFailed;
 
-  /// No description provided for @onboardingConnectBroker.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect my broker'**
-  String get onboardingConnectBroker;
-
   /// No description provided for @setupWelcomeTitle.
   ///
   /// In en, this message translates to:
@@ -2615,7 +2645,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuideSmlight.
   ///
   /// In en, this message translates to:
-  /// **'SMLIGHT / SMHUB: open the device\'s web UI, enable the MQTT broker, and check that Zigbee2MQTT shows as connected.'**
+  /// **'SMLIGHT / SMHUB: open the device\'s web UI, go to Settings > MQTT, turn on Allow External so your phone can reach the broker, and check that Zigbee2MQTT shows as running.'**
   String get setupGuideSmlight;
 
   /// No description provided for @setupTryAgain.
@@ -2863,6 +2893,984 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get setupErrUnknownAction;
+
+  /// No description provided for @setupNoZ2mTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your broker works, but Zigbee2MQTT isn\'t publishing here'**
+  String get setupNoZ2mTitle;
+
+  /// No description provided for @setupNoZ2mBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We listened on {base}/bridge and heard nothing.'**
+  String setupNoZ2mBody(String base);
+
+  /// No description provided for @setupBaseTopicQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Using a different base topic?'**
+  String get setupBaseTopicQuestion;
+
+  /// No description provided for @setupGuidesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Zigbee2MQTT'**
+  String get setupGuidesTitle;
+
+  /// No description provided for @setupTryDemoMeanwhile.
+  ///
+  /// In en, this message translates to:
+  /// **'Try the demo meanwhile'**
+  String get setupTryDemoMeanwhile;
+
+  /// No description provided for @demoBannerText.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re in demo mode'**
+  String get demoBannerText;
+
+  /// No description provided for @demoBannerAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect your home'**
+  String get demoBannerAction;
+
+  /// No description provided for @deviceOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get deviceOn;
+
+  /// No description provided for @deviceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get deviceOff;
+
+  /// No description provided for @deviceOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get deviceOpen;
+
+  /// No description provided for @deviceClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get deviceClosed;
+
+  /// No description provided for @deviceMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion'**
+  String get deviceMotion;
+
+  /// No description provided for @deviceClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get deviceClear;
+
+  /// No description provided for @deviceLeakDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Leak detected'**
+  String get deviceLeakDetected;
+
+  /// No description provided for @deviceSmokeDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoke detected'**
+  String get deviceSmokeDetected;
+
+  /// No description provided for @deviceGasDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Gas detected'**
+  String get deviceGasDetected;
+
+  /// No description provided for @deviceWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for first report'**
+  String get deviceWaiting;
+
+  /// No description provided for @deviceEndpointsOnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'{on} on · {off} off'**
+  String deviceEndpointsOnOff(int on, int off);
+
+  /// No description provided for @deviceBrightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get deviceBrightness;
+
+  /// No description provided for @deviceWhite.
+  ///
+  /// In en, this message translates to:
+  /// **'White'**
+  String get deviceWhite;
+
+  /// No description provided for @deviceColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get deviceColor;
+
+  /// No description provided for @deviceHue.
+  ///
+  /// In en, this message translates to:
+  /// **'Hue'**
+  String get deviceHue;
+
+  /// No description provided for @devicePosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Position'**
+  String get devicePosition;
+
+  /// No description provided for @deviceControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Controls'**
+  String get deviceControls;
+
+  /// No description provided for @deviceBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery {percent}%'**
+  String deviceBattery(int percent);
+
+  /// No description provided for @deviceToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on or off'**
+  String get deviceToggle;
+
+  /// No description provided for @deviceMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get deviceMore;
+
+  /// No description provided for @sectionLights.
+  ///
+  /// In en, this message translates to:
+  /// **'Lights'**
+  String get sectionLights;
+
+  /// No description provided for @sectionSwitchesCovers.
+  ///
+  /// In en, this message translates to:
+  /// **'Switches and covers'**
+  String get sectionSwitchesCovers;
+
+  /// No description provided for @sectionSensors.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensors'**
+  String get sectionSensors;
+
+  /// No description provided for @sectionOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get sectionOther;
+
+  /// No description provided for @homeFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'My Home'**
+  String get homeFirstName;
+
+  /// No description provided for @homeNumberedName.
+  ///
+  /// In en, this message translates to:
+  /// **'Home {number}'**
+  String homeNumberedName(int number);
+
+  /// No description provided for @dashAddTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tile'**
+  String get dashAddTile;
+
+  /// No description provided for @addTileSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search devices'**
+  String get addTileSearch;
+
+  /// No description provided for @addTileNotOnDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on a dashboard'**
+  String get addTileNotOnDashboard;
+
+  /// No description provided for @addTileAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices'**
+  String get addTileAllDevices;
+
+  /// No description provided for @addTileReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get addTileReading;
+
+  /// No description provided for @addTileReadingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One value from a device or topic'**
+  String get addTileReadingSubtitle;
+
+  /// No description provided for @addTileCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom MQTT tile'**
+  String get addTileCustom;
+
+  /// No description provided for @addTileCustomSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Any tile type, set up by topic'**
+  String get addTileCustomSubtitle;
+
+  /// No description provided for @addTileNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices to show. Connect to your broker, or pair a device in Zigbee2MQTT.'**
+  String get addTileNoDevices;
+
+  /// No description provided for @addTileAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addTileAdd;
+
+  /// No description provided for @addTileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get addTileName;
+
+  /// No description provided for @addTileNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. {model}'**
+  String addTileNameHint(String model);
+
+  /// No description provided for @addTileSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Section'**
+  String get addTileSection;
+
+  /// No description provided for @addTileNoSection.
+  ///
+  /// In en, this message translates to:
+  /// **'No section'**
+  String get addTileNoSection;
+
+  /// No description provided for @addTileSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get addTileSize;
+
+  /// No description provided for @deviceClassColorLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Color light'**
+  String get deviceClassColorLight;
+
+  /// No description provided for @deviceClassLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get deviceClassLight;
+
+  /// No description provided for @deviceClassSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch or plug'**
+  String get deviceClassSwitch;
+
+  /// No description provided for @deviceClassCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get deviceClassCover;
+
+  /// No description provided for @deviceClassLeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Leak or smoke'**
+  String get deviceClassLeak;
+
+  /// No description provided for @deviceClassContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get deviceClassContact;
+
+  /// No description provided for @deviceClassMotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion'**
+  String get deviceClassMotion;
+
+  /// No description provided for @deviceClassClimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Climate sensor'**
+  String get deviceClassClimate;
+
+  /// No description provided for @deviceClassGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get deviceClassGeneric;
+
+  /// No description provided for @deviceNotResponding.
+  ///
+  /// In en, this message translates to:
+  /// **'Not responding'**
+  String get deviceNotResponding;
+
+  /// No description provided for @homeAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a home'**
+  String get homeAdd;
+
+  /// No description provided for @homeManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage homes'**
+  String get homeManage;
+
+  /// No description provided for @homeSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch home'**
+  String get homeSwitch;
+
+  /// No description provided for @navDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get navDevices;
+
+  /// No description provided for @navScenes.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenes'**
+  String get navScenes;
+
+  /// No description provided for @devicesNewDot.
+  ///
+  /// In en, this message translates to:
+  /// **'New devices'**
+  String get devicesNewDot;
+
+  /// No description provided for @editEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing'**
+  String get editEditing;
+
+  /// No description provided for @editDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get editDashboard;
+
+  /// No description provided for @editDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get editDone;
+
+  /// No description provided for @editAddSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add section'**
+  String get editAddSection;
+
+  /// No description provided for @editSectionName.
+  ///
+  /// In en, this message translates to:
+  /// **'Section name'**
+  String get editSectionName;
+
+  /// No description provided for @editRenameSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename section'**
+  String get editRenameSection;
+
+  /// No description provided for @editDeleteSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete section'**
+  String get editDeleteSection;
+
+  /// No description provided for @editDeleteSectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'What should happen to its tiles?'**
+  String get editDeleteSectionBody;
+
+  /// No description provided for @editKeepTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep tiles, remove section'**
+  String get editKeepTiles;
+
+  /// No description provided for @editDeleteTiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete tiles too'**
+  String get editDeleteTiles;
+
+  /// No description provided for @editMoveToSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to section'**
+  String get editMoveToSection;
+
+  /// No description provided for @editEditTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit tile'**
+  String get editEditTile;
+
+  /// No description provided for @editRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from dashboard'**
+  String get editRemove;
+
+  /// No description provided for @editRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Tile removed'**
+  String get editRemoved;
+
+  /// No description provided for @editUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get editUndo;
+
+  /// No description provided for @editReplaceWithDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace with device tile'**
+  String get editReplaceWithDevice;
+
+  /// No description provided for @editMoveEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Move earlier'**
+  String get editMoveEarlier;
+
+  /// No description provided for @editMoveLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Move later'**
+  String get editMoveLater;
+
+  /// No description provided for @editUnassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 device isn\'t on any dashboard} other{{count} devices aren\'t on any dashboard}}'**
+  String editUnassigned(int count);
+
+  /// No description provided for @editTileActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tile options'**
+  String get editTileActions;
+
+  /// No description provided for @editSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get editSave;
+
+  /// No description provided for @editCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get editCancel;
+
+  /// No description provided for @ageJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get ageJustNow;
+
+  /// No description provided for @ageMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min ago'**
+  String ageMinutes(int n);
+
+  /// No description provided for @ageHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} h ago'**
+  String ageHours(int n);
+
+  /// No description provided for @statusCantReach.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach your broker'**
+  String get statusCantReach;
+
+  /// No description provided for @statusWhy.
+  ///
+  /// In en, this message translates to:
+  /// **'Why?'**
+  String get statusWhy;
+
+  /// No description provided for @statusWhyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your broker isn\'t answering'**
+  String get statusWhyTitle;
+
+  /// No description provided for @statusWhyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash keeps trying on its own. Until it\'s back, tiles show their last known values, dimmed, with their age. Check that the broker is on and this phone is on the same network, or test the connection in its settings.'**
+  String get statusWhyBody;
+
+  /// No description provided for @statusSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection settings'**
+  String get statusSettings;
+
+  /// No description provided for @deviceAddToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to a dashboard'**
+  String get deviceAddToDashboard;
+
+  /// No description provided for @deviceDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get deviceDismiss;
+
+  /// No description provided for @devicesFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get devicesFilterAll;
+
+  /// No description provided for @devicesFilterAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention · {count}'**
+  String devicesFilterAttention(int count);
+
+  /// No description provided for @devicesFilterUnassigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on a dashboard · {count}'**
+  String devicesFilterUnassigned(int count);
+
+  /// No description provided for @devicesNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices match'**
+  String get devicesNoMatch;
+
+  /// No description provided for @deviceBatteryLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get deviceBatteryLow;
+
+  /// No description provided for @deviceLinkWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get deviceLinkWeak;
+
+  /// No description provided for @deviceUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Not supported by Zigbee2MQTT'**
+  String get deviceUnsupported;
+
+  /// No description provided for @deviceInterviewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Pairing didn\'t finish'**
+  String get deviceInterviewFailed;
+
+  /// No description provided for @deviceNoReport.
+  ///
+  /// In en, this message translates to:
+  /// **'No report yet'**
+  String get deviceNoReport;
+
+  /// No description provided for @devicesAvailabilityOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT availability is off, so offline devices show as Not responding.'**
+  String get devicesAvailabilityOff;
+
+  /// No description provided for @devicesAvailabilityHow.
+  ///
+  /// In en, this message translates to:
+  /// **'How to turn it on'**
+  String get devicesAvailabilityHow;
+
+  /// No description provided for @devicesDotBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get devicesDotBattery;
+
+  /// No description provided for @deviceDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Device details'**
+  String get deviceDetails;
+
+  /// No description provided for @deviceGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This device is no longer in Zigbee2MQTT.'**
+  String get deviceGone;
+
+  /// No description provided for @deviceControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Control'**
+  String get deviceControlTitle;
+
+  /// No description provided for @deviceReadingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Readings'**
+  String get deviceReadingsTitle;
+
+  /// No description provided for @deviceHealthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get deviceHealthTitle;
+
+  /// No description provided for @deviceOnDashboards.
+  ///
+  /// In en, this message translates to:
+  /// **'On dashboards'**
+  String get deviceOnDashboards;
+
+  /// No description provided for @deviceUnsupportedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT doesn\'t support this device yet, so there is nothing to control.'**
+  String get deviceUnsupportedBody;
+
+  /// No description provided for @deviceAddReadingTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add as reading tile'**
+  String get deviceAddReadingTile;
+
+  /// No description provided for @deviceAddReadingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to which dashboard?'**
+  String get deviceAddReadingTo;
+
+  /// No description provided for @deviceAddedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {dashboard}'**
+  String deviceAddedTo(Object dashboard);
+
+  /// No description provided for @deviceLinkQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Link quality'**
+  String get deviceLinkQuality;
+
+  /// No description provided for @deviceLinkGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get deviceLinkGood;
+
+  /// No description provided for @devicePowerSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Power source'**
+  String get devicePowerSource;
+
+  /// No description provided for @devicePowerBattery.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery'**
+  String get devicePowerBattery;
+
+  /// No description provided for @devicePowerMains.
+  ///
+  /// In en, this message translates to:
+  /// **'Mains'**
+  String get devicePowerMains;
+
+  /// No description provided for @deviceLastHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'Last heard'**
+  String get deviceLastHeard;
+
+  /// No description provided for @deviceAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get deviceAvailability;
+
+  /// No description provided for @deviceAvailabilityOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off in Zigbee2MQTT'**
+  String get deviceAvailabilityOff;
+
+  /// No description provided for @settingsPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacy;
+
+  /// No description provided for @settingsPrivacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No telemetry. Everything stays on this phone.'**
+  String get settingsPrivacySubtitle;
+
+  /// No description provided for @homeCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current home'**
+  String get homeCurrent;
+
+  /// No description provided for @homeConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get homeConnection;
+
+  /// No description provided for @homeSwitchTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to this home'**
+  String get homeSwitchTo;
+
+  /// No description provided for @homeDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete home'**
+  String get homeDelete;
+
+  /// No description provided for @devicesSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a device'**
+  String get devicesSelect;
+
+  /// No description provided for @scenesSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a scene to edit'**
+  String get scenesSelect;
+
+  /// No description provided for @panelFormTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get panelFormTopic;
+
+  /// No description provided for @panelFormPickDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a device'**
+  String get panelFormPickDevice;
+
+  /// No description provided for @panelFormStateTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'State topic'**
+  String get panelFormStateTopic;
+
+  /// No description provided for @panelFormCommandTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Command topic'**
+  String get panelFormCommandTopic;
+
+  /// No description provided for @panelFormCommandTopicDerived.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled from the state topic until you change it.'**
+  String get panelFormCommandTopicDerived;
+
+  /// No description provided for @panelFormLinkedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked to {device}'**
+  String panelFormLinkedTo(Object device);
+
+  /// No description provided for @panelFormOpenDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Open device'**
+  String get panelFormOpenDevice;
+
+  /// No description provided for @panelFormUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get panelFormUnlink;
+
+  /// No description provided for @panelFormValueChoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Values from this device'**
+  String get panelFormValueChoices;
+
+  /// No description provided for @panelFormAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get panelFormAdvanced;
+
+  /// No description provided for @panelFormAdvancedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefix override, QoS, retain'**
+  String get panelFormAdvancedSubtitle;
+
+  /// No description provided for @panelFormStateTopicHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Blank = the prefix itself (a Zigbee2MQTT device\'s state).'**
+  String get panelFormStateTopicHelper;
+
+  /// No description provided for @dashWallDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display'**
+  String get dashWallDisplay;
+
+  /// No description provided for @dashWallDisplayOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display on: the screen stays on, and the bars hide after 10 seconds without a touch. Tap to bring them back.'**
+  String get dashWallDisplayOn;
+
+  /// No description provided for @dashWallDisplayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display off.'**
+  String get dashWallDisplayOff;
+
+  /// No description provided for @analyticsSetupCheckbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data to help improve setup'**
+  String get analyticsSetupCheckbox;
+
+  /// No description provided for @analyticsWhatsShared.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s shared'**
+  String get analyticsWhatsShared;
+
+  /// No description provided for @analyticsCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help improve ZigDash?'**
+  String get analyticsCardTitle;
+
+  /// No description provided for @analyticsCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data: which setup steps fail and which features get used. Never your devices, topics or broker.'**
+  String get analyticsCardBody;
+
+  /// No description provided for @analyticsShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get analyticsShare;
+
+  /// No description provided for @analyticsNoThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'No thanks'**
+  String get analyticsNoThanks;
+
+  /// No description provided for @settingsAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Share anonymous usage data'**
+  String get settingsAnalytics;
+
+  /// No description provided for @settingsAnalyticsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup steps and features used. Never your devices, topics or broker.'**
+  String get settingsAnalyticsSubtitle;
+
+  /// No description provided for @settingsPrivacySubtitleOptIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous usage data only if you opt in.'**
+  String get settingsPrivacySubtitleOptIn;
+
+  /// No description provided for @dashDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get dashDefaultName;
+
+  /// No description provided for @dashExportSaveFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save file'**
+  String get dashExportSaveFile;
+
+  /// No description provided for @dashExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup saved'**
+  String get dashExportSaved;
+
+  /// No description provided for @dashImportChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose file'**
+  String get dashImportChooseFile;
+
+  /// No description provided for @dashImportFileUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read that file'**
+  String get dashImportFileUnreadable;
 }
 
 class _AppLocalizationsDelegate
@@ -2883,6 +3891,9 @@ class _AppLocalizationsDelegate
     'he',
     'nb',
     'nl',
+    'pl',
+    'pt',
+    'ru',
     'sv',
   ].contains(locale.languageCode);
 
@@ -2907,6 +3918,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsNb();
     case 'nl':
       return AppLocalizationsNl();
+    case 'pl':
+      return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
     case 'sv':
       return AppLocalizationsSv();
   }

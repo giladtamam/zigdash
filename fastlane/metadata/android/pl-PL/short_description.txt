@@ -1,0 +1,1 @@
+Dla Twojego Zigbee2MQTT (wymagane): dashboard, który buduje się sam. Bez chmury.

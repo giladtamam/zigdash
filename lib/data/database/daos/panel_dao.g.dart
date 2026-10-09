@@ -6,5 +6,20 @@ part of 'panel_dao.dart';
 mixin _$PanelDaoMixin on DatabaseAccessor<AppDatabase> {
   $ConnectionsTable get connections => attachedDatabase.connections;
   $DashboardsTable get dashboards => attachedDatabase.dashboards;
+  $SectionsTable get sections => attachedDatabase.sections;
   $PanelsTable get panels => attachedDatabase.panels;
+  PanelDaoManager get managers => PanelDaoManager(this);
+}
+
+class PanelDaoManager {
+  final _$PanelDaoMixin _db;
+  PanelDaoManager(this._db);
+  $$ConnectionsTableTableManager get connections =>
+      $$ConnectionsTableTableManager(_db.attachedDatabase, _db.connections);
+  $$DashboardsTableTableManager get dashboards =>
+      $$DashboardsTableTableManager(_db.attachedDatabase, _db.dashboards);
+  $$SectionsTableTableManager get sections =>
+      $$SectionsTableTableManager(_db.attachedDatabase, _db.sections);
+  $$PanelsTableTableManager get panels =>
+      $$PanelsTableTableManager(_db.attachedDatabase, _db.panels);
 }

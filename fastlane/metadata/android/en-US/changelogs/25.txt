@@ -1,0 +1,1 @@
+A faster first run: ZigDash opens on Find my setup, connects on its own when it finds one broker, and lands straight on your new dashboard. If your broker works but Zigbee2MQTT isn't publishing, you can check the base topic in place. The demo is clearly marked, and connecting your home removes it. The app now opens on the dashboard you used last.

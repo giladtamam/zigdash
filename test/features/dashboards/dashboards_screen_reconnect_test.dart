@@ -37,9 +37,12 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
+    // Reconnect now lives behind the status line's "Why?".
+    await tester.tap(find.text('Why?'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Reconnect now'));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Connection failed'), findsOneWidget);
     expect(tester.takeException(), isNull);

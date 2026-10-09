@@ -1,1 +1,1 @@
-Panel Zigbee2MQTT: detección automática de dispositivos. Local, privado, libre.
+Para tu Zigbee2MQTT (necesario): un panel que se crea solo. Sin nube.

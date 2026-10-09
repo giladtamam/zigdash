@@ -1,5 +1,7 @@
 ZigDash es el panel MQTT creado para Zigbee2MQTT: detecta tus dispositivos Zigbee automáticamente, así que tu panel domótico se construye solo. Sin nube, sin anuncios, sin cuenta: gratis y de código abierto. Controla luces, persianas, interruptores y sensores desde el móvil o una tablet de pared, y automatiza en tu hub incluso con el móvil apagado.
 
+Requiere Zigbee2MQTT en marcha y un broker MQTT en tu red. ¿Aún no tienes Zigbee2MQTT? La app incluye una casa de demostración para explorar.
+
 DETECCIÓN AUTOMÁTICA PARA ZIGBEE2MQTT
 • Escanea tu bridge Zigbee2MQTT y crea un panel por cada dispositivo con un solo toque, sin configurar topics a mano.
 • Extracción por ruta JSON en cada panel, para que ZigDash entienda los mensajes reales de Zigbee2MQTT desde el principio.
@@ -25,11 +27,11 @@ AUTOMATIZACIÓN QUE FUNCIONA CON EL MÓVIL APAGADO
 PULIDO PARA MÓVIL Y TABLET
 • Material 3 con tema claro, oscuro y del sistema; color dinámico Material You en Android 12+.
 • Móvil y tablet, vertical y horizontal: ideal como panel domótico de pared.
-• Disponible en español, inglés, francés, alemán, neerlandés, sueco, noruego y hebreo, con RTL automático.
+• Disponible en español, inglés, francés, alemán, neerlandés, sueco, noruego, ruso, polaco, portugués y hebreo, con RTL automático.
 • Cuadrícula adaptable (ancho completo, mitad, tercio), bloqueo del panel, copia de seguridad y restauración en JSON portable, escenas.
 
 100 % PRIVADO. SIN NUBE.
-• Sin anuncios. Sin analíticas. Sin cuenta. Sin servidor del desarrollador.
+• Sin anuncios. Sin cuenta. Datos de uso anónimos solo si lo aceptas.
 • Tus datos viven en tu dispositivo y en tu bróker MQTT, en ningún otro sitio.
 • Código abierto (MIT). El código es público y auditable.
 

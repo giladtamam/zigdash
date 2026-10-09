@@ -1,1 +1,1 @@
-Zigbee2MQTT dashboard: auto-discovers your devices. Local, private, open source.
+For your Zigbee2MQTT setup (required): a dashboard that builds itself. No cloud.
