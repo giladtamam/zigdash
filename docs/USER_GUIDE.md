@@ -5,7 +5,7 @@ ZigDash turns your phone into a private, customizable control panel for a
 MQTT broker you control — no cloud account, no third‑party servers, no tracking.
 
 This guide walks through everything: connecting to a broker, building dashboards,
-each panel type, scheduled automation, remote access, settings, backup, and a FAQ.
+each panel type, scheduled automation, scenes, remote access, settings, backup, and a FAQ.
 
 ---
 
@@ -39,7 +39,7 @@ The hierarchy is: **Broker → Dashboards → Panels**.
    - **Port** — usually `1883` (plain MQTT) or `8883`/`9001` for TLS/WebSocket.
    - **Username / Password** — only if your broker requires auth. Passwords are stored in your device's secure keystore (encrypted), never in plain text.
    - **Auto‑connect on app start** — connect automatically when the app opens.
-3. (Optional, **Advanced**) **Remote host (Tailscale)** and **Keep‑alive** — see §6 and below.
+3. (Optional, **Advanced**) **Remote host (Tailscale)** and **Keep‑alive** — see §7 and below.
 4. **Save.**
 
 The broker row shows a live status dot: **Connecting**, **Connected**, **Reconnecting**, or **Error**. Tap the row to open its dashboards.
@@ -107,7 +107,53 @@ at 06:30") and a warning if the scheduler hub appears offline.
 
 ---
 
-## 6. Remote access from outside home (Tailscale)
+## 6. Scenes
+
+A **scene** saves how a group of devices should be set, and sets them all with one
+tap. For example, "Evening": the living-room lamp on at 40%, the kitchen plug off,
+the shutters at 30%.
+
+### Create a scene
+
+1. Open the **Scenes** tab in the bottom bar and tap **New scene**.
+2. Give it a **Scene name**.
+3. Under **Devices to capture**, tick the devices to include. Each one starts from
+   its current state, which ZigDash reads live from Zigbee2MQTT.
+4. Adjust the values: lights and switches have **Power** and **Brightness**, and
+   shutters have **Position**. Anything else a device can set (colour, colour
+   temperature…) is saved as it is right now.
+5. Tap **Save**.
+
+**Quickest way:** set your devices the way you want with their tiles first, then
+create the scene. Everything is captured as it is, and you only tick the devices.
+
+### Use a scene
+
+- **Tap it** in the Scenes tab. ZigDash sends each device its saved values and
+  shows "Activated …".
+- **Put it on a dashboard:** ⋮ next to the scene → **Add to dashboard**. You get a
+  scene tile that runs it with one tap, next to your other tiles.
+
+### Edit or delete
+
+⋮ next to the scene → **Edit** or **Delete**. Deleting a scene doesn't change your
+devices.
+
+### Good to know
+
+- **Scenes run from the app.** Your phone has to be connected to the broker when
+  you tap one; otherwise ZigDash says it can't activate the scene. Scenes don't
+  run on a timer: for timed actions, use the **Schedule** panel (§5).
+- **Read-only values are never saved** (battery, link quality and so on), so a
+  scene only sends values the device accepts.
+- **Scenes are stored on this phone, per home.** They are not part of the
+  dashboards backup (§9) yet, so a new phone starts without them.
+- ZigDash scenes are ZigDash's own. They don't use the scenes Zigbee2MQTT can
+  store on devices (`scene_store` / `scene_recall`).
+
+---
+
+## 7. Remote access from outside home (Tailscale)
 
 By default ZigDash reaches your broker over the LAN, so it only works at home.
 To control your home while away, add a **remote host** using
@@ -123,7 +169,7 @@ is encrypted end‑to‑end by Tailscale. Full setup steps: `docs/tailscale-remo
 
 ---
 
-## 7. Settings
+## 8. Settings
 
 **Settings** (the gear in the header):
 - **Homes** — every broker you use, as a home. Tap one to rename it, edit its connection, set its **Zigbee2MQTT base topic** (if yours is not `zigbee2mqtt`), switch to it, or delete it. **Add a home** runs setup again.
@@ -136,16 +182,16 @@ All settings persist across restarts.
 
 ---
 
-## 8. Backup & restore
+## 9. Backup & restore
 
 From a broker's dashboards view, the **⋮ / backup menu** lets you **Export** your
-setup (dashboards + panels) to a JSON file and **Import** it back later or onto
+setup (dashboards + panels; scenes aren't included yet) to a JSON file and **Import** it back later or onto
 another device. Passwords are **not** included in the export (they live only in the
 device's secure storage) — re‑enter them after importing.
 
 ---
 
-## 9. FAQ
+## 10. FAQ
 
 **Q: The broker shows "Connecting" forever / "Error". What do I check?**
 - Is the **host/port** right and reachable from the phone's current network? (At home, the phone must be on the same Wi‑Fi/LAN as the broker.)
@@ -155,7 +201,7 @@ device's secure storage) — re‑enter them after importing.
 
 **Q: It works at home but not when I'm away.**
 That's expected without remote access — your LAN address isn't reachable from
-outside. Set up **Tailscale** and add a **Remote host** (see §6). When away, the
+outside. Set up **Tailscale** and add a **Remote host** (see §7). When away, the
 chip should read **Connected · Remote**.
 
 **Q: A panel shows "—" or no value.**
@@ -214,7 +260,7 @@ expose a **WebSocket** listener and you must use the `ws`/`wss` protocol. On a p
 plain `tcp` works fine.
 
 **Q: How do I move my setup to a new phone?**
-Use **Export** (§8) to save the JSON, install ZigDash on the new phone, then
+Use **Export** (§9) to save the JSON, install ZigDash on the new phone, then
 **Import** it. Re‑enter broker passwords afterward.
 
 ---
