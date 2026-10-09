@@ -2,7 +2,6 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -39,6 +38,33 @@ final dynamicColorAvailableProvider = FutureProvider<bool>((ref) async {
 /// (The GitHub Pages address was never enabled and returned 404.)
 final privacyPolicyUrl =
     Uri.parse('https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md');
+
+/// ZigDash's package on Google Play. Fixed, so test builds with a suffixed
+/// package (`.dev`) still open the real listing.
+const playPackage = 'com.giladtamam.zigdash';
+
+/// The Play Store app's page for ZigDash, and the web page as a fallback.
+final playStoreAppUrl = Uri.parse('market://details?id=$playPackage');
+final playStoreWebUrl =
+    Uri.https('play.google.com', '/store/apps/details', {'id': playPackage});
+
+/// Opens ZigDash on Google Play so the user can rate it.
+///
+/// Not the in-app review dialog: Play rations it and gives no signal when it
+/// shows nothing, so a Rate button that relies on it often does nothing at
+/// all, and Google advises against calling it from a button. The automatic
+/// prompt (lib/core/review) still uses it.
+Future<void> openPlayListing() async {
+  try {
+    if (await launchUrl(playStoreAppUrl,
+        mode: LaunchMode.externalApplication)) {
+      return;
+    }
+  } catch (_) {
+    // No Play Store app (or no handler for market://): use the web page.
+  }
+  await launchUrl(playStoreWebUrl, mode: LaunchMode.externalApplication);
+}
 
 /// Where feature requests and problem reports go: a GitHub issue (public, votable) or an email to
 /// the developer (private). The app only opens a browser or mail app; it
@@ -145,14 +171,7 @@ class SettingsScreen extends ConsumerWidget {
                 leading: const Icon(Icons.star_outline),
                 title: Text(l10n.settingsRateApp),
                 subtitle: Text(l10n.settingsRateAppSubtitle),
-                onTap: () async {
-                  final review = InAppReview.instance;
-                  if (await review.isAvailable()) {
-                    await review.requestReview();
-                  } else {
-                    await review.openStoreListing();
-                  }
-                },
+                onTap: openPlayListing,
               ),
               ListTile(
                 leading: const Icon(Icons.lightbulb_outline),

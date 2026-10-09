@@ -2,6 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/features/settings/screens/settings_screen.dart';
 
 void main() {
+  test('Rate opens the real Play listing, also from a .dev test build', () {
+    expect(playStoreAppUrl.toString(),
+        'market://details?id=com.giladtamam.zigdash');
+    expect(playStoreWebUrl.toString(),
+        'https://play.google.com/store/apps/details?id=com.giladtamam.zigdash');
+  });
+
   test('GitHub link opens the feature-request form with the version', () {
     final url = featureRequestGithubUrl('2.0.1 (30)');
     expect(url.host, 'github.com');
