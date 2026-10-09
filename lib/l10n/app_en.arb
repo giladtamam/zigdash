@@ -697,6 +697,8 @@
   "panelFormAdvancedSubtitle": "Prefix override, QoS, retain",
   "panelFormStateTopicHelper": "Blank = the prefix itself (a Zigbee2MQTT device's state).",
   "dashWallDisplay": "Wall display",
+  "dashWallDisplayOn": "Wall display on: the screen stays on, and the bars hide after 10 seconds without a touch. Tap to bring them back.",
+  "dashWallDisplayOff": "Wall display off.",
   "analyticsSetupCheckbox": "Share anonymous usage data to help improve setup",
   "analyticsWhatsShared": "What's shared",
   "analyticsCardTitle": "Help improve ZigDash?",

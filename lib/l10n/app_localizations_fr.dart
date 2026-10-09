@@ -2049,6 +2049,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dashWallDisplay => 'Affichage mural';
 
   @override
+  String get dashWallDisplayOn =>
+      'Affichage mural activé : l\'écran reste allumé et les barres se masquent après 10 secondes sans toucher. Touchez pour les revoir.';
+
+  @override
+  String get dashWallDisplayOff => 'Affichage mural désactivé.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Partager des données d\'utilisation anonymes pour améliorer la configuration';
 

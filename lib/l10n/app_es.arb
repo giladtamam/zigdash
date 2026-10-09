@@ -685,6 +685,8 @@
   "panelFormAdvancedSubtitle": "Anular prefijo, QoS, retener",
   "panelFormStateTopicHelper": "Vacío = el propio prefijo (estado de un dispositivo Zigbee2MQTT).",
   "dashWallDisplay": "Pantalla de pared",
+  "dashWallDisplayOn": "Modo pared activado: la pantalla no se apaga y las barras se ocultan tras 10 segundos sin tocarla. Toca para que vuelvan.",
+  "dashWallDisplayOff": "Modo pared desactivado.",
   "analyticsSetupCheckbox": "Compartir datos de uso anónimos para mejorar la configuración",
   "analyticsWhatsShared": "Qué se comparte",
   "analyticsCardTitle": "¿Ayudar a mejorar ZigDash?",

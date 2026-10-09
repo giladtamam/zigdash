@@ -685,6 +685,8 @@
   "panelFormAdvancedSubtitle": "Prefix-åsidosättning, QoS, retain",
   "panelFormStateTopicHelper": "Tomt = själva prefixet (status för en Zigbee2MQTT-enhet).",
   "dashWallDisplay": "Väggskärm",
+  "dashWallDisplayOn": "Väggvisning på: skärmen förblir på och fälten döljs efter 10 sekunder utan beröring. Tryck för att visa dem igen.",
+  "dashWallDisplayOff": "Väggvisning av.",
   "analyticsSetupCheckbox": "Dela anonym användningsdata för att förbättra installationen",
   "analyticsWhatsShared": "Vad som delas",
   "analyticsCardTitle": "Hjälpa till att förbättra ZigDash?",

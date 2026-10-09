@@ -680,6 +680,8 @@
   "panelFormAdvancedSubtitle": "Nadpisanie prefiksu, QoS, retain",
   "panelFormStateTopicHelper": "Puste = sam prefiks (stan urządzenia Zigbee2MQTT).",
   "dashWallDisplay": "Tryb ekranu ściennego",
+  "dashWallDisplayOn": "Wyświetlacz ścienny włączony: ekran nie gaśnie, a paski chowają się po 10 sekundach bez dotyku. Dotknij, aby je przywrócić.",
+  "dashWallDisplayOff": "Wyświetlacz ścienny wyłączony.",
   "analyticsSetupCheckbox": "Udostępniaj anonimowe dane o użyciu, aby pomóc ulepszyć konfigurację",
   "analyticsWhatsShared": "Co jest udostępniane",
   "analyticsCardTitle": "Pomożesz ulepszyć ZigDash?",

@@ -2032,6 +2032,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashWallDisplay => 'Wall display';
 
   @override
+  String get dashWallDisplayOn =>
+      'Wall display on: the screen stays on, and the bars hide after 10 seconds without a touch. Tap to bring them back.';
+
+  @override
+  String get dashWallDisplayOff => 'Wall display off.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Share anonymous usage data to help improve setup';
 

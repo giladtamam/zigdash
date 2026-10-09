@@ -2044,6 +2044,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dashWallDisplay => 'Wandanzeige';
 
   @override
+  String get dashWallDisplayOn =>
+      'Wandanzeige an: Der Bildschirm bleibt an, und die Leisten verschwinden nach 10 Sekunden ohne Berührung. Tippen holt sie zurück.';
+
+  @override
+  String get dashWallDisplayOff => 'Wandanzeige aus.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Anonyme Nutzungsdaten teilen, um die Einrichtung zu verbessern';
 

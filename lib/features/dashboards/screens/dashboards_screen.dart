@@ -580,7 +580,16 @@ class _DashboardMenu extends ConsumerWidget {
             _import(context, ref);
           case 'wall':
             final d = current?.call();
-            if (d != null) ref.read(wallDisplayProvider(d.id).notifier).toggle();
+            if (d == null) break;
+            ref.read(wallDisplayProvider(d.id).notifier).toggle();
+            // Nothing changes on screen for 10 s, so say what will happen.
+            final on = ref.read(wallDisplayProvider(d.id));
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                content: Text(
+                    on ? l10n.dashWallDisplayOn : l10n.dashWallDisplayOff),
+              ));
         }
       },
       itemBuilder: (_) => [

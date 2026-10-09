@@ -2036,6 +2036,13 @@ class AppLocalizationsNb extends AppLocalizations {
   String get dashWallDisplay => 'Veggskjerm';
 
   @override
+  String get dashWallDisplayOn =>
+      'Veggvisning på: skjermen holdes på, og feltene skjules etter 10 sekunder uten berøring. Trykk for å hente dem tilbake.';
+
+  @override
+  String get dashWallDisplayOff => 'Veggvisning av.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Del anonyme bruksdata for å forbedre oppsettet';
 

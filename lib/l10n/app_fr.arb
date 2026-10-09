@@ -610,6 +610,8 @@
   "panelFormAdvancedSubtitle": "Remplacement du préfixe, QoS, retain",
   "panelFormStateTopicHelper": "Vide = le préfixe lui-même (état d’un appareil Zigbee2MQTT).",
   "dashWallDisplay": "Affichage mural",
+  "dashWallDisplayOn": "Affichage mural activé : l'écran reste allumé et les barres se masquent après 10 secondes sans toucher. Touchez pour les revoir.",
+  "dashWallDisplayOff": "Affichage mural désactivé.",
   "analyticsSetupCheckbox": "Partager des données d'utilisation anonymes pour améliorer la configuration",
   "analyticsWhatsShared": "Ce qui est partagé",
   "analyticsCardTitle": "Aider à améliorer ZigDash ?",

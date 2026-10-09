@@ -2055,6 +2055,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get dashWallDisplay => 'Tryb ekranu ściennego';
 
   @override
+  String get dashWallDisplayOn =>
+      'Wyświetlacz ścienny włączony: ekran nie gaśnie, a paski chowają się po 10 sekundach bez dotyku. Dotknij, aby je przywrócić.';
+
+  @override
+  String get dashWallDisplayOff => 'Wyświetlacz ścienny wyłączony.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Udostępniaj anonimowe dane o użyciu, aby pomóc ulepszyć konfigurację';
 

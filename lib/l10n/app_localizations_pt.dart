@@ -2043,6 +2043,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dashWallDisplay => 'Tela de parede';
 
   @override
+  String get dashWallDisplayOn =>
+      'Tela de parede ativada: a tela fica ligada e as barras somem após 10 segundos sem toque. Toque para trazê-las de volta.';
+
+  @override
+  String get dashWallDisplayOff => 'Tela de parede desativada.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Compartilhar dados de uso anônimos para melhorar a configuração';
 

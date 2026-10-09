@@ -2045,6 +2045,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dashWallDisplay => 'Pantalla de pared';
 
   @override
+  String get dashWallDisplayOn =>
+      'Modo pared activado: la pantalla no se apaga y las barras se ocultan tras 10 segundos sin tocarla. Toca para que vuelvan.';
+
+  @override
+  String get dashWallDisplayOff => 'Modo pared desactivado.';
+
+  @override
   String get analyticsSetupCheckbox =>
       'Compartir datos de uso anónimos para mejorar la configuración';
 

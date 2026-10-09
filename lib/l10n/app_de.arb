@@ -685,6 +685,8 @@
   "panelFormAdvancedSubtitle": "Präfix-Überschreibung, QoS, Retain",
   "panelFormStateTopicHelper": "Leer = das Präfix selbst (Status eines Zigbee2MQTT-Geräts).",
   "dashWallDisplay": "Wandanzeige",
+  "dashWallDisplayOn": "Wandanzeige an: Der Bildschirm bleibt an, und die Leisten verschwinden nach 10 Sekunden ohne Berührung. Tippen holt sie zurück.",
+  "dashWallDisplayOff": "Wandanzeige aus.",
   "analyticsSetupCheckbox": "Anonyme Nutzungsdaten teilen, um die Einrichtung zu verbessern",
   "analyticsWhatsShared": "Was geteilt wird",
   "analyticsCardTitle": "ZigDash verbessern helfen?",

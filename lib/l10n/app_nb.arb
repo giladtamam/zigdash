@@ -685,6 +685,8 @@
   "panelFormAdvancedSubtitle": "Prefiksoverstyring, QoS, retain",
   "panelFormStateTopicHelper": "Tomt = selve prefikset (status for en Zigbee2MQTT-enhet).",
   "dashWallDisplay": "Veggskjerm",
+  "dashWallDisplayOn": "Veggvisning på: skjermen holdes på, og feltene skjules etter 10 sekunder uten berøring. Trykk for å hente dem tilbake.",
+  "dashWallDisplayOff": "Veggvisning av.",
   "analyticsSetupCheckbox": "Del anonyme bruksdata for å forbedre oppsettet",
   "analyticsWhatsShared": "Hva som deles",
   "analyticsCardTitle": "Hjelpe til å forbedre ZigDash?",

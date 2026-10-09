@@ -680,6 +680,8 @@
   "panelFormAdvancedSubtitle": "Свой префикс, QoS, retain",
   "panelFormStateTopicHelper": "Пусто = сам префикс (состояние устройства Zigbee2MQTT).",
   "dashWallDisplay": "Настенный экран",
+  "dashWallDisplayOn": "Настенный дисплей включён: экран не гаснет, а панели скрываются через 10 секунд без касаний. Коснитесь, чтобы вернуть их.",
+  "dashWallDisplayOff": "Настенный дисплей выключен.",
   "analyticsSetupCheckbox": "Отправлять анонимные данные об использовании для улучшения настройки",
   "analyticsWhatsShared": "Что отправляется",
   "analyticsCardTitle": "Помочь улучшить ZigDash?",

@@ -685,6 +685,8 @@
   "panelFormAdvancedSubtitle": "Prefix overschrijven, QoS, retain",
   "panelFormStateTopicHelper": "Leeg = het voorvoegsel zelf (status van een Zigbee2MQTT-apparaat).",
   "dashWallDisplay": "Wandweergave",
+  "dashWallDisplayOn": "Wandweergave aan: het scherm blijft aan en de balken verdwijnen na 10 seconden zonder aanraking. Tik om ze terug te halen.",
+  "dashWallDisplayOff": "Wandweergave uit.",
   "analyticsSetupCheckbox": "Anonieme gebruiksgegevens delen om de installatie te verbeteren",
   "analyticsWhatsShared": "Wat wordt gedeeld",
   "analyticsCardTitle": "ZigDash helpen verbeteren?",

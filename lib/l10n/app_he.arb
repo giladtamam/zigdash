@@ -754,6 +754,8 @@
   "panelFormAdvancedSubtitle": "עקיפת קידומת, QoS, retain",
   "panelFormStateTopicHelper": "ריק = הקידומת עצמה (המצב של מכשיר Zigbee2MQTT).",
   "dashWallDisplay": "תצוגת קיר",
+  "dashWallDisplayOn": "תצוגת קיר פעילה: המסך נשאר דולק, והסרגלים נעלמים אחרי 10 שניות בלי מגע. הקשה מחזירה אותם.",
+  "dashWallDisplayOff": "תצוגת קיר כבויה.",
   "analyticsSetupCheckbox": "שיתוף נתוני שימוש אנונימיים לשיפור ההגדרה",
   "analyticsWhatsShared": "מה משותף",
   "analyticsCardTitle": "לעזור לשפר את ZigDash?",

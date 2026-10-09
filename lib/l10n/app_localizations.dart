@@ -3776,6 +3776,18 @@ abstract class AppLocalizations {
   /// **'Wall display'**
   String get dashWallDisplay;
 
+  /// No description provided for @dashWallDisplayOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display on: the screen stays on, and the bars hide after 10 seconds without a touch. Tap to bring them back.'**
+  String get dashWallDisplayOn;
+
+  /// No description provided for @dashWallDisplayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display off.'**
+  String get dashWallDisplayOff;
+
   /// No description provided for @analyticsSetupCheckbox.
   ///
   /// In en, this message translates to:
