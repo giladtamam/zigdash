@@ -6,6 +6,7 @@ import 'package:zigdash/core/storage/secure_storage.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
 import 'package:zigdash/data/database/daos/dashboard_dao.dart';
 import 'package:zigdash/data/database/daos/panel_dao.dart';
+import 'package:zigdash/data/database/daos/scene_dao.dart';
 import 'package:zigdash/data/database/daos/section_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
@@ -16,6 +17,8 @@ import 'package:zigdash/data/repositories/dashboard_repo.dart';
 import 'package:zigdash/data/repositories/panel_repo.dart';
 import 'package:zigdash/data/repositories/section_repo.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
+import 'package:zigdash/features/scenes/models/scene.dart';
+import 'package:zigdash/features/scenes/scenes_providers.dart';
 
 class _MemSecure implements SecureStore {
   @override
@@ -32,6 +35,7 @@ void main() {
   late DashboardRepo dashboards;
   late SectionRepo sections;
   late PanelRepo panels;
+  late SceneRepo scenes;
   late BackupService backup;
 
   Future<String> connection(String id) async {
@@ -54,7 +58,8 @@ void main() {
     sections = SectionRepo(SectionDao(db));
     panels = PanelRepo(PanelDao(db));
     homes = ConnectionRepo(ConnectionDao(db), _MemSecure());
-    backup = BackupService(dashboards, sections, panels, homes);
+    scenes = SceneRepo(SceneDao(db));
+    backup = BackupService(dashboards, sections, panels, homes, scenes: scenes);
   });
   tearDown(() => db.close());
 
@@ -64,7 +69,7 @@ void main() {
     await dashboards.create(
         connectionId: source, name: 'Home', colorSeed: 0, iconCodepoint: 0);
     final raw = await backup.exportConnection(source);
-    expect(json.decode(raw)['version'], 3);
+    expect(json.decode(raw)['version'], BackupService.formatVersion);
     expect(json.decode(raw)['z2mBaseTopic'], 'z2m-garage');
 
     final empty = await connection('c2');
@@ -75,6 +80,64 @@ void main() {
     await homes.setBaseTopic(set, 'mine');
     await backup.importToConnection(set, raw);
     expect((await homes.getById(set))!.z2mBaseTopic, 'mine');
+  });
+
+  test('format 4 restores scenes and re-links scene tiles to them', () async {
+    final source = await connection('c1');
+    const evening = [
+      SceneAction(
+          setTopic: 'zigbee2mqtt/lamp/set',
+          payload: '{"state":"ON","brightness":100}'),
+      SceneAction(
+          setTopic: 'zigbee2mqtt/shutter/set', payload: '{"position":30}'),
+    ];
+    await scenes.create(
+        connectionId: source,
+        name: 'Morning',
+        iconCodepoint: 1,
+        colorSeed: 2,
+        actions: const [
+          SceneAction(setTopic: 'zigbee2mqtt/lamp/set', payload: '{"state":"OFF"}')
+        ]);
+    final eveningId = await scenes.create(
+        connectionId: source,
+        name: 'Evening',
+        iconCodepoint: 3,
+        colorSeed: 4,
+        sortOrder: 1,
+        actions: evening);
+    final dash = await dashboards.create(
+        connectionId: source, name: 'Home', colorSeed: 0, iconCodepoint: 0);
+    await panels.create(
+      dashboardId: dash,
+      name: 'Evening',
+      type: PanelType.scene,
+      topic: '',
+      config: SceneConfig(sceneId: eveningId),
+    );
+
+    final raw = await backup.exportConnection(source);
+    final target = await connection('c2');
+    await backup.importToConnection(target, raw);
+
+    final restored = await scenes.getByConnection(target);
+    expect(restored.map((s) => s.name), ['Morning', 'Evening']);
+    final restoredEvening = restored.last;
+    expect(restoredEvening.id, isNot(eveningId));
+    expect(SceneAction.decodeList(restoredEvening.actions), evening);
+
+    final targetDash = (await dashboards.getByConnection(target)).single;
+    final tile = (await panels.getByDashboard(targetDash.id)).single;
+    final config = PanelConfig.decode(tile.type, tile.config) as SceneConfig;
+    expect(config.sceneId, restoredEvening.id,
+        reason: 'the tile runs the imported scene, not the old id');
+  });
+
+  test('a backup without scenes imports with none', () async {
+    final target = await connection('c2');
+    await backup.importToConnection(
+        target, json.encode({'version': 3, 'dashboards': []}));
+    expect(await scenes.getByConnection(target), isEmpty);
   });
 
   test('a format 2 backup leaves the base topic unset', () async {
@@ -123,7 +186,7 @@ void main() {
     expect(rows.every((p) => p.sectionId == null), isTrue);
   });
 
-  test('format 3 round-trips sections, sizes and device links', () async {
+  test('the backup round-trips sections, sizes and device links', () async {
     final source = await connection('c1');
     final dashId = await dashboards.create(
       connectionId: source,
@@ -154,7 +217,7 @@ void main() {
     );
 
     final exported = await backup.exportConnection(source);
-    expect(json.decode(exported)['version'], 3);
+    expect(json.decode(exported)['version'], BackupService.formatVersion);
 
     final target = await connection('c2');
     await backup.importToConnection(target, exported);

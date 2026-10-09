@@ -19,6 +19,17 @@ class SceneDao extends DatabaseAccessor<AppDatabase> with _$SceneDaoMixin {
         .watch();
   }
 
+  /// A home's scenes, in display order, read once (for backups).
+  Future<List<Scene>> getByConnection(String connectionId) {
+    return (select(scenes)
+          ..where((s) => s.connectionId.equals(connectionId))
+          ..orderBy([
+            (s) => OrderingTerm(expression: s.sortOrder),
+            (s) => OrderingTerm(expression: s.name),
+          ]))
+        .get();
+  }
+
   Future<Scene?> getById(String id) =>
       (select(scenes)..where((s) => s.id.equals(id))).getSingleOrNull();
 

@@ -146,8 +146,8 @@ devices.
   run on a timer: for timed actions, use the **Schedule** panel (§5).
 - **Read-only values are never saved** (battery, link quality and so on), so a
   scene only sends values the device accepts.
-- **Scenes are stored on this phone, per home.** They are not part of the
-  dashboards backup (§9) yet, so a new phone starts without them.
+- **Scenes are stored on this phone, per home**, and the backup (§9) includes
+  them, so **Export** and **Import** move them to a new phone too.
 - ZigDash scenes are ZigDash's own. They don't use the scenes Zigbee2MQTT can
   store on devices (`scene_store` / `scene_recall`).
 
@@ -185,7 +185,7 @@ All settings persist across restarts.
 ## 9. Backup & restore
 
 From a broker's dashboards view, the **⋮ / backup menu** lets you **Export** your
-setup (dashboards + panels; scenes aren't included yet) to a JSON file and **Import** it back later or onto
+setup (dashboards, tiles and scenes) to a JSON file and **Import** it back later or onto
 another device. Passwords are **not** included in the export (they live only in the
 device's secure storage) — re‑enter them after importing.
 

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/panels/models/panel_config.dart';
+import '../../features/scenes/models/scene.dart';
+import '../../features/scenes/scenes_providers.dart';
 import '../database/database.dart';
 import '../database/tables/panels.dart';
 import 'connection_repo.dart';
@@ -19,31 +21,60 @@ import 'section_repo.dart';
 /// sizes. Format 1 backups still import: half and third become Small.
 /// Format 3 (1.13) adds the home's Zigbee2MQTT base topic, applied on import
 /// only when the target home has none set.
+/// Format 4 (2.0.1) adds the home's scenes. A scene tile names its scene by
+/// position in `scenes` (`scene`), since ids are regenerated on import.
 /// Last-known values are never part of a backup.
 class BackupService {
-  BackupService(this._dashboards, this._sections, this._panels, this._homes);
+  BackupService(
+    this._dashboards,
+    this._sections,
+    this._panels,
+    this._homes, {
+    SceneRepo? scenes,
+  }) : _scenes = scenes;
 
   final ConnectionRepo _homes;
   final DashboardRepo _dashboards;
   final SectionRepo _sections;
   final PanelRepo _panels;
+  final SceneRepo? _scenes;
 
-  static const int formatVersion = 3;
+  static const int formatVersion = 4;
 
   Future<String> exportConnection(String connectionId) async {
     final dashboards = await _dashboards.getByConnection(connectionId);
     final home = await _homes.getById(connectionId);
+    final scenes =
+        await _scenes?.getByConnection(connectionId) ?? const <Scene>[];
+    final sceneIndex = {
+      for (var i = 0; i < scenes.length; i++) scenes[i].id: i,
+    };
     final out = <String, dynamic>{
       'version': formatVersion,
       if (home?.z2mBaseTopic != null) 'z2mBaseTopic': home!.z2mBaseTopic,
+      'scenes': [
+        for (final s in scenes)
+          {
+            'name': s.name,
+            'iconCodepoint': s.iconCodepoint,
+            'colorSeed': s.colorSeed,
+            'sortOrder': s.sortOrder,
+            'actions': [
+              for (final a in SceneAction.decodeList(s.actions)) a.toJson(),
+            ],
+          },
+      ],
       'dashboards': [
-        for (final d in dashboards) await _exportDashboard(d),
+        for (final d in dashboards) await _exportDashboard(d, sceneIndex),
       ],
     };
     return const JsonEncoder.withIndent('  ').convert(out);
   }
 
-  Future<Map<String, dynamic>> _exportDashboard(Dashboard d) async {
+  Future<Map<String, dynamic>> _exportDashboard(
+    Dashboard d,
+    Map<String, int> sceneIndex,
+  ) async {
     final sections = await _sections.getByDashboard(d.id);
     final sectionIndex = {
       for (var i = 0; i < sections.length; i++) sections[i].id: i,
@@ -72,6 +103,11 @@ class BackupService {
             'sortOrder': p.sortOrder,
             'section': sectionIndex[p.sectionId],
             'deviceIeee': p.deviceIeee,
+            if (p.type == PanelType.scene)
+              'scene':
+                  sceneIndex[(PanelConfig.decode(p.type, p.config)
+                          as SceneConfig)
+                      .sceneId],
             'config': json.decode(p.config),
           },
       ],
@@ -93,6 +129,7 @@ class BackupService {
         await _homes.setBaseTopic(connectionId, base);
       }
     }
+    final sceneIds = await _importScenes(connectionId, doc['scenes']);
     for (final d in dashboards.cast<Map<String, dynamic>>()) {
       final dashboardId = await _dashboards.create(
         connectionId: connectionId,
@@ -106,19 +143,30 @@ class BackupService {
         sortOrder: (d['sortOrder'] as num?)?.toInt() ?? 0,
       );
       final sectionIds = <String>[];
-      for (final sec in ((d['sections'] as List?) ?? const [])
-          .cast<Map<String, dynamic>>()) {
+      for (final sec
+          in ((d['sections'] as List?) ?? const [])
+              .cast<Map<String, dynamic>>()) {
         final name = (sec['name'] as String?)?.trim();
-        sectionIds.add(await _sections.create(
-          dashboardId: dashboardId,
-          name: name == null || name.isEmpty ? 'Section' : name,
-          sortOrder: (sec['sortOrder'] as num?)?.toInt() ?? sectionIds.length,
-        ));
+        sectionIds.add(
+          await _sections.create(
+            dashboardId: dashboardId,
+            name: name == null || name.isEmpty ? 'Section' : name,
+            sortOrder: (sec['sortOrder'] as num?)?.toInt() ?? sectionIds.length,
+          ),
+        );
       }
       final panels = (d['panels'] as List?) ?? const [];
       for (final p in panels.cast<Map<String, dynamic>>()) {
         final type = _parsePanelType(p['type'] as String?);
-        final config = PanelConfig.decode(type, json.encode(p['config'] ?? {}));
+        var config = PanelConfig.decode(type, json.encode(p['config'] ?? {}));
+        // Point a scene tile at the scene imported with it.
+        final sceneAt = p['scene'];
+        if (type == PanelType.scene &&
+            sceneAt is num &&
+            sceneAt >= 0 &&
+            sceneAt < sceneIds.length) {
+          config = SceneConfig(sceneId: sceneIds[sceneAt.toInt()]);
+        }
         await _panels.create(
           dashboardId: dashboardId,
           name: (p['name'] as String?) ?? 'Panel',
@@ -137,6 +185,33 @@ class BackupService {
       }
     }
     return dashboards.length;
+  }
+
+  /// Creates the backup's scenes on [connectionId] and returns their new ids
+  /// in backup order. Older formats have no scenes.
+  Future<List<String>> _importScenes(String connectionId, Object? raw) async {
+    final scenes = _scenes;
+    if (scenes == null || raw is! List) return const [];
+    final ids = <String>[];
+    for (final s in raw.whereType<Map<String, dynamic>>()) {
+      final name = (s['name'] as String?)?.trim();
+      ids.add(
+        await scenes.create(
+          connectionId: connectionId,
+          name: name == null || name.isEmpty ? 'Scene' : name,
+          iconCodepoint: (s['iconCodepoint'] as num?)?.toInt() ?? 0xe1ac,
+          colorSeed: (s['colorSeed'] as num?)?.toInt() ?? 0xFF6750A4,
+          sortOrder: (s['sortOrder'] as num?)?.toInt() ?? ids.length,
+          actions: [
+            for (final a
+                in ((s['actions'] as List?) ?? const [])
+                    .whereType<Map<String, dynamic>>())
+              SceneAction.fromJson(a),
+          ],
+        ),
+      );
+    }
+    return ids;
   }
 
   static PanelType _parsePanelType(String? s) {
@@ -159,5 +234,6 @@ final backupServiceProvider = Provider<BackupService>((ref) {
     ref.watch(sectionRepoProvider),
     ref.watch(panelRepoProvider),
     ref.watch(connectionRepoProvider),
+    scenes: ref.watch(sceneRepoProvider),
   );
 });
