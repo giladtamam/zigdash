@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android-blue.svg)](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash)
 [![Built with Flutter](https://img.shields.io/badge/Built%20with-Flutter-02569B.svg)](https://flutter.dev)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2.svg)](https://github.com/sponsors/giladtamam)
 
 ZigDash discovers your Zigbee devices automatically — no manual topic wiring —
 and controls lights, shutters, switches, and sensors from your phone or a
@@ -55,6 +56,13 @@ MQTT.
 Feature requests, bug reports, and ideas are welcome — open a
 [GitHub issue](https://github.com/giladtamam/zigdash/issues).
 Built by a Zigbee2MQTT user, for the Zigbee2MQTT community.
+
+## Support
+
+ZigDash is free, with no ads, and stays that way. If it's useful to you,
+you can [sponsor it on GitHub](https://github.com/sponsors/giladtamam). A
+[Google Play review](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash)
+helps too.
 
 ## Build & test
 
