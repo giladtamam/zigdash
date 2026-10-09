@@ -23,6 +23,7 @@ import '../../data/repositories/dashboard_repo.dart';
 import '../../data/repositories/panel_repo.dart';
 import '../../data/repositories/section_repo.dart';
 import '../devices/devices_providers.dart';
+import '../discovery/models/z2m_device.dart';
 import '../discovery/providers/discovery_provider.dart';
 import '../onboarding/first_run.dart';
 import '../onboarding/setup/recommendation_policy.dart';
@@ -186,12 +187,17 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
           (await ref.read(dashboardRepoProvider).getByConnection(connectionId))
               .isNotEmpty;
       if (hasDashboard) return;
-      final devices = await ref.read(
-        discoveredDevicesProvider((
-          connectionId: connectionId,
-          base: base,
-        )).future,
-      );
+      // The provider is autoDispose: listen while reading, or it is disposed
+      // (unsubscribing) before the retained list arrives.
+      final args = (connectionId: connectionId, base: base);
+      final keepAlive =
+          ref.listenManual(discoveredDevicesProvider(args), (_, _) {});
+      final List<Z2mDevice> devices;
+      try {
+        devices = await ref.read(discoveredDevicesProvider(args).future);
+      } finally {
+        keepAlive.close();
+      }
       final rows = recommendDevices(devices, base: base);
       final selected = rows.where((r) => r.selected).toList();
       if (selected.isEmpty) return;
