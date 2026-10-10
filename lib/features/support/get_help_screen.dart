@@ -10,8 +10,8 @@ import 'help_tips.dart';
 import 'support_details.dart';
 import 'support_facts.dart';
 
-/// Where Support requests go. Swap for the dedicated support address once
-/// it exists (docs/design/support.md §6).
+/// Where Support requests go: the developer's existing address, kept on
+/// 2026-10-10 instead of a dedicated one (docs/design/support.md §1).
 const supportEmail = 'giladtamam1@gmail.com';
 
 /// A new email to [supportEmail]: [subject], a [prompt] to answer, and the
