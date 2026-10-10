@@ -774,5 +774,6 @@
   "tipSetupAtHomeTitle": "På samma Wi-Fi",
   "tipSetupAtHomeBody": "Konfigurera hemma, med telefonen på samma Wi-Fi som hubben.",
   "tipFindSetupTitle": "Sedan",
-  "tipFindSetupBody": "Lämna demon och tryck på „Hitta min installation”. ZigDash letar själv efter din hubb."
+  "tipFindSetupBody": "Lämna demon och tryck på „Hitta min installation”. ZigDash letar själv efter din hubb.",
+  "getHelpNoEmailApp": "Ingen e-postapp hittades. Kopiera uppgifterna och skriv till {email}."
 }

@@ -36,7 +36,8 @@ final platformFactsProvider = FutureProvider<PlatformFacts>((ref) async {
     try {
       final a = await DeviceInfoPlugin().androidInfo;
       android = a.version.release;
-      phone = '${a.manufacturer[0].toUpperCase()}${a.manufacturer.substring(1)} '
+      phone =
+          '${a.manufacturer[0].toUpperCase()}${a.manufacturer.substring(1)} '
           '${a.model}';
     } catch (_) {}
   }
@@ -73,8 +74,11 @@ bool? bridgeOnlineOf(String payload) {
 
 /// Reads Zigbee2MQTT's version, bridge state and device count from their
 /// retained topics, waiting at most [wait]. Null when nothing arrives.
-Future<Z2mFacts?> z2mFactsOf(MqttManager mgr, String base,
-    {Duration wait = const Duration(seconds: 2)}) async {
+Future<Z2mFacts?> z2mFactsOf(
+  MqttManager mgr,
+  String base, {
+  Duration wait = const Duration(seconds: 2),
+}) async {
   if (!mgr.isConnected) return null;
   String? version;
   bool? online;
@@ -82,17 +86,26 @@ Future<Z2mFacts?> z2mFactsOf(MqttManager mgr, String base,
   final topics = {
     '$base/bridge/info': (String p) => version = z2mVersionOf(p),
     '$base/bridge/state': (String p) => online = bridgeOnlineOf(p),
-    '$base/bridge/devices': (String p) =>
-        devices = p.trim().startsWith('[') ? parseBridgeDevices(p).length : null,
+    '$base/bridge/devices': (String p) => devices = p.trim().startsWith('[')
+        ? parseBridgeDevices(p).length
+        : null,
   };
   final done = Completer<void>();
   final subs = <StreamSubscription<MqttRxMessage>>[];
-  var seen = 0;
+  // A topic can deliver twice (the cached value, then the retained one), so
+  // wait for each topic, not for a number of messages.
+  final arrived = <String>{};
   for (final MapEntry(key: topic, value: take) in topics.entries) {
-    subs.add(mgr.subscribe(topic).listen((m) {
-      take(m.payload);
-      if (++seen >= topics.length && !done.isCompleted) done.complete();
-    }));
+    subs.add(
+      mgr.subscribe(topic).listen((m) {
+        take(m.payload);
+        if (arrived.add(topic) &&
+            arrived.length == topics.length &&
+            !done.isCompleted) {
+          done.complete();
+        }
+      }),
+    );
   }
   await done.future.timeout(wait, onTimeout: () {});
   for (final s in subs) {
@@ -106,55 +119,58 @@ Future<Z2mFacts?> z2mFactsOf(MqttManager mgr, String base,
 }
 
 String _protocolLabel(MqttProtocol p) => switch (p) {
-      MqttProtocol.tcp => 'TCP',
-      MqttProtocol.tcpSsl => 'TLS',
-      MqttProtocol.ws => 'WebSocket',
-      MqttProtocol.wss => 'WebSocket TLS',
-    };
+  MqttProtocol.tcp => 'TCP',
+  MqttProtocol.tcpSsl => 'TLS',
+  MqttProtocol.ws => 'WebSocket',
+  MqttProtocol.wss => 'WebSocket TLS',
+};
 
 typedef SupportQuery = ({String openedFrom, String? connectionId});
 
 /// Support details for Get help, assembled when it opens.
 final supportDetailsProvider = FutureProvider.autoDispose
     .family<SupportDetails, SupportQuery>((ref, q) async {
-  final platform = await ref.watch(platformFactsProvider.future);
-  final log = ref.read(supportLogProvider);
-  await log.load();
+      final platform = await ref.watch(platformFactsProvider.future);
+      final log = ref.read(supportLogProvider);
+      await log.load();
 
-  ConnectionFacts? connection;
-  Z2mFacts? z2m;
-  final id = q.connectionId;
-  if (id != null) {
-    final conn = await ref.read(connectionRepoProvider).getById(id);
-    if (conn != null) {
-      MqttManager? mgr;
-      try {
-        mgr = await ref
-            .read(mqttManagerProvider(id).future)
-            .timeout(const Duration(seconds: 2));
-      } catch (_) {}
-      final remote = mgr?.activeEndpoint == MqttEndpoint.remote;
-      final host = remote ? (conn.remoteHost ?? conn.host) : conn.host;
-      connection = ConnectionFacts(
-        remote: remote,
-        protocol: _protocolLabel(conn.protocol),
-        port: conn.port,
-        shape: addressShape(host),
+      ConnectionFacts? connection;
+      Z2mFacts? z2m;
+      final id = q.connectionId;
+      // A failure here only drops the home's lines: support must stay reachable.
+      if (id != null) {
+        try {
+          final conn = await ref.read(connectionRepoProvider).getById(id);
+          if (conn != null) {
+            MqttManager? mgr;
+            try {
+              mgr = await ref
+                  .read(mqttManagerProvider(id).future)
+                  .timeout(const Duration(seconds: 2));
+            } catch (_) {}
+            final remote = mgr?.activeEndpoint == MqttEndpoint.remote;
+            final host = remote ? (conn.remoteHost ?? conn.host) : conn.host;
+            connection = ConnectionFacts(
+              remote: remote,
+              protocol: _protocolLabel(conn.protocol),
+              port: conn.port,
+              shape: addressShape(host),
+            );
+            final base = ref.read(homeBaseTopicProvider(id)) ?? 'zigbee2mqtt';
+            if (mgr != null) z2m = await z2mFactsOf(mgr, base);
+          }
+        } catch (_) {}
+      }
+
+      return SupportDetails(
+        appVersion: platform.appVersion,
+        build: platform.build,
+        android: platform.android,
+        phone: platform.phone,
+        openedFrom: q.openedFrom,
+        connection: connection,
+        z2m: z2m,
+        lastFailure: log.lastFailure,
+        lastScan: log.lastScan,
       );
-      final base = ref.read(homeBaseTopicProvider(id)) ?? 'zigbee2mqtt';
-      if (mgr != null) z2m = await z2mFactsOf(mgr, base);
-    }
-  }
-
-  return SupportDetails(
-    appVersion: platform.appVersion,
-    build: platform.build,
-    android: platform.android,
-    phone: platform.phone,
-    openedFrom: q.openedFrom,
-    connection: connection,
-    z2m: z2m,
-    lastFailure: log.lastFailure,
-    lastScan: log.lastScan,
-  );
-});
+    });

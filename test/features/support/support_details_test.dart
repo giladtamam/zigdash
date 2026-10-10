@@ -87,6 +87,28 @@ void main() {
       expect(failureKindFromError(StateError('?')), FailureKind.unknown);
     });
 
+    test('from a wrapped client error, by its message', () {
+      expect(
+          failureKindFromMessage('mqtt-client::NoConnectionException: '
+              'MqttNormalConnection::connect - The connection to the message '
+              'broker {smhub.local}:{1883} could not be made. Error is '
+              'SocketException: Failed host lookup: \'smhub.local\''),
+          FailureKind.hostNotFound);
+      expect(
+          failureKindFromMessage('... could not be made. Error is '
+              'SocketException: Connection refused (OS Error: errno = 111)'),
+          FailureKind.refused);
+      expect(
+          failureKindFromMessage('... could not be made. Error is '
+              'SocketException: No route to host'),
+          FailureKind.unreachable);
+      expect(
+          failureKindFromMessage('The broker is not responding to the '
+              'connection request message (Missing Connection Acknowledgement?'),
+          FailureKind.notMqtt);
+      expect(failureKindFromMessage('something new'), FailureKind.unknown);
+    });
+
     test('names round-trip for storage', () {
       for (final k in FailureKind.values) {
         expect(FailureKind.values.byName(k.name), k);

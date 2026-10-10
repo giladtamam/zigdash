@@ -2340,4 +2340,9 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get tipFindSetupBody =>
       'Lämna demon och tryck på „Hitta min installation”. ZigDash letar själv efter din hubb.';
+
+  @override
+  String getHelpNoEmailApp(Object email) {
+    return 'Ingen e-postapp hittades. Kopiera uppgifterna och skriv till $email.';
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/features/support/support_details.dart';
 import 'package:zigdash/features/support/support_log.dart';
@@ -48,5 +50,29 @@ void main() {
         read: () async => '{"failure":"fromTheFuture"}', write: (_) async {});
     await unknownKind.load();
     expect(unknownKind.lastFailure, isNull);
+  });
+
+  test('clear removes an earlier session\'s file even before any read',
+      () async {
+    String? saved = '{"failure":"timedOut"}';
+    final log = SupportLog(read: () async => saved, write: (s) async => saved = s);
+    await log.clear();
+    expect(saved, isNull);
+    await log.recordScan(scan);
+    expect(log.lastFailure, isNull, reason: 'the stale failure must not return');
+  });
+
+  test('a record made during the first read is not overwritten by it',
+      () async {
+    final gate = Completer<String?>();
+    String? saved;
+    final log = SupportLog(read: () => gate.future, write: (s) async => saved = s);
+    final reading = log.load();
+    final recording = log.recordScan(scan);
+    gate.complete('{"scan":{"widened":false,"hostsTried":1,"brokersFound":0}}');
+    await reading;
+    await recording;
+    expect(log.lastScan, scan);
+    expect(saved, contains('1018'));
   });
 }

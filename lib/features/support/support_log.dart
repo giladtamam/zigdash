@@ -23,14 +23,16 @@ class SupportLog {
 
   FailureKind? _failure;
   ScanSummary? _scan;
-  bool _loaded = false;
+  Future<void>? _loading;
 
   FailureKind? get lastFailure => _failure;
   ScanSummary? get lastScan => _scan;
 
-  Future<void> load() async {
-    if (_loaded) return;
-    _loaded = true;
+  /// Reads the file once; every caller waits for that same read, so a
+  /// record made while it runs is never overwritten by older contents.
+  Future<void> load() => _loading ??= _read();
+
+  Future<void> _read() async {
     try {
       final raw = await read();
       if (raw == null) return;
@@ -56,9 +58,10 @@ class SupportLog {
     await _save();
   }
 
+  /// After a successful connection. Always removes the file, which may hold
+  /// an earlier session's values even before anything was read.
   Future<void> clear() async {
-    _loaded = true;
-    if (_failure == null && _scan == null) return;
+    await load();
     _failure = null;
     _scan = null;
     await _save();

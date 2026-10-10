@@ -2355,4 +2355,9 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get tipFindSetupBody =>
       'Выйдите из демо-режима и нажмите «Найти мою систему». ZigDash сам найдёт ваш хаб.';
+
+  @override
+  String getHelpNoEmailApp(Object email) {
+    return 'Почтовое приложение не найдено. Скопируйте данные и напишите на $email.';
+  }
 }

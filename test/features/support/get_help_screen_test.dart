@@ -76,6 +76,22 @@ void main() {
     expect(find.text('Details copied'), findsOneWidget);
   });
 
+  testWidgets('with no email app, it points to Copy and the address',
+      (tester) async {
+    // A phone with no email app: the launcher can't open mailto.
+    final saved = openMailApp;
+    addTearDown(() => openMailApp = saved);
+    openMailApp = (_) async => false;
+    await tester.pumpWidget(_app(const GetHelpScreen(from: HelpFrom.settings)));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Copy details'), 200,
+        scrollable: find.byType(Scrollable).first);
+    await tester.tap(find.text('Contact support'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('No email app found'), findsOneWidget);
+    expect(find.textContaining(supportEmail), findsOneWidget);
+  });
+
   testWidgets('ticking a tip is local only', (tester) async {
     await tester.pumpWidget(_app(const GetHelpScreen(from: HelpFrom.demo)));
     await tester.pumpAndSettle();

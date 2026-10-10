@@ -774,5 +774,6 @@
   "tipSetupAtHomeTitle": "Op dezelfde wifi",
   "tipSetupAtHomeBody": "Stel alles thuis in, met je telefoon op dezelfde wifi als de hub.",
   "tipFindSetupTitle": "Daarna",
-  "tipFindSetupBody": "Verlaat de demo en tik op „Vind mijn installatie”. ZigDash zoekt je hub zelf."
+  "tipFindSetupBody": "Verlaat de demo en tik op „Vind mijn installatie”. ZigDash zoekt je hub zelf.",
+  "getHelpNoEmailApp": "Geen e-mailapp gevonden. Kopieer de gegevens en mail naar {email}."
 }

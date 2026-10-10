@@ -55,6 +55,10 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
   );
   final failures = coordinator.states.listen((s) {
     if (s is SetupFailed) support.recordFailure(failureKindFromSetup(s.kind));
+    if (s is SetupNeedsAuth) {
+      support.recordFailure(
+          s.rejected ? FailureKind.loginRejected : FailureKind.loginRequired);
+    }
   });
   ref.onDispose(failures.cancel);
   ref.onDispose(coordinator.dispose);

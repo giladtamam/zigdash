@@ -31,6 +31,25 @@ FailureKind failureKindFromError(Object error) {
   return FailureKind.unknown;
 }
 
+/// The kind of a connect error from its message, for errors a client
+/// library wraps (mqtt_client puts the socket error inside its own
+/// NoConnectionException). Only the kind survives, never the text.
+FailureKind failureKindFromMessage(String message) {
+  final m = message.toLowerCase();
+  if (m.contains('host lookup')) return FailureKind.hostNotFound;
+  if (m.contains('refused')) return FailureKind.refused;
+  if (m.contains('timed out')) return FailureKind.timedOut;
+  if (m.contains('acknowledgement') || m.contains('return code')) {
+    return FailureKind.notMqtt;
+  }
+  if (m.contains('could not be made') ||
+      m.contains('unreachable') ||
+      m.contains('no route')) {
+    return FailureKind.unreachable;
+  }
+  return FailureKind.unknown;
+}
+
 /// Short English label for Support details.
 String failureKindLabel(FailureKind kind) => switch (kind) {
       FailureKind.unreachable => "can't reach the address",

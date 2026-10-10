@@ -843,5 +843,6 @@
   "tipSetupAtHomeTitle": "באותה רשת Wi-Fi",
   "tipSetupAtHomeBody": "בצעו את ההגדרה בבית, כשהטלפון באותה רשת Wi-Fi כמו ההאב.",
   "tipFindSetupTitle": "ואז",
-  "tipFindSetupBody": "צאו מההדגמה והקישו על \"מצאו את ההתקנה שלי\". ZigDash יחפש את ההאב בעצמו."
+  "tipFindSetupBody": "צאו מההדגמה והקישו על \"מצאו את ההתקנה שלי\". ZigDash יחפש את ההאב בעצמו.",
+  "getHelpNoEmailApp": "לא נמצאה אפליקציית דואר. העתיקו את הפרטים וכתבו אל {email}."
 }

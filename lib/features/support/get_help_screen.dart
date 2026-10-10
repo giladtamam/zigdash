@@ -7,6 +7,7 @@ import '../../core/analytics/analytics.dart';
 import '../../core/l10n/l10n_ext.dart';
 import '../onboarding/setup/setup_error_guidance.dart';
 import 'help_tips.dart';
+import 'support_details.dart';
 import 'support_facts.dart';
 
 /// Where Support requests go. Swap for the dedicated support address once
@@ -28,6 +29,11 @@ Uri supportMailUrl({
       query: 'subject=${Uri.encodeComponent(subject)}'
           '&body=${Uri.encodeComponent('$prompt\n\n\n— Support details —\n$details')}',
     );
+
+/// Opens a mailto URL; replaced in tests.
+@visibleForTesting
+Future<bool> Function(Uri url) openMailApp =
+    (url) => launchUrl(url, mode: LaunchMode.externalApplication);
 
 /// The one screen every help link opens (CONTEXT.md: Get help): the tips for
 /// the place it came from, the support promise, what Support details
@@ -69,17 +75,22 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
 
   Future<void> _contact(String details) async {
     final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
     ref
         .read(analyticsProvider)
         .track(SupportContact(widget.from, ContactVia.email));
-    await launchUrl(
-      supportMailUrl(
+    var opened = false;
+    try {
+      opened = await openMailApp(supportMailUrl(
         subject: l10n.getHelpEmailSubject,
         prompt: l10n.getHelpEmailPrompt,
         details: details,
-      ),
-      mode: LaunchMode.externalApplication,
-    );
+      ));
+    } catch (_) {}
+    if (!opened) {
+      messenger.showSnackBar(SnackBar(
+          content: Text(l10n.getHelpNoEmailApp(supportEmail))));
+    }
   }
 
   Future<void> _copy(String details) async {
@@ -99,7 +110,12 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
     final scheme = theme.colorScheme;
     final tips = tipsFor(l10n, widget.from, widget.error);
     final details = ref.watch(supportDetailsProvider(_query));
-    final text = details.valueOrNull?.format();
+    // If gathering fails, still let the user reach support with the basics.
+    final text = details.hasError
+        ? SupportDetails(
+                appVersion: '?', build: '?', openedFrom: _query.openedFrom)
+            .format()
+        : details.valueOrNull?.format();
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.getHelpTitle)),

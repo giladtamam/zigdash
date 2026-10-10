@@ -2322,4 +2322,9 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get tipFindSetupBody =>
       'צאו מההדגמה והקישו על \"מצאו את ההתקנה שלי\". ZigDash יחפש את ההאב בעצמו.';
+
+  @override
+  String getHelpNoEmailApp(Object email) {
+    return 'לא נמצאה אפליקציית דואר. העתיקו את הפרטים וכתבו אל $email.';
+  }
 }

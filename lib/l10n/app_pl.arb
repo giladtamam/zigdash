@@ -769,5 +769,6 @@
   "tipSetupAtHomeTitle": "W tej samej sieci Wi-Fi",
   "tipSetupAtHomeBody": "Konfiguruj w domu, z telefonem w tej samej sieci Wi-Fi co hub.",
   "tipFindSetupTitle": "Potem",
-  "tipFindSetupBody": "Wyjdź z trybu demo i dotknij „Znajdź moją instalację”. ZigDash sam znajdzie Twój hub."
+  "tipFindSetupBody": "Wyjdź z trybu demo i dotknij „Znajdź moją instalację”. ZigDash sam znajdzie Twój hub.",
+  "getHelpNoEmailApp": "Nie znaleziono aplikacji pocztowej. Skopiuj dane i napisz na {email}."
 }

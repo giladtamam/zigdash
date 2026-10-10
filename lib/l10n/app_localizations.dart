@@ -4315,6 +4315,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leave the demo and tap Find my setup. ZigDash looks for your hub on its own.'**
   String get tipFindSetupBody;
+
+  /// No description provided for @getHelpNoEmailApp.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app found. Copy the details and write to {email}.'**
+  String getHelpNoEmailApp(Object email);
 }
 
 class _AppLocalizationsDelegate

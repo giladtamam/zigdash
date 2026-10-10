@@ -2360,4 +2360,9 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get tipFindSetupBody =>
       'Wyjdź z trybu demo i dotknij „Znajdź moją instalację”. ZigDash sam znajdzie Twój hub.';
+
+  @override
+  String getHelpNoEmailApp(Object email) {
+    return 'Nie znaleziono aplikacji pocztowej. Skopiuj dane i napisz na $email.';
+  }
 }

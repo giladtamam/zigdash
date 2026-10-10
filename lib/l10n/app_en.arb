@@ -786,5 +786,7 @@
   "tipSetupAtHomeTitle": "On the same Wi-Fi",
   "tipSetupAtHomeBody": "Set up at home, with your phone on the same Wi-Fi as the hub.",
   "tipFindSetupTitle": "Then",
-  "tipFindSetupBody": "Leave the demo and tap Find my setup. ZigDash looks for your hub on its own."
+  "tipFindSetupBody": "Leave the demo and tap Find my setup. ZigDash looks for your hub on its own.",
+  "getHelpNoEmailApp": "No email app found. Copy the details and write to {email}.",
+  "@getHelpNoEmailApp": { "placeholders": {"email": {}} }
 }

@@ -308,8 +308,11 @@ class MqttManager {
         code == mc.MqttConnectReturnCode.badUsernameOrPassword) {
       return FailureKind.loginRejected;
     }
-    if (error is mc.NoConnectionException) return FailureKind.notMqtt;
-    return error == null ? FailureKind.notMqtt : failureKindFromError(error);
+    if (error == null) return FailureKind.notMqtt;
+    if (error is mc.NoConnectionException) {
+      return failureKindFromMessage(error.toString());
+    }
+    return failureKindFromError(error);
   }
 
   /// Force an immediate reconnect, bypassing any pending backoff timer. Called
