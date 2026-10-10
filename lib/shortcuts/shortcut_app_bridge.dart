@@ -59,14 +59,20 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       // Uses noted by tiles and Device Controls while the app was closed.
       unawaited(reportShortcutUsage(
           ref.read(sharedPreferencesProvider), ref.read(analyticsProvider)));
-      // Device Controls offer what's on the dashboards: follow changes.
+      // Device Controls and tiles show what's on the dashboards: follow
+      // changes.
       final db = ref.read(appDatabaseProvider);
       _dashboardChanges = db
           .tableUpdates(TableUpdateQuery.onAllTables(
-              [db.panels, db.dashboards, db.connections]))
+              [db.panels, db.dashboards, db.connections, db.shortcuts]))
           .listen((_) {
         _resync?.cancel();
-        _resync = Timer(const Duration(seconds: 1), service.resyncControls);
+        _resync = Timer(const Duration(seconds: 1), () async {
+          await service.resyncControls();
+          // Tiles follow renames and deleted Homes without a restart.
+          await service.resyncTiles();
+          await refreshShortcutTiles();
+        });
       });
       try {
         _handle(await appChannel.invokeMethod<Object?>('takeAction'));

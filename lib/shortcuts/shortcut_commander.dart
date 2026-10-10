@@ -277,6 +277,7 @@ class ShortcutCommander {
     var command = fixed ?? commandFor(d, lastPayload);
     var before = decodeDeviceState(lastPayload);
     var sent = false;
+    DateTime? sentAt;
     final sub = mgr.subscribe(d.subscribeTopic).listen((m) {
       if (m.payload.isEmpty) return;
       if (!sent) {
@@ -285,7 +286,10 @@ class ShortcutCommander {
       }
       // Only a state matching the command is the device's answer: the
       // broker's old copy can still arrive after sending.
+      // The subscription replays the last value it holds, received before
+      // the send: never an answer, however well it matches.
       if (!reply.isCompleted &&
+          !m.receivedAt.isBefore(sentAt!) &&
           confirms(command, decodeDeviceState(m.payload), before)) {
         reply.complete(m.payload);
       }
@@ -302,6 +306,7 @@ class ShortcutCommander {
           command = commandFor(d, now);
         }
       }
+      sentAt = DateTime.now();
       mgr.publish(d.publishTopic, jsonEncode(command), '');
       sent = true;
       final payload = await reply.future.timeout(confirmWithin);

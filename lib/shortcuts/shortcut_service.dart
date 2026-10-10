@@ -86,7 +86,14 @@ class ShortcutService {
   /// so tiles follow renames and pick up new fields (e.g. "this is a
   /// shutter") after an update.
   Future<void> resyncTiles() async {
-    for (final row in await _dao.watchAll().first) {
+    final rows = await _dao.watchAll().first;
+    // A slot whose row is gone (its Home was deleted) goes back to "Choose
+    // a device" instead of showing "Removed" forever.
+    final used = {for (final r in rows) r.tileSlot};
+    for (var s = 1; s <= shortcutTileSlots; s++) {
+      if (!used.contains(s)) await _prefs.remove(shortcutTileKey(s));
+    }
+    for (final row in rows) {
       final slot = row.tileSlot;
       final targets = shortcutTargets(row);
       if (slot == null || targets.isEmpty) continue;

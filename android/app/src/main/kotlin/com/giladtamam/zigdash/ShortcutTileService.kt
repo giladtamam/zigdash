@@ -22,6 +22,7 @@ abstract class ShortcutTileService : TileService() {
     private val main = Handler(Looper.getMainLooper())
     private var flash: String? = null
     private var working = false
+    private val clearFlash = Runnable { flash = null; render() }
 
     // While the panel is open, redraw whenever the app or the engine writes
     // a new state (a shutter moving, a light switched from the dashboard).
@@ -72,7 +73,9 @@ abstract class ShortcutTileService : TileService() {
                 else -> ShortcutPrefs.word(this, "notConfirmed", "Not confirmed")
             }
             render()
-            if (flash != null) main.postDelayed({ flash = null; render() }, 10_000)
+            // Only the newest problem clears itself after 10 s.
+            main.removeCallbacks(clearFlash)
+            if (flash != null) main.postDelayed(clearFlash, 10_000)
         }
     }
 

@@ -168,6 +168,24 @@ void main() {
     });
   });
 
+  test('the value the manager already held is not the answer', () async {
+    // Real time: replayed values carry the time they first arrived.
+    final b = _Broker(silent: true);
+    final m = _manager(b);
+    await m.ensureConnected();
+    final watch = m.subscribe('zigbee2mqtt/lamp').listen((_) {});
+    b.emit('zigbee2mqtt/lamp', '{"state":"OFF"}');
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+    final r = await ShortcutCommander(
+            l10n: l10n, confirmWithin: const Duration(milliseconds: 200))
+        .toggle(m, _device(_light, 'lamp'),
+            lastPayload: '{"state":"ON"}', command: {'state': 'OFF'});
+    expect(r.outcome, ShortcutOutcome.unconfirmed,
+        reason: 'the replayed OFF is from before the send');
+    await watch.cancel();
+    await m.dispose();
+  });
+
   test('a first tap learns the current state, then sends its target value',
       () {
     fakeAsync((async) {

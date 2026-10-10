@@ -108,6 +108,10 @@ class CoverControlActivity : Activity() {
     override fun onStop() {
         ShortcutPrefs.unlisten(this, changes)
         super.onStop()
+        // A pop-up, not a screen to come back to: left open (Home pressed),
+        // singleTask would bring this shutter back when another shutter's
+        // tile is tapped.
+        finish()
     }
 
     private fun send(command: ((String) -> Unit) -> Unit) {

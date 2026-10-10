@@ -96,7 +96,14 @@ class ShortcutEngine {
     return db;
   }
 
-  Future<SharedPreferences> get _prefs => SharedPreferences.getInstance();
+  /// The shared preferences, re-read: the app writes them from its own
+  /// isolate (a device's state, the language), and the plugin's copy here
+  /// would otherwise never see it.
+  Future<SharedPreferences> get _prefs async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    return prefs;
+  }
 
   /// One manager per home, rebuilt when the home's settings or password
   /// change in the app.

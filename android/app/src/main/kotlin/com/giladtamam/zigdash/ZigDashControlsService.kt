@@ -96,7 +96,10 @@ class ZigDashControlsService : ControlsProviderService() {
                 }
                 if (problem != null) {
                     flash[id] = problem
-                    main.postDelayed({ flash.remove(id); push(e) }, 10_000)
+                    // Only the newest problem clears itself after 10 s.
+                    main.removeCallbacksAndMessages(id.intern())
+                    main.postAtTime({ flash.remove(id); push(e) }, id.intern(),
+                        android.os.SystemClock.uptimeMillis() + 10_000)
                 }
                 push(e)
             }

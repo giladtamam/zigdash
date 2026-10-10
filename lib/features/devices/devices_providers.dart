@@ -287,11 +287,15 @@ Future<String?> renameDevice(
   final mgr = await ref.read(mqttManagerProvider(connectionId).future);
   final responseTopic = '$base/bridge/response/device/rename';
   final answer = Completer<String?>();
+  final since = DateTime.now();
   final sub = mgr.subscribe(responseTopic).listen((m) {
+    // The subscription replays the previous rename's answer.
+    if (m.receivedAt.isBefore(since)) return;
     try {
       final j = jsonDecode(m.payload) as Map<String, dynamic>;
       final data = j['data'];
-      if (data is Map && data['to'] != to) return; // another rename
+      // Another rename's answer; an error carries no names (data: {}).
+      if (data is Map && data['to'] != null && data['to'] != to) return;
       if (!answer.isCompleted) {
         answer.complete(j['status'] == 'ok' ? null : '${j['error'] ?? '?'}');
       }
