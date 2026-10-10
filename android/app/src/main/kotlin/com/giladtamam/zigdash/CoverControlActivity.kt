@@ -103,6 +103,9 @@ class CoverControlActivity : Activity() {
         super.onStart()
         ShortcutPrefs.listen(this, changes)
         render()
+        // The last-known position may be old (a wall switch moved it): ask
+        // the shutter, and follow it while the pop-up is open.
+        ShortcutEngine.watch(this, connectionId, listOf(ieee)) {}
     }
 
     override fun onStop() {
