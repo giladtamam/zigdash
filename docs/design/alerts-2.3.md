@@ -36,18 +36,19 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 
 - A Node-RED flow, `node-red/alerts-flow.json`, in core nodes only. The function node uses Node's built-in `crypto` (declared in its Setup tab; no npm module), and an `http request` node posts the push. Proven on the user's SMHUB.
 - It reads one retained config per Home from `zigdash/alerts/config` (contract below).
-- It subscribes to `zigbee2mqtt/+` and fires on these values:
-  - `water_leak` → leak;
-  - `smoke` → smoke;
-  - `contact: false` → opened;
-  - `battery_low: true`, or `battery` at or below the alert's threshold (default 20%) → low battery.
+- It subscribes to `<base>/#` (the Home's Zigbee2MQTT base topic, from the config) and looks at messages whose topic is one of the configured devices' state topics, ignoring `/set`, `/get` and `bridge/`. Zigbee2MQTT publishes state under the friendly name, not the IEEE address, so each configured device carries its topic.
+- **It fires on changes, never on values.** A device's last seen value is kept per device; the first message after a (re)start only seeds it. Zigbee2MQTT republishes a device's whole state whenever anything asks (`/get`, a widget, an app start), and may retain it, so firing on `contact: false` would mean a "Front door opened" at every such republish.
+  - `water_leak` false → true: leak; true → false: cleared.
+  - `smoke` false → true: smoke; true → false: cleared.
+  - `contact` true → false: opened.
+  - `battery_low` false → true, or `battery` crossing down to the alert's threshold (default 20%): low battery; crossing back up clears the "reported" mark.
 - **When it notifies:**
   - **Leak and smoke:** once when it starts, and once when it clears.
-  - **Door or window:** once per opening, only inside the alert's hours if set (hub local time, crossing midnight allowed).
+  - **Door or window:** once per opening, only inside the alert's hours if set. Hours are in the Home's time zone, sent in the config (`timeZone`, IANA name), since the hub's Node-RED most likely runs in UTC.
   - **Low battery:** once per device until the battery is back above the threshold.
 - **What it sends** (to every phone in the config, and to ntfy/Pushover if set): one JSON object, `{"v":1, "kind":"leak", "device":"0x00158d…", "name":"Kitchen sensor", "home":"My Home", "cleared":false, "value":null, "at":"2026-10-10T21:03:12+03:00"}`. The phone writes the notification text in its own language (§2), so the flow carries no wording. For ntfy and Pushover, which show raw text, the flow uses the English phrases in the config's `"text"` map, written by ZigDash in the app's language.
 - **Push details:** Web Push, RFC 8291 `aes128gcm` to each phone's keys, VAPID ES256 with the key pair from the config, headers `Urgency: high` (required: normal urgency waits for the phone to wake), `TTL: 86400`. A `404`/`410` answer marks that phone `dead` in `zigdash/alerts/state`; ZigDash removes it from the config.
-- **Memory:** the SMHUB's Node-RED keeps context in memory only, so "already reported" state (battery, a leak in progress) is also kept retained on `zigdash/alerts/state` and reloaded on start.
+- **Memory:** the SMHUB's Node-RED keeps context in memory only, so the per-device memory (last values, "battery already reported") is also kept retained on `zigdash/alerts/state` and reloaded on start; it is republished only when something tracked changed.
 - **Recent alerts:** it publishes the last 20 fired alerts, retained at QoS 1, to `zigdash/alerts/recent`, as a JSON list of the same objects.
 - **Health:** retained `zigdash/alerts/bridge/state` = `online` on start and every 30 s, with a Last-Will of `offline` (the schedules flow's pattern).
 - **Test:** a message on `zigdash/alerts/test` with `{"phone":"<id>"}` sends a test alert to that phone (or to all channels when no id), and the result goes to `zigdash/alerts/test/result`.
@@ -58,6 +59,8 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 {
   "version": 1,
   "home": "My Home",
+  "base": "zigbee2mqtt",
+  "timeZone": "Asia/Jerusalem",
   "vapid": { "publicKey": "BJ5D…", "privateJwk": { "kty": "EC", "crv": "P-256", "x": "…", "y": "…", "d": "…" } },
   "phones": [
     { "id": "a1b2…", "name": "Gilad's Galaxy", "endpoint": "https://fcm.googleapis.com/fcm/send/…", "p256dh": "BGpQ…", "auth": "b3tV…" }
@@ -66,22 +69,22 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
   "pushover": null,
   "text": { "leak": "💧 Leak — {name} ({home})", "leakCleared": "✅ {name} is dry again", "smoke": "…", "smokeCleared": "…", "opened": "🚪 {name} opened ({home})", "battery": "🔋 Battery low — {name}, {value}% ({home})", "test": "ZigDash test alert" },
   "alerts": [
-    { "id": "…", "kind": "leak", "devices": ["0x00158d…"], "names": {"0x00158d…": "Kitchen sensor"} },
-    { "id": "…", "kind": "opened", "devices": ["…"], "names": {"…": "Front door"}, "from": "23:00", "to": "06:00" },
-    { "id": "…", "kind": "battery", "devices": ["…"], "names": {"…": "Bedroom sensor"}, "threshold": 20 }
+    { "id": "…", "kind": "leak", "devices": [{ "ieee": "0x00158d…", "topic": "zigbee2mqtt/Kitchen sensor", "name": "Kitchen sensor" }] },
+    { "id": "…", "kind": "opened", "devices": [{ "ieee": "…", "topic": "zigbee2mqtt/Front door", "name": "Front door" }], "from": "23:00", "to": "06:00" },
+    { "id": "…", "kind": "battery", "devices": [{ "ieee": "…", "topic": "…", "name": "Bedroom sensor" }], "threshold": 20 }
   ]
 }
 ```
 
 - **The VAPID key pair** is made by the first phone that sets up alerts and lives in the config, on the user's own broker, like the Pushover keys. Anyone who can read the broker can already control the home, so this adds no exposure; the privacy policy says it. A phone that joins later reads the public key from the retained config, registers with it, and adds itself to `phones`.
 - **Several phones** share one config; each phone rewrites it from the retained value it last received (last writer wins; `phones` entries are merged by `id`). ZigDash re-registers at every start (the push library asks for this) and updates its entry if the endpoint changed.
-- The device name is sent in the config because the flow speaks only MQTT and doesn't read Zigbee2MQTT's device list. ZigDash republishes the config when a device is renamed.
+- Each device carries its IEEE address (for the app), its state topic and its name, because the flow speaks only MQTT and doesn't read Zigbee2MQTT's device list. ZigDash republishes the config when a device is renamed (its topic changes too).
 - An empty retained payload removes the config, which turns alerts off for that Home.
 - **`ntfy`** holds `{server, topic}` when household sharing or the no-Google fallback is on. **`pushover`** holds `{user, token}`.
 
 ### Installing the flow
 
-- **One button: "Set up alerts on the hub".** ZigDash finds Node-RED at the broker's address on port 1880 and calls Node-RED's admin API: `GET /settings` to detect it, then `POST /flow` to add the flow as its own tab, or `PUT /flow/:id` to update it. Verified on SMHUB (§5).
+- **One button: "Set up alerts on the hub".** ZigDash finds Node-RED at the broker's address on port 1880 and calls Node-RED's admin API: `GET /settings` to detect it, `GET /flows` to find a tab labelled "ZigDash alerts", then `POST /flow` to add it or `PUT /flow/:id` to update it. Verified on SMHUB (§5).
 - **Fallback.** If Node-RED asks for a login, or isn't reachable, the screen shows short steps and copies the flow JSON: open Node-RED, Import, paste, Deploy.
 - **Node-RED not installed** (port 1880 refused): the screen explains that alerts need Node-RED on the hub. It links to Get help, which gets a new tip, "Install Node-RED", with SMHUB steps (Apps → Node-RED → Install) and a pointer for a Raspberry Pi.
 - **The broker node** in the posted flow must use the Home's broker **address, never `localhost`** (on SMHUB, Node-RED can't reach the broker that way). ZigDash fills in address, port and username from the Connection; the password is never written into the flow. If the broker needs a password, the flow's broker node asks for it in Node-RED, and the fallback steps say so.
