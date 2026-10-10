@@ -28,6 +28,11 @@ All data stays on your device:
 - **Dashboards and panels** — your dashboard layouts and panel configuration are
   stored in a local on-device database.
 - **App preferences** — theme, Material You setting, and language.
+- **Support details** — the kind of the last connection error and what the
+  last hub scan tried (how many addresses, how many brokers found, Wi-Fi or
+  Ethernet), kept only until the next successful connection. No addresses or
+  names. They leave your device only if you send or copy them yourself from
+  Get help or Report a problem. They are not included in Android backups.
 
 This data is never uploaded to the developer. You can remove it at any time by
 deleting a connection (which removes its dashboards, panels, and saved password)
@@ -71,6 +76,8 @@ never from anything you typed or anything your broker sent.
 | `app_started` | Once each time the app starts | phone or tablet; theme (system, light, dark); Material You on or off; number of homes (0, 1, 2+); number of tiles (0, 1–10, 11–30, 31+); demo or not |
 | `setup_step` | Each step of first-run setup | the step (started, scan found, scan empty, needs login, login rejected, failed, review, complete, manual, demo); the type of setup error, if any; number of devices found (0, 1–5, 6–20, 21+) |
 | `feature_used` | The first use of a feature in a session | Devices tab, device page, Scenes, Edit mode, Wall display, or tile added (with the kind of tile, such as "light" or "toggle") |
+| `help_opened` | Get help was opened | where from: no connection found, a setup error, manual connect, home can't be reached, device list missing, Settings, or the demo |
+| `support_contact` | A support request was started from Get help | where from (as above); email or copy |
 
 **Never sent:** broker addresses, ports, usernames or passwords; MQTT topics or
 messages; device names or addresses; home or dashboard names; device states or
@@ -78,6 +85,12 @@ values; error messages.
 
 Because nothing identifies you, the developer cannot find or delete "your"
 events on request. To stop sending, turn the switch off.
+
+## Support emails
+
+If you contact support, your email (and the Support details you choose to
+include) is used only to help you, is never shared, and is deleted within 6
+months after the issue is closed.
 
 ## Optional automation
 
