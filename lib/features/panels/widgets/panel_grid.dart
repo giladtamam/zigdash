@@ -126,6 +126,7 @@ class PanelGrid extends ConsumerWidget {
               children.add(editing
                   ? EditableSectionHeader(
                       key: ValueKey(section.id),
+                      connectionId: connectionId,
                       section: section,
                       sections: sections,
                     )

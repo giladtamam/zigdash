@@ -160,6 +160,18 @@ class ShortcutService {
       }
     }
     await _prefs.setString(shortcutScenesKey, jsonEncode(out));
+    // A scene's last run ("Sent", "Confirmed") is kept under the state key
+    // with its id; forget the ones whose scene is gone. Device states (IEEE
+    // addresses, "0x…") are left alone.
+    final kept = {
+      for (final o in out)
+        shortcutStateKey('${o['connectionId']}', '${o['sceneId']}'),
+    };
+    for (final key in _prefs.getKeys().toList()) {
+      if (!key.startsWith('shortcut.state.') || kept.contains(key)) continue;
+      if (key.split('.').last.startsWith('0x')) continue;
+      await _prefs.remove(key);
+    }
   }
 
   /// Writes the groups the group widget's picker offers: each dashboard
@@ -181,7 +193,7 @@ class ShortcutService {
               ..orderBy([(p) => OrderingTerm(expression: p.sortOrder)]))
             .get();
         // Tiles outside a section come first on the dashboard, too.
-        for (final (sectionId, name) in [
+        for (final (String? sectionId, name) in [
           (null, dash.name),
           for (final sec in sections) (sec.id, sec.name),
         ]) {
@@ -205,6 +217,7 @@ class ShortcutService {
           if (ieees.isEmpty && scenes.isEmpty) continue;
           out.add({
             'connectionId': conn.id,
+            'id': groupIdOf(dashboardId: dash.id, sectionId: sectionId),
             'home': conn.name,
             'dashboard': dash.name,
             'name': name,
@@ -284,7 +297,8 @@ class ShortcutService {
   }
 
   /// Asks the launcher to pin a home-screen widget: [kind] `device` (an
-  /// IEEE address in [target]) or `scene` (a scene id).
+  /// IEEE address in [target]), `scene` (a scene id) or `group` (a group id,
+  /// [groupIdOf]).
   Future<PinWidgetResult> requestPinWidget(
       {required String kind,
       required String connectionId,

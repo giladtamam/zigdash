@@ -11,6 +11,8 @@ import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
 import '../../devices/device_registry.dart';
 import 'tile_actions_sheet.dart';
+import '../../../shortcuts/add_tile_button.dart';
+import '../../../shortcuts/shortcut_service.dart';
 
 // Edit mode on the dashboard grid (docs/design/dashboard-1.12.md §7).
 // Drag rules from the spike: one LongPressDraggable per tile with the
@@ -168,10 +170,12 @@ class _EditableTileState extends ConsumerState<EditableTile>
 class EditableSectionHeader extends ConsumerStatefulWidget {
   const EditableSectionHeader({
     super.key,
+    required this.connectionId,
     required this.section,
     required this.sections,
   });
 
+  final String connectionId;
   final Section section;
   final List<Section> sections;
 
@@ -269,6 +273,18 @@ class _EditableSectionHeaderState extends ConsumerState<EditableSectionHeader>
                       .copyWith(color: DashboardAccent.of(context))),
             ),
           ),
+          // The section as a group widget on the home screen.
+          if (AddShortcutButton.available)
+            IconButton(
+              tooltip: l10n.shortcutAddToHome,
+              icon: const Icon(Icons.add_to_home_screen),
+              onPressed: () => addHomeScreenWidget(
+                  context, ref.read(shortcutServiceProvider),
+                  kind: 'group',
+                  connectionId: widget.connectionId,
+                  target: s.id,
+                  name: s.name),
+            ),
           IconButton(
             tooltip: l10n.editRenameSection,
             icon: const Icon(Icons.edit_outlined),

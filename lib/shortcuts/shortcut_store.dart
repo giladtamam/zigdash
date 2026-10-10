@@ -60,9 +60,15 @@ const shortcutScenesKey = 'shortcut.scenes';
 
 /// The groups offered to the group widget's picker: one per dashboard
 /// section (tiles outside a section form one named after the dashboard), a
-/// JSON list of `{"connectionId", "home", "dashboard", "name", "ieees",
-/// "scenes"}` with at most [groupDevices] devices and [groupScenes] scenes.
+/// JSON list of `{"connectionId", "id", "home", "dashboard", "name",
+/// "ieees", "scenes"}` with at most [groupDevices] devices and [groupScenes]
+/// scenes. "id" is [groupIdOf].
 const shortcutGroupsKey = 'shortcut.groups';
+
+/// A group's id in [shortcutGroupsKey]: its section's id, or the dashboard's
+/// for the tiles outside a section.
+String groupIdOf({required String dashboardId, String? sectionId}) =>
+    sectionId ?? 'dashboard:$dashboardId';
 const groupDevices = 5;
 const groupScenes = 3;
 

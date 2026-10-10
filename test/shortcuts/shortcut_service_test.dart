@@ -196,6 +196,22 @@ void main() {
     ]);
   });
 
+  test("a deleted scene's last run is forgotten; devices' states stay",
+      () async {
+    await db.into(db.scenes).insert(ScenesCompanion.insert(
+        id: 'kept', connectionId: 'home', name: 'Evening', iconCodepoint: 0,
+        colorSeed: 0, actions: '[]', createdAt: t, updatedAt: t));
+    await prefs.setString(shortcutStateKey('home', 'kept'), '{"line":"Sent"}');
+    await prefs.setString(shortcutStateKey('home', 'gone'), '{"line":"Sent"}');
+    await prefs.setString(
+        shortcutStateKey('home', '0x00158d0001'), '{"line":"On"}');
+    await service.resyncScenes();
+    expect(prefs.getString(shortcutStateKey('home', 'kept')), isNotNull);
+    expect(prefs.getString(shortcutStateKey('home', 'gone')), isNull);
+    expect(prefs.getString(shortcutStateKey('home', '0x00158d0001')),
+        isNotNull);
+  });
+
   group('group widgets', () {
     const plug = [
       {
@@ -249,8 +265,10 @@ void main() {
       final groups = (jsonDecode(prefs.getString(shortcutGroupsKey)!) as List)
           .cast<Map<String, dynamic>>();
       expect(groups.map((g) => g['name']), ['Main', 'Lights', 'Covers']);
+      expect(groups.map((g) => g['id']), ['dashboard:d1', 's1', 's2']);
       expect(groups[1], {
         'connectionId': 'home',
+        'id': 's1',
         'home': 'Home',
         'dashboard': 'Main',
         'name': 'Lights',

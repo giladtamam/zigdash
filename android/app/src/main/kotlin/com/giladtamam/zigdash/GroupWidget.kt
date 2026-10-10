@@ -81,10 +81,15 @@ class GroupWidget : AppWidgetProvider() {
             mgr.updateAppWidget(id, views)
         }
 
+        /** How a widget for group [g] looks, for the launcher's "Add?" prompt. */
+        fun preview(ctx: Context, g: ShortcutPrefs.GroupEntry): RemoteViews =
+            views(ctx, 0, 190f, null, null, g)
+
         private fun views(ctx: Context, id: Int, height: Float,
-                          busy: String?, trouble: Pair<String?, String>?): RemoteViews {
+                          busy: String?, trouble: Pair<String?, String>?,
+                          entry: ShortcutPrefs.GroupEntry? = null): RemoteViews {
             val v = RemoteViews(ctx.packageName, R.layout.widget_group)
-            val g = ShortcutPrefs.groupWidget(ctx, id)
+            val g = entry ?: ShortcutPrefs.groupWidget(ctx, id)
             if (g == null) {
                 // Not set up (the picker was left): tapping opens it again.
                 v.setTextViewText(R.id.w_title,

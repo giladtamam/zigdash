@@ -10,8 +10,8 @@ import android.os.Build
 
 /**
  * "Add to home screen" from inside ZigDash (docs/design/roadmap-post-2.0.md,
- * adding shortcuts): [request] asks the launcher to pin a device or scene
- * widget; once the user confirms, Android sends the new widget's id here and
+ * adding shortcuts): [request] asks the launcher to pin a device, scene or
+ * group widget; once the user confirms, Android sends the new widget's id here and
  * the widget is set up as the picker would (the picker isn't shown for a
  * pinned widget).
  */
@@ -23,6 +23,15 @@ class PinWidgetReceiver : BroadcastReceiver() {
         val conn = intent.getStringExtra(EXTRA_HOME) ?: return
         val mgr = AppWidgetManager.getInstance(ctx)
         when (intent.getStringExtra(EXTRA_KIND)) {
+            "group" -> {
+                val groupId = intent.getStringExtra(EXTRA_TARGET) ?: return
+                val g = ShortcutPrefs.groups(ctx)
+                    .firstOrNull { it.connectionId == conn && it.id == groupId } ?: return
+                ShortcutPrefs.setGroupWidget(ctx, id, g)
+                GroupWidget.render(ctx, mgr, id)
+                ShortcutPrefs.mark(ctx, "shortcut.added.group_widget")
+                askState(ctx, id)
+            }
             "scene" -> {
                 val sceneId = intent.getStringExtra(EXTRA_TARGET) ?: return
                 val e = ShortcutPrefs.scenes(ctx)
@@ -39,18 +48,22 @@ class PinWidgetReceiver : BroadcastReceiver() {
                 ShortcutPrefs.setWidget(ctx, id, e)
                 DeviceWidget.render(ctx, mgr, id)
                 ShortcutPrefs.mark(ctx, "shortcut.added.widget")
-                // Ask the device where it is, through the foreground service.
-                try {
-                    val ask = Intent(ctx, WidgetActionService::class.java)
-                        .setAction(WidgetActionService.ACTION_WATCH)
-                        .putExtra(DeviceWidget.EXTRA_ID, id)
-                    if (Build.VERSION.SDK_INT >= 26) ctx.startForegroundService(ask)
-                    else ctx.startService(ask)
-                } catch (_: Exception) {
-                    // Not allowed from the background: the widget shows the
-                    // last-known state until the app or a tap refreshes it.
-                }
+                askState(ctx, id)
             }
+        }
+    }
+
+    /** Asks widget [id]'s devices where they are, through the foreground service. */
+    private fun askState(ctx: Context, id: Int) {
+        try {
+            val ask = Intent(ctx, WidgetActionService::class.java)
+                .setAction(WidgetActionService.ACTION_WATCH)
+                .putExtra(DeviceWidget.EXTRA_ID, id)
+            if (Build.VERSION.SDK_INT >= 26) ctx.startForegroundService(ask)
+            else ctx.startService(ask)
+        } catch (_: Exception) {
+            // Not allowed from the background: the widget shows the
+            // last-known state until the app or a tap refreshes it.
         }
     }
 
@@ -61,8 +74,9 @@ class PinWidgetReceiver : BroadcastReceiver() {
         private const val EXTRA_NAME = "zigdash.name"
 
         /**
-         * Asks the launcher to pin a [kind] ("device" or "scene") widget for
-         * [target] (an IEEE or scene id) of Home [connectionId]. "requested"
+         * Asks the launcher to pin a [kind] ("device", "scene" or "group")
+         * widget for [target] (an IEEE, a scene id, or a group id from
+         * shortcut.groups) of Home [connectionId]. "requested"
          * when the launcher's prompt opened, "unsupported" when the launcher
          * can't pin widgets.
          */
@@ -71,8 +85,11 @@ class PinWidgetReceiver : BroadcastReceiver() {
             if (Build.VERSION.SDK_INT < 26) return "unsupported"
             val mgr = ctx.getSystemService(AppWidgetManager::class.java)
             if (mgr == null || !mgr.isRequestPinAppWidgetSupported) return "unsupported"
-            val provider = ComponentName(ctx,
-                if (kind == "scene") SceneWidget::class.java else DeviceWidget::class.java)
+            val provider = ComponentName(ctx, when (kind) {
+                "scene" -> SceneWidget::class.java
+                "group" -> GroupWidget::class.java
+                else -> DeviceWidget::class.java
+            })
             val done = Intent(ctx, PinWidgetReceiver::class.java)
                 .putExtra(EXTRA_KIND, kind)
                 .putExtra(EXTRA_HOME, connectionId)
@@ -83,7 +100,11 @@ class PinWidgetReceiver : BroadcastReceiver() {
                 PendingIntent.FLAG_UPDATE_CURRENT or
                     (if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0))
             // The prompt shows the widget as it will look, not the sample.
-            val preview = if (kind == "scene") {
+            val preview = if (kind == "group") {
+                ShortcutPrefs.groups(ctx)
+                    .firstOrNull { it.connectionId == connectionId && it.id == target }
+                    ?.let { GroupWidget.preview(ctx, it) }
+            } else if (kind == "scene") {
                 ShortcutPrefs.scenes(ctx)
                     .firstOrNull { it.connectionId == connectionId && it.sceneId == target }
                     ?.let { SceneWidget.preview(ctx, it) }

@@ -109,6 +109,8 @@ object ShortcutPrefs {
     data class GroupEntry(
         val connectionId: String, val home: String, val dashboard: String, val name: String,
         val ieees: List<String>, val scenes: List<String>,
+        /** Its section's id (or "dashboard:<id>"), in the picker's list only. */
+        val id: String = "",
     )
 
     private fun strings(a: org.json.JSONArray?): List<String> =
@@ -122,7 +124,8 @@ object ShortcutPrefs {
                 val o = list.getJSONObject(i)
                 GroupEntry(o.optString("connectionId"), o.optString("home"),
                     o.optString("dashboard"), o.optString("name"),
-                    strings(o.optJSONArray("ieees")), strings(o.optJSONArray("scenes")))
+                    strings(o.optJSONArray("ieees")), strings(o.optJSONArray("scenes")),
+                    o.optString("id"))
             }
         } catch (_: Exception) { emptyList() }
     }
