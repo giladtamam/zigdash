@@ -14,8 +14,9 @@
         android:layout_height="28dp"
         android:importantForAccessibility="no"
         android:src="@drawable/w_ic_light" />
-    <View
-        android:layout_width="0dp"
+    <!-- Spacer: widgets allow only some view classes (no plain View). -->
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
     <TextView
