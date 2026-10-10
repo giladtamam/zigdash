@@ -796,5 +796,6 @@
   "deviceRenameHint": "Een naam voor de kamer of het apparaat, zoals Slaapkamer",
   "deviceRenamed": "Hernoemd naar {name}",
   "deviceRenameFailed": "Hernoemen mislukt: {reason}",
-  "deviceRenameNoAnswer": "Zigbee2MQTT gaf geen antwoord"
+  "deviceRenameNoAnswer": "Zigbee2MQTT gaf geen antwoord",
+  "shortcutOpenAppFirst": "Open ZigDash en zet eerst een apparaat op een dashboard."
 }

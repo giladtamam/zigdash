@@ -816,5 +816,7 @@
   "@deviceRenamed": {"placeholders": {"name": {}}},
   "deviceRenameFailed": "Couldn't rename: {reason}",
   "@deviceRenameFailed": {"placeholders": {"reason": {}}},
-  "deviceRenameNoAnswer": "Zigbee2MQTT didn't answer"
+  "deviceRenameNoAnswer": "Zigbee2MQTT didn't answer",
+  "shortcutOpenAppFirst": "Open ZigDash and put a device on a dashboard first.",
+  "@shortcutOpenAppFirst": {"description": "Home-screen widget picker, when no device is on a dashboard yet."}
 }

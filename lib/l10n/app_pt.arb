@@ -756,5 +756,6 @@
   "deviceRenameHint": "Um nome para o cômodo ou o dispositivo, como Quarto",
   "deviceRenamed": "Renomeado para {name}",
   "deviceRenameFailed": "Não foi possível renomear: {reason}",
-  "deviceRenameNoAnswer": "O Zigbee2MQTT não respondeu"
+  "deviceRenameNoAnswer": "O Zigbee2MQTT não respondeu",
+  "shortcutOpenAppFirst": "Abra o ZigDash e coloque primeiro um dispositivo em um painel."
 }

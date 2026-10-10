@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="w_ground">#100E0B</color>
+    <color name="w_tile">#1E1B16</color>
+    <color name="w_ink">#F3EEE3</color>
+    <color name="w_ink2">#B5AC98</color>
+    <color name="w_amber">#F0A544</color>
+    <color name="w_on_amber">#1C1A16</color>
+    <color name="w_on_amber2">#3A2E14</color>
+    <color name="w_problem">#F2B8B5</color>
+</resources>

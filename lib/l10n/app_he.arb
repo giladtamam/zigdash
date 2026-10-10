@@ -865,5 +865,6 @@
   "deviceRenameHint": "שם לחדר או למכשיר, למשל חדר שינה",
   "deviceRenamed": "השם שונה ל-{name}",
   "deviceRenameFailed": "לא ניתן לשנות את השם: {reason}",
-  "deviceRenameNoAnswer": "Zigbee2MQTT לא ענה"
+  "deviceRenameNoAnswer": "Zigbee2MQTT לא ענה",
+  "shortcutOpenAppFirst": "פתחו את ZigDash והוסיפו קודם מכשיר ללוח."
 }

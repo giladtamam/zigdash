@@ -2406,4 +2406,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT לא ענה';
+
+  @override
+  String get shortcutOpenAppFirst => 'פתחו את ZigDash והוסיפו קודם מכשיר ללוח.';
 }

@@ -791,5 +791,6 @@
   "deviceRenameHint": "Название комнаты или устройства, например Спальня",
   "deviceRenamed": "Новое название: {name}",
   "deviceRenameFailed": "Не удалось переименовать: {reason}",
-  "deviceRenameNoAnswer": "Zigbee2MQTT не ответил"
+  "deviceRenameNoAnswer": "Zigbee2MQTT не ответил",
+  "shortcutOpenAppFirst": "Откройте ZigDash и сначала добавьте устройство на дашборд."
 }

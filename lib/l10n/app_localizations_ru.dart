@@ -2440,4 +2440,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT не ответил';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Откройте ZigDash и сначала добавьте устройство на дашборд.';
 }

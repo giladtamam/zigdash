@@ -796,5 +796,6 @@
   "deviceRenameHint": "Ein Name für den Raum oder das Gerät, z. B. Schlafzimmer",
   "deviceRenamed": "Umbenannt in {name}",
   "deviceRenameFailed": "Umbenennen fehlgeschlagen: {reason}",
-  "deviceRenameNoAnswer": "Zigbee2MQTT hat nicht geantwortet"
+  "deviceRenameNoAnswer": "Zigbee2MQTT hat nicht geantwortet",
+  "shortcutOpenAppFirst": "Öffne ZigDash und lege zuerst ein Gerät auf ein Dashboard."
 }

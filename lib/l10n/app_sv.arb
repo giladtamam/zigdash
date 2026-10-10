@@ -796,5 +796,6 @@
   "deviceRenameHint": "Ett namn på rummet eller enheten, till exempel Sovrum",
   "deviceRenamed": "Nytt namn: {name}",
   "deviceRenameFailed": "Kunde inte byta namn: {reason}",
-  "deviceRenameNoAnswer": "Zigbee2MQTT svarade inte"
+  "deviceRenameNoAnswer": "Zigbee2MQTT svarade inte",
+  "shortcutOpenAppFirst": "Öppna ZigDash och lägg först en enhet på en dashboard."
 }

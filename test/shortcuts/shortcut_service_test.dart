@@ -5,6 +5,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/data/database/daos/shortcut_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
@@ -139,6 +140,32 @@ void main() {
         'connectionId': 'home', 'home': 'Home', 'ieee': '0x1',
         'name': 'אור חדר שרות', 'class': 'light', 'kind': 'dimmer',
       });
+    });
+  });
+
+  group('home-screen widgets', () {
+    test('widgets set up on the home screen become shortcuts the app follows',
+        () async {
+      await prefs.setString('shortcut.widget.7',
+          '{"connectionId":"home","ieee":"0x1","name":"Lamp","class":"light"}');
+      await prefs.setString('shortcut.widget.9',
+          '{"connectionId":"home","ieee":"0x2","name":"Blind","class":"cover","cover":true}');
+      await service.syncWidgets();
+      final rows = await db.select(db.shortcuts).get();
+      expect(rows.map((r) => '${r.appWidgetId} ${shortcutTargets(r)}').toSet(),
+          {'7 [0x1]', '9 [0x2]'});
+
+      // A widget removed from the home screen goes away here too.
+      await prefs.remove('shortcut.widget.7');
+      await service.syncWidgets();
+      expect((await db.select(db.shortcuts).get()).single.appWidgetId, 9);
+    });
+
+    test('a widget for a Home that no longer exists is skipped', () async {
+      await prefs.setString('shortcut.widget.3',
+          '{"connectionId":"gone","ieee":"0x1","name":"Lamp"}');
+      await service.syncWidgets();
+      expect(await db.select(db.shortcuts).get(), isEmpty);
     });
   });
 }

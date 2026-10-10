@@ -35,6 +35,7 @@ class MainActivity : FlutterActivity() {
                             // Not added to Quick Settings: nothing to redraw.
                         }
                     }
+                    DeviceWidget.refreshAll(this)
                     result.success(null)
                 }
                 else -> result.notImplemented()

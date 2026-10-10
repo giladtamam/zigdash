@@ -4447,6 +4447,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Zigbee2MQTT didn\'t answer'**
   String get deviceRenameNoAnswer;
+
+  /// Home-screen widget picker, when no device is on a dashboard yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ZigDash and put a device on a dashboard first.'**
+  String get shortcutOpenAppFirst;
 }
 
 class _AppLocalizationsDelegate

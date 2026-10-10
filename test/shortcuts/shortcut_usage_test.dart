@@ -47,4 +47,15 @@ void main() {
     expect(sink.sent, isEmpty);
     expect(prefs.getString('shortcut.used.control'), isNull);
   });
+
+  test('each widget added is reported', () async {
+    SharedPreferences.setMockInitialValues({'shortcut.added.widget': '1'});
+    final prefs = await SharedPreferences.getInstance();
+    final sink = _Sink();
+    final analytics = Analytics(sink, enabled: true);
+    await reportShortcutUsage(prefs, analytics);
+    expect(sink.sent.map((e) => '${e.$1} ${e.$2}'),
+        ['shortcut_added {kind: widget}']);
+    expect(prefs.getString('shortcut.added.widget'), isNull);
+  });
 }

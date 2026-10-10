@@ -55,6 +55,25 @@ object ShortcutPrefs {
         } catch (_: Exception) { emptyList() }
     }
 
+    /** The device home-screen widget [id] shows (shortcut.widget.<id>). */
+    fun widget(ctx: Context, id: Int): Tile? = json(ctx, "shortcut.widget.$id")?.let {
+        Tile(it.optString("connectionId"), it.optString("ieee"), it.optString("name"),
+            it.optBoolean("cover"), it.optBoolean("position"), it.optString("class"))
+    }
+
+    /** Assigns [e] to widget [id], in the same format as a tile slot. */
+    fun setWidget(ctx: Context, id: Int, e: ControlEntry) {
+        val o = JSONObject()
+            .put("connectionId", e.connectionId).put("ieee", e.ieee).put("name", e.name)
+            .put("class", e.cls)
+        if (e.kind == "cover") o.put("cover", true)
+        if (e.position) o.put("position", true)
+        prefs(ctx).edit().putString("flutter.shortcut.widget.$id", o.toString()).apply()
+    }
+
+    fun removeWidget(ctx: Context, id: Int) =
+        prefs(ctx).edit().remove("flutter.shortcut.widget.$id").apply()
+
     /** A shutter's position or a light's brightness, 0–100, if known. */
     fun level(ctx: Context, connectionId: String, ieee: String): Int? =
         json(ctx, "shortcut.state.$connectionId.$ieee")?.let {

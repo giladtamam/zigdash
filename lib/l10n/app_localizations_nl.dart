@@ -2435,4 +2435,8 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT gaf geen antwoord';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Open ZigDash en zet eerst een apparaat op een dashboard.';
 }

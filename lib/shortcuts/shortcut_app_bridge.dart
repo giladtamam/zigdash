@@ -54,7 +54,10 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final service = ref.read(shortcutServiceProvider);
-      unawaited(service.resyncTiles().then((_) => refreshShortcutTiles()));
+      unawaited(service
+          .syncWidgets()
+          .then((_) => service.resyncTiles())
+          .then((_) => refreshShortcutTiles()));
       unawaited(service.resyncControls());
       // Uses noted by tiles and Device Controls while the app was closed.
       unawaited(reportShortcutUsage(

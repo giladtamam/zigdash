@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Words Android shows outside the app (the widget picker). Everything
+     shown inside widgets comes from the app's own translations
+     (shortcut.strings in shared preferences). -->
+<resources>
+    <string name="widget_device_label">ZigDash device</string>
+    <string name="widget_device_description">Switch a light or plug, or move a shutter, from your home screen</string>
+</resources>

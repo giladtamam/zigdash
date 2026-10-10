@@ -13,6 +13,7 @@ String shortcutUsedKey(ShortcutEventKind kind) => 'shortcut.used.${kind.name}';
 /// "1" once Device Controls showed ZigDash's controls (the user added them).
 const shortcutControlsAddedKey = 'shortcut.added.control';
 const _controlsAddedReported = 'shortcut.added.control.reported';
+const _widgetAdded = 'shortcut.added.widget';
 
 /// Sends what the native side noted and clears the notes.
 Future<void> reportShortcutUsage(
@@ -23,6 +24,11 @@ Future<void> reportShortcutUsage(
     if (prefs.getString(key) == null) continue;
     analytics.track(ShortcutUsed(kind));
     await prefs.remove(key);
+  }
+  // Each home-screen widget added (the launcher's picker notes it).
+  if (prefs.getString(_widgetAdded) != null) {
+    analytics.track(const ShortcutAdded(ShortcutEventKind.widget));
+    await prefs.remove(_widgetAdded);
   }
   if (prefs.getString(shortcutControlsAddedKey) != null &&
       prefs.getString(_controlsAddedReported) == null) {

@@ -154,10 +154,10 @@ class SupportContact extends AnalyticsEvent {
 }
 
 /// Where a shortcut lives (docs/design/roadmap-post-2.0.md, 2.1 §7).
-enum ShortcutEventKind { tile, control }
+enum ShortcutEventKind { tile, control, widget }
 
-/// A Quick Settings tile was assigned a device, or Device Controls were
-/// first set up.
+/// A Quick Settings tile or a home-screen widget was given a device, or
+/// Device Controls were first set up.
 class ShortcutAdded extends AnalyticsEvent {
   const ShortcutAdded(this.kind);
 

@@ -138,6 +138,50 @@ class ShortcutService {
     await _prefs.setString(shortcutControlsKey, jsonEncode(out));
   }
 
+  /// Home-screen widgets are set up by the launcher's picker on the native
+  /// side (`shortcut.widget.<id>`); this copies them into the shortcuts table
+  /// so the running app keeps them current, and drops widgets that were
+  /// removed from the home screen.
+  Future<void> syncWidgets() async {
+    await _prefs.reload(); // written natively, behind the plugin's cache
+    final homes = {
+      for (final c in await _db.select(_db.connections).get()) c.id,
+    };
+    final seen = <int>{};
+    for (final key in _prefs.getKeys()) {
+      final id = int.tryParse(key.replaceFirst('shortcut.widget.', ''));
+      if (!key.startsWith('shortcut.widget.') || id == null) continue;
+      final Map<String, dynamic> w;
+      try {
+        w = jsonDecode(_prefs.getString(key) ?? '') as Map<String, dynamic>;
+      } catch (_) {
+        continue;
+      }
+      final home = w['connectionId'], ieee = w['ieee'];
+      if (home is! String || ieee is! String || !homes.contains(home)) continue;
+      seen.add(id);
+      final row = await _dao.getByWidget(id);
+      if (row != null &&
+          row.connectionId == home &&
+          shortcutTargets(row).contains(ieee)) {
+        continue;
+      }
+      await _dao.put(ShortcutsCompanion.insert(
+        id: 'widget-$id',
+        connectionId: home,
+        kind: ShortcutKind.device,
+        surface: ShortcutSurface.widget,
+        targets: encodeShortcutTargets([ieee]),
+        appWidgetId: Value(id),
+        createdAt: _now(),
+      ));
+    }
+    for (final row in await _dao.watchAll().first) {
+      final id = row.appWidgetId;
+      if (id != null && !seen.contains(id)) await _dao.deleteByWidget(id);
+    }
+  }
+
   Future<void> clearTile(int slot) async {
     await _dao.deleteByTileSlot(slot);
     await _prefs.remove(shortcutTileKey(slot));
@@ -169,6 +213,7 @@ class ShortcutService {
         'stop': l10n.panelCoverStop,
         'close': l10n.panelCoverClose,
         'position': l10n.devicePosition,
+        'openAppFirst': l10n.shortcutOpenAppFirst,
       }));
 }
 
