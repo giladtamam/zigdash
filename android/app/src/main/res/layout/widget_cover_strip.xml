@@ -17,6 +17,8 @@
         android:orientation="vertical">
         <TextView
             android:id="@+id/w_name"
+            android:textDirection="locale"
+            android:textAlignment="viewStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -26,6 +28,8 @@
             android:textStyle="bold" />
         <TextView
             android:id="@+id/w_line"
+            android:textDirection="locale"
+            android:textAlignment="viewStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
