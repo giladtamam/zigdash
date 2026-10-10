@@ -107,6 +107,7 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
   - ZigDash creates the topic once per Home (random, 22 characters) and keeps it in the Home's settings.
   - **Get notifications on this phone** opens the ntfy app already subscribed to the topic (`ntfy://` link; verify the exact form), or opens ntfy on Play if it isn't installed.
   - An advanced field takes a self-hosted ntfy server instead of ntfy.sh.
+- **Other people in the household:** **Share alerts** shows a QR code and a share link, `ntfy://ntfy.sh/<topic>?display=<Home name>`. Another phone can get the Home's notifications with only ntfy installed, no ZigDash needed. The screen warns that anyone with the link gets the alerts, and **New link** makes a fresh topic, which cuts off old subscribers (decided 2026-10-10).
 - **Pushover (optional):** the user enters their user key and app token, and the help text links to Pushover's pricing ($4.99 once after a trial).
 - **Send test notification** publishes to `zigdash/alerts/test` and shows the hub's result ("Sent", or the error from ntfy/Pushover). It is the only end-to-end proof, and the setup flow asks for it before finishing.
 
