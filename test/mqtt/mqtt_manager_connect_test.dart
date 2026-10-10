@@ -250,6 +250,56 @@ void main() {
       });
     });
 
+    test('every attempt sends a fresh client id', () {
+      fakeAsync((async) {
+        final ids = <String>[];
+        final behaviors = [_Behavior.hang, _Behavior.succeed];
+        final m = MqttManager(
+          config: local,
+          password: '',
+          clientFactory: (c, id, {host}) {
+            ids.add(id);
+            return _FakeClient(host ?? c.host, behaviors.removeAt(0));
+          },
+        );
+        m.connect();
+        async.elapse(const Duration(milliseconds: 1500));
+        m.ensureConnected();
+        async.elapse(const Duration(milliseconds: 50));
+        expect(ids, hasLength(2));
+        expect(ids[0], startsWith('zd-conn1'));
+        expect(ids[0], isNot(ids[1]),
+            reason: 'a late abandoned attempt must not take over the session');
+        expect(ids[1], startsWith('zd-conn1'),
+            reason: 'same connection tail for broker logs and ACLs');
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a tap\'s short silence limit replaces a quiet connection', () {
+      fakeAsync((async) {
+        var now = DateTime(2026, 10, 10, 12);
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            now: () => now,
+            clientFactory: sequence([_Behavior.succeed, _Behavior.succeed], made));
+        m.connect();
+        async.flushMicrotasks();
+        now = now.add(const Duration(seconds: 5));
+        m.ensureConnected();
+        async.flushMicrotasks();
+        expect(made, hasLength(1), reason: '5 s is fine by the keep-alive rule');
+        m.ensureConnected(maxSilence: const Duration(seconds: 3));
+        async.elapse(const Duration(milliseconds: 50));
+        expect(made, hasLength(2));
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
     test('a pending backoff is skipped', () {
       fakeAsync((async) {
         final made = <_FakeClient>[];

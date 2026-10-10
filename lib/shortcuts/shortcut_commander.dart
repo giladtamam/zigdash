@@ -87,12 +87,17 @@ class ShortcutCommander {
     required this.l10n,
     this.connectWithin = const Duration(seconds: 8),
     this.confirmWithin = const Duration(seconds: 5),
+    this.maxSilence = const Duration(seconds: 3),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
   final AppLocalizations l10n;
   final Duration connectWithin;
   final Duration confirmWithin;
+
+  /// A connection quiet for longer is replaced before sending: between taps
+  /// Android freezes the app and its socket dies unnoticed (measured).
+  final Duration maxSilence;
   final DateTime Function() _now;
 
   /// The command a tap sends: covers open or close, everything else toggles
@@ -107,6 +112,30 @@ class ShortcutCommander {
     }
     final f = d.profile.switches.first;
     return DeviceCommand.toggle(f, state.isOn(f));
+  }
+
+  /// Whether a state the device reported answers [command]: every commanded
+  /// key now holds the commanded value ("CLOSE" and "CLOSED" alike), or, for
+  /// TOGGLE, a value different from [before]. A stale copy (the broker's
+  /// retained state, or another client's older message) doesn't count.
+  static bool confirms(Map<String, Object?> command, Map<String, Object?> state,
+      Map<String, Object?> before) {
+    String norm(Object? v) {
+      final s = '$v'.toUpperCase();
+      return s == 'CLOSED' ? 'CLOSE' : s;
+    }
+
+    for (final MapEntry(:key, :value) in command.entries) {
+      final now = state[key];
+      if (now == null) return false;
+      if (norm(value) == 'TOGGLE') {
+        final was = before[key];
+        if (was != null && norm(was) == norm(now)) return false;
+        continue;
+      }
+      if (norm(now) != norm(value)) return false;
+    }
+    return true;
   }
 
   bool? _onOf(ShortcutDevice d, Map<String, Object?> values) {
@@ -142,21 +171,25 @@ class ShortcutCommander {
     String? lastPayload,
     DateTime? lastAt,
   }) async {
-    if (!await mgr.ensureConnected(timeout: connectWithin)) {
+    if (!await mgr.ensureConnected(
+        timeout: connectWithin, maxSilence: maxSilence)) {
       return _result(ShortcutOutcome.unreachable, d, lastPayload, lastAt);
     }
     final reply = Completer<String>();
+    final command = commandFor(d, lastPayload);
+    final before = decodeDeviceState(lastPayload);
     var sent = false;
     final sub = mgr.subscribe(d.subscribeTopic).listen((m) {
-      // The subscription replays the newest value first; only a state that
-      // arrives after the command is the device's answer.
-      if (sent && m.payload.isNotEmpty && !reply.isCompleted) {
+      // Only a state that arrives after the command and matches it is the
+      // device's answer; a fresh subscription first gets the broker's old copy.
+      if (sent &&
+          !reply.isCompleted &&
+          confirms(command, decodeDeviceState(m.payload), before)) {
         reply.complete(m.payload);
       }
     });
     try {
-      mgr.publish(
-          d.publishTopic, jsonEncode(commandFor(d, lastPayload)), '');
+      mgr.publish(d.publishTopic, jsonEncode(command), '');
       sent = true;
       final payload = await reply.future.timeout(confirmWithin);
       return _result(ShortcutOutcome.confirmed, d, payload, _now());
@@ -173,7 +206,8 @@ class ShortcutCommander {
   /// Runs a scene's actions, as the app's scene tile does.
   Future<ShortcutOutcome> runScene(
       MqttManager mgr, List<SceneAction> actions) async {
-    if (!await mgr.ensureConnected(timeout: connectWithin)) {
+    if (!await mgr.ensureConnected(
+        timeout: connectWithin, maxSilence: maxSilence)) {
       return ShortcutOutcome.unreachable;
     }
     for (final a in actions) {

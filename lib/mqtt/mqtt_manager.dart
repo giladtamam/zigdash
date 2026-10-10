@@ -59,7 +59,8 @@ class MqttManager {
     String? clientIdOverride,
     MqttClientFactory? clientFactory,
     Now? now,
-  }) : _clientId = clientIdOverride ?? _shortClientId(config.id),
+  }) : _clientIdOverride = clientIdOverride,
+       _clientId = clientIdOverride ?? _shortClientId(config.id),
        _clientFactory = clientFactory ?? buildMqttClient,
        _now = now ?? DateTime.now;
 
@@ -95,7 +96,13 @@ class MqttManager {
 
   final BrokerConfig config;
   final String password;
-  final String _clientId;
+  /// The id of the current connection attempt. Each attempt gets a fresh
+  /// random part: an abandoned attempt (see [ensureConnected]) can still
+  /// reach the broker a moment later, and with the same id it would take over
+  /// the session the command was just sent on (seen on Android after the
+  /// app was frozen and thawed).
+  String _clientId;
+  final String? _clientIdOverride;
   final MqttClientFactory _clientFactory;
   final Now _now;
 
@@ -376,13 +383,17 @@ class MqttManager {
   /// backoff is skipped. True once connected, false after [timeout].
   /// Measured on a real phone, this turns a 2.2 s tap into about 0.2 s
   /// (docs/design/roadmap-post-2.0.md, 2.1 §1).
+  /// [maxSilence] tightens what counts as stale: a shortcut tap passes a few
+  /// seconds, because Android freezes an idle background app within seconds
+  /// and its socket dies without the manager hearing about it.
   Future<bool> ensureConnected({
     Duration timeout = const Duration(seconds: 8),
+    Duration? maxSilence,
   }) async {
     if (_disposed || _userInitiatedDisconnect) return false;
     final status = _status.value;
     if (status == MqttStatus.connected) {
-      if (!_isStale) return true;
+      if (!_isStale(maxSilence)) return true;
       _dropDeadConnection();
     } else if (_connectInFlight && !_attemptHung) {
       final waiter = Completer<bool>();
@@ -407,10 +418,11 @@ class MqttManager {
     });
   }
 
-  bool get _isStale {
+  bool _isStale([Duration? maxSilence]) {
     final last = _lastActivity;
     if (last == null) return false;
-    final limit = Duration(milliseconds: config.keepAliveSeconds * 1500);
+    final limit =
+        maxSilence ?? Duration(milliseconds: config.keepAliveSeconds * 1500);
     return _now().difference(last) > limit;
   }
 
@@ -578,6 +590,7 @@ class MqttManager {
   }
 
   mc.MqttClient _buildClient(String host, int timeoutMs) {
+    _clientId = _clientIdOverride ?? _shortClientId(config.id);
     final client = _clientFactory(config, _clientId, host: host);
     client.logging(on: false);
     // Stay on mqtt_client's default protocol (MQTT 3.1, ProtocolName=MQIsdp).

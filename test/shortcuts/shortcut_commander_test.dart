@@ -129,6 +129,42 @@ void main() {
     });
   });
 
+  test('an old state arriving first (a retained message) is not the answer',
+      () {
+    fakeAsync((async) {
+      final b = _Broker(silent: true);
+      final m = _manager(b);
+      ShortcutResult? r;
+      ShortcutCommander(l10n: l10n)
+          .toggle(m, _device(_light, 'lamp'), lastPayload: '{"state":"OFF"}')
+          .then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 50));
+      b.emit('zigbee2mqtt/lamp', '{"state":"OFF"}'); // the broker's old copy
+      async.elapse(const Duration(milliseconds: 50));
+      expect(r, isNull, reason: 'still waiting for the real answer');
+      b.emit('zigbee2mqtt/lamp', '{"state":"ON"}');
+      async.elapse(const Duration(milliseconds: 50));
+      expect(r!.outcome, ShortcutOutcome.confirmed);
+      expect(r!.on, isTrue);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('confirms only a state that matches the command', () {
+    expect(ShortcutCommander.confirms({'state': 'ON'}, {'state': 'on'}, {}), isTrue);
+    expect(ShortcutCommander.confirms({'state': 'ON'}, {'state': 'OFF'}, {}), isFalse);
+    expect(ShortcutCommander.confirms({'state': 'CLOSE'}, {'state': 'CLOSED'}, {}),
+        isTrue);
+    expect(ShortcutCommander.confirms({'state': 'TOGGLE'}, {'state': 'ON'},
+        {'state': 'OFF'}), isTrue);
+    expect(ShortcutCommander.confirms({'state': 'TOGGLE'}, {'state': 'OFF'},
+        {'state': 'OFF'}), isFalse);
+    expect(ShortcutCommander.confirms({'state': 'TOGGLE'}, {'state': 'OFF'}, {}),
+        isTrue, reason: 'unknown before: any answer counts');
+    expect(ShortcutCommander.confirms({'state': 'ON'}, {'power': 3}, {}), isFalse);
+  });
+
   test('a closed cover opens, an open one closes', () {
     final d = _device(_cover, 'shutter');
     expect(ShortcutCommander.commandFor(d, '{"state":"CLOSE","position":0}'),
