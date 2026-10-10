@@ -156,6 +156,17 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
 3. **End to end on the user's phone with the screen off and Doze forced** (`adb shell dumpsys deviceidle force-idle`): a priority-5 ntfy message must arrive.
 4. **The broker node in an API-posted flow:** how credentials are set, given Node-RED keeps them in a separate credentials file.
 
+### Results so far (2026-10-10, the user's SMHUB, Node-RED 4.1.10 from SMHUB → Apps)
+
+1. **Admin API: passes.** No login (`/auth/login` returns `{}`). `GET /settings`, `GET /flows` (API v2), `POST /flow`, `PUT /flow/:id` and `DELETE /flow/:id` all work. A test tab was added, ran, and was removed.
+4. **Broker node: passes, with one rule.** A flow posted through the API connects and publishes. On SMHUB, Node-RED **cannot reach the broker as `localhost`**; it must use the hub's address, so ZigDash writes the Connection's host into the broker node. `credentials: {user, password}` on the config node is accepted. Untested with a password-protected broker, since the user's broker has none.
+   - **Also found:** Node-RED's context store is memory only, so the flow loses what it remembers (e.g. "battery already reported") on every restart. Keep that state retained on the broker too (`zigdash/alerts/state`), not only in flow context.
+2. **ntfy links: answered from ntfy's docs.**
+   - Subscribe with `ntfy://ntfy.sh/<topic>?display=<Home name>` (self-hosted: `ntfy://<host>/<topic>`, plus `?secure=false` for http).
+   - The `Click` header accepts custom schemes, so a notification can open `zigdash://…`. ZigDash has no `zigdash://` scheme yet, so 2.3 adds one (Device page by Home and IEEE).
+   - The no-ntfy-installed case is still to check on the phone.
+3. **Doze delivery: not run yet.** It needs ntfy installed on the phone.
+
 ## 6. Effort
 
 - Spikes: half a day.
