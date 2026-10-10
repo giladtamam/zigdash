@@ -4,6 +4,8 @@ Decided with the user on 2026-10-10 in two question rounds. Words follow [CONTEX
 
 **Branch:** `release/2.3` (from `release/2.2.1`). **Version:** 2.3.0.
 
+> **Changed 2026-10-10 (user):** a second app is too much to ask ("I don't think many users will do that"). Delivery into ZigDash itself (UnifiedPush with the embedded FCM distributor, no second app, no ZigDash server) is now the goal for 2.3, decided by a 1–2 day prototype first. ntfy stays the fallback if the prototype fails, and the optional household-sharing path. The sections below that assume ntfy as the default get rewritten after the prototype.
+
 ## Scope
 
 In:
