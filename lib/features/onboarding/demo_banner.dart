@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/build/store_capture.dart';
+import '../../core/analytics/analytics_events.dart' show HelpFrom;
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../data/repositories/connection_repo.dart';
@@ -37,6 +38,11 @@ class DemoBanner extends ConsumerWidget {
                 l10n.demoBannerText,
                 style: TextStyle(color: scheme.onSecondaryContainer),
               ),
+            ),
+            TextButton(
+              onPressed: () =>
+                  context.push(Routes.getHelpFrom(HelpFrom.demo.name)),
+              child: Text(l10n.demoBannerHelp),
             ),
             TextButton(
               onPressed: () => context.push(Routes.setup),

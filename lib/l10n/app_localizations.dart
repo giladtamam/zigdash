@@ -1931,7 +1931,7 @@ abstract class AppLocalizations {
   /// No description provided for @reportProblemEmailPrompt.
   ///
   /// In en, this message translates to:
-  /// **'What happened, and what did you expect? Your device model and Zigbee2MQTT version help.'**
+  /// **'What happened, and what did you expect?'**
   String get reportProblemEmailPrompt;
 
   /// No description provided for @settingsBuyCoffee.

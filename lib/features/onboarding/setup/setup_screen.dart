@@ -7,6 +7,7 @@ import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../support/get_help_screen.dart' show GetHelpLink;
 import '../first_run.dart';
 import 'recommendation_policy.dart';
 import 'setup_candidate.dart';
@@ -280,6 +281,9 @@ class _ScanEmpty extends StatelessWidget {
           icon: const Icon(Icons.refresh),
           label: Text(l10n.setupTryAgain),
         ),
+        GetHelpLink(
+            onPressed: () => context
+                .push(Routes.getHelpFrom(HelpFrom.noConnection.name))),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
         TextButton(onPressed: onDemo, child: Text(l10n.onboardingDemo)),
@@ -348,7 +352,14 @@ class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: GetHelpLink(
+              onPressed: () => context.push(Routes.getHelpFrom(
+                  HelpFrom.setupError.name,
+                  error: SetupErrorKind.notZigbee2Mqtt.name))),
+        ),
+        const SizedBox(height: 16),
         Text(l10n.setupGuidesTitle, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
         const _SetupGuides(),
@@ -447,6 +458,13 @@ class _AuthPromptState extends State<_AuthPrompt> {
               widget.onSubmit(_username.text.trim(), _password.text),
           child: Text(l10n.setupErrAuthRequiredAction),
         ),
+        GetHelpLink(
+            onPressed: () => context.push(Routes.getHelpFrom(
+                HelpFrom.setupError.name,
+                error: (widget.state.rejected
+                        ? SetupErrorKind.authRejected
+                        : SetupErrorKind.authRequired)
+                    .name))),
       ],
     );
   }
@@ -493,6 +511,10 @@ class _Failure extends StatelessWidget {
           icon: const Icon(Icons.refresh),
           label: Text(_guidanceText(l10n, guidance.actionKey)),
         ),
+        GetHelpLink(
+            onPressed: () => context.push(Routes.getHelpFrom(
+                HelpFrom.setupError.name,
+                error: state.kind.name))),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
       ],

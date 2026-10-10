@@ -33,3 +33,9 @@ body:
     attributes:
       label: ZigDash version
       description: Filled in when you come from the app.
+  - type: textarea
+    id: details
+    attributes:
+      label: Support details
+      description: Filled in when you come from the app. No passwords, addresses or device names. Delete any line you'd rather not share.
+      render: text

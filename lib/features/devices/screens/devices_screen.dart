@@ -6,11 +6,13 @@ import '../../../core/theme/signal_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics_events.dart' show HelpFrom;
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../../home/home_shell.dart';
+import '../../support/get_help_screen.dart' show GetHelpLink;
 import '../../panels/screens/add_tile_screen.dart' show showAddDeviceSheet;
 import '../../panels/widgets/device_tile_panel.dart'
     show deviceClassIcon, deviceStateLine, ltr;
@@ -455,6 +457,10 @@ class _NoDevicesState extends ConsumerState<_NoDevices> {
                 onPressed: _restart,
                 child: Text(l10n.devicesRestartZ2m),
               ),
+            GetHelpLink(
+                onPressed: () => context.push(Routes.getHelpFrom(
+                    HelpFrom.deviceListMissing.name,
+                    home: widget.args.connectionId))),
           ],
         ),
       ),

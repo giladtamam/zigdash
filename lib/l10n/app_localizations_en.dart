@@ -1001,7 +1001,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportProblemEmailPrompt =>
-      'What happened, and what did you expect? Your device model and Zigbee2MQTT version help.';
+      'What happened, and what did you expect?';
 
   @override
   String get settingsBuyCoffee => 'Buy me a coffee';

@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../support/support_details.dart';
+import '../support/get_help_screen.dart' show GetHelpLink;
 import '../support/support_log.dart';
+import '../../core/analytics/analytics_events.dart' show HelpFrom;
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../data/database/tables/connections.dart';
@@ -394,6 +396,9 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
             ),
           ],
         ),
+        GetHelpLink(
+            onPressed: () => context
+                .push(Routes.getHelpFrom(HelpFrom.manualConnect.name))),
       ],
     );
   }

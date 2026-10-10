@@ -346,7 +346,7 @@
   "settingsReportProblem": "Report a problem",
   "settingsReportProblemSubtitle": "Something broken or confusing? Tell me.",
   "reportProblemEmailSubject": "ZigDash problem report",
-  "reportProblemEmailPrompt": "What happened, and what did you expect? Your device model and Zigbee2MQTT version help.",
+  "reportProblemEmailPrompt": "What happened, and what did you expect?",
   "settingsBuyCoffee": "Buy me a coffee",
   "settingsBuyCoffeeSubtitle": "Free & open source — tips keep it brewing.",
 

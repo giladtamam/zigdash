@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../mqtt/mqtt_status.dart';
+import '../../support/get_help_screen.dart' show GetHelpLink;
 
 /// The slim "Can't reach your broker · Why?" line
 /// (docs/design/dashboard-1.12.md §5). It replaces the old banner: it never
@@ -14,12 +15,16 @@ class ConnectionStatusBanner extends StatelessWidget {
     required this.status,
     required this.onReconnect,
     this.onSettings,
+    this.onGetHelp,
     this.lastError,
   });
 
   final MqttStatus status;
   final VoidCallback onReconnect;
   final VoidCallback? onSettings;
+
+  /// Opens Get help for an unreachable home.
+  final VoidCallback? onGetHelp;
   final String? lastError;
 
   @override
@@ -101,6 +106,11 @@ class ConnectionStatusBanner extends StatelessWidget {
                   child: Text(l10n.statusSettings),
                 ),
               ],
+              if (onGetHelp != null)
+                GetHelpLink(onPressed: () {
+                  Navigator.pop(ctx);
+                  onGetHelp!();
+                }),
             ],
           ),
         ),
