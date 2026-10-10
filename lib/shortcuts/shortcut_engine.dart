@@ -286,8 +286,19 @@ class ShortcutEngine {
     final scene = await SceneDao(await _database).getById(sceneId);
     final mgr = await _manager(connectionId);
     if (scene == null || mgr == null) return {'outcome': 'removed'};
-    final outcome = await (await _commander())
-        .runScene(mgr, SceneAction.decodeList(scene.actions));
+    final commander = await _commander();
+    final prefs = await _prefs;
+    // A scene's widget shows its last run like a device's state: "Sent",
+    // then "Confirmed" once every device answered.
+    final key = shortcutStateKey(connectionId, sceneId);
+    Future<void> say(String line) => prefs.setString(key,
+        jsonEncode({'line': line, 'at': DateTime.now().millisecondsSinceEpoch}));
+    final outcome = await commander.runScene(
+        mgr, SceneAction.decodeList(scene.actions),
+        onSent: () => say(commander.l10n.shortcutSceneSent));
+    if (outcome == ShortcutOutcome.confirmed) {
+      await say(commander.l10n.shortcutSceneConfirmed);
+    }
     return {'outcome': outcome.name};
   }
 

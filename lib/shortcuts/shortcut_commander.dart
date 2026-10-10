@@ -42,7 +42,7 @@ enum ShortcutOutcome {
   /// The broker couldn't be reached ("Can't reach home").
   unreachable,
 
-  /// A scene: every action was published.
+  /// A scene: every action was published, not every device answered.
   sent,
 }
 
@@ -354,15 +354,61 @@ class ShortcutCommander {
     }
   }
 
-  /// Runs a scene's actions, as the app's scene tile does.
+  /// Runs a scene's actions, as the app's scene tile does, and waits for
+  /// the devices to report their new states. [onSent] is called once every
+  /// action went out. Confirmed when every device answered within
+  /// [confirmWithin]; otherwise still [ShortcutOutcome.sent]: a scene with
+  /// one silent light isn't a failure.
   Future<ShortcutOutcome> runScene(
-      MqttManager mgr, List<SceneAction> actions) async {
-    if (!await reach(mgr)) {
-      return ShortcutOutcome.unreachable;
+      MqttManager mgr, List<SceneAction> actions,
+      {void Function()? onSent}) async {
+    if (!await reach(mgr)) return ShortcutOutcome.unreachable;
+    final waiting = <int>{};
+    final allIn = Completer<void>();
+    final subs = <StreamSubscription<Object?>>[];
+    final topics = <String>[];
+    DateTime? sentAt;
+    for (final (i, a) in actions.indexed) {
+      if (!a.setTopic.endsWith('/set')) continue;
+      final Map<String, Object?> command;
+      try {
+        command = Map<String, Object?>.from(jsonDecode(a.payload) as Map);
+      } catch (_) {
+        continue;
+      }
+      final topic = a.setTopic.substring(0, a.setTopic.length - 4);
+      waiting.add(i);
+      topics.add(topic);
+      subs.add(mgr.subscribe(topic).listen((m) {
+        // Values held from before the send are not answers.
+        if (sentAt == null || m.payload.isEmpty) return;
+        if (m.receivedAt.isBefore(sentAt)) return;
+        if (confirms(command, decodeDeviceState(m.payload), const {}) &&
+            waiting.remove(i) &&
+            waiting.isEmpty &&
+            !allIn.isCompleted) {
+          allIn.complete();
+        }
+      }));
     }
-    for (final a in actions) {
-      mgr.publish(a.setTopic, a.payload, '');
+    try {
+      sentAt = DateTime.now();
+      for (final a in actions) {
+        mgr.publish(a.setTopic, a.payload, '');
+      }
+      onSent?.call();
+      if (waiting.isEmpty) return ShortcutOutcome.sent;
+      await allIn.future.timeout(confirmWithin);
+      return ShortcutOutcome.confirmed;
+    } on TimeoutException {
+      return ShortcutOutcome.sent;
+    } finally {
+      for (final sub in subs) {
+        unawaited(sub.cancel());
+      }
+      for (final t in topics) {
+        mgr.unsubscribe(t);
+      }
     }
-    return ShortcutOutcome.sent;
   }
 }

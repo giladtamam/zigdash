@@ -8,12 +8,14 @@ import '../core/analytics/analytics.dart';
 // only with consent; without it the notes are dropped).
 
 /// "1" once a shortcut of [kind] was used since the last report.
-String shortcutUsedKey(ShortcutEventKind kind) => 'shortcut.used.${kind.name}';
+String shortcutUsedKey(ShortcutEventKind kind) => 'shortcut.used.${kind.wire}';
 
 /// "1" once Device Controls showed ZigDash's controls (the user added them).
 const shortcutControlsAddedKey = 'shortcut.added.control';
 const _controlsAddedReported = 'shortcut.added.control.reported';
-const _widgetAdded = 'shortcut.added.widget';
+/// "1" once a home-screen widget of a kind was added (the launcher's
+/// picker notes it): `shortcut.added.widget`, `shortcut.added.scene_widget`.
+String _addedKey(ShortcutEventKind kind) => 'shortcut.added.${kind.wire}';
 
 /// Sends what the native side noted and clears the notes.
 Future<void> reportShortcutUsage(
@@ -25,10 +27,11 @@ Future<void> reportShortcutUsage(
     analytics.track(ShortcutUsed(kind));
     await prefs.remove(key);
   }
-  // Each home-screen widget added (the launcher's picker notes it).
-  if (prefs.getString(_widgetAdded) != null) {
-    analytics.track(const ShortcutAdded(ShortcutEventKind.widget));
-    await prefs.remove(_widgetAdded);
+  // Home-screen widgets added (the launcher's picker notes them).
+  for (final kind in [ShortcutEventKind.widget, ShortcutEventKind.sceneWidget]) {
+    if (prefs.getString(_addedKey(kind)) == null) continue;
+    analytics.track(ShortcutAdded(kind));
+    await prefs.remove(_addedKey(kind));
   }
   if (prefs.getString(shortcutControlsAddedKey) != null &&
       prefs.getString(_controlsAddedReported) == null) {

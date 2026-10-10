@@ -2341,7 +2341,19 @@ class AppLocalizationsHe extends AppLocalizations {
   String get shortcutRemoved => 'הוסר';
 
   @override
+  String get shortcutSceneSent => 'נשלחה';
+
+  @override
+  String get shortcutSceneConfirmed => 'אושרה';
+
+  @override
   String get shortcutChooseDevice => 'בחרו מכשיר';
+
+  @override
+  String get shortcutChooseScene => 'בחירת סצנה';
+
+  @override
+  String get shortcutOpenAppFirstScene => 'פתחו את ZigDash וצרו סצנה קודם.';
 
   @override
   String get shortcutAddTile => 'הוספה להגדרות המהירות';

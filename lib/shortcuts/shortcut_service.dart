@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart' show Value;
+import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -138,6 +138,26 @@ class ShortcutService {
     await _prefs.setString(shortcutControlsKey, jsonEncode(out));
   }
 
+  /// Writes the scenes the scene widget's picker offers.
+  Future<void> resyncScenes() async {
+    final out = <Map<String, Object?>>[];
+    for (final conn in await _db.select(_db.connections).get()) {
+      final scenes = await (_db.select(_db.scenes)
+            ..where((s) => s.connectionId.equals(conn.id))
+            ..orderBy([(s) => OrderingTerm(expression: s.sortOrder)]))
+          .get();
+      for (final scene in scenes) {
+        out.add({
+          'connectionId': conn.id,
+          'home': conn.name,
+          'sceneId': scene.id,
+          'name': scene.name,
+        });
+      }
+    }
+    await _prefs.setString(shortcutScenesKey, jsonEncode(out));
+  }
+
   /// Home-screen widgets are set up by the launcher's picker on the native
   /// side (`shortcut.widget.<id>`); this copies them into the shortcuts table
   /// so the running app keeps them current, and drops widgets that were
@@ -157,21 +177,28 @@ class ShortcutService {
       } catch (_) {
         continue;
       }
-      final home = w['connectionId'], ieee = w['ieee'];
-      if (home is! String || ieee is! String || !homes.contains(home)) continue;
+      final home = w['connectionId'];
+      final scene = w['kind'] == 'scene';
+      // A device widget names its device; a scene widget its scene.
+      final target = scene ? w['sceneId'] : w['ieee'];
+      if (home is! String || target is! String || !homes.contains(home)) {
+        continue;
+      }
+      final kind = scene ? ShortcutKind.scene : ShortcutKind.device;
       seen.add(id);
       final row = await _dao.getByWidget(id);
       if (row != null &&
           row.connectionId == home &&
-          shortcutTargets(row).contains(ieee)) {
+          row.kind == kind &&
+          shortcutTargets(row).contains(target)) {
         continue;
       }
       await _dao.put(ShortcutsCompanion.insert(
         id: 'widget-$id',
         connectionId: home,
-        kind: ShortcutKind.device,
+        kind: kind,
         surface: ShortcutSurface.widget,
-        targets: encodeShortcutTargets([ieee]),
+        targets: encodeShortcutTargets([target]),
         appWidgetId: Value(id),
         createdAt: _now(),
       ));
@@ -214,6 +241,8 @@ class ShortcutService {
         'close': l10n.panelCoverClose,
         'position': l10n.devicePosition,
         'openAppFirst': l10n.shortcutOpenAppFirst,
+        'chooseScene': l10n.shortcutChooseScene,
+        'openAppFirstScene': l10n.shortcutOpenAppFirstScene,
       }));
 }
 

@@ -2376,7 +2376,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shortcutRemoved => 'Supprimé';
 
   @override
+  String get shortcutSceneSent => 'Envoyée';
+
+  @override
+  String get shortcutSceneConfirmed => 'Confirmée';
+
+  @override
   String get shortcutChooseDevice => 'Choisir un appareil';
+
+  @override
+  String get shortcutChooseScene => 'Choisir une scène';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Ouvrez ZigDash et créez d\'abord une scène.';
 
   @override
   String get shortcutAddTile => 'Ajouter aux Réglages rapides';

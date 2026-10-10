@@ -154,7 +154,17 @@ class SupportContact extends AnalyticsEvent {
 }
 
 /// Where a shortcut lives (docs/design/roadmap-post-2.0.md, 2.1 §7).
-enum ShortcutEventKind { tile, control, widget }
+enum ShortcutEventKind {
+  tile('tile'),
+  control('control'),
+  widget('widget'),
+  sceneWidget('scene_widget');
+
+  const ShortcutEventKind(this.wire);
+
+  /// The value sent, and the native side's note key (`shortcut.used.<wire>`).
+  final String wire;
+}
 
 /// A Quick Settings tile or a home-screen widget was given a device, or
 /// Device Controls were first set up.
@@ -167,7 +177,7 @@ class ShortcutAdded extends AnalyticsEvent {
   String get name => 'shortcut_added';
 
   @override
-  Map<String, String> get props => {'kind': kind.name};
+  Map<String, String> get props => {'kind': kind.wire};
 }
 
 /// A shortcut was used, sent at most once per app session for each kind.
@@ -180,7 +190,7 @@ class ShortcutUsed extends AnalyticsEvent {
   String get name => 'shortcut_used';
 
   @override
-  Map<String, String> get props => {'kind': kind.name};
+  Map<String, String> get props => {'kind': kind.wire};
 }
 
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from

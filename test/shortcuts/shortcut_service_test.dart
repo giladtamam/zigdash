@@ -9,6 +9,7 @@ import 'package:zigdash/data/database/daos/shortcut_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
+import 'package:zigdash/data/database/tables/shortcuts.dart';
 import 'package:zigdash/features/devices/device_profile.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
@@ -161,11 +162,37 @@ void main() {
       expect((await db.select(db.shortcuts).get()).single.appWidgetId, 9);
     });
 
+    test('a scene widget becomes a scene shortcut', () async {
+      await prefs.setString('shortcut.widget.4',
+          '{"connectionId":"home","kind":"scene","sceneId":"s1","name":"Evening"}');
+      await service.syncWidgets();
+      final row = (await db.select(db.shortcuts).get()).single;
+      expect(row.kind, ShortcutKind.scene);
+      expect(shortcutTargets(row), ['s1']);
+      expect(row.appWidgetId, 4);
+    });
+
     test('a widget for a Home that no longer exists is skipped', () async {
       await prefs.setString('shortcut.widget.3',
           '{"connectionId":"gone","ieee":"0x1","name":"Lamp"}');
       await service.syncWidgets();
       expect(await db.select(db.shortcuts).get(), isEmpty);
     });
+  });
+
+  test('the scenes the native picker offers, per Home in the app\'s order',
+      () async {
+    Future<void> scene(String id, String name, int order) =>
+        db.into(db.scenes).insert(ScenesCompanion.insert(
+            id: id, connectionId: 'home', name: name, iconCodepoint: 0,
+            colorSeed: 0, actions: '[]', createdAt: t, updatedAt: t,
+            sortOrder: Value(order)));
+    await scene('s2', 'Night', 1);
+    await scene('s1', 'Evening', 0);
+    await service.resyncScenes();
+    expect(jsonDecode(prefs.getString(shortcutScenesKey)!), [
+      {'connectionId': 'home', 'home': 'Home', 'sceneId': 's1', 'name': 'Evening'},
+      {'connectionId': 'home', 'home': 'Home', 'sceneId': 's2', 'name': 'Night'},
+    ]);
   });
 }

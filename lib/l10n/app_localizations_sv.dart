@@ -2359,7 +2359,20 @@ class AppLocalizationsSv extends AppLocalizations {
   String get shortcutRemoved => 'Borttagen';
 
   @override
+  String get shortcutSceneSent => 'Skickad';
+
+  @override
+  String get shortcutSceneConfirmed => 'Bekräftad';
+
+  @override
   String get shortcutChooseDevice => 'Välj en enhet';
+
+  @override
+  String get shortcutChooseScene => 'Välj en scen';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Öppna ZigDash och skapa en scen först.';
 
   @override
   String get shortcutAddTile => 'Lägg till i Snabbinställningar';

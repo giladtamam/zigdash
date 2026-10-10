@@ -53,6 +53,11 @@ Map<String, Object?> encodeControl(
   };
 }
 
+/// The scenes offered to the scene widget's picker, a JSON list of
+/// `{"connectionId", "home", "sceneId", "name"}`, per Home in the app's
+/// order.
+const shortcutScenesKey = 'shortcut.scenes';
+
 /// The native side's words, in the app's language.
 const shortcutStringsKey = 'shortcut.strings';
 

@@ -2374,7 +2374,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortcutRemoved => 'Удалено';
 
   @override
+  String get shortcutSceneSent => 'Отправлено';
+
+  @override
+  String get shortcutSceneConfirmed => 'Подтверждено';
+
+  @override
   String get shortcutChooseDevice => 'Выберите устройство';
+
+  @override
+  String get shortcutChooseScene => 'Выберите сцену';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Откройте ZigDash и сначала создайте сцену.';
 
   @override
   String get shortcutAddTile => 'Добавить в быстрые настройки';

@@ -2359,7 +2359,19 @@ class AppLocalizationsNb extends AppLocalizations {
   String get shortcutRemoved => 'Fjernet';
 
   @override
+  String get shortcutSceneSent => 'Sendt';
+
+  @override
+  String get shortcutSceneConfirmed => 'Bekreftet';
+
+  @override
   String get shortcutChooseDevice => 'Velg en enhet';
+
+  @override
+  String get shortcutChooseScene => 'Velg en scene';
+
+  @override
+  String get shortcutOpenAppFirstScene => 'Åpne ZigDash og lag en scene først.';
 
   @override
   String get shortcutAddTile => 'Legg til i Hurtiginnstillinger';

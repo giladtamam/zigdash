@@ -4346,11 +4346,35 @@ abstract class AppLocalizations {
   /// **'Removed'**
   String get shortcutRemoved;
 
+  /// A scene shortcut's line once its commands went out (not every device answered yet).
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get shortcutSceneSent;
+
+  /// A scene shortcut's line once every device reported its new state.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get shortcutSceneConfirmed;
+
   /// No description provided for @shortcutChooseDevice.
   ///
   /// In en, this message translates to:
   /// **'Choose a device'**
   String get shortcutChooseDevice;
+
+  /// Title of the scene widget's picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a scene'**
+  String get shortcutChooseScene;
+
+  /// Scene widget picker, when there are no scenes yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ZigDash and create a scene first.'**
+  String get shortcutOpenAppFirstScene;
 
   /// No description provided for @shortcutAddTile.
   ///
