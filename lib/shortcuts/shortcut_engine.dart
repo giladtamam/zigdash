@@ -19,7 +19,6 @@ import '../features/scenes/models/scene.dart';
 import '../mqtt/broker_config.dart';
 import '../mqtt/mqtt_manager.dart';
 import '../features/devices/device_profile.dart';
-import '../features/devices/device_state.dart' show DeviceCommand;
 import '../features/panels/widgets/device_tile_panel.dart'
     show decodeDeviceState;
 import 'shortcut_commander.dart';
@@ -216,10 +215,15 @@ class ShortcutEngine {
     return toggle(connectionId, ieee, command: command);
   }
 
-  /// Device Controls opened: asks [ieees] for their state and writes what
-  /// they report for [within], so the controls show the current state.
+  /// Device Controls or the shutter pop-up opened: asks [ieees] for their
+  /// state and writes what they report for [within], so the controls show
+  /// the current state. Gentle on the hub: one small request at a time,
+  /// [spacing] apart, and none for a device that reported in the last
+  /// [freshFor] or that isn't asked at all (sensors).
   Future<Map<String, Object?>> watch(String connectionId, List<String> ieees,
-      {Duration within = const Duration(seconds: 30)}) async {
+      {Duration within = const Duration(seconds: 30),
+      Duration spacing = const Duration(milliseconds: 400),
+      Duration freshFor = const Duration(minutes: 1)}) async {
     final mgr = await _manager(connectionId);
     if (mgr == null) return {'outcome': 'removed'};
     if (!await mgr.ensureConnected(maxSilence: const Duration(seconds: 3))) {
@@ -227,6 +231,7 @@ class ShortcutEngine {
     }
     final prefs = await _prefs;
     final commander = await _commander();
+    var asked = 0;
     for (final ieee in ieees) {
       final d = await _device(connectionId, ieee);
       if (d == null) continue;
@@ -236,14 +241,21 @@ class ShortcutEngine {
         prefs.setString(
             key, jsonEncode(commander.describe(d, m.payload, m.receivedAt).toJson()));
       });
-      final get = DeviceCommand.refresh(d.profile);
-      if (get != null) mgr.publish('${d.subscribeTopic}/get', jsonEncode(get), '');
       Timer(within, () {
         sub.cancel();
         mgr.unsubscribe(d.subscribeTopic);
       });
+      final get = ShortcutCommander.stateRequest(d);
+      final at = _decode(prefs.getString(key))['at'];
+      final fresh = at is int &&
+          DateTime.now()
+              .difference(DateTime.fromMillisecondsSinceEpoch(at))
+              .compareTo(freshFor) < 0;
+      if (get == null || fresh) continue;
+      if (asked++ > 0) await Future<void>.delayed(spacing);
+      mgr.publish('${d.subscribeTopic}/get', jsonEncode(get), '');
     }
-    return {'outcome': 'sent'};
+    return {'outcome': 'sent', 'asked': asked};
   }
 
   /// Writes [d]'s state as it reports it, until its motor stops or after

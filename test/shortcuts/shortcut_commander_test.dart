@@ -362,4 +362,23 @@ void main() {
           isFalse);
     });
   });
+
+  group('asking for state', () {
+    test('only what a shortcut shows: on/off, brightness, position', () {
+      expect(ShortcutCommander.stateRequest(_device(_dimmer, 'lamp')),
+          {'state': '', 'brightness': ''});
+      expect(ShortcutCommander.stateRequest(_device(_light, 'lamp')),
+          {'state': ''});
+      expect(ShortcutCommander.stateRequest(_device(_cover, 'blind')),
+          {'position': ''});
+    });
+
+    test('a sensor is not asked: it reports by itself', () {
+      final sensor = classifyExposes([
+        {'type': 'numeric', 'name': 'temperature', 'property': 'temperature',
+          'access': 5},
+      ]);
+      expect(ShortcutCommander.stateRequest(_device(sensor, 'climate')), isNull);
+    });
+  });
 }
