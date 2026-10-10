@@ -1,0 +1,1 @@
+ZigDash 2.0.3: los dispositivos con nombres en otros idiomas vuelven a funcionar. Un dispositivo con letras fuera del inglés básico en su nombre (hebreo, cirílico, é, ñ, ü, etc.) mostraba «Sin datos todavía» y no respondía. Ahora muestra su estado y se puede controlar.

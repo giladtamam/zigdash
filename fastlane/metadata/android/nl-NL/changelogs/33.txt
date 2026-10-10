@@ -1,0 +1,1 @@
+ZigDash 2.0.3: apparaten met namen in andere talen werken weer. Een apparaat met letters buiten het basis-Engels in de naam (Hebreeuws, Cyrillisch, é, ë, ü enz.) toonde "Nog geen melding" en reageerde niet. Nu toont het zijn status en is het te bedienen.
