@@ -21,6 +21,9 @@ object ShortcutIcons {
         val n = name.trim()
         if (n.isEmpty() || address.matches(n)) return null
         val words = n.split(Regex("[\\s_\\-]+")).filter { it.isNotEmpty() }
+        // "Bedroom shutter 1" and "… 2" must differ: first letter + number.
+        val number = words.last().takeIf { words.size >= 2 && it.all(Char::isDigit) }
+        if (number != null) return words[0].take(1).uppercase() + number.take(2)
         return if (words.size >= 2) {
             (words[0].take(1) + words[1].take(1)).uppercase()
         } else {
