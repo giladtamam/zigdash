@@ -124,7 +124,10 @@ class ZigDashControlsService : ControlsProviderService() {
                 ToggleTemplate(e.id, ControlButton(on, e.name))
             e.kind == "dimmer" -> ToggleRangeTemplate(e.id, ControlButton(on, e.name),
                 RangeTemplate("${e.id}/level", 0f, 100f, level, 1f, "%.0f%%"))
-            e.kind == "cover" -> RangeTemplate(e.id, 0f, 100f, level, 1f, "%.0f%%")
+            // A shutter: the button opens or closes it (lit while open), and
+            // dragging sets its position.
+            e.kind == "cover" -> ToggleRangeTemplate(e.id, ControlButton(on, e.name),
+                RangeTemplate("${e.id}/level", 0f, 100f, level, 1f, "%.0f%%"))
             else -> ControlTemplate.getNoTemplateObject()
         }
         val status = when {
