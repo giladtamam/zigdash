@@ -1,0 +1,1 @@
+ZigDash 2.0.3 : les appareils dont le nom est dans une autre langue fonctionnent à nouveau. Un appareil dont le nom contenait des lettres hors de l'anglais de base (hébreu, cyrillique, é, è, ç, etc.) affichait « Aucun rapport pour l'instant » et ne répondait pas. Il affiche désormais son état et peut être commandé.
