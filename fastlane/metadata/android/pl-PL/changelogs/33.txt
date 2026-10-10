@@ -1,0 +1,1 @@
+ZigDash 2.0.3: urządzenia z nazwami w innych językach znów działają. Urządzenie z literami spoza podstawowego angielskiego w nazwie (hebrajski, cyrylica, ą, ł, ż itd.) pokazywało „Brak raportu” i nie reagowało. Teraz pokazuje swój stan i można nim sterować.

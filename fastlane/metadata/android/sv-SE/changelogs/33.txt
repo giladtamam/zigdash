@@ -1,0 +1,1 @@
+ZigDash 2.0.3: enheter med namn på andra språk fungerar igen. En enhet med bokstäver utanför grundläggande engelska i namnet (hebreiska, kyrilliska, å, ä, ö osv.) visade "Ingen rapport än" och svarade inte. Nu visar den sitt läge och kan styras.
