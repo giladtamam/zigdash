@@ -69,7 +69,8 @@ class GroupWidget : AppWidgetProvider() {
             val views = if (Build.VERSION.SDK_INT >= 31) {
                 // How many rows fit each height: title, rows of 42dp, the
                 // scene buttons; the launcher picks the largest that fits.
-                RemoteViews(listOf(110f, 150f, 190f, 230f, 270f, 310f).associate { h ->
+                // Steps of half a row, so a row shows as soon as it fits.
+                RemoteViews((0..10).map { 110f + it * 21f }.associate { h ->
                     SizeF(180f, h) to views(ctx, id, h, busy, trouble)
                 })
             } else {
@@ -152,7 +153,7 @@ class GroupWidget : AppWidgetProvider() {
             v.setTextViewText(r.line, when {
                 busy == e.ieee -> ShortcutPrefs.word(ctx, "working", "working…")
                 mine -> trouble!!.second
-                else -> DeviceWidget.withAge(s?.line, s?.at) ?: ""
+                else -> DeviceWidget.withAge(s?.line, s?.at, short = true) ?: ""
             })
             v.setTextColor(r.line, ctx.getColor(when {
                 mine -> R.color.w_problem

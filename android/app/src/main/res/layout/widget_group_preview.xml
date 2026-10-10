@@ -101,46 +101,6 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/w_row_off"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="10dp"
-        android:paddingEnd="12dp">
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="10dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/w_ic_cover"
-            android:tint="@color/w_ink" />
-        <TextView
-            android:text="@string/widget_group_sample_3"
-            android:textDirection="locale"
-            android:textAlignment="viewStart"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/w_ink"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-        <TextView
-            android:text="60%"
-            android:textDirection="locale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:maxWidth="140dp"
-            android:textColor="@color/w_ink2"
-            android:textSize="12sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:orientation="horizontal">

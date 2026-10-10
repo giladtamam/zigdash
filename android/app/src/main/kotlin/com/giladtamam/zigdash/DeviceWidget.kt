@@ -147,11 +147,14 @@ class DeviceWidget : AppWidgetProvider() {
         }
 
         /** The last-known line, with its age once it's over a minute old. */
-        internal fun withAge(line: String?, at: Long?): String? {
+        internal fun withAge(line: String?, at: Long?, short: Boolean = false): String? {
             if (line == null || at == null) return line
             val now = System.currentTimeMillis()
             if (now - at < DateUtils.MINUTE_IN_MILLIS) return line
-            return "$line · ${DateUtils.getRelativeTimeSpanString(at, now, DateUtils.MINUTE_IN_MILLIS)}"
+            // [short]: "5 min. ago", for a group widget's narrow rows.
+            val age = DateUtils.getRelativeTimeSpanString(at, now, DateUtils.MINUTE_IN_MILLIS,
+                if (short) DateUtils.FORMAT_ABBREV_RELATIVE else 0)
+            return "$line · $age"
         }
     }
 }
