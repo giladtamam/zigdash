@@ -3,6 +3,8 @@ package com.giladtamam.zigdash
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.RectF
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Icon
@@ -11,8 +13,9 @@ import android.graphics.drawable.Icon
  * A shortcut's icon. Samsung's compact Quick Settings area shows a custom
  * tile as an icon only, so a named device gets its initials ("La" for Lavi,
  * "BR" for Bedroom roller) and the user can tell tiles apart; a device still
- * named by its address (0x…) gets its type's glyph. Drawn white on clear:
- * Android tints tile icons from their alpha.
+ * named by its address (0x…) gets its type's glyph. A small ZigDash logo in
+ * the corner says whose tile it is. Drawn white on clear: Android tints tile
+ * icons from their alpha.
  */
 object ShortcutIcons {
     private val address = Regex("^0x[0-9a-fA-F]+$")
@@ -32,21 +35,63 @@ object ShortcutIcons {
     }
 
     fun forTile(ctx: Context, t: ShortcutPrefs.Tile): Icon {
-        val text = initials(t.name) ?: return Icon.createWithResource(ctx, t.icon)
         val size = (48 * ctx.resources.displayMetrics.density).toInt()
         val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = android.graphics.Color.WHITE
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textAlign = Paint.Align.CENTER
-            textSize = size * (if (text.length > 1) 0.56f else 0.7f)
+        val canvas = Canvas(bmp)
+        // The content sits low and left, clear of the badge.
+        val cx = size * 0.44f
+        val cy = size * 0.58f
+        val text = initials(t.name)
+        if (text == null) {
+            val glyph = ctx.getDrawable(t.icon)!!
+            val half = (size * 0.32f).toInt()
+            glyph.setBounds(cx.toInt() - half, cy.toInt() - half, cx.toInt() + half, cy.toInt() + half)
+            glyph.setTint(Color.WHITE)
+            glyph.draw(canvas)
+        } else {
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                textAlign = Paint.Align.CENTER
+                textSize = size * (if (text.length > 1) 0.5f else 0.62f)
+            }
+            // Shrink long glyphs (wide letters, other scripts) to fit.
+            val maxWidth = size * 0.76f
+            val w = paint.measureText(text)
+            if (w > maxWidth) paint.textSize *= maxWidth / w
+            canvas.drawText(text, cx, cy - (paint.descent() + paint.ascent()) / 2f, paint)
         }
-        // Shrink long glyphs (wide letters, other scripts) to fit.
-        val maxWidth = size * 0.9f
-        val w = paint.measureText(text)
-        if (w > maxWidth) paint.textSize *= maxWidth / w
-        val y = size / 2f - (paint.descent() + paint.ascent()) / 2f
-        Canvas(bmp).drawText(text, size / 2f, y, paint)
+        drawBadge(canvas, size)
         return Icon.createWithBitmap(bmp)
+    }
+
+    /**
+     * ZigDash's logo, small, in the top corner: four rounded squares with
+     * the top-left one filled. Quick Settings shows custom tiles with no app
+     * name, so this marks the tile as ZigDash's.
+     */
+    private fun drawBadge(canvas: Canvas, size: Int) {
+        val cell = size * 0.11f
+        val gap = size * 0.035f
+        val stroke = size * 0.028f
+        val left = size - 2 * cell - gap - size * 0.02f
+        val top = size * 0.02f
+        val r = cell * 0.3f
+        val fill = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
+        val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            style = Paint.Style.STROKE
+            strokeWidth = stroke
+        }
+        for (row in 0..1) for (col in 0..1) {
+            val x = left + col * (cell + gap)
+            val y = top + row * (cell + gap)
+            if (row == 0 && col == 0) {
+                canvas.drawRoundRect(RectF(x, y, x + cell, y + cell), r, r, fill)
+            } else {
+                val h = stroke / 2
+                canvas.drawRoundRect(RectF(x + h, y + h, x + cell - h, y + cell - h), r, r, line)
+            }
+        }
     }
 }
