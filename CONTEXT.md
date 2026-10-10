@@ -45,3 +45,9 @@
 **Last-known value** — a tile's most recent received value, kept on the phone across restarts, shown when the value is not fresh (broker unreachable, or not yet reported since connecting) and marked stale with its age. Never leaves the device, not even in Android backups.
 
 **Successful session** — a calendar day on which the user sent a command and received a confirming state update. Counted locally for the rating prompt; nothing leaves the device.
+
+**Support request** — a user asking the developer for help, in writing (email or GitHub), in English or Hebrew. A call is offered only by the developer when writing hasn't solved it; users can't book one unprompted. Not a chat: there is no live channel.
+
+**Support details** — the snapshot added to a Support request or a Report a problem: app version, phone model, where Get help was opened from, the kind of connection, the Zigbee2MQTT version and device count, the kind of the last connection error and what the last hub scan tried. Always in English. Never passwords, addresses, usernames, home names or device names. The user sees it before sending, and it leaves the phone only when they send or paste it themselves.
+
+**Get help** — the one screen every help link opens. It knows where the user came from (a setup failure, an unreachable home, a missing device list, Settings, the demo) and shows the tips for that place first, then a way to send a Support request. Different from **Report a problem**, which reports a bug to fix.
