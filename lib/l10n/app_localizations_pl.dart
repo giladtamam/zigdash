@@ -2515,4 +2515,49 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'Dane o użyciu są wyłączone, więc nic stąd nie zostanie wysłane. Napisz nam przez Zaproponuj funkcję.';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 Wyciek — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name znów jest suchy';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 Dym — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ Nie ma już dymu przy $name';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name otwarte';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 Słaba bateria — $name, $value%';
+  }
+
+  @override
+  String get alertTest => 'Testowe powiadomienie ZigDash';
+
+  @override
+  String get alertsChannel => 'Alarmy';
+
+  @override
+  String get alertsChannelDescription => 'Wycieki i dym';
+
+  @override
+  String get noticesChannel => 'Powiadomienia';
+
+  @override
+  String get noticesChannelDescription => 'Drzwi, okna i baterie';
 }

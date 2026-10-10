@@ -813,5 +813,16 @@
   "pollGroups": "Grupy Zigbee",
   "pollNotNow": "Nie teraz",
   "pollThanks": "Dzięki! To pomaga zdecydować, co dalej.",
-  "pollNoAnalytics": "Dane o użyciu są wyłączone, więc nic stąd nie zostanie wysłane. Napisz nam przez Zaproponuj funkcję."
+  "pollNoAnalytics": "Dane o użyciu są wyłączone, więc nic stąd nie zostanie wysłane. Napisz nam przez Zaproponuj funkcję.",
+  "alertLeak": "💧 Wyciek — {name}",
+  "alertLeakCleared": "✅ {name} znów jest suchy",
+  "alertSmoke": "🔥 Dym — {name}",
+  "alertSmokeCleared": "✅ Nie ma już dymu przy {name}",
+  "alertOpened": "🚪 {name} otwarte",
+  "alertBattery": "🔋 Słaba bateria — {name}, {value}%",
+  "alertTest": "Testowe powiadomienie ZigDash",
+  "alertsChannel": "Alarmy",
+  "alertsChannelDescription": "Wycieki i dym",
+  "noticesChannel": "Powiadomienia",
+  "noticesChannelDescription": "Drzwi, okna i baterie"
 }

@@ -10,6 +10,7 @@ import 'tables/panels.dart';
 import 'tables/scenes.dart';
 import 'tables/sections.dart';
 import 'tables/shortcuts.dart';
+import 'tables/alert_configs.dart';
 
 part 'database.g.dart';
 
@@ -22,6 +23,7 @@ part 'database.g.dart';
   DeviceDismissals,
   DeviceHealthFlags,
   Shortcuts,
+  AlertConfigs,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
@@ -39,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   /// The file's own schema version, for [AppDatabase.readOnly].
   int? fileVersion;
 
-  static const _version = 8;
+  static const _version = 9;
 
   @override
   int get schemaVersion => _readOnly ? (fileVersion ?? _version) : _version;
@@ -120,6 +122,9 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 8) {
             await m.createTable(shortcuts);
+          }
+          if (from < 9) {
+            await m.createTable(alertConfigs);
           }
         },
         // The schema's cascades (home → dashboards → sections, tiles) only

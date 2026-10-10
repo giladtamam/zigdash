@@ -2496,4 +2496,49 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'Användningsdata är avstängt, så inget skickas härifrån. Berätta för oss via Föreslå en funktion istället.';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 Läcka — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name är torr igen';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 Rök — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ Ingen rök längre vid $name';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name öppnad';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 Lågt batteri — $name, $value %';
+  }
+
+  @override
+  String get alertTest => 'ZigDash-testavisering';
+
+  @override
+  String get alertsChannel => 'Larm';
+
+  @override
+  String get alertsChannelDescription => 'Läckor och rök';
+
+  @override
+  String get noticesChannel => 'Meddelanden';
+
+  @override
+  String get noticesChannelDescription => 'Dörrar, fönster och batterier';
 }

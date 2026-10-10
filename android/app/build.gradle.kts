@@ -8,6 +8,18 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Alerts (docs/design/alerts-2.3.md): the push library and secure storage
+// bring different Tink versions; use one (unifiedpush README).
+configurations.all {
+    val tink = "com.google.crypto.tink:tink-android:1.23.0"
+    resolutionStrategy {
+        force(tink)
+        dependencySubstitution {
+            substitute(module("com.google.crypto.tink:tink")).using(module(tink))
+        }
+    }
+}
+
 // Release signing: loaded from android/key.properties (gitignored). When that
 // file is absent (fresh clone / CI without secrets) the release build falls
 // back to debug signing so `flutter build` still works.
@@ -23,6 +35,7 @@ android {
     ndkVersion = "27.0.12077973"
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -71,6 +84,13 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Alerts arrive through Google's push with ZigDash as its own UnifiedPush
+    // distributor: no Firebase project, no second app (alerts-2.3.md).
+    implementation("org.unifiedpush.android:embedded-fcm-distributor:3.1.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
 
 kotlin {

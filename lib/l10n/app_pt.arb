@@ -778,5 +778,16 @@
   "pollGroups": "Grupos Zigbee",
   "pollNotNow": "Agora não",
   "pollThanks": "Obrigado! Isso ajuda a decidir o que vem a seguir.",
-  "pollNoAnalytics": "Os dados de uso estão desativados, então nada é enviado daqui. Conte para nós em Sugerir um recurso."
+  "pollNoAnalytics": "Os dados de uso estão desativados, então nada é enviado daqui. Conte para nós em Sugerir um recurso.",
+  "alertLeak": "💧 Vazamento — {name}",
+  "alertLeakCleared": "✅ {name} está seco de novo",
+  "alertSmoke": "🔥 Fumaça — {name}",
+  "alertSmokeCleared": "✅ Sem fumaça em {name}",
+  "alertOpened": "🚪 {name} aberto",
+  "alertBattery": "🔋 Bateria fraca — {name}, {value}%",
+  "alertTest": "Notificação de teste do ZigDash",
+  "alertsChannel": "Alertas",
+  "alertsChannelDescription": "Vazamentos e fumaça",
+  "noticesChannel": "Avisos",
+  "noticesChannelDescription": "Portas, janelas e baterias"
 }

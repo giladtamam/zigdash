@@ -813,5 +813,16 @@
   "pollGroups": "Группы Zigbee",
   "pollNotNow": "Не сейчас",
   "pollThanks": "Спасибо! Это помогает решить, что делать дальше.",
-  "pollNoAnalytics": "Данные об использовании выключены, поэтому отсюда ничего не отправляется. Расскажите нам через «Предложить функцию»."
+  "pollNoAnalytics": "Данные об использовании выключены, поэтому отсюда ничего не отправляется. Расскажите нам через «Предложить функцию».",
+  "alertLeak": "💧 Протечка — {name}",
+  "alertLeakCleared": "✅ {name} снова сухой",
+  "alertSmoke": "🔥 Дым — {name}",
+  "alertSmokeCleared": "✅ Дыма у {name} больше нет",
+  "alertOpened": "🚪 {name} открыто",
+  "alertBattery": "🔋 Низкий заряд — {name}, {value}%",
+  "alertTest": "Тестовое уведомление ZigDash",
+  "alertsChannel": "Тревоги",
+  "alertsChannelDescription": "Протечки и дым",
+  "noticesChannel": "Уведомления",
+  "noticesChannelDescription": "Двери, окна и батареи"
 }

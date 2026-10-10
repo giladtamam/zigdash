@@ -2495,4 +2495,49 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'Bruksdata er av, så ingenting sendes herfra. Fortell oss heller via Foreslå en funksjon.';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 Lekkasje — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name er tørr igjen';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 Røyk — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ Ikke mer røyk ved $name';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name åpnet';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 Lavt batteri — $name, $value %';
+  }
+
+  @override
+  String get alertTest => 'ZigDash-testvarsel';
+
+  @override
+  String get alertsChannel => 'Varsler';
+
+  @override
+  String get alertsChannelDescription => 'Lekkasjer og røyk';
+
+  @override
+  String get noticesChannel => 'Meldinger';
+
+  @override
+  String get noticesChannelDescription => 'Dører, vinduer og batterier';
 }

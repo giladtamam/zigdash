@@ -887,5 +887,16 @@
   "pollGroups": "קבוצות Zigbee",
   "pollNotNow": "לא עכשיו",
   "pollThanks": "תודה! זה עוזר להחליט מה יגיע בהמשך.",
-  "pollNoAnalytics": "נתוני השימוש כבויים, לכן שום דבר לא נשלח מכאן. ספרו לנו דרך בקשת תכונה."
+  "pollNoAnalytics": "נתוני השימוש כבויים, לכן שום דבר לא נשלח מכאן. ספרו לנו דרך בקשת תכונה.",
+  "alertLeak": "💧 נזילה — {name}",
+  "alertLeakCleared": "✅ {name} יבש שוב",
+  "alertSmoke": "🔥 עשן — {name}",
+  "alertSmokeCleared": "✅ אין יותר עשן ב-{name}",
+  "alertOpened": "🚪 {name} נפתח",
+  "alertBattery": "🔋 סוללה חלשה — {name}, {value}%",
+  "alertTest": "התראת בדיקה של ZigDash",
+  "alertsChannel": "התראות",
+  "alertsChannelDescription": "נזילות ועשן",
+  "noticesChannel": "הודעות",
+  "noticesChannelDescription": "דלתות, חלונות וסוללות"
 }

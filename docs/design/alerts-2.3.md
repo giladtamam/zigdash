@@ -46,7 +46,7 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
   - **Leak and smoke:** once when it starts, and once when it clears.
   - **Door or window:** once per opening, only inside the alert's hours if set. Hours are in the Home's time zone, sent in the config (`timeZone`, IANA name), since the hub's Node-RED most likely runs in UTC.
   - **Low battery:** once per device until the battery is back above the threshold.
-- **What it sends** (to every phone in the config, and to ntfy/Pushover if set): one JSON object, `{"v":1, "kind":"leak", "device":"0x00158d…", "name":"Kitchen sensor", "home":"My Home", "cleared":false, "value":null, "at":"2026-10-10T21:03:12+03:00"}`. The phone writes the notification text in its own language (§2), so the flow carries no wording. For ntfy and Pushover, which show raw text, the flow uses the English phrases in the config's `"text"` map, written by ZigDash in the app's language.
+- **What it sends** (to every phone in the config, and to ntfy/Pushover if set): one JSON object, `{"v":1, "kind":"leak", "connection":"<Home id>", "device":"0x00158d…", "name":"Kitchen sensor", "home":"My Home", "cleared":false, "value":null, "at":"2026-10-10T21:03:12+03:00"}`. The phone writes the notification text in its own language (§2), so the flow carries no wording. For ntfy and Pushover, which show raw text, the flow uses the English phrases in the config's `"text"` map, written by ZigDash in the app's language.
 - **Push details:** Web Push, RFC 8291 `aes128gcm` to each phone's keys, VAPID ES256 with the key pair from the config, headers `Urgency: high` (required: normal urgency waits for the phone to wake), `TTL: 86400`. A `404`/`410` answer marks that phone `dead` in `zigdash/alerts/state`; ZigDash removes it from the config.
 - **Memory:** the SMHUB's Node-RED keeps context in memory only, so the per-device memory (last values, "battery already reported") is also kept retained on `zigdash/alerts/state` and reloaded on start; it is republished only when something tracked changed.
 - **Recent alerts:** it publishes the last 20 fired alerts, retained at QoS 1, to `zigdash/alerts/recent`, as a JSON list of the same objects.
@@ -58,6 +58,7 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 ```json
 {
   "version": 1,
+  "connection": "<the Home's id in ZigDash, echoed in every event so a tap opens the right Home>",
   "home": "My Home",
   "base": "zigbee2mqtt",
   "timeZone": "Asia/Jerusalem",

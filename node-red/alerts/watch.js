@@ -27,7 +27,8 @@ const within = (from, to) => {
 const events = [];
 let changed = false;
 const event = (h, kind, cleared, value) => ({
-    v: 1, kind, device: h.ieee, name: h.name, home: cfg.home, cleared, value: value === undefined ? null : value,
+    v: 1, kind, connection: cfg.connection || null, device: h.ieee, name: h.name, home: cfg.home, cleared,
+    value: value === undefined ? null : value,
     at: now.toISOString(),
 });
 

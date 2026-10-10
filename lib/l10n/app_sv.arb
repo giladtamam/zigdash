@@ -818,5 +818,16 @@
   "pollGroups": "Zigbee-grupper",
   "pollNotNow": "Inte nu",
   "pollThanks": "Tack! Det hjälper oss att välja vad som kommer.",
-  "pollNoAnalytics": "Användningsdata är avstängt, så inget skickas härifrån. Berätta för oss via Föreslå en funktion istället."
+  "pollNoAnalytics": "Användningsdata är avstängt, så inget skickas härifrån. Berätta för oss via Föreslå en funktion istället.",
+  "alertLeak": "💧 Läcka — {name}",
+  "alertLeakCleared": "✅ {name} är torr igen",
+  "alertSmoke": "🔥 Rök — {name}",
+  "alertSmokeCleared": "✅ Ingen rök längre vid {name}",
+  "alertOpened": "🚪 {name} öppnad",
+  "alertBattery": "🔋 Lågt batteri — {name}, {value} %",
+  "alertTest": "ZigDash-testavisering",
+  "alertsChannel": "Larm",
+  "alertsChannelDescription": "Läckor och rök",
+  "noticesChannel": "Meddelanden",
+  "noticesChannelDescription": "Dörrar, fönster och batterier"
 }

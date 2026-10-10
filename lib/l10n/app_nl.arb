@@ -818,5 +818,16 @@
   "pollGroups": "Zigbee-groepen",
   "pollNotNow": "Niet nu",
   "pollThanks": "Bedankt! Dat helpt kiezen wat er komt.",
-  "pollNoAnalytics": "Gebruiksgegevens staan uit, dus van hier wordt niets verstuurd. Laat het ons weten via Functie aanvragen."
+  "pollNoAnalytics": "Gebruiksgegevens staan uit, dus van hier wordt niets verstuurd. Laat het ons weten via Functie aanvragen.",
+  "alertLeak": "💧 Lek — {name}",
+  "alertLeakCleared": "✅ {name} is weer droog",
+  "alertSmoke": "🔥 Rook — {name}",
+  "alertSmokeCleared": "✅ Geen rook meer bij {name}",
+  "alertOpened": "🚪 {name} geopend",
+  "alertBattery": "🔋 Batterij bijna leeg — {name}, {value}%",
+  "alertTest": "ZigDash-testmelding",
+  "alertsChannel": "Alarmen",
+  "alertsChannelDescription": "Lekken en rook",
+  "noticesChannel": "Berichten",
+  "noticesChannelDescription": "Deuren, ramen en batterijen"
 }

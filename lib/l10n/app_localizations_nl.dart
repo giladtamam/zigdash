@@ -2506,4 +2506,49 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'Gebruiksgegevens staan uit, dus van hier wordt niets verstuurd. Laat het ons weten via Functie aanvragen.';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 Lek — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name is weer droog';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 Rook — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ Geen rook meer bij $name';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name geopend';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 Batterij bijna leeg — $name, $value%';
+  }
+
+  @override
+  String get alertTest => 'ZigDash-testmelding';
+
+  @override
+  String get alertsChannel => 'Alarmen';
+
+  @override
+  String get alertsChannelDescription => 'Lekken en rook';
+
+  @override
+  String get noticesChannel => 'Berichten';
+
+  @override
+  String get noticesChannelDescription => 'Deuren, ramen en batterijen';
 }

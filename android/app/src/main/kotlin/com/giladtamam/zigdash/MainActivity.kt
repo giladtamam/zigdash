@@ -30,6 +30,8 @@ class MainActivity : FlutterActivity() {
                     call.argument<String>("connectionId") ?: "",
                     call.argument<String>("target") ?: "",
                     call.argument<String>("name") ?: ""))
+                "generateVapidKeys" -> result.success(generateVapidKeys())
+                "timeZoneId" -> result.success(java.util.TimeZone.getDefault().id)
                 "refreshTiles" -> {
                     for (c in listOf(ShortcutTile1::class.java, ShortcutTile2::class.java,
                             ShortcutTile3::class.java, ShortcutTile4::class.java)) {
@@ -68,6 +70,33 @@ class MainActivity : FlutterActivity() {
             intent.getStringExtra(EXTRA_HOME)?.let { put("connectionId", it) }
             intent.getStringExtra(EXTRA_IEEE)?.let { put("ieee", it) }
         }
+    }
+
+    /**
+     * A fresh VAPID key pair for a Home's alerts (alerts-2.3.md): the public
+     * key (65 bytes, base64url) that the phone registers with, and the
+     * private key as a JWK the hub signs with.
+     */
+    private fun generateVapidKeys(): Map<String, Any> {
+        val gen = java.security.KeyPairGenerator.getInstance("EC")
+        gen.initialize(java.security.spec.ECGenParameterSpec("secp256r1"))
+        val pair = gen.generateKeyPair()
+        val pub = pair.public as java.security.interfaces.ECPublicKey
+        val priv = pair.private as java.security.interfaces.ECPrivateKey
+        fun fixed(n: java.math.BigInteger): ByteArray {
+            val raw = n.toByteArray()
+            val out = ByteArray(32)
+            val src = if (raw.size > 32) raw.copyOfRange(raw.size - 32, raw.size) else raw
+            System.arraycopy(src, 0, out, 32 - src.size, src.size)
+            return out
+        }
+        val b64 = { b: ByteArray -> android.util.Base64.encodeToString(b,
+            android.util.Base64.URL_SAFE or android.util.Base64.NO_PADDING or android.util.Base64.NO_WRAP) }
+        val x = fixed(pub.w.affineX); val y = fixed(pub.w.affineY)
+        return mapOf(
+            "publicKey" to b64(byteArrayOf(4) + x + y),
+            "privateJwk" to mapOf("kty" to "EC", "crv" to "P-256", "x" to b64(x), "y" to b64(y), "d" to b64(fixed(priv.s))),
+        )
     }
 
     private fun requestAddTile(slot: Int, label: String, result: MethodChannel.Result) {

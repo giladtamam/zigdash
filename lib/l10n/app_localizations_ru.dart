@@ -2511,4 +2511,49 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'Данные об использовании выключены, поэтому отсюда ничего не отправляется. Расскажите нам через «Предложить функцию».';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 Протечка — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name снова сухой';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 Дым — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ Дыма у $name больше нет';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name открыто';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 Низкий заряд — $name, $value%';
+  }
+
+  @override
+  String get alertTest => 'Тестовое уведомление ZigDash';
+
+  @override
+  String get alertsChannel => 'Тревоги';
+
+  @override
+  String get alertsChannelDescription => 'Протечки и дым';
+
+  @override
+  String get noticesChannel => 'Уведомления';
+
+  @override
+  String get noticesChannelDescription => 'Двери, окна и батареи';
 }

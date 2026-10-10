@@ -2493,4 +2493,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 Leak — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name is dry again';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 Smoke — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ No more smoke at $name';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name opened';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 Battery low — $name, $value%';
+  }
+
+  @override
+  String get alertTest => 'ZigDash test alert';
+
+  @override
+  String get alertsChannel => 'Alerts';
+
+  @override
+  String get alertsChannelDescription => 'Leaks and smoke';
+
+  @override
+  String get noticesChannel => 'Notices';
+
+  @override
+  String get noticesChannelDescription => 'Doors, windows and batteries';
 }

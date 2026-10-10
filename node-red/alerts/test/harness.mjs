@@ -39,7 +39,7 @@ const pubJwk = publicKey.export({ format: 'jwk' });
 const vapidPub = Buffer.concat([Buffer.from([4]), Buffer.from(pubJwk.x, 'base64url'), Buffer.from(pubJwk.y, 'base64url')]).toString('base64url');
 
 const config = {
-    version: 1, home: 'My Home', base: 'zigbee2mqtt', timeZone: 'Asia/Jerusalem',
+    version: 1, connection: 'home-1', home: 'My Home', base: 'zigbee2mqtt', timeZone: 'Asia/Jerusalem',
     vapid: { publicKey: vapidPub, privateJwk: privateKey.export({ format: 'jwk' }) },
     phones: [{ id: 'p1', name: 'Galaxy', endpoint: 'https://fcm.googleapis.com/fcm/send/abc', p256dh: phoneEcdh.getPublicKey().toString('base64url'), auth: phoneAuth.toString('base64url') },
              { id: 'p2', name: 'Old phone', endpoint: 'https://fcm.googleapis.com/fcm/send/old', p256dh: phoneEcdh.getPublicKey().toString('base64url'), auth: phoneAuth.toString('base64url') }],
@@ -79,7 +79,7 @@ check('a republish of the same state is silent', () => { assert.equal(ev.length,
 
 // 5. Leak!
 [ev, pub] = run('watch', { topic: 'zigbee2mqtt/Kitchen sensor', payload: { water_leak: true } });
-check('dry -> wet fires a leak', () => { assert.equal(ev.length, 1); assert.equal(ev[0].payload.kind, 'leak'); assert.equal(ev[0].payload.cleared, false); assert.equal(ev[0].payload.name, 'Kitchen sensor'); });
+check('dry -> wet fires a leak', () => { assert.equal(ev.length, 1); assert.equal(ev[0].payload.kind, 'leak'); assert.equal(ev[0].payload.connection, 'home-1'); assert.equal(ev[0].payload.cleared, false); assert.equal(ev[0].payload.name, 'Kitchen sensor'); });
 check('recent alerts published', () => assert.equal(JSON.parse(topicOf(pub)['zigdash/alerts/recent'])[0].kind, 'leak'));
 let [reqs] = run('push', ev[0]);
 check('one push per live phone, plus ntfy', () => {

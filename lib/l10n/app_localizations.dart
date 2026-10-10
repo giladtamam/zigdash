@@ -4579,6 +4579,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.'**
   String get pollNoAnalytics;
+
+  /// Notification: a leak sensor got wet. {name} is the device's name.
+  ///
+  /// In en, this message translates to:
+  /// **'💧 Leak — {name}'**
+  String alertLeak(Object name);
+
+  /// Notification: the leak sensor is dry again.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ {name} is dry again'**
+  String alertLeakCleared(Object name);
+
+  /// Notification: smoke detected.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Smoke — {name}'**
+  String alertSmoke(Object name);
+
+  /// Notification: no more smoke.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ No more smoke at {name}'**
+  String alertSmokeCleared(Object name);
+
+  /// Notification: a door or window opened.
+  ///
+  /// In en, this message translates to:
+  /// **'🚪 {name} opened'**
+  String alertOpened(Object name);
+
+  /// Notification: a battery is low; {value} is the percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'🔋 Battery low — {name}, {value}%'**
+  String alertBattery(Object name, Object value);
+
+  /// The test notification's text.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash test alert'**
+  String get alertTest;
+
+  /// Android notification channel for leak and smoke (urgent).
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alertsChannel;
+
+  /// What the urgent channel carries.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaks and smoke'**
+  String get alertsChannelDescription;
+
+  /// Android notification channel for doors and batteries.
+  ///
+  /// In en, this message translates to:
+  /// **'Notices'**
+  String get noticesChannel;
+
+  /// What the notices channel carries.
+  ///
+  /// In en, this message translates to:
+  /// **'Doors, windows and batteries'**
+  String get noticesChannelDescription;
 }
 
 class _AppLocalizationsDelegate

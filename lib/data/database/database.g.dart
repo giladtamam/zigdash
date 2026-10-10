@@ -4706,6 +4706,281 @@ class ShortcutsCompanion extends UpdateCompanion<Shortcut> {
   }
 }
 
+class $AlertConfigsTable extends AlertConfigs
+    with TableInfo<$AlertConfigsTable, AlertConfig> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AlertConfigsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES connections (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _configMeta = const VerificationMeta('config');
+  @override
+  late final GeneratedColumn<String> config = GeneratedColumn<String>(
+    'config',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [connectionId, config, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'alert_configs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AlertConfig> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('config')) {
+      context.handle(
+        _configMeta,
+        config.isAcceptableOrUnknown(data['config']!, _configMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_configMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {connectionId};
+  @override
+  AlertConfig map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AlertConfig(
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      config: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}config'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $AlertConfigsTable createAlias(String alias) {
+    return $AlertConfigsTable(attachedDatabase, alias);
+  }
+}
+
+class AlertConfig extends DataClass implements Insertable<AlertConfig> {
+  final String connectionId;
+  final String config;
+  final DateTime updatedAt;
+  const AlertConfig({
+    required this.connectionId,
+    required this.config,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['connection_id'] = Variable<String>(connectionId);
+    map['config'] = Variable<String>(config);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  AlertConfigsCompanion toCompanion(bool nullToAbsent) {
+    return AlertConfigsCompanion(
+      connectionId: Value(connectionId),
+      config: Value(config),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory AlertConfig.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AlertConfig(
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      config: serializer.fromJson<String>(json['config']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'connectionId': serializer.toJson<String>(connectionId),
+      'config': serializer.toJson<String>(config),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  AlertConfig copyWith({
+    String? connectionId,
+    String? config,
+    DateTime? updatedAt,
+  }) => AlertConfig(
+    connectionId: connectionId ?? this.connectionId,
+    config: config ?? this.config,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  AlertConfig copyWithCompanion(AlertConfigsCompanion data) {
+    return AlertConfig(
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      config: data.config.present ? data.config.value : this.config,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlertConfig(')
+          ..write('connectionId: $connectionId, ')
+          ..write('config: $config, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(connectionId, config, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AlertConfig &&
+          other.connectionId == this.connectionId &&
+          other.config == this.config &&
+          other.updatedAt == this.updatedAt);
+}
+
+class AlertConfigsCompanion extends UpdateCompanion<AlertConfig> {
+  final Value<String> connectionId;
+  final Value<String> config;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const AlertConfigsCompanion({
+    this.connectionId = const Value.absent(),
+    this.config = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AlertConfigsCompanion.insert({
+    required String connectionId,
+    required String config,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : connectionId = Value(connectionId),
+       config = Value(config),
+       updatedAt = Value(updatedAt);
+  static Insertable<AlertConfig> custom({
+    Expression<String>? connectionId,
+    Expression<String>? config,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (connectionId != null) 'connection_id': connectionId,
+      if (config != null) 'config': config,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AlertConfigsCompanion copyWith({
+    Value<String>? connectionId,
+    Value<String>? config,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return AlertConfigsCompanion(
+      connectionId: connectionId ?? this.connectionId,
+      config: config ?? this.config,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (config.present) {
+      map['config'] = Variable<String>(config.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlertConfigsCompanion(')
+          ..write('connectionId: $connectionId, ')
+          ..write('config: $config, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4720,6 +4995,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DeviceHealthFlagsTable deviceHealthFlags =
       $DeviceHealthFlagsTable(this);
   late final $ShortcutsTable shortcuts = $ShortcutsTable(this);
+  late final $AlertConfigsTable alertConfigs = $AlertConfigsTable(this);
   late final Index panelsDeviceIeee = Index(
     'panels_device_ieee',
     'CREATE INDEX panels_device_ieee ON panels (device_ieee)',
@@ -4737,6 +5013,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     deviceDismissals,
     deviceHealthFlags,
     shortcuts,
+    alertConfigs,
     panelsDeviceIeee,
   ];
   @override
@@ -4796,6 +5073,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('shortcuts', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'connections',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('alert_configs', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -4944,6 +5228,27 @@ final class $$ConnectionsTableReferences
     ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_shortcutsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$AlertConfigsTable, List<AlertConfig>>
+  _alertConfigsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.alertConfigs,
+    aliasName: $_aliasNameGenerator(
+      db.connections.id,
+      db.alertConfigs.connectionId,
+    ),
+  );
+
+  $$AlertConfigsTableProcessedTableManager get alertConfigsRefs {
+    final manager = $$AlertConfigsTableTableManager(
+      $_db,
+      $_db.alertConfigs,
+    ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_alertConfigsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -5146,6 +5451,31 @@ class $$ConnectionsTableFilterComposer
           }) => $$ShortcutsTableFilterComposer(
             $db: $db,
             $table: $db.shortcuts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> alertConfigsRefs(
+    Expression<bool> Function($$AlertConfigsTableFilterComposer f) f,
+  ) {
+    final $$AlertConfigsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.alertConfigs,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AlertConfigsTableFilterComposer(
+            $db: $db,
+            $table: $db.alertConfigs,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5424,6 +5754,31 @@ class $$ConnectionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> alertConfigsRefs<T extends Object>(
+    Expression<T> Function($$AlertConfigsTableAnnotationComposer a) f,
+  ) {
+    final $$AlertConfigsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.alertConfigs,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AlertConfigsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.alertConfigs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableTableManager
@@ -5445,6 +5800,7 @@ class $$ConnectionsTableTableManager
             bool deviceDismissalsRefs,
             bool deviceHealthFlagsRefs,
             bool shortcutsRefs,
+            bool alertConfigsRefs,
           })
         > {
   $$ConnectionsTableTableManager(_$AppDatabase db, $ConnectionsTable table)
@@ -5541,6 +5897,7 @@ class $$ConnectionsTableTableManager
                 deviceDismissalsRefs = false,
                 deviceHealthFlagsRefs = false,
                 shortcutsRefs = false,
+                alertConfigsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -5550,6 +5907,7 @@ class $$ConnectionsTableTableManager
                     if (deviceDismissalsRefs) db.deviceDismissals,
                     if (deviceHealthFlagsRefs) db.deviceHealthFlags,
                     if (shortcutsRefs) db.shortcuts,
+                    if (alertConfigsRefs) db.alertConfigs,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -5659,6 +6017,27 @@ class $$ConnectionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (alertConfigsRefs)
+                        await $_getPrefetchedData<
+                          Connection,
+                          $ConnectionsTable,
+                          AlertConfig
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ConnectionsTableReferences
+                              ._alertConfigsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ConnectionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).alertConfigsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -5685,6 +6064,7 @@ typedef $$ConnectionsTableProcessedTableManager =
         bool deviceDismissalsRefs,
         bool deviceHealthFlagsRefs,
         bool shortcutsRefs,
+        bool alertConfigsRefs,
       })
     >;
 typedef $$DashboardsTableCreateCompanionBuilder =
@@ -8794,6 +9174,287 @@ typedef $$ShortcutsTableProcessedTableManager =
       Shortcut,
       PrefetchHooks Function({bool connectionId})
     >;
+typedef $$AlertConfigsTableCreateCompanionBuilder =
+    AlertConfigsCompanion Function({
+      required String connectionId,
+      required String config,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$AlertConfigsTableUpdateCompanionBuilder =
+    AlertConfigsCompanion Function({
+      Value<String> connectionId,
+      Value<String> config,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$AlertConfigsTableReferences
+    extends BaseReferences<_$AppDatabase, $AlertConfigsTable, AlertConfig> {
+  $$AlertConfigsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ConnectionsTable _connectionIdTable(_$AppDatabase db) =>
+      db.connections.createAlias(
+        $_aliasNameGenerator(db.alertConfigs.connectionId, db.connections.id),
+      );
+
+  $$ConnectionsTableProcessedTableManager get connectionId {
+    final $_column = $_itemColumn<String>('connection_id')!;
+
+    final manager = $$ConnectionsTableTableManager(
+      $_db,
+      $_db.connections,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_connectionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$AlertConfigsTableFilterComposer
+    extends Composer<_$AppDatabase, $AlertConfigsTable> {
+  $$AlertConfigsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get config => $composableBuilder(
+    column: $table.config,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ConnectionsTableFilterComposer get connectionId {
+    final $$ConnectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AlertConfigsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AlertConfigsTable> {
+  $$AlertConfigsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get config => $composableBuilder(
+    column: $table.config,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ConnectionsTableOrderingComposer get connectionId {
+    final $$ConnectionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AlertConfigsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AlertConfigsTable> {
+  $$AlertConfigsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get config =>
+      $composableBuilder(column: $table.config, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$ConnectionsTableAnnotationComposer get connectionId {
+    final $$ConnectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AlertConfigsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AlertConfigsTable,
+          AlertConfig,
+          $$AlertConfigsTableFilterComposer,
+          $$AlertConfigsTableOrderingComposer,
+          $$AlertConfigsTableAnnotationComposer,
+          $$AlertConfigsTableCreateCompanionBuilder,
+          $$AlertConfigsTableUpdateCompanionBuilder,
+          (AlertConfig, $$AlertConfigsTableReferences),
+          AlertConfig,
+          PrefetchHooks Function({bool connectionId})
+        > {
+  $$AlertConfigsTableTableManager(_$AppDatabase db, $AlertConfigsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AlertConfigsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AlertConfigsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AlertConfigsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> connectionId = const Value.absent(),
+                Value<String> config = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AlertConfigsCompanion(
+                connectionId: connectionId,
+                config: config,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String connectionId,
+                required String config,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => AlertConfigsCompanion.insert(
+                connectionId: connectionId,
+                config: config,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AlertConfigsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({connectionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (connectionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.connectionId,
+                                referencedTable: $$AlertConfigsTableReferences
+                                    ._connectionIdTable(db),
+                                referencedColumn: $$AlertConfigsTableReferences
+                                    ._connectionIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AlertConfigsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AlertConfigsTable,
+      AlertConfig,
+      $$AlertConfigsTableFilterComposer,
+      $$AlertConfigsTableOrderingComposer,
+      $$AlertConfigsTableAnnotationComposer,
+      $$AlertConfigsTableCreateCompanionBuilder,
+      $$AlertConfigsTableUpdateCompanionBuilder,
+      (AlertConfig, $$AlertConfigsTableReferences),
+      AlertConfig,
+      PrefetchHooks Function({bool connectionId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8814,4 +9475,6 @@ class $AppDatabaseManager {
       $$DeviceHealthFlagsTableTableManager(_db, _db.deviceHealthFlags);
   $$ShortcutsTableTableManager get shortcuts =>
       $$ShortcutsTableTableManager(_db, _db.shortcuts);
+  $$AlertConfigsTableTableManager get alertConfigs =>
+      $$AlertConfigsTableTableManager(_db, _db.alertConfigs);
 }

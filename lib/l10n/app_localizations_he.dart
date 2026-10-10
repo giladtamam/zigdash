@@ -2475,4 +2475,49 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get pollNoAnalytics =>
       'נתוני השימוש כבויים, לכן שום דבר לא נשלח מכאן. ספרו לנו דרך בקשת תכונה.';
+
+  @override
+  String alertLeak(Object name) {
+    return '💧 נזילה — $name';
+  }
+
+  @override
+  String alertLeakCleared(Object name) {
+    return '✅ $name יבש שוב';
+  }
+
+  @override
+  String alertSmoke(Object name) {
+    return '🔥 עשן — $name';
+  }
+
+  @override
+  String alertSmokeCleared(Object name) {
+    return '✅ אין יותר עשן ב-$name';
+  }
+
+  @override
+  String alertOpened(Object name) {
+    return '🚪 $name נפתח';
+  }
+
+  @override
+  String alertBattery(Object name, Object value) {
+    return '🔋 סוללה חלשה — $name, $value%';
+  }
+
+  @override
+  String get alertTest => 'התראת בדיקה של ZigDash';
+
+  @override
+  String get alertsChannel => 'התראות';
+
+  @override
+  String get alertsChannelDescription => 'נזילות ועשן';
+
+  @override
+  String get noticesChannel => 'הודעות';
+
+  @override
+  String get noticesChannelDescription => 'דלתות, חלונות וסוללות';
 }

@@ -1,4 +1,7 @@
 import 'dart:async';
+
+import '../alerts/alert_push.dart';
+import '../alerts/alerts_service.dart';
 import 'dart:convert';
 
 import 'package:drift/drift.dart' show TableUpdateQuery;
@@ -38,10 +41,21 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
   StreamSubscription<Object?>? _dashboardChanges;
   Timer? _resync;
 
+  StreamSubscription<Object?>? _alertTaps;
+  StreamSubscription<Object?>? _alertEndpoints;
+  StreamSubscription<Object?>? _alertConfigs;
+  final _alertFollows = <String, StreamSubscription<Object?>?>{};
+
   @override
   void dispose() {
     _dashboardChanges?.cancel();
     _resync?.cancel();
+    _alertTaps?.cancel();
+    _alertEndpoints?.cancel();
+    _alertConfigs?.cancel();
+    for (final s in _alertFollows.values) {
+      s?.cancel();
+    }
     super.dispose();
   }
 
@@ -87,7 +101,35 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       } on MissingPluginException {
         // Not Android.
       }
+      // Alerts (alerts-2.3.md): a tap on a notification opens the device;
+      // a push registration lands in the Home's config; the broker's copy
+      // of each Home's config is followed while connected.
+      final alerts = ref.read(alertsServiceProvider);
+      final launched = await AlertPush.takeLaunchTap();
+      if (launched != null) _openFromAlert(launched);
+      _alertTaps = AlertPush.taps.stream.listen(_openFromAlert);
+      _alertEndpoints = AlertPush.endpoints.stream
+          .listen((e) => alerts.onEndpoint(e.$1, e.$2));
+      _alertConfigs = db.select(db.alertConfigs).watch().listen((rows) async {
+        final wanted = {for (final r in rows) r.connectionId};
+        for (final id in _alertFollows.keys.toList()) {
+          if (!wanted.contains(id)) await _alertFollows.remove(id)?.cancel();
+        }
+        for (final id in wanted) {
+          if (_alertFollows.containsKey(id)) continue;
+          _alertFollows[id] = null;
+          final sub = await alerts.followRetained(id);
+          if (_alertFollows.containsKey(id)) _alertFollows[id] = sub;
+        }
+      });
     });
+  }
+
+  void _openFromAlert((String, String?) tap) {
+    final (home, ieee) = tap;
+    if (ieee != null) {
+      ref.read(routerProvider).push(Routes.homeDevice(home, ieee));
+    }
   }
 
   void _handle(Object? args) {

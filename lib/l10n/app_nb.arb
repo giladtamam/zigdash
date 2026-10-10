@@ -818,5 +818,16 @@
   "pollGroups": "Zigbee-grupper",
   "pollNotNow": "Ikke nå",
   "pollThanks": "Takk! Det hjelper oss å velge hva som kommer.",
-  "pollNoAnalytics": "Bruksdata er av, så ingenting sendes herfra. Fortell oss heller via Foreslå en funksjon."
+  "pollNoAnalytics": "Bruksdata er av, så ingenting sendes herfra. Fortell oss heller via Foreslå en funksjon.",
+  "alertLeak": "💧 Lekkasje — {name}",
+  "alertLeakCleared": "✅ {name} er tørr igjen",
+  "alertSmoke": "🔥 Røyk — {name}",
+  "alertSmokeCleared": "✅ Ikke mer røyk ved {name}",
+  "alertOpened": "🚪 {name} åpnet",
+  "alertBattery": "🔋 Lavt batteri — {name}, {value} %",
+  "alertTest": "ZigDash-testvarsel",
+  "alertsChannel": "Varsler",
+  "alertsChannelDescription": "Lekkasjer og røyk",
+  "noticesChannel": "Meldinger",
+  "noticesChannelDescription": "Dører, vinduer og batterier"
 }
