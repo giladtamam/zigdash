@@ -14,6 +14,16 @@ class Routes {
   static String settingsHome(String connectionId) =>
       '/settings/home/$connectionId';
   static const help = '/help';
+  static const getHelp = '/get-help';
+
+  /// Get help, opened [from] a place (an `HelpFrom` name), for a home or a
+  /// setup error (a `SetupErrorKind` name) when there is one.
+  static String getHelpFrom(String from, {String? home, String? error}) =>
+      Uri(path: getHelp, queryParameters: {
+        'from': from,
+        if (home != null) 'home': home,
+        if (error != null) 'error': error,
+      }).toString();
   static const deviceDiscovery = '/connections/:id/dashboards/:dashboardId/discover';
   static const devices = '/connections/:id/devices';
   static const scenes = '/connections/:id/scenes';

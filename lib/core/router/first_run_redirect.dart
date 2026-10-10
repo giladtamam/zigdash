@@ -1,8 +1,13 @@
 import 'routes.dart';
 
-/// Screens a first-run user may be on: the setup flow, its manual entry, and
-/// help. Everything else waits until there is a home or the demo.
-const _firstRunLocations = {Routes.setup, Routes.guidedConnect, Routes.help};
+/// Screens a first-run user may be on: the setup flow, its manual entry,
+/// help and Get help. Everything else waits until there is a home or the demo.
+const _firstRunLocations = {
+  Routes.setup,
+  Routes.guidedConnect,
+  Routes.help,
+  Routes.getHelp,
+};
 
 /// Router redirect for first run: one door, no carousel.
 ///
