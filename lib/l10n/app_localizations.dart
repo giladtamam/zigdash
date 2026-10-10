@@ -1931,7 +1931,7 @@ abstract class AppLocalizations {
   /// No description provided for @reportProblemEmailPrompt.
   ///
   /// In en, this message translates to:
-  /// **'What happened, and what did you expect? Your device model and Zigbee2MQTT version help.'**
+  /// **'What happened, and what did you expect?'**
   String get reportProblemEmailPrompt;
 
   /// No description provided for @settingsBuyCoffee.
@@ -3871,6 +3871,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t read that file'**
   String get dashImportFileUnreadable;
+
+  /// No description provided for @getHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get help'**
+  String get getHelpTitle;
+
+  /// No description provided for @getHelpTryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Try these first'**
+  String get getHelpTryFirst;
+
+  /// No description provided for @getHelpPromise.
+  ///
+  /// In en, this message translates to:
+  /// **'Still stuck? I usually reply within 3 days, in English or Hebrew. I\'ll never ask for your passwords.'**
+  String get getHelpPromise;
+
+  /// No description provided for @getHelpIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s included'**
+  String get getHelpIncluded;
+
+  /// No description provided for @getHelpContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get getHelpContact;
+
+  /// No description provided for @getHelpCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy details'**
+  String get getHelpCopy;
+
+  /// No description provided for @getHelpCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Details copied'**
+  String get getHelpCopied;
+
+  /// No description provided for @getHelpLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Still stuck? Get help'**
+  String get getHelpLink;
+
+  /// No description provided for @getHelpEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash: help getting it working'**
+  String get getHelpEmailSubject;
+
+  /// No description provided for @getHelpEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What were you trying to do, and what happened?'**
+  String get getHelpEmailPrompt;
+
+  /// No description provided for @settingsHelpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & support'**
+  String get settingsHelpSupport;
+
+  /// No description provided for @settingsGetHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Get help'**
+  String get settingsGetHelp;
+
+  /// No description provided for @settingsGetHelpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t get it working? Tips first, then contact'**
+  String get settingsGetHelpSubtitle;
+
+  /// No description provided for @demoBannerHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Get help'**
+  String get demoBannerHelp;
+
+  /// No description provided for @tipSameWifiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Same Wi-Fi as your hub'**
+  String get tipSameWifiTitle;
+
+  /// No description provided for @tipSameWifiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone must be on the same network as the hub, not a guest network. Turn mobile data off while you set up.'**
+  String get tipSameWifiBody;
+
+  /// No description provided for @tipBrokerRunningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker is running'**
+  String get tipBrokerRunningTitle;
+
+  /// No description provided for @tipBrokerRunningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant: the Mosquitto add-on is started. Raspberry Pi: Mosquitto is running. SMLIGHT: Settings › MQTT is on.'**
+  String get tipBrokerRunningBody;
+
+  /// No description provided for @tipBrokerAcceptsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker accepts your phone'**
+  String get tipBrokerAcceptsTitle;
+
+  /// No description provided for @tipBrokerAcceptsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'SMLIGHT: turn on Allow External. Mosquitto 2 only accepts connections from the hub itself until it\'s set to listen on the network (port 1883).'**
+  String get tipBrokerAcceptsBody;
+
+  /// No description provided for @tipMeshTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mesh Wi-Fi or two routers?'**
+  String get tipMeshTitle;
+
+  /// No description provided for @tipMeshBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If the hub hangs off a second router, your phone may not see it. Plug the hub into the main router, or connect by its address.'**
+  String get tipMeshBody;
+
+  /// No description provided for @tipByAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect by address'**
+  String get tipByAddressTitle;
+
+  /// No description provided for @tipByAddressBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the hub\'s address in your router\'s app, then tap Enter details manually.'**
+  String get tipByAddressBody;
+
+  /// No description provided for @tipSameNetworkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Same network'**
+  String get tipSameNetworkTitle;
+
+  /// No description provided for @tipSameNetworkBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone and hub must be on the same Wi-Fi. Turn mobile data off.'**
+  String get tipSameNetworkBody;
+
+  /// No description provided for @tipAddressChangedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The address changed'**
+  String get tipAddressChangedTitle;
+
+  /// No description provided for @tipAddressChangedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Hubs can get a new address after a restart. Check it in your router\'s app, and reserve it there so it stays the same.'**
+  String get tipAddressChangedBody;
+
+  /// No description provided for @tipRightPortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The right port'**
+  String get tipRightPortTitle;
+
+  /// No description provided for @tipRightPortBody.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT is usually 1883 (8883 with TLS). 8080 or 80 is the hub\'s web page, not MQTT.'**
+  String get tipRightPortBody;
+
+  /// No description provided for @tipStartBrokerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker is running'**
+  String get tipStartBrokerTitle;
+
+  /// No description provided for @tipStartBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Mosquitto or the broker add-on, then try again.'**
+  String get tipStartBrokerBody;
+
+  /// No description provided for @tipMosquitto2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Mosquitto 2'**
+  String get tipMosquitto2Title;
+
+  /// No description provided for @tipMosquitto2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Mosquitto 2 only accepts connections from the hub itself until it\'s set to listen on the network (port 1883).'**
+  String get tipMosquitto2Body;
+
+  /// No description provided for @tipMqttLoginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The MQTT login, not the web login'**
+  String get tipMqttLoginTitle;
+
+  /// No description provided for @tipMqttLoginBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub\'s web page password is usually not the MQTT one. Home Assistant: use a Home Assistant user, or the login set in the Mosquitto add-on.'**
+  String get tipMqttLoginBody;
+
+  /// No description provided for @tipSpacesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for spaces'**
+  String get tipSpacesTitle;
+
+  /// No description provided for @tipSpacesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Copying a password can add a space at the end.'**
+  String get tipSpacesBody;
+
+  /// No description provided for @tipZ2mBrokerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT uses this broker'**
+  String get tipZ2mBrokerTitle;
+
+  /// No description provided for @tipZ2mBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In Zigbee2MQTT\'s settings, check that its MQTT server is this same broker.'**
+  String get tipZ2mBrokerBody;
+
+  /// No description provided for @tipBaseTopicTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Base topic'**
+  String get tipBaseTopicTitle;
+
+  /// No description provided for @tipBaseTopicBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If you changed the base topic from \"zigbee2mqtt\", enter it in manual setup.'**
+  String get tipBaseTopicBody;
+
+  /// No description provided for @tipPairFirstTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair devices first'**
+  String get tipPairFirstTitle;
+
+  /// No description provided for @tipPairFirstBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Zigbee2MQTT\'s web page and pair at least one device, then check again.'**
+  String get tipPairFirstBody;
+
+  /// No description provided for @tipRestartZ2mTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Zigbee2MQTT'**
+  String get tipRestartZ2mTitle;
+
+  /// No description provided for @tipRestartZ2mBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If devices are paired but none arrive, restart Zigbee2MQTT so it publishes its device list.'**
+  String get tipRestartZ2mBody;
+
+  /// No description provided for @tipNumberAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the number address'**
+  String get tipNumberAddressTitle;
+
+  /// No description provided for @tipNumberAddressBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Names ending in .local don\'t work on every Android phone. Try the hub\'s number address, like 192.168.1.20.'**
+  String get tipNumberAddressBody;
+
+  /// No description provided for @tipPortProtocolTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Port and protocol'**
+  String get tipPortProtocolTitle;
+
+  /// No description provided for @tipPortProtocolBody.
+  ///
+  /// In en, this message translates to:
+  /// **'TCP on 1883 is the usual. Pick TLS or WebSocket only if your broker is set up for it.'**
+  String get tipPortProtocolBody;
+
+  /// No description provided for @tipManualLoginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get tipManualLoginTitle;
+
+  /// No description provided for @tipManualLoginBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave username and password empty if your broker has none. Otherwise use the MQTT login, not the hub\'s web login.'**
+  String get tipManualLoginBody;
+
+  /// No description provided for @tipHubOnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Is the hub on?'**
+  String get tipHubOnTitle;
+
+  /// No description provided for @tipHubOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A power cut or update may have restarted it. Give it a minute after it comes back.'**
+  String get tipHubOnBody;
+
+  /// No description provided for @tipAwayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you at home?'**
+  String get tipAwayTitle;
+
+  /// No description provided for @tipAwayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Away from home, the app needs a remote address (for example Tailscale). Set it in the home\'s connection settings.'**
+  String get tipAwayBody;
+
+  /// No description provided for @tipHomeAddressChangedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Did the address change?'**
+  String get tipHomeAddressChangedTitle;
+
+  /// No description provided for @tipHomeAddressChangedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'After a router restart the hub may get a new address. Reserve its address in your router\'s app, then update the home.'**
+  String get tipHomeAddressChangedBody;
+
+  /// No description provided for @tipRestartZ2mButtonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Zigbee2MQTT'**
+  String get tipRestartZ2mButtonTitle;
+
+  /// No description provided for @tipRestartZ2mButtonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If the broker restarted, Zigbee2MQTT\'s device list is gone until Zigbee2MQTT restarts. Use the Restart Zigbee2MQTT button on the Devices tab.'**
+  String get tipRestartZ2mButtonBody;
+
+  /// No description provided for @tipZ2mRunningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT running?'**
+  String get tipZ2mRunningTitle;
+
+  /// No description provided for @tipZ2mRunningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open its web page. If it doesn\'t load, restart it on your hub.'**
+  String get tipZ2mRunningBody;
+
+  /// No description provided for @tipCantConnectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t connect to my hub'**
+  String get tipCantConnectTitle;
+
+  /// No description provided for @tipCantConnectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Same Wi-Fi, broker running, Allow External or Mosquitto listening on the network, then connect by address.'**
+  String get tipCantConnectBody;
+
+  /// No description provided for @tipDeviceWrongTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A device shows wrong or doesn\'t respond'**
+  String get tipDeviceWrongTitle;
+
+  /// No description provided for @tipDeviceWrongBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check it in Zigbee2MQTT\'s web page first. If it works there, use Report a problem.'**
+  String get tipDeviceWrongBody;
+
+  /// No description provided for @tipHowDoITitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I…'**
+  String get tipHowDoITitle;
+
+  /// No description provided for @tipHowDoIBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenes, Wall display, schedules and backups are in Help & Guide.'**
+  String get tipHowDoIBody;
+
+  /// No description provided for @tipWhatYouNeedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What you need'**
+  String get tipWhatYouNeedTitle;
+
+  /// No description provided for @tipWhatYouNeedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'An MQTT broker (Mosquitto) and Zigbee2MQTT running on a hub: Home Assistant, a Raspberry Pi, or an SMLIGHT hub.'**
+  String get tipWhatYouNeedBody;
+
+  /// No description provided for @tipSetupAtHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On the same Wi-Fi'**
+  String get tipSetupAtHomeTitle;
+
+  /// No description provided for @tipSetupAtHomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up at home, with your phone on the same Wi-Fi as the hub.'**
+  String get tipSetupAtHomeBody;
+
+  /// No description provided for @tipFindSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Then'**
+  String get tipFindSetupTitle;
+
+  /// No description provided for @tipFindSetupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the demo and tap Find my setup. ZigDash looks for your hub on its own.'**
+  String get tipFindSetupBody;
+
+  /// No description provided for @getHelpNoEmailApp.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app found. Copy the details and write to {email}.'**
+  String getHelpNoEmailApp(Object email);
 }
 
 class _AppLocalizationsDelegate

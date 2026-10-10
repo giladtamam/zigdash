@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../support/support_facts.dart' show supportDetailsProvider;
 import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../panels/widgets/device_tile_panel.dart' show ltr;
@@ -78,28 +79,35 @@ Uri featureRequestGithubUrl(String version) =>
 
 /// A new GitHub issue from the bug-report template, with the app version
 /// filled in.
-Uri problemReportGithubUrl(String version) =>
-    _githubIssueUrl('bug_report.yml', version);
+Uri problemReportGithubUrl(String version, {String? details}) =>
+    _githubIssueUrl('bug_report.yml', version, details: details);
 
-Uri _githubIssueUrl(String template, String version) => Uri.https(
+Uri _githubIssueUrl(String template, String version, {String? details}) =>
+    Uri.https(
       'github.com',
       '/giladtamam/zigdash/issues/new',
-      {'template': template, 'version': version},
+      {
+        'template': template,
+        'version': version,
+        if (details != null) 'details': details,
+      },
     );
 
 /// A new email to [featureRequestEmail] with [subject] and a body that asks
-/// [prompt] and ends with the app version.
+/// [prompt] and ends with the app version, or with Support [details] when
+/// given (problem reports).
 Uri feedbackMailUrl({
   required String version,
   required String subject,
   required String prompt,
+  String? details,
 }) =>
     Uri(
       scheme: 'mailto',
       path: featureRequestEmail,
       // Uri's queryParameters encode spaces as '+', which mail apps show.
       query: 'subject=${Uri.encodeComponent(subject)}'
-          '&body=${Uri.encodeComponent('$prompt\n\n\n— ZigDash $version')}',
+          '&body=${Uri.encodeComponent('$prompt\n\n\n${details == null ? '— ZigDash $version' : '— Support details —\n$details'}')}',
     );
 
 /// Settings (devices-tablet-1.13.md §6): Homes, Appearance and About on one
@@ -166,12 +174,28 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => context.push(Routes.settingsLanguage),
               ),
               const Divider(),
-              _SectionHeader(l10n.settingsAbout),
+              _SectionHeader(l10n.settingsHelpSupport),
               ListTile(
-                leading: const Icon(Icons.star_outline),
-                title: Text(l10n.settingsRateApp),
-                subtitle: Text(l10n.settingsRateAppSubtitle),
-                onTap: openPlayListing,
+                leading: const Icon(Icons.menu_book_outlined),
+                title: Text(l10n.settingsHelp),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(Routes.help),
+              ),
+              ListTile(
+                leading: const Icon(Icons.support_agent),
+                title: Text(l10n.settingsGetHelp),
+                subtitle: Text(l10n.settingsGetHelpSubtitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(Routes.getHelpFrom(
+                    HelpFrom.settings.name,
+                    home: current)),
+              ),
+              ListTile(
+                leading: const Icon(Icons.bug_report_outlined),
+                title: Text(l10n.settingsReportProblem),
+                subtitle: Text(l10n.settingsReportProblemSubtitle),
+                onTap: () => _sendFeedback(context, ref,
+                    problem: true, connectionId: current),
               ),
               ListTile(
                 leading: const Icon(Icons.lightbulb_outline),
@@ -179,17 +203,13 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(l10n.settingsFeatureRequestSubtitle),
                 onTap: () => _sendFeedback(context, ref, problem: false),
               ),
+              const Divider(),
+              _SectionHeader(l10n.settingsAbout),
               ListTile(
-                leading: const Icon(Icons.bug_report_outlined),
-                title: Text(l10n.settingsReportProblem),
-                subtitle: Text(l10n.settingsReportProblemSubtitle),
-                onTap: () => _sendFeedback(context, ref, problem: true),
-              ),
-              ListTile(
-                leading: const Icon(Icons.help_outline),
-                title: Text(l10n.settingsHelp),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.push(Routes.help),
+                leading: const Icon(Icons.star_outline),
+                title: Text(l10n.settingsRateApp),
+                subtitle: Text(l10n.settingsRateAppSubtitle),
+                onTap: openPlayListing,
               ),
               if (ref.watch(analyticsAvailableProvider))
                 SwitchListTile(
@@ -235,9 +255,22 @@ Future<void> _sendFeedback(
   BuildContext context,
   WidgetRef ref, {
   required bool problem,
+  String? connectionId,
 }) async {
   final l10n = context.l10n;
   final version = ref.read(appVersionProvider).valueOrNull ?? '';
+  // A problem report carries the same Support details as Get help.
+  String? details;
+  if (problem) {
+    try {
+      details = (await ref.read(supportDetailsProvider((
+        openedFrom: 'Settings › Report a problem',
+        connectionId: connectionId,
+      )).future))
+          .format();
+    } catch (_) {}
+    if (!context.mounted) return;
+  }
   final url = await showModalBottomSheet<Uri>(
     context: context,
     showDragHandle: true,
@@ -252,7 +285,7 @@ Future<void> _sendFeedback(
             onTap: () => Navigator.pop(
                 ctx,
                 problem
-                    ? problemReportGithubUrl(version)
+                    ? problemReportGithubUrl(version, details: details)
                     : featureRequestGithubUrl(version)),
           ),
           ListTile(
@@ -269,6 +302,7 @@ Future<void> _sendFeedback(
                   prompt: problem
                       ? l10n.reportProblemEmailPrompt
                       : l10n.featureRequestEmailPrompt,
+                  details: details,
                 )),
           ),
         ],

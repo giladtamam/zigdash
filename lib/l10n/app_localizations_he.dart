@@ -994,8 +994,7 @@ class AppLocalizationsHe extends AppLocalizations {
   String get reportProblemEmailSubject => 'ZigDash: דיווח על בעיה';
 
   @override
-  String get reportProblemEmailPrompt =>
-      'מה קרה, ומה ציפיתם שיקרה? דגם המכשיר וגרסת Zigbee2MQTT עוזרים.';
+  String get reportProblemEmailPrompt => 'מה קרה, ומה ציפיתם שיקרה?';
 
   @override
   String get settingsBuyCoffee => 'קנו לי קפה';
@@ -2070,4 +2069,262 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get dashImportFileUnreadable => 'לא ניתן לקרוא את הקובץ';
+
+  @override
+  String get getHelpTitle => 'קבלת עזרה';
+
+  @override
+  String get getHelpTryFirst => 'נסו קודם את אלה';
+
+  @override
+  String get getHelpPromise =>
+      'עדיין תקועים? בדרך כלל אני עונה תוך 3 ימים, באנגלית או בעברית. לעולם לא אבקש את הסיסמאות שלכם.';
+
+  @override
+  String get getHelpIncluded => 'מה נכלל';
+
+  @override
+  String get getHelpContact => 'פנייה לתמיכה';
+
+  @override
+  String get getHelpCopy => 'העתקת הפרטים';
+
+  @override
+  String get getHelpCopied => 'הפרטים הועתקו';
+
+  @override
+  String get getHelpLink => 'עדיין תקועים? קבלו עזרה';
+
+  @override
+  String get getHelpEmailSubject => 'ZigDash: עזרה בהפעלה';
+
+  @override
+  String get getHelpEmailPrompt => 'מה ניסיתם לעשות, ומה קרה?';
+
+  @override
+  String get settingsHelpSupport => 'עזרה ותמיכה';
+
+  @override
+  String get settingsGetHelp => 'קבלת עזרה';
+
+  @override
+  String get settingsGetHelpSubtitle =>
+      'לא מצליחים להפעיל? קודם טיפים, אחר כך פנייה';
+
+  @override
+  String get demoBannerHelp => 'קבלת עזרה';
+
+  @override
+  String get tipSameWifiTitle => 'אותה רשת Wi-Fi כמו ההאב';
+
+  @override
+  String get tipSameWifiBody =>
+      'הטלפון חייב להיות באותה רשת כמו ההאב, לא ברשת אורחים. כבו את הנתונים הסלולריים בזמן ההגדרה.';
+
+  @override
+  String get tipBrokerRunningTitle => 'ה‑broker פועל';
+
+  @override
+  String get tipBrokerRunningBody =>
+      'Home Assistant: ה‑add-on של Mosquitto הופעל. Raspberry Pi: Mosquitto פועל. SMLIGHT: Settings › MQTT מופעל.';
+
+  @override
+  String get tipBrokerAcceptsTitle => 'ה‑broker מקבל את הטלפון';
+
+  @override
+  String get tipBrokerAcceptsBody =>
+      'SMLIGHT: הפעילו את Allow External. Mosquitto 2 מקבל חיבורים רק מההאב עצמו, עד שמגדירים אותו להאזין ברשת (פורט 1883).';
+
+  @override
+  String get tipMeshTitle => 'רשת Mesh או שני נתבים?';
+
+  @override
+  String get tipMeshBody =>
+      'אם ההאב מחובר לנתב שני, ייתכן שהטלפון לא יראה אותו. חברו את ההאב לנתב הראשי, או התחברו לפי הכתובת שלו.';
+
+  @override
+  String get tipByAddressTitle => 'חיבור לפי כתובת';
+
+  @override
+  String get tipByAddressBody =>
+      'מצאו את הכתובת של ההאב באפליקציה של הנתב, ואז הקישו על \"הזנת פרטים ידנית\".';
+
+  @override
+  String get tipSameNetworkTitle => 'אותה רשת';
+
+  @override
+  String get tipSameNetworkBody =>
+      'הטלפון וההאב חייבים להיות באותה רשת Wi-Fi. כבו את הנתונים הסלולריים.';
+
+  @override
+  String get tipAddressChangedTitle => 'הכתובת השתנתה';
+
+  @override
+  String get tipAddressChangedBody =>
+      'האב יכול לקבל כתובת חדשה אחרי הפעלה מחדש. בדקו אותה באפליקציה של הנתב, ושריינו אותה שם כדי שלא תשתנה.';
+
+  @override
+  String get tipRightPortTitle => 'הפורט הנכון';
+
+  @override
+  String get tipRightPortBody =>
+      'MQTT הוא בדרך כלל בפורט 1883 (8883 עם TLS). 8080 או 80 הם ממשק הווב של ההאב, לא MQTT.';
+
+  @override
+  String get tipStartBrokerTitle => 'ה‑broker פועל';
+
+  @override
+  String get tipStartBrokerBody =>
+      'הפעילו את Mosquitto או את ה‑add-on של ה‑broker, ונסו שוב.';
+
+  @override
+  String get tipMosquitto2Title => 'Mosquitto 2';
+
+  @override
+  String get tipMosquitto2Body =>
+      'Mosquitto 2 מקבל חיבורים רק מההאב עצמו, עד שמגדירים אותו להאזין ברשת (פורט 1883).';
+
+  @override
+  String get tipMqttLoginTitle => 'פרטי ההתחברות של MQTT, לא של ממשק הווב';
+
+  @override
+  String get tipMqttLoginBody =>
+      'הסיסמה של ממשק הווב של ההאב היא בדרך כלל לא הסיסמה של MQTT. ב‑Home Assistant: השתמשו במשתמש של Home Assistant, או בפרטי ההתחברות שהוגדרו ב‑add-on של Mosquitto.';
+
+  @override
+  String get tipSpacesTitle => 'בדקו שאין רווחים';
+
+  @override
+  String get tipSpacesBody => 'בהעתקת סיסמה עלול להתווסף רווח בסוף.';
+
+  @override
+  String get tipZ2mBrokerTitle => 'Zigbee2MQTT משתמש ב‑broker הזה';
+
+  @override
+  String get tipZ2mBrokerBody =>
+      'בהגדרות של Zigbee2MQTT, ודאו ששרת ה‑MQTT שלו הוא אותו broker.';
+
+  @override
+  String get tipBaseTopicTitle => 'נושא בסיס';
+
+  @override
+  String get tipBaseTopicBody =>
+      'אם שיניתם את נושא הבסיס מ‑\"zigbee2mqtt\", הזינו אותו בהגדרה הידנית.';
+
+  @override
+  String get tipPairFirstTitle => 'קודם שייכו מכשירים';
+
+  @override
+  String get tipPairFirstBody =>
+      'פתחו את ממשק הווב של Zigbee2MQTT ושייכו לפחות מכשיר אחד, ואז בדקו שוב.';
+
+  @override
+  String get tipRestartZ2mTitle => 'הפעלה מחדש של Zigbee2MQTT';
+
+  @override
+  String get tipRestartZ2mBody =>
+      'אם יש מכשירים משויכים אבל אף אחד לא מגיע, הפעילו מחדש את Zigbee2MQTT כדי שיפרסם את רשימת המכשירים שלו.';
+
+  @override
+  String get tipNumberAddressTitle => 'השתמשו בכתובת המספרית';
+
+  @override
+  String get tipNumberAddressBody =>
+      'שמות שמסתיימים ב‑.local לא עובדים בכל טלפון Android. נסו את הכתובת המספרית של ההאב, למשל 192.168.1.20.';
+
+  @override
+  String get tipPortProtocolTitle => 'פורט ופרוטוקול';
+
+  @override
+  String get tipPortProtocolBody =>
+      'בדרך כלל זה TCP בפורט 1883. בחרו TLS או WebSocket רק אם ה‑broker מוגדר לכך.';
+
+  @override
+  String get tipManualLoginTitle => 'התחברות';
+
+  @override
+  String get tipManualLoginBody =>
+      'השאירו את שם המשתמש והסיסמה ריקים אם אין ל‑broker כאלה. אחרת השתמשו בפרטי ההתחברות של MQTT, לא של ממשק הווב של ההאב.';
+
+  @override
+  String get tipHubOnTitle => 'ההאב דולק?';
+
+  @override
+  String get tipHubOnBody =>
+      'ייתכן שהפסקת חשמל או עדכון הפעילו אותו מחדש. תנו לו דקה אחרי שהוא חוזר.';
+
+  @override
+  String get tipAwayTitle => 'אתם בבית?';
+
+  @override
+  String get tipAwayBody =>
+      'מחוץ לבית, האפליקציה צריכה כתובת מרוחקת (למשל Tailscale). הגדירו אותה בהגדרות החיבור של הבית.';
+
+  @override
+  String get tipHomeAddressChangedTitle => 'הכתובת השתנתה?';
+
+  @override
+  String get tipHomeAddressChangedBody =>
+      'אחרי הפעלה מחדש של הנתב, ההאב עלול לקבל כתובת חדשה. שריינו את הכתובת שלו באפליקציה של הנתב, ואז עדכנו את הבית.';
+
+  @override
+  String get tipRestartZ2mButtonTitle => 'הפעלה מחדש של Zigbee2MQTT';
+
+  @override
+  String get tipRestartZ2mButtonBody =>
+      'אם ה‑broker הופעל מחדש, רשימת המכשירים של Zigbee2MQTT חסרה עד ש‑Zigbee2MQTT מופעל מחדש. השתמשו בכפתור \"הפעלה מחדש של Zigbee2MQTT\" בלשונית \"מכשירים\".';
+
+  @override
+  String get tipZ2mRunningTitle => 'Zigbee2MQTT פועל?';
+
+  @override
+  String get tipZ2mRunningBody =>
+      'פתחו את ממשק הווב שלו. אם הוא לא נטען, הפעילו אותו מחדש בהאב.';
+
+  @override
+  String get tipCantConnectTitle => 'אין חיבור להאב שלי';
+
+  @override
+  String get tipCantConnectBody =>
+      'אותה רשת Wi-Fi, ה‑broker פועל, Allow External מופעל או ש‑Mosquitto מאזין ברשת, ואז חיבור לפי כתובת.';
+
+  @override
+  String get tipDeviceWrongTitle => 'מכשיר מוצג לא נכון או לא מגיב';
+
+  @override
+  String get tipDeviceWrongBody =>
+      'בדקו אותו קודם בממשק הווב של Zigbee2MQTT. אם שם הוא עובד, השתמשו ב\"דיווח על בעיה\".';
+
+  @override
+  String get tipHowDoITitle => 'איך עושים…';
+
+  @override
+  String get tipHowDoIBody =>
+      'סצנות, תצוגת קיר, תזמונים וגיבויים נמצאים ב\"עזרה ומדריך\".';
+
+  @override
+  String get tipWhatYouNeedTitle => 'מה צריך';
+
+  @override
+  String get tipWhatYouNeedBody =>
+      'broker של MQTT (Mosquitto) ו‑Zigbee2MQTT שפועלים על האב: Home Assistant, Raspberry Pi או האב של SMLIGHT.';
+
+  @override
+  String get tipSetupAtHomeTitle => 'באותה רשת Wi-Fi';
+
+  @override
+  String get tipSetupAtHomeBody =>
+      'בצעו את ההגדרה בבית, כשהטלפון באותה רשת Wi-Fi כמו ההאב.';
+
+  @override
+  String get tipFindSetupTitle => 'ואז';
+
+  @override
+  String get tipFindSetupBody =>
+      'צאו מההדגמה והקישו על \"מצאו את ההתקנה שלי\". ZigDash יחפש את ההאב בעצמו.';
+
+  @override
+  String getHelpNoEmailApp(Object email) {
+    return 'לא נמצאה אפליקציית דואר. העתיקו את הפרטים וכתבו אל $email.';
+  }
 }

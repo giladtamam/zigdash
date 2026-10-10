@@ -311,7 +311,10 @@ void main() {
         findsOneWidget);
     expect(find.text('Set up Zigbee2MQTT'), findsOneWidget);
     expect(find.textContaining('SMLIGHT'), findsWidgets);
-    expect(find.text('Try the demo meanwhile'), findsOneWidget);
+    // Further down the list, below the new Get help link.
+    expect(find.text('Try the demo meanwhile', skipOffstage: false),
+        findsOneWidget);
+    expect(find.text('Still stuck? Get help'), findsOneWidget);
 
     await tester.enterText(
         find.widgetWithText(TextField, 'Zigbee2MQTT base topic'), 'z2m');

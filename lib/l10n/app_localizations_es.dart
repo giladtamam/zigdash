@@ -1010,8 +1010,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reportProblemEmailSubject => 'ZigDash: informe de problema';
 
   @override
-  String get reportProblemEmailPrompt =>
-      '¿Qué pasó y qué esperabas? El modelo del dispositivo y la versión de Zigbee2MQTT ayudan.';
+  String get reportProblemEmailPrompt => '¿Qué pasó y qué esperabas?';
 
   @override
   String get settingsBuyCoffee => 'Invítame un café';
@@ -2096,4 +2095,263 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dashImportFileUnreadable => 'No se pudo leer ese archivo';
+
+  @override
+  String get getHelpTitle => 'Obtener ayuda';
+
+  @override
+  String get getHelpTryFirst => 'Prueba esto primero';
+
+  @override
+  String get getHelpPromise =>
+      '¿Sigues atascado? Suelo responder en menos de 3 días, en inglés o en hebreo. Nunca te pediré tus contraseñas.';
+
+  @override
+  String get getHelpIncluded => 'Qué se incluye';
+
+  @override
+  String get getHelpContact => 'Contactar con soporte';
+
+  @override
+  String get getHelpCopy => 'Copiar datos';
+
+  @override
+  String get getHelpCopied => 'Datos copiados';
+
+  @override
+  String get getHelpLink => '¿Sigues atascado? Obtén ayuda';
+
+  @override
+  String get getHelpEmailSubject => 'ZigDash: ayuda para que funcione';
+
+  @override
+  String get getHelpEmailPrompt => '¿Qué intentabas hacer y qué pasó?';
+
+  @override
+  String get settingsHelpSupport => 'Ayuda y soporte';
+
+  @override
+  String get settingsGetHelp => 'Obtener ayuda';
+
+  @override
+  String get settingsGetHelpSubtitle =>
+      '¿No consigues que funcione? Primero consejos, luego contacto';
+
+  @override
+  String get demoBannerHelp => 'Obtener ayuda';
+
+  @override
+  String get tipSameWifiTitle => 'La misma Wi-Fi que tu hub';
+
+  @override
+  String get tipSameWifiBody =>
+      'Tu teléfono debe estar en la misma red que el hub, no en una red de invitados. Desactiva los datos móviles mientras lo configuras.';
+
+  @override
+  String get tipBrokerRunningTitle => 'El broker está en marcha';
+
+  @override
+  String get tipBrokerRunningBody =>
+      'Home Assistant: el complemento Mosquitto está iniciado. Raspberry Pi: Mosquitto está en marcha. SMLIGHT: Settings › MQTT está activado.';
+
+  @override
+  String get tipBrokerAcceptsTitle => 'El broker acepta tu teléfono';
+
+  @override
+  String get tipBrokerAcceptsBody =>
+      'SMLIGHT: activa Allow External. Mosquitto 2 solo acepta conexiones del propio hub hasta que se configura para escuchar en la red (puerto 1883).';
+
+  @override
+  String get tipMeshTitle => '¿Wi-Fi en malla o dos routers?';
+
+  @override
+  String get tipMeshBody =>
+      'Si el hub cuelga de un segundo router, puede que tu teléfono no lo vea. Conecta el hub al router principal o conéctate por su dirección.';
+
+  @override
+  String get tipByAddressTitle => 'Conectar por dirección';
+
+  @override
+  String get tipByAddressBody =>
+      'Busca la dirección del hub en la app de tu router y luego toca «Introducir datos manualmente».';
+
+  @override
+  String get tipSameNetworkTitle => 'La misma red';
+
+  @override
+  String get tipSameNetworkBody =>
+      'El teléfono y el hub deben estar en la misma Wi-Fi. Desactiva los datos móviles.';
+
+  @override
+  String get tipAddressChangedTitle => 'La dirección ha cambiado';
+
+  @override
+  String get tipAddressChangedBody =>
+      'Los hubs pueden recibir una dirección nueva tras reiniciarse. Compruébala en la app de tu router y resérvala allí para que no cambie.';
+
+  @override
+  String get tipRightPortTitle => 'El puerto correcto';
+
+  @override
+  String get tipRightPortBody =>
+      'MQTT suele ir en el 1883 (8883 con TLS). El 8080 o el 80 es la interfaz web del hub, no MQTT.';
+
+  @override
+  String get tipStartBrokerTitle => 'El broker está en marcha';
+
+  @override
+  String get tipStartBrokerBody =>
+      'Inicia Mosquitto o el complemento del broker y vuelve a intentarlo.';
+
+  @override
+  String get tipMosquitto2Title => 'Mosquitto 2';
+
+  @override
+  String get tipMosquitto2Body =>
+      'Mosquitto 2 solo acepta conexiones del propio hub hasta que se configura para escuchar en la red (puerto 1883).';
+
+  @override
+  String get tipMqttLoginTitle => 'El acceso de MQTT, no el de la web';
+
+  @override
+  String get tipMqttLoginBody =>
+      'La contraseña de la interfaz web de tu hub no suele ser la de MQTT. Home Assistant: usa un usuario de Home Assistant o el acceso configurado en el complemento Mosquitto.';
+
+  @override
+  String get tipSpacesTitle => 'Revisa los espacios';
+
+  @override
+  String get tipSpacesBody =>
+      'Al copiar una contraseña se puede colar un espacio al final.';
+
+  @override
+  String get tipZ2mBrokerTitle => 'Zigbee2MQTT usa este broker';
+
+  @override
+  String get tipZ2mBrokerBody =>
+      'En los ajustes de Zigbee2MQTT, comprueba que su servidor MQTT es este mismo broker.';
+
+  @override
+  String get tipBaseTopicTitle => 'Tema base';
+
+  @override
+  String get tipBaseTopicBody =>
+      'Si cambiaste el tema base «zigbee2mqtt», introdúcelo en la configuración manual.';
+
+  @override
+  String get tipPairFirstTitle => 'Primero empareja dispositivos';
+
+  @override
+  String get tipPairFirstBody =>
+      'Abre la interfaz web de Zigbee2MQTT, empareja al menos un dispositivo y vuelve a comprobarlo.';
+
+  @override
+  String get tipRestartZ2mTitle => 'Reiniciar Zigbee2MQTT';
+
+  @override
+  String get tipRestartZ2mBody =>
+      'Si hay dispositivos emparejados pero no llega ninguno, reinicia Zigbee2MQTT para que publique su lista de dispositivos.';
+
+  @override
+  String get tipNumberAddressTitle => 'Usa la dirección numérica';
+
+  @override
+  String get tipNumberAddressBody =>
+      'Los nombres que terminan en .local no funcionan en todos los teléfonos Android. Prueba la dirección numérica del hub, como 192.168.1.20.';
+
+  @override
+  String get tipPortProtocolTitle => 'Puerto y protocolo';
+
+  @override
+  String get tipPortProtocolBody =>
+      'Lo habitual es TCP en el 1883. Elige TLS o WebSocket solo si tu broker está configurado para ello.';
+
+  @override
+  String get tipManualLoginTitle => 'Usuario y contraseña';
+
+  @override
+  String get tipManualLoginBody =>
+      'Deja el usuario y la contraseña vacíos si tu broker no los tiene. Si no, usa el acceso de MQTT, no el de la web del hub.';
+
+  @override
+  String get tipHubOnTitle => '¿Está encendido el hub?';
+
+  @override
+  String get tipHubOnBody =>
+      'Un corte de luz o una actualización puede haberlo reiniciado. Dale un minuto cuando vuelva.';
+
+  @override
+  String get tipAwayTitle => '¿Estás en casa?';
+
+  @override
+  String get tipAwayBody =>
+      'Fuera de casa, la app necesita una dirección remota (por ejemplo, Tailscale). Configúrala en los ajustes de conexión de la casa.';
+
+  @override
+  String get tipHomeAddressChangedTitle => '¿Ha cambiado la dirección?';
+
+  @override
+  String get tipHomeAddressChangedBody =>
+      'Tras reiniciar el router, el hub puede recibir una dirección nueva. Reserva su dirección en la app de tu router y luego actualiza la casa.';
+
+  @override
+  String get tipRestartZ2mButtonTitle => 'Reiniciar Zigbee2MQTT';
+
+  @override
+  String get tipRestartZ2mButtonBody =>
+      'Si el broker se reinició, la lista de dispositivos de Zigbee2MQTT desaparece hasta que Zigbee2MQTT se reinicia. Usa el botón «Reiniciar Zigbee2MQTT» de la pestaña Dispositivos.';
+
+  @override
+  String get tipZ2mRunningTitle => '¿Está en marcha Zigbee2MQTT?';
+
+  @override
+  String get tipZ2mRunningBody =>
+      'Abre su interfaz web. Si no carga, reinícialo en tu hub.';
+
+  @override
+  String get tipCantConnectTitle => 'No puedo conectar con mi hub';
+
+  @override
+  String get tipCantConnectBody =>
+      'Misma Wi-Fi, broker en marcha, Allow External activado o Mosquitto escuchando en la red; luego conéctate por dirección.';
+
+  @override
+  String get tipDeviceWrongTitle => 'Un dispositivo se ve mal o no responde';
+
+  @override
+  String get tipDeviceWrongBody =>
+      'Compruébalo primero en la interfaz web de Zigbee2MQTT. Si allí funciona, usa «Informar de un problema».';
+
+  @override
+  String get tipHowDoITitle => '¿Cómo hago…?';
+
+  @override
+  String get tipHowDoIBody =>
+      'Escenas, Pantalla de pared, programaciones y copias de seguridad están en «Ayuda y guía».';
+
+  @override
+  String get tipWhatYouNeedTitle => 'Qué necesitas';
+
+  @override
+  String get tipWhatYouNeedBody =>
+      'Un broker MQTT (Mosquitto) y Zigbee2MQTT funcionando en un hub: Home Assistant, una Raspberry Pi o un hub SMLIGHT.';
+
+  @override
+  String get tipSetupAtHomeTitle => 'En la misma Wi-Fi';
+
+  @override
+  String get tipSetupAtHomeBody =>
+      'Configúralo en casa, con el teléfono en la misma Wi-Fi que el hub.';
+
+  @override
+  String get tipFindSetupTitle => 'Después';
+
+  @override
+  String get tipFindSetupBody =>
+      'Sal de la demo y toca «Encontrar mi instalación». ZigDash busca tu hub por sí solo.';
+
+  @override
+  String getHelpNoEmailApp(Object email) {
+    return 'No se encontró ninguna app de correo. Copia los datos y escribe a $email.';
+  }
 }

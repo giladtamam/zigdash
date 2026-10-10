@@ -1,0 +1,1 @@
+ZigDash 2.0.2: help when you're stuck. A new Get help screen shows tips for exactly where you are: setup, a login error, a home that can't be reached or a missing device list. If that doesn't fix it, Contact support opens an email with the details I need, never passwords, addresses or device names. Report a problem adds the same details. Settings has a new Help & support group.

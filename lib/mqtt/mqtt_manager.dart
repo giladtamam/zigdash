@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'broker_config.dart';
 import 'client_factory.dart';
 import 'endpoint.dart';
+import 'connection_failure.dart';
 import 'mqtt_status.dart';
 import 'topic_matcher.dart';
 
@@ -138,6 +139,14 @@ class MqttManager {
   String? _lastError;
   String? get lastError => _lastError;
 
+  /// Why the last connect attempt failed, as a fixed kind (never the error
+  /// text, which names the host). The first candidate's failure wins, so a
+  /// remote fallback doesn't hide why the local address failed. Null after a
+  /// successful connect.
+  FailureKind? _lastFailure;
+  FailureKind? get lastFailure => _lastFailure;
+  FailureKind? _attemptFailure;
+
   final Map<String, _SubEntry> _subs = {};
 
   /// Values saved from earlier sessions, by exact topic, until live data
@@ -204,6 +213,7 @@ class MqttManager {
         : MqttStatus.connecting;
     if (_status.value != attemptStatus) _emit(attemptStatus);
     _emitEndpoint(null);
+    _attemptFailure = null;
 
     for (final cand in endpointCandidates(config)) {
       final mc.MqttClient client;
@@ -218,6 +228,7 @@ class MqttManager {
         return;
       } catch (e) {
         _lastError = e.toString();
+        _attemptFailure ??= failureKindFromError(e);
         continue; // transient build failure — try the next candidate
       }
       if (_disposed) {
@@ -240,10 +251,12 @@ class MqttManager {
       } on TimeoutException catch (_) {
         _lastError =
             'Connect timed out (${cand.timeoutMs} ms) for ${cand.host}';
+        _attemptFailure ??= FailureKind.timedOut;
         client.disconnect();
         continue; // host unreachable within budget — try the next candidate
       } on Exception catch (e) {
         _lastError = e.toString();
+        _attemptFailure ??= _failureOf(e, client);
         client.disconnect();
         continue; // unreachable / refused — try the next candidate
       }
@@ -253,6 +266,7 @@ class MqttManager {
       }
       if (client.connectionStatus?.state != mc.MqttConnectionState.connected) {
         _lastError = 'Connect failed (no CONNACK)';
+        _attemptFailure ??= _failureOf(null, client);
         client.disconnect();
         continue;
       }
@@ -265,6 +279,7 @@ class MqttManager {
       client.onDisconnected = () => _onDisconnected(client);
       final connectionGeneration = ++_connectionGeneration;
       _lastError = null;
+      _lastFailure = null;
       _emitEndpoint(cand.kind);
       _backoffMs = _initialBackoffMs;
       await _updatesSub?.cancel();
@@ -280,8 +295,24 @@ class MqttManager {
     }
 
     // All candidates failed.
+    _lastFailure = _attemptFailure ?? FailureKind.unknown;
     _emit(MqttStatus.error);
     _scheduleReconnect();
+  }
+
+  /// A refused login is the broker's CONNACK code; anything else that got
+  /// past TCP without a CONNACK isn't an MQTT broker we can talk to.
+  static FailureKind _failureOf(Object? error, mc.MqttClient client) {
+    final code = client.connectionStatus?.returnCode;
+    if (code == mc.MqttConnectReturnCode.notAuthorized ||
+        code == mc.MqttConnectReturnCode.badUsernameOrPassword) {
+      return FailureKind.loginRejected;
+    }
+    if (error == null) return FailureKind.notMqtt;
+    if (error is mc.NoConnectionException) {
+      return failureKindFromMessage(error.toString());
+    }
+    return failureKindFromError(error);
   }
 
   /// Force an immediate reconnect, bypassing any pending backoff timer. Called

@@ -11,6 +11,9 @@ import 'subnet.dart';
 /// network that has a broker never pays for the wider pass. The stream closes
 /// when every candidate has been probed; cancelling the subscription stops
 /// further probing.
+/// What a finished (or cancelled) scan tried, for Support details.
+typedef ScanStats = ({bool widened, int hostsTried, int brokersFound});
+
 class BrokerScanService {
   BrokerScanService({
     required this.prober,
@@ -22,7 +25,9 @@ class BrokerScanService {
   final List<int> ports;
   final int concurrency;
 
-  Stream<ProbeResult> scan(String deviceIp) {
+  /// [onDone] runs once, when the scan finishes or is cancelled.
+  Stream<ProbeResult> scan(String deviceIp,
+      {void Function(ScanStats stats)? onDone}) {
     List<({String host, int port})> tasksFor(List<String> hosts) => [
           for (final h in hosts)
             for (final p in ports) (host: h, port: p),
@@ -36,21 +41,32 @@ class BrokerScanService {
     var closed = false;
     var widened = false;
     late final void Function() pump;
+    var reported = false;
+    void report() {
+      if (reported) return;
+      reported = true;
+      onDone?.call((
+        widened: widened,
+        hostsTried: index ~/ ports.length,
+        brokersFound: seen.length,
+      ));
+    }
 
     void finishIfDone() {
       if (closed || active != 0 || (!cancelled && index < tasks.length)) {
         return;
       }
       if (!cancelled && !widened && seen.isEmpty) {
-        widened = true;
         final wider = tasksFor(widerCandidateHosts(deviceIp));
         if (wider.isNotEmpty) {
+          widened = true;
           tasks.addAll(wider);
           scheduleMicrotask(pump);
           return;
         }
       }
       closed = true;
+      report();
       controller.close();
     }
 
@@ -74,6 +90,7 @@ class BrokerScanService {
     controller.onListen = pump;
     controller.onCancel = () {
       cancelled = true;
+      report();
     };
     return controller.stream;
   }

@@ -12,7 +12,7 @@ Out: live chat, WhatsApp (personal or Business), in-app call booking, and anythi
 
 ## 1. The support promise
 
-- **Channel:** written, by email to a new address used only for ZigDash support. `giladtamam1@gmail.com` keeps working for the privacy policy and older app versions. GitHub stays open for those who prefer it.
+- **Channel:** written, by email to `giladtamam1@gmail.com`, the address the app already uses for feature requests and problem reports. A dedicated support address was planned; on 2026-10-10 the user chose to keep the existing one for now. GitHub stays open for those who prefer it.
 - **Reply time:** "usually within 3 days". Nothing faster is promised.
 - **Languages:** English and Hebrew. Users may write in any language; replies may go through a translator. Calls are English or Hebrew.
 - **Calls:** never offered in the app. For setup problems only, after two email rounds haven't solved it, the developer may send a private Cal.com link: one hidden 20-minute event with Cal Video, 15-minute buffer, 24 hours' notice, at most 2 a week, availability in Israel time. Fallback: propose two or three times by email in both time zones with a Meet or Jitsi link.
@@ -135,11 +135,11 @@ No event for ticked tips. Success after the first month: support stays within 1â
 
 ## 6. Launch chores
 
-- Create the dedicated support address and point the app's Contact support at it.
+- (Deferred) A dedicated support address. If one is created later, change `supportEmail` in `lib/features/support/get_help_screen.dart`, the README and the privacy policy.
 - Set up the Cal.com event (section 1) and make one test booking from a logged-out browser: the video link opens with no account, and the weekly cap is available on the free plan.
 - Privacy policy (`store/PRIVACY.md`): the two new events, and "Support emails are used only to help you, never shared, and deleted within 6 months after the issue is closed."
 - README Support section: the promise line and the support address.
-- Gmail: a filter for the support address, cause labels, and a twice-yearly cleanup.
+- Gmail: a filter for support emails (subject "ZigDash: help getting it working" and "Support details" in the body), cause labels, and a twice-yearly cleanup.
 
 ## 7. Exit checks
 

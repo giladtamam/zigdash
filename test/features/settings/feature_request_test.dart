@@ -38,4 +38,19 @@ void main() {
     expect(body, startsWith('What would you like ZigDash to do, and why?'));
     expect(body, endsWith('— ZigDash 2.0.1 (30)'));
   });
+
+  test('a problem report carries Support details instead of the version', () {
+    const details = 'ZigDash 2.0.1 (31)\nLast error: timed out';
+    final gh = problemReportGithubUrl('2.0.1 (31)', details: details);
+    expect(gh.queryParameters['details'], details);
+    final mail = feedbackMailUrl(
+      version: '2.0.1 (31)',
+      subject: 'ZigDash problem',
+      prompt: 'What happened, and what did you expect?',
+      details: details,
+    );
+    final body = Uri.decodeComponent(mail.query.split('&body=').last);
+    expect(body, endsWith('— Support details —\n$details'));
+    expect(body, isNot(contains('— ZigDash 2.0.1')));
+  });
 }

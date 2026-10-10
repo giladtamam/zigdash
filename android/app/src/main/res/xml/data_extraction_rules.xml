@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Android 12+. Last-known tile values stay on this phone: not in cloud
+<!-- Android 12+. Last-known tile values and Support details (docs/design/support.md) stay on this phone: not in cloud
      backup, not in device-to-device transfer (docs/adr/0004). Everything
      else keeps the default behaviour. -->
 <data-extraction-rules>
@@ -8,11 +8,13 @@
         <exclude domain="root" path="app_flutter/last_known.sqlite-wal" />
         <exclude domain="root" path="app_flutter/last_known.sqlite-shm" />
         <exclude domain="root" path="app_flutter/last_known.sqlite-journal" />
+        <exclude domain="root" path="app_flutter/support_last.json" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="root" path="app_flutter/last_known.sqlite" />
         <exclude domain="root" path="app_flutter/last_known.sqlite-wal" />
         <exclude domain="root" path="app_flutter/last_known.sqlite-shm" />
         <exclude domain="root" path="app_flutter/last_known.sqlite-journal" />
+        <exclude domain="root" path="app_flutter/support_last.json" />
     </device-transfer>
 </data-extraction-rules>

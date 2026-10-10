@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics_events.dart' show HelpFrom;
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/utils/window_class.dart';
 import '../../settings/screens/settings_screen.dart' show homeStatusLabel;
@@ -83,6 +84,9 @@ class DashboardsScreen extends ConsumerWidget {
                   status: connectionStatus,
                   onReconnect: () => _reconnectNow(context, ref, connectionId),
                   onSettings: () => context.push('/connections/$connectionId/edit'),
+                  onGetHelp: () => context.push(Routes.getHelpFrom(
+                      HelpFrom.homeUnreachable.name,
+                      home: connectionId)),
                 ),
                 AnalyticsConsentCard(connectionId: connectionId),
                 const Expanded(child: _EmptyState()),
@@ -242,6 +246,9 @@ class _DashboardsTabbed extends ConsumerWidget {
                 status: connectionStatus,
                 onReconnect: () => _reconnectNow(tabCtx, ref, connectionId),
                 onSettings: () => tabCtx.push('/connections/$connectionId/edit'),
+                onGetHelp: () => tabCtx.push(Routes.getHelpFrom(
+                    HelpFrom.homeUnreachable.name,
+                    home: connectionId)),
               ),
               Expanded(
                 child: TabBarView(

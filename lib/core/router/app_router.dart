@@ -18,6 +18,9 @@ import '../../features/home/home_shell.dart';
 import '../../features/home/list_detail.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
+import '../../features/onboarding/setup/setup_error_guidance.dart';
+import '../../features/support/get_help_screen.dart';
+import '../analytics/analytics_events.dart' show HelpFrom;
 import '../../features/settings/screens/home_settings_screen.dart';
 import '../../features/settings/screens/language_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
@@ -81,6 +84,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.help,
         pageBuilder: (_, __) => _slideUp(const HelpScreen()),
+      ),
+      GoRoute(
+        path: Routes.getHelp,
+        pageBuilder: (_, state) {
+          final q = state.uri.queryParameters;
+          return _slideUp(GetHelpScreen(
+            from: HelpFrom.values.asNameMap()[q['from']] ?? HelpFrom.settings,
+            connectionId: q['home'],
+            error: SetupErrorKind.values.asNameMap()[q['error']],
+          ));
+        },
       ),
       // One home at a time: Dashboards, Devices and Scenes share the bottom
       // bar; screens opened from them cover it (root navigator).
