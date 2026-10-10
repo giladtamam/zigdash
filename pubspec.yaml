@@ -56,6 +56,8 @@ dependencies:
 
   # App version display (Settings → About)
   package_info_plus: ^8.1.0
+  # Phone model and Android version for Support details.
+  device_info_plus: ^12.4.0
   in_app_review: ^2.0.12
   # Setup guides open in the browser.
   url_launcher: ^6.3.0
