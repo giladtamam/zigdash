@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">Устройство ZigDash</string>
+    <string name="widget_device_description">Включайте свет или розетку и управляйте шторами прямо с главного экрана</string>
+    <string name="widget_scene_label">Сцена ZigDash</string>
+    <string name="widget_scene_description">Запускайте сцену прямо с главного экрана</string>
+    <string name="widget_device_sample">Гостиная</string>
+    <string name="widget_device_sample_line">Вкл.</string>
+    <string name="widget_scene_sample">Вечер</string>
+    <string name="widget_scene_sample_line">Подтверждено</string>
+    <string name="widget_group_label">Группа ZigDash</string>
+    <string name="widget_group_description">Управляйте несколькими устройствами и сценами из одного виджета</string>
+    <string name="widget_group_sample_1">Люстра</string>
+    <string name="widget_group_sample_2">Торшер</string>
+    <string name="widget_group_sample_off">Выкл.</string>
+    <string name="widget_group_sample_3">Шторы</string>
+    <string name="widget_group_sample_scene">Ночь</string>
+</resources>

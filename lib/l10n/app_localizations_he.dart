@@ -2341,10 +2341,47 @@ class AppLocalizationsHe extends AppLocalizations {
   String get shortcutRemoved => 'הוסר';
 
   @override
+  String get shortcutSceneSent => 'נשלחה';
+
+  @override
+  String get shortcutSceneConfirmed => 'אושרה';
+
+  @override
   String get shortcutChooseDevice => 'בחרו מכשיר';
 
   @override
+  String get shortcutChooseScene => 'בחירת סצנה';
+
+  @override
+  String get shortcutOpenAppFirstScene => 'פתחו את ZigDash וצרו סצנה קודם.';
+
+  @override
+  String get shortcutChooseGroup => 'בחירת קבוצה';
+
+  @override
+  String get shortcutPickDevices => 'בחירת מכשירים…';
+
+  @override
+  String get shortcutGroupName => 'שם הקבוצה';
+
+  @override
+  String get shortcutGroupLimit => 'עד 5 מכשירים ו-3 סצנות';
+
+  @override
   String get shortcutAddTile => 'הוספה להגדרות המהירות';
+
+  @override
+  String get shortcutAddShortcut => 'הוספת קיצור דרך';
+
+  @override
+  String get shortcutAddToHome => 'הוספה למסך הבית';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'הוספת הווידג\'ט';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'לחצו לחיצה ארוכה על מקום ריק במסך הבית, הקישו על ווידג\'טים, מצאו את ZigDash וגררו את הווידג\'ט הרצוי.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2406,4 +2443,36 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT לא ענה';
+
+  @override
+  String get shortcutOpenAppFirst => 'פתחו את ZigDash והוסיפו קודם מכשיר ללוח.';
+
+  @override
+  String get pollTitle => 'מה ZigDash צריכה לעשות בהמשך?';
+
+  @override
+  String get pollBody =>
+      'בחרו את מה שהייתם משתמשים בו הכי הרבה. התשובה נשלחת עם נתוני השימוש האנונימיים שלכם.';
+
+  @override
+  String get pollNotifications => 'התראות';
+
+  @override
+  String get pollHistory => 'גרפים של היסטוריה';
+
+  @override
+  String get pollKiosk => 'מצב קיוסק לטאבלט על הקיר';
+
+  @override
+  String get pollGroups => 'קבוצות Zigbee';
+
+  @override
+  String get pollNotNow => 'לא עכשיו';
+
+  @override
+  String get pollThanks => 'תודה! זה עוזר להחליט מה יגיע בהמשך.';
+
+  @override
+  String get pollNoAnalytics =>
+      'נתוני השימוש כבויים, לכן שום דבר לא נשלח מכאן. ספרו לנו דרך בקשת תכונה.';
 }

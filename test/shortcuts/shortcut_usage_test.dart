@@ -47,4 +47,32 @@ void main() {
     expect(sink.sent, isEmpty);
     expect(prefs.getString('shortcut.used.control'), isNull);
   });
+
+  test('each widget added is reported', () async {
+    SharedPreferences.setMockInitialValues({'shortcut.added.widget': '1'});
+    final prefs = await SharedPreferences.getInstance();
+    final sink = _Sink();
+    final analytics = Analytics(sink, enabled: true);
+    await reportShortcutUsage(prefs, analytics);
+    expect(sink.sent.map((e) => '${e.$1} ${e.$2}'),
+        ['shortcut_added {kind: widget}']);
+    expect(prefs.getString('shortcut.added.widget'), isNull);
+  });
+
+  test('scene and group widgets are reported by their kind', () async {
+    SharedPreferences.setMockInitialValues({
+      'shortcut.added.scene_widget': '1',
+      'shortcut.used.scene_widget': '1',
+      'shortcut.added.group_widget': '1',
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final sink = _Sink();
+    await reportShortcutUsage(prefs, Analytics(sink, enabled: true));
+    expect(sink.sent.map((e) => '${e.$1} ${e.$2}').toSet(), {
+      'shortcut_used {kind: scene_widget}',
+      'shortcut_added {kind: scene_widget}',
+      'shortcut_added {kind: group_widget}',
+    });
+    expect(prefs.getKeys(), isEmpty);
+  });
 }

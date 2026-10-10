@@ -1,0 +1,1 @@
+ZigDash 2.2: widżety na ekranie głównym. Umieść lampę, gniazdko lub roletę na ekranie głównym, uruchom scenę jednym dotknięciem albo zbierz do pięciu urządzeń i trzech scen w jednym widżecie. Dodasz je z listy widżetów albo ze strony urządzenia przez Dodaj skrót. Sceny pokazują teraz, kiedy wszystkie urządzenia potwierdziły. Skróty łączą się pewniej po przerwie.

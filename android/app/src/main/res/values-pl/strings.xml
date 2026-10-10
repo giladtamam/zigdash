@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">Urządzenie ZigDash</string>
+    <string name="widget_device_description">Włącz światło lub gniazdko albo przesuń roletę z ekranu głównego</string>
+    <string name="widget_scene_label">Scena ZigDash</string>
+    <string name="widget_scene_description">Uruchom scenę z ekranu głównego</string>
+    <string name="widget_device_sample">Salon</string>
+    <string name="widget_device_sample_line">Wł.</string>
+    <string name="widget_scene_sample">Wieczór</string>
+    <string name="widget_scene_sample_line">Potwierdzono</string>
+    <string name="widget_group_label">Grupa ZigDash</string>
+    <string name="widget_group_description">Steruj kilkoma urządzeniami i uruchamiaj sceny z jednego widżetu</string>
+    <string name="widget_group_sample_1">Lampa sufitowa</string>
+    <string name="widget_group_sample_2">Lampa stojąca</string>
+    <string name="widget_group_sample_off">Wył.</string>
+    <string name="widget_group_sample_3">Rolety</string>
+    <string name="widget_group_sample_scene">Noc</string>
+</resources>

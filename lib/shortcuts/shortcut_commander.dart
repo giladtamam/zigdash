@@ -42,7 +42,7 @@ enum ShortcutOutcome {
   /// The broker couldn't be reached ("Can't reach home").
   unreachable,
 
-  /// A scene: every action was published.
+  /// A scene: every action was published, not every device answered.
   sent,
 }
 
@@ -95,6 +95,7 @@ class ShortcutCommander {
     this.confirmWithin = const Duration(seconds: 5),
     this.maxSilence = const Duration(seconds: 3),
     this.knownStateWithin = const Duration(milliseconds: 300),
+    this.retryGap = const Duration(milliseconds: 500),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
@@ -108,6 +109,9 @@ class ShortcutCommander {
 
   /// How long a first tap waits for the device's current state.
   final Duration knownStateWithin;
+
+  /// The pause between connect attempts in [reach].
+  final Duration retryGap;
   final DateTime Function() _now;
 
   /// The command a tap sends: covers open or close, everything else switches
@@ -252,6 +256,31 @@ class ShortcutCommander {
     return f == null || before[f.property] == null;
   }
 
+  /// Connects [mgr], trying again until [connectWithin] runs out: Android
+  /// lets a just-started widget service onto the network a moment after it
+  /// starts, so a first attempt can fail at once.
+  Future<bool> reach(MqttManager mgr) async {
+    var over = false;
+    Future<bool> tries() async {
+      while (!over) {
+        if (await mgr.ensureConnected(
+            timeout: connectWithin, maxSilence: maxSilence)) {
+          return true;
+        }
+        if (!over) await Future<void>.delayed(retryGap);
+      }
+      return false;
+    }
+
+    try {
+      return await tries().timeout(connectWithin);
+    } on TimeoutException {
+      return false;
+    } finally {
+      over = true;
+    }
+  }
+
   /// What a shortcut shows for [payload] (received at [at]), without a tap:
   /// used while the app runs to keep shortcuts current.
   ShortcutResult describe(ShortcutDevice d, String payload, DateTime at) =>
@@ -273,8 +302,7 @@ class ShortcutCommander {
 
   Future<ShortcutResult> _send(MqttManager mgr, ShortcutDevice d,
       Map<String, Object?>? fixed, String? lastPayload, DateTime? lastAt) async {
-    if (!await mgr.ensureConnected(
-        timeout: connectWithin, maxSilence: maxSilence)) {
+    if (!await reach(mgr)) {
       return _result(ShortcutOutcome.unreachable, d, lastPayload, lastAt);
     }
     final reply = Completer<String>();
@@ -326,16 +354,61 @@ class ShortcutCommander {
     }
   }
 
-  /// Runs a scene's actions, as the app's scene tile does.
+  /// Runs a scene's actions, as the app's scene tile does, and waits for
+  /// the devices to report their new states. [onSent] is called once every
+  /// action went out. Confirmed when every device answered within
+  /// [confirmWithin]; otherwise still [ShortcutOutcome.sent]: a scene with
+  /// one silent light isn't a failure.
   Future<ShortcutOutcome> runScene(
-      MqttManager mgr, List<SceneAction> actions) async {
-    if (!await mgr.ensureConnected(
-        timeout: connectWithin, maxSilence: maxSilence)) {
-      return ShortcutOutcome.unreachable;
+      MqttManager mgr, List<SceneAction> actions,
+      {void Function()? onSent}) async {
+    if (!await reach(mgr)) return ShortcutOutcome.unreachable;
+    final waiting = <int>{};
+    final allIn = Completer<void>();
+    final subs = <StreamSubscription<Object?>>[];
+    final topics = <String>[];
+    DateTime? sentAt;
+    for (final (i, a) in actions.indexed) {
+      if (!a.setTopic.endsWith('/set')) continue;
+      final Map<String, Object?> command;
+      try {
+        command = Map<String, Object?>.from(jsonDecode(a.payload) as Map);
+      } catch (_) {
+        continue;
+      }
+      final topic = a.setTopic.substring(0, a.setTopic.length - 4);
+      waiting.add(i);
+      topics.add(topic);
+      subs.add(mgr.subscribe(topic).listen((m) {
+        // Values held from before the send are not answers.
+        if (sentAt == null || m.payload.isEmpty) return;
+        if (m.receivedAt.isBefore(sentAt)) return;
+        if (confirms(command, decodeDeviceState(m.payload), const {}) &&
+            waiting.remove(i) &&
+            waiting.isEmpty &&
+            !allIn.isCompleted) {
+          allIn.complete();
+        }
+      }));
     }
-    for (final a in actions) {
-      mgr.publish(a.setTopic, a.payload, '');
+    try {
+      sentAt = DateTime.now();
+      for (final a in actions) {
+        mgr.publish(a.setTopic, a.payload, '');
+      }
+      onSent?.call();
+      if (waiting.isEmpty) return ShortcutOutcome.sent;
+      await allIn.future.timeout(confirmWithin);
+      return ShortcutOutcome.confirmed;
+    } on TimeoutException {
+      return ShortcutOutcome.sent;
+    } finally {
+      for (final sub in subs) {
+        unawaited(sub.cancel());
+      }
+      for (final t in topics) {
+        mgr.unsubscribe(t);
+      }
     }
-    return ShortcutOutcome.sent;
   }
 }

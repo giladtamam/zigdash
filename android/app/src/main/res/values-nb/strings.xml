@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">ZigDash-enhet</string>
+    <string name="widget_device_description">Slå av og på et lys eller en stikkontakt, eller flytt en persienne, fra startskjermen</string>
+    <string name="widget_scene_label">ZigDash-scene</string>
+    <string name="widget_scene_description">Kjør en scene fra startskjermen</string>
+    <string name="widget_device_sample">Stue</string>
+    <string name="widget_device_sample_line">På</string>
+    <string name="widget_scene_sample">Kveld</string>
+    <string name="widget_scene_sample_line">Bekreftet</string>
+    <string name="widget_group_label">ZigDash-gruppe</string>
+    <string name="widget_group_description">Styr flere enheter og kjør scener fra én widget</string>
+    <string name="widget_group_sample_1">Taklampe</string>
+    <string name="widget_group_sample_2">Gulvlampe</string>
+    <string name="widget_group_sample_off">Av</string>
+    <string name="widget_group_sample_3">Persienner</string>
+    <string name="widget_group_sample_scene">Natt</string>
+</resources>

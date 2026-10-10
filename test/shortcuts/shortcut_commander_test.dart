@@ -19,7 +19,7 @@ import 'package:zigdash/shortcuts/shortcut_commander.dart';
 class _Broker extends mc.MqttClient {
   _Broker({this.reachable = true, this.silent = false})
       : super.withPort('h', 'c', 1883);
-  final bool reachable;
+  bool reachable;
   final bool silent;
   final sent = <(String, String)>[];
   final _status = mc.MqttClientConnectionStatus();
@@ -282,6 +282,29 @@ void main() {
     });
   });
 
+  test('a refused first connect is tried again within connectWithin', () {
+    // Android lets a just-started widget service onto the network a moment
+    // after it starts: the first attempt can fail at once.
+    fakeAsync((async) {
+      final b = _Broker(reachable: false);
+      final m = _manager(b);
+      ShortcutResult? r;
+      ShortcutCommander(l10n: l10n)
+          .toggle(m, _device(_light, 'lamp'), lastPayload: '{"state":"ON"}')
+          .then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(r, isNull, reason: 'still trying');
+      b.reachable = true;
+      async.elapse(const Duration(seconds: 2));
+      expect(b.sent.single, ('zigbee2mqtt/lamp/set', '{"state":"OFF"}'));
+      b.emit('zigbee2mqtt/lamp', '{"state":"OFF"}');
+      async.elapse(const Duration(milliseconds: 50));
+      expect(r!.outcome, ShortcutOutcome.confirmed);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
   test('an unreachable broker sends nothing', () {
     fakeAsync((async) {
       final b = _Broker(reachable: false);
@@ -299,7 +322,47 @@ void main() {
     });
   });
 
-  test('a scene publishes every action', () {
+  test('a scene publishes every action, then says sent', () {
+    fakeAsync((async) {
+      final b = _Broker(silent: true);
+      final m = _manager(b);
+      ShortcutOutcome? r;
+      var sentSaid = false;
+      ShortcutCommander(l10n: l10n).runScene(m, const [
+        SceneAction(setTopic: 'zigbee2mqtt/a/set', payload: '{"state":"OFF"}'),
+        SceneAction(setTopic: 'zigbee2mqtt/b/set', payload: '{"state":"ON"}'),
+      ], onSent: () => sentSaid = true).then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(b.sent.map((p) => p.$1),
+          ['zigbee2mqtt/a/set', 'zigbee2mqtt/b/set']);
+      expect(sentSaid, isTrue);
+      expect(r, isNull, reason: 'waiting for the devices to answer');
+      async.elapse(const Duration(seconds: 6));
+      expect(r, ShortcutOutcome.sent, reason: 'nobody answered: still sent');
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a scene is confirmed once every device reports its new state', () {
+    fakeAsync((async) {
+      final b = _Broker(); // answers each command with the new state
+      final m = _manager(b);
+      ShortcutOutcome? r;
+      ShortcutCommander(l10n: l10n).runScene(m, const [
+        SceneAction(setTopic: 'zigbee2mqtt/a/set', payload: '{"state":"OFF"}'),
+        SceneAction(
+            setTopic: 'zigbee2mqtt/b/set',
+            payload: '{"state":"ON","brightness":120}'),
+      ]).then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(r, ShortcutOutcome.confirmed);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a scene with one silent device stays sent (not a problem)', () {
     fakeAsync((async) {
       final b = _Broker(silent: true);
       final m = _manager(b);
@@ -309,9 +372,28 @@ void main() {
         SceneAction(setTopic: 'zigbee2mqtt/b/set', payload: '{"state":"ON"}'),
       ]).then((v) => r = v);
       async.elapse(const Duration(milliseconds: 100));
+      b.emit('zigbee2mqtt/a', '{"state":"OFF"}');
+      async.elapse(const Duration(seconds: 6));
       expect(r, ShortcutOutcome.sent);
-      expect(b.sent.map((p) => p.$1),
-          ['zigbee2mqtt/a/set', 'zigbee2mqtt/b/set']);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a scene on an unreachable broker sends nothing', () {
+    fakeAsync((async) {
+      final b = _Broker(reachable: false);
+      final m = _manager(b);
+      ShortcutOutcome? r;
+      var sentSaid = false;
+      ShortcutCommander(l10n: l10n, connectWithin: const Duration(seconds: 2))
+          .runScene(m, const [
+        SceneAction(setTopic: 'zigbee2mqtt/a/set', payload: '{"state":"OFF"}'),
+      ], onSent: () => sentSaid = true).then((v) => r = v);
+      async.elapse(const Duration(seconds: 3));
+      expect(r, ShortcutOutcome.unreachable);
+      expect(sentSaid, isFalse);
+      expect(b.sent, isEmpty);
       m.dispose();
       async.flushMicrotasks();
     });

@@ -2,27 +2,28 @@
 
 The releases after 2.0, in order, decided on 2026-10-08 to 2026-10-10 in the "Post-2.0 roadmap" map and accepted by the user. Release 2.1 is specced to hand-off depth below; later releases stay at roadmap resolution and get their own spec when they start. Words follow [CONTEXT.md](../../CONTEXT.md) (Home, Device tile, Last-known value, Not responding, **Shortcut**).
 
-**Ranking rule:** user demand first, effort second. The demand evidence is thin and mostly from rival MQTT apps' reviews, so 2.1 carries a one-time poll that may reorder 2.2–2.4.
+**Ranking rule:** user demand first, effort second. The demand evidence is thin and mostly from rival MQTT apps' reviews, so 2.2 carries a one-time poll that may reorder 2.3–2.5.
 
 ## Releases
 
 | Release | Scope | Why this order |
 |---|---|---|
-| **2.1** | Shortcuts: home-screen widgets, Quick Settings tiles, Android Device Controls. Reconnect-immediately fix. "What next?" poll. | Widgets and tiles are asked for second most (about 34 rival-app reviews) and are measured feasible; Device Controls come almost free on the same engine. |
-| **2.2** | Push notifications (leak, door open, low battery). Android 17 local-network permission. | Most requested (about 25 reviews plus a dedicated rival app). The permission changes setup and must land well before targetSdk 37 is required (expected August 2027). |
-| **2.3** | History graphs (temperature, humidity, power over a day or a week). | Medium demand; needs a recorder, which Node-RED on the hub provides. |
-| **2.4** | Kiosk mode: PIN or guest lock on a wall tablet, building on Wall display. | Medium demand, mostly lock and fullscreen. |
+| **2.1** | Shortcuts: Quick Settings tiles, Android Device Controls, rename a device. Reconnect-immediately fix. | Live on Play since 2026-10-10. Tiles and controls are asked for second most (about 34 rival-app reviews) and are measured feasible. |
+| **2.2** | Home-screen widgets (one device, scene, group). "What next?" poll. | Moved from 2.1 (user, 2026-10-10) so tiles and controls shipped first; same engine. Built on `release/2.2` (2026-10-10); widgets are added from the launcher's list or from a device's page (Add shortcut) and a device or scene tile's Edit-mode menu. |
+| **2.3** | Push notifications (leak, door open, low battery). Android 17 local-network permission. | Most requested (about 25 reviews plus a dedicated rival app). The permission changes setup and must land well before targetSdk 37 is required (expected August 2027). |
+| **2.4** | History graphs (temperature, humidity, power over a day or a week). | Medium demand; needs a recorder, which Node-RED on the hub provides. |
+| **2.5** | Kiosk mode: PIN or guest lock on a wall tablet, building on Wall display. | Medium demand, mostly lock and fullscreen. |
 | Later, if asked | Zigbee groups, firmware (OTA) updates, Zigbee network map. | Low demand; all possible over Zigbee2MQTT 2.x MQTT. |
 | Dropped | Voice (needs Home Assistant's Assist), energy dashboard (low demand, only after history), conditional tiles (no demand). | |
 
 **Constraint for every release:** ZigDash has no server of its own. It's a phone app speaking MQTT to the user's broker, with optional Node-RED on the hub for anything that must run while the phone is off.
 
-## 2.2 to 2.4 at roadmap resolution
+## 2.3 to 2.5 at roadmap resolution
 
-- **2.2 Push notifications.** Node-RED on the hub is the alert engine; ZigDash configures an alerts flow over retained MQTT, the same way it configures schedules. Delivery starts with ntfy (high-priority FCM through Doze, no account, free up to 250 messages a day); UnifiedPush for native notifications is a later phase. Background MQTT on the phone is rejected (battery, `dataSync` limits, OEM killers). Node-RED republishes alerts retained at QoS 1 on `zigdash/alerts/...` so the app catches up. Research: branch `research/reliable-alerts`.
-- **2.2 Local-network permission.** At targetSdk 37, LAN connections need `ACCESS_LOCAL_NETWORK`; without it, connecting to the broker times out. Setup explains the permission before asking.
-- **2.3 History.** Zigbee2MQTT keeps no history, so a Node-RED flow on the hub records chosen readings; the app draws them. Retention and storage size are decided when 2.3 starts.
-- **2.4 Kiosk.** Scope (PIN lock in the app, OS lock task, ambient features) decided when 2.4 starts.
+- **2.3 Push notifications.** Node-RED on the hub is the alert engine; ZigDash configures an alerts flow over retained MQTT, the same way it configures schedules. Delivery starts with ntfy (high-priority FCM through Doze, no account, free up to 250 messages a day); UnifiedPush for native notifications is a later phase. Background MQTT on the phone is rejected (battery, `dataSync` limits, OEM killers). Node-RED republishes alerts retained at QoS 1 on `zigdash/alerts/...` so the app catches up. Research: branch `research/reliable-alerts`.
+- **2.3 Local-network permission.** At targetSdk 37, LAN connections need `ACCESS_LOCAL_NETWORK`; without it, connecting to the broker times out. Setup explains the permission before asking.
+- **2.4 History.** Zigbee2MQTT keeps no history, so a Node-RED flow on the hub records chosen readings; the app draws them. Retention and storage size are decided when 2.4 starts.
+- **2.5 Kiosk.** Scope (PIN lock in the app, OS lock task, ambient features) decided when 2.5 starts.
 
 ## 2.1 build spec: shortcuts
 

@@ -2376,10 +2376,48 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shortcutRemoved => 'Supprimé';
 
   @override
+  String get shortcutSceneSent => 'Envoyée';
+
+  @override
+  String get shortcutSceneConfirmed => 'Confirmée';
+
+  @override
   String get shortcutChooseDevice => 'Choisir un appareil';
 
   @override
+  String get shortcutChooseScene => 'Choisir une scène';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Ouvrez ZigDash et créez d\'abord une scène.';
+
+  @override
+  String get shortcutChooseGroup => 'Choisir un groupe';
+
+  @override
+  String get shortcutPickDevices => 'Choisir des appareils…';
+
+  @override
+  String get shortcutGroupName => 'Nom du groupe';
+
+  @override
+  String get shortcutGroupLimit => 'Jusqu\'à 5 appareils et 3 scènes';
+
+  @override
   String get shortcutAddTile => 'Ajouter aux Réglages rapides';
+
+  @override
+  String get shortcutAddShortcut => 'Ajouter un raccourci';
+
+  @override
+  String get shortcutAddToHome => 'Ajouter à l\'écran d\'accueil';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Ajouter le widget';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Appuyez longuement sur un espace libre de l\'écran d\'accueil, touchez Widgets, trouvez ZigDash et faites glisser le widget voulu.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2442,4 +2480,37 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT n\'a pas répondu';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Ouvrez ZigDash et placez d\'abord un appareil sur un tableau de bord.';
+
+  @override
+  String get pollTitle => 'Que devrait faire ZigDash ensuite ?';
+
+  @override
+  String get pollBody =>
+      'Choisissez ce que vous utiliseriez le plus. La réponse est envoyée avec vos données d\'utilisation anonymes.';
+
+  @override
+  String get pollNotifications => 'Notifications';
+
+  @override
+  String get pollHistory => 'Graphiques d\'historique';
+
+  @override
+  String get pollKiosk => 'Mode kiosque pour une tablette murale';
+
+  @override
+  String get pollGroups => 'Groupes Zigbee';
+
+  @override
+  String get pollNotNow => 'Pas maintenant';
+
+  @override
+  String get pollThanks => 'Merci ! Cela aide à choisir la suite.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Les données d\'utilisation sont désactivées : rien n\'est envoyé d\'ici. Dites-le-nous plutôt via Proposer une fonction.';
 }

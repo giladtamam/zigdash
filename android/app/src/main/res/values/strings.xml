@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Words Android shows outside the app (the widget picker). Everything
+     shown inside widgets comes from the app's own translations
+     (shortcut.strings in shared preferences). -->
+<resources>
+    <string name="widget_device_label">ZigDash device</string>
+    <string name="widget_device_description">Switch a light or plug, or move a shutter, from your home screen</string>
+    <string name="widget_scene_label">ZigDash scene</string>
+    <string name="widget_scene_description">Run a scene from your home screen</string>
+    <string name="widget_device_sample">Living room</string>
+    <string name="widget_device_sample_line">On</string>
+    <string name="widget_scene_sample">Evening</string>
+    <string name="widget_scene_sample_line">Confirmed</string>
+    <string name="widget_group_label">ZigDash group</string>
+    <string name="widget_group_description">Switch several devices and run scenes from one widget</string>
+    <string name="widget_group_sample_1">Ceiling light</string>
+    <string name="widget_group_sample_2">Floor lamp</string>
+    <string name="widget_group_sample_off">Off</string>
+    <string name="widget_group_sample_3">Blinds</string>
+    <string name="widget_group_sample_scene">Night</string>
+</resources>

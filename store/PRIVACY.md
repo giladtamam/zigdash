@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 2.1 is published (replaces the policy published with ZigDash 2.0)
+**Effective date:** the day ZigDash 2.2 is published (replaces the policy published with ZigDash 2.1)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -34,12 +34,14 @@ All data stays on your device:
   names. They leave your device only if you send or copy them yourself from
   Get help or Report a problem. They are not included in Android backups.
 
-- **Shortcuts** — which device each Quick Settings tile controls, the
-  devices offered to Android's Device Controls, and the last state each
-  shortcut showed, kept in the app's own storage so the tiles and controls
-  can show them. Android's Quick Settings and Device Controls display these
-  names and states on your phone (including, if you allow it in Android's
-  settings, on the lock screen); they are not sent anywhere.
+- **Shortcuts** — which device each Quick Settings tile controls, which
+  device, scene or group each home-screen widget shows, the devices and
+  scenes offered to Android's Device Controls and to the widget pickers, and
+  the last state each shortcut showed, kept in the app's own storage so the
+  tiles, widgets and controls can show them. Android's Quick Settings, home
+  screen and Device Controls display these names and states on your phone
+  (including, if you allow it in Android's settings, on the lock screen);
+  they are not sent anywhere.
 
 This data is never uploaded to the developer. You can remove it at any time by
 deleting a connection (which removes its dashboards, panels, and saved password)
@@ -85,8 +87,9 @@ never from anything you typed or anything your broker sent.
 | `feature_used` | The first use of a feature in a session | Devices tab, device page, Scenes, Edit mode, Wall display, or tile added (with the kind of tile, such as "light" or "toggle") |
 | `help_opened` | Get help was opened | where from: no connection found, a setup error, manual connect, home can't be reached, device list missing, Settings, or the demo |
 | `support_contact` | A support request was started from Get help | where from (as above); email or copy |
-| `shortcut_added` | A Quick Settings tile was given a device, or ZigDash's Device Controls were first shown | tile or control |
-| `shortcut_used` | A tile or a Device Control was used (sent at most once per kind when the app next starts) | tile or control |
+| `shortcut_added` | A Quick Settings tile was given a device, a home-screen widget was added, or ZigDash's Device Controls were first shown | tile, control, widget, scene widget or group widget |
+| `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |
+| `poll_answer` | The one-time "What should ZigDash do next?" card was answered | notifications, history graphs, kiosk mode or Zigbee groups |
 
 **Never sent:** broker addresses, ports, usernames or passwords; MQTT topics or
 messages; device names or addresses; home or dashboard names; device states or

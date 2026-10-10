@@ -5,9 +5,11 @@ import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/data/database/daos/shortcut_dao.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
+import 'package:zigdash/data/database/tables/shortcuts.dart';
 import 'package:zigdash/features/devices/device_profile.dart';
 import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
@@ -139,6 +141,148 @@ void main() {
         'connectionId': 'home', 'home': 'Home', 'ieee': '0x1',
         'name': 'אור חדר שרות', 'class': 'light', 'kind': 'dimmer',
       });
+    });
+  });
+
+  group('home-screen widgets', () {
+    test('widgets set up on the home screen become shortcuts the app follows',
+        () async {
+      await prefs.setString('shortcut.widget.7',
+          '{"connectionId":"home","ieee":"0x1","name":"Lamp","class":"light"}');
+      await prefs.setString('shortcut.widget.9',
+          '{"connectionId":"home","ieee":"0x2","name":"Blind","class":"cover","cover":true}');
+      await service.syncWidgets();
+      final rows = await db.select(db.shortcuts).get();
+      expect(rows.map((r) => '${r.appWidgetId} ${shortcutTargets(r)}').toSet(),
+          {'7 [0x1]', '9 [0x2]'});
+
+      // A widget removed from the home screen goes away here too.
+      await prefs.remove('shortcut.widget.7');
+      await service.syncWidgets();
+      expect((await db.select(db.shortcuts).get()).single.appWidgetId, 9);
+    });
+
+    test('a scene widget becomes a scene shortcut', () async {
+      await prefs.setString('shortcut.widget.4',
+          '{"connectionId":"home","kind":"scene","sceneId":"s1","name":"Evening"}');
+      await service.syncWidgets();
+      final row = (await db.select(db.shortcuts).get()).single;
+      expect(row.kind, ShortcutKind.scene);
+      expect(shortcutTargets(row), ['s1']);
+      expect(row.appWidgetId, 4);
+    });
+
+    test('a widget for a Home that no longer exists is skipped', () async {
+      await prefs.setString('shortcut.widget.3',
+          '{"connectionId":"gone","ieee":"0x1","name":"Lamp"}');
+      await service.syncWidgets();
+      expect(await db.select(db.shortcuts).get(), isEmpty);
+    });
+  });
+
+  test('the scenes the native picker offers, per Home in the app\'s order',
+      () async {
+    Future<void> scene(String id, String name, int order) =>
+        db.into(db.scenes).insert(ScenesCompanion.insert(
+            id: id, connectionId: 'home', name: name, iconCodepoint: 0,
+            colorSeed: 0, actions: '[]', createdAt: t, updatedAt: t,
+            sortOrder: Value(order)));
+    await scene('s2', 'Night', 1);
+    await scene('s1', 'Evening', 0);
+    await service.resyncScenes();
+    expect(jsonDecode(prefs.getString(shortcutScenesKey)!), [
+      {'connectionId': 'home', 'home': 'Home', 'sceneId': 's1', 'name': 'Evening'},
+      {'connectionId': 'home', 'home': 'Home', 'sceneId': 's2', 'name': 'Night'},
+    ]);
+  });
+
+  group('group widgets', () {
+    const plug = [
+      {
+        'type': 'switch',
+        'features': [
+          {'type': 'binary', 'name': 'state', 'property': 'state',
+            'value_on': 'ON', 'value_off': 'OFF', 'access': 7},
+        ]
+      }
+    ];
+    var order = 0;
+    Future<void> dashboard(String id, String name) => db
+        .into(db.dashboards)
+        .insert(DashboardsCompanion.insert(
+            id: id, connectionId: 'home', name: name, colorSeed: 0,
+            iconCodepoint: 0, createdAt: t, updatedAt: t));
+    Future<void> section(String id, String dash, String name, int sort) =>
+        db.into(db.sections).insert(SectionsCompanion.insert(
+            id: id, dashboardId: dash, name: name, createdAt: t, updatedAt: t,
+            sortOrder: Value(sort)));
+    Future<void> device(String id, String dash, String? sec, String ieee) =>
+        db.into(db.panels).insert(PanelsCompanion.insert(
+            id: id, dashboardId: dash, name: ieee, type: PanelType.device,
+            topic: ieee, width: PanelWidth.wide,
+            config: DeviceTileConfig(profile: classifyExposes(plug)).encode(),
+            createdAt: t, updatedAt: t, deviceIeee: Value(ieee),
+            sectionId: Value(sec), sortOrder: Value(order++)));
+    Future<void> sceneTile(String id, String dash, String? sec, String scene) =>
+        db.into(db.panels).insert(PanelsCompanion.insert(
+            id: id, dashboardId: dash, name: scene, type: PanelType.scene,
+            topic: '', width: PanelWidth.small,
+            config: SceneConfig(sceneId: scene).encode(),
+            createdAt: t, updatedAt: t,
+            sectionId: Value(sec), sortOrder: Value(order++)));
+
+    test('each dashboard section is offered as a group: 5 devices, 3 scenes',
+        () async {
+      await dashboard('d1', 'Main');
+      await section('s1', 'd1', 'Lights', 0);
+      await section('s2', 'd1', 'Covers', 1);
+      await device('p0', 'd1', null, '0x0'); // no section: the dashboard's
+      for (var i = 1; i <= 6; i++) {
+        await device('p$i', 'd1', 's1', '0x$i');
+      }
+      await device('p7', 'd1', 's1', '0x1'); // twice: once in the group
+      for (var i = 1; i <= 4; i++) {
+        await sceneTile('c$i', 'd1', 's1', 'scene$i');
+      }
+      await device('p8', 'd1', 's2', '0x8');
+      await service.resyncGroups();
+      final groups = (jsonDecode(prefs.getString(shortcutGroupsKey)!) as List)
+          .cast<Map<String, dynamic>>();
+      expect(groups.map((g) => g['name']), ['Main', 'Lights', 'Covers']);
+      expect(groups[1], {
+        'connectionId': 'home',
+        'home': 'Home',
+        'dashboard': 'Main',
+        'name': 'Lights',
+        'ieees': ['0x1', '0x2', '0x3', '0x4', '0x5'],
+        'scenes': ['scene1', 'scene2', 'scene3'],
+      });
+      expect(groups[0]['ieees'], ['0x0']);
+    });
+
+    test('a section with no devices or scenes is not offered', () async {
+      await dashboard('d1', 'Main');
+      await section('s1', 'd1', 'Empty', 0);
+      await service.resyncGroups();
+      expect(jsonDecode(prefs.getString(shortcutGroupsKey)!), isEmpty);
+    });
+
+    test('a group widget becomes a group shortcut of its devices', () async {
+      await prefs.setString('shortcut.widget.5',
+          '{"kind":"group","connectionId":"home","name":"Lights",'
+          '"ieees":["0x1","0x2","0x3"],"scenes":["scene1"]}');
+      await service.syncWidgets();
+      final row = (await db.select(db.shortcuts).get()).single;
+      expect(row.kind, ShortcutKind.group);
+      expect(shortcutTargets(row), ['0x1', '0x2', '0x3']);
+
+      // Changing its devices (set up again) updates the row.
+      await prefs.setString('shortcut.widget.5',
+          '{"kind":"group","connectionId":"home","name":"Lights",'
+          '"ieees":["0x1","0x4"],"scenes":[]}');
+      await service.syncWidgets();
+      expect(shortcutTargets((await db.select(db.shortcuts).get()).single),
+          ['0x1', '0x4']);
     });
   });
 }

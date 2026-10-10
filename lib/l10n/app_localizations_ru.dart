@@ -2374,10 +2374,48 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortcutRemoved => 'Удалено';
 
   @override
+  String get shortcutSceneSent => 'Отправлено';
+
+  @override
+  String get shortcutSceneConfirmed => 'Подтверждено';
+
+  @override
   String get shortcutChooseDevice => 'Выберите устройство';
 
   @override
+  String get shortcutChooseScene => 'Выберите сцену';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Откройте ZigDash и сначала создайте сцену.';
+
+  @override
+  String get shortcutChooseGroup => 'Выберите группу';
+
+  @override
+  String get shortcutPickDevices => 'Выбрать устройства…';
+
+  @override
+  String get shortcutGroupName => 'Название группы';
+
+  @override
+  String get shortcutGroupLimit => 'До 5 устройств и 3 сцен';
+
+  @override
   String get shortcutAddTile => 'Добавить в быстрые настройки';
+
+  @override
+  String get shortcutAddShortcut => 'Добавить ярлык';
+
+  @override
+  String get shortcutAddToHome => 'Добавить на главный экран';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Добавить виджет';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Нажмите и удерживайте пустое место на главном экране, выберите «Виджеты», найдите ZigDash и перетащите нужный виджет.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2440,4 +2478,37 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT не ответил';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Откройте ZigDash и сначала добавьте устройство на дашборд.';
+
+  @override
+  String get pollTitle => 'Что ZigDash стоит сделать дальше?';
+
+  @override
+  String get pollBody =>
+      'Выберите то, чем пользовались бы чаще всего. Ответ отправится вместе с анонимными данными об использовании.';
+
+  @override
+  String get pollNotifications => 'Уведомления';
+
+  @override
+  String get pollHistory => 'Графики истории';
+
+  @override
+  String get pollKiosk => 'Режим киоска для настенного планшета';
+
+  @override
+  String get pollGroups => 'Группы Zigbee';
+
+  @override
+  String get pollNotNow => 'Не сейчас';
+
+  @override
+  String get pollThanks => 'Спасибо! Это помогает решить, что делать дальше.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Данные об использовании выключены, поэтому отсюда ничего не отправляется. Расскажите нам через «Предложить функцию».';
 }

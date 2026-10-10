@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">ZigDash-apparaat</string>
+    <string name="widget_device_description">Schakel een lamp of stekker, of beweeg een rolluik, vanaf je startscherm</string>
+    <string name="widget_scene_label">ZigDash-scène</string>
+    <string name="widget_scene_description">Start een scène vanaf je startscherm</string>
+    <string name="widget_device_sample">Woonkamer</string>
+    <string name="widget_device_sample_line">Aan</string>
+    <string name="widget_scene_sample">Avond</string>
+    <string name="widget_scene_sample_line">Bevestigd</string>
+    <string name="widget_group_label">ZigDash-groep</string>
+    <string name="widget_group_description">Schakel meerdere apparaten en start scènes vanuit één widget</string>
+    <string name="widget_group_sample_1">Plafondlamp</string>
+    <string name="widget_group_sample_2">Staande lamp</string>
+    <string name="widget_group_sample_off">Uit</string>
+    <string name="widget_group_sample_3">Rolluiken</string>
+    <string name="widget_group_sample_scene">Nacht</string>
+</resources>

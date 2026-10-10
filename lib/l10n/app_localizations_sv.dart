@@ -2359,10 +2359,48 @@ class AppLocalizationsSv extends AppLocalizations {
   String get shortcutRemoved => 'Borttagen';
 
   @override
+  String get shortcutSceneSent => 'Skickad';
+
+  @override
+  String get shortcutSceneConfirmed => 'Bekräftad';
+
+  @override
   String get shortcutChooseDevice => 'Välj en enhet';
 
   @override
+  String get shortcutChooseScene => 'Välj en scen';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Öppna ZigDash och skapa en scen först.';
+
+  @override
+  String get shortcutChooseGroup => 'Välj en grupp';
+
+  @override
+  String get shortcutPickDevices => 'Välj enheter…';
+
+  @override
+  String get shortcutGroupName => 'Gruppnamn';
+
+  @override
+  String get shortcutGroupLimit => 'Upp till 5 enheter och 3 scener';
+
+  @override
   String get shortcutAddTile => 'Lägg till i Snabbinställningar';
+
+  @override
+  String get shortcutAddShortcut => 'Lägg till genväg';
+
+  @override
+  String get shortcutAddToHome => 'Lägg till på hemskärmen';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Lägg till widgeten';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Håll ned en tom plats på hemskärmen, tryck på Widgetar, hitta ZigDash och dra den widget du vill ha.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2425,4 +2463,37 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT svarade inte';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Öppna ZigDash och lägg först en enhet på en dashboard.';
+
+  @override
+  String get pollTitle => 'Vad ska ZigDash göra härnäst?';
+
+  @override
+  String get pollBody =>
+      'Välj det du skulle använda mest. Svaret skickas med dina anonyma användningsdata.';
+
+  @override
+  String get pollNotifications => 'Aviseringar';
+
+  @override
+  String get pollHistory => 'Historikgrafer';
+
+  @override
+  String get pollKiosk => 'Kioskläge för en surfplatta på väggen';
+
+  @override
+  String get pollGroups => 'Zigbee-grupper';
+
+  @override
+  String get pollNotNow => 'Inte nu';
+
+  @override
+  String get pollThanks => 'Tack! Det hjälper oss att välja vad som kommer.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Användningsdata är avstängt, så inget skickas härifrån. Berätta för oss via Föreslå en funktion istället.';
 }

@@ -22,6 +22,7 @@ Brytare, Knapp, Reglage, Rullgardin (öppna/stopp/stäng med förval), Flerläge
 GENVÄGAR – UTAN ATT ÖPPNA APPEN
 • Rutor i Snabbinställningar: tänd en lampa eller ett uttag med ett tryck, eller ställ en rullgardin med ett reglage, direkt från aviseringspanelen.
 • Androids enhetsstyrning: varje enhet på dina dashboards som ett kort, med reglage för ljusstyrka och position.
+• Widgetar på hemskärmen: en enhet, en scen eller en grupp med upp till fem enheter och scenknappar.
 
 AUTOMATION – KÖRS ÄVEN NÄR MOBILEN ÄR AV
 • Schemapaneler: dagliga öppna/stäng-timers sparade som retained MQTT-konfiguration.

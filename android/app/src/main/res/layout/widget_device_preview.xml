@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The device widget's preview in the launcher's widget list: a light
+     that is on. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/w_row_on"
+    android:orientation="vertical"
+    android:padding="14dp">
+    <ImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/w_ic_light"
+        android:tint="@color/w_on_amber" />
+    <!-- Spacer: widgets allow only some view classes (no plain View). -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    <TextView
+        android:text="@string/widget_device_sample"
+        android:textDirection="locale"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/w_on_amber"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+    <TextView
+        android:text="@string/widget_device_sample_line"
+        android:textDirection="locale"
+        android:textAlignment="viewStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/w_on_amber2"
+        android:textSize="12sp" />
+</LinearLayout>

@@ -2368,10 +2368,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shortcutRemoved => 'Eliminado';
 
   @override
+  String get shortcutSceneSent => 'Enviada';
+
+  @override
+  String get shortcutSceneConfirmed => 'Confirmada';
+
+  @override
   String get shortcutChooseDevice => 'Elige un dispositivo';
 
   @override
+  String get shortcutChooseScene => 'Elige una escena';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Abre ZigDash y crea primero una escena.';
+
+  @override
+  String get shortcutChooseGroup => 'Elige un grupo';
+
+  @override
+  String get shortcutPickDevices => 'Elegir dispositivos…';
+
+  @override
+  String get shortcutGroupName => 'Nombre del grupo';
+
+  @override
+  String get shortcutGroupLimit => 'Hasta 5 dispositivos y 3 escenas';
+
+  @override
   String get shortcutAddTile => 'Añadir a Ajustes rápidos';
+
+  @override
+  String get shortcutAddShortcut => 'Añadir acceso directo';
+
+  @override
+  String get shortcutAddToHome => 'Añadir a la pantalla de inicio';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Añadir el widget';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Mantén pulsado un espacio libre de la pantalla de inicio, toca Widgets, busca ZigDash y arrastra el widget que quieras.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2434,4 +2472,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT no respondió';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Abre ZigDash y pon primero un dispositivo en un panel.';
+
+  @override
+  String get pollTitle => '¿Qué debería hacer ZigDash ahora?';
+
+  @override
+  String get pollBody =>
+      'Elige lo que más usarías. Tu respuesta se envía con tus datos de uso anónimos.';
+
+  @override
+  String get pollNotifications => 'Notificaciones';
+
+  @override
+  String get pollHistory => 'Gráficos de historial';
+
+  @override
+  String get pollKiosk => 'Modo quiosco para una tablet de pared';
+
+  @override
+  String get pollGroups => 'Grupos Zigbee';
+
+  @override
+  String get pollNotNow => 'Ahora no';
+
+  @override
+  String get pollThanks => '¡Gracias! Eso ayuda a decidir lo siguiente.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Los datos de uso están desactivados, así que no se envía nada desde aquí. Cuéntanoslo con Proponer una función.';
 }

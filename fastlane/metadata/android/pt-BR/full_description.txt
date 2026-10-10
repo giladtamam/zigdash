@@ -14,6 +14,7 @@ QUALQUER BROKER
 ATALHOS SEM ABRIR O APP
 • Blocos das Configurações rápidas: ligue uma luz ou tomada com um toque, ou ajuste uma persiana com um controle deslizante, direto da aba de notificações.
 • Controles de dispositivos do Android: cada dispositivo dos seus painéis como um cartão, com controles de brilho e posição.
+• Widgets na tela inicial: um dispositivo, uma cena ou um grupo de até cinco dispositivos com botões de cena.
 
 AUTOMAÇÃO SEM O CELULAR
 • Agendamentos e regras de desligamento automático rodam no seu hub (Node-RED), mesmo com o celular desligado.

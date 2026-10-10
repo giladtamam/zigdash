@@ -54,8 +54,13 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final service = ref.read(shortcutServiceProvider);
-      unawaited(service.resyncTiles().then((_) => refreshShortcutTiles()));
+      unawaited(service
+          .syncWidgets()
+          .then((_) => service.resyncTiles())
+          .then((_) => refreshShortcutTiles()));
       unawaited(service.resyncControls());
+      unawaited(service.resyncScenes());
+      unawaited(service.resyncGroups());
       // Uses noted by tiles and Device Controls while the app was closed.
       unawaited(reportShortcutUsage(
           ref.read(sharedPreferencesProvider), ref.read(analyticsProvider)));
@@ -64,11 +69,14 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       final db = ref.read(appDatabaseProvider);
       _dashboardChanges = db
           .tableUpdates(TableUpdateQuery.onAllTables(
-              [db.panels, db.dashboards, db.connections, db.shortcuts]))
+              [db.panels, db.dashboards, db.connections, db.shortcuts,
+                db.scenes, db.sections]))
           .listen((_) {
         _resync?.cancel();
         _resync = Timer(const Duration(seconds: 1), () async {
           await service.resyncControls();
+          await service.resyncScenes();
+          await service.resyncGroups();
           // Tiles follow renames and deleted Homes without a restart.
           await service.resyncTiles();
           await refreshShortcutTiles();

@@ -2356,10 +2356,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortcutRemoved => 'Removed';
 
   @override
+  String get shortcutSceneSent => 'Sent';
+
+  @override
+  String get shortcutSceneConfirmed => 'Confirmed';
+
+  @override
   String get shortcutChooseDevice => 'Choose a device';
 
   @override
+  String get shortcutChooseScene => 'Choose a scene';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Open ZigDash and create a scene first.';
+
+  @override
+  String get shortcutChooseGroup => 'Choose a group';
+
+  @override
+  String get shortcutPickDevices => 'Pick devices…';
+
+  @override
+  String get shortcutGroupName => 'Group name';
+
+  @override
+  String get shortcutGroupLimit => 'Up to 5 devices and 3 scenes';
+
+  @override
   String get shortcutAddTile => 'Add to Quick Settings';
+
+  @override
+  String get shortcutAddShortcut => 'Add shortcut';
+
+  @override
+  String get shortcutAddToHome => 'Add to home screen';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Add the widget';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Long-press an empty spot on your home screen, tap Widgets, find ZigDash and drag the widget you want.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2422,4 +2460,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT didn\'t answer';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Open ZigDash and put a device on a dashboard first.';
+
+  @override
+  String get pollTitle => 'What should ZigDash do next?';
+
+  @override
+  String get pollBody =>
+      'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.';
+
+  @override
+  String get pollNotifications => 'Notifications';
+
+  @override
+  String get pollHistory => 'History graphs';
+
+  @override
+  String get pollKiosk => 'Kiosk mode for a wall tablet';
+
+  @override
+  String get pollGroups => 'Zigbee groups';
+
+  @override
+  String get pollNotNow => 'Not now';
+
+  @override
+  String get pollThanks => 'Thanks! That helps decide what comes next.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.';
 }

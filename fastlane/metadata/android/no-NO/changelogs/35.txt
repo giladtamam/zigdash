@@ -1,0 +1,1 @@
+ZigDash 2.2: widgets på startskjermen. Legg en lampe, stikkontakt eller persienne på startskjermen, kjør en scene med ett trykk, eller samle opptil fem enheter og tre scener i én widget. Legg dem til fra widgetlisten, eller fra en enhets side med Legg til snarvei. Scener viser nå når alle enhetene har bekreftet. Snarveier kobler til mer pålitelig etter en pause.

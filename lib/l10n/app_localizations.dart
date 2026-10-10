@@ -4346,17 +4346,89 @@ abstract class AppLocalizations {
   /// **'Removed'**
   String get shortcutRemoved;
 
+  /// A scene shortcut's line once its commands went out (not every device answered yet).
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get shortcutSceneSent;
+
+  /// A scene shortcut's line once every device reported its new state.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get shortcutSceneConfirmed;
+
   /// No description provided for @shortcutChooseDevice.
   ///
   /// In en, this message translates to:
   /// **'Choose a device'**
   String get shortcutChooseDevice;
 
+  /// Title of the scene widget's picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a scene'**
+  String get shortcutChooseScene;
+
+  /// Scene widget picker, when there are no scenes yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ZigDash and create a scene first.'**
+  String get shortcutOpenAppFirstScene;
+
+  /// Title of the group widget's picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a group'**
+  String get shortcutChooseGroup;
+
+  /// Group widget picker: build a group by hand instead of from a dashboard section.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick devices…'**
+  String get shortcutPickDevices;
+
+  /// Group widget picker: label of the name field for a hand-picked group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group name'**
+  String get shortcutGroupName;
+
+  /// Group widget picker: how many devices and scenes a group can hold.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 5 devices and 3 scenes'**
+  String get shortcutGroupLimit;
+
   /// No description provided for @shortcutAddTile.
   ///
   /// In en, this message translates to:
   /// **'Add to Quick Settings'**
   String get shortcutAddTile;
+
+  /// Device page: button offering a home-screen widget or a Quick Settings tile for the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Add shortcut'**
+  String get shortcutAddShortcut;
+
+  /// Adds a widget for this device or scene to the phone's home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to home screen'**
+  String get shortcutAddToHome;
+
+  /// Dialog title when the launcher can't add a widget for the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the widget'**
+  String get shortcutWidgetHowToTitle;
+
+  /// How to add a ZigDash widget by hand.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press an empty spot on your home screen, tap Widgets, find ZigDash and drag the widget you want.'**
+  String get shortcutWidgetHowTo;
 
   /// No description provided for @shortcutTileReady.
   ///
@@ -4447,6 +4519,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Zigbee2MQTT didn\'t answer'**
   String get deviceRenameNoAnswer;
+
+  /// Home-screen widget picker, when no device is on a dashboard yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ZigDash and put a device on a dashboard first.'**
+  String get shortcutOpenAppFirst;
+
+  /// One-time dashboard card asking what to build next.
+  ///
+  /// In en, this message translates to:
+  /// **'What should ZigDash do next?'**
+  String get pollTitle;
+
+  /// Under the poll title, for people who share usage data.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.'**
+  String get pollBody;
+
+  /// Poll choice: alerts on the phone (door opened, leak…).
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get pollNotifications;
+
+  /// Poll choice: graphs of past readings.
+  ///
+  /// In en, this message translates to:
+  /// **'History graphs'**
+  String get pollHistory;
+
+  /// Poll choice: a full-screen mode for a wall tablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Kiosk mode for a wall tablet'**
+  String get pollKiosk;
+
+  /// Poll choice: control Zigbee2MQTT groups.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee groups'**
+  String get pollGroups;
+
+  /// Hides the poll for good.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get pollNotNow;
+
+  /// Snackbar after answering the poll.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks! That helps decide what comes next.'**
+  String get pollThanks;
+
+  /// Poll card text for people who don't share usage data.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.'**
+  String get pollNoAnalytics;
 }
 
 class _AppLocalizationsDelegate

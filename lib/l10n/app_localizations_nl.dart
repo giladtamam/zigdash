@@ -2369,10 +2369,48 @@ class AppLocalizationsNl extends AppLocalizations {
   String get shortcutRemoved => 'Verwijderd';
 
   @override
+  String get shortcutSceneSent => 'Verstuurd';
+
+  @override
+  String get shortcutSceneConfirmed => 'Bevestigd';
+
+  @override
   String get shortcutChooseDevice => 'Kies een apparaat';
 
   @override
+  String get shortcutChooseScene => 'Kies een scène';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Open ZigDash en maak eerst een scène.';
+
+  @override
+  String get shortcutChooseGroup => 'Kies een groep';
+
+  @override
+  String get shortcutPickDevices => 'Apparaten kiezen…';
+
+  @override
+  String get shortcutGroupName => 'Groepsnaam';
+
+  @override
+  String get shortcutGroupLimit => 'Tot 5 apparaten en 3 scènes';
+
+  @override
   String get shortcutAddTile => 'Toevoegen aan Snelle instellingen';
+
+  @override
+  String get shortcutAddShortcut => 'Snelkoppeling toevoegen';
+
+  @override
+  String get shortcutAddToHome => 'Toevoegen aan startscherm';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Widget toevoegen';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Houd een lege plek op je startscherm ingedrukt, tik op Widgets, zoek ZigDash en sleep de widget die je wilt.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2435,4 +2473,37 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT gaf geen antwoord';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Open ZigDash en zet eerst een apparaat op een dashboard.';
+
+  @override
+  String get pollTitle => 'Wat moet ZigDash hierna doen?';
+
+  @override
+  String get pollBody =>
+      'Kies wat je het meest zou gebruiken. Je antwoord wordt met je anonieme gebruiksgegevens verstuurd.';
+
+  @override
+  String get pollNotifications => 'Meldingen';
+
+  @override
+  String get pollHistory => 'Geschiedenisgrafieken';
+
+  @override
+  String get pollKiosk => 'Kioskmodus voor een wandtablet';
+
+  @override
+  String get pollGroups => 'Zigbee-groepen';
+
+  @override
+  String get pollNotNow => 'Niet nu';
+
+  @override
+  String get pollThanks => 'Bedankt! Dat helpt kiezen wat er komt.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Gebruiksgegevens staan uit, dus van hier wordt niets verstuurd. Laat het ons weten via Functie aanvragen.';
 }

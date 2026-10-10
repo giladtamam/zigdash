@@ -14,7 +14,6 @@ CONNECTEZ N'IMPORTE QUEL BROKER
 • État en direct avec reconnexion automatique (backoff exponentiel).
 • Prise en charge de Tailscale : accès à distance via votre maillage WireGuard, sans redirection de port.
 • Plusieurs brokers avec bascule instantanée.
-• Un client MQTT complet sous le capot : publiez et abonnez-vous à n'importe quel topic.
 
 16 TYPES DE PANNEAUX : PILOTEZ TOUT
 Interrupteur, Bouton, Curseur, Volet (ouvrir/stop/fermer avec positions), Multi-état, Liste, Radio, Voyant LED, État du nœud, Progression, Saisie de texte, Journal, Scène, Programmation, Règle d'arrêt auto et Détection d'appareils Zigbee2MQTT. Des lumières et volets aux capteurs et scènes : un seul dashboard Zigbee pour chaque appareil.
@@ -22,6 +21,7 @@ Interrupteur, Bouton, Curseur, Volet (ouvrir/stop/fermer avec positions), Multi-
 RACCOURCIS : SANS OUVRIR L’APP
 • Tuiles des Réglages rapides : allumez une lampe ou une prise d’un geste, réglez un volet au curseur, depuis le volet de notifications.
 • Commandes des appareils Android : chaque appareil de vos tableaux en carte, avec curseurs de luminosité et de position.
+• Widgets d’écran d’accueil : un appareil, une scène, ou un groupe de jusqu’à cinq appareils avec boutons de scène.
 
 AUTOMATISATION : FONCTIONNE TÉLÉPHONE ÉTEINT
 • Panneaux de programmation : minuteries quotidiennes d'ouverture/fermeture enregistrées en configuration MQTT retained.
@@ -32,7 +32,7 @@ SOIGNÉ : TÉLÉPHONE ET TABLETTE
 • Material 3 avec thèmes clair, sombre et système ; couleurs dynamiques Material You sur Android 12+.
 • Téléphone et tablette, portrait et paysage : idéal en dashboard domotique mural.
 • Disponible en français, anglais, allemand, espagnol, néerlandais, suédois, norvégien, russe, polonais, portugais et hébreu, avec RTL automatique.
-• Grille de panneaux réactive (pleine, demie, tiers de largeur), verrouillage du dashboard, sauvegarde/restauration en JSON portable, scènes.
+• Grille de panneaux réactive, verrouillage du dashboard, sauvegarde/restauration en JSON portable, scènes.
 
 100 % PRIVÉ. SANS CLOUD.
 • Pas de pub. Pas de compte. Données d'utilisation anonymes uniquement si vous l'acceptez.

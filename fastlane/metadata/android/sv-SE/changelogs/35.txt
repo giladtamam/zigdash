@@ -1,0 +1,1 @@
+ZigDash 2.2: widgetar på hemskärmen. Lägg en lampa, ett uttag eller en rullgardin på hemskärmen, kör en scen med ett tryck, eller samla upp till fem enheter och tre scener i en widget. Lägg till dem från widgetlistan, eller från en enhets sida med Lägg till genväg. Scener visar nu när alla enheter har bekräftat. Genvägar ansluter pålitligare efter en paus.

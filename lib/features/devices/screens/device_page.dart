@@ -166,19 +166,23 @@ class _DevicePageState extends ConsumerState<DevicePage> {
       );
     }
 
-    // Only devices with a switch or a cover, shown on a dashboard, can be
-    // a tile: the tile switches them like the dashboard tile's quick action.
-    final tileable = AddTileButton.available &&
-        tiles.any((t) {
-          if (t.$1.type != PanelType.device) return false;
-          final c = PanelConfig.decode(t.$1.type, t.$1.config);
-          return c is DeviceTileConfig &&
-              (c.profile.switches.isNotEmpty ||
-                  c.profile.deviceClass == DeviceClass.cover);
-        });
-    final addTile = tileable
-        ? AddTileButton(
-            connectionId: widget.connectionId, ieee: widget.ieee, name: title)
+    // A device shown on a dashboard can be a home-screen widget; one with a
+    // switch or a cover can also be a Quick Settings tile, which switches it
+    // like the dashboard tile's quick action.
+    final onDashboard = tiles.any((t) => t.$1.type == PanelType.device);
+    final tileable = tiles.any((t) {
+      if (t.$1.type != PanelType.device) return false;
+      final c = PanelConfig.decode(t.$1.type, t.$1.config);
+      return c is DeviceTileConfig &&
+          (c.profile.switches.isNotEmpty ||
+              c.profile.deviceClass == DeviceClass.cover);
+    });
+    final addTile = AddShortcutButton.available && onDashboard
+        ? AddShortcutButton(
+            connectionId: widget.connectionId,
+            ieee: widget.ieee,
+            name: title,
+            canTile: tileable)
         : null;
     final rename = device == null
         ? null

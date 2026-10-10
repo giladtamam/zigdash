@@ -154,10 +154,21 @@ class SupportContact extends AnalyticsEvent {
 }
 
 /// Where a shortcut lives (docs/design/roadmap-post-2.0.md, 2.1 §7).
-enum ShortcutEventKind { tile, control }
+enum ShortcutEventKind {
+  tile('tile'),
+  control('control'),
+  widget('widget'),
+  sceneWidget('scene_widget'),
+  groupWidget('group_widget');
 
-/// A Quick Settings tile was assigned a device, or Device Controls were
-/// first set up.
+  const ShortcutEventKind(this.wire);
+
+  /// The value sent, and the native side's note key (`shortcut.used.<wire>`).
+  final String wire;
+}
+
+/// A Quick Settings tile or a home-screen widget was given a device, or
+/// Device Controls were first set up.
 class ShortcutAdded extends AnalyticsEvent {
   const ShortcutAdded(this.kind);
 
@@ -167,7 +178,7 @@ class ShortcutAdded extends AnalyticsEvent {
   String get name => 'shortcut_added';
 
   @override
-  Map<String, String> get props => {'kind': kind.name};
+  Map<String, String> get props => {'kind': kind.wire};
 }
 
 /// A shortcut was used, sent at most once per app session for each kind.
@@ -180,7 +191,32 @@ class ShortcutUsed extends AnalyticsEvent {
   String get name => 'shortcut_used';
 
   @override
-  Map<String, String> get props => {'kind': kind.name};
+  Map<String, String> get props => {'kind': kind.wire};
+}
+
+/// The "What should ZigDash do next?" poll's choices
+/// (docs/design/roadmap-post-2.0.md, 2.2 §6).
+enum PollChoice {
+  notifications('notifications'),
+  history('history'),
+  kiosk('kiosk'),
+  groups('zigbee_groups');
+
+  const PollChoice(this.wire);
+  final String wire;
+}
+
+/// The one-time poll was answered.
+class PollAnswer extends AnalyticsEvent {
+  const PollAnswer(this.choice);
+
+  final PollChoice choice;
+
+  @override
+  String get name => 'poll_answer';
+
+  @override
+  Map<String, String> get props => {'choice': choice.wire};
 }
 
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from

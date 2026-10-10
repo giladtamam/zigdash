@@ -2359,10 +2359,47 @@ class AppLocalizationsNb extends AppLocalizations {
   String get shortcutRemoved => 'Fjernet';
 
   @override
+  String get shortcutSceneSent => 'Sendt';
+
+  @override
+  String get shortcutSceneConfirmed => 'Bekreftet';
+
+  @override
   String get shortcutChooseDevice => 'Velg en enhet';
 
   @override
+  String get shortcutChooseScene => 'Velg en scene';
+
+  @override
+  String get shortcutOpenAppFirstScene => 'Åpne ZigDash og lag en scene først.';
+
+  @override
+  String get shortcutChooseGroup => 'Velg en gruppe';
+
+  @override
+  String get shortcutPickDevices => 'Velg enheter…';
+
+  @override
+  String get shortcutGroupName => 'Gruppenavn';
+
+  @override
+  String get shortcutGroupLimit => 'Opptil 5 enheter og 3 scener';
+
+  @override
   String get shortcutAddTile => 'Legg til i Hurtiginnstillinger';
+
+  @override
+  String get shortcutAddShortcut => 'Legg til snarvei';
+
+  @override
+  String get shortcutAddToHome => 'Legg til på startskjermen';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Legg til widgeten';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Trykk lenge på et tomt sted på startskjermen, trykk på Widgets, finn ZigDash og dra widgeten du vil ha.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2425,4 +2462,37 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT svarte ikke';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Åpne ZigDash og legg først en enhet på et dashbord.';
+
+  @override
+  String get pollTitle => 'Hva bør ZigDash gjøre videre?';
+
+  @override
+  String get pollBody =>
+      'Velg det du ville brukt mest. Svaret sendes med de anonyme bruksdataene dine.';
+
+  @override
+  String get pollNotifications => 'Varsler';
+
+  @override
+  String get pollHistory => 'Historikkgrafer';
+
+  @override
+  String get pollKiosk => 'Kioskmodus for et nettbrett på veggen';
+
+  @override
+  String get pollGroups => 'Zigbee-grupper';
+
+  @override
+  String get pollNotNow => 'Ikke nå';
+
+  @override
+  String get pollThanks => 'Takk! Det hjelper oss å velge hva som kommer.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Bruksdata er av, så ingenting sendes herfra. Fortell oss heller via Foreslå en funksjon.';
 }

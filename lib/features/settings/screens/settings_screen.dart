@@ -194,14 +194,14 @@ class SettingsScreen extends ConsumerWidget {
                 leading: const Icon(Icons.bug_report_outlined),
                 title: Text(l10n.settingsReportProblem),
                 subtitle: Text(l10n.settingsReportProblemSubtitle),
-                onTap: () => _sendFeedback(context, ref,
+                onTap: () => sendFeedback(context, ref,
                     problem: true, connectionId: current),
               ),
               ListTile(
                 leading: const Icon(Icons.lightbulb_outline),
                 title: Text(l10n.settingsFeatureRequest),
                 subtitle: Text(l10n.settingsFeatureRequestSubtitle),
-                onTap: () => _sendFeedback(context, ref, problem: false),
+                onTap: () => sendFeedback(context, ref, problem: false),
               ),
               const Divider(),
               _SectionHeader(l10n.settingsAbout),
@@ -251,7 +251,7 @@ class SettingsScreen extends ConsumerWidget {
 
 /// Asks where to send a feature request or a problem report ([problem]),
 /// then opens GitHub or the mail app.
-Future<void> _sendFeedback(
+Future<void> sendFeedback(
   BuildContext context,
   WidgetRef ref, {
   required bool problem,

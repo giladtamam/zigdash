@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart' show PlatformDispatcher;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/l10n/app_l10n.dart';
@@ -22,6 +23,7 @@ import '../features/devices/device_profile.dart';
 import '../features/panels/widgets/device_tile_panel.dart'
     show decodeDeviceState;
 import 'shortcut_commander.dart';
+import '../mqtt/dropped_connection.dart';
 import 'shortcut_store.dart';
 
 /// The headless command engine for shortcuts (docs/design/roadmap-post-2.0.md,
@@ -31,14 +33,11 @@ import 'shortcut_store.dart';
 /// shortcut shows lives in shared preferences, which the native side reads.
 @pragma('vm:entry-point')
 void shortcutEngine() {
+  WidgetsFlutterBinding.ensureInitialized();
   // When Android freezes the idle app, the broker connection's socket dies
   // and mqtt_client reports it as an uncaught error; the next tap reconnects
-  // (ensureConnected), so log it quietly instead.
-  runZonedGuarded(_serve, (e, st) => debugPrint('shortcut engine: $e'));
-}
-
-void _serve() {
-  WidgetsFlutterBinding.ensureInitialized();
+  // (ensureConnected). Other errors still surface.
+  PlatformDispatcher.instance.onError = ignoreDroppedConnection;
   DartPluginRegistrant.ensureInitialized();
   final engine = ShortcutEngine();
   const channel = MethodChannel('zigdash/shortcuts');
@@ -226,11 +225,9 @@ class ShortcutEngine {
       Duration freshFor = const Duration(minutes: 1)}) async {
     final mgr = await _manager(connectionId);
     if (mgr == null) return {'outcome': 'removed'};
-    if (!await mgr.ensureConnected(maxSilence: const Duration(seconds: 3))) {
-      return {'outcome': 'unreachable'};
-    }
-    final prefs = await _prefs;
     final commander = await _commander();
+    if (!await commander.reach(mgr)) return {'outcome': 'unreachable'};
+    final prefs = await _prefs;
     var asked = 0;
     for (final ieee in ieees) {
       final d = await _device(connectionId, ieee);
@@ -288,8 +285,19 @@ class ShortcutEngine {
     final scene = await SceneDao(await _database).getById(sceneId);
     final mgr = await _manager(connectionId);
     if (scene == null || mgr == null) return {'outcome': 'removed'};
-    final outcome = await (await _commander())
-        .runScene(mgr, SceneAction.decodeList(scene.actions));
+    final commander = await _commander();
+    final prefs = await _prefs;
+    // A scene's widget shows its last run like a device's state: "Sent",
+    // then "Confirmed" once every device answered.
+    final key = shortcutStateKey(connectionId, sceneId);
+    Future<void> say(String line) => prefs.setString(key,
+        jsonEncode({'line': line, 'at': DateTime.now().millisecondsSinceEpoch}));
+    final outcome = await commander.runScene(
+        mgr, SceneAction.decodeList(scene.actions),
+        onSent: () => say(commander.l10n.shortcutSceneSent));
+    if (outcome == ShortcutOutcome.confirmed) {
+      await say(commander.l10n.shortcutSceneConfirmed);
+    }
     return {'outcome': outcome.name};
   }
 

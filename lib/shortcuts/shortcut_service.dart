@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart' show Value;
+import 'package:drift/drift.dart' show OrderingTerm, Value;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,6 +25,10 @@ const appChannel = MethodChannel('zigdash/app');
 
 /// How a request to add a tile went.
 enum AddTileResult { added, already, declined, unsupported, failed }
+
+/// What asking the launcher to pin a widget did: [requested] opened its
+/// prompt (the widget is set up natively once confirmed).
+enum PinWidgetResult { requested, unsupported }
 
 /// Assigns shortcuts and keeps what the native side reads up to date.
 class ShortcutService {
@@ -138,9 +142,169 @@ class ShortcutService {
     await _prefs.setString(shortcutControlsKey, jsonEncode(out));
   }
 
+  /// Writes the scenes the scene widget's picker offers.
+  Future<void> resyncScenes() async {
+    final out = <Map<String, Object?>>[];
+    for (final conn in await _db.select(_db.connections).get()) {
+      final scenes = await (_db.select(_db.scenes)
+            ..where((s) => s.connectionId.equals(conn.id))
+            ..orderBy([(s) => OrderingTerm(expression: s.sortOrder)]))
+          .get();
+      for (final scene in scenes) {
+        out.add({
+          'connectionId': conn.id,
+          'home': conn.name,
+          'sceneId': scene.id,
+          'name': scene.name,
+        });
+      }
+    }
+    await _prefs.setString(shortcutScenesKey, jsonEncode(out));
+  }
+
+  /// Writes the groups the group widget's picker offers: each dashboard
+  /// section's first devices and scenes, in dashboard order.
+  Future<void> resyncGroups() async {
+    final out = <Map<String, Object?>>[];
+    for (final conn in await _db.select(_db.connections).get()) {
+      final dashboards = await (_db.select(_db.dashboards)
+            ..where((d) => d.connectionId.equals(conn.id))
+            ..orderBy([(d) => OrderingTerm(expression: d.sortOrder)]))
+          .get();
+      for (final dash in dashboards) {
+        final sections = await (_db.select(_db.sections)
+              ..where((s) => s.dashboardId.equals(dash.id))
+              ..orderBy([(s) => OrderingTerm(expression: s.sortOrder)]))
+            .get();
+        final panels = await (_db.select(_db.panels)
+              ..where((p) => p.dashboardId.equals(dash.id))
+              ..orderBy([(p) => OrderingTerm(expression: p.sortOrder)]))
+            .get();
+        // Tiles outside a section come first on the dashboard, too.
+        for (final (sectionId, name) in [
+          (null, dash.name),
+          for (final sec in sections) (sec.id, sec.name),
+        ]) {
+          final ieees = <String>[], scenes = <String>[];
+          for (final p in panels.where((p) => p.sectionId == sectionId)) {
+            final ieee = p.deviceIeee;
+            if (p.type == PanelType.device && ieee != null) {
+              if (ieees.length < groupDevices && !ieees.contains(ieee)) {
+                ieees.add(ieee);
+              }
+            } else if (p.type == PanelType.scene) {
+              final c = PanelConfig.decode(p.type, p.config);
+              if (c is SceneConfig &&
+                  c.sceneId.isNotEmpty &&
+                  scenes.length < groupScenes &&
+                  !scenes.contains(c.sceneId)) {
+                scenes.add(c.sceneId);
+              }
+            }
+          }
+          if (ieees.isEmpty && scenes.isEmpty) continue;
+          out.add({
+            'connectionId': conn.id,
+            'home': conn.name,
+            'dashboard': dash.name,
+            'name': name,
+            'ieees': ieees,
+            'scenes': scenes,
+          });
+        }
+      }
+    }
+    await _prefs.setString(shortcutGroupsKey, jsonEncode(out));
+  }
+
+  /// Home-screen widgets are set up by the launcher's picker on the native
+  /// side (`shortcut.widget.<id>`); this copies them into the shortcuts table
+  /// so the running app keeps them current, and drops widgets that were
+  /// removed from the home screen.
+  Future<void> syncWidgets() async {
+    await _prefs.reload(); // written natively, behind the plugin's cache
+    final homes = {
+      for (final c in await _db.select(_db.connections).get()) c.id,
+    };
+    final seen = <int>{};
+    for (final key in _prefs.getKeys()) {
+      final id = int.tryParse(key.replaceFirst('shortcut.widget.', ''));
+      if (!key.startsWith('shortcut.widget.') || id == null) continue;
+      final Map<String, dynamic> w;
+      try {
+        w = jsonDecode(_prefs.getString(key) ?? '') as Map<String, dynamic>;
+      } catch (_) {
+        continue;
+      }
+      final home = w['connectionId'];
+      // A device widget names its device, a scene widget its scene, a group
+      // widget its devices (its scenes need no following).
+      final (kind, targets) = switch (w['kind']) {
+        'scene' => (ShortcutKind.scene, [w['sceneId']]),
+        'group' => (
+            ShortcutKind.group,
+            w['ieees'] is List ? w['ieees'] as List : const <Object?>[]
+          ),
+        _ => (ShortcutKind.device, [w['ieee']]),
+      };
+      if (home is! String ||
+          !homes.contains(home) ||
+          targets.any((t) => t is! String) ||
+          (kind != ShortcutKind.group && targets.isEmpty)) {
+        continue;
+      }
+      final target = targets.cast<String>();
+      seen.add(id);
+      final row = await _dao.getByWidget(id);
+      if (row != null &&
+          row.connectionId == home &&
+          row.kind == kind &&
+          shortcutTargets(row).join(',') == target.join(',')) {
+        continue;
+      }
+      await _dao.put(ShortcutsCompanion.insert(
+        id: 'widget-$id',
+        connectionId: home,
+        kind: kind,
+        surface: ShortcutSurface.widget,
+        targets: encodeShortcutTargets(target),
+        appWidgetId: Value(id),
+        createdAt: _now(),
+      ));
+    }
+    for (final row in await _dao.watchAll().first) {
+      final id = row.appWidgetId;
+      if (id != null && !seen.contains(id)) await _dao.deleteByWidget(id);
+    }
+  }
+
   Future<void> clearTile(int slot) async {
     await _dao.deleteByTileSlot(slot);
     await _prefs.remove(shortcutTileKey(slot));
+  }
+
+  /// Asks the launcher to pin a home-screen widget: [kind] `device` (an
+  /// IEEE address in [target]) or `scene` (a scene id).
+  Future<PinWidgetResult> requestPinWidget(
+      {required String kind,
+      required String connectionId,
+      required String target,
+      required String name}) async {
+    try {
+      final r = await appChannel.invokeMethod<String>('requestPinWidget', {
+        'kind': kind,
+        'connectionId': connectionId,
+        'target': target,
+        'name': name,
+      });
+      return r == 'requested'
+          ? PinWidgetResult.requested
+          : PinWidgetResult.unsupported;
+    } on MissingPluginException {
+      return PinWidgetResult.unsupported;
+    } on PlatformException {
+      return PinWidgetResult.unsupported;
+    }
   }
 
   /// Asks Android to add tile [slot] to Quick Settings (Android 13+).
@@ -169,6 +333,15 @@ class ShortcutService {
         'stop': l10n.panelCoverStop,
         'close': l10n.panelCoverClose,
         'position': l10n.devicePosition,
+        'openAppFirst': l10n.shortcutOpenAppFirst,
+        'chooseScene': l10n.shortcutChooseScene,
+        'openAppFirstScene': l10n.shortcutOpenAppFirstScene,
+        'chooseGroup': l10n.shortcutChooseGroup,
+        'pickDevices': l10n.shortcutPickDevices,
+        'groupName': l10n.shortcutGroupName,
+        'groupLimit': l10n.shortcutGroupLimit,
+        'save': l10n.save,
+        'scenes': l10n.scenesTitle,
       }));
 }
 

@@ -1,0 +1,229 @@
+package com.giladtamam.zigdash
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.appwidget.AppWidgetManager
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.pm.ServiceInfo
+import android.os.Build
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import org.json.JSONObject
+
+/**
+ * Runs a home-screen widget tap (docs/design/roadmap-post-2.0.md, 2.1 §1:
+ * "widget taps run as a short user-initiated foreground task", because
+ * Android 16 can block network for an idle app). It sends the command
+ * through [ShortcutEngine], redraws the widget as the device answers, keeps
+ * a problem on screen for 10 s, and follows a moving shutter until the
+ * engine stops writing (at most [FOLLOW_MS]).
+ */
+class WidgetActionService : Service() {
+    private val main = Handler(Looper.getMainLooper())
+    private var running = 0
+    private val changes = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key != null && key.startsWith("flutter.shortcut.state.")) {
+            main.post {
+                DeviceWidget.refreshAll(this)
+                SceneWidget.refreshAll(this)
+                GroupWidget.refreshAll(this)
+            }
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        ShortcutPrefs.listen(this, changes)
+    }
+
+    override fun onDestroy() {
+        ShortcutPrefs.unlisten(this, changes)
+        super.onDestroy()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground()
+        val id = intent?.getIntExtra(DeviceWidget.EXTRA_ID, -1) ?: -1
+        val action = intent?.action ?: ""
+        ShortcutPrefs.groupWidget(this, id)?.let {
+            runGroup(id, it, action, intent)
+            return START_NOT_STICKY
+        }
+        if (action == ACTION_SCENE) {
+            runScene(id)
+            return START_NOT_STICKY
+        }
+        val t = ShortcutPrefs.widget(this, id)
+        if (t == null) {
+            finishSoon(0)
+            return START_NOT_STICKY
+        }
+        if (action == ACTION_WATCH) {
+            // A new widget asks its device where it is. Android cuts an
+            // app's network seconds after it leaves the screen, so this
+            // runs here too; the answer usually comes within a second.
+            running++
+            ShortcutEngine.watch(this, t.connectionId, listOf(t.ieee)) {
+                running--
+                finishSoon(WATCH_MS)
+            }
+            return START_NOT_STICKY
+        }
+        ShortcutPrefs.mark(this, "shortcut.used.widget")
+        val mgr = AppWidgetManager.getInstance(this)
+        DeviceWidget.render(this, mgr, id, working = true)
+        running++
+        val done = { json: String ->
+            android.util.Log.i("ZigDashShortcuts", "widget $id $action: $json")
+            val outcome = try { JSONObject(json).optString("outcome") } catch (_: Exception) { "" }
+            val problem = when (outcome) {
+                "confirmed", "sent" -> null
+                "unreachable" -> ShortcutPrefs.word(this, "cantReach", "Can't reach home")
+                "removed" -> ShortcutPrefs.word(this, "removed", "Removed")
+                else -> ShortcutPrefs.word(this, "notConfirmed", "Not confirmed")
+            }
+            DeviceWidget.render(this, mgr, id, problem = problem)
+            running--
+            // A problem stays 10 s; a shutter that started moving is
+            // followed by the engine, which writes its state as it goes.
+            finishSoon(when {
+                problem != null -> 10_000L
+                t.cover -> FOLLOW_MS
+                else -> 0L
+            }, redraw = problem != null)
+        }
+        when (action) {
+            "TOGGLE" -> ShortcutEngine.toggle(this, t.connectionId, t.ieee, done)
+            "OPEN", "STOP", "CLOSE" -> ShortcutEngine.cover(this, t.connectionId, t.ieee, action, done)
+            else -> done("{}")
+        }
+        return START_NOT_STICKY
+    }
+
+    /** The words a tap's outcome shows, or null when it went well. */
+    private fun problemFor(json: String): String? {
+        val outcome = try { JSONObject(json).optString("outcome") } catch (_: Exception) { "" }
+        return when (outcome) {
+            "confirmed", "sent" -> null
+            "unreachable" -> ShortcutPrefs.word(this, "cantReach", "Can't reach home")
+            "removed" -> ShortcutPrefs.word(this, "removed", "Removed")
+            else -> ShortcutPrefs.word(this, "notConfirmed", "Not confirmed")
+        }
+    }
+
+    /**
+     * A group widget's tap: a row's toggle (its IEEE in the intent), a scene
+     * button (its scene id), or the new widget asking its devices for state.
+     */
+    private fun runGroup(id: Int, g: ShortcutPrefs.GroupEntry, action: String, intent: Intent?) {
+        val mgr = AppWidgetManager.getInstance(this)
+        if (action == ACTION_WATCH) {
+            running++
+            ShortcutEngine.watch(this, g.connectionId, g.ieees) {
+                running--
+                finishSoon(WATCH_MS)
+            }
+            return
+        }
+        val ieee = intent?.getStringExtra(GroupWidget.EXTRA_IEEE)
+        val scene = intent?.getStringExtra(GroupWidget.EXTRA_SCENE)
+        val about = (if (action == ACTION_SCENE) scene else ieee)
+        if (about == null) {
+            finishSoon(0)
+            return
+        }
+        ShortcutPrefs.mark(this, "shortcut.used.group_widget")
+        GroupWidget.render(this, mgr, id, about, working = true)
+        running++
+        val done = { json: String ->
+            android.util.Log.i("ZigDashShortcuts", "group widget $id $action $about: $json")
+            val problem = problemFor(json)
+            GroupWidget.render(this, mgr, id, about, problem = problem)
+            running--
+            if (problem != null) {
+                main.postDelayed({ GroupWidget.render(this, mgr, id) }, 10_000L)
+            }
+            finishSoon(if (problem != null) 10_000L else 0L)
+        }
+        if (action == ACTION_SCENE) {
+            ShortcutEngine.scene(this, g.connectionId, about, done)
+        } else {
+            ShortcutEngine.toggle(this, g.connectionId, about, done)
+        }
+    }
+
+    /** Runs scene widget [id]'s scene; the engine writes "Sent", then "Confirmed". */
+    private fun runScene(id: Int) {
+        val e = ShortcutPrefs.sceneWidget(this, id)
+        if (e == null) {
+            finishSoon(0)
+            return
+        }
+        ShortcutPrefs.mark(this, "shortcut.used.scene_widget")
+        val mgr = AppWidgetManager.getInstance(this)
+        SceneWidget.render(this, mgr, id, working = true)
+        running++
+        ShortcutEngine.scene(this, e.connectionId, e.sceneId) { json ->
+            android.util.Log.i("ZigDashShortcuts", "scene widget $id: $json")
+            val outcome = try { JSONObject(json).optString("outcome") } catch (_: Exception) { "" }
+            val problem = when (outcome) {
+                "confirmed", "sent" -> null
+                "unreachable" -> ShortcutPrefs.word(this, "cantReach", "Can't reach home")
+                "removed" -> ShortcutPrefs.word(this, "removed", "Removed")
+                else -> ShortcutPrefs.word(this, "notConfirmed", "Not confirmed")
+            }
+            SceneWidget.render(this, mgr, id, problem = problem)
+            running--
+            if (problem != null) {
+                main.postDelayed({ SceneWidget.render(this, mgr, id) }, 10_000L)
+            }
+            finishSoon(if (problem != null) 10_000L else 0L)
+        }
+    }
+
+    private fun finishSoon(delay: Long, redraw: Boolean = false) {
+        main.postDelayed({
+            if (redraw) DeviceWidget.refreshAll(this)
+            if (running == 0) stopSelf()
+        }, delay)
+    }
+
+    // shortService (Android 14+) allows about three minutes; a tap takes
+    // seconds.
+    override fun onTimeout(startId: Int) {
+        stopSelf()
+    }
+
+    private fun startForeground() {
+        val nm = getSystemService(NotificationManager::class.java)
+        if (Build.VERSION.SDK_INT >= 26 && nm.getNotificationChannel(CHANNEL) == null) {
+            nm.createNotificationChannel(NotificationChannel(CHANNEL,
+                ShortcutPrefs.word(this, "working", "working…"), NotificationManager.IMPORTANCE_MIN))
+        }
+        val n = (if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, CHANNEL)
+                 else @Suppress("DEPRECATION") Notification.Builder(this))
+            .setSmallIcon(R.drawable.ic_shortcut_tile)
+            .setContentTitle(ShortcutPrefs.word(this, "working", "working…"))
+            .build()
+        if (Build.VERSION.SDK_INT >= 34) {
+            startForeground(NOTIFICATION, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE)
+        } else {
+            startForeground(NOTIFICATION, n)
+        }
+    }
+
+    companion object {
+        private const val CHANNEL = "shortcuts"
+        private const val NOTIFICATION = 21
+        private const val FOLLOW_MS = 45_000L
+        private const val WATCH_MS = 10_000L
+        const val ACTION_WATCH = "WATCH"
+        const val ACTION_SCENE = "SCENE"
+    }
+}

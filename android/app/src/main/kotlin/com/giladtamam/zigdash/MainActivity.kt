@@ -25,6 +25,11 @@ class MainActivity : FlutterActivity() {
                 "takeAction" -> result.success(takeAction(intent))
                 "requestAddTile" -> requestAddTile(call.argument<Int>("slot") ?: 1,
                     call.argument<String>("label") ?: "ZigDash", result)
+                "requestPinWidget" -> result.success(PinWidgetReceiver.request(this,
+                    call.argument<String>("kind") ?: "device",
+                    call.argument<String>("connectionId") ?: "",
+                    call.argument<String>("target") ?: "",
+                    call.argument<String>("name") ?: ""))
                 "refreshTiles" -> {
                     for (c in listOf(ShortcutTile1::class.java, ShortcutTile2::class.java,
                             ShortcutTile3::class.java, ShortcutTile4::class.java)) {
@@ -35,6 +40,9 @@ class MainActivity : FlutterActivity() {
                             // Not added to Quick Settings: nothing to redraw.
                         }
                     }
+                    DeviceWidget.refreshAll(this)
+                    SceneWidget.refreshAll(this)
+                    GroupWidget.refreshAll(this)
                     result.success(null)
                 }
                 else -> result.notImplemented()

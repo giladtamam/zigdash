@@ -7,6 +7,8 @@ import org.json.JSONObject
  * What the Dart side wrote for shortcuts, read from the shared_preferences
  * plugin's file (keys carry its "flutter." prefix):
  * - shortcut.tile.<slot>: {"connectionId","ieee","name"}
+ * - shortcut.widget.<id>: a device widget's device, or {"kind":"scene",…}
+ * - shortcut.scenes: the scenes a scene widget can run
  * - shortcut.state.<connectionId>.<ieee>: {"line","on","at"}
  * - shortcut.strings: the native side's words, in the app's language.
  */
@@ -54,6 +56,106 @@ object ShortcutPrefs {
             }
         } catch (_: Exception) { emptyList() }
     }
+
+    /** The device home-screen widget [id] shows (shortcut.widget.<id>). */
+    fun widget(ctx: Context, id: Int): Tile? = json(ctx, "shortcut.widget.$id")
+        // Only a device widget's pref; scene and group widgets name a kind.
+        ?.takeIf { it.optString("kind").let { k -> k.isEmpty() || k == "device" } }?.let {
+        Tile(it.optString("connectionId"), it.optString("ieee"), it.optString("name"),
+            it.optBoolean("cover"), it.optBoolean("position"), it.optString("class"))
+    }
+
+    /** Assigns [e] to widget [id], in the same format as a tile slot. */
+    fun setWidget(ctx: Context, id: Int, e: ControlEntry) {
+        val o = JSONObject()
+            .put("connectionId", e.connectionId).put("ieee", e.ieee).put("name", e.name)
+            .put("class", e.cls)
+        if (e.kind == "cover") o.put("cover", true)
+        if (e.position) o.put("position", true)
+        prefs(ctx).edit().putString("flutter.shortcut.widget.$id", o.toString()).apply()
+    }
+
+    /** A scene offered to the scene widget's picker (shortcut.scenes). */
+    data class SceneEntry(
+        val connectionId: String, val home: String, val sceneId: String, val name: String,
+    )
+
+    fun scenes(ctx: Context): List<SceneEntry> {
+        val raw = prefs(ctx).getString("flutter.shortcut.scenes", null) ?: return emptyList()
+        return try {
+            val list = org.json.JSONArray(raw)
+            (0 until list.length()).map { i ->
+                val o = list.getJSONObject(i)
+                SceneEntry(o.optString("connectionId"), o.optString("home"),
+                    o.optString("sceneId"), o.optString("name"))
+            }
+        } catch (_: Exception) { emptyList() }
+    }
+
+    /**
+     * The scene home-screen widget [id] runs, named as the app now names it
+     * (a rename reaches the widget without setting it up again).
+     */
+    fun sceneWidget(ctx: Context, id: Int): SceneEntry? = json(ctx, "shortcut.widget.$id")
+        ?.takeIf { it.optString("kind") == "scene" }?.let { w ->
+            val conn = w.optString("connectionId")
+            val sceneId = w.optString("sceneId")
+            scenes(ctx).firstOrNull { it.connectionId == conn && it.sceneId == sceneId }
+                ?: SceneEntry(conn, "", sceneId, w.optString("name"))
+        }
+
+    /** A group offered to the group widget's picker (shortcut.groups), or a
+     *  group widget's own devices and scenes. */
+    data class GroupEntry(
+        val connectionId: String, val home: String, val dashboard: String, val name: String,
+        val ieees: List<String>, val scenes: List<String>,
+    )
+
+    private fun strings(a: org.json.JSONArray?): List<String> =
+        if (a == null) emptyList() else (0 until a.length()).map { a.optString(it) }
+
+    fun groups(ctx: Context): List<GroupEntry> {
+        val raw = prefs(ctx).getString("flutter.shortcut.groups", null) ?: return emptyList()
+        return try {
+            val list = org.json.JSONArray(raw)
+            (0 until list.length()).map { i ->
+                val o = list.getJSONObject(i)
+                GroupEntry(o.optString("connectionId"), o.optString("home"),
+                    o.optString("dashboard"), o.optString("name"),
+                    strings(o.optJSONArray("ieees")), strings(o.optJSONArray("scenes")))
+            }
+        } catch (_: Exception) { emptyList() }
+    }
+
+    fun groupWidget(ctx: Context, id: Int): GroupEntry? = json(ctx, "shortcut.widget.$id")
+        ?.takeIf { it.optString("kind") == "group" }?.let {
+            GroupEntry(it.optString("connectionId"), "", "", it.optString("name"),
+                strings(it.optJSONArray("ieees")), strings(it.optJSONArray("scenes")))
+        }
+
+    fun setGroupWidget(ctx: Context, id: Int, g: GroupEntry) {
+        val o = JSONObject().put("kind", "group")
+            .put("connectionId", g.connectionId).put("name", g.name)
+            .put("ieees", org.json.JSONArray(g.ieees)).put("scenes", org.json.JSONArray(g.scenes))
+        prefs(ctx).edit().putString("flutter.shortcut.widget.$id", o.toString()).apply()
+    }
+
+    /** Device [ieee] of Home [connectionId] as Device Controls offer it. */
+    fun control(ctx: Context, connectionId: String, ieee: String): ControlEntry? =
+        controls(ctx).firstOrNull { it.connectionId == connectionId && it.ieee == ieee }
+
+    /** Scene [sceneId]'s current name, if the app still has it. */
+    fun sceneName(ctx: Context, connectionId: String, sceneId: String): String? =
+        scenes(ctx).firstOrNull { it.connectionId == connectionId && it.sceneId == sceneId }?.name
+
+    fun setSceneWidget(ctx: Context, id: Int, e: SceneEntry) {
+        val o = JSONObject().put("kind", "scene")
+            .put("connectionId", e.connectionId).put("sceneId", e.sceneId).put("name", e.name)
+        prefs(ctx).edit().putString("flutter.shortcut.widget.$id", o.toString()).apply()
+    }
+
+    fun removeWidget(ctx: Context, id: Int) =
+        prefs(ctx).edit().remove("flutter.shortcut.widget.$id").apply()
 
     /** A shutter's position or a light's brightness, 0–100, if known. */
     fun level(ctx: Context, connectionId: String, ieee: String): Int? =

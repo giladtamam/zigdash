@@ -2379,10 +2379,48 @@ class AppLocalizationsPl extends AppLocalizations {
   String get shortcutRemoved => 'Usunięto';
 
   @override
+  String get shortcutSceneSent => 'Wysłano';
+
+  @override
+  String get shortcutSceneConfirmed => 'Potwierdzono';
+
+  @override
   String get shortcutChooseDevice => 'Wybierz urządzenie';
 
   @override
+  String get shortcutChooseScene => 'Wybierz scenę';
+
+  @override
+  String get shortcutOpenAppFirstScene =>
+      'Otwórz ZigDash i najpierw utwórz scenę.';
+
+  @override
+  String get shortcutChooseGroup => 'Wybierz grupę';
+
+  @override
+  String get shortcutPickDevices => 'Wybierz urządzenia…';
+
+  @override
+  String get shortcutGroupName => 'Nazwa grupy';
+
+  @override
+  String get shortcutGroupLimit => 'Do 5 urządzeń i 3 scen';
+
+  @override
   String get shortcutAddTile => 'Dodaj do Szybkich ustawień';
+
+  @override
+  String get shortcutAddShortcut => 'Dodaj skrót';
+
+  @override
+  String get shortcutAddToHome => 'Dodaj do ekranu głównego';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Dodaj widżet';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Przytrzymaj puste miejsce na ekranie głównym, dotknij Widżety, znajdź ZigDash i przeciągnij wybrany widżet.';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
@@ -2444,4 +2482,37 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get deviceRenameNoAnswer => 'Zigbee2MQTT nie odpowiedział';
+
+  @override
+  String get shortcutOpenAppFirst =>
+      'Otwórz ZigDash i najpierw dodaj urządzenie do dashboardu.';
+
+  @override
+  String get pollTitle => 'Co ZigDash powinien robić dalej?';
+
+  @override
+  String get pollBody =>
+      'Wybierz to, z czego korzystałbyś najczęściej. Odpowiedź zostanie wysłana z anonimowymi danymi o użyciu.';
+
+  @override
+  String get pollNotifications => 'Powiadomienia';
+
+  @override
+  String get pollHistory => 'Wykresy historii';
+
+  @override
+  String get pollKiosk => 'Tryb kiosku dla tabletu na ścianie';
+
+  @override
+  String get pollGroups => 'Grupy Zigbee';
+
+  @override
+  String get pollNotNow => 'Nie teraz';
+
+  @override
+  String get pollThanks => 'Dzięki! To pomaga zdecydować, co dalej.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Dane o użyciu są wyłączone, więc nic stąd nie zostanie wysłane. Napisz nam przez Zaproponuj funkcję.';
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Group widget (docs/design/roadmap-post-2.0.md, widgets): 4×2 to 4×4.
+     Chosen in WidgetConfigActivity (group mode); reconfigured by
+     long-press on Android 12+. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.giladtamam.zigdash.WidgetConfigActivity"
+    android:description="@string/widget_group_description"
+    android:initialLayout="@layout/widget_group"
+    android:minWidth="250dp"
+    android:minHeight="110dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="110dp"
+    android:previewLayout="@layout/widget_group_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="4"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable" />

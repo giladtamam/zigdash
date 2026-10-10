@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Signal colours for home-screen widgets (docs/design/tokens.md); the
+     night variant in values-night. -->
+<resources>
+    <color name="w_ground">#F6F3EC</color>
+    <color name="w_tile">#FFFFFF</color>
+    <color name="w_ink">#1C1A16</color>
+    <color name="w_ink2">#5B5446</color>
+    <color name="w_amber">#F5C878</color>
+    <color name="w_on_amber">#1C1A16</color>
+    <color name="w_on_amber2">#4A3D22</color>
+    <color name="w_problem">#B3261E</color>
+</resources>

@@ -19,7 +19,6 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
    • Live status with automatic exponential-backoff reconnect.
    • Tailscale support: remote access over your WireGuard mesh, no port forwarding.
    • Multiple brokers with instant switching.
-   • A full MQTT client under the hood: publish and subscribe to any topic.
 
    ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -32,6 +31,7 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
    SHORTCUTS — WITHOUT OPENING THE APP
    • Quick Settings tiles: switch a light or plug in one tap, or set a shutter with a slider, right from the notification shade.
    • Android Device Controls: every device on your dashboards as a card, with sliders for brightness and shutter position.
+   • Home-screen widgets: one device, a scene, or a group of up to five devices with scene buttons.
 
    ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -46,7 +46,7 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
    • Material 3 with light, dark, and system themes; Android 12+ Material You dynamic color.
    • Phone and tablet, portrait and landscape — ideal as a wall panel or wall-mounted home automation dashboard.
    • Available in English, French, German, Spanish, Dutch, Swedish, Norwegian, Russian, Polish, Portuguese (Brazil) and Hebrew (עברית), with automatic RTL.
-   • Responsive panel grid (full, half, third width), dashboard lock, backup/restore as portable JSON, scenes.
+   • Responsive panel grid, dashboard lock, backup/restore as portable JSON, scenes.
 
    ━━━━━━━━━━━━━━━━━━━━━━
 
