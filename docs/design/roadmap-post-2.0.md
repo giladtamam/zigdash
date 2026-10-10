@@ -8,8 +8,8 @@ The releases after 2.0, in order, decided on 2026-10-08 to 2026-10-10 in the "Po
 
 | Release | Scope | Why this order |
 |---|---|---|
-| **2.1** | Shortcuts: Quick Settings tiles, Android Device Controls, rename a device. Reconnect-immediately fix. | In Play review since 2026-10-10. Tiles and controls are asked for second most (about 34 rival-app reviews) and are measured feasible. |
-| **2.2** | Home-screen widgets (one device, scene, group). "What next?" poll. | Moved from 2.1 (user, 2026-10-10) so tiles and controls shipped first; same engine. |
+| **2.1** | Shortcuts: Quick Settings tiles, Android Device Controls, rename a device. Reconnect-immediately fix. | Live on Play since 2026-10-10. Tiles and controls are asked for second most (about 34 rival-app reviews) and are measured feasible. |
+| **2.2** | Home-screen widgets (one device, scene, group). "What next?" poll. | Moved from 2.1 (user, 2026-10-10) so tiles and controls shipped first; same engine. Built on `release/2.2` (2026-10-10); widgets are added from the launcher's list or from a device's page (Add shortcut) and a device or scene tile's Edit-mode menu. |
 | **2.3** | Push notifications (leak, door open, low battery). Android 17 local-network permission. | Most requested (about 25 reviews plus a dedicated rival app). The permission changes setup and must land well before targetSdk 37 is required (expected August 2027). |
 | **2.4** | History graphs (temperature, humidity, power over a day or a week). | Medium demand; needs a recorder, which Node-RED on the hub provides. |
 | **2.5** | Kiosk mode: PIN or guest lock on a wall tablet, building on Wall display. | Medium demand, mostly lock and fullscreen. |

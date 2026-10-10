@@ -22,6 +22,7 @@ Schalter, Taste, Slider, Rollladen (Auf/Stopp/Zu mit Voreinstellungen), Multi-St
 KURZBEFEHLE – OHNE DIE APP ZU ÖFFNEN
 • Schnelleinstellungs-Kacheln: Lampe oder Steckdose mit einem Tippen schalten, Rollladen per Schieberegler stellen, direkt aus der Benachrichtigungsleiste.
 • Android-Gerätesteuerung: jedes Gerät deiner Dashboards als Karte, mit Reglern für Helligkeit und Rollladenposition.
+• Startbildschirm-Widgets: ein Gerät, eine Szene oder eine Gruppe mit bis zu fünf Geräten und Szenen-Tasten.
 
 AUTOMATISIERUNG – LÄUFT AUCH BEI AUSGESCHALTETEM HANDY
 • Zeitplan-Panels: tägliche Öffnen/Schließen-Timer, gespeichert als retained MQTT-Konfiguration.

@@ -1,0 +1,1 @@
+ZigDash 2.2: home-screen widgets. Put a light, plug or shutter on your home screen, run a scene with one tap, or keep a whole group of up to five devices and three scenes in one widget. Add them from your phone's widget list, or from a device's page with Add shortcut. Scenes now show when every device confirmed. Shortcuts connect more reliably after the phone was idle.

@@ -22,6 +22,7 @@ Schakelaar, Knop, Schuifregelaar, Rolluik (open/stop/dicht met presets), Multi-S
 SNELKOPPELINGEN – ZONDER DE APP TE OPENEN
 • Tegels in Snelle instellingen: schakel een lamp of stekker met één tik, of zet een rolluik met een schuifregelaar, direct vanuit het meldingenpaneel.
 • Android-apparaatbediening: elk apparaat van je dashboards als kaart, met schuifregelaars voor helderheid en rolluikstand.
+• Widgets op het startscherm: één apparaat, een scène, of een groep van maximaal vijf apparaten met scèneknoppen.
 
 AUTOMATISERING – WERKT OOK ALS JE TELEFOON UIT STAAT
 • Schemapanelen: dagelijkse open/dicht-timers opgeslagen als retained MQTT-configuratie.

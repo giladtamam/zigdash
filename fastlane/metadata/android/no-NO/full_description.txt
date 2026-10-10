@@ -22,6 +22,7 @@ Bryter, Knapp, Glidebryter, Persienne (åpne/stopp/lukk med forvalg), Flertilsta
 SNARVEIER – UTEN Å ÅPNE APPEN
 • Fliser i Hurtiginnstillinger: slå på en lampe eller stikkontakt med ett trykk, eller still en persienne med en glidebryter, rett fra varslingspanelet.
 • Android-enhetsstyring: hver enhet på dashbordene dine som et kort, med glidebrytere for lysstyrke og posisjon.
+• Widgets på startskjermen: én enhet, en scene, eller en gruppe på opptil fem enheter med sceneknapper.
 
 AUTOMATISERING – KJØRER SELV NÅR MOBILEN ER AV
 • Tidsplanpaneler: daglige åpne/lukke-timere lagret som retained MQTT-konfigurasjon.
