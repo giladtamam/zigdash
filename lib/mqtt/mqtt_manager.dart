@@ -245,8 +245,7 @@ class MqttManager {
         // for the OS default (tens of seconds), wedging us in `connecting` while
         // the guard above turns every reconnect into a no-op. Timing out here
         // makes the per-candidate budgets in endpoint.dart actually effective.
-        await client
-            .connect(config.username, password)
+        await connectAsV31(client, config.username, password)
             .timeout(Duration(milliseconds: cand.timeoutMs));
       } on TimeoutException catch (_) {
         _lastError =
@@ -448,6 +447,40 @@ class MqttManager {
     }
   }
 
+  /// Makes mqtt_client encode and decode under MQTT 3.1.1 rules.
+  ///
+  /// mqtt_client keeps the protocol version in a global and reads it for
+  /// every packet. Under 3.1 it rejects topics with characters beyond ASCII
+  /// (InvalidTopicException), and mis-measures received topics that have
+  /// them, so a device named in Hebrew could be neither controlled nor read.
+  /// 3.1.1 handles both. Only the CONNECT packet must still say 3.1, for the
+  /// SMHUB's broker; [connectAsV31] does that.
+  @visibleForTesting
+  static void useProtocolRules() {
+    mc.Protocol.version = mc.MqttClientConstants.mqttV311ProtocolVersion;
+    mc.Protocol.name = mc.MqttClientConstants.mqttV311ProtocolName;
+  }
+
+  /// Connects [client] introducing itself as MQTT 3.1 (MQIsdp): the
+  /// Mosquitto build on SMLIGHT SMHUB disconnects 3.1.1 CONNECT packets with
+  /// "protocol error", even though they're spec-valid.
+  ///
+  /// [mc.MqttClient.connect] copies the global version into the CONNECT
+  /// packet synchronously, before its first await, so switching the global
+  /// for exactly that call is enough; everything after it, the CONNACK
+  /// included, runs under [useProtocolRules].
+  @visibleForTesting
+  static Future<mc.MqttClientConnectionStatus?> connectAsV31(
+      mc.MqttClient client, String? username, String? password) {
+    mc.Protocol.version = mc.MqttClientConstants.mqttV31ProtocolVersion;
+    mc.Protocol.name = mc.MqttClientConstants.mqttV31ProtocolName;
+    try {
+      return client.connect(username, password);
+    } finally {
+      useProtocolRules();
+    }
+  }
+
   /// Publishes [value] using [template], substituting `{value}` with [value]'s string form.
   void publish(
     String topic,
@@ -470,9 +503,7 @@ class MqttManager {
       client.publishMessage(topic, qos, builder.payload!, retain: retain);
       if (!_commandsSent.isClosed) _commandsSent.add(topic);
     } catch (e) {
-      // mqtt_client's MQTT 3.1 encoding rejects extended UTF-8 in topics
-      // with InvalidTopicException. We swallow here so a misconfigured panel
-      // doesn't crash the widget tree; callers should ensure ASCII topics.
+      // Swallowed so a misconfigured panel doesn't crash the widget tree.
       // ignore: avoid_print
       print('[MqttManager] publish failed for topic "$topic": $e');
     }
@@ -481,9 +512,9 @@ class MqttManager {
   mc.MqttClient _buildClient(String host, int timeoutMs) {
     final client = _clientFactory(config, _clientId, host: host);
     client.logging(on: false);
-    // Stay on mqtt_client's default protocol (MQTT 3.1, ProtocolName=MQIsdp).
-    // The Mosquitto build on SMLIGHT SMHUB silently disconnects 3.1.1
-    // CONNECT packets with "protocol error" — even though they're spec-valid.
+    // CONNECT says MQTT 3.1 (connectAsV31); every other packet follows
+    // 3.1.1 rules, so topics may hold any language.
+    useProtocolRules();
     client.keepAlivePeriod = config.keepAliveSeconds;
     client.connectTimeoutPeriod =
         timeoutMs; // ms; per-candidate (LAN probe vs standard)
