@@ -60,7 +60,7 @@ void main() {
 
       final db = AppDatabase.test(schema.newConnection());
       addTearDown(db.close);
-      await verifier.migrateAndValidate(db, 7);
+      await verifier.migrateAndValidate(db, 8);
 
       final dash = await db.select(db.dashboards).getSingle();
       expect(dash.colorSeed, purple);

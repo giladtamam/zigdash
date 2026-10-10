@@ -9,6 +9,7 @@ import 'tables/device_health_flags.dart';
 import 'tables/panels.dart';
 import 'tables/scenes.dart';
 import 'tables/sections.dart';
+import 'tables/shortcuts.dart';
 
 part 'database.g.dart';
 
@@ -20,13 +21,14 @@ part 'database.g.dart';
   Sections,
   DeviceDismissals,
   DeviceHealthFlags,
+  Shortcuts,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_open());
   AppDatabase.test(super.executor);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -94,6 +96,9 @@ class AppDatabase extends _$AppDatabase {
           if (from < 7) {
             await m.addColumn(connections, connections.z2mBaseTopic);
             await m.createTable(deviceHealthFlags);
+          }
+          if (from < 8) {
+            await m.createTable(shortcuts);
           }
         },
         // The schema's cascades (home → dashboards → sections, tiles) only
