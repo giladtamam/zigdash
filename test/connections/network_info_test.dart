@@ -47,4 +47,13 @@ void main() {
       '100.70.1.2',
     );
   });
+
+  test('pickHomeAddress keeps the interface name', () {
+    expect(
+        pickHomeAddress([
+          (name: 'p2p-wlan0-0', ip: '192.168.49.1'),
+          (name: 'wlan0', ip: '192.168.68.57'),
+        ]),
+        (name: 'wlan0', ip: '192.168.68.57'));
+  });
 }

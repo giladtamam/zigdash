@@ -127,6 +127,28 @@ void main() {
       expect(prober.probed.every((h) => h.startsWith('192.168.7.')), isTrue);
     });
 
+    test('reports what it tried, once', () async {
+      final stats = <ScanStats>[];
+      final service = BrokerScanService(
+          prober: _FakeProber({'192.168.68.55:1883': false}),
+          ports: const [1883, 8883]);
+      await service.scan('192.168.69.10', onDone: stats.add).toList();
+      expect(stats, hasLength(1));
+      expect(stats.single.widened, isTrue);
+      expect(stats.single.brokersFound, 1);
+      // 253 in the own /24, then the other 765 of the /22 (all but .0 and
+      // the /24 already tried), each on two ports.
+      expect(stats.single.hostsTried, greaterThan(1000));
+
+      stats.clear();
+      await BrokerScanService(prober: _FakeProber({}), ports: const [1883])
+          .scan('8.8.8.8', onDone: stats.add)
+          .toList();
+      // A public address has no wider /22 to try.
+      expect(stats.single,
+          (widened: false, hostsTried: 253, brokersFound: 0));
+    });
+
     test('no brokers found → empty, still closes', () async {
       final service = BrokerScanService(
           prober: _FakeProber({}), ports: const [1883]);

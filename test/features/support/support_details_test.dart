@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
 import 'package:zigdash/features/onboarding/setup/setup_error_guidance.dart';
 import 'package:zigdash/features/support/support_details.dart';
-import 'package:zigdash/mqtt/connection_failure.dart';
 
 void main() {
   group('addressShape', () {

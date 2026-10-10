@@ -2,13 +2,16 @@ import 'dart:io';
 
 /// Returns the phone's private IPv4 address on the home network (Wi-Fi or
 /// Ethernet), or null if none is found.
-Future<String?> wifiIpv4() async {
+Future<String?> wifiIpv4() async => (await homeIpv4())?.ip;
+
+/// The home-network address and the name of the interface it is on.
+Future<({String name, String ip})?> homeIpv4() async {
   try {
     final interfaces = await NetworkInterface.list(
       type: InternetAddressType.IPv4,
       includeLoopback: false,
     );
-    return pickHomeIpv4([
+    return pickHomeAddress([
       for (final iface in interfaces)
         for (final addr in iface.addresses) (name: iface.name, ip: addr.address),
     ]);
@@ -25,7 +28,13 @@ Future<String?> wifiIpv4() async {
 /// (`wlan*`, `eth*`, `en*`) come first, other private addresses next, any
 /// other address last, and Wi-Fi Direct, mobile data, VPN and tethering
 /// interfaces never.
-String? pickHomeIpv4(List<({String name, String ip})> addresses) {
+String? pickHomeIpv4(List<({String name, String ip})> addresses) =>
+    pickHomeAddress(addresses)?.ip;
+
+/// [pickHomeIpv4], keeping the interface name (for Support details' network
+/// kind; the name itself is never shown).
+({String name, String ip})? pickHomeAddress(
+    List<({String name, String ip})> addresses) {
   final usable = [
     for (final a in addresses)
       if (!_isExcluded(a.name)) a,
@@ -35,10 +44,10 @@ String? pickHomeIpv4(List<({String name, String ip})> addresses) {
       if (_isPrivate(a.ip)) a,
   ];
   for (final a in private) {
-    if (_isHomeInterface(a.name)) return a.ip;
+    if (_isHomeInterface(a.name)) return a;
   }
-  if (private.isNotEmpty) return private.first.ip;
-  return usable.isEmpty ? null : usable.first.ip;
+  if (private.isNotEmpty) return private.first;
+  return usable.isEmpty ? null : usable.first;
 }
 
 bool _isHomeInterface(String name) =>

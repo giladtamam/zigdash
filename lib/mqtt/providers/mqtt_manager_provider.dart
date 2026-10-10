@@ -5,6 +5,7 @@ import '../../data/last_known/last_known_store.dart';
 import '../../features/onboarding/demo_home.dart' show demoValues;
 import '../../features/onboarding/demo_service.dart' show isDemoConnection;
 import '../../data/repositories/connection_repo.dart';
+import '../../features/support/support_log.dart';
 import '../broker_config.dart';
 import '../endpoint.dart';
 import '../mqtt_manager.dart';
@@ -79,6 +80,19 @@ final mqttManagerProvider =
   final saving =
       manager.messages.listen((m) => store.record(connectionId, m));
   ref.onDispose(saving.cancel);
+
+  // Support details keeps the last failure kind until a connection works.
+  if (!isDemoConnection(conn.host)) {
+    final support = ref.read(supportLogProvider);
+    final watching = manager.status$.listen((s) {
+      if (s == MqttStatus.connected) {
+        support.clear();
+      } else if (s == MqttStatus.error && manager.lastFailure != null) {
+        support.recordFailure(manager.lastFailure!);
+      }
+    });
+    ref.onDispose(watching.cancel);
+  }
 
   // Fire-and-forget connect — UI watches status$ to observe progress. The
   // demo has no broker: it stays offline, quietly, without a status line.
