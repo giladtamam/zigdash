@@ -50,12 +50,18 @@ class AlertsService {
       .watchSingleOrNull()
       .map((row) => row == null ? null : AlertsConfig.decode(row.config));
 
-  Future<void> save(AlertsConfig config) => _db
-      .into(_db.alertConfigs)
-      .insertOnConflictUpdate(AlertConfigsCompanion.insert(
-          connectionId: config.connectionId,
-          config: config.encode(),
-          updatedAt: DateTime.now()));
+  Future<void> save(AlertsConfig config) async {
+    await _db.into(_db.alertConfigs).insertOnConflictUpdate(
+        AlertConfigsCompanion.insert(
+            connectionId: config.connectionId,
+            config: config.encode(),
+            updatedAt: DateTime.now()));
+    // The notification's title is this phone's own name for the Home.
+    final conn = await (_db.select(_db.connections)
+          ..where((c) => c.id.equals(config.connectionId)))
+        .getSingleOrNull();
+    if (conn != null) await AlertPush.rememberHomeName(_prefs, config.connectionId, conn.name);
+  }
 
   /// The Home's config, made from the Connection on first use (with a fresh
   /// key pair, the Home's name, base topic and this phone's time zone).
@@ -161,6 +167,10 @@ class AlertsService {
   Future<void> onRetained(String connectionId, String raw) async {
     final retained = AlertsConfig.decode(raw);
     final local = await load(connectionId);
+    // Pushes name the Home by the writing phone's id: map it to ours.
+    if (retained != null && retained.connectionId != connectionId) {
+      await AlertPush.rememberAlias(_prefs, retained.connectionId, connectionId);
+    }
     if (retained == null) {
       // Another phone turned alerts off.
       if (local != null) {

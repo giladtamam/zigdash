@@ -147,6 +147,8 @@ void main() {
     expect(mine.connectionId, 'home');
     expect(mine.vapid?.publicKey, 'PUB', reason: 'the keys come along');
     expect(mine.phones.single.id, 'other');
+    // Pushes will name the Home by their id: it maps to ours, with our name.
+    expect(AlertPush.homeOf(prefs, 'their-id-for-it'), ('home', 'My Home'));
   });
 
   test('an empty retained config means another phone turned alerts off',

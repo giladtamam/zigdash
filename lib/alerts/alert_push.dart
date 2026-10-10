@@ -127,6 +127,23 @@ abstract final class AlertPush {
     await _channels();
   }
 
+  /// This phone's own name for Home [connectionId], for notification titles.
+  static Future<void> rememberHomeName(
+          SharedPreferences prefs, String connectionId, String name) =>
+      prefs.setString('alerts.home.$connectionId', name);
+
+  /// Another phone's id for the same Home, as it appears in pushes.
+  static Future<void> rememberAlias(
+          SharedPreferences prefs, String theirId, String connectionId) =>
+      prefs.setString('alerts.alias.$theirId', connectionId);
+
+  /// Our id for the Home a push names, and our name for it.
+  static (String?, String?) homeOf(SharedPreferences? prefs, String? pushedId) {
+    if (prefs == null || pushedId == null) return (pushedId, null);
+    final id = prefs.getString('alerts.alias.$pushedId') ?? pushedId;
+    return (id, prefs.getString('alerts.home.$id'));
+  }
+
   /// This phone's id in a Home's config, made once.
   static String phoneId(SharedPreferences prefs) {
     var id = prefs.getString(_phoneIdKey);
@@ -214,12 +231,13 @@ abstract final class AlertPush {
     final code = prefs?.getString('locale');
     final l10n = appL10n(code == null || code.isEmpty ? null : Locale(code));
     final urgent = event.urgent;
+    final (homeId, homeName) = homeOf(prefs, event.connectionId);
     await _channels();
     await _notes.show(
       id: event.device?.hashCode ?? event.at.millisecondsSinceEpoch ~/ 1000,
-      title: event.home.isEmpty ? 'ZigDash' : event.home,
+      title: homeName ?? (event.home.isEmpty ? 'ZigDash' : event.home),
       body: event.text(l10n, oneHome: true),
-      payload: '${event.connectionId ?? ''}|${event.device ?? ''}|${event.home}',
+      payload: '${homeId ?? ''}|${event.device ?? ''}|${event.home}',
       notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           urgent ? urgentChannel : noticeChannel,
