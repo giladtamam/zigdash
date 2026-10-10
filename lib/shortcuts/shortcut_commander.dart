@@ -95,6 +95,7 @@ class ShortcutCommander {
     this.confirmWithin = const Duration(seconds: 5),
     this.maxSilence = const Duration(seconds: 3),
     this.knownStateWithin = const Duration(milliseconds: 300),
+    this.retryGap = const Duration(milliseconds: 500),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
@@ -108,6 +109,9 @@ class ShortcutCommander {
 
   /// How long a first tap waits for the device's current state.
   final Duration knownStateWithin;
+
+  /// The pause between connect attempts in [reach].
+  final Duration retryGap;
   final DateTime Function() _now;
 
   /// The command a tap sends: covers open or close, everything else switches
@@ -252,6 +256,31 @@ class ShortcutCommander {
     return f == null || before[f.property] == null;
   }
 
+  /// Connects [mgr], trying again until [connectWithin] runs out: Android
+  /// lets a just-started widget service onto the network a moment after it
+  /// starts, so a first attempt can fail at once.
+  Future<bool> reach(MqttManager mgr) async {
+    var over = false;
+    Future<bool> tries() async {
+      while (!over) {
+        if (await mgr.ensureConnected(
+            timeout: connectWithin, maxSilence: maxSilence)) {
+          return true;
+        }
+        if (!over) await Future<void>.delayed(retryGap);
+      }
+      return false;
+    }
+
+    try {
+      return await tries().timeout(connectWithin);
+    } on TimeoutException {
+      return false;
+    } finally {
+      over = true;
+    }
+  }
+
   /// What a shortcut shows for [payload] (received at [at]), without a tap:
   /// used while the app runs to keep shortcuts current.
   ShortcutResult describe(ShortcutDevice d, String payload, DateTime at) =>
@@ -273,8 +302,7 @@ class ShortcutCommander {
 
   Future<ShortcutResult> _send(MqttManager mgr, ShortcutDevice d,
       Map<String, Object?>? fixed, String? lastPayload, DateTime? lastAt) async {
-    if (!await mgr.ensureConnected(
-        timeout: connectWithin, maxSilence: maxSilence)) {
+    if (!await reach(mgr)) {
       return _result(ShortcutOutcome.unreachable, d, lastPayload, lastAt);
     }
     final reply = Completer<String>();
@@ -329,8 +357,7 @@ class ShortcutCommander {
   /// Runs a scene's actions, as the app's scene tile does.
   Future<ShortcutOutcome> runScene(
       MqttManager mgr, List<SceneAction> actions) async {
-    if (!await mgr.ensureConnected(
-        timeout: connectWithin, maxSilence: maxSilence)) {
+    if (!await reach(mgr)) {
       return ShortcutOutcome.unreachable;
     }
     for (final a in actions) {

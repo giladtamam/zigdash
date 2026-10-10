@@ -19,7 +19,7 @@ import 'package:zigdash/shortcuts/shortcut_commander.dart';
 class _Broker extends mc.MqttClient {
   _Broker({this.reachable = true, this.silent = false})
       : super.withPort('h', 'c', 1883);
-  final bool reachable;
+  bool reachable;
   final bool silent;
   final sent = <(String, String)>[];
   final _status = mc.MqttClientConnectionStatus();
@@ -277,6 +277,29 @@ void main() {
           .then((v) => r = v);
       async.elapse(const Duration(seconds: 6));
       expect(r!.line, l10n.deviceNotResponding);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a refused first connect is tried again within connectWithin', () {
+    // Android lets a just-started widget service onto the network a moment
+    // after it starts: the first attempt can fail at once.
+    fakeAsync((async) {
+      final b = _Broker(reachable: false);
+      final m = _manager(b);
+      ShortcutResult? r;
+      ShortcutCommander(l10n: l10n)
+          .toggle(m, _device(_light, 'lamp'), lastPayload: '{"state":"ON"}')
+          .then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(r, isNull, reason: 'still trying');
+      b.reachable = true;
+      async.elapse(const Duration(seconds: 2));
+      expect(b.sent.single, ('zigbee2mqtt/lamp/set', '{"state":"OFF"}'));
+      b.emit('zigbee2mqtt/lamp', '{"state":"OFF"}');
+      async.elapse(const Duration(milliseconds: 50));
+      expect(r!.outcome, ShortcutOutcome.confirmed);
       m.dispose();
       async.flushMicrotasks();
     });

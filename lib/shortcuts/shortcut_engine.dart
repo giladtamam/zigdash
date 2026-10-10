@@ -226,11 +226,9 @@ class ShortcutEngine {
       Duration freshFor = const Duration(minutes: 1)}) async {
     final mgr = await _manager(connectionId);
     if (mgr == null) return {'outcome': 'removed'};
-    if (!await mgr.ensureConnected(maxSilence: const Duration(seconds: 3))) {
-      return {'outcome': 'unreachable'};
-    }
-    final prefs = await _prefs;
     final commander = await _commander();
+    if (!await commander.reach(mgr)) return {'outcome': 'unreachable'};
+    final prefs = await _prefs;
     var asked = 0;
     for (final ieee in ieees) {
       final d = await _device(connectionId, ieee);
