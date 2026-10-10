@@ -19,6 +19,10 @@ CONÉCTATE A CUALQUIER BRÓKER
 16 TIPOS DE PANEL: CONTRÓLALO TODO
 Interruptor, Botón, Deslizador, Persiana (abrir/parar/cerrar con posiciones), Multiestado, Combo, Radio, Indicador LED, Estado de nodo, Progreso, Entrada de texto, Registro de texto, Escena, Programación, Regla de autoapagado y Detección de dispositivos Zigbee2MQTT. De luces y persianas a sensores y escenas: un panel Zigbee para cada dispositivo.
 
+ACCESOS DIRECTOS: SIN ABRIR LA APP
+• Mosaicos de Ajustes rápidos: enciende una luz o un enchufe con un toque o ajusta una persiana con un deslizador, desde el panel de notificaciones.
+• Control de dispositivos de Android: cada dispositivo de tus paneles como tarjeta, con deslizadores de brillo y posición.
+
 AUTOMATIZACIÓN QUE FUNCIONA CON EL MÓVIL APAGADO
 • Paneles de programación: temporizadores diarios de abrir/cerrar guardados como configuración MQTT retenida.
 • Reglas de autoapagado: apaga un dispositivo N segundos después de encenderse, ideal para ventiladores, bombas y luces temporizadas.

@@ -19,6 +19,10 @@ MIT JEDEM BROKER VERBINDEN
 16 PANEL-TYPEN – ALLES STEUERN
 Schalter, Taste, Slider, Rollladen (Auf/Stopp/Zu mit Voreinstellungen), Multi-State, Combo, Radio, LED-Anzeige, Node-Status, Fortschritt, Texteingabe, Textprotokoll, Szene, Zeitplan, Auto-Aus-Regel und Zigbee2MQTT-Geräteerkennung. Von Lampen und Rollläden bis zu Sensoren und Szenen: ein Zigbee-Dashboard für jedes Gerät.
 
+KURZBEFEHLE – OHNE DIE APP ZU ÖFFNEN
+• Schnelleinstellungs-Kacheln: Lampe oder Steckdose mit einem Tippen schalten, Rollladen per Schieberegler stellen, direkt aus der Benachrichtigungsleiste.
+• Android-Gerätesteuerung: jedes Gerät deiner Dashboards als Karte, mit Reglern für Helligkeit und Rollladenposition.
+
 AUTOMATISIERUNG – LÄUFT AUCH BEI AUSGESCHALTETEM HANDY
 • Zeitplan-Panels: tägliche Öffnen/Schließen-Timer, gespeichert als retained MQTT-Konfiguration.
 • Auto-Aus-Regeln: ein Gerät N Sekunden nach dem Einschalten wieder ausschalten, ideal für Lüfter, Pumpen und Zeitlicht.

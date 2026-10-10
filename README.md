@@ -33,14 +33,18 @@ MQTT.
   config executed by Node-RED on your always-on hub (SMLIGHT, Raspberry Pi, …).
   Your phone can be off; the automation still runs. Bundled Node-RED flows in
   `node-red/`.
+- **Shortcuts** — Quick Settings tiles switch a light or plug in one tap, or
+  open a slider for a shutter; Android's Device Controls show every dashboard
+  device as a card with brightness and position sliders.
 - **Any MQTT broker** — TCP, SSL/TLS, WebSocket, WSS. Broker auto-scan on the
   LAN, username/password in hardware-backed secure storage, automatic
   exponential-backoff reconnect, multiple brokers with instant switching.
 - **Tailscale support** — secure remote access over your WireGuard mesh, no
   port forwarding.
 - **Polished** — Material 3 with Material You dynamic color (Android 12+),
-  phone and tablet in both orientations, eight languages (English, French, German,
-  Spanish, Dutch, Swedish, Norwegian, Hebrew) with full RTL, responsive panel
+  phone and tablet in both orientations, eleven languages (English, French,
+  German, Spanish, Dutch, Swedish, Norwegian, Russian, Polish, Portuguese,
+  Hebrew) with full RTL, responsive panel
   grid, dashboard lock, JSON backup/restore.
 - **Private** — no ads, no account. Anonymous usage data only if you opt in;
   builds without an analytics key (F-Droid, your own) send nothing at all.

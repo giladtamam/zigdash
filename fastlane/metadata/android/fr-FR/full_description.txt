@@ -19,6 +19,10 @@ CONNECTEZ N'IMPORTE QUEL BROKER
 16 TYPES DE PANNEAUX : PILOTEZ TOUT
 Interrupteur, Bouton, Curseur, Volet (ouvrir/stop/fermer avec positions), Multi-état, Liste, Radio, Voyant LED, État du nœud, Progression, Saisie de texte, Journal, Scène, Programmation, Règle d'arrêt auto et Détection d'appareils Zigbee2MQTT. Des lumières et volets aux capteurs et scènes : un seul dashboard Zigbee pour chaque appareil.
 
+RACCOURCIS : SANS OUVRIR L’APP
+• Tuiles des Réglages rapides : allumez une lampe ou une prise d’un geste, réglez un volet au curseur, depuis le volet de notifications.
+• Commandes des appareils Android : chaque appareil de vos tableaux en carte, avec curseurs de luminosité et de position.
+
 AUTOMATISATION : FONCTIONNE TÉLÉPHONE ÉTEINT
 • Panneaux de programmation : minuteries quotidiennes d'ouverture/fermeture enregistrées en configuration MQTT retained.
 • Règles d'arrêt auto : éteindre un appareil N secondes après son allumage, parfait pour ventilateurs, pompes et éclairages temporisés.
