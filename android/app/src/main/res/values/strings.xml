@@ -5,4 +5,10 @@
 <resources>
     <string name="widget_device_label">ZigDash device</string>
     <string name="widget_device_description">Switch a light or plug, or move a shutter, from your home screen</string>
+    <string name="widget_scene_label">ZigDash scene</string>
+    <string name="widget_scene_description">Run a scene from your home screen</string>
+    <string name="widget_device_sample">Living room</string>
+    <string name="widget_device_sample_line">On</string>
+    <string name="widget_scene_sample">Evening</string>
+    <string name="widget_scene_sample_line">Confirmed</string>
 </resources>

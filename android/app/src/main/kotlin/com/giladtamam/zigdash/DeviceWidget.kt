@@ -147,7 +147,7 @@ class DeviceWidget : AppWidgetProvider() {
         }
 
         /** The last-known line, with its age once it's over a minute old. */
-        private fun withAge(line: String?, at: Long?): String? {
+        internal fun withAge(line: String?, at: Long?): String? {
             if (line == null || at == null) return line
             val now = System.currentTimeMillis()
             if (now - at < DateUtils.MINUTE_IN_MILLIS) return line

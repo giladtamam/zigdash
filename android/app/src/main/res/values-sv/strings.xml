@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">ZigDash-enhet</string>
     <string name="widget_device_description">Slå på en lampa eller ett uttag, eller flytta en rullgardin, från hemskärmen</string>
+    <string name="widget_scene_label">ZigDash-scen</string>
+    <string name="widget_scene_description">Kör en scen från hemskärmen</string>
+    <string name="widget_device_sample">Vardagsrum</string>
+    <string name="widget_device_sample_line">På</string>
+    <string name="widget_scene_sample">Kväll</string>
+    <string name="widget_scene_sample_line">Bekräftad</string>
 </resources>

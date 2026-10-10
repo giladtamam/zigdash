@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">Appareil ZigDash</string>
     <string name="widget_device_description">Allumez une lampe ou une prise, ou bougez un volet, depuis votre écran d\'accueil</string>
+    <string name="widget_scene_label">Scène ZigDash</string>
+    <string name="widget_scene_description">Lancez une scène depuis votre écran d\'accueil</string>
+    <string name="widget_device_sample">Salon</string>
+    <string name="widget_device_sample_line">Allumé</string>
+    <string name="widget_scene_sample">Soirée</string>
+    <string name="widget_scene_sample_line">Confirmée</string>
 </resources>

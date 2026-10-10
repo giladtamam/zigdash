@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">Urządzenie ZigDash</string>
     <string name="widget_device_description">Włącz światło lub gniazdko albo przesuń roletę z ekranu głównego</string>
+    <string name="widget_scene_label">Scena ZigDash</string>
+    <string name="widget_scene_description">Uruchom scenę z ekranu głównego</string>
+    <string name="widget_device_sample">Salon</string>
+    <string name="widget_device_sample_line">Wł.</string>
+    <string name="widget_scene_sample">Wieczór</string>
+    <string name="widget_scene_sample_line">Potwierdzono</string>
 </resources>

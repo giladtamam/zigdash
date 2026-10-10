@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One-device widget (docs/design/roadmap-post-2.0.md, widgets): 2×2,
-     resizable down to a 4×1 strip. Chosen in WidgetConfigActivity;
-     reconfigured by long-press on Android 12+. -->
+<!-- Scene button (docs/design/roadmap-post-2.0.md, widgets): the size of a
+     one-device widget, 2×2 down to a strip. Chosen in WidgetConfigActivity
+     (scene mode); reconfigured by long-press on Android 12+. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="com.giladtamam.zigdash.WidgetConfigActivity"
-    android:description="@string/widget_device_description"
+    android:description="@string/widget_scene_description"
     android:initialLayout="@layout/widget_device"
     android:minWidth="110dp"
     android:minHeight="40dp"
     android:minResizeWidth="110dp"
     android:minResizeHeight="40dp"
-    android:previewLayout="@layout/widget_device_preview"
+    android:previewLayout="@layout/widget_scene_preview"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="2"
     android:targetCellHeight="2"

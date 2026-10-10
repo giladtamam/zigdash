@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">Dispositivo ZigDash</string>
     <string name="widget_device_description">Ligue uma luz ou tomada, ou mova uma persiana, direto da tela inicial</string>
+    <string name="widget_scene_label">Cena do ZigDash</string>
+    <string name="widget_scene_description">Ative uma cena direto da tela inicial</string>
+    <string name="widget_device_sample">Sala</string>
+    <string name="widget_device_sample_line">Ligado</string>
+    <string name="widget_scene_sample">Noite</string>
+    <string name="widget_scene_sample_line">Confirmada</string>
 </resources>

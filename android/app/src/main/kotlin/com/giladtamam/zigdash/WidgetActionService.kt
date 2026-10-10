@@ -27,7 +27,7 @@ class WidgetActionService : Service() {
     private var running = 0
     private val changes = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         if (key != null && key.startsWith("flutter.shortcut.state.")) {
-            main.post { DeviceWidget.refreshAll(this) }
+            main.post { DeviceWidget.refreshAll(this); SceneWidget.refreshAll(this) }
         }
     }
 
@@ -47,6 +47,10 @@ class WidgetActionService : Service() {
         startForeground()
         val id = intent?.getIntExtra(DeviceWidget.EXTRA_ID, -1) ?: -1
         val action = intent?.action ?: ""
+        if (action == ACTION_SCENE) {
+            runScene(id)
+            return START_NOT_STICKY
+        }
         val t = ShortcutPrefs.widget(this, id)
         if (t == null) {
             finishSoon(0)
@@ -94,6 +98,35 @@ class WidgetActionService : Service() {
         return START_NOT_STICKY
     }
 
+    /** Runs scene widget [id]'s scene; the engine writes "Sent", then "Confirmed". */
+    private fun runScene(id: Int) {
+        val e = ShortcutPrefs.sceneWidget(this, id)
+        if (e == null) {
+            finishSoon(0)
+            return
+        }
+        ShortcutPrefs.mark(this, "shortcut.used.scene_widget")
+        val mgr = AppWidgetManager.getInstance(this)
+        SceneWidget.render(this, mgr, id, working = true)
+        running++
+        ShortcutEngine.scene(this, e.connectionId, e.sceneId) { json ->
+            android.util.Log.i("ZigDashShortcuts", "scene widget $id: $json")
+            val outcome = try { JSONObject(json).optString("outcome") } catch (_: Exception) { "" }
+            val problem = when (outcome) {
+                "confirmed", "sent" -> null
+                "unreachable" -> ShortcutPrefs.word(this, "cantReach", "Can't reach home")
+                "removed" -> ShortcutPrefs.word(this, "removed", "Removed")
+                else -> ShortcutPrefs.word(this, "notConfirmed", "Not confirmed")
+            }
+            SceneWidget.render(this, mgr, id, problem = problem)
+            running--
+            if (problem != null) {
+                main.postDelayed({ SceneWidget.render(this, mgr, id) }, 10_000L)
+            }
+            finishSoon(if (problem != null) 10_000L else 0L)
+        }
+    }
+
     private fun finishSoon(delay: Long, redraw: Boolean = false) {
         main.postDelayed({
             if (redraw) DeviceWidget.refreshAll(this)
@@ -131,5 +164,6 @@ class WidgetActionService : Service() {
         private const val FOLLOW_MS = 45_000L
         private const val WATCH_MS = 10_000L
         const val ACTION_WATCH = "WATCH"
+        const val ACTION_SCENE = "SCENE"
     }
 }

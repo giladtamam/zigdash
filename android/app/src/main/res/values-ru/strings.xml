@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">Устройство ZigDash</string>
     <string name="widget_device_description">Включайте свет или розетку и управляйте шторами прямо с главного экрана</string>
+    <string name="widget_scene_label">Сцена ZigDash</string>
+    <string name="widget_scene_description">Запускайте сцену прямо с главного экрана</string>
+    <string name="widget_device_sample">Гостиная</string>
+    <string name="widget_device_sample_line">Вкл.</string>
+    <string name="widget_scene_sample">Вечер</string>
+    <string name="widget_scene_sample_line">Подтверждено</string>
 </resources>

@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">ZigDash-apparaat</string>
     <string name="widget_device_description">Schakel een lamp of stekker, of beweeg een rolluik, vanaf je startscherm</string>
+    <string name="widget_scene_label">ZigDash-scène</string>
+    <string name="widget_scene_description">Start een scène vanaf je startscherm</string>
+    <string name="widget_device_sample">Woonkamer</string>
+    <string name="widget_device_sample_line">Aan</string>
+    <string name="widget_scene_sample">Avond</string>
+    <string name="widget_scene_sample_line">Bevestigd</string>
 </resources>

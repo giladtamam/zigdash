@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">ZigDash-enhet</string>
     <string name="widget_device_description">Slå av og på et lys eller en stikkontakt, eller flytt en persienne, fra startskjermen</string>
+    <string name="widget_scene_label">ZigDash-scene</string>
+    <string name="widget_scene_description">Kjør en scene fra startskjermen</string>
+    <string name="widget_device_sample">Stue</string>
+    <string name="widget_device_sample_line">På</string>
+    <string name="widget_scene_sample">Kveld</string>
+    <string name="widget_scene_sample_line">Bekreftet</string>
 </resources>

@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">Dispositivo ZigDash</string>
     <string name="widget_device_description">Enciende una luz o un enchufe, o mueve una persiana, desde tu pantalla de inicio</string>
+    <string name="widget_scene_label">Escena de ZigDash</string>
+    <string name="widget_scene_description">Activa una escena desde tu pantalla de inicio</string>
+    <string name="widget_device_sample">Salón</string>
+    <string name="widget_device_sample_line">Encendido</string>
+    <string name="widget_scene_sample">Noche</string>
+    <string name="widget_scene_sample_line">Confirmada</string>
 </resources>

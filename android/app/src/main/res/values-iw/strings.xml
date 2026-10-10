@@ -2,4 +2,10 @@
 <resources>
     <string name="widget_device_label">מכשיר ZigDash</string>
     <string name="widget_device_description">הדליקו אור או שקע, או הזיזו תריס, ישירות ממסך הבית</string>
+    <string name="widget_scene_label">סצנת ZigDash</string>
+    <string name="widget_scene_description">הפעילו סצנה ישירות ממסך הבית</string>
+    <string name="widget_device_sample">סלון</string>
+    <string name="widget_device_sample_line">דולק</string>
+    <string name="widget_scene_sample">ערב</string>
+    <string name="widget_scene_sample_line">אושרה</string>
 </resources>
