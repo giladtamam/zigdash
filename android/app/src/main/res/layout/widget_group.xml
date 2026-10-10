@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Group widget (4×2 to 4×4): a title, up to five device rows and a row of up
-     to three scene buttons. Unused slots are hidden; GroupWidget picks how
+     to three scene buttons. In a row the name wins: it takes the room it
+     needs (capped), and the state line gets the rest. Unused slots are hidden; GroupWidget picks how
      many rows fit the widget's height. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/w_root"
@@ -43,9 +44,9 @@
             android:id="@+id/w_r1_name"
             android:textDirection="locale"
             android:textAlignment="viewStart"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/w_ink"
@@ -54,12 +55,13 @@
         <TextView
             android:id="@+id/w_r1_line"
             android:textDirection="locale"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="140dp"
             android:textColor="@color/w_ink2"
             android:textSize="12sp" />
     </LinearLayout>
@@ -84,9 +86,9 @@
             android:id="@+id/w_r2_name"
             android:textDirection="locale"
             android:textAlignment="viewStart"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/w_ink"
@@ -95,12 +97,13 @@
         <TextView
             android:id="@+id/w_r2_line"
             android:textDirection="locale"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="140dp"
             android:textColor="@color/w_ink2"
             android:textSize="12sp" />
     </LinearLayout>
@@ -125,9 +128,9 @@
             android:id="@+id/w_r3_name"
             android:textDirection="locale"
             android:textAlignment="viewStart"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/w_ink"
@@ -136,12 +139,13 @@
         <TextView
             android:id="@+id/w_r3_line"
             android:textDirection="locale"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="140dp"
             android:textColor="@color/w_ink2"
             android:textSize="12sp" />
     </LinearLayout>
@@ -166,9 +170,9 @@
             android:id="@+id/w_r4_name"
             android:textDirection="locale"
             android:textAlignment="viewStart"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/w_ink"
@@ -177,12 +181,13 @@
         <TextView
             android:id="@+id/w_r4_line"
             android:textDirection="locale"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="140dp"
             android:textColor="@color/w_ink2"
             android:textSize="12sp" />
     </LinearLayout>
@@ -207,9 +212,9 @@
             android:id="@+id/w_r5_name"
             android:textDirection="locale"
             android:textAlignment="viewStart"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:maxWidth="200dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/w_ink"
@@ -218,12 +223,13 @@
         <TextView
             android:id="@+id/w_r5_line"
             android:textDirection="locale"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:gravity="end"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="140dp"
             android:textColor="@color/w_ink2"
             android:textSize="12sp" />
     </LinearLayout>
