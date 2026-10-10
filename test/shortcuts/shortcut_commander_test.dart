@@ -185,6 +185,16 @@ void main() {
     expect(ShortcutCommander.confirms({'state': 'TOGGLE'}, {'state': 'OFF'}, {}),
         isTrue, reason: 'unknown before: any answer counts');
     expect(ShortcutCommander.confirms({'state': 'ON'}, {'power': 3}, {}), isFalse);
+    // A shutter starting to move confirms OPEN/CLOSE before it gets there.
+    expect(ShortcutCommander.confirms({'state': 'OPEN'},
+        {'state': 'CLOSE', 'motor_run_status': 'Forward'}, {}), isTrue);
+    expect(ShortcutCommander.confirms({'state': 'OPEN'},
+        {'state': 'CLOSE', 'position': 12}, {'position': 0}), isTrue);
+    expect(ShortcutCommander.confirms({'state': 'OPEN'},
+        {'state': 'CLOSE', 'motor_run_status': 'Stop', 'position': 0},
+        {'position': 0}), isFalse);
+    expect(ShortcutCommander.confirms(
+        {'state': 'OPEN'}, {'motor_run_status': 'Forward'}, {}), isTrue);
   });
 
   test('a closed cover opens, an open one closes', () {

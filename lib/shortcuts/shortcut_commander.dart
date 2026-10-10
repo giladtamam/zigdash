@@ -133,9 +133,31 @@ class ShortcutCommander {
       return s == 'CLOSED' ? 'CLOSE' : s;
     }
 
+    // A shutter takes several seconds to travel and only reports its final
+    // state at the end, so the motor starting (or the position changing) is
+    // the confirmation. Measured on a SONOFF MINI-ZBRBS: it reports
+    // motor_run_status every 5 s while moving.
+    final target = command['state'];
+    if (target is String &&
+        (norm(target) == 'OPEN' || norm(target) == 'CLOSE') &&
+        state['state'] != null &&
+        norm(state['state']) != norm(target)) {
+      final motor = state['motor_run_status'];
+      final pos = state['position'], was = before['position'];
+      if ((motor is String && norm(motor) != 'STOP') ||
+          (pos != null && was != null && pos != was)) {
+        return true;
+      }
+    }
     for (final MapEntry(:key, :value) in command.entries) {
       final now = state[key];
-      if (now == null) return false;
+      if (now == null) {
+        // Same as above, for a shutter that leaves "state" out.
+        if (key == 'state' && state['motor_run_status'] is String) {
+          return norm(state['motor_run_status']) != 'STOP';
+        }
+        return false;
+      }
       if (norm(value) == 'TOGGLE') {
         final was = before[key];
         if (was != null && norm(was) == norm(now)) return false;

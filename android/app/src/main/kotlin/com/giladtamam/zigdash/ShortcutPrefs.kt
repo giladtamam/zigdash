@@ -36,6 +36,12 @@ object ShortcutPrefs {
             )
         }
 
+    fun listen(ctx: Context, l: android.content.SharedPreferences.OnSharedPreferenceChangeListener) =
+        prefs(ctx).registerOnSharedPreferenceChangeListener(l)
+
+    fun unlisten(ctx: Context, l: android.content.SharedPreferences.OnSharedPreferenceChangeListener) =
+        prefs(ctx).unregisterOnSharedPreferenceChangeListener(l)
+
     /** The app's word for [key], or the English fallback. */
     fun word(ctx: Context, key: String, fallback: String): String =
         json(ctx, "shortcut.strings")?.optString(key)?.ifEmpty { null } ?: fallback

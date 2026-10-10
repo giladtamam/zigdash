@@ -23,10 +23,22 @@ abstract class ShortcutTileService : TileService() {
     private var flash: String? = null
     private var working = false
 
+    // While the panel is open, redraw whenever the app or the engine writes
+    // a new state (a shutter moving, a light switched from the dashboard).
+    private val changes = android.content.SharedPreferences
+        .OnSharedPreferenceChangeListener { _, key ->
+            if (key != null && key.startsWith("flutter.shortcut.")) main.post { render() }
+        }
+
     override fun onStartListening() {
         // The panel is open: start the engine now so a tap is quick.
         ShortcutEngine.warm(this)
+        ShortcutPrefs.listen(this, changes)
         render()
+    }
+
+    override fun onStopListening() {
+        ShortcutPrefs.unlisten(this, changes)
     }
 
     override fun onClick() {
@@ -40,7 +52,10 @@ abstract class ShortcutTileService : TileService() {
         working = true
         flash = null
         render()
+        val tap = System.currentTimeMillis()
         ShortcutEngine.toggle(this, t.connectionId, t.ieee) { json ->
+            android.util.Log.i("ZigDashShortcuts",
+                "tile $slot: ${System.currentTimeMillis() - tap} ms $json")
             working = false
             val outcome = try { JSONObject(json).optString("outcome") } catch (_: Exception) { "error" }
             flash = when (outcome) {

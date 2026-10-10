@@ -110,6 +110,7 @@ final shortcutLiveStateProvider =
         following.add(mgr.subscribe(device.subscribeTopic).listen((m) {
           if (m.payload.isEmpty) return;
           final r = commander.describe(device, m.payload, m.receivedAt);
+          debugPrint('shortcut live: ${device.name} on=${r.on} ${r.line}');
           prefs.setString(shortcutStateKey(row.connectionId, ieee),
               jsonEncode(r.toJson()));
           redraw?.cancel();

@@ -18,6 +18,9 @@ import '../data/database/database.dart';
 import '../features/scenes/models/scene.dart';
 import '../mqtt/broker_config.dart';
 import '../mqtt/mqtt_manager.dart';
+import '../features/devices/device_profile.dart';
+import '../features/panels/widgets/device_tile_panel.dart'
+    show decodeDeviceState;
 import 'shortcut_commander.dart';
 import 'shortcut_store.dart';
 
@@ -147,12 +150,53 @@ class ShortcutEngine {
     );
     if (result.outcome == ShortcutOutcome.confirmed) {
       await prefs.setString(key, jsonEncode(result.toJson()));
+      // A shutter is confirmed when its motor starts; follow it to the end
+      // so the shortcut shows it moving and where it stops.
+      if (device.profile.deviceClass == DeviceClass.cover) {
+        _follow(mgr, device, key, await _commander());
+      }
+    } else if (result.outcome == ShortcutOutcome.unconfirmed &&
+        device.profile.deviceClass == DeviceClass.cover) {
+      // The shutter didn't move: it was most likely already there (moved by
+      // a wall switch or an automation while the app was closed). Record
+      // that, so the next tap goes the other way.
+      final target = ShortcutCommander.commandFor(
+          device, last['payload'] as String?)['state'];
+      final assumed = (await _commander()).describe(
+          device, jsonEncode({'state': target}), DateTime.now());
+      await prefs.setString(key, jsonEncode(assumed.toJson()));
     }
     return {
       ...result.toJson(),
       // Where the time went, for the debug log (ms since the call).
       'timing': {'device': tDevice, 'manager': tManager, 'done': sw.elapsedMilliseconds},
     };
+  }
+
+  /// Writes [d]'s state as it reports it, until its motor stops or after
+  /// [limit]; the native tile and widget redraw on each write.
+  void _follow(MqttManager mgr, ShortcutDevice d, String key,
+      ShortcutCommander commander,
+      {Duration limit = const Duration(seconds: 45)}) {
+    late final StreamSubscription<MqttRxMessage> sub;
+    Timer? stop;
+    void end() {
+      stop?.cancel();
+      sub.cancel();
+      mgr.unsubscribe(d.subscribeTopic);
+    }
+
+    final since = DateTime.now();
+    sub = mgr.subscribe(d.subscribeTopic).listen((m) async {
+      // The subscription first replays the last message, from before the
+      // tap; its "Stop" would end the follow at once.
+      if (m.payload.isEmpty || m.receivedAt.isBefore(since)) return;
+      final r = commander.describe(d, m.payload, m.receivedAt);
+      (await _prefs).setString(key, jsonEncode(r.toJson()));
+      final motor = decodeDeviceState(m.payload)['motor_run_status'];
+      if (motor is String && motor.toUpperCase() == 'STOP') end();
+    });
+    stop = Timer(limit, end);
   }
 
   Future<Map<String, Object?>> scene(String connectionId, String sceneId) async {
