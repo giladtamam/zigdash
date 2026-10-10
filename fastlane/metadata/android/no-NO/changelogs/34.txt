@@ -1,0 +1,1 @@
+ZigDash 2.1: snarveier. Legg en enhet i Hurtiginnstillinger og slå den av og på med ett trykk, eller still en persienne med en glidebryter, uten å åpne appen. ZigDash vises også i Androids enhetsstyring, med hver enhet på dashbordene som et kort. Gi en enhet nytt navn fra siden dens. Og raskere ny tilkobling etter en pause.

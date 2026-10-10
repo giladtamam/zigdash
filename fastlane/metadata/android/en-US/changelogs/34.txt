@@ -1,0 +1,1 @@
+ZigDash 2.1: shortcuts. Put a device on Quick Settings and switch it in one tap, or set a shutter with a slider, without opening the app. ZigDash also appears in Android's Device Controls, with every dashboard device as a card. Rename a device from its page. And a faster reconnect after the phone was idle.
