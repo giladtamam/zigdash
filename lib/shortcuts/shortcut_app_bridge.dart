@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/analytics/analytics.dart';
 import '../core/l10n/l10n_ext.dart';
 import '../core/router/app_router.dart';
 import '../core/router/routes.dart';
@@ -18,6 +19,7 @@ import '../mqtt/providers/mqtt_manager_provider.dart';
 import 'shortcut_commander.dart';
 import 'shortcut_service.dart';
 import 'shortcut_store.dart';
+import 'shortcut_usage.dart';
 
 /// Connects the running app to its shortcuts: opens the tile picker when an
 /// unassigned tile is tapped, writes the native side's words in the app's
@@ -54,6 +56,9 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       final service = ref.read(shortcutServiceProvider);
       unawaited(service.resyncTiles().then((_) => refreshShortcutTiles()));
       unawaited(service.resyncControls());
+      // Uses noted by tiles and Device Controls while the app was closed.
+      unawaited(reportShortcutUsage(
+          ref.read(sharedPreferencesProvider), ref.read(analyticsProvider)));
       // Device Controls offer what's on the dashboards: follow changes.
       final db = ref.read(appDatabaseProvider);
       _dashboardChanges = db

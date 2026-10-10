@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/analytics/analytics.dart';
+
 import '../core/l10n/l10n_ext.dart';
 import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
@@ -53,6 +55,7 @@ class AddTileButton extends ConsumerWidget {
     }
     await service.assignTile(slot,
         connectionId: connectionId, ieee: ieee, name: name);
+    ref.read(analyticsProvider).track(const ShortcutAdded(ShortcutEventKind.tile));
     await refreshShortcutTiles();
     final r = await service.requestAddTile(slot, name);
     if (r == AddTileResult.added || r == AddTileResult.already) {

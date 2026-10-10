@@ -86,6 +86,17 @@ object ShortcutPrefs {
             )
         }
 
+    /**
+     * Notes a shortcut use for the app's opt-in analytics (shortcut_usage.dart
+     * sends and clears it when the app next starts). [onlyOnce] keeps a
+     * note that's already there.
+     */
+    fun mark(ctx: Context, key: String, onlyOnce: Boolean = false) {
+        val p = prefs(ctx)
+        if (onlyOnce && p.contains("flutter.$key")) return
+        p.edit().putString("flutter.$key", "1").apply()
+    }
+
     fun listen(ctx: Context, l: android.content.SharedPreferences.OnSharedPreferenceChangeListener) =
         prefs(ctx).registerOnSharedPreferenceChangeListener(l)
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/analytics/analytics.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/l10n/l10n_ext.dart';
@@ -67,6 +69,9 @@ class ShortcutTilePicker extends ConsumerWidget {
                         final messenger = ScaffoldMessenger.of(context);
                         await ref.read(shortcutServiceProvider).assignTile(slot,
                             connectionId: c.connectionId, ieee: c.ieee, name: c.name);
+                        ref
+                            .read(analyticsProvider)
+                            .track(const ShortcutAdded(ShortcutEventKind.tile));
                         await refreshShortcutTiles();
                         messenger.showSnackBar(SnackBar(
                             content: Text(l10n.shortcutTileReady(c.name, slot))));
