@@ -53,3 +53,11 @@
 **Get help** — the one screen every help link opens. It knows where the user came from (a setup failure, an unreachable home, a missing device list, Settings, the demo) and shows the tips for that place first, then a way to send a Support request. Different from **Report a problem**, which reports a bug to fix.
 
 **Shortcut** — a way to control one device from outside the app: a home-screen **widget**, a Quick Settings **tile**, or an Android Device **control**. Each is tied to one device in one Home, chosen when it is added, and keeps working when another Home is open in the app. After a tap it shows "working…" until the device confirms its new state (or, after 5 seconds, that it wasn't confirmed). Between taps it shows the Last-known value with its age; it never refreshes in the background.
+
+**Alert** — something the user asked to be told about when it happens at home: a leak, smoke, a door or window opening (optionally only within set hours), or a low battery, for chosen devices in one Home. The hub's Node-RED watches for it; the phone does not. Not a schedule: alerts tell, schedules act. Code: `AlertRule` in the config sent to the hub; UI only says "alert".
+
+**Notification** — what reaches the phone when an alert fires, delivered by a push service (ntfy by default) so it arrives with ZigDash closed. Leak and smoke also notify when they clear.
+
+**Recent alerts** — the last 20 alerts that fired, kept on the hub, shown at the top of the Alerts screen so a missed notification is still seen.
+
+**Alerts paused** — the state when the hub's alert flow has not reported in for over a minute (Node-RED stopped or not installed): no alert can fire, and the app says so on the Alerts screen and the dashboard.

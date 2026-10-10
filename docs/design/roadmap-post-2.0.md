@@ -20,7 +20,7 @@ The releases after 2.0, in order, decided on 2026-10-08 to 2026-10-10 in the "Po
 
 ## 2.3 to 2.5 at roadmap resolution
 
-- **2.3 Push notifications.** Node-RED on the hub is the alert engine; ZigDash configures an alerts flow over retained MQTT, the same way it configures schedules. Delivery starts with ntfy (high-priority FCM through Doze, no account, free up to 250 messages a day); UnifiedPush for native notifications is a later phase. Background MQTT on the phone is rejected (battery, `dataSync` limits, OEM killers). Node-RED republishes alerts retained at QoS 1 on `zigdash/alerts/...` so the app catches up. Research: branch `research/reliable-alerts`.
+- **2.3 Push notifications.** Specced in [alerts-2.3.md](alerts-2.3.md) (2026-10-10). Node-RED on the hub is the alert engine; ZigDash configures an alerts flow over retained MQTT, the same way it configures schedules. Delivery starts with ntfy (high-priority FCM through Doze, no account, free up to 250 messages a day); UnifiedPush for native notifications is a later phase. Background MQTT on the phone is rejected (battery, `dataSync` limits, OEM killers). Node-RED republishes alerts retained at QoS 1 on `zigdash/alerts/...` so the app catches up. Research: branch `research/reliable-alerts`.
 - **2.3 Local-network permission.** At targetSdk 37, LAN connections need `ACCESS_LOCAL_NETWORK`; without it, connecting to the broker times out. Setup explains the permission before asking.
 - **2.4 History.** Zigbee2MQTT keeps no history, so a Node-RED flow on the hub records chosen readings; the app draws them. Retention and storage size are decided when 2.4 starts.
 - **2.5 Kiosk.** Scope (PIN lock in the app, OS lock task, ambient features) decided when 2.5 starts.
