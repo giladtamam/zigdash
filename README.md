@@ -51,13 +51,20 @@ MQTT.
 - [Google Play](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash)
 - F-Droid / IzzyOnDroid / Obtainium: in progress.
 
-## Feedback
+## Getting help
 
-Feature requests, bug reports, and ideas are welcome — open a
+Stuck setting up, or something doesn't work? In the app, open **Get help**
+(Settings › Help & support, or the link on any setup error). It shows tips
+for where you are, then lets you email support with the app's Support
+details (no passwords, addresses or device names), or write to
+giladtamam1@gmail.com. I usually reply within 3 days, in English or Hebrew.
+I'll never ask for your passwords or for remote access.
+
+Feature requests, bug reports, and ideas are welcome too — open a
 [GitHub issue](https://github.com/giladtamam/zigdash/issues).
 Built by a Zigbee2MQTT user, for the Zigbee2MQTT community.
 
-## Support
+## Sponsor
 
 ZigDash is free, with no ads, and stays that way. If it's useful to you,
 you can [sponsor it on GitHub](https://github.com/sponsors/giladtamam). A
