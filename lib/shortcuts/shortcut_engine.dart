@@ -19,6 +19,7 @@ import '../features/scenes/models/scene.dart';
 import '../mqtt/broker_config.dart';
 import '../mqtt/mqtt_manager.dart';
 import '../features/devices/device_profile.dart';
+import '../features/devices/device_state.dart' show DeviceCommand;
 import '../features/panels/widgets/device_tile_panel.dart'
     show decodeDeviceState;
 import 'shortcut_commander.dart';
@@ -56,6 +57,17 @@ void _serve() {
         return jsonEncode(await engine.toggle(
             args['connectionId'] as String, args['ieee'] as String,
             command: {'position': args['position'] as int}));
+      case 'set':
+        return jsonEncode(await engine.control(
+            args['connectionId'] as String, args['ieee'] as String,
+            on: args['on'] as bool));
+      case 'level':
+        return jsonEncode(await engine.control(
+            args['connectionId'] as String, args['ieee'] as String,
+            level: args['level'] as int));
+      case 'watch':
+        return jsonEncode(await engine.watch(args['connectionId'] as String,
+            (args['ieees'] as List).cast<String>()));
       case 'scene':
         return jsonEncode(await engine.scene(
             args['connectionId'] as String, args['sceneId'] as String));
@@ -182,6 +194,49 @@ class ShortcutEngine {
       // Where the time went, for the debug log (ms since the call).
       'timing': {'device': tDevice, 'manager': tManager, 'done': sw.elapsedMilliseconds},
     };
+  }
+
+  /// Device Controls: switch [ieee] [on] or off, or set its [level]
+  /// (a shutter's position, a light's brightness).
+  Future<Map<String, Object?>> control(String connectionId, String ieee,
+      {bool? on, int? level}) async {
+    final device = await _device(connectionId, ieee);
+    if (device == null) return {'outcome': 'removed'};
+    final command = on != null
+        ? ShortcutCommander.switchTo(device, on: on)
+        : ShortcutCommander.levelTo(device, level ?? 0);
+    if (command == null) return {'outcome': 'removed'};
+    return toggle(connectionId, ieee, command: command);
+  }
+
+  /// Device Controls opened: asks [ieees] for their state and writes what
+  /// they report for [within], so the controls show the current state.
+  Future<Map<String, Object?>> watch(String connectionId, List<String> ieees,
+      {Duration within = const Duration(seconds: 30)}) async {
+    final mgr = await _manager(connectionId);
+    if (mgr == null) return {'outcome': 'removed'};
+    if (!await mgr.ensureConnected(maxSilence: const Duration(seconds: 3))) {
+      return {'outcome': 'unreachable'};
+    }
+    final prefs = await _prefs;
+    final commander = await _commander();
+    for (final ieee in ieees) {
+      final d = await _device(connectionId, ieee);
+      if (d == null) continue;
+      final key = shortcutStateKey(connectionId, ieee);
+      final sub = mgr.subscribe(d.subscribeTopic).listen((m) {
+        if (m.payload.isEmpty) return;
+        prefs.setString(
+            key, jsonEncode(commander.describe(d, m.payload, m.receivedAt).toJson()));
+      });
+      final get = DeviceCommand.refresh(d.profile);
+      if (get != null) mgr.publish('${d.subscribeTopic}/get', jsonEncode(get), '');
+      Timer(within, () {
+        sub.cancel();
+        mgr.unsubscribe(d.subscribeTopic);
+      });
+    }
+    return {'outcome': 'sent'};
   }
 
   /// Writes [d]'s state as it reports it, until its motor stops or after

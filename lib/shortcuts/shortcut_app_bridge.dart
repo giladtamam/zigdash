@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:drift/drift.dart' show TableUpdateQuery;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +33,15 @@ class ShortcutAppBridge extends ConsumerStatefulWidget {
 
 class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
   String? _wordsFor;
+  StreamSubscription<Object?>? _dashboardChanges;
+  Timer? _resync;
+
+  @override
+  void dispose() {
+    _dashboardChanges?.cancel();
+    _resync?.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -41,10 +51,18 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       return null;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      unawaited(ref
-          .read(shortcutServiceProvider)
-          .resyncTiles()
-          .then((_) => refreshShortcutTiles()));
+      final service = ref.read(shortcutServiceProvider);
+      unawaited(service.resyncTiles().then((_) => refreshShortcutTiles()));
+      unawaited(service.resyncControls());
+      // Device Controls offer what's on the dashboards: follow changes.
+      final db = ref.read(appDatabaseProvider);
+      _dashboardChanges = db
+          .tableUpdates(TableUpdateQuery.onAllTables(
+              [db.panels, db.dashboards, db.connections]))
+          .listen((_) {
+        _resync?.cancel();
+        _resync = Timer(const Duration(seconds: 1), service.resyncControls);
+      });
       try {
         _handle(await appChannel.invokeMethod<Object?>('takeAction'));
       } on MissingPluginException {
@@ -58,6 +76,13 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
     if (args['action'] == 'assignTile') {
       final slot = args['slot'] as int? ?? 1;
       ref.read(routerProvider).push(Routes.shortcutTile(slot));
+    } else if (args['action'] == 'openDevice') {
+      // A long-press on a Device Controls card.
+      final home = args['connectionId'] as String?;
+      final ieee = args['ieee'] as String?;
+      if (home != null && ieee != null) {
+        ref.read(routerProvider).push(Routes.homeDevice(home, ieee));
+      }
     }
   }
 

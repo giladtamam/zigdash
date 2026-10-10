@@ -37,6 +37,16 @@
             android:taskAffinity="com.giladtamam.zigdash.cover"
             android:launchMode="singleTask"
             android:theme="@style/CoverPopup" />
+        <!-- Shortcuts: Android's Device Controls (2.1 §4), Android 11+. -->
+        <service
+            android:name=".ZigDashControlsService"
+            android:exported="true"
+            android:label="ZigDash"
+            android:permission="android.permission.BIND_CONTROLS">
+            <intent-filter>
+                <action android:name="android.service.controls.ControlsProviderService" />
+            </intent-filter>
+        </service>
         <!-- Shortcuts: four Quick Settings tile slots (2.1 §4), assigned in the app. -->
         <service
             android:name=".ShortcutTile1"

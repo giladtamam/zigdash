@@ -53,6 +53,7 @@ class ShortcutResult {
     this.payload,
     this.on,
     this.at,
+    this.level,
   });
 
   final ShortcutOutcome outcome;
@@ -70,12 +71,17 @@ class ShortcutResult {
   /// When [payload] was received.
   final DateTime? at;
 
+  /// A shutter's position or a light's brightness, 0–100 (Device Controls
+  /// draw it as a slider).
+  final int? level;
+
   Map<String, Object?> toJson() => {
         'outcome': outcome.name,
         'line': line,
         if (payload != null) 'payload': payload,
         if (on != null) 'on': on,
         if (at != null) 'at': at!.millisecondsSinceEpoch,
+        if (level != null) 'level': level,
       };
 }
 
@@ -120,6 +126,29 @@ class ShortcutCommander {
     final on = state.isOn(f);
     if (on == null) return DeviceCommand.toggle(f, null);
     return {f.property: on ? (f.valueOff ?? false) : (f.valueOn ?? true)};
+  }
+
+  /// Device Controls' on or off: the switch's own value (a shutter opens or
+  /// closes).
+  static Map<String, Object?> switchTo(ShortcutDevice d, {required bool on}) {
+    if (d.profile.deviceClass == DeviceClass.cover) {
+      return DeviceCommand.cover(on ? 'OPEN' : 'CLOSE');
+    }
+    final f = d.profile.switches.first;
+    return {f.property: on ? (f.valueOn ?? true) : (f.valueOff ?? false)};
+  }
+
+  /// Device Controls' slider: a shutter's position or a light's brightness,
+  /// [percent] 0–100; null when the device has neither.
+  static Map<String, Object?>? levelTo(ShortcutDevice d, int percent) {
+    final position = d.profile.position;
+    if (d.profile.deviceClass == DeviceClass.cover && position != null) {
+      return DeviceCommand.position(position, percent);
+    }
+    final brightness = d.profile.brightness;
+    return brightness == null
+        ? null
+        : DeviceCommand.brightnessPercent(brightness, percent);
   }
 
   /// Whether a state the device reported answers [command]: every commanded
@@ -195,6 +224,7 @@ class ShortcutCommander {
   ShortcutResult _result(ShortcutOutcome outcome, ShortcutDevice d,
       String? payload, DateTime? at) {
     final values = decodeDeviceState(payload);
+    final state = DeviceState(d.profile, values);
     return ShortcutResult(
       outcome: outcome,
       line: deviceStateLine(DeviceState(d.profile, values), l10n,
@@ -203,6 +233,9 @@ class ShortcutCommander {
       payload: payload,
       on: _onOf(d, values),
       at: at,
+      level: d.profile.deviceClass == DeviceClass.cover
+          ? state.position
+          : state.brightnessPercent,
     );
   }
 

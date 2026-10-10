@@ -54,7 +54,12 @@ class MainActivity : FlutterActivity() {
         val action = intent?.getStringExtra(EXTRA_ACTION) ?: return null
         val slot = intent.getIntExtra(EXTRA_SLOT, 0)
         intent.removeExtra(EXTRA_ACTION)
-        return mapOf("action" to action, "slot" to slot)
+        return buildMap {
+            put("action", action)
+            put("slot", slot)
+            intent.getStringExtra(EXTRA_HOME)?.let { put("connectionId", it) }
+            intent.getStringExtra(EXTRA_IEEE)?.let { put("ieee", it) }
+        }
     }
 
     private fun requestAddTile(slot: Int, label: String, result: MethodChannel.Result) {
@@ -85,5 +90,7 @@ class MainActivity : FlutterActivity() {
     companion object {
         const val EXTRA_ACTION = "zigdash.action"
         const val EXTRA_SLOT = "zigdash.slot"
+        const val EXTRA_HOME = "zigdash.home"
+        const val EXTRA_IEEE = "zigdash.ieee"
     }
 }

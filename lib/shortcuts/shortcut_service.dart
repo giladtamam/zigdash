@@ -3,9 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/database/daos/device_registry_dao.dart';
 import '../data/database/daos/shortcut_dao.dart';
 import '../data/database/database.dart';
+import '../data/database/tables/panels.dart';
 import '../data/database/tables/shortcuts.dart';
+import '../features/panels/models/panel_config.dart';
 import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
@@ -101,6 +104,31 @@ class ShortcutService {
               position: cover && device.profile.position != null,
               deviceClass: device.profile.deviceClass.name));
     }
+  }
+
+  /// Writes the devices Android's Device Controls offer: every device on a
+  /// dashboard, once per Home, in dashboard order.
+  Future<void> resyncControls() async {
+    final out = <Map<String, Object?>>[];
+    for (final conn in await _db.select(_db.connections).get()) {
+      final seen = <String>{};
+      for (final (panel, _)
+          in await DeviceRegistryDao(_db).tilesOfHome(conn.id)) {
+        final ieee = panel.deviceIeee;
+        if (panel.type != PanelType.device || ieee == null || !seen.add(ieee)) {
+          continue;
+        }
+        final config = PanelConfig.decode(panel.type, panel.config);
+        if (config is! DeviceTileConfig) continue;
+        out.add(encodeControl(
+            connectionId: conn.id,
+            home: conn.name,
+            ieee: ieee,
+            name: panel.name,
+            profile: config.profile));
+      }
+    }
+    await _prefs.setString(shortcutControlsKey, jsonEncode(out));
   }
 
   Future<void> clearTile(int slot) async {

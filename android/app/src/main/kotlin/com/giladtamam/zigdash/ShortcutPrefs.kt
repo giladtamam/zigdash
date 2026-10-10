@@ -34,6 +34,33 @@ object ShortcutPrefs {
         }
     }
 
+    /** A device offered to Device Controls (shortcut.controls). */
+    data class ControlEntry(
+        val connectionId: String, val home: String, val ieee: String,
+        val name: String, val cls: String, val kind: String, val position: Boolean,
+    ) {
+        val id: String get() = "$connectionId/$ieee"
+    }
+
+    fun controls(ctx: Context): List<ControlEntry> {
+        val raw = prefs(ctx).getString("flutter.shortcut.controls", null) ?: return emptyList()
+        return try {
+            val list = org.json.JSONArray(raw)
+            (0 until list.length()).map { i ->
+                val o = list.getJSONObject(i)
+                ControlEntry(o.optString("connectionId"), o.optString("home"),
+                    o.optString("ieee"), o.optString("name"), o.optString("class"),
+                    o.optString("kind"), o.optBoolean("position"))
+            }
+        } catch (_: Exception) { emptyList() }
+    }
+
+    /** A shutter's position or a light's brightness, 0–100, if known. */
+    fun level(ctx: Context, connectionId: String, ieee: String): Int? =
+        json(ctx, "shortcut.state.$connectionId.$ieee")?.let {
+            if (it.has("level")) it.optInt("level") else null
+        }
+
     data class State(val line: String?, val on: Boolean?, val at: Long?)
 
     fun tile(ctx: Context, slot: Int): Tile? = json(ctx, "shortcut.tile.$slot")?.let {

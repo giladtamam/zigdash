@@ -37,6 +37,18 @@ object ShortcutEngine {
     fun position(ctx: Context, connectionId: String, ieee: String, position: Int, done: (String) -> Unit) =
         call(ctx, "position", mapOf("connectionId" to connectionId, "ieee" to ieee, "position" to position), done)
 
+    /** Device Controls: on or off. */
+    fun set(ctx: Context, connectionId: String, ieee: String, on: Boolean, done: (String) -> Unit) =
+        call(ctx, "set", mapOf("connectionId" to connectionId, "ieee" to ieee, "on" to on), done)
+
+    /** Device Controls' slider: a shutter's position or a light's brightness. */
+    fun level(ctx: Context, connectionId: String, ieee: String, level: Int, done: (String) -> Unit) =
+        call(ctx, "level", mapOf("connectionId" to connectionId, "ieee" to ieee, "level" to level), done)
+
+    /** Asks [ieees] for their state and follows them for a while. */
+    fun watch(ctx: Context, connectionId: String, ieees: List<String>, done: (String) -> Unit) =
+        call(ctx, "watch", mapOf("connectionId" to connectionId, "ieees" to ieees), done)
+
     fun scene(ctx: Context, connectionId: String, sceneId: String, done: (String) -> Unit) =
         call(ctx, "scene", mapOf("connectionId" to connectionId, "sceneId" to sceneId), done)
 

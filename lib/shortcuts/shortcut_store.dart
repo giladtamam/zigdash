@@ -3,6 +3,7 @@ import 'dart:convert';
 import '../data/database/daos/device_registry_dao.dart';
 import '../data/database/database.dart';
 import '../data/database/tables/panels.dart';
+import '../features/devices/device_profile.dart';
 import '../features/panels/models/panel_config.dart';
 import '../features/panels/providers/panel_value_provider.dart'
     show composeTopic;
@@ -19,6 +20,38 @@ String shortcutStateKey(String connectionId, String ieee) =>
 
 /// `{"connectionId", "ieee", "name"}`: the device a tile slot controls.
 String shortcutTileKey(int slot) => 'shortcut.tile.$slot';
+
+/// The devices offered to Android's Device Controls, a JSON list of
+/// [encodeControl] maps.
+const shortcutControlsKey = 'shortcut.controls';
+
+/// One device for Device Controls. [kind] picks its control: `switch`
+/// (on/off), `dimmer` (on/off and brightness), `cover` (position, or open
+/// and close without [position]) or `sensor` (its reading only).
+Map<String, Object?> encodeControl(
+        {required String connectionId,
+        required String home,
+        required String ieee,
+        required String name,
+        required DeviceProfile profile}) {
+  final cover = profile.deviceClass == DeviceClass.cover;
+  final kind = cover
+      ? 'cover'
+      : profile.switches.isEmpty
+          ? 'sensor'
+          : profile.brightness != null
+              ? 'dimmer'
+              : 'switch';
+  return {
+    'connectionId': connectionId,
+    'home': home,
+    'ieee': ieee,
+    'name': name,
+    'class': profile.deviceClass.name,
+    'kind': kind,
+    if (cover && profile.position != null) 'position': true,
+  };
+}
 
 /// The native side's words, in the app's language.
 const shortcutStringsKey = 'shortcut.strings';

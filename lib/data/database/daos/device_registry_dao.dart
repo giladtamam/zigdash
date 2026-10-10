@@ -30,7 +30,11 @@ class DeviceRegistryDao extends DatabaseAccessor<AppDatabase>
     final q = select(panels).join([
       innerJoin(dashboards, dashboards.id.equalsExp(panels.dashboardId)),
     ])
-      ..where(dashboards.connectionId.equals(connectionId));
+      ..where(dashboards.connectionId.equals(connectionId))
+      ..orderBy([
+        OrderingTerm.asc(dashboards.sortOrder),
+        OrderingTerm.asc(panels.sortOrder),
+      ]);
     return q
         .map((r) => (r.readTable(panels), r.readTable(dashboards).topicPrefix))
         .get();

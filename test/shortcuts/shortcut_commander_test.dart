@@ -93,6 +93,23 @@ final _cover = classifyExposes([
   }
 ]);
 
+final _dimmer = classifyExposes([
+  {
+    'type': 'light',
+    'features': [
+      {
+        'type': 'binary', 'name': 'state', 'property': 'state',
+        'value_on': 'ON', 'value_off': 'OFF', 'value_toggle': 'TOGGLE',
+        'access': 7
+      },
+      {
+        'type': 'numeric', 'name': 'brightness', 'property': 'brightness',
+        'value_min': 0, 'value_max': 254, 'access': 7
+      },
+    ]
+  }
+]);
+
 ShortcutDevice _device(DeviceProfile p, String name) => ShortcutDevice(
       ieee: '0x1',
       name: name,
@@ -279,6 +296,52 @@ void main() {
           ['zigbee2mqtt/a/set', 'zigbee2mqtt/b/set']);
       m.dispose();
       async.flushMicrotasks();
+    });
+  });
+
+  group('Device Controls', () {
+    test('on and off name their value, never TOGGLE', () {
+      expect(ShortcutCommander.switchTo(_device(_light, 'lamp'), on: false),
+          {'state': 'OFF'});
+      expect(ShortcutCommander.switchTo(_device(_light, 'lamp'), on: true),
+          {'state': 'ON'});
+    });
+
+    test('a level is a light\'s brightness or a shutter\'s position', () {
+      expect(ShortcutCommander.levelTo(_device(_dimmer, 'lamp'), 50),
+          {'brightness': 127});
+      expect(ShortcutCommander.levelTo(_device(_cover, 'blind'), 30),
+          {'position': 30});
+      expect(ShortcutCommander.levelTo(_device(_light, 'lamp'), 30), isNull);
+    });
+
+    test('the state a shortcut shows carries its level (0–100)', () {
+      final c = ShortcutCommander(l10n: l10n);
+      final at = DateTime(2026, 10, 10);
+      expect(
+          c.describe(_device(_dimmer, 'lamp'),
+              '{"state":"ON","brightness":127}', at).toJson()['level'],
+          50);
+      expect(
+          c.describe(_device(_cover, 'blind'), '{"position":46}', at)
+              .toJson()['level'],
+          46);
+      expect(
+          c.describe(_device(_light, 'lamp'), '{"state":"ON"}', at)
+              .toJson()
+              .containsKey('level'),
+          isFalse);
+    });
+
+    test('a brightness change is confirmed by the new brightness', () {
+      expect(
+          ShortcutCommander.confirms(
+              {'brightness': 127}, {'state': 'ON', 'brightness': 127}, {}),
+          isTrue);
+      expect(
+          ShortcutCommander.confirms(
+              {'brightness': 127}, {'state': 'ON', 'brightness': 254}, {}),
+          isFalse);
     });
   });
 }
