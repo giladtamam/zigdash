@@ -4525,6 +4525,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open ZigDash and put a device on a dashboard first.'**
   String get shortcutOpenAppFirst;
+
+  /// One-time dashboard card asking what to build next.
+  ///
+  /// In en, this message translates to:
+  /// **'What should ZigDash do next?'**
+  String get pollTitle;
+
+  /// Under the poll title, for people who share usage data.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.'**
+  String get pollBody;
+
+  /// Poll choice: alerts on the phone (door opened, leak…).
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get pollNotifications;
+
+  /// Poll choice: graphs of past readings.
+  ///
+  /// In en, this message translates to:
+  /// **'History graphs'**
+  String get pollHistory;
+
+  /// Poll choice: a full-screen mode for a wall tablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Kiosk mode for a wall tablet'**
+  String get pollKiosk;
+
+  /// Poll choice: control Zigbee2MQTT groups.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee groups'**
+  String get pollGroups;
+
+  /// Hides the poll for good.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get pollNotNow;
+
+  /// Snackbar after answering the poll.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks! That helps decide what comes next.'**
+  String get pollThanks;
+
+  /// Poll card text for people who don't share usage data.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.'**
+  String get pollNoAnalytics;
 }
 
 class _AppLocalizationsDelegate

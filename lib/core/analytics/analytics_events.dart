@@ -194,6 +194,31 @@ class ShortcutUsed extends AnalyticsEvent {
   Map<String, String> get props => {'kind': kind.wire};
 }
 
+/// The "What should ZigDash do next?" poll's choices
+/// (docs/design/roadmap-post-2.0.md, 2.2 §6).
+enum PollChoice {
+  notifications('notifications'),
+  history('history'),
+  kiosk('kiosk'),
+  groups('zigbee_groups');
+
+  const PollChoice(this.wire);
+  final String wire;
+}
+
+/// The one-time poll was answered.
+class PollAnswer extends AnalyticsEvent {
+  const PollAnswer(this.choice);
+
+  final PollChoice choice;
+
+  @override
+  String get name => 'poll_answer';
+
+  @override
+  Map<String, String> get props => {'choice': choice.wire};
+}
+
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from
 /// [ranges], else [top].
 String bucket(int n,

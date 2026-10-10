@@ -878,5 +878,14 @@
   "deviceRenamed": "השם שונה ל-{name}",
   "deviceRenameFailed": "לא ניתן לשנות את השם: {reason}",
   "deviceRenameNoAnswer": "Zigbee2MQTT לא ענה",
-  "shortcutOpenAppFirst": "פתחו את ZigDash והוסיפו קודם מכשיר ללוח."
+  "shortcutOpenAppFirst": "פתחו את ZigDash והוסיפו קודם מכשיר ללוח.",
+  "pollTitle": "מה ZigDash צריכה לעשות בהמשך?",
+  "pollBody": "בחרו את מה שהייתם משתמשים בו הכי הרבה. התשובה נשלחת עם נתוני השימוש האנונימיים שלכם.",
+  "pollNotifications": "התראות",
+  "pollHistory": "גרפים של היסטוריה",
+  "pollKiosk": "מצב קיוסק לטאבלט על הקיר",
+  "pollGroups": "קבוצות Zigbee",
+  "pollNotNow": "לא עכשיו",
+  "pollThanks": "תודה! זה עוזר להחליט מה יגיע בהמשך.",
+  "pollNoAnalytics": "נתוני השימוש כבויים, לכן שום דבר לא נשלח מכאן. ספרו לנו דרך בקשת תכונה."
 }

@@ -2477,4 +2477,33 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get shortcutOpenAppFirst =>
       'Abra o ZigDash e coloque primeiro um dispositivo em um painel.';
+
+  @override
+  String get pollTitle => 'O que o ZigDash deve fazer a seguir?';
+
+  @override
+  String get pollBody =>
+      'Escolha o que você mais usaria. A resposta é enviada com seus dados de uso anônimos.';
+
+  @override
+  String get pollNotifications => 'Notificações';
+
+  @override
+  String get pollHistory => 'Gráficos de histórico';
+
+  @override
+  String get pollKiosk => 'Modo quiosque para um tablet na parede';
+
+  @override
+  String get pollGroups => 'Grupos Zigbee';
+
+  @override
+  String get pollNotNow => 'Agora não';
+
+  @override
+  String get pollThanks => 'Obrigado! Isso ajuda a decidir o que vem a seguir.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Os dados de uso estão desativados, então nada é enviado daqui. Conte para nós em Sugerir um recurso.';
 }

@@ -2482,4 +2482,33 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get shortcutOpenAppFirst =>
       'Откройте ZigDash и сначала добавьте устройство на дашборд.';
+
+  @override
+  String get pollTitle => 'Что ZigDash стоит сделать дальше?';
+
+  @override
+  String get pollBody =>
+      'Выберите то, чем пользовались бы чаще всего. Ответ отправится вместе с анонимными данными об использовании.';
+
+  @override
+  String get pollNotifications => 'Уведомления';
+
+  @override
+  String get pollHistory => 'Графики истории';
+
+  @override
+  String get pollKiosk => 'Режим киоска для настенного планшета';
+
+  @override
+  String get pollGroups => 'Группы Zigbee';
+
+  @override
+  String get pollNotNow => 'Не сейчас';
+
+  @override
+  String get pollThanks => 'Спасибо! Это помогает решить, что делать дальше.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Данные об использовании выключены, поэтому отсюда ничего не отправляется. Расскажите нам через «Предложить функцию».';
 }

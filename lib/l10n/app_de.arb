@@ -809,5 +809,14 @@
   "deviceRenamed": "Umbenannt in {name}",
   "deviceRenameFailed": "Umbenennen fehlgeschlagen: {reason}",
   "deviceRenameNoAnswer": "Zigbee2MQTT hat nicht geantwortet",
-  "shortcutOpenAppFirst": "Öffne ZigDash und lege zuerst ein Gerät auf ein Dashboard."
+  "shortcutOpenAppFirst": "Öffne ZigDash und lege zuerst ein Gerät auf ein Dashboard.",
+  "pollTitle": "Was soll ZigDash als Nächstes können?",
+  "pollBody": "Wähle, was du am meisten nutzen würdest. Die Antwort wird mit deinen anonymen Nutzungsdaten gesendet.",
+  "pollNotifications": "Benachrichtigungen",
+  "pollHistory": "Verlaufsdiagramme",
+  "pollKiosk": "Kiosk-Modus für ein Wand-Tablet",
+  "pollGroups": "Zigbee-Gruppen",
+  "pollNotNow": "Nicht jetzt",
+  "pollThanks": "Danke! Das hilft bei der Entscheidung, was als Nächstes kommt.",
+  "pollNoAnalytics": "Nutzungsdaten sind aus, daher wird von hier nichts gesendet. Sag es uns stattdessen über Funktion vorschlagen."
 }

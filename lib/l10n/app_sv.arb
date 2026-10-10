@@ -809,5 +809,14 @@
   "deviceRenamed": "Nytt namn: {name}",
   "deviceRenameFailed": "Kunde inte byta namn: {reason}",
   "deviceRenameNoAnswer": "Zigbee2MQTT svarade inte",
-  "shortcutOpenAppFirst": "Öppna ZigDash och lägg först en enhet på en dashboard."
+  "shortcutOpenAppFirst": "Öppna ZigDash och lägg först en enhet på en dashboard.",
+  "pollTitle": "Vad ska ZigDash göra härnäst?",
+  "pollBody": "Välj det du skulle använda mest. Svaret skickas med dina anonyma användningsdata.",
+  "pollNotifications": "Aviseringar",
+  "pollHistory": "Historikgrafer",
+  "pollKiosk": "Kioskläge för en surfplatta på väggen",
+  "pollGroups": "Zigbee-grupper",
+  "pollNotNow": "Inte nu",
+  "pollThanks": "Tack! Det hjälper oss att välja vad som kommer.",
+  "pollNoAnalytics": "Användningsdata är avstängt, så inget skickas härifrån. Berätta för oss via Föreslå en funktion istället."
 }

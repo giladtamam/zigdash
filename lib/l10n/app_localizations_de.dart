@@ -2478,4 +2478,34 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get shortcutOpenAppFirst =>
       'Öffne ZigDash und lege zuerst ein Gerät auf ein Dashboard.';
+
+  @override
+  String get pollTitle => 'Was soll ZigDash als Nächstes können?';
+
+  @override
+  String get pollBody =>
+      'Wähle, was du am meisten nutzen würdest. Die Antwort wird mit deinen anonymen Nutzungsdaten gesendet.';
+
+  @override
+  String get pollNotifications => 'Benachrichtigungen';
+
+  @override
+  String get pollHistory => 'Verlaufsdiagramme';
+
+  @override
+  String get pollKiosk => 'Kiosk-Modus für ein Wand-Tablet';
+
+  @override
+  String get pollGroups => 'Zigbee-Gruppen';
+
+  @override
+  String get pollNotNow => 'Nicht jetzt';
+
+  @override
+  String get pollThanks =>
+      'Danke! Das hilft bei der Entscheidung, was als Nächstes kommt.';
+
+  @override
+  String get pollNoAnalytics =>
+      'Nutzungsdaten sind aus, daher wird von hier nichts gesendet. Sag es uns stattdessen über Funktion vorschlagen.';
 }
