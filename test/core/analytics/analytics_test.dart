@@ -144,6 +144,17 @@ void main() {
       ]);
     });
 
+    test('help_opened and support_contact', () {
+      expect(const HelpOpened(HelpFrom.noConnection).props,
+          {'from': 'no_connection'});
+      expect(const HelpOpened(HelpFrom.deviceListMissing).name, 'help_opened');
+      expect(
+          const SupportContact(HelpFrom.setupError, ContactVia.copy).props,
+          {'from': 'setup_error', 'via': 'copy'});
+      expect(const SupportContact(HelpFrom.demo, ContactVia.email).name,
+          'support_contact');
+    });
+
     test('buckets', () {
       expect(bucket(0, const [0], ranges: const [(1, 10)], top: '11+'), '0');
       expect(bucket(10, const [0], ranges: const [(1, 10)], top: '11+'), '1-10');

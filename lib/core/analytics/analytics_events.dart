@@ -112,6 +112,47 @@ class FeatureUsed extends AnalyticsEvent {
       };
 }
 
+/// Where Get help was opened from (docs/design/support.md §2).
+enum HelpFrom {
+  noConnection,
+  setupError,
+  manualConnect,
+  homeUnreachable,
+  deviceListMissing,
+  settings,
+  demo,
+}
+
+enum ContactVia { email, copy }
+
+/// Get help was opened.
+class HelpOpened extends AnalyticsEvent {
+  const HelpOpened(this.from);
+
+  final HelpFrom from;
+
+  @override
+  String get name => 'help_opened';
+
+  @override
+  Map<String, String> get props => {'from': _snake(from.name)};
+}
+
+/// The user sent or copied a support request from Get help.
+class SupportContact extends AnalyticsEvent {
+  const SupportContact(this.from, this.via);
+
+  final HelpFrom from;
+  final ContactVia via;
+
+  @override
+  String get name => 'support_contact';
+
+  @override
+  Map<String, String> get props =>
+      {'from': _snake(from.name), 'via': via.name};
+}
+
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from
 /// [ranges], else [top].
 String bucket(int n,
