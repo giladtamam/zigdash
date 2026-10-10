@@ -1,23 +1,23 @@
 # ZigDash 2.3: alerts (build spec)
 
-Decided with the user on 2026-10-10 in two question rounds. Words follow [CONTEXT.md](../../CONTEXT.md): **Alert**, **Notification**, **Recent alerts**, **Alerts paused**, Home, Device page. Research: branch `research/reliable-alerts` (`research/reliable-alerts.md`, 2026-10-08), which this spec follows.
+Decided with the user on 2026-10-10 in two question rounds, then changed after a prototype the same day. Words follow [CONTEXT.md](../../CONTEXT.md): **Alert**, **Notification**, **Recent alerts**, **Alerts paused**, Home, Device page. Research: branch `research/reliable-alerts` (`research/reliable-alerts.md`, 2026-10-08). Prototype: branch `prototype/in-app-push` (results in §5).
 
 **Branch:** `release/2.3` (from `release/2.2.1`). **Version:** 2.3.0.
 
-> **Changed 2026-10-10 (user):** a second app is too much to ask ("I don't think many users will do that"). Delivery into ZigDash itself (UnifiedPush with the embedded FCM distributor, no second app, no ZigDash server) is now the goal for 2.3, decided by a 1–2 day prototype first. ntfy stays the fallback if the prototype fails, and the optional household-sharing path. The sections below that assume ntfy as the default get rewritten after the prototype.
+**How delivery was decided.** The research recommended ntfy, a second app. The user ruled that out ("I don't think many users will do that"). The prototype then showed that alerts can reach ZigDash itself through Google's push service, with no second app, no Firebase project and no ZigDash server, including when ZigDash is closed or the phone is in Doze. That is the 2.3 path; ntfy is the fallback for phones without Google services and the way to share alerts with people who don't use ZigDash.
 
 ## Scope
 
 In:
 - Alerts for leak, smoke, door/window opened (optionally within set hours) and low battery.
 - The hub's Node-RED as the alert engine, set up from ZigDash.
-- Notifications through ntfy (default) or Pushover (optional, for smoke and leak).
+- Notifications delivered into ZigDash (UnifiedPush, embedded FCM distributor), end-to-end encrypted.
+- ntfy as the fallback and for household sharing; Pushover optional for smoke and leak (repeats until acknowledged).
 - An Alerts screen with Recent alerts, a "Notify me" shortcut on device pages, and Alerts paused warnings.
 - The Android local-network permission.
 - Privacy policy, store listing, 11 languages.
 
-Out (phase 2 or later):
-- Notifications delivered into ZigDash itself (UnifiedPush). They need a prototype first: does delivery reach a closed Flutter app?
+Out (later):
 - "Device stopped responding" alerts.
 - Value thresholds (temperature above X).
 - An "armed" mode.
@@ -28,13 +28,13 @@ Out (phase 2 or later):
 
 A phone that keeps its own connection to the broker is killed by Samsung, Xiaomi and others unless the user changes battery settings, drains the battery, needs a special Play review with a demo video, and only works when the phone can reach home. Every app that does this carries those complaints (Home Assistant, MQTT Alert, Gotify).
 
-Instead, Node-RED on the always-on hub watches the devices and sends each alert to a push service that Android lets through even in Doze. ZigDash only configures it, the same way it configures schedules today.
+Instead, Node-RED on the always-on hub watches the devices and sends each alert through Google's push service, which Android lets through even in Doze. ZigDash only configures it, the same way it configures schedules today.
 
 ## 1. The hub side
 
 ### The alerts flow
 
-- A Node-RED flow, `node-red/alerts-flow.json`, in core nodes only. The only outside call is an HTTP request to ntfy or Pushover.
+- A Node-RED flow, `node-red/alerts-flow.json`, in core nodes only. The function node uses Node's built-in `crypto` (declared in its Setup tab; no npm module), and an `http request` node posts the push. Proven on the user's SMHUB.
 - It reads one retained config per Home from `zigdash/alerts/config` (contract below).
 - It subscribes to `zigbee2mqtt/+` and fires on these values:
   - `water_leak` → leak;
@@ -42,13 +42,15 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
   - `contact: false` → opened;
   - `battery_low: true`, or `battery` at or below the alert's threshold (default 20%) → low battery.
 - **When it notifies:**
-  - **Leak and smoke:** once when it starts, and once when it clears ("Kitchen sensor is dry again").
+  - **Leak and smoke:** once when it starts, and once when it clears.
   - **Door or window:** once per opening, only inside the alert's hours if set (hub local time, crossing midnight allowed).
   - **Low battery:** once per device until the battery is back above the threshold.
-- **Priority:** ntfy priority 5 for leak and smoke (long vibration; can override Do Not Disturb if the user allows it in ntfy), 4 for the others. Pushover: priority 2 (repeats until acknowledged) for leak and smoke, 1 for the others.
-- **Recent alerts:** it publishes the last 20 fired alerts, retained at QoS 1, to `zigdash/alerts/recent`, as a JSON list of `{at, kind, device, cleared}`.
-- **Health:** it publishes retained `zigdash/alerts/bridge/state` = `online` on start and every 30 s, with a Last-Will of `offline`. This is the same pattern as the schedules flow.
-- **Test:** `zigdash/alerts/test` (not retained) sends a test notification through the configured service, and the result goes to `zigdash/alerts/test/result`.
+- **What it sends** (to every phone in the config, and to ntfy/Pushover if set): one JSON object, `{"v":1, "kind":"leak", "device":"0x00158d…", "name":"Kitchen sensor", "home":"My Home", "cleared":false, "value":null, "at":"2026-10-10T21:03:12+03:00"}`. The phone writes the notification text in its own language (§2), so the flow carries no wording. For ntfy and Pushover, which show raw text, the flow uses the English phrases in the config's `"text"` map, written by ZigDash in the app's language.
+- **Push details:** Web Push, RFC 8291 `aes128gcm` to each phone's keys, VAPID ES256 with the key pair from the config, headers `Urgency: high` (required: normal urgency waits for the phone to wake), `TTL: 86400`. A `404`/`410` answer marks that phone `dead` in `zigdash/alerts/state`; ZigDash removes it from the config.
+- **Memory:** the SMHUB's Node-RED keeps context in memory only, so "already reported" state (battery, a leak in progress) is also kept retained on `zigdash/alerts/state` and reloaded on start.
+- **Recent alerts:** it publishes the last 20 fired alerts, retained at QoS 1, to `zigdash/alerts/recent`, as a JSON list of the same objects.
+- **Health:** retained `zigdash/alerts/bridge/state` = `online` on start and every 30 s, with a Last-Will of `offline` (the schedules flow's pattern).
+- **Test:** a message on `zigdash/alerts/test` with `{"phone":"<id>"}` sends a test alert to that phone (or to all channels when no id), and the result goes to `zigdash/alerts/test/result`.
 
 ### The config contract (retained, QoS 1)
 
@@ -56,31 +58,33 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 {
   "version": 1,
   "home": "My Home",
-  "delivery": {
-    "service": "ntfy",
-    "server": "https://ntfy.sh",
-    "topic": "zd-<22 random characters>",
-    "pushover": null
-  },
-  "hideNames": false,
+  "vapid": { "publicKey": "BJ5D…", "privateJwk": { "kty": "EC", "crv": "P-256", "x": "…", "y": "…", "d": "…" } },
+  "phones": [
+    { "id": "a1b2…", "name": "Gilad's Galaxy", "endpoint": "https://fcm.googleapis.com/fcm/send/…", "p256dh": "BGpQ…", "auth": "b3tV…" }
+  ],
+  "ntfy": null,
+  "pushover": null,
+  "text": { "leak": "💧 Leak — {name} ({home})", "leakCleared": "✅ {name} is dry again", "smoke": "…", "smokeCleared": "…", "opened": "🚪 {name} opened ({home})", "battery": "🔋 Battery low — {name}, {value}% ({home})", "test": "ZigDash test alert" },
   "alerts": [
     { "id": "…", "kind": "leak", "devices": ["0x00158d…"], "names": {"0x00158d…": "Kitchen sensor"} },
-    { "id": "…", "kind": "opened", "devices": ["…"], "names": {…}, "from": "23:00", "to": "06:00" },
-    { "id": "…", "kind": "battery", "devices": ["…"], "names": {…}, "threshold": 20 }
+    { "id": "…", "kind": "opened", "devices": ["…"], "names": {"…": "Front door"}, "from": "23:00", "to": "06:00" },
+    { "id": "…", "kind": "battery", "devices": ["…"], "names": {"…": "Bedroom sensor"}, "threshold": 20 }
   ]
 }
 ```
 
+- **The VAPID key pair** is made by the first phone that sets up alerts and lives in the config, on the user's own broker, like the Pushover keys. Anyone who can read the broker can already control the home, so this adds no exposure; the privacy policy says it. A phone that joins later reads the public key from the retained config, registers with it, and adds itself to `phones`.
+- **Several phones** share one config; each phone rewrites it from the retained value it last received (last writer wins; `phones` entries are merged by `id`). ZigDash re-registers at every start (the push library asks for this) and updates its entry if the endpoint changed.
 - The device name is sent in the config because the flow speaks only MQTT and doesn't read Zigbee2MQTT's device list. ZigDash republishes the config when a device is renamed.
 - An empty retained payload removes the config, which turns alerts off for that Home.
-- **Pushover:** `delivery.pushover` holds `{user, token}`. These are the user's own Pushover keys, kept in the retained config on their own broker. The setup screen says so.
+- **`ntfy`** holds `{server, topic}` when household sharing or the no-Google fallback is on. **`pushover`** holds `{user, token}`.
 
 ### Installing the flow
 
-- **One button: "Set up alerts on the hub".** ZigDash finds Node-RED at the broker's address on port 1880 and calls Node-RED's admin API: `GET /settings` to detect it, then `POST /flow` to add the flow as its own tab, or update it if one is already there.
+- **One button: "Set up alerts on the hub".** ZigDash finds Node-RED at the broker's address on port 1880 and calls Node-RED's admin API: `GET /settings` to detect it, then `POST /flow` to add the flow as its own tab, or `PUT /flow/:id` to update it. Verified on SMHUB (§5).
 - **Fallback.** If Node-RED asks for a login, or isn't reachable, the screen shows short steps and copies the flow JSON: open Node-RED, Import, paste, Deploy.
-- **Node-RED not installed** (port 1880 refused): the screen explains that alerts need Node-RED on the hub. It links to Get help, which gets a new tip, "Install Node-RED", with SMHUB steps (Apps → Node-RED → Install) and a pointer for a Raspberry Pi. *Observed on the user's SMHUB, 2026-10-10: Node-RED is offered in SMHUB → Apps (5.0.1, beta) and not installed.*
-- **The broker node in the imported flow** must point at the Home's broker. ZigDash fills it in from the Connection (address, port, username) before posting the flow; the password is never written into the flow. If the broker needs a password, the flow's broker node asks for it in Node-RED, and the fallback steps say so.
+- **Node-RED not installed** (port 1880 refused): the screen explains that alerts need Node-RED on the hub. It links to Get help, which gets a new tip, "Install Node-RED", with SMHUB steps (Apps → Node-RED → Install) and a pointer for a Raspberry Pi.
+- **The broker node** in the posted flow must use the Home's broker **address, never `localhost`** (on SMHUB, Node-RED can't reach the broker that way). ZigDash fills in address, port and username from the Connection; the password is never written into the flow. If the broker needs a password, the flow's broker node asks for it in Node-RED, and the fallback steps say so.
 
 ## 2. The app
 
@@ -88,10 +92,10 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 
 - **Where:** Settings → Home → **Alerts**, plus an icon in the dashboard header when alerts exist, so it's one tap from home.
 - **What it shows, top to bottom:**
-  1. **Status:** "Alerts are on", "Alerts are paused: Node-RED on the hub isn't running", or "Not set up".
+  1. **Status:** "Alerts are on", "Alerts are paused: Node-RED on the hub isn't running", "This phone isn't getting notifications" (see below), or "Not set up".
   2. **Recent alerts** (up to 20, newest first, with age).
   3. **The alerts,** each as "Leak · Kitchen sensor, Bathroom sensor" with a switch.
-  4. **Add alert**, **Notifications on this phone**, and **Send test notification**.
+  4. **Add alert**, **Notifications on this phone**, **Share alerts**, and **Send test notification**.
 - **Add or edit an alert:**
   - pick the kind;
   - pick devices (only devices that report that value; for low battery, battery-powered devices);
@@ -103,15 +107,26 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 
 A device page for a leak, smoke, contact or battery device shows **Notify me…**. It opens the alert editor pre-filled with that device, or shows the alert the device is already in.
 
-### Getting notifications on this phone
+### Notifications on this phone
 
-- **ntfy (default):**
-  - ZigDash creates the topic once per Home (random, 22 characters) and keeps it in the Home's settings.
-  - **Get notifications on this phone** opens the ntfy app already subscribed to the topic (`ntfy://` link; verify the exact form), or opens ntfy on Play if it isn't installed.
-  - An advanced field takes a self-hosted ntfy server instead of ntfy.sh.
-- **Other people in the household:** **Share alerts** shows a QR code and a share link, `ntfy://ntfy.sh/<topic>?display=<Home name>`. Another phone can get the Home's notifications with only ntfy installed, no ZigDash needed. The screen warns that anyone with the link gets the alerts, and **New link** makes a fresh topic, which cuts off old subscribers (decided 2026-10-10).
-- **Pushover (optional):** the user enters their user key and app token, and the help text links to Pushover's pricing ($4.99 once after a trial).
-- **Send test notification** publishes to `zigdash/alerts/test` and shows the hub's result ("Sent", or the error from ntfy/Pushover). It is the only end-to-end proof, and the setup flow asks for it before finishing.
+- **Turning it on** (one switch, on by default when alerts are set up):
+  1. Ask Android's notification permission.
+  2. Register with the push library using the Home's VAPID public key; ZigDash is its own distributor, so nothing else is installed. On a phone without Google services ZigDash isn't offered as a distributor; the switch then explains and offers the ntfy fallback.
+  3. Put this phone's endpoint and keys into the config.
+- **Turning it off** removes the phone from the config and unregisters.
+- **Notification channels:** "Alerts" (leak, smoke): max importance, its own sound, and a note that the user can let it override Do Not Disturb in Android's settings. "Notices" (door, battery): high importance.
+- **Tapping** a notification opens ZigDash on the Device page.
+- **Kept alive:** on Android 14+, a force-stopped app gets no pushes until it's opened. Samsung's "sleeping apps" does the same. So:
+  - the Alerts screen shows "This phone isn't getting notifications" when Android reports background restrictions for ZigDash, with a button to Android's settings and, on Samsung, the words to look for ("Never sleeping apps");
+  - Recent alerts shows what was missed the next time ZigDash opens;
+  - the dashboard banner says the same when alerts are set up and the phone is restricted.
+- **Send test notification** publishes to `zigdash/alerts/test` for this phone and shows the hub's result. The setup flow asks for it before finishing: it is the only end-to-end proof.
+
+### Share alerts and the fallback (ntfy)
+
+- **Share alerts** turns on an ntfy topic for the Home (random, 22 characters, kept in the config as `ntfy`), then shows a QR code and the link `ntfy://ntfy.sh/<topic>?display=<Home name>`. Another phone gets the Home's notifications with only the ntfy app, no ZigDash needed. The screen says that anyone with the link gets the alerts, and that this text goes through ntfy.sh unencrypted; **New link** makes a fresh topic, which cuts off old subscribers. An advanced field takes a self-hosted ntfy server.
+- **The no-Google fallback** uses the same topic from the Alerts screen: "Get notifications with ntfy" opens the link, or ntfy on Play (or F-Droid) if it isn't installed.
+- **Pushover (optional):** the user enters their user key and app token; help text links to Pushover's pricing ($4.99 once after a trial). Smoke and leak go at priority 2 (repeats until acknowledged), the rest at 1.
 
 ### Alerts paused
 
@@ -121,13 +136,13 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
 
 ### Privacy
 
-- **Before alerts are turned on,** the setup screen says what leaves the hub:
-  - the alert text (kind, device name, Home name) goes to ntfy.sh (and Google's push service, which ntfy.sh uses to reach Android), or to Pushover;
-  - nothing else does.
-- **Hide device names** (off by default) sends "💧 Leak detected" without names; tapping the notification opens ZigDash.
+- **Pushes to ZigDash are end-to-end encrypted** (Web Push, RFC 8291): Google's push service carries the message but can't read it. Only the fact that a push was sent, and when, is visible to Google.
+- **ntfy and Pushover are not:** the alert text passes through ntfy.sh (and Google's push, which ntfy.sh uses) or Pushover in the clear. The Share alerts screen says so before the topic is made, and **Hide device names** (off by default) sends "💧 Leak detected" without names on those paths.
 - **The privacy policy** gains an "Alerts" section saying the same, and that ZigDash itself sends nothing: the hub does, and only when the user sets it up.
 
 ### Notification text
+
+Written by ZigDash from the push's JSON, in the app's language:
 
 | Kind | Fired | Cleared |
 |---|---|---|
@@ -136,8 +151,7 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
 | Opened | 🚪 Front door opened (My Home) | — |
 | Battery | 🔋 Battery low — Bedroom sensor, 12% (My Home) | — |
 
-- **Language:** the text is written by the flow in the language ZigDash sends in the config (`"lang"`), using phrases ZigDash includes in the config for that language. The flow has no translations of its own.
-- **Tapping** an ntfy notification opens ZigDash on the Device page via a `zigdash://` link carried in ntfy's click action.
+The Home name is left out when the app has one Home.
 
 ## 3. Local-network permission
 
@@ -146,17 +160,18 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
 - If it's denied, the connection error says so and offers to ask again.
 - Behind a version check, so nothing changes on Android 16 and older.
 
+
 ## 4. Analytics (ADR 0006, opt-in only)
 
-- `alerts_setup`: step (flow installed, flow manual, no Node-RED, test sent, test failed), service (ntfy, pushover).
+- `alerts_setup`: step (flow installed, flow manual, no Node-RED, phone registered, no Google services, test sent, test failed), channel (push, ntfy, pushover).
 - `alert_added`: kind.
-- The privacy policy lists both. No device or Home names, topics or keys are ever sent.
+- The privacy policy lists both. No device or Home names, endpoints, topics or keys are ever sent.
 
 ## 5. Risks to check first (spikes, before building the screens)
 
 1. **Node-RED admin API on SMHUB:** `GET /settings` and `POST /flow` without a login. Does the SMHUB build need auth?
 2. **ntfy deep link:** the exact `ntfy://` subscribe link and its behaviour when ntfy isn't installed. Also the click action that opens `zigdash://` from a notification.
-3. **End to end on the user's phone with the screen off and Doze forced** (`adb shell dumpsys deviceidle force-idle`): a priority-5 ntfy message must arrive.
+3. **End to end on the user's phone with the screen off and Doze forced** (`adb shell dumpsys deviceidle force-idle`): a high-urgency push must arrive. Done on the emulator (below); the user's Samsung is still to do.
 4. **The broker node in an API-posted flow:** how credentials are set, given Node-RED keeps them in a separate credentials file.
 
 ### Results so far (2026-10-10, the user's SMHUB, Node-RED 4.1.10 from SMHUB → Apps)
@@ -200,17 +215,29 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
 
 **What changes in the spec:**
 - **Delivery:** ntfy is no longer the default. It becomes the optional household-sharing path, and the fallback for phones without Google Play services (where ZigDash isn't listed as a distributor).
-- **The hub's keys:** the hub keeps a VAPID key pair; ZigDash fetches the public key before registering.
+- **The keys:** the first phone makes the VAPID key pair and keeps it in the retained config, so later phones read the public key there (no Node-RED HTTP endpoint needed).
 - **What each phone sends the hub:** its endpoint and keys, through the retained config (one entry per phone, so several phones get alerts).
 - **Tapping a notification** opens ZigDash directly, so the `zigdash://` scheme is only needed for ntfy.
 
+
 ## 6. Effort
 
-- Spikes: half a day.
-- Flow and contract: 1–2 days.
+- Flow and contract (push, state kept retained, recent, test): 2 days.
 - Install path: 1 day.
+- Push registration, channels, background notification, restricted-phone check: 1.5 days.
 - Alerts screen, editor, Notify me, paused banner: 3–4 days.
+- Share alerts (ntfy) and Pushover: 1 day.
 - Local-network permission: half a day.
 - Privacy, listing, 11 languages, tests: 1 day.
 
-About 1.5–2 weeks.
+About 2 weeks.
+
+## 7. Build order
+
+1. Flow + contract, tested against the prototype's sender on the emulator.
+2. Push registration in the app (from the prototype), notification display, tap-to-open.
+3. Install path.
+4. Alerts screen, editor, Notify me, pre-filled alerts.
+5. Paused and restricted-phone warnings, Recent alerts.
+6. Share alerts, Pushover, local-network permission.
+7. Privacy, listing, translations, Samsung test on the user's phone.

@@ -56,7 +56,7 @@
 
 **Alert** — something the user asked to be told about when it happens at home: a leak, smoke, a door or window opening (optionally only within set hours), or a low battery, for chosen devices in one Home. The hub's Node-RED watches for it; the phone does not. Not a schedule: alerts tell, schedules act. Code: `AlertRule` in the config sent to the hub; UI only says "alert".
 
-**Notification** — what reaches the phone when an alert fires, delivered by a push service (ntfy by default) so it arrives with ZigDash closed. Leak and smoke also notify when they clear.
+**Notification** — what reaches the phone when an alert fires: a ZigDash notification, delivered through Google's push service (encrypted end to end) so it arrives with ZigDash closed; or an ntfy notification for phones without Google services and for people sharing a Home's alerts without ZigDash. Leak and smoke also notify when they clear.
 
 **Recent alerts** — the last 20 alerts that fired, kept on the hub, shown at the top of the Alerts screen so a missed notification is still seen.
 
