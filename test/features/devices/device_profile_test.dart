@@ -231,10 +231,28 @@ void main() {
       });
     });
 
-    test('refresh asks only for gettable readable properties', () {
-      expect(DeviceCommand.refresh(bulb)?.keys,
-          containsAll(['state', 'brightness', 'color_temp', 'color']));
-      expect(DeviceCommand.refresh(bulb)?.keys, isNot(contains('effect')));
+    test('refresh asks only for what a tile shows: on/off and brightness',
+        () {
+      // Zigbee2MQTT republishes the whole cached state after any read, so
+      // one small request fills the tile; a burst of reads can crash a
+      // hub's Zigbee radio (EmberZNet 7.4.2 on an SMHUB).
+      expect(DeviceCommand.refresh(bulb), {'state': '', 'brightness': ''});
+    });
+
+    test('refresh asks a shutter for its position, a sensor for nothing', () {
+      final cover = classifyExposes(_j('''[
+        {"type":"cover","features":[
+          {"type":"enum","name":"state","property":"state","access":7,
+           "values":["OPEN","CLOSE","STOP"]},
+          {"type":"numeric","name":"position","property":"position","access":7},
+          {"type":"enum","name":"motor_travel_calibration_action",
+           "property":"motor_travel_calibration_action","access":7,
+           "values":["start","stop","clear"]}]}]'''));
+      expect(DeviceCommand.refresh(cover), {'position': ''});
+      final sensor = classifyExposes(_j('''[
+        {"type":"numeric","name":"temperature","property":"temperature",
+         "access":5}]'''));
+      expect(DeviceCommand.refresh(sensor), isNull);
     });
   });
 

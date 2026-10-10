@@ -151,24 +151,10 @@ class ShortcutCommander {
         : DeviceCommand.brightnessPercent(brightness, percent);
   }
 
-  /// The `/get` request that fills a shortcut: only what it shows (on/off,
-  /// brightness, position). Null for a device that isn't asked: a sensor,
-  /// often asleep on batteries, reports by itself. Kept small because a
-  /// burst of requests can overwhelm a hub's Zigbee radio (seen on an SMHUB
-  /// with EmberZNet 7.4.2: the adapter crashed and Zigbee2MQTT restarted).
-  static Map<String, Object?>? stateRequest(ShortcutDevice d) {
-    final p = d.profile;
-    final features = p.deviceClass == DeviceClass.cover
-        ? [p.position ?? p.feature('state')]
-        : p.switches.isEmpty
-            ? const <DeviceFeature?>[]
-            : [p.switches.first, p.brightness];
-    final props = {
-      for (final f in features)
-        if (f != null && f.gettable) f.property: '',
-    };
-    return props.isEmpty ? null : props;
-  }
+  /// The `/get` request that fills a shortcut: the same small request as a
+  /// dashboard tile's (see [DeviceCommand.refresh]).
+  static Map<String, Object?>? stateRequest(ShortcutDevice d) =>
+      DeviceCommand.refresh(d.profile);
 
   /// Whether a state the device reported answers [command]: every commanded
   /// key now holds the commanded value ("CLOSE" and "CLOSED" alike), or, for
