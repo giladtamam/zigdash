@@ -9,7 +9,10 @@ import 'package:alchemist/alchemist.dart';
 /// Golden tests run in two tiers (see docs/design/phasing.md):
 ///
 /// - CI goldens (`goldens/ci/`): text drawn as blocks, identical on every OS.
-///   These gate layout, color and shape everywhere.
+///   These gate layout, color and shape everywhere. They allow 0.05% of
+///   pixels to differ: macOS and Linux smooth the block edges slightly
+///   differently (up to 0.01% seen), while a real layout change moves far
+///   more.
 /// - Platform goldens (`goldens/linux/`): real fonts, rendered only on Linux,
 ///   the OS CI runs on. These gate typography.
 ///
@@ -29,6 +32,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
   return AlchemistConfig.runWithConfig(
     config: AlchemistConfig(
+      ciGoldensConfig: const CiGoldensConfig(diffThreshold: 0.0005),
       platformGoldensConfig: PlatformGoldensConfig(
         platforms: {HostPlatform.linux},
       ),
