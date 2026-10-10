@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">ZigDash-apparaat</string>
+    <string name="widget_device_description">Schakel een lamp of stekker, of beweeg een rolluik, vanaf je startscherm</string>
+</resources>

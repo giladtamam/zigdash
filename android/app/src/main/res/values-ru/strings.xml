@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">Устройство ZigDash</string>
+    <string name="widget_device_description">Включайте свет или розетку и управляйте шторами прямо с главного экрана</string>
+</resources>

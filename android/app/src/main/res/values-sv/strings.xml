@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">ZigDash-enhet</string>
+    <string name="widget_device_description">Slå på en lampa eller ett uttag, eller flytta en rullgardin, från hemskärmen</string>
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">מכשיר ZigDash</string>
+    <string name="widget_device_description">הדליקו אור או שקע, או הזיזו תריס, ישירות ממסך הבית</string>
+</resources>

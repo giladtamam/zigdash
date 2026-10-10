@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_device_label">Appareil ZigDash</string>
+    <string name="widget_device_description">Allumez une lampe ou une prise, ou bougez un volet, depuis votre écran d\'accueil</string>
+</resources>
