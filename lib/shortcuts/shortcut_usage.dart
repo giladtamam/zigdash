@@ -14,7 +14,7 @@ String shortcutUsedKey(ShortcutEventKind kind) => 'shortcut.used.${kind.wire}';
 const shortcutControlsAddedKey = 'shortcut.added.control';
 const _controlsAddedReported = 'shortcut.added.control.reported';
 /// "1" once a home-screen widget of a kind was added (the launcher's
-/// picker notes it): `shortcut.added.widget`, `shortcut.added.scene_widget`.
+/// picker notes it): `shortcut.added.widget`, `.scene_widget`, `.group_widget`.
 String _addedKey(ShortcutEventKind kind) => 'shortcut.added.${kind.wire}';
 
 /// Sends what the native side noted and clears the notes.
@@ -28,7 +28,11 @@ Future<void> reportShortcutUsage(
     await prefs.remove(key);
   }
   // Home-screen widgets added (the launcher's picker notes them).
-  for (final kind in [ShortcutEventKind.widget, ShortcutEventKind.sceneWidget]) {
+  for (final kind in [
+    ShortcutEventKind.widget,
+    ShortcutEventKind.sceneWidget,
+    ShortcutEventKind.groupWidget,
+  ]) {
     if (prefs.getString(_addedKey(kind)) == null) continue;
     analytics.track(ShortcutAdded(kind));
     await prefs.remove(_addedKey(kind));

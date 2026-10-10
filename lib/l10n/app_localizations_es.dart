@@ -2384,6 +2384,18 @@ class AppLocalizationsEs extends AppLocalizations {
       'Abre ZigDash y crea primero una escena.';
 
   @override
+  String get shortcutChooseGroup => 'Elige un grupo';
+
+  @override
+  String get shortcutPickDevices => 'Elegir dispositivos…';
+
+  @override
+  String get shortcutGroupName => 'Nombre del grupo';
+
+  @override
+  String get shortcutGroupLimit => 'Hasta 5 dispositivos y 3 escenas';
+
+  @override
   String get shortcutAddTile => 'Añadir a Ajustes rápidos';
 
   @override

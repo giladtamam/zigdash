@@ -2356,6 +2356,18 @@ class AppLocalizationsHe extends AppLocalizations {
   String get shortcutOpenAppFirstScene => 'פתחו את ZigDash וצרו סצנה קודם.';
 
   @override
+  String get shortcutChooseGroup => 'בחירת קבוצה';
+
+  @override
+  String get shortcutPickDevices => 'בחירת מכשירים…';
+
+  @override
+  String get shortcutGroupName => 'שם הקבוצה';
+
+  @override
+  String get shortcutGroupLimit => 'עד 5 מכשירים ו-3 סצנות';
+
+  @override
   String get shortcutAddTile => 'הוספה להגדרות המהירות';
 
   @override

@@ -2390,6 +2390,18 @@ class AppLocalizationsRu extends AppLocalizations {
       'Откройте ZigDash и сначала создайте сцену.';
 
   @override
+  String get shortcutChooseGroup => 'Выберите группу';
+
+  @override
+  String get shortcutPickDevices => 'Выбрать устройства…';
+
+  @override
+  String get shortcutGroupName => 'Название группы';
+
+  @override
+  String get shortcutGroupLimit => 'До 5 устройств и 3 сцен';
+
+  @override
   String get shortcutAddTile => 'Добавить в быстрые настройки';
 
   @override

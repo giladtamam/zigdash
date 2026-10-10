@@ -4376,6 +4376,30 @@ abstract class AppLocalizations {
   /// **'Open ZigDash and create a scene first.'**
   String get shortcutOpenAppFirstScene;
 
+  /// Title of the group widget's picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a group'**
+  String get shortcutChooseGroup;
+
+  /// Group widget picker: build a group by hand instead of from a dashboard section.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick devices…'**
+  String get shortcutPickDevices;
+
+  /// Group widget picker: label of the name field for a hand-picked group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group name'**
+  String get shortcutGroupName;
+
+  /// Group widget picker: how many devices and scenes a group can hold.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 5 devices and 3 scenes'**
+  String get shortcutGroupLimit;
+
   /// No description provided for @shortcutAddTile.
   ///
   /// In en, this message translates to:

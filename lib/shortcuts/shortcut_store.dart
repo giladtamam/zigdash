@@ -58,6 +58,14 @@ Map<String, Object?> encodeControl(
 /// order.
 const shortcutScenesKey = 'shortcut.scenes';
 
+/// The groups offered to the group widget's picker: one per dashboard
+/// section (tiles outside a section form one named after the dashboard), a
+/// JSON list of `{"connectionId", "home", "dashboard", "name", "ieees",
+/// "scenes"}` with at most [groupDevices] devices and [groupScenes] scenes.
+const shortcutGroupsKey = 'shortcut.groups';
+const groupDevices = 5;
+const groupScenes = 3;
+
 /// The native side's words, in the app's language.
 const shortcutStringsKey = 'shortcut.strings';
 

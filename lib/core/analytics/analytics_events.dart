@@ -158,7 +158,8 @@ enum ShortcutEventKind {
   tile('tile'),
   control('control'),
   widget('widget'),
-  sceneWidget('scene_widget');
+  sceneWidget('scene_widget'),
+  groupWidget('group_widget');
 
   const ShortcutEventKind(this.wire);
 

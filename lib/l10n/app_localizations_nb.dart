@@ -2374,6 +2374,18 @@ class AppLocalizationsNb extends AppLocalizations {
   String get shortcutOpenAppFirstScene => 'Åpne ZigDash og lag en scene først.';
 
   @override
+  String get shortcutChooseGroup => 'Velg en gruppe';
+
+  @override
+  String get shortcutPickDevices => 'Velg enheter…';
+
+  @override
+  String get shortcutGroupName => 'Gruppenavn';
+
+  @override
+  String get shortcutGroupLimit => 'Opptil 5 enheter og 3 scener';
+
+  @override
   String get shortcutAddTile => 'Legg til i Hurtiginnstillinger';
 
   @override
