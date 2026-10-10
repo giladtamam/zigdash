@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert' show JsonEncoder;
 import 'dart:math';
 
@@ -38,8 +39,29 @@ class AlertsScreen extends ConsumerStatefulWidget {
 
 class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   bool _busy = false;
+  StreamSubscription<Object?>? _retained;
 
   String get _id => widget.connectionId;
+
+  @override
+  void initState() {
+    super.initState();
+    // Another phone may have set the Home's alerts up already: take the
+    // broker's copy (keys included) before offering to start from scratch.
+    ref.read(alertsServiceProvider).followRetained(_id).then((sub) {
+      if (mounted) {
+        _retained = sub;
+      } else {
+        sub?.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _retained?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

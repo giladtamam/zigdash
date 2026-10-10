@@ -69,8 +69,10 @@ abstract final class AlertPush {
   static final endpoints =
       StreamController<(String, PushRegistration)>.broadcast();
 
-  /// A notification was tapped while the app runs: (connectionId, ieee).
-  static final taps = StreamController<(String, String?)>.broadcast();
+  /// A notification was tapped while the app runs: (connectionId, ieee,
+  /// Home name). The id is the writing phone's; the name finds the Home
+  /// when the id isn't this phone's.
+  static final taps = StreamController<(String, String?, String)>.broadcast();
 
   static bool get available => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
@@ -198,8 +200,8 @@ abstract final class AlertPush {
   static String? registrationFailure(SharedPreferences prefs, String connectionId) =>
       prefs.getString(_failedKey(connectionId));
 
-  /// If the app was started by a tap on a notification: (connectionId, ieee).
-  static Future<(String, String?)?> takeLaunchTap() async {
+  /// If the app was started by a tap on a notification.
+  static Future<(String, String?, String)?> takeLaunchTap() async {
     if (!available) return null;
     final d = await _notes.getNotificationAppLaunchDetails();
     if (d == null || !d.didNotificationLaunchApp) return null;
@@ -217,7 +219,7 @@ abstract final class AlertPush {
       id: event.device?.hashCode ?? event.at.millisecondsSinceEpoch ~/ 1000,
       title: event.home.isEmpty ? 'ZigDash' : event.home,
       body: event.text(l10n, oneHome: true),
-      payload: '${event.connectionId ?? ''}|${event.device ?? ''}',
+      payload: '${event.connectionId ?? ''}|${event.device ?? ''}|${event.home}',
       notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           urgent ? urgentChannel : noticeChannel,
@@ -252,11 +254,10 @@ abstract final class AlertPush {
   static String? _connectionOf(String instance) =>
       instance.startsWith('alerts:') ? instance.substring(7) : null;
 
-  static (String, String?)? _parsePayload(String? payload) {
+  static (String, String?, String)? _parsePayload(String? payload) {
     if (payload == null || payload.isEmpty) return null;
-    final i = payload.indexOf('|');
-    if (i <= 0) return null;
-    final ieee = payload.substring(i + 1);
-    return (payload.substring(0, i), ieee.isEmpty ? null : ieee);
+    final parts = payload.split('|');
+    if (parts.length < 2 || parts[0].isEmpty) return null;
+    return (parts[0], parts[1].isEmpty ? null : parts[1], parts.length > 2 ? parts[2] : '');
   }
 }

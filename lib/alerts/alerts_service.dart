@@ -170,9 +170,15 @@ class AlertsService {
       }
       return;
     }
-    final merged = local == null
-        ? retained
-        : local.mergedFrom(retained, myPhoneId: phoneId);
+    // The broker's copy carries the Home id of the phone that wrote it; here
+    // it lives under this phone's id for the same Home.
+    final merged = (local ??
+            AlertsConfig(
+                connectionId: connectionId,
+                home: retained.home,
+                base: retained.base,
+                timeZone: retained.timeZone))
+        .mergedFrom(retained, myPhoneId: phoneId);
     if (local == null || merged.encode() != local.encode()) await save(merged);
   }
 

@@ -125,11 +125,16 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
     });
   }
 
-  void _openFromAlert((String, String?) tap) {
-    final (home, ieee) = tap;
-    if (ieee != null) {
-      ref.read(routerProvider).push(Routes.homeDevice(home, ieee));
-    }
+  Future<void> _openFromAlert((String, String?, String) tap) async {
+    final (id, ieee, name) = tap;
+    if (ieee == null) return;
+    // The id is the writing phone's Home id; find ours by it, else by name.
+    final homes = await ref.read(appDatabaseProvider).select(ref.read(appDatabaseProvider).connections).get();
+    final home = homes.where((c) => c.id == id).firstOrNull ??
+        homes.where((c) => c.name == name).firstOrNull ??
+        (homes.length == 1 ? homes.single : null);
+    if (home == null || !mounted) return;
+    ref.read(routerProvider).push(Routes.homeDevice(home.id, ieee));
   }
 
   void _handle(Object? args) {

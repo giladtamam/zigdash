@@ -134,6 +134,21 @@ void main() {
     expect(merged.phones.map((p) => p.endpoint), ['theirs', 'mine']);
   });
 
+  test("the broker's copy from another phone lands under this phone's Home id",
+      () async {
+    // The other phone knows the same Home by a different id.
+    final theirs = AlertsConfig(
+        connectionId: 'their-id-for-it', home: 'My Home', base: 'zigbee2mqtt',
+        timeZone: 'Asia/Jerusalem',
+        vapid: const VapidKeys(publicKey: 'PUB', privateJwk: {'d': 'D'}),
+        phones: const [AlertPhone(id: 'other', name: 'Pixel', endpoint: 'e', p256dh: 'k', auth: 'a')]);
+    await service.onRetained('home', theirs.encode());
+    final mine = (await service.load('home'))!;
+    expect(mine.connectionId, 'home');
+    expect(mine.vapid?.publicKey, 'PUB', reason: 'the keys come along');
+    expect(mine.phones.single.id, 'other');
+  });
+
   test('an empty retained config means another phone turned alerts off',
       () async {
     await service.save(config());
