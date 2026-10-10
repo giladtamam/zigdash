@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart' show PlatformDispatcher;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/l10n/app_l10n.dart';
@@ -22,6 +23,7 @@ import '../features/devices/device_profile.dart';
 import '../features/panels/widgets/device_tile_panel.dart'
     show decodeDeviceState;
 import 'shortcut_commander.dart';
+import '../mqtt/dropped_connection.dart';
 import 'shortcut_store.dart';
 
 /// The headless command engine for shortcuts (docs/design/roadmap-post-2.0.md,
@@ -31,14 +33,11 @@ import 'shortcut_store.dart';
 /// shortcut shows lives in shared preferences, which the native side reads.
 @pragma('vm:entry-point')
 void shortcutEngine() {
+  WidgetsFlutterBinding.ensureInitialized();
   // When Android freezes the idle app, the broker connection's socket dies
   // and mqtt_client reports it as an uncaught error; the next tap reconnects
-  // (ensureConnected), so log it quietly instead.
-  runZonedGuarded(_serve, (e, st) => debugPrint('shortcut engine: $e'));
-}
-
-void _serve() {
-  WidgetsFlutterBinding.ensureInitialized();
+  // (ensureConnected). Other errors still surface.
+  PlatformDispatcher.instance.onError = ignoreDroppedConnection;
   DartPluginRegistrant.ensureInitialized();
   final engine = ShortcutEngine();
   const channel = MethodChannel('zigdash/shortcuts');
