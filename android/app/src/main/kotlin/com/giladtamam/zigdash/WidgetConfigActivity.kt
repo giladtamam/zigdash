@@ -82,7 +82,11 @@ class WidgetConfigActivity : Activity() {
         DeviceWidget.render(this, AppWidgetManager.getInstance(this), id)
         ShortcutPrefs.mark(this, "shortcut.added.widget")
         // Ask the device for its state so the new widget isn't blank.
-        ShortcutEngine.watch(this, e.connectionId, listOf(e.ieee)) {}
+        // Through the foreground service: this screen closes right away.
+        val ask = Intent(this, WidgetActionService::class.java)
+            .setAction(WidgetActionService.ACTION_WATCH)
+            .putExtra(DeviceWidget.EXTRA_ID, id)
+        if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(ask) else startService(ask)
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id))
         finish()
     }

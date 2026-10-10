@@ -52,6 +52,17 @@ class WidgetActionService : Service() {
             finishSoon(0)
             return START_NOT_STICKY
         }
+        if (action == ACTION_WATCH) {
+            // A new widget asks its device where it is. Android cuts an
+            // app's network seconds after it leaves the screen, so this
+            // runs here too; the answer usually comes within a second.
+            running++
+            ShortcutEngine.watch(this, t.connectionId, listOf(t.ieee)) {
+                running--
+                finishSoon(WATCH_MS)
+            }
+            return START_NOT_STICKY
+        }
         ShortcutPrefs.mark(this, "shortcut.used.widget")
         val mgr = AppWidgetManager.getInstance(this)
         DeviceWidget.render(this, mgr, id, working = true)
@@ -118,5 +129,7 @@ class WidgetActionService : Service() {
         private const val CHANNEL = "shortcuts"
         private const val NOTIFICATION = 21
         private const val FOLLOW_MS = 45_000L
+        private const val WATCH_MS = 10_000L
+        const val ACTION_WATCH = "WATCH"
     }
 }
