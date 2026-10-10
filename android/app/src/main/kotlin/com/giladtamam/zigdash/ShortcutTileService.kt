@@ -88,7 +88,7 @@ abstract class ShortcutTileService : TileService() {
         }
         val s = ShortcutPrefs.state(this, t.connectionId, t.ieee)
         tile.label = t.name
-        tile.icon = android.graphics.drawable.Icon.createWithResource(this, t.icon)
+        tile.icon = ShortcutIcons.forTile(this, t)
         setSubtitle(tile, when {
             working -> ShortcutPrefs.word(this, "working", "working…")
             flash != null -> flash
