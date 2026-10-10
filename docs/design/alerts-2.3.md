@@ -217,7 +217,7 @@ The Home name is left out when the app has one Home.
 
 **Flow on the hub (2026-10-10, later):** `node-red/alerts-flow.json`, installed on the SMHUB through `POST /flow`, with a config naming a fake sensor topic: dry → wet sent a push that woke the closed ZigDash on the emulator; `zigdash/alerts/test` answered `{"ok":true}` on `test/result`; state and recent were retained as specified. The flow's 29-check harness (`node-red/alerts/test/harness.mjs`) passes.
 
-**Still to test on the user's Samsung phone:** delivery in real Doze, and Samsung's own app sleeping.
+**On the user's Samsung (Galaxy S24 FE, Android 16, 2026-10-11): passes.** ZigDash Dev joined the Home's existing setup (same keys as the emulator), a test push from the app arrived (hub answered 201), and with the app killed and the phone forced into Doze a push started the app and showed the notification. Samsung had not restricted the app (background: allow, standby bucket active). With the background restriction simulated (`appops RUN_ANY_IN_BACKGROUND ignore`) the Alerts screen shows the "Android may stop ZigDash" warning. Samsung's own "sleeping apps" list was not exercised (it needs days of non-use). Found and fixed on the way: a second phone saved the broker's copy under the writer's Home id (foreign-key failure) and never followed it before setting up.
 
 **What changes in the spec:**
 - **Delivery:** ntfy is no longer the default. It becomes the optional household-sharing path, and the fallback for phones without Google Play services (where ZigDash isn't listed as a distributor).
