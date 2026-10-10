@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/analytics/analytics.dart';
 import '../core/l10n/l10n_ext.dart';
 import '../features/devices/device_profile.dart';
 import '../features/devices/devices_providers.dart';
@@ -212,8 +213,10 @@ class _AlertEditorScreenState extends ConsumerState<AlertEditorScreen> {
     final rule = _rule!;
     final others = [for (final a in config.alerts) if (a.id != rule.id) a];
     final service = ref.read(alertsServiceProvider);
+    final added = !remove && !config.alerts.any((a) => a.id == rule.id);
     await service.save(config.copyWith(alerts: remove ? others : [...others, rule]));
     await service.publish(widget.connectionId);
+    if (added) ref.read(analyticsProvider).track(AlertAdded(rule.kind.name));
     if (mounted) Navigator.of(context).pop();
   }
 }

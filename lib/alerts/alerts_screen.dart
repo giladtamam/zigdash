@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../core/analytics/analytics.dart';
 import '../core/l10n/l10n_ext.dart';
 import '../core/router/routes.dart';
 import '../data/repositories/connection_repo.dart';
@@ -163,6 +164,8 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     );
   }
 
+  void _track(AnalyticsEvent e) => ref.read(analyticsProvider).track(e);
+
   Future<void> _update(AlertsConfig config) async {
     final service = ref.read(alertsServiceProvider);
     await service.save(config);
@@ -176,7 +179,13 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     try {
       await ref.read(alertsServiceProvider).ensure(_id, l10n);
       final ok = await _install(l10n);
-      if (ok && mounted) await _thisPhone(true, l10n);
+      if (ok && mounted) {
+        if (await AlertPush.availability() == PushAvailability.none) {
+          _track(const AlertsSetup(AlertsSetupStep.noGoogleServices));
+        } else {
+          await _thisPhone(true, l10n);
+        }
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -197,6 +206,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
       if (!mounted) return false;
       switch (r) {
         case NodeRedInstall.installed:
+          _track(const AlertsSetup(AlertsSetupStep.flowInstalled));
           messenger.showSnackBar(SnackBar(content: Text(l10n.alertsHubInstalled)));
           await ref.read(alertsServiceProvider).publish(_id);
           return true;
@@ -205,9 +215,11 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           await ref.read(alertsServiceProvider).publish(_id);
           return true;
         case NodeRedInstall.needsLogin:
+          _track(const AlertsSetup(AlertsSetupStep.flowManual));
           await _manualSteps(l10n, conn.host, conn.port, conn.username, base);
           return true;
         case NodeRedInstall.notInstalled:
+          _track(const AlertsSetup(AlertsSetupStep.noNodeRed));
           await _say(l10n.alertsNoNodeRed(conn.host));
           return false;
         case NodeRedInstall.failed:
@@ -261,6 +273,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
       if (on) {
         await AlertPush.askPermission();
         await service.enableThisPhone(_id, l10n);
+        _track(const AlertsSetup(AlertsSetupStep.phoneRegistered));
       } else {
         await service.disableThisPhone(_id);
       }
@@ -274,6 +287,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     setState(() => _busy = true);
     try {
       final r = await ref.read(alertsServiceProvider).sendTest(_id);
+      _track(AlertsSetup(r.ok ? AlertsSetupStep.testSent : AlertsSetupStep.testFailed));
       messenger.showSnackBar(SnackBar(
           content: Text(r.ok
               ? l10n.alertsTestSent
@@ -449,6 +463,7 @@ class _Suggestions extends ConsumerWidget {
                         to: k == AlertKind.opened ? '06:00' : null),
                   ]));
                   await service.publish(connectionId);
+                  ref.read(analyticsProvider).track(AlertAdded(k.name));
                 },
                 child: Text(l10n.alertsTurnOn),
               ),

@@ -194,6 +194,49 @@ class ShortcutUsed extends AnalyticsEvent {
   Map<String, String> get props => {'kind': kind.wire};
 }
 
+/// A step of setting alerts up (docs/design/alerts-2.3.md §4).
+enum AlertsSetupStep {
+  flowInstalled('flow_installed'),
+  flowManual('flow_manual'),
+  noNodeRed('no_node_red'),
+  phoneRegistered('phone_registered'),
+  noGoogleServices('no_google_services'),
+  testSent('test_sent'),
+  testFailed('test_failed');
+
+  const AlertsSetupStep(this.wire);
+  final String wire;
+}
+
+/// How a Home's alerts reach a phone.
+enum AlertsChannel { push, ntfy, pushover }
+
+class AlertsSetup extends AnalyticsEvent {
+  const AlertsSetup(this.step, {this.channel = AlertsChannel.push});
+
+  final AlertsSetupStep step;
+  final AlertsChannel channel;
+
+  @override
+  String get name => 'alerts_setup';
+
+  @override
+  Map<String, String> get props => {'step': step.wire, 'channel': channel.name};
+}
+
+/// An alert was added: its kind (leak, smoke, opened, battery).
+class AlertAdded extends AnalyticsEvent {
+  const AlertAdded(this.kind);
+
+  final String kind;
+
+  @override
+  String get name => 'alert_added';
+
+  @override
+  Map<String, String> get props => {'kind': kind};
+}
+
 /// The "What should ZigDash do next?" poll's choices
 /// (docs/design/roadmap-post-2.0.md, 2.2 §6).
 enum PollChoice {

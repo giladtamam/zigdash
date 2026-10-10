@@ -72,7 +72,7 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
   "alerts": [
     { "id": "…", "kind": "leak", "devices": [{ "ieee": "0x00158d…", "topic": "zigbee2mqtt/Kitchen sensor", "name": "Kitchen sensor" }] },
     { "id": "…", "kind": "opened", "devices": [{ "ieee": "…", "topic": "zigbee2mqtt/Front door", "name": "Front door" }], "from": "23:00", "to": "06:00" },
-    { "id": "…", "kind": "battery", "devices": [{ "ieee": "…", "topic": "…", "name": "Bedroom sensor" }], "threshold": 20 }
+    { "id": "…", "kind": "battery", "devices": [{ "ieee": "…", "topic": "…", "name": "Bedroom sensor" }], "threshold": 20, "enabled": true }
   ]
 }
 ```
@@ -80,7 +80,7 @@ Instead, Node-RED on the always-on hub watches the devices and sends each alert 
 - **The VAPID key pair** is made by the first phone that sets up alerts and lives in the config, on the user's own broker, like the Pushover keys. Anyone who can read the broker can already control the home, so this adds no exposure; the privacy policy says it. A phone that joins later reads the public key from the retained config, registers with it, and adds itself to `phones`.
 - **Several phones** share one config; each phone rewrites it from the retained value it last received (last writer wins; `phones` entries are merged by `id`). ZigDash re-registers at every start (the push library asks for this) and updates its entry if the endpoint changed.
 - Each device carries its IEEE address (for the app), its state topic and its name, because the flow speaks only MQTT and doesn't read Zigbee2MQTT's device list. ZigDash republishes the config when a device is renamed (its topic changes too).
-- An empty retained payload removes the config, which turns alerts off for that Home.
+- An empty retained payload removes the config, which turns alerts off for that Home. An alert with `"enabled": false` (its switch off) is kept but ignored by the flow.
 - **`ntfy`** holds `{server, topic}` when household sharing or the no-Google fallback is on. **`pushover`** holds `{user, token}`.
 
 ### Installing the flow
@@ -128,7 +128,7 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
 
 ### Share alerts and the fallback (ntfy)
 
-- **Share alerts** turns on an ntfy topic for the Home (random, 22 characters, kept in the config as `ntfy`), then shows a QR code and the link `ntfy://ntfy.sh/<topic>?display=<Home name>`. Another phone gets the Home's notifications with only the ntfy app, no ZigDash needed. The screen says that anyone with the link gets the alerts, and that this text goes through ntfy.sh unencrypted; **New link** makes a fresh topic, which cuts off old subscribers. An advanced field takes a self-hosted ntfy server.
+- **Share alerts** turns on an ntfy topic for the Home (random, 22 characters, kept in the config as `ntfy`), then shows the link (copy, or open on this phone; a QR code was dropped to avoid another package) `ntfy://ntfy.sh/<topic>?display=<Home name>`. Another phone gets the Home's notifications with only the ntfy app, no ZigDash needed. The screen says that anyone with the link gets the alerts, and that this text goes through ntfy.sh unencrypted; **New link** makes a fresh topic, which cuts off old subscribers. An advanced field takes a self-hosted ntfy server.
 - **The no-Google fallback** uses the same topic from the Alerts screen: "Get notifications with ntfy" opens the link, or ntfy on Play (or F-Droid) if it isn't installed.
 - **Pushover (optional):** the user enters their user key and app token; help text links to Pushover's pricing ($4.99 once after a trial). Smoke and leak go at priority 2 (repeats until acknowledged), the rest at 1.
 
@@ -238,7 +238,11 @@ The Home name is left out when the app has one Home.
 
 About 2 weeks.
 
-## 7. Build order
+## 7. Progress (2026-10-11)
+
+Built and verified on the user's SMHUB and an Android 16 emulator: the flow (§1), push registration and notifications, the Alerts screen, editor, Notify me, suggested alerts, the paused banner, one-button install, share alerts/Pushover sheet, the local-network permission (declared; asked for on Android 17), analytics events, 11 languages. Left: the privacy policy and store listing text, the Samsung test (real Doze and "sleeping apps"), release prep. The user wants to run 2.3 on their own phone for a few days before Play.
+
+## 8. Build order
 
 1. Flow + contract, tested against the prototype's sender on the emulator.
 2. Push registration in the app (from the prototype), notification display, tap-to-open.
