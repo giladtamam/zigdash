@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/onboarding/setup/setup_error_guidance.dart';
-import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 
