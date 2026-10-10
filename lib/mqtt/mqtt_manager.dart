@@ -104,6 +104,23 @@ class MqttManager {
   Timer? _reconnectTimer;
   bool _userInitiatedDisconnect = false;
   bool _connectInFlight = false;
+
+  /// Bumped for every connect attempt; an attempt that finds it changed was
+  /// abandoned by [ensureConnected] and must not touch any state.
+  int _attempt = 0;
+
+  /// Set once the current attempt has run for [_hungAfter]: only then does
+  /// [ensureConnected] abandon it. A connect normally takes ~50 ms on a
+  /// phone, so a younger attempt is simply waited for (and two quick resumes
+  /// don't start two connections).
+  bool _attemptHung = false;
+  Timer? _hungTimer;
+  static const _hungAfter = Duration(seconds: 1);
+
+  /// When the broker last showed it's there (a message, a PINGRESP or the
+  /// CONNACK). A connection silent for longer than the keep-alive is dead,
+  /// usually because Android froze the app.
+  DateTime? _lastActivity;
   bool _reconnectInProgress = false;
   bool _disposed = false;
   int _backoffMs = _initialBackoffMs;
@@ -193,21 +210,38 @@ class MqttManager {
   void _emit(MqttStatus s) {
     if (_disposed || _status.isClosed) return;
     _status.add(s);
+    if (s == MqttStatus.connected) {
+      for (final w in _connectedWaiters) {
+        if (!w.isCompleted) w.complete(true);
+      }
+      _connectedWaiters.clear();
+    }
   }
+
+  /// [ensureConnected] callers, told directly (not through the stream) when
+  /// the connection comes up.
+  final _connectedWaiters = <Completer<bool>>[];
 
   Future<void> connect() async {
     if (_disposed) return;
     _userInitiatedDisconnect = false;
     if (_connectInFlight || _status.value == MqttStatus.connected) return;
     _connectInFlight = true;
+    final attempt = ++_attempt;
+    _attemptHung = false;
+    _hungTimer?.cancel();
+    _hungTimer = Timer(_hungAfter, () => _attemptHung = true);
     try {
-      await _connect();
+      await _connect(attempt);
     } finally {
-      _connectInFlight = false;
+      if (attempt == _attempt) {
+        _connectInFlight = false;
+        _hungTimer?.cancel();
+      }
     }
   }
 
-  Future<void> _connect() async {
+  Future<void> _connect(int attempt) async {
     final attemptStatus = _reconnectInProgress
         ? MqttStatus.reconnecting
         : MqttStatus.connecting;
@@ -249,18 +283,26 @@ class MqttManager {
             .connect(config.username, password)
             .timeout(Duration(milliseconds: cand.timeoutMs));
       } on TimeoutException catch (_) {
+        if (attempt != _attempt) {
+          client.disconnect();
+          return;
+        }
         _lastError =
             'Connect timed out (${cand.timeoutMs} ms) for ${cand.host}';
         _attemptFailure ??= FailureKind.timedOut;
         client.disconnect();
         continue; // host unreachable within budget — try the next candidate
       } on Exception catch (e) {
+        if (attempt != _attempt) {
+          client.disconnect();
+          return;
+        }
         _lastError = e.toString();
         _attemptFailure ??= _failureOf(e, client);
         client.disconnect();
         continue; // unreachable / refused — try the next candidate
       }
-      if (_disposed) {
+      if (_disposed || attempt != _attempt) {
         client.disconnect();
         return;
       }
@@ -280,6 +322,8 @@ class MqttManager {
       final connectionGeneration = ++_connectionGeneration;
       _lastError = null;
       _lastFailure = null;
+      _lastActivity = _now();
+      client.pongCallback = () => _lastActivity = _now();
       _emitEndpoint(cand.kind);
       _backoffMs = _initialBackoffMs;
       await _updatesSub?.cancel();
@@ -295,6 +339,7 @@ class MqttManager {
     }
 
     // All candidates failed.
+    if (attempt != _attempt) return;
     _lastFailure = _attemptFailure ?? FailureKind.unknown;
     _emit(MqttStatus.error);
     _scheduleReconnect();
@@ -322,14 +367,63 @@ class MqttManager {
   /// or if the user explicitly disconnected.
   void reconnectNow() {
     if (_disposed || _userInitiatedDisconnect) return;
-    if (_status.value == MqttStatus.connected ||
-        _status.value == MqttStatus.connecting) {
-      return;
+    unawaited(ensureConnected());
+  }
+
+  /// Connects now for a command (a shortcut tap) or a return to the app,
+  /// never waiting on what came before: a connection silent for longer than
+  /// the keep-alive is replaced, a hung attempt is abandoned, and a pending
+  /// backoff is skipped. True once connected, false after [timeout].
+  /// Measured on a real phone, this turns a 2.2 s tap into about 0.2 s
+  /// (docs/design/roadmap-post-2.0.md, 2.1 §1).
+  Future<bool> ensureConnected({
+    Duration timeout = const Duration(seconds: 8),
+  }) async {
+    if (_disposed || _userInitiatedDisconnect) return false;
+    final status = _status.value;
+    if (status == MqttStatus.connected) {
+      if (!_isStale) return true;
+      _dropDeadConnection();
+    } else if (_connectInFlight && !_attemptHung) {
+      final waiter = Completer<bool>();
+      _connectedWaiters.add(waiter);
+      return waiter.future.timeout(timeout, onTimeout: () {
+        _connectedWaiters.remove(waiter);
+        return false;
+      });
+    } else if (_connectInFlight) {
+      _attempt++; // the hung attempt bails at its next step
+      _connectInFlight = false;
     }
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _backoffMs = _initialBackoffMs;
-    connect();
+    final waiter = Completer<bool>();
+    _connectedWaiters.add(waiter);
+    unawaited(connect());
+    return waiter.future.timeout(timeout, onTimeout: () {
+      _connectedWaiters.remove(waiter);
+      return false;
+    });
+  }
+
+  bool get _isStale {
+    final last = _lastActivity;
+    if (last == null) return false;
+    final limit = Duration(milliseconds: config.keepAliveSeconds * 1500);
+    return _now().difference(last) > limit;
+  }
+
+  void _dropDeadConnection() {
+    final client = _client;
+    _client = null;
+    _updatesSub?.cancel();
+    _updatesSub = null;
+    client?.onDisconnected = null;
+    client?.disconnect();
+    _reconnectInProgress = true;
+    _emitEndpoint(null);
+    _emit(MqttStatus.reconnecting);
   }
 
   void disconnect() {
@@ -347,6 +441,11 @@ class MqttManager {
 
   Future<void> dispose() async {
     _disposed = true;
+    _hungTimer?.cancel();
+    for (final w in _connectedWaiters) {
+      if (!w.isCompleted) w.complete(false);
+    }
+    _connectedWaiters.clear();
     for (final e in _subs.values) {
       e.release?.cancel();
     }
@@ -500,6 +599,7 @@ class MqttManager {
     List<mc.MqttReceivedMessage<mc.MqttMessage>> events,
     int connectionGeneration,
   ) {
+    _lastActivity = _now();
     for (final event in events) {
       final pub = event.payload;
       if (pub is! mc.MqttPublishMessage) continue;
