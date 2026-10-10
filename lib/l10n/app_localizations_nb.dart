@@ -2345,4 +2345,61 @@ class AppLocalizationsNb extends AppLocalizations {
   String getHelpNoEmailApp(Object email) {
     return 'Fant ingen e-postapp. Kopier detaljene og skriv til $email.';
   }
+
+  @override
+  String get shortcutWorking => 'working…';
+
+  @override
+  String get shortcutCantReach => 'Can\'t reach home';
+
+  @override
+  String get shortcutNotConfirmed => 'Not confirmed';
+
+  @override
+  String get shortcutRemoved => 'Removed';
+
+  @override
+  String get shortcutChooseDevice => 'Choose a device';
+
+  @override
+  String get shortcutAddTile => 'Add to Quick Settings';
+
+  @override
+  String shortcutTileReady(Object name, Object slot) {
+    return '$name is on Quick Settings tile ZigDash $slot';
+  }
+
+  @override
+  String shortcutTileAlready(Object name, Object slot) {
+    return '$name is already on tile ZigDash $slot';
+  }
+
+  @override
+  String get shortcutTileHowToTitle => 'Add the tile';
+
+  @override
+  String shortcutTileHowTo(Object slot) {
+    return 'Open Quick Settings (swipe down twice), tap the pencil to edit, and drag “ZigDash $slot” into your tiles.';
+  }
+
+  @override
+  String shortcutPickTitle(Object slot) {
+    return 'Choose a device for ZigDash $slot';
+  }
+
+  @override
+  String get shortcutPickEmpty =>
+      'No devices to switch yet. Put a light, plug or shutter on a dashboard first.';
+
+  @override
+  String get shortcutSlotsFull =>
+      'All 4 ZigDash tiles are in use. Which one should show this device instead?';
+
+  @override
+  String shortcutSlotLabel(Object slot) {
+    return 'ZigDash $slot';
+  }
+
+  @override
+  String get shortcutSlotEmpty => 'Not used';
 }

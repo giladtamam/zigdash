@@ -20,6 +20,7 @@ import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/onboarding/setup/setup_error_guidance.dart';
 import '../../features/support/get_help_screen.dart';
+import '../../shortcuts/shortcut_tile_picker.dart';
 import '../analytics/analytics_events.dart' show HelpFrom;
 import '../../features/settings/screens/home_settings_screen.dart';
 import '../../features/settings/screens/language_screen.dart';
@@ -84,6 +85,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.help,
         pageBuilder: (_, __) => _slideUp(const HelpScreen()),
+      ),
+      GoRoute(
+        path: '/shortcuts/tile/:slot',
+        pageBuilder: (_, state) => _slideUp(ShortcutTilePicker(
+            slot: int.tryParse(state.pathParameters['slot'] ?? '') ?? 1)),
       ),
       GoRoute(
         path: Routes.getHelp,

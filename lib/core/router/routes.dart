@@ -16,6 +16,9 @@ class Routes {
   static const help = '/help';
   static const getHelp = '/get-help';
 
+  /// Choosing the device a Quick Settings tile slot controls.
+  static String shortcutTile(int slot) => '/shortcuts/tile/$slot';
+
   /// Get help, opened [from] a place (an `HelpFrom` name), for a home or a
   /// setup error (a `SetupErrorKind` name) when there is one.
   static String getHelpFrom(String from, {String? home, String? error}) =>

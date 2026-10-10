@@ -164,6 +164,11 @@ class ShortcutCommander {
     );
   }
 
+  /// What a shortcut shows for [payload] (received at [at]), without a tap:
+  /// used while the app runs to keep shortcuts current.
+  ShortcutResult describe(ShortcutDevice d, String payload, DateTime at) =>
+      _result(ShortcutOutcome.confirmed, d, payload, at);
+
   /// Toggles [d]; [lastPayload] is the state the shortcut last showed.
   Future<ShortcutResult> toggle(
     MqttManager mgr,

@@ -30,6 +30,8 @@ import '../device_state.dart';
 import '../device_tiles.dart';
 import '../devices_providers.dart';
 import '../z2m_bridge.dart';
+import '../../panels/models/panel_config.dart';
+import '../../../shortcuts/add_tile_button.dart';
 import 'devices_screen.dart' show deviceHealthLine;
 
 /// Tiles of a home that show one device, with dashboard and section.
@@ -128,21 +130,44 @@ class _DevicePageState extends ConsumerState<DevicePage> {
       );
     }
 
+    // Only devices with a switch or a cover, shown on a dashboard, can be
+    // a tile: the tile switches them like the dashboard tile's quick action.
+    final tileable = AddTileButton.available &&
+        tiles.any((t) {
+          if (t.$1.type != PanelType.device) return false;
+          final c = PanelConfig.decode(t.$1.type, t.$1.config);
+          return c is DeviceTileConfig &&
+              (c.profile.switches.isNotEmpty ||
+                  c.profile.deviceClass == DeviceClass.cover);
+        });
+    final addTile = tileable
+        ? AddTileButton(
+            connectionId: widget.connectionId, ieee: widget.ieee, name: title)
+        : null;
+
     if (widget.embedded) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 8, 4),
-            child: Text(title,
-                style: Theme.of(context).textTheme.headlineSmall,
-                semanticsLabel: title),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(title,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      semanticsLabel: title),
+                ),
+                ?addTile,
+              ],
+            ),
           ),
           Expanded(child: body),
         ],
       );
     }
-    return Scaffold(appBar: AppBar(title: Text(title)), body: body);
+    return Scaffold(
+        appBar: AppBar(title: Text(title), actions: [?addTile]), body: body);
   }
 }
 

@@ -9,17 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/l10n/app_l10n.dart';
 import '../core/storage/secure_storage.dart';
 import '../data/database/daos/connection_dao.dart';
-import '../data/database/daos/device_registry_dao.dart';
 import '../data/database/daos/scene_dao.dart';
 import '../data/database/database.dart';
-import '../data/database/tables/panels.dart';
-import '../features/panels/models/panel_config.dart';
-import '../features/panels/providers/panel_value_provider.dart'
-    show composeTopic;
 import '../features/scenes/models/scene.dart';
 import '../mqtt/broker_config.dart';
 import '../mqtt/mqtt_manager.dart';
 import 'shortcut_commander.dart';
+import 'shortcut_store.dart';
 
 /// The headless command engine for shortcuts (docs/design/roadmap-post-2.0.md,
 /// 2.1 §1): a cached FlutterEngine runs this entrypoint, and the native
@@ -54,12 +50,6 @@ void _serve() {
   channel.invokeMethod('ready');
 }
 
-/// The shared-preferences key holding what a device's shortcuts show:
-/// `{"payload", "at", "line", "on"}`. Read natively from
-/// FlutterSharedPreferences with the plugin's `flutter.` prefix.
-String shortcutStateKey(String connectionId, String ieee) =>
-    'shortcut.state.$connectionId.$ieee';
-
 class ShortcutEngine {
   AppDatabase? _db;
   final _managers = <String, MqttManager>{};
@@ -88,25 +78,8 @@ class ShortcutEngine {
     );
   }
 
-  /// The device's dashboard tile, which follows renames.
-  Future<ShortcutDevice?> _device(String connectionId, String ieee) async {
-    for (final (panel, prefix)
-        in await DeviceRegistryDao(_database).tilesOfHome(connectionId)) {
-      if (panel.deviceIeee != ieee || panel.type != PanelType.device) continue;
-      final config = PanelConfig.decode(panel.type, panel.config);
-      if (config is! DeviceTileConfig) continue;
-      final effective = panel.topicPrefixOverride ?? prefix;
-      return ShortcutDevice(
-        ieee: ieee,
-        name: panel.name,
-        publishTopic: composeTopic(effective, panel.topic),
-        subscribeTopic:
-            composeTopic(effective, panel.subscribeTopic ?? panel.topic),
-        profile: config.profile,
-      );
-    }
-    return null;
-  }
+  Future<ShortcutDevice?> _device(String connectionId, String ieee) =>
+      resolveShortcutDevice(_database, connectionId, ieee);
 
   Future<ShortcutCommander> _commander() async {
     final code = (await _prefs).getString('locale');
