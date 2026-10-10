@@ -2367,53 +2367,53 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get shortcutWorking => 'working…';
+  String get shortcutWorking => 'trwa…';
 
   @override
-  String get shortcutCantReach => 'Can\'t reach home';
+  String get shortcutCantReach => 'Brak połączenia z domem';
 
   @override
-  String get shortcutNotConfirmed => 'Not confirmed';
+  String get shortcutNotConfirmed => 'Nie potwierdzono';
 
   @override
-  String get shortcutRemoved => 'Removed';
+  String get shortcutRemoved => 'Usunięto';
 
   @override
-  String get shortcutChooseDevice => 'Choose a device';
+  String get shortcutChooseDevice => 'Wybierz urządzenie';
 
   @override
-  String get shortcutAddTile => 'Add to Quick Settings';
+  String get shortcutAddTile => 'Dodaj do Szybkich ustawień';
 
   @override
   String shortcutTileReady(Object name, Object slot) {
-    return '$name is on Quick Settings tile ZigDash $slot';
+    return '$name jest na kafelku ZigDash $slot w Szybkich ustawieniach';
   }
 
   @override
   String shortcutTileAlready(Object name, Object slot) {
-    return '$name is already on tile ZigDash $slot';
+    return '$name jest już na kafelku ZigDash $slot';
   }
 
   @override
-  String get shortcutTileHowToTitle => 'Add the tile';
+  String get shortcutTileHowToTitle => 'Dodaj kafelek';
 
   @override
   String shortcutTileHowTo(Object slot) {
-    return 'Open Quick Settings (swipe down twice), tap the pencil to edit, and drag “ZigDash $slot” into your tiles.';
+    return 'Otwórz Szybkie ustawienia (przesuń dwa razy w dół), dotknij ołówka, aby edytować, i przeciągnij „ZigDash $slot” do swoich kafelków.';
   }
 
   @override
   String shortcutPickTitle(Object slot) {
-    return 'Choose a device for ZigDash $slot';
+    return 'Wybierz urządzenie dla ZigDash $slot';
   }
 
   @override
   String get shortcutPickEmpty =>
-      'No devices to switch yet. Put a light, plug or shutter on a dashboard first.';
+      'Nie ma jeszcze urządzeń do przełączania. Najpierw dodaj lampę, gniazdko lub roletę do dashboardu.';
 
   @override
   String get shortcutSlotsFull =>
-      'All 4 ZigDash tiles are in use. Which one should show this device instead?';
+      'Wszystkie 4 kafelki ZigDash są zajęte. Który ma zamiast tego pokazywać to urządzenie?';
 
   @override
   String shortcutSlotLabel(Object slot) {
@@ -2421,28 +2421,27 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
-  String get shortcutSlotEmpty => 'Not used';
+  String get shortcutSlotEmpty => 'Nieużywany';
 
   @override
-  String get deviceRename => 'Rename';
+  String get deviceRename => 'Zmień nazwę';
 
   @override
-  String get deviceRenameTitle => 'Rename device';
+  String get deviceRenameTitle => 'Zmień nazwę urządzenia';
 
   @override
-  String get deviceRenameHint =>
-      'A name for the room or the device, like Bedroom';
+  String get deviceRenameHint => 'Nazwa pokoju lub urządzenia, np. Sypialnia';
 
   @override
   String deviceRenamed(Object name) {
-    return 'Renamed to $name';
+    return 'Zmieniono nazwę na $name';
   }
 
   @override
   String deviceRenameFailed(Object reason) {
-    return 'Couldn\'t rename: $reason';
+    return 'Nie udało się zmienić nazwy: $reason';
   }
 
   @override
-  String get deviceRenameNoAnswer => 'Zigbee2MQTT didn\'t answer';
+  String get deviceRenameNoAnswer => 'Zigbee2MQTT nie odpowiedział';
 }
