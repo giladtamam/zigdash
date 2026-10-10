@@ -313,6 +313,7 @@ class ShortcutService {
         'groupName': l10n.shortcutGroupName,
         'groupLimit': l10n.shortcutGroupLimit,
         'save': l10n.save,
+        'scenes': l10n.scenesTitle,
       }));
 }
 

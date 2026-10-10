@@ -6,6 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -90,6 +93,7 @@ class WidgetConfigActivity : Activity() {
                 addView(TextView(context).apply {
                     text = name
                     setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                    startAligned()
                 })
                 if (homes) addView(TextView(context).apply {
                     text = home
@@ -98,10 +102,99 @@ class WidgetConfigActivity : Activity() {
                 setOnClickListener { pick() }
             })
         }
-        setContentView(ScrollView(this).apply {
-            addView(list, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT))
+        // A group can also be put together by hand.
+        if (group && ShortcutPrefs.controls(this).isNotEmpty()) {
+            list.addView(TextView(this).apply {
+                text = ShortcutPrefs.word(context, "pickDevices", "Pick devices…")
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                setPadding(0, dp(14), 0, dp(10))
+                setTypeface(typeface, android.graphics.Typeface.BOLD)
+                setOnClickListener { pickByHand() }
+            })
+        }
+        show(list)
+    }
+
+    private fun show(content: LinearLayout) = setContentView(ScrollView(this).apply {
+        addView(content, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT))
+    })
+
+    /**
+     * A hand-picked group: a name, up to five devices and three scenes, all
+     * from one Home (the first ticked decides it).
+     */
+    private fun pickByHand() {
+        val pad = dp(20)
+        val form = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(pad, pad, pad, dp(12))
+            minimumWidth = dp(300)
+        }
+        val name = EditText(this).apply {
+            hint = ShortcutPrefs.word(context, "groupName", "Group name")
+            setSingleLine()
+        }
+        form.addView(name)
+        form.addView(TextView(this).apply {
+            text = ShortcutPrefs.word(context, "groupLimit", "Up to 5 devices and 3 scenes")
+            alpha = 0.7f
+            setPadding(0, dp(8), 0, dp(8))
         })
+        val devices = ShortcutPrefs.controls(this)
+        val scenes = ShortcutPrefs.scenes(this)
+        val homes = (devices.map { it.home } + scenes.map { it.home }).distinct().size > 1
+        // (box, its Home's connection, IEEE or null, scene id or null)
+        data class Pick(val box: CheckBox, val conn: String, val ieee: String?, val scene: String?)
+        val picks = mutableListOf<Pick>()
+        val save = Button(this).apply {
+            text = ShortcutPrefs.word(context, "save", "Save")
+            isEnabled = false
+        }
+        fun refresh() {
+            val chosen = picks.filter { it.box.isChecked }
+            val home = chosen.firstOrNull()?.conn
+            val fullDevices = chosen.count { it.ieee != null } >= 5
+            val fullScenes = chosen.count { it.scene != null } >= 3
+            for (p in picks) {
+                p.box.isEnabled = p.box.isChecked || ((home == null || p.conn == home) &&
+                    !(p.ieee != null && fullDevices) && !(p.scene != null && fullScenes))
+            }
+            save.isEnabled = chosen.isNotEmpty()
+        }
+        fun box(label: String, home: String, conn: String, ieee: String?, scene: String?) {
+            val b = CheckBox(this).apply {
+                text = if (homes) "$label · $home" else label
+                startAligned()
+                setOnCheckedChangeListener { _, _ -> refresh() }
+            }
+            picks.add(Pick(b, conn, ieee, scene))
+            form.addView(b)
+        }
+        for (e in devices) box(e.name, e.home, e.connectionId, e.ieee, null)
+        if (scenes.isNotEmpty()) {
+            form.addView(TextView(this).apply {
+                text = ShortcutPrefs.word(context, "scenes", "Scenes")
+                alpha = 0.7f
+                setPadding(0, dp(12), 0, dp(4))
+            })
+        }
+        for (e in scenes) box(e.name, e.home, e.connectionId, null, e.sceneId)
+        save.setOnClickListener {
+            val chosen = picks.filter { it.box.isChecked }
+            val first = chosen.firstOrNull() ?: return@setOnClickListener
+            val title = name.text.toString().trim().ifEmpty {
+                devices.firstOrNull { it.ieee == chosen.firstOrNull { c -> c.ieee != null }?.ieee }?.name
+                    ?: "ZigDash"
+            }
+            chooseGroup(ShortcutPrefs.GroupEntry(first.conn, "", "", title,
+                chosen.mapNotNull { it.ieee }, chosen.mapNotNull { it.scene }))
+        }
+        form.addView(save, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            topMargin = dp(12)
+        })
+        show(form)
     }
 
     private fun chooseGroup(g: ShortcutPrefs.GroupEntry) {
@@ -140,4 +233,14 @@ class WidgetConfigActivity : Activity() {
     }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
+
+    /** Every name starts on the same side, whatever its script. */
+    private fun TextView.startAligned() {
+        // Left or right outright: "start" follows each name's own script.
+        val rtl = resources.configuration.layoutDirection == android.view.View.LAYOUT_DIRECTION_RTL
+        textDirection = android.view.View.TEXT_DIRECTION_LOCALE
+        textAlignment = android.view.View.TEXT_ALIGNMENT_GRAVITY
+        gravity = android.view.Gravity.CENTER_VERTICAL or
+            (if (rtl) android.view.Gravity.RIGHT else android.view.Gravity.LEFT)
+    }
 }
