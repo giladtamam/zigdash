@@ -9,6 +9,7 @@ import '../data/database/tables/shortcuts.dart';
 import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
+import '../features/devices/device_profile.dart';
 import 'shortcut_store.dart';
 import 'dart:convert';
 
@@ -65,8 +66,39 @@ class ShortcutService {
       tileSlot: Value(slot),
       createdAt: _now(),
     ));
-    await _prefs.setString(shortcutTileKey(slot),
-        encodeTileAssignment(connectionId: connectionId, ieee: ieee, name: name));
+    final device = await resolveShortcutDevice(_db, connectionId, ieee);
+    final cover = device?.profile.deviceClass == DeviceClass.cover;
+    await _prefs.setString(
+        shortcutTileKey(slot),
+        encodeTileAssignment(
+            connectionId: connectionId,
+            ieee: ieee,
+            name: name,
+            cover: cover,
+            position: cover && device?.profile.position != null));
+  }
+
+  /// Rewrites what every tile reads from the database: run at app start,
+  /// so tiles follow renames and pick up new fields (e.g. "this is a
+  /// shutter") after an update.
+  Future<void> resyncTiles() async {
+    for (final row in await _dao.watchAll().first) {
+      final slot = row.tileSlot;
+      final targets = shortcutTargets(row);
+      if (slot == null || targets.isEmpty) continue;
+      final device =
+          await resolveShortcutDevice(_db, row.connectionId, targets.first);
+      if (device == null) continue;
+      final cover = device.profile.deviceClass == DeviceClass.cover;
+      await _prefs.setString(
+          shortcutTileKey(slot),
+          encodeTileAssignment(
+              connectionId: row.connectionId,
+              ieee: targets.first,
+              name: device.name,
+              cover: cover,
+              position: cover && device.profile.position != null));
+    }
   }
 
   Future<void> clearTile(int slot) async {
@@ -96,6 +128,10 @@ class ShortcutService {
         'notConfirmed': l10n.shortcutNotConfirmed,
         'removed': l10n.shortcutRemoved,
         'chooseDevice': l10n.shortcutChooseDevice,
+        'open': l10n.panelCoverOpen,
+        'stop': l10n.panelCoverStop,
+        'close': l10n.panelCoverClose,
+        'position': l10n.devicePosition,
       }));
 }
 

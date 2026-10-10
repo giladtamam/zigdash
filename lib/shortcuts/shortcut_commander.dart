@@ -133,6 +133,18 @@ class ShortcutCommander {
       return s == 'CLOSED' ? 'CLOSE' : s;
     }
 
+    // STOP: any report after it (the motor has stopped, or says so) answers.
+    if (command['state'] is String && norm(command['state']) == 'STOP') {
+      return true;
+    }
+    // A position: the motor starting, the position changing, or arriving.
+    final wanted = command['position'];
+    if (wanted != null) {
+      final motor = state['motor_run_status'];
+      final pos = state['position'], was = before['position'];
+      return (motor is String && norm(motor) != 'STOP') ||
+          (pos != null && (pos == wanted || (was != null && pos != was)));
+    }
     // A shutter takes several seconds to travel and only reports its final
     // state at the end, so the motor starting (or the position changing) is
     // the confirmation. Measured on a SONOFF MINI-ZBRBS: it reports
@@ -208,19 +220,28 @@ class ShortcutCommander {
       _result(ShortcutOutcome.confirmed, d, payload, at);
 
   /// Toggles [d]; [lastPayload] is the state the shortcut last showed.
+  /// Toggles [d], or sends [command] instead (a shutter's OPEN, STOP,
+  /// CLOSE or position from the slider pop-up).
   Future<ShortcutResult> toggle(
     MqttManager mgr,
     ShortcutDevice d, {
     String? lastPayload,
     DateTime? lastAt,
+    Map<String, Object?>? command,
   }) async {
+    final fixed = command;
+    return _send(mgr, d, fixed, lastPayload, lastAt);
+  }
+
+  Future<ShortcutResult> _send(MqttManager mgr, ShortcutDevice d,
+      Map<String, Object?>? fixed, String? lastPayload, DateTime? lastAt) async {
     if (!await mgr.ensureConnected(
         timeout: connectWithin, maxSilence: maxSilence)) {
       return _result(ShortcutOutcome.unreachable, d, lastPayload, lastAt);
     }
     final reply = Completer<String>();
     final current = Completer<String>();
-    var command = commandFor(d, lastPayload);
+    var command = fixed ?? commandFor(d, lastPayload);
     var before = decodeDeviceState(lastPayload);
     var sent = false;
     final sub = mgr.subscribe(d.subscribeTopic).listen((m) {
@@ -239,7 +260,7 @@ class ShortcutCommander {
     try {
       // State unknown (a first tap): take the device's current state if it
       // arrives quickly, so the command can name its target value.
-      if (_unknown(d, before)) {
+      if (fixed == null && _unknown(d, before)) {
         final now = await current.future
             .timeout(knownStateWithin, onTimeout: () => '');
         if (now.isNotEmpty) {

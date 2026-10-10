@@ -48,6 +48,14 @@ void _serve() {
       case 'toggle':
         return jsonEncode(await engine.toggle(
             args['connectionId'] as String, args['ieee'] as String));
+      case 'cover':
+        return jsonEncode(await engine.toggle(
+            args['connectionId'] as String, args['ieee'] as String,
+            command: {'state': args['action'] as String}));
+      case 'position':
+        return jsonEncode(await engine.toggle(
+            args['connectionId'] as String, args['ieee'] as String,
+            command: {'position': args['position'] as int}));
       case 'scene':
         return jsonEncode(await engine.scene(
             args['connectionId'] as String, args['sceneId'] as String));
@@ -130,7 +138,8 @@ class ShortcutEngine {
         l10n: appL10n(code == null || code.isEmpty ? null : Locale(code)));
   }
 
-  Future<Map<String, Object?>> toggle(String connectionId, String ieee) async {
+  Future<Map<String, Object?>> toggle(String connectionId, String ieee,
+      {Map<String, Object?>? command}) async {
     final sw = Stopwatch()..start();
     final device = await _device(connectionId, ieee);
     final tDevice = sw.elapsedMilliseconds;
@@ -147,6 +156,7 @@ class ShortcutEngine {
       lastAt: last['at'] is int
           ? DateTime.fromMillisecondsSinceEpoch(last['at'] as int)
           : null,
+      command: command,
     );
     if (result.outcome == ShortcutOutcome.confirmed) {
       await prefs.setString(key, jsonEncode(result.toJson()));
@@ -156,6 +166,7 @@ class ShortcutEngine {
         _follow(mgr, device, key, await _commander());
       }
     } else if (result.outcome == ShortcutOutcome.unconfirmed &&
+        command == null &&
         device.profile.deviceClass == DeviceClass.cover) {
       // The shutter didn't move: it was most likely already there (moved by
       // a wall switch or an automation while the app was closed). Record

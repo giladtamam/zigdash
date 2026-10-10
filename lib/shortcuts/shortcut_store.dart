@@ -23,11 +23,21 @@ String shortcutTileKey(int slot) => 'shortcut.tile.$slot';
 /// The native side's words, in the app's language.
 const shortcutStringsKey = 'shortcut.strings';
 
+/// [cover]: a shutter, whose tile opens the slider pop-up instead of
+/// toggling; [position]: it can be set to a position.
 String encodeTileAssignment(
         {required String connectionId,
         required String ieee,
-        required String name}) =>
-    jsonEncode({'connectionId': connectionId, 'ieee': ieee, 'name': name});
+        required String name,
+        bool cover = false,
+        bool position = false}) =>
+    jsonEncode({
+      'connectionId': connectionId,
+      'ieee': ieee,
+      'name': name,
+      if (cover) 'cover': true,
+      if (position) 'position': true,
+    });
 
 /// The device [ieee] in [connectionId], from its dashboard tile (which
 /// follows renames), or null when it has no device tile. Read-only.

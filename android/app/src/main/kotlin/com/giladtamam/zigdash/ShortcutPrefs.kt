@@ -19,13 +19,26 @@ object ShortcutPrefs {
             try { JSONObject(it) } catch (_: Exception) { null }
         }
 
-    data class Tile(val connectionId: String, val ieee: String, val name: String)
+    data class Tile(
+        val connectionId: String, val ieee: String, val name: String,
+        val cover: Boolean = false, val position: Boolean = false,
+    )
 
     data class State(val line: String?, val on: Boolean?, val at: Long?)
 
     fun tile(ctx: Context, slot: Int): Tile? = json(ctx, "shortcut.tile.$slot")?.let {
-        Tile(it.optString("connectionId"), it.optString("ieee"), it.optString("name"))
+        Tile(it.optString("connectionId"), it.optString("ieee"), it.optString("name"),
+            it.optBoolean("cover"), it.optBoolean("position"))
     }
+
+    /** The shutter position (0–100) in the stored state payload, if any. */
+    fun position(ctx: Context, connectionId: String, ieee: String): Int? =
+        json(ctx, "shortcut.state.$connectionId.$ieee")?.optString("payload")?.let {
+            try {
+                val p = JSONObject(it)
+                if (p.has("position")) p.optInt("position") else null
+            } catch (_: Exception) { null }
+        }
 
     fun state(ctx: Context, connectionId: String, ieee: String): State? =
         json(ctx, "shortcut.state.$connectionId.$ieee")?.let {

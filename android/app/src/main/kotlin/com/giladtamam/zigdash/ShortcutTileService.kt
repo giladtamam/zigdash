@@ -49,6 +49,11 @@ abstract class ShortcutTileService : TileService() {
                 .putExtra(MainActivity.EXTRA_SLOT, slot))
             return
         }
+        // A shutter has a position, not on/off: open its slider pop-up.
+        if (t.cover) {
+            openApp(CoverControlActivity.intent(this, t))
+            return
+        }
         working = true
         flash = null
         render()

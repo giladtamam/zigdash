@@ -195,6 +195,17 @@ void main() {
         {'position': 0}), isFalse);
     expect(ShortcutCommander.confirms(
         {'state': 'OPEN'}, {'motor_run_status': 'Forward'}, {}), isTrue);
+    // The slider pop-up: STOP, and a position.
+    expect(ShortcutCommander.confirms({'state': 'STOP'},
+        {'state': 'OPEN', 'motor_run_status': 'Stop'}, {}), isTrue);
+    expect(ShortcutCommander.confirms({'position': 50},
+        {'position': 46, 'motor_run_status': 'Forward'}, {'position': 46}),
+        isTrue, reason: 'motor started');
+    expect(ShortcutCommander.confirms({'position': 50}, {'position': 50}, {}),
+        isTrue);
+    expect(ShortcutCommander.confirms({'position': 50},
+        {'position': 46, 'motor_run_status': 'Stop'}, {'position': 46}),
+        isFalse, reason: 'nothing moved');
   });
 
   test('a closed cover opens, an open one closes', () {

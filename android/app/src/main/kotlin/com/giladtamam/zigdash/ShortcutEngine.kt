@@ -29,10 +29,18 @@ object ShortcutEngine {
     fun toggle(ctx: Context, connectionId: String, ieee: String, done: (String) -> Unit) =
         call(ctx, "toggle", mapOf("connectionId" to connectionId, "ieee" to ieee), done)
 
+    /** A shutter's OPEN, STOP or CLOSE. */
+    fun cover(ctx: Context, connectionId: String, ieee: String, action: String, done: (String) -> Unit) =
+        call(ctx, "cover", mapOf("connectionId" to connectionId, "ieee" to ieee, "action" to action), done)
+
+    /** A shutter's position, 0–100. */
+    fun position(ctx: Context, connectionId: String, ieee: String, position: Int, done: (String) -> Unit) =
+        call(ctx, "position", mapOf("connectionId" to connectionId, "ieee" to ieee, "position" to position), done)
+
     fun scene(ctx: Context, connectionId: String, sceneId: String, done: (String) -> Unit) =
         call(ctx, "scene", mapOf("connectionId" to connectionId, "sceneId" to sceneId), done)
 
-    private fun call(ctx: Context, method: String, args: Map<String, String>, done: (String) -> Unit) {
+    private fun call(ctx: Context, method: String, args: Map<String, Any>, done: (String) -> Unit) {
         ensure(ctx.applicationContext)
         val run = {
             channel!!.invokeMethod(method, args, object : MethodChannel.Result {

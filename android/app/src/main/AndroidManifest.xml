@@ -29,6 +29,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- The shutter pop-up, opened by a shutter's tile or widget. -->
+        <activity
+            android:name=".CoverControlActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity="com.giladtamam.zigdash.cover"
+            android:launchMode="singleTask"
+            android:theme="@style/CoverPopup" />
         <!-- Shortcuts: four Quick Settings tile slots (2.1 §4), assigned in the app. -->
         <service
             android:name=".ShortcutTile1"

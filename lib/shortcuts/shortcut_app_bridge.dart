@@ -41,6 +41,10 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       return null;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      unawaited(ref
+          .read(shortcutServiceProvider)
+          .resyncTiles()
+          .then((_) => refreshShortcutTiles()));
       try {
         _handle(await appChannel.invokeMethod<Object?>('takeAction'));
       } on MissingPluginException {
