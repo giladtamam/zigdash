@@ -88,6 +88,9 @@ class DeviceWidget : AppWidgetProvider() {
             val line = when {
                 working -> ShortcutPrefs.word(ctx, "working", "working…")
                 problem != null -> problem
+                // Beside three buttons only the position fits.
+                shutter && strip -> ShortcutPrefs.position(ctx, t.connectionId, t.ieee)
+                    ?.let { "$it%" } ?: withAge(s?.line, s?.at) ?: ""
                 else -> withAge(s?.line, s?.at) ?: ""
             }
             v.setTextViewText(R.id.w_name, t.name)
