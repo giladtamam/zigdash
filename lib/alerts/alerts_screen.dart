@@ -16,6 +16,10 @@ import 'alert_push.dart';
 import 'alerts_config.dart';
 import 'alerts_providers.dart';
 import 'alerts_service.dart';
+import 'alert_editor_screen.dart' show alertKindsOf;
+import '../features/devices/device_profile.dart' show classifyExposes;
+import '../features/discovery/providers/discovery_provider.dart';
+import '../features/panels/providers/panel_value_provider.dart' show composeTopic;
 import 'node_red_installer.dart';
 
 /// A Home's alerts (docs/design/alerts-2.3.md, "Alerts screen"): status,
@@ -91,6 +95,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                           ? null
                           : () => context.push(Routes.homeDevice(_id, e.device!)),
                     ),
+                if (config.alerts.isEmpty) _Suggestions(connectionId: _id, config: config),
                 _Header(l10n.alertsYourAlerts),
                 for (final a in config.alerts)
                   ListTile(
@@ -385,6 +390,63 @@ class _StatusCard extends ConsumerWidget {
               )
             : null,
       ),
+    );
+  }
+}
+
+/// On first visit (no alerts yet): one suggestion per kind the Home's
+/// devices report, turned on with one tap (alerts-2.3.md).
+class _Suggestions extends ConsumerWidget {
+  const _Suggestions({required this.connectionId, required this.config});
+  final String connectionId;
+  final AlertsConfig config;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final base = ref.watch(homeBaseTopicProvider(connectionId)) ?? 'zigbee2mqtt';
+    final devices = ref
+            .watch(bridgeDevicesStreamProvider((connectionId: connectionId, base: base)))
+            .valueOrNull ??
+        const [];
+    final byKind = <AlertKind, List<AlertDevice>>{};
+    for (final d in devices) {
+      final ieee = d.ieeeAddress;
+      if (ieee == null) continue;
+      for (final k in alertKindsOf(classifyExposes(d.rawExposes))) {
+        (byKind[k] ??= []).add(AlertDevice(
+            ieee: ieee, topic: composeTopic(base, d.friendlyName), name: d.friendlyName));
+      }
+    }
+    if (byKind.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _Header(l10n.alertsSuggested),
+        for (final k in AlertKind.values)
+          if (byKind[k] case final list?)
+            ListTile(
+              leading: Icon(_iconFor(k.name)),
+              title: Text(kindLabel(l10n, k)),
+              subtitle: Text(l10n.alertsSuggestedCount(list.length)),
+              trailing: FilledButton.tonal(
+                onPressed: () async {
+                  final service = ref.read(alertsServiceProvider);
+                  await service.save(config.copyWith(alerts: [
+                    ...config.alerts,
+                    AlertRule(
+                        id: newAlertId(),
+                        kind: k,
+                        devices: list,
+                        from: k == AlertKind.opened ? '23:00' : null,
+                        to: k == AlertKind.opened ? '06:00' : null),
+                  ]));
+                  await service.publish(connectionId);
+                },
+                child: Text(l10n.alertsTurnOn),
+              ),
+            ),
+      ],
     );
   }
 }

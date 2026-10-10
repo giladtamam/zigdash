@@ -876,5 +876,8 @@
   "alertsWhatLeaves": "Alarmen naar ZigDash zijn end-to-end versleuteld: Googles pushdienst vervoert ze maar kan ze niet lezen. Verder verlaat niets je hub.",
   "alertsRestricted": "Android kan ZigDash op de achtergrond stoppen, waardoor meldingen laat of niet aankomen. Sta uitvoeren op de achtergrond toe in de Android-instellingen (op Samsung: Batterij › Apps die nooit slapen).",
   "alertsOpenSettings": "Android-instellingen openen",
-  "alertsOff": "Uit"
+  "alertsOff": "Uit",
+  "alertsSuggested": "Voorgestelde alarmen",
+  "alertsSuggestedCount": "{count, plural, =1{1 apparaat} other{{count} apparaten}}",
+  "alertsTurnOn": "Aanzetten"
 }

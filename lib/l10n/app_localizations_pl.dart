@@ -2716,4 +2716,22 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get alertsOff => 'Wył.';
+
+  @override
+  String get alertsSuggested => 'Proponowane alarmy';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count urządzeń',
+      few: '$count urządzenia',
+      one: '1 urządzenie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Włącz';
 }

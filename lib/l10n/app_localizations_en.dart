@@ -2691,4 +2691,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alertsOff => 'Off';
+
+  @override
+  String get alertsSuggested => 'Suggested alerts';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices',
+      one: '1 device',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Turn on';
 }

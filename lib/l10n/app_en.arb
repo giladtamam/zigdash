@@ -976,5 +976,11 @@
   "alertsOpenSettings": "Open Android settings",
   "@alertsOpenSettings": {"description": "Alerts screen."},
   "alertsOff": "Off",
-  "@alertsOff": {"description": "Alerts screen."}
+  "@alertsOff": {"description": "Alerts screen."},
+  "alertsSuggested": "Suggested alerts",
+  "@alertsSuggested": {"description": "Alerts screen, suggested alerts on first visit."},
+  "alertsSuggestedCount": "{count, plural, =1{1 device} other{{count} devices}}",
+  "@alertsSuggestedCount": {"description": "Alerts screen, suggested alerts on first visit.", "placeholders": {"count": {"type": "int"}}},
+  "alertsTurnOn": "Turn on",
+  "@alertsTurnOn": {"description": "Alerts screen, suggested alerts on first visit."}
 }

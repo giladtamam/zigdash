@@ -268,7 +268,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: ':alertId',
                     builder: (_, state) => AlertEditorScreen(
                         connectionId: state.pathParameters['id']!,
-                        alertId: state.pathParameters['alertId']!),
+                        alertId: state.pathParameters['alertId']!,
+                        kind: state.uri.queryParameters['kind'],
+                        ieee: state.uri.queryParameters['ieee']),
                   ),
                 ],
               ),

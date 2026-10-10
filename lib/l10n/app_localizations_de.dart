@@ -2709,4 +2709,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get alertsOff => 'Aus';
+
+  @override
+  String get alertsSuggested => 'Vorgeschlagene Alarme';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Geräte',
+      one: '1 Gerät',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Einschalten';
 }

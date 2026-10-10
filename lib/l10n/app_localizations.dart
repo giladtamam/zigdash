@@ -4927,6 +4927,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Off'**
   String get alertsOff;
+
+  /// Alerts screen, suggested alerts on first visit.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested alerts'**
+  String get alertsSuggested;
+
+  /// Alerts screen, suggested alerts on first visit.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 device} other{{count} devices}}'**
+  String alertsSuggestedCount(int count);
+
+  /// Alerts screen, suggested alerts on first visit.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get alertsTurnOn;
 }
 
 class _AppLocalizationsDelegate

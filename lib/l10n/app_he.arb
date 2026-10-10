@@ -945,5 +945,8 @@
   "alertsWhatLeaves": "התראות ל-ZigDash מוצפנות מקצה לקצה: שירות הדחיפה של Google מעביר אותן אך לא יכול לקרוא אותן. שום דבר אחר לא יוצא מהרכזת.",
   "alertsRestricted": "Android עלול לעצור את ZigDash ברקע, ואז התראות יגיעו באיחור או לא יגיעו. אפשרו ריצה ברקע בהגדרות Android (בסמסונג: סוללה › אפליקציות שלעולם לא ישנות).",
   "alertsOpenSettings": "פתיחת הגדרות Android",
-  "alertsOff": "כבויה"
+  "alertsOff": "כבויה",
+  "alertsSuggested": "התראות מוצעות",
+  "alertsSuggestedCount": "{count, plural, =1{מכשיר אחד} other{{count} מכשירים}}",
+  "alertsTurnOn": "הפעלה"
 }

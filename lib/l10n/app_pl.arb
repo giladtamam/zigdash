@@ -871,5 +871,8 @@
   "alertsWhatLeaves": "Alarmy do ZigDash są szyfrowane od końca do końca: usługa push Google je przenosi, ale nie może ich odczytać. Nic więcej nie opuszcza huba.",
   "alertsRestricted": "Android może zatrzymać ZigDash w tle, przez co powiadomienia przyjdą późno lub wcale. Zezwól na działanie w tle w ustawieniach Androida (Samsung: Bateria › Aplikacje nigdy nieusypiane).",
   "alertsOpenSettings": "Otwórz ustawienia Androida",
-  "alertsOff": "Wył."
+  "alertsOff": "Wył.",
+  "alertsSuggested": "Proponowane alarmy",
+  "alertsSuggestedCount": "{count, plural, =1{1 urządzenie} few{{count} urządzenia} other{{count} urządzeń}}",
+  "alertsTurnOn": "Włącz"
 }

@@ -801,5 +801,8 @@
   "alertsWhatLeaves": "Les alertes vers ZigDash sont chiffrées de bout en bout : le service push de Google les transporte sans pouvoir les lire. Rien d'autre ne quitte votre hub.",
   "alertsRestricted": "Android peut arrêter ZigDash en arrière-plan, et les notifications arriveraient en retard ou pas du tout. Autorisez l'exécution en arrière-plan dans les réglages Android (sur Samsung : Batterie › Applis jamais en veille).",
   "alertsOpenSettings": "Ouvrir les réglages Android",
-  "alertsOff": "Désactivée"
+  "alertsOff": "Désactivée",
+  "alertsSuggested": "Alertes suggérées",
+  "alertsSuggestedCount": "{count, plural, =1{1 appareil} other{{count} appareils}}",
+  "alertsTurnOn": "Activer"
 }

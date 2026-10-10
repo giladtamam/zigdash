@@ -876,5 +876,8 @@
   "alertsWhatLeaves": "Las alertas a ZigDash van cifradas de extremo a extremo: el servicio push de Google las transporta pero no puede leerlas. Nada más sale de tu hub.",
   "alertsRestricted": "Android puede detener ZigDash en segundo plano, y las notificaciones llegarían tarde o se perderían. Permite que se ejecute en segundo plano en los ajustes de Android (en Samsung: Batería › Apps que nunca se suspenden).",
   "alertsOpenSettings": "Abrir ajustes de Android",
-  "alertsOff": "Desactivada"
+  "alertsOff": "Desactivada",
+  "alertsSuggested": "Alertas sugeridas",
+  "alertsSuggestedCount": "{count, plural, =1{1 dispositivo} other{{count} dispositivos}}",
+  "alertsTurnOn": "Activar"
 }

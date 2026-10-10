@@ -15,12 +15,20 @@ import 'alerts_service.dart';
 /// battery's threshold.
 class AlertEditorScreen extends ConsumerStatefulWidget {
   const AlertEditorScreen(
-      {super.key, required this.connectionId, required this.alertId});
+      {super.key,
+      required this.connectionId,
+      required this.alertId,
+      this.kind,
+      this.ieee});
 
   final String connectionId;
 
   /// `new` for a new alert.
   final String alertId;
+
+  /// For a new alert from a device page: its kind and the device to tick.
+  final String? kind;
+  final String? ieee;
 
   @override
   ConsumerState<AlertEditorScreen> createState() => _AlertEditorScreenState();
@@ -34,18 +42,39 @@ class _AlertEditorScreenState extends ConsumerState<AlertEditorScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final config = ref.watch(alertsConfigProvider(widget.connectionId)).valueOrNull;
-    if (config != null && !_loaded) {
-      _loaded = true;
-      _rule = config.alerts.where((a) => a.id == widget.alertId).firstOrNull ??
-          AlertRule(id: newAlertId(), kind: AlertKind.leak, devices: const []);
-    }
-    final rule = _rule;
     final base = ref.watch(homeBaseTopicProvider(widget.connectionId)) ?? 'zigbee2mqtt';
     final devices = ref
             .watch(bridgeDevicesStreamProvider(
                 (connectionId: widget.connectionId, base: base)))
             .valueOrNull ??
         const [];
+    if (config != null && !_loaded && (widget.ieee == null || devices.isNotEmpty)) {
+      _loaded = true;
+      final wantedKind = AlertKind.values.asNameMap()[widget.kind];
+      // From a device page: the alert that device is already in, or a new
+      // one of that kind with the device ticked.
+      final existing = widget.ieee == null
+          ? null
+          : config.alerts
+              .where((a) =>
+                  (wantedKind == null || a.kind == wantedKind) &&
+                  a.devices.any((d) => d.ieee == widget.ieee))
+              .firstOrNull;
+      final device = devices.where((d) => d.ieeeAddress == widget.ieee).firstOrNull;
+      _rule = config.alerts.where((a) => a.id == widget.alertId).firstOrNull ??
+          existing ??
+          AlertRule(
+              id: newAlertId(),
+              kind: wantedKind ?? AlertKind.leak,
+              devices: [
+                if (device != null)
+                  AlertDevice(
+                      ieee: device.ieeeAddress!,
+                      topic: composeTopic(base, device.friendlyName),
+                      name: device.friendlyName),
+              ]);
+    }
+    final rule = _rule;
     if (rule == null) {
       return Scaffold(appBar: AppBar(title: Text(l10n.alertsEditTitle)));
     }
@@ -58,7 +87,7 @@ class _AlertEditorScreenState extends ConsumerState<AlertEditorScreen> {
               name: d.friendlyName),
     ];
     final chosen = {for (final d in rule.devices) d.ieee};
-    final isNew = widget.alertId == 'new';
+    final isNew = !config!.alerts.any((a) => a.id == rule.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(isNew ? l10n.alertsAdd : l10n.alertsEditTitle),
@@ -67,10 +96,10 @@ class _AlertEditorScreenState extends ConsumerState<AlertEditorScreen> {
             IconButton(
               tooltip: l10n.alertsDelete,
               icon: const Icon(Icons.delete_outline),
-              onPressed: () => _save(config!, remove: true),
+              onPressed: () => _save(config, remove: true),
             ),
           TextButton(
-            onPressed: rule.devices.isEmpty ? null : () => _save(config!),
+            onPressed: rule.devices.isEmpty ? null : () => _save(config),
             child: Text(l10n.save),
           ),
         ],
@@ -166,12 +195,8 @@ class _AlertEditorScreenState extends ConsumerState<AlertEditorScreen> {
     );
   }
 
-  static bool _reports(DeviceProfile p, AlertKind kind) => switch (kind) {
-        AlertKind.leak => p.feature('water_leak') != null,
-        AlertKind.smoke => p.feature('smoke') != null,
-        AlertKind.opened => p.feature('contact') != null,
-        AlertKind.battery => p.battery != null || p.feature('battery_low') != null,
-      };
+  static bool _reports(DeviceProfile p, AlertKind kind) => alertKindsOf(p).contains(kind);
+
 
   Future<void> _pickTime(String hhmm, void Function(String) done) async {
     final parts = hhmm.split(':');
@@ -191,4 +216,22 @@ class _AlertEditorScreenState extends ConsumerState<AlertEditorScreen> {
     await service.publish(widget.connectionId);
     if (mounted) Navigator.of(context).pop();
   }
+}
+
+/// The alert kinds a device can have, from what it reports.
+Set<AlertKind> alertKindsOf(DeviceProfile p) => {
+      if (p.feature('water_leak') != null) AlertKind.leak,
+      if (p.feature('smoke') != null) AlertKind.smoke,
+      if (p.feature('contact') != null) AlertKind.opened,
+      if (p.battery != null || p.feature('battery_low') != null) AlertKind.battery,
+    };
+
+/// The alert a device page offers first (`leak`, `smoke`, `opened`,
+/// `battery`), or null when the device reports none of these.
+String? alertKindFor(DeviceProfile p) {
+  final kinds = alertKindsOf(p);
+  for (final k in AlertKind.values) {
+    if (kinds.contains(k)) return k.name;
+  }
+  return null;
 }

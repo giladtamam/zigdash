@@ -871,5 +871,8 @@
   "alertsWhatLeaves": "Тревоги в ZigDash зашифрованы сквозным шифрованием: push-сервис Google их доставляет, но не может прочитать. Больше ничего не покидает ваш хаб.",
   "alertsRestricted": "Android может останавливать ZigDash в фоне, и уведомления придут поздно или не придут. Разрешите работу в фоне в настройках Android (на Samsung: Батарея › Никогда не переводить в спящий режим).",
   "alertsOpenSettings": "Открыть настройки Android",
-  "alertsOff": "Выкл."
+  "alertsOff": "Выкл.",
+  "alertsSuggested": "Предлагаемые тревоги",
+  "alertsSuggestedCount": "{count, plural, =1{1 устройство} few{{count} устройства} other{{count} устройств}}",
+  "alertsTurnOn": "Включить"
 }

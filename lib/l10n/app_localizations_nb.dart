@@ -2694,4 +2694,21 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get alertsOff => 'Av';
+
+  @override
+  String get alertsSuggested => 'Foreslåtte varsler';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter',
+      one: '1 enhet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Slå på';
 }

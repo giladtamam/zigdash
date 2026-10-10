@@ -876,5 +876,8 @@
   "alertsWhatLeaves": "Alarme an ZigDash sind Ende-zu-Ende verschlüsselt: Googles Push-Dienst überträgt sie, kann sie aber nicht lesen. Sonst verlässt nichts deinen Hub.",
   "alertsRestricted": "Android könnte ZigDash im Hintergrund beenden, dann kommen Benachrichtigungen spät oder gar nicht. Erlaube in den Android-Einstellungen das Ausführen im Hintergrund (bei Samsung: Akku › Nie schlafende Apps).",
   "alertsOpenSettings": "Android-Einstellungen öffnen",
-  "alertsOff": "Aus"
+  "alertsOff": "Aus",
+  "alertsSuggested": "Vorgeschlagene Alarme",
+  "alertsSuggestedCount": "{count, plural, =1{1 Gerät} other{{count} Geräte}}",
+  "alertsTurnOn": "Einschalten"
 }

@@ -2671,4 +2671,21 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get alertsOff => 'כבויה';
+
+  @override
+  String get alertsSuggested => 'התראות מוצעות';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count מכשירים',
+      one: 'מכשיר אחד',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'הפעלה';
 }

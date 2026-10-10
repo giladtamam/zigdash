@@ -2706,4 +2706,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get alertsOff => 'Desligado';
+
+  @override
+  String get alertsSuggested => 'Alertas sugeridos';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivos',
+      one: '1 dispositivo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Ativar';
 }

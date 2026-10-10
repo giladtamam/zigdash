@@ -2711,4 +2711,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get alertsOff => 'Выкл.';
+
+  @override
+  String get alertsSuggested => 'Предлагаемые тревоги';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count устройств',
+      few: '$count устройства',
+      one: '1 устройство',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Включить';
 }

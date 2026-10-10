@@ -876,5 +876,8 @@
   "alertsWhatLeaves": "Varsler til ZigDash er ende-til-ende-kryptert: Googles push-tjeneste frakter dem, men kan ikke lese dem. Ingenting annet forlater huben.",
   "alertsRestricted": "Android kan stoppe ZigDash i bakgrunnen, slik at varsler kommer sent eller uteblir. Tillat kjøring i bakgrunnen i Android-innstillingene (på Samsung: Batteri › Apper som aldri sover).",
   "alertsOpenSettings": "Åpne Android-innstillinger",
-  "alertsOff": "Av"
+  "alertsOff": "Av",
+  "alertsSuggested": "Foreslåtte varsler",
+  "alertsSuggestedCount": "{count, plural, =1{1 enhet} other{{count} enheter}}",
+  "alertsTurnOn": "Slå på"
 }

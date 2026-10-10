@@ -17,6 +17,11 @@ class Routes {
       '/settings/home/$connectionId/alerts';
   static String homeAlertEdit(String connectionId, String alertId) =>
       '/settings/home/$connectionId/alerts/$alertId';
+
+  /// The editor for a new alert of [kind] with [ieee] already ticked, or
+  /// the alert that device is already in (Notify me… on a device page).
+  static String homeAlertFor(String connectionId, String kind, String ieee) =>
+      '/settings/home/$connectionId/alerts/new?kind=$kind&ieee=${Uri.encodeQueryComponent(ieee)}';
   static const help = '/help';
   static const getHelp = '/get-help';
 

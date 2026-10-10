@@ -876,5 +876,8 @@
   "alertsWhatLeaves": "Larm till ZigDash är totalsträckskrypterade: Googles push-tjänst bär dem men kan inte läsa dem. Inget annat lämnar din hubb.",
   "alertsRestricted": "Android kan stoppa ZigDash i bakgrunden, så aviseringar kan komma sent eller utebli. Tillåt körning i bakgrunden i Android-inställningarna (på Samsung: Batteri › Appar som aldrig sover).",
   "alertsOpenSettings": "Öppna Android-inställningar",
-  "alertsOff": "Av"
+  "alertsOff": "Av",
+  "alertsSuggested": "Föreslagna larm",
+  "alertsSuggestedCount": "{count, plural, =1{1 enhet} other{{count} enheter}}",
+  "alertsTurnOn": "Slå på"
 }

@@ -24,6 +24,7 @@ import '../../panels/widgets/device_tile_panel.dart'
 import '../../panels/widgets/panel_reliability_frame.dart'
     show formatValueAge;
 import '../device_health.dart';
+import '../../../alerts/alert_editor_screen.dart' show alertKindFor;
 import '../device_profile.dart';
 import '../device_registry.dart';
 import '../device_state.dart';
@@ -184,6 +185,17 @@ class _DevicePageState extends ConsumerState<DevicePage> {
             name: title,
             canTile: tileable)
         : null;
+    // Notify me… (alerts-2.3.md): a device that reports a leak, smoke, a
+    // contact or a battery can have an alert.
+    final alertKind = device == null ? null : alertKindFor(classifyExposes(device.rawExposes));
+    final notifyMe = alertKind == null || !AddShortcutButton.available
+        ? null
+        : IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            tooltip: l10n.alertsNotifyMe,
+            onPressed: () => context.push(
+                Routes.homeAlertFor(widget.connectionId, alertKind, widget.ieee)),
+          );
     final rename = device == null
         ? null
         : IconButton(
@@ -206,6 +218,7 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                       semanticsLabel: title),
                 ),
                 ?rename,
+                ?notifyMe,
                 ?addTile,
               ],
             ),
@@ -215,7 +228,7 @@ class _DevicePageState extends ConsumerState<DevicePage> {
       );
     }
     return Scaffold(
-        appBar: AppBar(title: Text(title), actions: [?rename, ?addTile]),
+        appBar: AppBar(title: Text(title), actions: [?rename, ?notifyMe, ?addTile]),
         body: body);
   }
 }

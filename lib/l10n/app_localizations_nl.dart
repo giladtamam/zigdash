@@ -2705,4 +2705,21 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get alertsOff => 'Uit';
+
+  @override
+  String get alertsSuggested => 'Voorgestelde alarmen';
+
+  @override
+  String alertsSuggestedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count apparaten',
+      one: '1 apparaat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get alertsTurnOn => 'Aanzetten';
 }
