@@ -2327,4 +2327,83 @@ class AppLocalizationsHe extends AppLocalizations {
   String getHelpNoEmailApp(Object email) {
     return 'לא נמצאה אפליקציית דואר. העתיקו את הפרטים וכתבו אל $email.';
   }
+
+  @override
+  String get shortcutWorking => 'פועל…';
+
+  @override
+  String get shortcutCantReach => 'אין חיבור לבית';
+
+  @override
+  String get shortcutNotConfirmed => 'לא אושר';
+
+  @override
+  String get shortcutRemoved => 'הוסר';
+
+  @override
+  String get shortcutChooseDevice => 'בחרו מכשיר';
+
+  @override
+  String get shortcutAddTile => 'הוספה להגדרות המהירות';
+
+  @override
+  String shortcutTileReady(Object name, Object slot) {
+    return '$name נמצא באריח ZigDash $slot בהגדרות המהירות';
+  }
+
+  @override
+  String shortcutTileAlready(Object name, Object slot) {
+    return '$name כבר נמצא באריח ZigDash $slot';
+  }
+
+  @override
+  String get shortcutTileHowToTitle => 'הוספת האריח';
+
+  @override
+  String shortcutTileHowTo(Object slot) {
+    return 'פתחו את ההגדרות המהירות (החליקו למטה פעמיים), הקישו על העיפרון לעריכה וגררו את „ZigDash $slot” לאריחים שלכם.';
+  }
+
+  @override
+  String shortcutPickTitle(Object slot) {
+    return 'בחירת מכשיר עבור ZigDash $slot';
+  }
+
+  @override
+  String get shortcutPickEmpty =>
+      'עדיין אין מכשירים להפעלה. הוסיפו קודם נורה, שקע או תריס ללוח.';
+
+  @override
+  String get shortcutSlotsFull =>
+      'כל 4 האריחים של ZigDash בשימוש. איזה מהם יציג את המכשיר הזה במקום?';
+
+  @override
+  String shortcutSlotLabel(Object slot) {
+    return 'ZigDash $slot';
+  }
+
+  @override
+  String get shortcutSlotEmpty => 'לא בשימוש';
+
+  @override
+  String get deviceRename => 'שינוי שם';
+
+  @override
+  String get deviceRenameTitle => 'שינוי שם המכשיר';
+
+  @override
+  String get deviceRenameHint => 'שם לחדר או למכשיר, למשל חדר שינה';
+
+  @override
+  String deviceRenamed(Object name) {
+    return 'השם שונה ל-$name';
+  }
+
+  @override
+  String deviceRenameFailed(Object reason) {
+    return 'לא ניתן לשנות את השם: $reason';
+  }
+
+  @override
+  String get deviceRenameNoAnswer => 'Zigbee2MQTT לא ענה';
 }

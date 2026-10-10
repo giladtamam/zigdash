@@ -42,6 +42,12 @@ Toggle, Button, Slider, Cover (open/stop/close with presets), Multi-State, Combo
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
+SHORTCUTS — WITHOUT OPENING THE APP
+• Quick Settings tiles: switch a light or plug in one tap, or set a shutter with a slider, right from the notification shade.
+• Android Device Controls: every device on your dashboards as a card, with sliders for brightness and shutter position.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
 AUTOMATION — RUNS WHEN YOUR PHONE IS OFF
 • Schedule panels: daily open/close timers saved as retained MQTT config.
 • Auto-Close Rules: turn a device off N seconds after it turns on — perfect for fans, pumps, and timed lights.

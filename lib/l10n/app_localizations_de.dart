@@ -2356,4 +2356,84 @@ class AppLocalizationsDe extends AppLocalizations {
   String getHelpNoEmailApp(Object email) {
     return 'Keine E-Mail-App gefunden. Kopiere die Angaben und schreib an $email.';
   }
+
+  @override
+  String get shortcutWorking => 'läuft…';
+
+  @override
+  String get shortcutCantReach => 'Zuhause nicht erreichbar';
+
+  @override
+  String get shortcutNotConfirmed => 'Nicht bestätigt';
+
+  @override
+  String get shortcutRemoved => 'Entfernt';
+
+  @override
+  String get shortcutChooseDevice => 'Gerät wählen';
+
+  @override
+  String get shortcutAddTile => 'Zu Schnelleinstellungen hinzufügen';
+
+  @override
+  String shortcutTileReady(Object name, Object slot) {
+    return '$name liegt auf der Schnelleinstellungs-Kachel ZigDash $slot';
+  }
+
+  @override
+  String shortcutTileAlready(Object name, Object slot) {
+    return '$name liegt schon auf der Kachel ZigDash $slot';
+  }
+
+  @override
+  String get shortcutTileHowToTitle => 'Kachel hinzufügen';
+
+  @override
+  String shortcutTileHowTo(Object slot) {
+    return 'Öffne die Schnelleinstellungen (zweimal nach unten wischen), tippe zum Bearbeiten auf den Stift und ziehe „ZigDash $slot“ zu deinen Kacheln.';
+  }
+
+  @override
+  String shortcutPickTitle(Object slot) {
+    return 'Gerät für ZigDash $slot wählen';
+  }
+
+  @override
+  String get shortcutPickEmpty =>
+      'Noch keine schaltbaren Geräte. Lege zuerst eine Lampe, Steckdose oder einen Rollladen auf ein Dashboard.';
+
+  @override
+  String get shortcutSlotsFull =>
+      'Alle 4 ZigDash-Kacheln sind belegt. Welche soll stattdessen dieses Gerät zeigen?';
+
+  @override
+  String shortcutSlotLabel(Object slot) {
+    return 'ZigDash $slot';
+  }
+
+  @override
+  String get shortcutSlotEmpty => 'Nicht belegt';
+
+  @override
+  String get deviceRename => 'Umbenennen';
+
+  @override
+  String get deviceRenameTitle => 'Gerät umbenennen';
+
+  @override
+  String get deviceRenameHint =>
+      'Ein Name für den Raum oder das Gerät, z. B. Schlafzimmer';
+
+  @override
+  String deviceRenamed(Object name) {
+    return 'Umbenannt in $name';
+  }
+
+  @override
+  String deviceRenameFailed(Object reason) {
+    return 'Umbenennen fehlgeschlagen: $reason';
+  }
+
+  @override
+  String get deviceRenameNoAnswer => 'Zigbee2MQTT hat nicht geantwortet';
 }

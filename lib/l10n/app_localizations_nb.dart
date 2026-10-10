@@ -2345,4 +2345,84 @@ class AppLocalizationsNb extends AppLocalizations {
   String getHelpNoEmailApp(Object email) {
     return 'Fant ingen e-postapp. Kopier detaljene og skriv til $email.';
   }
+
+  @override
+  String get shortcutWorking => 'jobber…';
+
+  @override
+  String get shortcutCantReach => 'Når ikke hjemmet';
+
+  @override
+  String get shortcutNotConfirmed => 'Ikke bekreftet';
+
+  @override
+  String get shortcutRemoved => 'Fjernet';
+
+  @override
+  String get shortcutChooseDevice => 'Velg en enhet';
+
+  @override
+  String get shortcutAddTile => 'Legg til i Hurtiginnstillinger';
+
+  @override
+  String shortcutTileReady(Object name, Object slot) {
+    return '$name ligger på hurtiginnstillingsflisen ZigDash $slot';
+  }
+
+  @override
+  String shortcutTileAlready(Object name, Object slot) {
+    return '$name ligger allerede på flisen ZigDash $slot';
+  }
+
+  @override
+  String get shortcutTileHowToTitle => 'Legg til flisen';
+
+  @override
+  String shortcutTileHowTo(Object slot) {
+    return 'Åpne Hurtiginnstillinger (sveip ned to ganger), trykk på blyanten for å redigere og dra «ZigDash $slot» inn blant flisene dine.';
+  }
+
+  @override
+  String shortcutPickTitle(Object slot) {
+    return 'Velg en enhet for ZigDash $slot';
+  }
+
+  @override
+  String get shortcutPickEmpty =>
+      'Ingen enheter å slå av og på ennå. Legg først en lampe, stikkontakt eller persienne på et dashbord.';
+
+  @override
+  String get shortcutSlotsFull =>
+      'Alle 4 ZigDash-flisene er i bruk. Hvilken skal vise denne enheten i stedet?';
+
+  @override
+  String shortcutSlotLabel(Object slot) {
+    return 'ZigDash $slot';
+  }
+
+  @override
+  String get shortcutSlotEmpty => 'Ikke i bruk';
+
+  @override
+  String get deviceRename => 'Gi nytt navn';
+
+  @override
+  String get deviceRenameTitle => 'Gi enheten nytt navn';
+
+  @override
+  String get deviceRenameHint =>
+      'Et navn på rommet eller enheten, for eksempel Soverom';
+
+  @override
+  String deviceRenamed(Object name) {
+    return 'Nytt navn: $name';
+  }
+
+  @override
+  String deviceRenameFailed(Object reason) {
+    return 'Kunne ikke endre navn: $reason';
+  }
+
+  @override
+  String get deviceRenameNoAnswer => 'Zigbee2MQTT svarte ikke';
 }

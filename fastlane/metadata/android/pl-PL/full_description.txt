@@ -11,6 +11,10 @@ DOWOLNY BROKER
 • Wyszukiwanie brokera w sieci lokalnej, hasło w bezpiecznym magazynie, automatyczne ponowne łączenie.
 • Obsługa Tailscale: zdalny dostęp bez przekierowania portów.
 
+SKRÓTY BEZ OTWIERANIA APLIKACJI
+• Kafelki Szybkich ustawień: włącz lampę lub gniazdko jednym dotknięciem albo ustaw roletę suwakiem, prosto z panelu powiadomień.
+• Sterowanie urządzeniami w Androidzie: każde urządzenie z dashboardów jako karta, z suwakami jasności i położenia.
+
 AUTOMATYZACJA BEZ TELEFONU
 • Harmonogramy i reguły automatycznego wyłączania działają na Twoim hubie (Node-RED), nawet gdy telefon jest wyłączony.
 

@@ -2345,4 +2345,84 @@ class AppLocalizationsSv extends AppLocalizations {
   String getHelpNoEmailApp(Object email) {
     return 'Ingen e-postapp hittades. Kopiera uppgifterna och skriv till $email.';
   }
+
+  @override
+  String get shortcutWorking => 'arbetar…';
+
+  @override
+  String get shortcutCantReach => 'Når inte hemmet';
+
+  @override
+  String get shortcutNotConfirmed => 'Inte bekräftad';
+
+  @override
+  String get shortcutRemoved => 'Borttagen';
+
+  @override
+  String get shortcutChooseDevice => 'Välj en enhet';
+
+  @override
+  String get shortcutAddTile => 'Lägg till i Snabbinställningar';
+
+  @override
+  String shortcutTileReady(Object name, Object slot) {
+    return '$name finns på snabbinställningsrutan ZigDash $slot';
+  }
+
+  @override
+  String shortcutTileAlready(Object name, Object slot) {
+    return '$name finns redan på rutan ZigDash $slot';
+  }
+
+  @override
+  String get shortcutTileHowToTitle => 'Lägg till rutan';
+
+  @override
+  String shortcutTileHowTo(Object slot) {
+    return 'Öppna Snabbinställningar (svep nedåt två gånger), tryck på pennan för att redigera och dra ”ZigDash $slot” till dina rutor.';
+  }
+
+  @override
+  String shortcutPickTitle(Object slot) {
+    return 'Välj en enhet för ZigDash $slot';
+  }
+
+  @override
+  String get shortcutPickEmpty =>
+      'Inga enheter att slå på och av ännu. Lägg först en lampa, ett uttag eller en rullgardin på en dashboard.';
+
+  @override
+  String get shortcutSlotsFull =>
+      'Alla 4 ZigDash-rutor används. Vilken ska visa den här enheten i stället?';
+
+  @override
+  String shortcutSlotLabel(Object slot) {
+    return 'ZigDash $slot';
+  }
+
+  @override
+  String get shortcutSlotEmpty => 'Används inte';
+
+  @override
+  String get deviceRename => 'Byt namn';
+
+  @override
+  String get deviceRenameTitle => 'Byt namn på enheten';
+
+  @override
+  String get deviceRenameHint =>
+      'Ett namn på rummet eller enheten, till exempel Sovrum';
+
+  @override
+  String deviceRenamed(Object name) {
+    return 'Nytt namn: $name';
+  }
+
+  @override
+  String deviceRenameFailed(Object reason) {
+    return 'Kunde inte byta namn: $reason';
+  }
+
+  @override
+  String get deviceRenameNoAnswer => 'Zigbee2MQTT svarade inte';
 }

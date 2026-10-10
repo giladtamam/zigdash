@@ -131,12 +131,22 @@ abstract final class DeviceCommand {
   static Map<String, Object?> position(DeviceFeature f, int percent) =>
       {f.property: percent.clamp(0, 100)};
 
-  /// A `/get` request for the readable-and-gettable features, used once per
-  /// connection to fill tiles that have no value yet.
+  /// A `/get` request that fills a device's tile: only what the tile shows
+  /// (on/off and brightness, or a shutter's position). Zigbee2MQTT
+  /// republishes the whole cached state after any read, so one small
+  /// request is enough, and a burst of reads can crash a hub's Zigbee radio
+  /// (seen on an SMHUB with EmberZNet 7.4.2: the adapter failed and
+  /// Zigbee2MQTT restarted, losing commands). Null for a device that isn't
+  /// asked: a sensor, often asleep on batteries, reports by itself.
   static Map<String, Object?>? refresh(DeviceProfile profile) {
+    final features = profile.deviceClass == DeviceClass.cover
+        ? [profile.position ?? profile.feature('state')]
+        : profile.switches.isEmpty
+            ? const <DeviceFeature?>[]
+            : [profile.switches.first, profile.brightness];
     final props = {
-      for (final f in profile.features)
-        if (f.gettable && f.readable && f.normal) f.property: '',
+      for (final f in features)
+        if (f != null && f.gettable) f.property: '',
     };
     return props.isEmpty ? null : props;
   }

@@ -9,6 +9,7 @@ import 'tables/device_health_flags.dart';
 import 'tables/panels.dart';
 import 'tables/scenes.dart';
 import 'tables/sections.dart';
+import 'tables/shortcuts.dart';
 
 part 'database.g.dart';
 
@@ -20,16 +21,38 @@ part 'database.g.dart';
   Sections,
   DeviceDismissals,
   DeviceHealthFlags,
+  Shortcuts,
 ])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_open());
-  AppDatabase.test(super.executor);
+  AppDatabase()
+      : _readOnly = false,
+        super(_open());
+  AppDatabase.test(super.executor) : _readOnly = false;
+
+  /// For the headless shortcut engine (2.1 §1), which runs beside the app:
+  /// takes the file at whatever version it's at ([fileVersion], set when the
+  /// executor opens) and never migrates or writes. Only the app migrates.
+  AppDatabase.readOnly(super.executor) : _readOnly = true;
+
+  final bool _readOnly;
+
+  /// The file's own schema version, for [AppDatabase.readOnly].
+  int? fileVersion;
+
+  static const _version = 8;
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => _readOnly ? (fileVersion ?? _version) : _version;
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
+  MigrationStrategy get migration => _readOnly
+      ? MigrationStrategy(
+          onCreate: (_) async {},
+          onUpgrade: (_, __, ___) async {},
+        )
+      : _migration;
+
+  MigrationStrategy get _migration => MigrationStrategy(
         onCreate: (m) => m.createAll(),
         onUpgrade: (m, from, to) async {
           if (from < 2) {
@@ -94,6 +117,9 @@ class AppDatabase extends _$AppDatabase {
           if (from < 7) {
             await m.addColumn(connections, connections.z2mBaseTopic);
             await m.createTable(deviceHealthFlags);
+          }
+          if (from < 8) {
+            await m.createTable(shortcuts);
           }
         },
         // The schema's cascades (home → dashboards → sections, tiles) only

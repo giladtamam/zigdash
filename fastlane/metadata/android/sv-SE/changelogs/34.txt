@@ -1,0 +1,1 @@
+ZigDash 2.1: genvägar. Lägg en enhet i Snabbinställningar och slå på och av den med ett tryck, eller ställ en rullgardin med ett reglage, utan att öppna appen. ZigDash finns också i Androids enhetsstyrning, med varje enhet på dina dashboards som ett kort. Byt namn på en enhet från dess sida. Och snabbare återanslutning efter en paus.

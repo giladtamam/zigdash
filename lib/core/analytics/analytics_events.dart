@@ -153,6 +153,36 @@ class SupportContact extends AnalyticsEvent {
       {'from': _snake(from.name), 'via': via.name};
 }
 
+/// Where a shortcut lives (docs/design/roadmap-post-2.0.md, 2.1 §7).
+enum ShortcutEventKind { tile, control }
+
+/// A Quick Settings tile was assigned a device, or Device Controls were
+/// first set up.
+class ShortcutAdded extends AnalyticsEvent {
+  const ShortcutAdded(this.kind);
+
+  final ShortcutEventKind kind;
+
+  @override
+  String get name => 'shortcut_added';
+
+  @override
+  Map<String, String> get props => {'kind': kind.name};
+}
+
+/// A shortcut was used, sent at most once per app session for each kind.
+class ShortcutUsed extends AnalyticsEvent {
+  const ShortcutUsed(this.kind);
+
+  final ShortcutEventKind kind;
+
+  @override
+  String get name => 'shortcut_used';
+
+  @override
+  Map<String, String> get props => {'kind': kind.name};
+}
+
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from
 /// [ranges], else [top].
 String bucket(int n,

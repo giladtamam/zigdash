@@ -1,0 +1,1 @@
+ZigDash 2.1 : raccourcis. Placez un appareil dans les Réglages rapides et allumez-le d'un geste, ou réglez un volet au curseur, sans ouvrir l'app. ZigDash apparaît aussi dans les Commandes des appareils d'Android, chaque appareil de vos tableaux en carte. Renommez un appareil depuis sa page. Et une reconnexion plus rapide après une pause.

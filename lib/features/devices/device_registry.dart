@@ -39,6 +39,14 @@ class DeviceRegistry {
             (tile.type == PanelType.device || tile.type == PanelType.reading) &&
             tile.topicPrefixOverride != expected) {
           await _dao.setPrefix(tile.id, expected);
+          // A tile still named after the device takes its new name; one the
+          // user named stays as it is.
+          final was = tile.topicPrefixOverride;
+          if (was != null &&
+              was.startsWith('$base/') &&
+              tile.name == was.substring(base.length + 1)) {
+            await _dao.setName(tile.id, device!.friendlyName);
+          }
         }
         continue;
       }

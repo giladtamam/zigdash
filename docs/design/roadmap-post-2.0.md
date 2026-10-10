@@ -56,6 +56,7 @@ Rules the measurement set:
 - **Not responding device:** send anyway; without confirmation show "Not responding".
 - **Freshness:** refresh only after a tap or while the app runs. Otherwise show the Last-known value with its age ("40 min ago"). No background refresh.
 - **Sensors and contacts** in a widget show their reading; tapping opens ZigDash on that device.
+- **Shutters have a position, not on/off** (user, 2026-10-10). A shutter's tile, and its widget's name, open the **shutter pop-up**: live state line, a position slider (0–100%) and Open / Stop / Close. A widget also shows the position as a bar with ▲ ■ ▼ buttons (widgets can't hold sliders). Device Controls use Android's own slider. A shutter command is confirmed when its motor starts, and the engine follows it until it stops.
 
 ### 3. Widgets
 
@@ -68,7 +69,7 @@ Prototype: branch `prototype/shortcuts`, `docs/design/prototypes/shortcuts-proto
 
 ### 4. Quick Settings tiles and Device Controls
 
-- **Tiles:** one device per tile, toggled on and off. Label = device name, subtitle = state line. Unavailable devices (sensors) can't be tiles. Long-press opens ZigDash on the device. Android limits how many tiles one app can offer; ZigDash declares a fixed set of tile slots that the user assigns to devices.
+- **Tiles:** one device per tile, toggled on and off; a shutter's tile opens the shutter pop-up instead. Label = device name, subtitle = state line. Unavailable devices (sensors) can't be tiles. Long-press opens ZigDash on the device. On a locked phone a tap asks for the unlock first (user, 2026-10-10); Device Controls follow Android's own "control from locked device" setting. Android limits how many tiles one app can offer; ZigDash declares a fixed set of tile slots that the user assigns to devices.
 - **Device Controls** (Android 11+): one control per device in a "ZigDash · <Home>" structure. Lights, plugs and switches toggle; dimmable lights and covers get a slider (Android draws it); sensors are status-only. Android decides the look.
 
 ### 5. Adding shortcuts

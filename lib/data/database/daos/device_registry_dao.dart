@@ -30,7 +30,11 @@ class DeviceRegistryDao extends DatabaseAccessor<AppDatabase>
     final q = select(panels).join([
       innerJoin(dashboards, dashboards.id.equalsExp(panels.dashboardId)),
     ])
-      ..where(dashboards.connectionId.equals(connectionId));
+      ..where(dashboards.connectionId.equals(connectionId))
+      ..orderBy([
+        OrderingTerm.asc(dashboards.sortOrder),
+        OrderingTerm.asc(panels.sortOrder),
+      ]);
     return q
         .map((r) => (r.readTable(panels), r.readTable(dashboards).topicPrefix))
         .get();
@@ -82,6 +86,10 @@ class DeviceRegistryDao extends DatabaseAccessor<AppDatabase>
   Future<void> setLink(String panelId, String ieee) =>
       (update(panels)..where((p) => p.id.equals(panelId)))
           .write(PanelsCompanion(deviceIeee: Value(ieee)));
+
+  Future<void> setName(String panelId, String name) =>
+      (update(panels)..where((p) => p.id.equals(panelId))).write(
+          PanelsCompanion(name: Value(name), updatedAt: Value(DateTime.now())));
 
   Future<void> setPrefix(String panelId, String prefix) =>
       (update(panels)..where((p) => p.id.equals(panelId))).write(

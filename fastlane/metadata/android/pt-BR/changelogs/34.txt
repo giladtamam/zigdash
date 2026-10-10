@@ -1,0 +1,1 @@
+ZigDash 2.1: atalhos. Coloque um dispositivo nas Configurações rápidas e ligue-o com um toque, ou ajuste uma persiana com um controle deslizante, sem abrir o app. O ZigDash também aparece nos Controles de dispositivos do Android, com cada dispositivo dos seus painéis como um cartão. Renomeie um dispositivo na página dele. E reconexão mais rápida após uma pausa.

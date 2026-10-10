@@ -1,0 +1,1 @@
+ZigDash 2.1: Kurzbefehle. Lege ein Gerät in die Schnelleinstellungen und schalte es mit einem Tippen, oder stelle einen Rollladen per Schieberegler, ohne die App zu öffnen. ZigDash erscheint auch in der Android-Gerätesteuerung, jedes Gerät deiner Dashboards als Karte. Geräte lassen sich auf ihrer Seite umbenennen. Und nach einer Pause verbindet sich die App schneller neu.

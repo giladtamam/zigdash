@@ -19,6 +19,10 @@ KOBLE TIL HVILKEN SOM HELST BROKER
 16 PANELTYPER – STYR ALT
 Bryter, Knapp, Glidebryter, Persienne (åpne/stopp/lukk med forvalg), Flertilstand, Kombo, Radio, LED-indikator, Nodestatus, Fremdrift, Tekstinndata, Tekstlogg, Scene, Tidsplan, Auto-av-regel og Zigbee2MQTT-enhetsoppdagelse. Fra lys og persienner til sensorer og scener: ett Zigbee-dashbord for hver enhet.
 
+SNARVEIER – UTEN Å ÅPNE APPEN
+• Fliser i Hurtiginnstillinger: slå på en lampe eller stikkontakt med ett trykk, eller still en persienne med en glidebryter, rett fra varslingspanelet.
+• Android-enhetsstyring: hver enhet på dashbordene dine som et kort, med glidebrytere for lysstyrke og posisjon.
+
 AUTOMATISERING – KJØRER SELV NÅR MOBILEN ER AV
 • Tidsplanpaneler: daglige åpne/lukke-timere lagret som retained MQTT-konfigurasjon.
 • Auto-av-regler: slå av en enhet N sekunder etter at den slås på, perfekt for vifter, pumper og tidsstyrt lys.

@@ -8,6 +8,7 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/settings/providers/settings_controller.dart';
 import 'core/analytics/analytics_tracker.dart';
+import 'shortcuts/shortcut_app_bridge.dart';
 
 class ZigDashApp extends ConsumerWidget {
   const ZigDashApp({super.key});
@@ -30,7 +31,8 @@ class ZigDashApp extends ConsumerWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           routerConfig: router,
-          builder: (context, child) => AnalyticsTracker(child: child!),
+          builder: (context, child) =>
+              ShortcutAppBridge(child: AnalyticsTracker(child: child!)),
           // Onboarding is a router route (Routes.onboarding) with a redirect,
           // so its context.go calls can reach the InheritedGoRouter.
         ),

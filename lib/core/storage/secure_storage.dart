@@ -17,8 +17,11 @@ class SecureStore {
       _storage.delete(key: '$_passwordPrefix$connectionId');
 }
 
-final secureStorageProvider = Provider<SecureStore>((ref) {
-  return SecureStore(const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  ));
-});
+/// The password store as the app configures it; also used by the headless
+/// shortcut engine, which has no Riverpod container.
+SecureStore createSecureStore() => SecureStore(const FlutterSecureStorage(
+      aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    ));
+
+final secureStorageProvider =
+    Provider<SecureStore>((ref) => createSecureStore());

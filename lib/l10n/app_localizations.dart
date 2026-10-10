@@ -4321,6 +4321,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No email app found. Copy the details and write to {email}.'**
   String getHelpNoEmailApp(Object email);
+
+  /// No description provided for @shortcutWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'working…'**
+  String get shortcutWorking;
+
+  /// No description provided for @shortcutCantReach.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach home'**
+  String get shortcutCantReach;
+
+  /// No description provided for @shortcutNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not confirmed'**
+  String get shortcutNotConfirmed;
+
+  /// No description provided for @shortcutRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed'**
+  String get shortcutRemoved;
+
+  /// No description provided for @shortcutChooseDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a device'**
+  String get shortcutChooseDevice;
+
+  /// No description provided for @shortcutAddTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Quick Settings'**
+  String get shortcutAddTile;
+
+  /// No description provided for @shortcutTileReady.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is on Quick Settings tile ZigDash {slot}'**
+  String shortcutTileReady(Object name, Object slot);
+
+  /// No description provided for @shortcutTileAlready.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is already on tile ZigDash {slot}'**
+  String shortcutTileAlready(Object name, Object slot);
+
+  /// No description provided for @shortcutTileHowToTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the tile'**
+  String get shortcutTileHowToTitle;
+
+  /// No description provided for @shortcutTileHowTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Quick Settings (swipe down twice), tap the pencil to edit, and drag “ZigDash {slot}” into your tiles.'**
+  String shortcutTileHowTo(Object slot);
+
+  /// No description provided for @shortcutPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a device for ZigDash {slot}'**
+  String shortcutPickTitle(Object slot);
+
+  /// No description provided for @shortcutPickEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices to switch yet. Put a light, plug or shutter on a dashboard first.'**
+  String get shortcutPickEmpty;
+
+  /// No description provided for @shortcutSlotsFull.
+  ///
+  /// In en, this message translates to:
+  /// **'All 4 ZigDash tiles are in use. Which one should show this device instead?'**
+  String get shortcutSlotsFull;
+
+  /// No description provided for @shortcutSlotLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash {slot}'**
+  String shortcutSlotLabel(Object slot);
+
+  /// No description provided for @shortcutSlotEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Not used'**
+  String get shortcutSlotEmpty;
+
+  /// No description provided for @deviceRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get deviceRename;
+
+  /// No description provided for @deviceRenameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename device'**
+  String get deviceRenameTitle;
+
+  /// No description provided for @deviceRenameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A name for the room or the device, like Bedroom'**
+  String get deviceRenameHint;
+
+  /// No description provided for @deviceRenamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Renamed to {name}'**
+  String deviceRenamed(Object name);
+
+  /// No description provided for @deviceRenameFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t rename: {reason}'**
+  String deviceRenameFailed(Object reason);
+
+  /// No description provided for @deviceRenameNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT didn\'t answer'**
+  String get deviceRenameNoAnswer;
 }
 
 class _AppLocalizationsDelegate

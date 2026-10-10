@@ -37,18 +37,27 @@ void main() {
 
   setUpAll(() => verifier = SchemaVerifier(GeneratedHelper()));
 
-  test('schema 5 → 7 matches the declared schema', () async {
+  test('schema 5 → 8 matches the declared schema', () async {
     final connection = await verifier.startAt(5);
     final db = AppDatabase.test(connection);
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 7);
+    await verifier.migrateAndValidate(db, 8);
   });
 
-  test('schema 6 → 7 matches the declared schema', () async {
+  test('schema 6 → 8 matches the declared schema', () async {
     final connection = await verifier.startAt(6);
     final db = AppDatabase.test(connection);
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 7);
+    await verifier.migrateAndValidate(db, 8);
+  });
+
+  test('schema 7 → 8 matches the declared schema and adds shortcuts',
+      () async {
+    final connection = await verifier.startAt(7);
+    final db = AppDatabase.test(connection);
+    addTearDown(db.close);
+    await verifier.migrateAndValidate(db, 8);
+    expect(await db.select(db.shortcuts).get(), isEmpty);
   });
 
   test('a 1.12 home keeps everything through 6 → 7, base topic unset',
@@ -99,7 +108,7 @@ void main() {
 
     final db = AppDatabase.test(schema.newConnection());
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 7);
+    await verifier.migrateAndValidate(db, 8);
 
     final home = await db.select(db.connections).getSingle();
     expect(home.z2mBaseTopic, isNull);
@@ -197,7 +206,7 @@ void main() {
 
     final db = AppDatabase.test(schema.newConnection());
     addTearDown(db.close);
-    await verifier.migrateAndValidate(db, 7);
+    await verifier.migrateAndValidate(db, 8);
 
     final all = await PanelDao(db).getByDashboard('d1');
     final toggle = all.firstWhere((p) => p.id == 'setup-toggle');

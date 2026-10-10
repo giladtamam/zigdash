@@ -143,6 +143,217 @@ void main() {
     });
   });
 
+  group('ensureConnected (shortcut taps and app resume, ticket 07)', () {
+    const local = BrokerConfig(
+      id: 'conn-1',
+      host: localHost,
+      port: 1883,
+      protocol: MqttProtocol.tcp,
+      keepAliveSeconds: 60,
+    );
+
+    /// Hands out clients in [behaviors] order and records them.
+    MqttClientFactory sequence(List<_Behavior> behaviors, List<_FakeClient> made) =>
+        (BrokerConfig c, String id, {String? host}) {
+          final client = _FakeClient(host ?? c.host, behaviors.removeAt(0));
+          made.add(client);
+          return client;
+        };
+
+    test('a fresh connection is used as is', () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            clientFactory: sequence([_Behavior.succeed], made));
+        m.connect();
+        async.flushMicrotasks();
+        bool? ok;
+        m.ensureConnected().then((v) => ok = v);
+        async.flushMicrotasks();
+        expect(ok, isTrue);
+        expect(made, hasLength(1));
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a connection silent for longer than keep-alive is replaced at once',
+        () {
+      fakeAsync((async) {
+        var now = DateTime(2026, 10, 10, 12);
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            now: () => now,
+            clientFactory: sequence([_Behavior.succeed, _Behavior.succeed], made));
+        m.connect();
+        async.flushMicrotasks();
+        expect(m.connectionGeneration, 1);
+        // The app idled (frozen): no message, no PINGRESP for 2 minutes.
+        now = now.add(const Duration(minutes: 2));
+        bool? ok;
+        m.ensureConnected().then((v) => ok = v);
+        async.elapse(const Duration(milliseconds: 50));
+        async.flushMicrotasks();
+        expect(ok, isTrue);
+        expect(made, hasLength(2));
+        expect(made.first.disconnectCalled, isTrue);
+        expect(m.connectionGeneration, 2);
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a live attempt is waited for, so the remote try isn\'t cut short',
+        () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: configWithRemote(),
+            password: '',
+            clientFactory: sequence([_Behavior.hang, _Behavior.succeed], made));
+        m.connect();
+        // 1.5 s into the 3 s local probe: still within the attempt's budget.
+        async.elapse(const Duration(milliseconds: 1500));
+        bool? ok;
+        m.ensureConnected().then((v) => ok = v);
+        async.elapse(const Duration(milliseconds: 2000));
+        async.flushMicrotasks();
+        expect(ok, isTrue);
+        expect(made, hasLength(2), reason: 'local probe, then remote: no restart');
+        expect(m.activeEndpoint, MqttEndpoint.remote);
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('when every candidate fails, waiters hear it at once', () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            clientFactory: sequence([_Behavior.fail], made));
+        bool? ok;
+        m.ensureConnected().then((v) => ok = v);
+        async.elapse(const Duration(milliseconds: 50));
+        async.flushMicrotasks();
+        expect(ok, isFalse, reason: 'not after the 8 s timeout');
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a young attempt is waited for, not doubled', () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            clientFactory: sequence([_Behavior.hang, _Behavior.succeed], made));
+        m.connect();
+        async.elapse(const Duration(milliseconds: 100));
+        m.ensureConnected();
+        m.ensureConnected();
+        async.elapse(const Duration(milliseconds: 100));
+        expect(made, hasLength(1));
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('every attempt sends a fresh client id', () {
+      fakeAsync((async) {
+        final ids = <String>[];
+        final behaviors = [_Behavior.fail, _Behavior.succeed];
+        final m = MqttManager(
+          config: local,
+          password: '',
+          clientFactory: (c, id, {host}) {
+            ids.add(id);
+            return _FakeClient(host ?? c.host, behaviors.removeAt(0));
+          },
+        );
+        m.connect();
+        async.flushMicrotasks();
+        m.ensureConnected();
+        async.elapse(const Duration(milliseconds: 50));
+        expect(ids, hasLength(2));
+        expect(ids[0], startsWith('zd-conn1'));
+        expect(ids[1], startsWith('zd-conn1'));
+        expect(ids[0], isNot(ids[1]),
+            reason: 'a late abandoned attempt must not take over the session');
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a tap\'s short silence limit replaces a quiet connection', () {
+      fakeAsync((async) {
+        var now = DateTime(2026, 10, 10, 12);
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            now: () => now,
+            clientFactory: sequence([_Behavior.succeed, _Behavior.succeed], made));
+        m.connect();
+        async.flushMicrotasks();
+        now = now.add(const Duration(seconds: 5));
+        m.ensureConnected();
+        async.flushMicrotasks();
+        expect(made, hasLength(1), reason: '5 s is fine by the keep-alive rule');
+        m.ensureConnected(maxSilence: const Duration(seconds: 3));
+        async.elapse(const Duration(milliseconds: 50));
+        expect(made, hasLength(2));
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a pending backoff is skipped', () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            clientFactory: sequence([_Behavior.fail, _Behavior.succeed], made));
+        m.connect();
+        async.flushMicrotasks();
+        expect(m.status, MqttStatus.error);
+        bool? ok;
+        m.ensureConnected().then((v) => ok = v);
+        async.elapse(const Duration(milliseconds: 50));
+        async.flushMicrotasks();
+        expect(ok, isTrue);
+        expect(made, hasLength(2));
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('gives up after its timeout when nothing answers', () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: local,
+            password: '',
+            clientFactory:
+                sequence(List.filled(10, _Behavior.hang), made));
+        bool? ok;
+        m.ensureConnected(timeout: const Duration(seconds: 3))
+            .then((v) => ok = v);
+        async.elapse(const Duration(seconds: 4));
+        expect(ok, isFalse);
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+  });
+
   test('lastFailure keeps the local failure kind, then clears on connect', () {
     fakeAsync((async) {
       final manager = MqttManager(

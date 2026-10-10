@@ -1,3 +1,6 @@
+// Keeps the headless shortcut entrypoint in the build (2.1 §1).
+// ignore: unused_import
+import 'shortcuts/shortcut_engine.dart';
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/services.dart';

@@ -1,0 +1,1 @@
+ZigDash 2.1: skróty. Dodaj urządzenie do Szybkich ustawień i przełączaj je jednym dotknięciem albo ustaw roletę suwakiem, bez otwierania aplikacji. ZigDash pojawia się też w sterowaniu urządzeniami Androida, każde urządzenie z dashboardów jako karta. Zmiana nazwy urządzenia z jego strony. I szybsze ponowne łączenie po przerwie.

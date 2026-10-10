@@ -4115,6 +4115,597 @@ class DeviceHealthFlagsCompanion extends UpdateCompanion<DeviceHealthFlag> {
   }
 }
 
+class $ShortcutsTable extends Shortcuts
+    with TableInfo<$ShortcutsTable, Shortcut> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ShortcutsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _connectionIdMeta = const VerificationMeta(
+    'connectionId',
+  );
+  @override
+  late final GeneratedColumn<String> connectionId = GeneratedColumn<String>(
+    'connection_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES connections (id) ON DELETE CASCADE',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<ShortcutKind, String> kind =
+      GeneratedColumn<String>(
+        'kind',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<ShortcutKind>($ShortcutsTable.$converterkind);
+  @override
+  late final GeneratedColumnWithTypeConverter<ShortcutSurface, String> surface =
+      GeneratedColumn<String>(
+        'surface',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<ShortcutSurface>($ShortcutsTable.$convertersurface);
+  static const VerificationMeta _targetsMeta = const VerificationMeta(
+    'targets',
+  );
+  @override
+  late final GeneratedColumn<String> targets = GeneratedColumn<String>(
+    'targets',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _appWidgetIdMeta = const VerificationMeta(
+    'appWidgetId',
+  );
+  @override
+  late final GeneratedColumn<int> appWidgetId = GeneratedColumn<int>(
+    'app_widget_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _tileSlotMeta = const VerificationMeta(
+    'tileSlot',
+  );
+  @override
+  late final GeneratedColumn<int> tileSlot = GeneratedColumn<int>(
+    'tile_slot',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    connectionId,
+    kind,
+    surface,
+    targets,
+    title,
+    appWidgetId,
+    tileSlot,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'shortcuts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Shortcut> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('connection_id')) {
+      context.handle(
+        _connectionIdMeta,
+        connectionId.isAcceptableOrUnknown(
+          data['connection_id']!,
+          _connectionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_connectionIdMeta);
+    }
+    if (data.containsKey('targets')) {
+      context.handle(
+        _targetsMeta,
+        targets.isAcceptableOrUnknown(data['targets']!, _targetsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_targetsMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('app_widget_id')) {
+      context.handle(
+        _appWidgetIdMeta,
+        appWidgetId.isAcceptableOrUnknown(
+          data['app_widget_id']!,
+          _appWidgetIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('tile_slot')) {
+      context.handle(
+        _tileSlotMeta,
+        tileSlot.isAcceptableOrUnknown(data['tile_slot']!, _tileSlotMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Shortcut map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Shortcut(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      connectionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}connection_id'],
+      )!,
+      kind: $ShortcutsTable.$converterkind.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}kind'],
+        )!,
+      ),
+      surface: $ShortcutsTable.$convertersurface.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}surface'],
+        )!,
+      ),
+      targets: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}targets'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      appWidgetId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}app_widget_id'],
+      ),
+      tileSlot: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tile_slot'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ShortcutsTable createAlias(String alias) {
+    return $ShortcutsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<ShortcutKind, String, String> $converterkind =
+      const EnumNameConverter<ShortcutKind>(ShortcutKind.values);
+  static JsonTypeConverter2<ShortcutSurface, String, String> $convertersurface =
+      const EnumNameConverter<ShortcutSurface>(ShortcutSurface.values);
+}
+
+class Shortcut extends DataClass implements Insertable<Shortcut> {
+  final String id;
+  final String connectionId;
+  final ShortcutKind kind;
+  final ShortcutSurface surface;
+  final String targets;
+
+  /// A group's name, shown as the widget's title.
+  final String? title;
+
+  /// The launcher's id for a widget; null for a tile.
+  final int? appWidgetId;
+
+  /// Which of ZigDash's fixed tile slots; null for a widget.
+  final int? tileSlot;
+  final DateTime createdAt;
+  const Shortcut({
+    required this.id,
+    required this.connectionId,
+    required this.kind,
+    required this.surface,
+    required this.targets,
+    this.title,
+    this.appWidgetId,
+    this.tileSlot,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['connection_id'] = Variable<String>(connectionId);
+    {
+      map['kind'] = Variable<String>(
+        $ShortcutsTable.$converterkind.toSql(kind),
+      );
+    }
+    {
+      map['surface'] = Variable<String>(
+        $ShortcutsTable.$convertersurface.toSql(surface),
+      );
+    }
+    map['targets'] = Variable<String>(targets);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || appWidgetId != null) {
+      map['app_widget_id'] = Variable<int>(appWidgetId);
+    }
+    if (!nullToAbsent || tileSlot != null) {
+      map['tile_slot'] = Variable<int>(tileSlot);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  ShortcutsCompanion toCompanion(bool nullToAbsent) {
+    return ShortcutsCompanion(
+      id: Value(id),
+      connectionId: Value(connectionId),
+      kind: Value(kind),
+      surface: Value(surface),
+      targets: Value(targets),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      appWidgetId: appWidgetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(appWidgetId),
+      tileSlot: tileSlot == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tileSlot),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Shortcut.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Shortcut(
+      id: serializer.fromJson<String>(json['id']),
+      connectionId: serializer.fromJson<String>(json['connectionId']),
+      kind: $ShortcutsTable.$converterkind.fromJson(
+        serializer.fromJson<String>(json['kind']),
+      ),
+      surface: $ShortcutsTable.$convertersurface.fromJson(
+        serializer.fromJson<String>(json['surface']),
+      ),
+      targets: serializer.fromJson<String>(json['targets']),
+      title: serializer.fromJson<String?>(json['title']),
+      appWidgetId: serializer.fromJson<int?>(json['appWidgetId']),
+      tileSlot: serializer.fromJson<int?>(json['tileSlot']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'connectionId': serializer.toJson<String>(connectionId),
+      'kind': serializer.toJson<String>(
+        $ShortcutsTable.$converterkind.toJson(kind),
+      ),
+      'surface': serializer.toJson<String>(
+        $ShortcutsTable.$convertersurface.toJson(surface),
+      ),
+      'targets': serializer.toJson<String>(targets),
+      'title': serializer.toJson<String?>(title),
+      'appWidgetId': serializer.toJson<int?>(appWidgetId),
+      'tileSlot': serializer.toJson<int?>(tileSlot),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Shortcut copyWith({
+    String? id,
+    String? connectionId,
+    ShortcutKind? kind,
+    ShortcutSurface? surface,
+    String? targets,
+    Value<String?> title = const Value.absent(),
+    Value<int?> appWidgetId = const Value.absent(),
+    Value<int?> tileSlot = const Value.absent(),
+    DateTime? createdAt,
+  }) => Shortcut(
+    id: id ?? this.id,
+    connectionId: connectionId ?? this.connectionId,
+    kind: kind ?? this.kind,
+    surface: surface ?? this.surface,
+    targets: targets ?? this.targets,
+    title: title.present ? title.value : this.title,
+    appWidgetId: appWidgetId.present ? appWidgetId.value : this.appWidgetId,
+    tileSlot: tileSlot.present ? tileSlot.value : this.tileSlot,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Shortcut copyWithCompanion(ShortcutsCompanion data) {
+    return Shortcut(
+      id: data.id.present ? data.id.value : this.id,
+      connectionId: data.connectionId.present
+          ? data.connectionId.value
+          : this.connectionId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      surface: data.surface.present ? data.surface.value : this.surface,
+      targets: data.targets.present ? data.targets.value : this.targets,
+      title: data.title.present ? data.title.value : this.title,
+      appWidgetId: data.appWidgetId.present
+          ? data.appWidgetId.value
+          : this.appWidgetId,
+      tileSlot: data.tileSlot.present ? data.tileSlot.value : this.tileSlot,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Shortcut(')
+          ..write('id: $id, ')
+          ..write('connectionId: $connectionId, ')
+          ..write('kind: $kind, ')
+          ..write('surface: $surface, ')
+          ..write('targets: $targets, ')
+          ..write('title: $title, ')
+          ..write('appWidgetId: $appWidgetId, ')
+          ..write('tileSlot: $tileSlot, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    connectionId,
+    kind,
+    surface,
+    targets,
+    title,
+    appWidgetId,
+    tileSlot,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Shortcut &&
+          other.id == this.id &&
+          other.connectionId == this.connectionId &&
+          other.kind == this.kind &&
+          other.surface == this.surface &&
+          other.targets == this.targets &&
+          other.title == this.title &&
+          other.appWidgetId == this.appWidgetId &&
+          other.tileSlot == this.tileSlot &&
+          other.createdAt == this.createdAt);
+}
+
+class ShortcutsCompanion extends UpdateCompanion<Shortcut> {
+  final Value<String> id;
+  final Value<String> connectionId;
+  final Value<ShortcutKind> kind;
+  final Value<ShortcutSurface> surface;
+  final Value<String> targets;
+  final Value<String?> title;
+  final Value<int?> appWidgetId;
+  final Value<int?> tileSlot;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const ShortcutsCompanion({
+    this.id = const Value.absent(),
+    this.connectionId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.surface = const Value.absent(),
+    this.targets = const Value.absent(),
+    this.title = const Value.absent(),
+    this.appWidgetId = const Value.absent(),
+    this.tileSlot = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ShortcutsCompanion.insert({
+    required String id,
+    required String connectionId,
+    required ShortcutKind kind,
+    required ShortcutSurface surface,
+    required String targets,
+    this.title = const Value.absent(),
+    this.appWidgetId = const Value.absent(),
+    this.tileSlot = const Value.absent(),
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       connectionId = Value(connectionId),
+       kind = Value(kind),
+       surface = Value(surface),
+       targets = Value(targets),
+       createdAt = Value(createdAt);
+  static Insertable<Shortcut> custom({
+    Expression<String>? id,
+    Expression<String>? connectionId,
+    Expression<String>? kind,
+    Expression<String>? surface,
+    Expression<String>? targets,
+    Expression<String>? title,
+    Expression<int>? appWidgetId,
+    Expression<int>? tileSlot,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (connectionId != null) 'connection_id': connectionId,
+      if (kind != null) 'kind': kind,
+      if (surface != null) 'surface': surface,
+      if (targets != null) 'targets': targets,
+      if (title != null) 'title': title,
+      if (appWidgetId != null) 'app_widget_id': appWidgetId,
+      if (tileSlot != null) 'tile_slot': tileSlot,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ShortcutsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? connectionId,
+    Value<ShortcutKind>? kind,
+    Value<ShortcutSurface>? surface,
+    Value<String>? targets,
+    Value<String?>? title,
+    Value<int?>? appWidgetId,
+    Value<int?>? tileSlot,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return ShortcutsCompanion(
+      id: id ?? this.id,
+      connectionId: connectionId ?? this.connectionId,
+      kind: kind ?? this.kind,
+      surface: surface ?? this.surface,
+      targets: targets ?? this.targets,
+      title: title ?? this.title,
+      appWidgetId: appWidgetId ?? this.appWidgetId,
+      tileSlot: tileSlot ?? this.tileSlot,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (connectionId.present) {
+      map['connection_id'] = Variable<String>(connectionId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(
+        $ShortcutsTable.$converterkind.toSql(kind.value),
+      );
+    }
+    if (surface.present) {
+      map['surface'] = Variable<String>(
+        $ShortcutsTable.$convertersurface.toSql(surface.value),
+      );
+    }
+    if (targets.present) {
+      map['targets'] = Variable<String>(targets.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (appWidgetId.present) {
+      map['app_widget_id'] = Variable<int>(appWidgetId.value);
+    }
+    if (tileSlot.present) {
+      map['tile_slot'] = Variable<int>(tileSlot.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ShortcutsCompanion(')
+          ..write('id: $id, ')
+          ..write('connectionId: $connectionId, ')
+          ..write('kind: $kind, ')
+          ..write('surface: $surface, ')
+          ..write('targets: $targets, ')
+          ..write('title: $title, ')
+          ..write('appWidgetId: $appWidgetId, ')
+          ..write('tileSlot: $tileSlot, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4128,6 +4719,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $DeviceHealthFlagsTable deviceHealthFlags =
       $DeviceHealthFlagsTable(this);
+  late final $ShortcutsTable shortcuts = $ShortcutsTable(this);
   late final Index panelsDeviceIeee = Index(
     'panels_device_ieee',
     'CREATE INDEX panels_device_ieee ON panels (device_ieee)',
@@ -4144,6 +4736,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     scenes,
     deviceDismissals,
     deviceHealthFlags,
+    shortcuts,
     panelsDeviceIeee,
   ];
   @override
@@ -4196,6 +4789,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('device_health_flags', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'connections',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('shortcuts', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -4323,6 +4923,27 @@ final class $$ConnectionsTableReferences
     final cache = $_typedResult.readTableOrNull(
       _deviceHealthFlagsRefsTable($_db),
     );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ShortcutsTable, List<Shortcut>>
+  _shortcutsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.shortcuts,
+    aliasName: $_aliasNameGenerator(
+      db.connections.id,
+      db.shortcuts.connectionId,
+    ),
+  );
+
+  $$ShortcutsTableProcessedTableManager get shortcutsRefs {
+    final manager = $$ShortcutsTableTableManager(
+      $_db,
+      $_db.shortcuts,
+    ).filter((f) => f.connectionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_shortcutsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -4500,6 +5121,31 @@ class $$ConnectionsTableFilterComposer
           }) => $$DeviceHealthFlagsTableFilterComposer(
             $db: $db,
             $table: $db.deviceHealthFlags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> shortcutsRefs(
+    Expression<bool> Function($$ShortcutsTableFilterComposer f) f,
+  ) {
+    final $$ShortcutsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shortcuts,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShortcutsTableFilterComposer(
+            $db: $db,
+            $table: $db.shortcuts,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4753,6 +5399,31 @@ class $$ConnectionsTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> shortcutsRefs<T extends Object>(
+    Expression<T> Function($$ShortcutsTableAnnotationComposer a) f,
+  ) {
+    final $$ShortcutsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.shortcuts,
+      getReferencedColumn: (t) => t.connectionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ShortcutsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.shortcuts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableTableManager
@@ -4773,6 +5444,7 @@ class $$ConnectionsTableTableManager
             bool scenesRefs,
             bool deviceDismissalsRefs,
             bool deviceHealthFlagsRefs,
+            bool shortcutsRefs,
           })
         > {
   $$ConnectionsTableTableManager(_$AppDatabase db, $ConnectionsTable table)
@@ -4868,6 +5540,7 @@ class $$ConnectionsTableTableManager
                 scenesRefs = false,
                 deviceDismissalsRefs = false,
                 deviceHealthFlagsRefs = false,
+                shortcutsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -4876,6 +5549,7 @@ class $$ConnectionsTableTableManager
                     if (scenesRefs) db.scenes,
                     if (deviceDismissalsRefs) db.deviceDismissals,
                     if (deviceHealthFlagsRefs) db.deviceHealthFlags,
+                    if (shortcutsRefs) db.shortcuts,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -4964,6 +5638,27 @@ class $$ConnectionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (shortcutsRefs)
+                        await $_getPrefetchedData<
+                          Connection,
+                          $ConnectionsTable,
+                          Shortcut
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ConnectionsTableReferences
+                              ._shortcutsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ConnectionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).shortcutsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -4989,6 +5684,7 @@ typedef $$ConnectionsTableProcessedTableManager =
         bool scenesRefs,
         bool deviceDismissalsRefs,
         bool deviceHealthFlagsRefs,
+        bool shortcutsRefs,
       })
     >;
 typedef $$DashboardsTableCreateCompanionBuilder =
@@ -7699,6 +8395,405 @@ typedef $$DeviceHealthFlagsTableProcessedTableManager =
       DeviceHealthFlag,
       PrefetchHooks Function({bool connectionId})
     >;
+typedef $$ShortcutsTableCreateCompanionBuilder =
+    ShortcutsCompanion Function({
+      required String id,
+      required String connectionId,
+      required ShortcutKind kind,
+      required ShortcutSurface surface,
+      required String targets,
+      Value<String?> title,
+      Value<int?> appWidgetId,
+      Value<int?> tileSlot,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$ShortcutsTableUpdateCompanionBuilder =
+    ShortcutsCompanion Function({
+      Value<String> id,
+      Value<String> connectionId,
+      Value<ShortcutKind> kind,
+      Value<ShortcutSurface> surface,
+      Value<String> targets,
+      Value<String?> title,
+      Value<int?> appWidgetId,
+      Value<int?> tileSlot,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$ShortcutsTableReferences
+    extends BaseReferences<_$AppDatabase, $ShortcutsTable, Shortcut> {
+  $$ShortcutsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ConnectionsTable _connectionIdTable(_$AppDatabase db) =>
+      db.connections.createAlias(
+        $_aliasNameGenerator(db.shortcuts.connectionId, db.connections.id),
+      );
+
+  $$ConnectionsTableProcessedTableManager get connectionId {
+    final $_column = $_itemColumn<String>('connection_id')!;
+
+    final manager = $$ConnectionsTableTableManager(
+      $_db,
+      $_db.connections,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_connectionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ShortcutsTableFilterComposer
+    extends Composer<_$AppDatabase, $ShortcutsTable> {
+  $$ShortcutsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<ShortcutKind, ShortcutKind, String> get kind =>
+      $composableBuilder(
+        column: $table.kind,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<ShortcutSurface, ShortcutSurface, String>
+  get surface => $composableBuilder(
+    column: $table.surface,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get targets => $composableBuilder(
+    column: $table.targets,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get appWidgetId => $composableBuilder(
+    column: $table.appWidgetId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get tileSlot => $composableBuilder(
+    column: $table.tileSlot,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ConnectionsTableFilterComposer get connectionId {
+    final $$ConnectionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableFilterComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ShortcutsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ShortcutsTable> {
+  $$ShortcutsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get surface => $composableBuilder(
+    column: $table.surface,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get targets => $composableBuilder(
+    column: $table.targets,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get appWidgetId => $composableBuilder(
+    column: $table.appWidgetId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get tileSlot => $composableBuilder(
+    column: $table.tileSlot,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ConnectionsTableOrderingComposer get connectionId {
+    final $$ConnectionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ShortcutsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ShortcutsTable> {
+  $$ShortcutsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ShortcutKind, String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ShortcutSurface, String> get surface =>
+      $composableBuilder(column: $table.surface, builder: (column) => column);
+
+  GeneratedColumn<String> get targets =>
+      $composableBuilder(column: $table.targets, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<int> get appWidgetId => $composableBuilder(
+    column: $table.appWidgetId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get tileSlot =>
+      $composableBuilder(column: $table.tileSlot, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$ConnectionsTableAnnotationComposer get connectionId {
+    final $$ConnectionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.connectionId,
+      referencedTable: $db.connections,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ConnectionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.connections,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ShortcutsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ShortcutsTable,
+          Shortcut,
+          $$ShortcutsTableFilterComposer,
+          $$ShortcutsTableOrderingComposer,
+          $$ShortcutsTableAnnotationComposer,
+          $$ShortcutsTableCreateCompanionBuilder,
+          $$ShortcutsTableUpdateCompanionBuilder,
+          (Shortcut, $$ShortcutsTableReferences),
+          Shortcut,
+          PrefetchHooks Function({bool connectionId})
+        > {
+  $$ShortcutsTableTableManager(_$AppDatabase db, $ShortcutsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ShortcutsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ShortcutsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ShortcutsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> connectionId = const Value.absent(),
+                Value<ShortcutKind> kind = const Value.absent(),
+                Value<ShortcutSurface> surface = const Value.absent(),
+                Value<String> targets = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<int?> appWidgetId = const Value.absent(),
+                Value<int?> tileSlot = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ShortcutsCompanion(
+                id: id,
+                connectionId: connectionId,
+                kind: kind,
+                surface: surface,
+                targets: targets,
+                title: title,
+                appWidgetId: appWidgetId,
+                tileSlot: tileSlot,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String connectionId,
+                required ShortcutKind kind,
+                required ShortcutSurface surface,
+                required String targets,
+                Value<String?> title = const Value.absent(),
+                Value<int?> appWidgetId = const Value.absent(),
+                Value<int?> tileSlot = const Value.absent(),
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ShortcutsCompanion.insert(
+                id: id,
+                connectionId: connectionId,
+                kind: kind,
+                surface: surface,
+                targets: targets,
+                title: title,
+                appWidgetId: appWidgetId,
+                tileSlot: tileSlot,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ShortcutsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({connectionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (connectionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.connectionId,
+                                referencedTable: $$ShortcutsTableReferences
+                                    ._connectionIdTable(db),
+                                referencedColumn: $$ShortcutsTableReferences
+                                    ._connectionIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ShortcutsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ShortcutsTable,
+      Shortcut,
+      $$ShortcutsTableFilterComposer,
+      $$ShortcutsTableOrderingComposer,
+      $$ShortcutsTableAnnotationComposer,
+      $$ShortcutsTableCreateCompanionBuilder,
+      $$ShortcutsTableUpdateCompanionBuilder,
+      (Shortcut, $$ShortcutsTableReferences),
+      Shortcut,
+      PrefetchHooks Function({bool connectionId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7717,4 +8812,6 @@ class $AppDatabaseManager {
       $$DeviceDismissalsTableTableManager(_db, _db.deviceDismissals);
   $$DeviceHealthFlagsTableTableManager get deviceHealthFlags =>
       $$DeviceHealthFlagsTableTableManager(_db, _db.deviceHealthFlags);
+  $$ShortcutsTableTableManager get shortcuts =>
+      $$ShortcutsTableTableManager(_db, _db.shortcuts);
 }

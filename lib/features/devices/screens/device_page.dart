@@ -30,6 +30,8 @@ import '../device_state.dart';
 import '../device_tiles.dart';
 import '../devices_providers.dart';
 import '../z2m_bridge.dart';
+import '../../panels/models/panel_config.dart';
+import '../../../shortcuts/add_tile_button.dart';
 import 'devices_screen.dart' show deviceHealthLine;
 
 /// Tiles of a home that show one device, with dashboard and section.
@@ -69,6 +71,42 @@ class _DevicePageState extends ConsumerState<DevicePage> {
   void didUpdateWidget(DevicePage old) {
     super.didUpdateWidget(old);
     if (old.ieee != widget.ieee) _acknowledge();
+  }
+
+  /// Renames the device in Zigbee2MQTT; tiles follow (device registry).
+  Future<void> _rename(BuildContext context, String base, String current) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final controller = TextEditingController(text: current);
+    final to = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.deviceRenameTitle),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(helperText: l10n.deviceRenameHint),
+          onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              child: Text(l10n.deviceRename)),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (to == null || to.isEmpty || to == current) return;
+    final error = await renameDevice(ref, widget.connectionId, base,
+        from: current, to: to);
+    messenger.showSnackBar(SnackBar(
+        content: Text(error == null
+            ? l10n.deviceRenamed(to)
+            : l10n.deviceRenameFailed(
+                error.isEmpty ? l10n.deviceRenameNoAnswer : error))));
   }
 
   /// Opening the page is seeing the device: its low battery stops lighting
@@ -128,21 +166,53 @@ class _DevicePageState extends ConsumerState<DevicePage> {
       );
     }
 
+    // Only devices with a switch or a cover, shown on a dashboard, can be
+    // a tile: the tile switches them like the dashboard tile's quick action.
+    final tileable = AddTileButton.available &&
+        tiles.any((t) {
+          if (t.$1.type != PanelType.device) return false;
+          final c = PanelConfig.decode(t.$1.type, t.$1.config);
+          return c is DeviceTileConfig &&
+              (c.profile.switches.isNotEmpty ||
+                  c.profile.deviceClass == DeviceClass.cover);
+        });
+    final addTile = tileable
+        ? AddTileButton(
+            connectionId: widget.connectionId, ieee: widget.ieee, name: title)
+        : null;
+    final rename = device == null
+        ? null
+        : IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            tooltip: l10n.deviceRename,
+            onPressed: () => _rename(context, base, device.friendlyName),
+          );
+
     if (widget.embedded) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 8, 4),
-            child: Text(title,
-                style: Theme.of(context).textTheme.headlineSmall,
-                semanticsLabel: title),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(title,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      semanticsLabel: title),
+                ),
+                ?rename,
+                ?addTile,
+              ],
+            ),
           ),
           Expanded(child: body),
         ],
       );
     }
-    return Scaffold(appBar: AppBar(title: Text(title)), body: body);
+    return Scaffold(
+        appBar: AppBar(title: Text(title), actions: [?rename, ?addTile]),
+        body: body);
   }
 }
 
