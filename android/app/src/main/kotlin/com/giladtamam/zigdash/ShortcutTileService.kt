@@ -43,6 +43,13 @@ abstract class ShortcutTileService : TileService() {
     }
 
     override fun onClick() {
+        // On a locked phone, a tap first asks for the unlock (user's choice,
+        // 2026-10-10: nobody holding the phone switches lights or opens
+        // shutters). Device Controls are guarded by Android's own setting.
+        if (isLocked) unlockAndRun(::handleClick) else handleClick()
+    }
+
+    private fun handleClick() {
         val t = ShortcutPrefs.tile(this, slot)
         if (t != null) ShortcutPrefs.mark(this, "shortcut.used.tile")
         if (t == null) {

@@ -69,7 +69,7 @@ Prototype: branch `prototype/shortcuts`, `docs/design/prototypes/shortcuts-proto
 
 ### 4. Quick Settings tiles and Device Controls
 
-- **Tiles:** one device per tile, toggled on and off; a shutter's tile opens the shutter pop-up instead. Label = device name, subtitle = state line. Unavailable devices (sensors) can't be tiles. Long-press opens ZigDash on the device. Android limits how many tiles one app can offer; ZigDash declares a fixed set of tile slots that the user assigns to devices.
+- **Tiles:** one device per tile, toggled on and off; a shutter's tile opens the shutter pop-up instead. Label = device name, subtitle = state line. Unavailable devices (sensors) can't be tiles. Long-press opens ZigDash on the device. On a locked phone a tap asks for the unlock first (user, 2026-10-10); Device Controls follow Android's own "control from locked device" setting. Android limits how many tiles one app can offer; ZigDash declares a fixed set of tile slots that the user assigns to devices.
 - **Device Controls** (Android 11+): one control per device in a "ZigDash · <Home>" structure. Lights, plugs and switches toggle; dimmable lights and covers get a slider (Android draws it); sensors are status-only. Android decides the look.
 
 ### 5. Adding shortcuts
