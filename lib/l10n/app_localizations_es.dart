@@ -2399,6 +2399,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shortcutAddTile => 'Añadir a Ajustes rápidos';
 
   @override
+  String get shortcutAddShortcut => 'Añadir acceso directo';
+
+  @override
+  String get shortcutAddToHome => 'Añadir a la pantalla de inicio';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Añadir el widget';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Mantén pulsado un espacio libre de la pantalla de inicio, toca Widgets, busca ZigDash y arrastra el widget que quieras.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name está en el mosaico ZigDash $slot de Ajustes rápidos';
   }

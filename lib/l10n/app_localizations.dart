@@ -4406,6 +4406,30 @@ abstract class AppLocalizations {
   /// **'Add to Quick Settings'**
   String get shortcutAddTile;
 
+  /// Device page: button offering a home-screen widget or a Quick Settings tile for the device.
+  ///
+  /// In en, this message translates to:
+  /// **'Add shortcut'**
+  String get shortcutAddShortcut;
+
+  /// Adds a widget for this device or scene to the phone's home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to home screen'**
+  String get shortcutAddToHome;
+
+  /// Dialog title when the launcher can't add a widget for the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the widget'**
+  String get shortcutWidgetHowToTitle;
+
+  /// How to add a ZigDash widget by hand.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press an empty spot on your home screen, tap Widgets, find ZigDash and drag the widget you want.'**
+  String get shortcutWidgetHowTo;
+
   /// No description provided for @shortcutTileReady.
   ///
   /// In en, this message translates to:

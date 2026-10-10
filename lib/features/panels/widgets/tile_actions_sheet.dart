@@ -14,6 +14,9 @@ import '../../devices/devices_providers.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
+import '../models/panel_config.dart';
+import '../../../shortcuts/add_tile_button.dart';
+import '../../../shortcuts/shortcut_service.dart';
 
 /// The Edit-mode actions of one tile (docs/design/dashboard-1.12.md §7):
 /// size, move to section, edit, duplicate, replace with a device tile
@@ -102,6 +105,23 @@ Future<void> showTileActions(
                     Routes.homeDevice(connectionId, panel.deviceIeee!));
               },
             ),
+          // A device or scene tile can also live on the home screen.
+          if (AddShortcutButton.available &&
+              ((panel.type == PanelType.device && panel.deviceIeee != null) ||
+                  _sceneId(panel) != null))
+            ListTile(
+              leading: const Icon(Icons.add_to_home_screen),
+              title: Text(l10n.shortcutAddToHome),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                final scene = _sceneId(panel);
+                addHomeScreenWidget(host, container.read(shortcutServiceProvider),
+                    kind: scene != null ? 'scene' : 'device',
+                    connectionId: connectionId,
+                    target: scene ?? panel.deviceIeee!,
+                    name: panel.name);
+              },
+            ),
           if (panel.type != PanelType.device && panel.deviceIeee != null)
             ListTile(
               leading: const Icon(Icons.auto_fix_high),
@@ -128,6 +148,13 @@ Future<void> showTileActions(
       ),
     ),
   );
+}
+
+/// The scene a scene tile runs, or null.
+String? _sceneId(Panel panel) {
+  if (panel.type != PanelType.scene) return null;
+  final c = PanelConfig.decode(panel.type, panel.config);
+  return c is SceneConfig && c.sceneId.isNotEmpty ? c.sceneId : null;
 }
 
 /// Removes [panel] at once and offers Undo. A schedule's or auto-close

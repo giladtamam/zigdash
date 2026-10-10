@@ -2401,6 +2401,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shortcutAddTile => 'Zu Schnelleinstellungen hinzufügen';
 
   @override
+  String get shortcutAddShortcut => 'Verknüpfung hinzufügen';
+
+  @override
+  String get shortcutAddToHome => 'Zum Startbildschirm hinzufügen';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Widget hinzufügen';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Halte eine freie Stelle auf dem Startbildschirm gedrückt, tippe auf Widgets, suche ZigDash und ziehe das gewünschte Widget.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name liegt auf der Schnelleinstellungs-Kachel ZigDash $slot';
   }

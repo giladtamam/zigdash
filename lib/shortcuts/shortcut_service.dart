@@ -26,6 +26,10 @@ const appChannel = MethodChannel('zigdash/app');
 /// How a request to add a tile went.
 enum AddTileResult { added, already, declined, unsupported, failed }
 
+/// What asking the launcher to pin a widget did: [requested] opened its
+/// prompt (the widget is set up natively once confirmed).
+enum PinWidgetResult { requested, unsupported }
+
 /// Assigns shortcuts and keeps what the native side reads up to date.
 class ShortcutService {
   ShortcutService(this._db, this._prefs, {DateTime Function()? now})
@@ -277,6 +281,30 @@ class ShortcutService {
   Future<void> clearTile(int slot) async {
     await _dao.deleteByTileSlot(slot);
     await _prefs.remove(shortcutTileKey(slot));
+  }
+
+  /// Asks the launcher to pin a home-screen widget: [kind] `device` (an
+  /// IEEE address in [target]) or `scene` (a scene id).
+  Future<PinWidgetResult> requestPinWidget(
+      {required String kind,
+      required String connectionId,
+      required String target,
+      required String name}) async {
+    try {
+      final r = await appChannel.invokeMethod<String>('requestPinWidget', {
+        'kind': kind,
+        'connectionId': connectionId,
+        'target': target,
+        'name': name,
+      });
+      return r == 'requested'
+          ? PinWidgetResult.requested
+          : PinWidgetResult.unsupported;
+    } on MissingPluginException {
+      return PinWidgetResult.unsupported;
+    } on PlatformException {
+      return PinWidgetResult.unsupported;
+    }
   }
 
   /// Asks Android to add tile [slot] to Quick Settings (Android 13+).

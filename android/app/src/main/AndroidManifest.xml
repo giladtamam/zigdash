@@ -75,6 +75,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_group_info" />
         </receiver>
+        <!-- Shortcuts: sets up a widget pinned from inside ZigDash. -->
+        <receiver
+            android:name=".PinWidgetReceiver"
+            android:exported="false" />
         <activity
             android:name=".WidgetConfigActivity"
             android:exported="true"

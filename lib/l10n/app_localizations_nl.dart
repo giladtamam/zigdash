@@ -2400,6 +2400,19 @@ class AppLocalizationsNl extends AppLocalizations {
   String get shortcutAddTile => 'Toevoegen aan Snelle instellingen';
 
   @override
+  String get shortcutAddShortcut => 'Snelkoppeling toevoegen';
+
+  @override
+  String get shortcutAddToHome => 'Toevoegen aan startscherm';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Widget toevoegen';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Houd een lege plek op je startscherm ingedrukt, tik op Widgets, zoek ZigDash en sleep de widget die je wilt.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name staat op tegel ZigDash $slot in Snelle instellingen';
   }

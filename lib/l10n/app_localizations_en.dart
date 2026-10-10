@@ -2387,6 +2387,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortcutAddTile => 'Add to Quick Settings';
 
   @override
+  String get shortcutAddShortcut => 'Add shortcut';
+
+  @override
+  String get shortcutAddToHome => 'Add to home screen';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Add the widget';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Long-press an empty spot on your home screen, tap Widgets, find ZigDash and drag the widget you want.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name is on Quick Settings tile ZigDash $slot';
   }

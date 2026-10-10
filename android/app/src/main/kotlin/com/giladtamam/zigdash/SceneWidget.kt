@@ -54,8 +54,13 @@ class SceneWidget : AppWidgetProvider() {
             mgr.updateAppWidget(id, views)
         }
 
+        /** How a widget for scene [e] looks, for the launcher's "Add?" prompt. */
+        fun preview(ctx: Context, e: ShortcutPrefs.SceneEntry): RemoteViews =
+            views(ctx, 0, strip = false, working = false, problem = null, entry = e)
+
         private fun views(ctx: Context, id: Int, strip: Boolean,
-                          working: Boolean, problem: String?): RemoteViews {
+                          working: Boolean, problem: String?,
+                          entry: ShortcutPrefs.SceneEntry? = null): RemoteViews {
             val v = RemoteViews(ctx.packageName,
                 if (strip) R.layout.widget_device_strip else R.layout.widget_device)
             v.setImageViewResource(R.id.w_icon, R.drawable.w_ic_scene)
@@ -65,7 +70,7 @@ class SceneWidget : AppWidgetProvider() {
             v.setInt(R.id.w_icon, "setColorFilter", ink)
             v.setTextColor(R.id.w_line, ctx.getColor(
                 if (problem != null) R.color.w_problem else R.color.w_ink2))
-            val e = ShortcutPrefs.sceneWidget(ctx, id)
+            val e = entry ?: ShortcutPrefs.sceneWidget(ctx, id)
             if (e == null) {
                 // Not set up (the picker was left): tapping opens it again.
                 v.setTextViewText(R.id.w_name, "ZigDash")

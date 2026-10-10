@@ -60,6 +60,10 @@ class DeviceWidget : AppWidgetProvider() {
             mgr.updateAppWidget(id, views)
         }
 
+        /** How a widget for device [t] looks, for the launcher's "Add?" prompt. */
+        fun preview(ctx: Context, t: ShortcutPrefs.Tile): RemoteViews =
+            views(ctx, 0, t, strip = false, working = false, problem = null)
+
         private fun views(ctx: Context, id: Int, t: ShortcutPrefs.Tile?, strip: Boolean,
                           working: Boolean, problem: String?): RemoteViews {
             if (t == null) {

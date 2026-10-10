@@ -2390,6 +2390,19 @@ class AppLocalizationsSv extends AppLocalizations {
   String get shortcutAddTile => 'Lägg till i Snabbinställningar';
 
   @override
+  String get shortcutAddShortcut => 'Lägg till genväg';
+
+  @override
+  String get shortcutAddToHome => 'Lägg till på hemskärmen';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Lägg till widgeten';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Håll ned en tom plats på hemskärmen, tryck på Widgetar, hitta ZigDash och dra den widget du vill ha.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name finns på snabbinställningsrutan ZigDash $slot';
   }

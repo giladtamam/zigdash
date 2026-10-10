@@ -2371,6 +2371,19 @@ class AppLocalizationsHe extends AppLocalizations {
   String get shortcutAddTile => 'הוספה להגדרות המהירות';
 
   @override
+  String get shortcutAddShortcut => 'הוספת קיצור דרך';
+
+  @override
+  String get shortcutAddToHome => 'הוספה למסך הבית';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'הוספת הווידג\'ט';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'לחצו לחיצה ארוכה על מקום ריק במסך הבית, הקישו על ווידג\'טים, מצאו את ZigDash וגררו את הווידג\'ט הרצוי.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name נמצא באריח ZigDash $slot בהגדרות המהירות';
   }

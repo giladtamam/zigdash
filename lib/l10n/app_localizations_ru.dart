@@ -2405,6 +2405,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shortcutAddTile => 'Добавить в быстрые настройки';
 
   @override
+  String get shortcutAddShortcut => 'Добавить ярлык';
+
+  @override
+  String get shortcutAddToHome => 'Добавить на главный экран';
+
+  @override
+  String get shortcutWidgetHowToTitle => 'Добавить виджет';
+
+  @override
+  String get shortcutWidgetHowTo =>
+      'Нажмите и удерживайте пустое место на главном экране, выберите «Виджеты», найдите ZigDash и перетащите нужный виджет.';
+
+  @override
   String shortcutTileReady(Object name, Object slot) {
     return '$name на плитке ZigDash $slot в быстрых настройках';
   }
