@@ -2551,4 +2551,158 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'Deuren, ramen en batterijen';
+
+  @override
+  String get alertsTitle => 'Alarmen';
+
+  @override
+  String get alertsStatusOn => 'Alarmen staan aan';
+
+  @override
+  String get alertsStatusPaused =>
+      'Alarmen gepauzeerd: Node-RED op de hub draait niet';
+
+  @override
+  String get alertsStatusNotSetUp => 'Niet ingesteld';
+
+  @override
+  String get alertsStatusPhoneOff => 'Deze telefoon krijgt geen meldingen';
+
+  @override
+  String get alertsIntro =>
+      'Krijg een melding op deze telefoon bij een lek, rook, een geopende deur of een bijna lege batterij, ook als ZigDash gesloten is. Node-RED op je hub bewaakt de apparaten; ZigDash stelt het in.';
+
+  @override
+  String get alertsSetUpHub => 'Alarmen instellen op de hub';
+
+  @override
+  String get alertsHubInstalled => 'De alarmflow is geïnstalleerd op de hub';
+
+  @override
+  String get alertsHubUpdated => 'De alarmflow op de hub is bijgewerkt';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED vraagt om in te loggen, importeer de flow daarom handmatig:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'Open Node-RED op de hub, kies Importeren, plak de gekopieerde flow, kies je broker in de broker-node en klik op Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'Flow kopiëren';
+
+  @override
+  String get alertsFlowCopied => 'Flow gekopieerd';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'Alarmen hebben Node-RED op de hub nodig, en niets antwoordt op poort 1880 van $host. Op een SMLIGHT SMHUB installeer je het onder Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED weigerde de flow';
+
+  @override
+  String get alertsRecent => 'Recente alarmen';
+
+  @override
+  String get alertsRecentNone => 'Nog niets';
+
+  @override
+  String get alertsYourAlerts => 'Je alarmen';
+
+  @override
+  String get alertsAdd => 'Alarm toevoegen';
+
+  @override
+  String get alertsNotificationsOnThisPhone => 'Meldingen op deze telefoon';
+
+  @override
+  String get alertsNoGoogle =>
+      'Deze telefoon heeft geen Google-diensten, dus ZigDash kan hier geen pushes ontvangen.';
+
+  @override
+  String get alertsSendTest => 'Testmelding sturen';
+
+  @override
+  String get alertsTestSent => 'Test verstuurd. Hij zou nu moeten aankomen.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'De hub kon hem niet sturen ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut =>
+      'Geen antwoord van de hub. Draait de alarmflow?';
+
+  @override
+  String get alertsNotConnected => 'Niet verbonden met de hub';
+
+  @override
+  String get alertsTurnOff => 'Alarmen uitzetten';
+
+  @override
+  String get alertsTurnOffBody =>
+      'Alarmen stoppen voor elke telefoon van dit huis.';
+
+  @override
+  String get alertKindLeak => 'Lek';
+
+  @override
+  String get alertKindSmoke => 'Rook';
+
+  @override
+  String get alertKindOpened => 'Deur of raam geopend';
+
+  @override
+  String get alertKindBattery => 'Batterij bijna leeg';
+
+  @override
+  String get alertsEditTitle => 'Alarm';
+
+  @override
+  String get alertsKind => 'Wat';
+
+  @override
+  String get alertsDevices => 'Apparaten';
+
+  @override
+  String get alertsNoDevicesForKind => 'Geen apparaat van dit huis meldt dat.';
+
+  @override
+  String get alertsHours => 'Alleen tussen';
+
+  @override
+  String get alertsHoursAny => 'Altijd';
+
+  @override
+  String get alertsHoursFrom => 'Van';
+
+  @override
+  String get alertsHoursTo => 'Tot';
+
+  @override
+  String get alertsThreshold => 'Batterij onder';
+
+  @override
+  String get alertsDelete => 'Alarm verwijderen';
+
+  @override
+  String get alertsNotifyMe => 'Waarschuw me…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'Alarmen naar ZigDash zijn end-to-end versleuteld: Googles pushdienst vervoert ze maar kan ze niet lezen. Verder verlaat niets je hub.';
+
+  @override
+  String get alertsRestricted =>
+      'Android kan ZigDash op de achtergrond stoppen, waardoor meldingen laat of niet aankomen. Sta uitvoeren op de achtergrond toe in de Android-instellingen (op Samsung: Batterij › Apps die nooit slapen).';
+
+  @override
+  String get alertsOpenSettings => 'Android-instellingen openen';
+
+  @override
+  String get alertsOff => 'Uit';
 }

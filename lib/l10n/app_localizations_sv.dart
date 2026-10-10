@@ -2541,4 +2541,159 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'Dörrar, fönster och batterier';
+
+  @override
+  String get alertsTitle => 'Larm';
+
+  @override
+  String get alertsStatusOn => 'Larmen är på';
+
+  @override
+  String get alertsStatusPaused =>
+      'Larmen är pausade: Node-RED på hubben kör inte';
+
+  @override
+  String get alertsStatusNotSetUp => 'Inte inställt';
+
+  @override
+  String get alertsStatusPhoneOff => 'Den här telefonen får inga aviseringar';
+
+  @override
+  String get alertsIntro =>
+      'Få en avisering på den här telefonen vid läcka, rök, en öppnad dörr eller lågt batteri, även när ZigDash är stängt. Node-RED på din hubb vakar över enheterna; ZigDash ställer in det.';
+
+  @override
+  String get alertsSetUpHub => 'Ställ in larm på hubben';
+
+  @override
+  String get alertsHubInstalled => 'Larmflödet är installerat på hubben';
+
+  @override
+  String get alertsHubUpdated => 'Larmflödet på hubben är uppdaterat';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED kräver inloggning, så importera flödet för hand:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'Öppna Node-RED på hubben, välj Import, klistra in det kopierade flödet, välj din broker i broker-noden och tryck Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'Kopiera flödet';
+
+  @override
+  String get alertsFlowCopied => 'Flöde kopierat';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'Larm kräver Node-RED på hubben, och inget svarar på port 1880 hos $host. På en SMLIGHT SMHUB installerar du det under Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED avvisade flödet';
+
+  @override
+  String get alertsRecent => 'Senaste larmen';
+
+  @override
+  String get alertsRecentNone => 'Inget ännu';
+
+  @override
+  String get alertsYourAlerts => 'Dina larm';
+
+  @override
+  String get alertsAdd => 'Lägg till larm';
+
+  @override
+  String get alertsNotificationsOnThisPhone =>
+      'Aviseringar på den här telefonen';
+
+  @override
+  String get alertsNoGoogle =>
+      'Den här telefonen saknar Google-tjänster, så ZigDash kan inte ta emot push här.';
+
+  @override
+  String get alertsSendTest => 'Skicka testavisering';
+
+  @override
+  String get alertsTestSent => 'Test skickat. Det bör komma nu.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'Hubben kunde inte skicka det ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut => 'Inget svar från hubben. Kör larmflödet?';
+
+  @override
+  String get alertsNotConnected => 'Inte ansluten till hubben';
+
+  @override
+  String get alertsTurnOff => 'Stäng av larmen';
+
+  @override
+  String get alertsTurnOffBody =>
+      'Larmen stoppas för alla telefoner i det här hemmet.';
+
+  @override
+  String get alertKindLeak => 'Läcka';
+
+  @override
+  String get alertKindSmoke => 'Rök';
+
+  @override
+  String get alertKindOpened => 'Dörr eller fönster öppnat';
+
+  @override
+  String get alertKindBattery => 'Lågt batteri';
+
+  @override
+  String get alertsEditTitle => 'Larm';
+
+  @override
+  String get alertsKind => 'Vad';
+
+  @override
+  String get alertsDevices => 'Enheter';
+
+  @override
+  String get alertsNoDevicesForKind =>
+      'Ingen enhet i det här hemmet rapporterar det.';
+
+  @override
+  String get alertsHours => 'Bara mellan';
+
+  @override
+  String get alertsHoursAny => 'När som helst';
+
+  @override
+  String get alertsHoursFrom => 'Från';
+
+  @override
+  String get alertsHoursTo => 'Till';
+
+  @override
+  String get alertsThreshold => 'Batteri under';
+
+  @override
+  String get alertsDelete => 'Ta bort larm';
+
+  @override
+  String get alertsNotifyMe => 'Meddela mig…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'Larm till ZigDash är totalsträckskrypterade: Googles push-tjänst bär dem men kan inte läsa dem. Inget annat lämnar din hubb.';
+
+  @override
+  String get alertsRestricted =>
+      'Android kan stoppa ZigDash i bakgrunden, så aviseringar kan komma sent eller utebli. Tillåt körning i bakgrunden i Android-inställningarna (på Samsung: Batteri › Appar som aldrig sover).';
+
+  @override
+  String get alertsOpenSettings => 'Öppna Android-inställningar';
+
+  @override
+  String get alertsOff => 'Av';
 }

@@ -49,6 +49,7 @@ const config = {
         { id: 'a1', kind: 'leak', devices: [{ ieee: '0x1', topic: 'zigbee2mqtt/Kitchen sensor', name: 'Kitchen sensor' }] },
         { id: 'a2', kind: 'opened', devices: [{ ieee: '0x2', topic: 'zigbee2mqtt/Front door', name: 'Front door' }], from: '23:00', to: '06:00' },
         { id: 'a3', kind: 'battery', devices: [{ ieee: '0x3', topic: 'zigbee2mqtt/Bedroom sensor', name: 'Bedroom sensor' }], threshold: 20 },
+        { id: 'a4', kind: 'smoke', enabled: false, devices: [{ ieee: '0x4', topic: 'zigbee2mqtt/Off detector', name: 'Off detector' }] },
     ],
 };
 const at = (h, m = 0) => { // a Date whose wall time in Asia/Jerusalem is h:m today
@@ -63,7 +64,7 @@ const check = (what, fn) => { step++; try { fn(); console.log(`ok ${step}: ${wha
 
 // 1. Config arrives.
 run('ingest', { topic: 'zigdash/alerts/config', payload: JSON.stringify(config) });
-check('config indexed by topic', () => assert.deepEqual(Object.keys(store.index).sort(), ['zigbee2mqtt/Bedroom sensor', 'zigbee2mqtt/Front door', 'zigbee2mqtt/Kitchen sensor']));
+check('config indexed by topic; a switched-off alert is left out', () => assert.deepEqual(Object.keys(store.index).sort(), ['zigbee2mqtt/Bedroom sensor', 'zigbee2mqtt/Front door', 'zigbee2mqtt/Kitchen sensor']));
 
 // 2. Retained memory: nothing yet.
 run('restore', { topic: 'zigdash/alerts/state', payload: '' });
@@ -160,6 +161,22 @@ check('an open door at first sight does not', () => assert.equal(ev.length, 0));
 check('a test goes only to the asked phone', () => { assert.deepEqual(reqs.map(r => r.phone), ['p1']); assert.equal(decrypt(reqs[0].payload).kind, 'test'); });
 [pub] = run('result', { statusCode: 201, phone: 'p1', isTest: true, payload: '' });
 check('the test result reaches ZigDash', () => assert.deepEqual(JSON.parse(topicOf(pub)['zigdash/alerts/test/result']).ok, true));
+
+// 12b. New keys in a new config: the cached token is not reused.
+const before = reqs[0].headers.Authorization;
+const k2 = crypto.generateKeyPairSync('ec', { namedCurve: 'P-256' });
+const j2 = k2.publicKey.export({ format: 'jwk' });
+const pub2 = Buffer.concat([Buffer.from([4]), Buffer.from(j2.x, 'base64url'), Buffer.from(j2.y, 'base64url')]).toString('base64url');
+run('ingest', { topic: 'zigdash/alerts/config', payload: JSON.stringify({ ...config, vapid: { publicKey: pub2, privateJwk: k2.privateKey.export({ format: 'jwk' }) } }) });
+[ev] = run('test', { topic: 'zigdash/alerts/test', payload: '{"phone":"p1"}' });
+[reqs] = run('push', ev[0]);
+check('a new key pair signs a new token with the new public key', () => {
+    const a = reqs[0].headers.Authorization;
+    assert.notEqual(a.match(/t=([^,]+)/)[1], before.match(/t=([^,]+)/)[1]);
+    assert.equal(a.match(/k=(.+)$/)[1], pub2);
+    const [h, p, sg] = a.match(/t=([^,]+)/)[1].split('.');
+    assert.ok(crypto.verify('sha256', Buffer.from(h + '.' + p), { key: k2.publicKey, dsaEncoding: 'ieee-p1363' }, Buffer.from(sg, 'base64url')));
+});
 
 // 13. Config removed: everything stops.
 run('ingest', { topic: 'zigdash/alerts/config', payload: '' });

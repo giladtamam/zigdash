@@ -2520,4 +2520,155 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'דלתות, חלונות וסוללות';
+
+  @override
+  String get alertsTitle => 'התראות';
+
+  @override
+  String get alertsStatusOn => 'ההתראות פועלות';
+
+  @override
+  String get alertsStatusPaused => 'ההתראות מושהות: Node-RED על הרכזת לא רץ';
+
+  @override
+  String get alertsStatusNotSetUp => 'לא הוגדר';
+
+  @override
+  String get alertsStatusPhoneOff => 'הטלפון הזה לא מקבל התראות';
+
+  @override
+  String get alertsIntro =>
+      'קבלו התראה בטלפון הזה כשמדווחים על נזילה, עשן, דלת פתוחה או סוללה חלשה, גם כש-ZigDash סגורה. Node-RED על הרכזת עוקב אחרי המכשירים; ZigDash מגדירה אותו.';
+
+  @override
+  String get alertsSetUpHub => 'הגדרת התראות על הרכזת';
+
+  @override
+  String get alertsHubInstalled => 'זרימת ההתראות מותקנת על הרכזת';
+
+  @override
+  String get alertsHubUpdated => 'זרימת ההתראות על הרכזת מעודכנת';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED מבקש התחברות, לכן ייבאו את הזרימה ידנית:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'פתחו את Node-RED על הרכזת, בחרו Import, הדביקו את הזרימה שהועתקה, בחרו את ה-broker שלכם בצומת ה-broker ולחצו Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'העתקת הזרימה';
+
+  @override
+  String get alertsFlowCopied => 'הזרימה הועתקה';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'התראות דורשות Node-RED על הרכזת, ושום דבר לא עונה בפורט 1880 בכתובת $host. ב-SMLIGHT SMHUB מתקינים אותו תחת Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED דחה את הזרימה';
+
+  @override
+  String get alertsRecent => 'התראות אחרונות';
+
+  @override
+  String get alertsRecentNone => 'עדיין אין';
+
+  @override
+  String get alertsYourAlerts => 'ההתראות שלכם';
+
+  @override
+  String get alertsAdd => 'הוספת התראה';
+
+  @override
+  String get alertsNotificationsOnThisPhone => 'התראות בטלפון הזה';
+
+  @override
+  String get alertsNoGoogle =>
+      'בטלפון הזה אין שירותי Google, לכן ZigDash לא יכולה לקבל כאן הודעות דחיפה.';
+
+  @override
+  String get alertsSendTest => 'שליחת התראת בדיקה';
+
+  @override
+  String get alertsTestSent => 'הבדיקה נשלחה. היא אמורה להגיע עכשיו.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'הרכזת לא הצליחה לשלוח ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut => 'אין תשובה מהרכזת. האם זרימת ההתראות רצה?';
+
+  @override
+  String get alertsNotConnected => 'אין חיבור לרכזת';
+
+  @override
+  String get alertsTurnOff => 'כיבוי ההתראות';
+
+  @override
+  String get alertsTurnOffBody => 'ההתראות ייפסקו בכל הטלפונים של הבית הזה.';
+
+  @override
+  String get alertKindLeak => 'נזילה';
+
+  @override
+  String get alertKindSmoke => 'עשן';
+
+  @override
+  String get alertKindOpened => 'דלת או חלון נפתחו';
+
+  @override
+  String get alertKindBattery => 'סוללה חלשה';
+
+  @override
+  String get alertsEditTitle => 'התראה';
+
+  @override
+  String get alertsKind => 'מה';
+
+  @override
+  String get alertsDevices => 'מכשירים';
+
+  @override
+  String get alertsNoDevicesForKind => 'אף מכשיר בבית הזה לא מדווח על כך.';
+
+  @override
+  String get alertsHours => 'רק בין';
+
+  @override
+  String get alertsHoursAny => 'בכל שעה';
+
+  @override
+  String get alertsHoursFrom => 'מ-';
+
+  @override
+  String get alertsHoursTo => 'עד';
+
+  @override
+  String get alertsThreshold => 'סוללה מתחת ל-';
+
+  @override
+  String get alertsDelete => 'מחיקת ההתראה';
+
+  @override
+  String get alertsNotifyMe => 'להודיע לי…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'התראות ל-ZigDash מוצפנות מקצה לקצה: שירות הדחיפה של Google מעביר אותן אך לא יכול לקרוא אותן. שום דבר אחר לא יוצא מהרכזת.';
+
+  @override
+  String get alertsRestricted =>
+      'Android עלול לעצור את ZigDash ברקע, ואז התראות יגיעו באיחור או לא יגיעו. אפשרו ריצה ברקע בהגדרות Android (בסמסונג: סוללה › אפליקציות שלעולם לא ישנות).';
+
+  @override
+  String get alertsOpenSettings => 'פתיחת הגדרות Android';
+
+  @override
+  String get alertsOff => 'כבויה';
 }

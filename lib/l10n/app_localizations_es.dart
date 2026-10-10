@@ -2550,4 +2550,160 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'Puertas, ventanas y baterías';
+
+  @override
+  String get alertsTitle => 'Alertas';
+
+  @override
+  String get alertsStatusOn => 'Las alertas están activas';
+
+  @override
+  String get alertsStatusPaused =>
+      'Alertas en pausa: Node-RED en el hub no está en marcha';
+
+  @override
+  String get alertsStatusNotSetUp => 'Sin configurar';
+
+  @override
+  String get alertsStatusPhoneOff => 'Este móvil no recibe notificaciones';
+
+  @override
+  String get alertsIntro =>
+      'Recibe una notificación en este móvil cuando se detecte una fuga, humo, una puerta abierta o una batería baja, incluso con ZigDash cerrado. Node-RED en tu hub vigila los dispositivos; ZigDash lo configura.';
+
+  @override
+  String get alertsSetUpHub => 'Configurar alertas en el hub';
+
+  @override
+  String get alertsHubInstalled =>
+      'El flujo de alertas está instalado en el hub';
+
+  @override
+  String get alertsHubUpdated => 'El flujo de alertas del hub está actualizado';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED pide iniciar sesión, así que importa el flujo a mano:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'Abre Node-RED en el hub, elige Importar, pega el flujo copiado, elige tu broker en el nodo del broker y pulsa Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'Copiar el flujo';
+
+  @override
+  String get alertsFlowCopied => 'Flujo copiado';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'Las alertas necesitan Node-RED en el hub, y nada responde en el puerto 1880 de $host. En un SMLIGHT SMHUB, instálalo en Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED rechazó el flujo';
+
+  @override
+  String get alertsRecent => 'Alertas recientes';
+
+  @override
+  String get alertsRecentNone => 'Nada todavía';
+
+  @override
+  String get alertsYourAlerts => 'Tus alertas';
+
+  @override
+  String get alertsAdd => 'Añadir alerta';
+
+  @override
+  String get alertsNotificationsOnThisPhone => 'Notificaciones en este móvil';
+
+  @override
+  String get alertsNoGoogle =>
+      'Este móvil no tiene servicios de Google, así que ZigDash no puede recibir pushes aquí.';
+
+  @override
+  String get alertsSendTest => 'Enviar notificación de prueba';
+
+  @override
+  String get alertsTestSent => 'Prueba enviada. Debería llegar ahora.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'El hub no pudo enviarla ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut =>
+      'El hub no responde. ¿Está en marcha el flujo de alertas?';
+
+  @override
+  String get alertsNotConnected => 'Sin conexión con el hub';
+
+  @override
+  String get alertsTurnOff => 'Desactivar las alertas';
+
+  @override
+  String get alertsTurnOffBody =>
+      'Las alertas se detienen en todos los móviles de esta casa.';
+
+  @override
+  String get alertKindLeak => 'Fuga';
+
+  @override
+  String get alertKindSmoke => 'Humo';
+
+  @override
+  String get alertKindOpened => 'Puerta o ventana abierta';
+
+  @override
+  String get alertKindBattery => 'Batería baja';
+
+  @override
+  String get alertsEditTitle => 'Alerta';
+
+  @override
+  String get alertsKind => 'Qué';
+
+  @override
+  String get alertsDevices => 'Dispositivos';
+
+  @override
+  String get alertsNoDevicesForKind =>
+      'Ningún dispositivo de esta casa informa de eso.';
+
+  @override
+  String get alertsHours => 'Solo entre';
+
+  @override
+  String get alertsHoursAny => 'A cualquier hora';
+
+  @override
+  String get alertsHoursFrom => 'Desde';
+
+  @override
+  String get alertsHoursTo => 'Hasta';
+
+  @override
+  String get alertsThreshold => 'Batería por debajo de';
+
+  @override
+  String get alertsDelete => 'Eliminar alerta';
+
+  @override
+  String get alertsNotifyMe => 'Avisarme…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'Las alertas a ZigDash van cifradas de extremo a extremo: el servicio push de Google las transporta pero no puede leerlas. Nada más sale de tu hub.';
+
+  @override
+  String get alertsRestricted =>
+      'Android puede detener ZigDash en segundo plano, y las notificaciones llegarían tarde o se perderían. Permite que se ejecute en segundo plano en los ajustes de Android (en Samsung: Batería › Apps que nunca se suspenden).';
+
+  @override
+  String get alertsOpenSettings => 'Abrir ajustes de Android';
+
+  @override
+  String get alertsOff => 'Desactivada';
 }

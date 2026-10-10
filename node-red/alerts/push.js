@@ -21,17 +21,19 @@ const text = () => {
 if (cfg.vapid && cfg.vapid.privateJwk) {
     const key = crypto.createPrivateKey({ key: cfg.vapid.privateJwk, format: 'jwk' });
     const enc = o => Buffer.from(JSON.stringify(o)).toString('base64url');
+    // Signed tokens are kept for a while, per push server and per key: a
+    // token signed with an old key pair would be refused ("invalid JWT").
     const jwts = flow.get('jwts') || {};
     const nowS = Math.floor(Date.now() / 1000);
     const jwtFor = origin => {
-        const c = jwts[origin];
+        const c = jwts[origin + '|' + cfg.vapid.publicKey];
         if (c && c.exp - nowS > 3600) return c.jwt;
         const exp = nowS + 12 * 3600;
         const unsigned = enc({ typ: 'JWT', alg: 'ES256' }) + '.' +
             enc({ aud: origin, exp, sub: 'mailto:alerts@zigdash.app' });
         const sig = crypto.sign('sha256', Buffer.from(unsigned), { key, dsaEncoding: 'ieee-p1363' }).toString('base64url');
-        jwts[origin] = { jwt: unsigned + '.' + sig, exp };
-        return jwts[origin].jwt;
+        jwts[origin + '|' + cfg.vapid.publicKey] = { jwt: unsigned + '.' + sig, exp };
+        return jwts[origin + '|' + cfg.vapid.publicKey].jwt;
     };
     const plain = Buffer.from(JSON.stringify(ev));
     for (const p of cfg.phones || []) {

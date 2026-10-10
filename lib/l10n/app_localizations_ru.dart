@@ -2556,4 +2556,159 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'Двери, окна и батареи';
+
+  @override
+  String get alertsTitle => 'Тревоги';
+
+  @override
+  String get alertsStatusOn => 'Тревоги включены';
+
+  @override
+  String get alertsStatusPaused =>
+      'Тревоги приостановлены: Node-RED на хабе не запущен';
+
+  @override
+  String get alertsStatusNotSetUp => 'Не настроено';
+
+  @override
+  String get alertsStatusPhoneOff => 'Этот телефон не получает уведомления';
+
+  @override
+  String get alertsIntro =>
+      'Получайте уведомление на этом телефоне о протечке, дыме, открытой двери или низком заряде, даже когда ZigDash закрыт. Node-RED на вашем хабе следит за устройствами; ZigDash его настраивает.';
+
+  @override
+  String get alertsSetUpHub => 'Настроить тревоги на хабе';
+
+  @override
+  String get alertsHubInstalled => 'Поток тревог установлен на хабе';
+
+  @override
+  String get alertsHubUpdated => 'Поток тревог на хабе обновлён';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED требует входа, поэтому импортируйте поток вручную:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'Откройте Node-RED на хабе, выберите Import, вставьте скопированный поток, выберите свой брокер в узле брокера и нажмите Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'Скопировать поток';
+
+  @override
+  String get alertsFlowCopied => 'Поток скопирован';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'Для тревог нужен Node-RED на хабе, но на порту 1880 по адресу $host никто не отвечает. На SMLIGHT SMHUB установите его в разделе Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED отклонил поток';
+
+  @override
+  String get alertsRecent => 'Последние тревоги';
+
+  @override
+  String get alertsRecentNone => 'Пока ничего';
+
+  @override
+  String get alertsYourAlerts => 'Ваши тревоги';
+
+  @override
+  String get alertsAdd => 'Добавить тревогу';
+
+  @override
+  String get alertsNotificationsOnThisPhone => 'Уведомления на этом телефоне';
+
+  @override
+  String get alertsNoGoogle =>
+      'На этом телефоне нет сервисов Google, поэтому ZigDash не может получать push здесь.';
+
+  @override
+  String get alertsSendTest => 'Отправить тестовое уведомление';
+
+  @override
+  String get alertsTestSent => 'Тест отправлен. Он должен прийти сейчас.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'Хаб не смог отправить ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut =>
+      'Нет ответа от хаба. Запущен ли поток тревог?';
+
+  @override
+  String get alertsNotConnected => 'Нет связи с хабом';
+
+  @override
+  String get alertsTurnOff => 'Выключить тревоги';
+
+  @override
+  String get alertsTurnOffBody =>
+      'Тревоги прекратятся на всех телефонах этого дома.';
+
+  @override
+  String get alertKindLeak => 'Протечка';
+
+  @override
+  String get alertKindSmoke => 'Дым';
+
+  @override
+  String get alertKindOpened => 'Открыта дверь или окно';
+
+  @override
+  String get alertKindBattery => 'Низкий заряд';
+
+  @override
+  String get alertsEditTitle => 'Тревога';
+
+  @override
+  String get alertsKind => 'Что';
+
+  @override
+  String get alertsDevices => 'Устройства';
+
+  @override
+  String get alertsNoDevicesForKind =>
+      'Ни одно устройство этого дома такого не сообщает.';
+
+  @override
+  String get alertsHours => 'Только между';
+
+  @override
+  String get alertsHoursAny => 'В любое время';
+
+  @override
+  String get alertsHoursFrom => 'С';
+
+  @override
+  String get alertsHoursTo => 'До';
+
+  @override
+  String get alertsThreshold => 'Заряд ниже';
+
+  @override
+  String get alertsDelete => 'Удалить тревогу';
+
+  @override
+  String get alertsNotifyMe => 'Сообщать мне…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'Тревоги в ZigDash зашифрованы сквозным шифрованием: push-сервис Google их доставляет, но не может прочитать. Больше ничего не покидает ваш хаб.';
+
+  @override
+  String get alertsRestricted =>
+      'Android может останавливать ZigDash в фоне, и уведомления придут поздно или не придут. Разрешите работу в фоне в настройках Android (на Samsung: Батарея › Никогда не переводить в спящий режим).';
+
+  @override
+  String get alertsOpenSettings => 'Открыть настройки Android';
+
+  @override
+  String get alertsOff => 'Выкл.';
 }

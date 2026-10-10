@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/database/tables/panels.dart';
+import '../../alerts/alert_editor_screen.dart';
+import '../../alerts/alerts_screen.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
 import '../../features/onboarding/setup/setup_screen.dart';
@@ -256,6 +258,21 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'home/:id',
             builder: (_, state) => HomeSettingsScreen(
                 connectionId: state.pathParameters['id']!),
+            routes: [
+              GoRoute(
+                path: 'alerts',
+                builder: (_, state) =>
+                    AlertsScreen(connectionId: state.pathParameters['id']!),
+                routes: [
+                  GoRoute(
+                    path: ':alertId',
+                    builder: (_, state) => AlertEditorScreen(
+                        connectionId: state.pathParameters['id']!,
+                        alertId: state.pathParameters['alertId']!),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

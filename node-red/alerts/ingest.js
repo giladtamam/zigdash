@@ -13,6 +13,7 @@ if (empty) {
 const cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());
 const index = {};
 for (const a of cfg.alerts || []) {
+    if (a.enabled === false) continue;
     for (const d of a.devices || []) {
         if (!d.topic) continue;
         (index[d.topic] = index[d.topic] || []).push({
@@ -24,6 +25,7 @@ for (const a of cfg.alerts || []) {
 }
 flow.set('cfg', cfg);
 flow.set('index', index);
+flow.set('jwts', {}); // a new config may carry new keys
 // Forget devices that are no longer watched.
 const mem = flow.get('mem') || {};
 let changed = false;

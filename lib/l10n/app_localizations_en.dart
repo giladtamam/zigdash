@@ -2538,4 +2538,157 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'Doors, windows and batteries';
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get alertsStatusOn => 'Alerts are on';
+
+  @override
+  String get alertsStatusPaused =>
+      'Alerts are paused: Node-RED on the hub isn\'t running';
+
+  @override
+  String get alertsStatusNotSetUp => 'Not set up';
+
+  @override
+  String get alertsStatusPhoneOff => 'This phone isn\'t getting notifications';
+
+  @override
+  String get alertsIntro =>
+      'Get a notification on this phone when a leak, smoke, an opened door or a low battery is reported, even with ZigDash closed. Node-RED on your hub watches the devices; ZigDash sets it up.';
+
+  @override
+  String get alertsSetUpHub => 'Set up alerts on the hub';
+
+  @override
+  String get alertsHubInstalled => 'The alerts flow is installed on the hub';
+
+  @override
+  String get alertsHubUpdated => 'The alerts flow on the hub is up to date';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED asks for a login, so import the flow by hand:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'Open Node-RED on the hub, choose Import, paste the copied flow, pick your broker in the broker node, and Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'Copy the flow';
+
+  @override
+  String get alertsFlowCopied => 'Flow copied';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'Alerts need Node-RED on the hub, and nothing answers on port 1880 at $host. On an SMLIGHT SMHUB, install it under Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED refused the flow';
+
+  @override
+  String get alertsRecent => 'Recent alerts';
+
+  @override
+  String get alertsRecentNone => 'Nothing yet';
+
+  @override
+  String get alertsYourAlerts => 'Your alerts';
+
+  @override
+  String get alertsAdd => 'Add alert';
+
+  @override
+  String get alertsNotificationsOnThisPhone => 'Notifications on this phone';
+
+  @override
+  String get alertsNoGoogle =>
+      'This phone has no Google services, so ZigDash can\'t receive pushes here.';
+
+  @override
+  String get alertsSendTest => 'Send test notification';
+
+  @override
+  String get alertsTestSent => 'Test sent. It should arrive now.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'The hub couldn\'t send it ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut =>
+      'No answer from the hub. Is the alerts flow running?';
+
+  @override
+  String get alertsNotConnected => 'Not connected to the hub';
+
+  @override
+  String get alertsTurnOff => 'Turn alerts off';
+
+  @override
+  String get alertsTurnOffBody => 'Alerts stop for every phone of this Home.';
+
+  @override
+  String get alertKindLeak => 'Leak';
+
+  @override
+  String get alertKindSmoke => 'Smoke';
+
+  @override
+  String get alertKindOpened => 'Door or window opened';
+
+  @override
+  String get alertKindBattery => 'Battery low';
+
+  @override
+  String get alertsEditTitle => 'Alert';
+
+  @override
+  String get alertsKind => 'What';
+
+  @override
+  String get alertsDevices => 'Devices';
+
+  @override
+  String get alertsNoDevicesForKind => 'No device of this Home reports that.';
+
+  @override
+  String get alertsHours => 'Only between';
+
+  @override
+  String get alertsHoursAny => 'Any time';
+
+  @override
+  String get alertsHoursFrom => 'From';
+
+  @override
+  String get alertsHoursTo => 'To';
+
+  @override
+  String get alertsThreshold => 'Battery below';
+
+  @override
+  String get alertsDelete => 'Delete alert';
+
+  @override
+  String get alertsNotifyMe => 'Notify me…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'Alerts to ZigDash are encrypted end to end: Google\'s push service carries them but can\'t read them. Nothing else leaves your hub.';
+
+  @override
+  String get alertsRestricted =>
+      'Android may stop ZigDash in the background, so notifications could be late or missed. Allow it to run in the background in Android\'s settings (on Samsung: Battery › Never sleeping apps).';
+
+  @override
+  String get alertsOpenSettings => 'Open Android settings';
+
+  @override
+  String get alertsOff => 'Off';
 }

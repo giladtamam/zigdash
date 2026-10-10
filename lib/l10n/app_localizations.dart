@@ -4645,6 +4645,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Doors, windows and batteries'**
   String get noticesChannelDescription;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alertsTitle;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts are on'**
+  String get alertsStatusOn;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts are paused: Node-RED on the hub isn\'t running'**
+  String get alertsStatusPaused;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set up'**
+  String get alertsStatusNotSetUp;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone isn\'t getting notifications'**
+  String get alertsStatusPhoneOff;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a notification on this phone when a leak, smoke, an opened door or a low battery is reported, even with ZigDash closed. Node-RED on your hub watches the devices; ZigDash sets it up.'**
+  String get alertsIntro;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up alerts on the hub'**
+  String get alertsSetUpHub;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'The alerts flow is installed on the hub'**
+  String get alertsHubInstalled;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'The alerts flow on the hub is up to date'**
+  String get alertsHubUpdated;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Node-RED asks for a login, so import the flow by hand:'**
+  String get alertsHubNeedsLogin;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Node-RED on the hub, choose Import, paste the copied flow, pick your broker in the broker node, and Deploy.'**
+  String get alertsHubManualSteps;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the flow'**
+  String get alertsCopyFlow;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Flow copied'**
+  String get alertsFlowCopied;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts need Node-RED on the hub, and nothing answers on port 1880 at {host}. On an SMLIGHT SMHUB, install it under Apps.'**
+  String alertsNoNodeRed(Object host);
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Node-RED refused the flow'**
+  String get alertsHubFailed;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent alerts'**
+  String get alertsRecent;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get alertsRecentNone;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your alerts'**
+  String get alertsYourAlerts;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Add alert'**
+  String get alertsAdd;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications on this phone'**
+  String get alertsNotificationsOnThisPhone;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone has no Google services, so ZigDash can\'t receive pushes here.'**
+  String get alertsNoGoogle;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Send test notification'**
+  String get alertsSendTest;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Test sent. It should arrive now.'**
+  String get alertsTestSent;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'The hub couldn\'t send it ({status})'**
+  String alertsTestFailed(Object status);
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'No answer from the hub. Is the alerts flow running?'**
+  String get alertsTestTimedOut;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to the hub'**
+  String get alertsNotConnected;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn alerts off'**
+  String get alertsTurnOff;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts stop for every phone of this Home.'**
+  String get alertsTurnOffBody;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Leak'**
+  String get alertKindLeak;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoke'**
+  String get alertKindSmoke;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Door or window opened'**
+  String get alertKindOpened;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get alertKindBattery;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert'**
+  String get alertsEditTitle;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'What'**
+  String get alertsKind;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get alertsDevices;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'No device of this Home reports that.'**
+  String get alertsNoDevicesForKind;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Only between'**
+  String get alertsHours;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get alertsHoursAny;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get alertsHoursFrom;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get alertsHoursTo;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery below'**
+  String get alertsThreshold;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete alert'**
+  String get alertsDelete;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify me…'**
+  String get alertsNotifyMe;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts to ZigDash are encrypted end to end: Google\'s push service carries them but can\'t read them. Nothing else leaves your hub.'**
+  String get alertsWhatLeaves;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Android may stop ZigDash in the background, so notifications could be late or missed. Allow it to run in the background in Android\'s settings (on Samsung: Battery › Never sleeping apps).'**
+  String get alertsRestricted;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Android settings'**
+  String get alertsOpenSettings;
+
+  /// Alerts screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get alertsOff;
 }
 
 class _AppLocalizationsDelegate

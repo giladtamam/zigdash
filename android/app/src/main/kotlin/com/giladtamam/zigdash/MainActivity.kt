@@ -32,6 +32,10 @@ class MainActivity : FlutterActivity() {
                     call.argument<String>("name") ?: ""))
                 "generateVapidKeys" -> result.success(generateVapidKeys())
                 "timeZoneId" -> result.success(java.util.TimeZone.getDefault().id)
+                // Alerts: a background-restricted app gets no pushes (alerts-2.3.md).
+                "isBackgroundRestricted" -> result.success(
+                    Build.VERSION.SDK_INT >= 28 &&
+                        getSystemService(android.app.ActivityManager::class.java).isBackgroundRestricted)
                 "refreshTiles" -> {
                     for (c in listOf(ShortcutTile1::class.java, ShortcutTile2::class.java,
                             ShortcutTile3::class.java, ShortcutTile4::class.java)) {

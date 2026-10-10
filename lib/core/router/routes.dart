@@ -13,6 +13,10 @@ class Routes {
   static const settingsLanguage = '/settings/language';
   static String settingsHome(String connectionId) =>
       '/settings/home/$connectionId';
+  static String homeAlerts(String connectionId) =>
+      '/settings/home/$connectionId/alerts';
+  static String homeAlertEdit(String connectionId, String alertId) =>
+      '/settings/home/$connectionId/alerts/$alertId';
   static const help = '/help';
   static const getHelp = '/get-help';
 

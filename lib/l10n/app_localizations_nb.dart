@@ -2540,4 +2540,158 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get noticesChannelDescription => 'Dører, vinduer og batterier';
+
+  @override
+  String get alertsTitle => 'Varsler';
+
+  @override
+  String get alertsStatusOn => 'Varsler er på';
+
+  @override
+  String get alertsStatusPaused =>
+      'Varsler er satt på pause: Node-RED på huben kjører ikke';
+
+  @override
+  String get alertsStatusNotSetUp => 'Ikke satt opp';
+
+  @override
+  String get alertsStatusPhoneOff => 'Denne telefonen får ikke varsler';
+
+  @override
+  String get alertsIntro =>
+      'Få et varsel på denne telefonen ved lekkasje, røyk, en åpnet dør eller lavt batteri, selv når ZigDash er lukket. Node-RED på huben din passer på enhetene; ZigDash setter det opp.';
+
+  @override
+  String get alertsSetUpHub => 'Sett opp varsler på huben';
+
+  @override
+  String get alertsHubInstalled => 'Varselflyten er installert på huben';
+
+  @override
+  String get alertsHubUpdated => 'Varselflyten på huben er oppdatert';
+
+  @override
+  String get alertsHubNeedsLogin =>
+      'Node-RED ber om innlogging, så importer flyten manuelt:';
+
+  @override
+  String get alertsHubManualSteps =>
+      'Åpne Node-RED på huben, velg Import, lim inn den kopierte flyten, velg brokeren din i broker-noden og trykk Deploy.';
+
+  @override
+  String get alertsCopyFlow => 'Kopier flyten';
+
+  @override
+  String get alertsFlowCopied => 'Flyt kopiert';
+
+  @override
+  String alertsNoNodeRed(Object host) {
+    return 'Varsler trenger Node-RED på huben, og ingenting svarer på port 1880 hos $host. På en SMLIGHT SMHUB installerer du det under Apps.';
+  }
+
+  @override
+  String get alertsHubFailed => 'Node-RED avviste flyten';
+
+  @override
+  String get alertsRecent => 'Siste varsler';
+
+  @override
+  String get alertsRecentNone => 'Ingenting ennå';
+
+  @override
+  String get alertsYourAlerts => 'Varslene dine';
+
+  @override
+  String get alertsAdd => 'Legg til varsel';
+
+  @override
+  String get alertsNotificationsOnThisPhone => 'Varsler på denne telefonen';
+
+  @override
+  String get alertsNoGoogle =>
+      'Denne telefonen har ikke Google-tjenester, så ZigDash kan ikke motta push her.';
+
+  @override
+  String get alertsSendTest => 'Send testvarsel';
+
+  @override
+  String get alertsTestSent => 'Test sendt. Det bør komme nå.';
+
+  @override
+  String alertsTestFailed(Object status) {
+    return 'Huben klarte ikke å sende det ($status)';
+  }
+
+  @override
+  String get alertsTestTimedOut => 'Ingen svar fra huben. Kjører varselflyten?';
+
+  @override
+  String get alertsNotConnected => 'Ikke koblet til huben';
+
+  @override
+  String get alertsTurnOff => 'Slå av varsler';
+
+  @override
+  String get alertsTurnOffBody =>
+      'Varslene stopper for alle telefoner i dette hjemmet.';
+
+  @override
+  String get alertKindLeak => 'Lekkasje';
+
+  @override
+  String get alertKindSmoke => 'Røyk';
+
+  @override
+  String get alertKindOpened => 'Dør eller vindu åpnet';
+
+  @override
+  String get alertKindBattery => 'Lavt batteri';
+
+  @override
+  String get alertsEditTitle => 'Varsel';
+
+  @override
+  String get alertsKind => 'Hva';
+
+  @override
+  String get alertsDevices => 'Enheter';
+
+  @override
+  String get alertsNoDevicesForKind =>
+      'Ingen enhet i dette hjemmet rapporterer det.';
+
+  @override
+  String get alertsHours => 'Bare mellom';
+
+  @override
+  String get alertsHoursAny => 'Når som helst';
+
+  @override
+  String get alertsHoursFrom => 'Fra';
+
+  @override
+  String get alertsHoursTo => 'Til';
+
+  @override
+  String get alertsThreshold => 'Batteri under';
+
+  @override
+  String get alertsDelete => 'Slett varsel';
+
+  @override
+  String get alertsNotifyMe => 'Varsle meg…';
+
+  @override
+  String get alertsWhatLeaves =>
+      'Varsler til ZigDash er ende-til-ende-kryptert: Googles push-tjeneste frakter dem, men kan ikke lese dem. Ingenting annet forlater huben.';
+
+  @override
+  String get alertsRestricted =>
+      'Android kan stoppe ZigDash i bakgrunnen, slik at varsler kommer sent eller uteblir. Tillat kjøring i bakgrunnen i Android-innstillingene (på Samsung: Batteri › Apper som aldri sover).';
+
+  @override
+  String get alertsOpenSettings => 'Åpne Android-innstillinger';
+
+  @override
+  String get alertsOff => 'Av';
 }

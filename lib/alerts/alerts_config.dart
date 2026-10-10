@@ -260,6 +260,7 @@ class AlertRule {
     this.from,
     this.to,
     this.threshold = 20,
+    this.enabled = true,
   });
   final String id;
   final AlertKind kind;
@@ -268,12 +269,16 @@ class AlertRule {
   final String? to;
   final int threshold;
 
+  /// Off: kept, shown, but the hub ignores it.
+  final bool enabled;
+
   Map<String, Object?> toJson() => {
         'id': id,
         'kind': kind.name,
         'devices': [for (final d in devices) d.toJson()],
         if (from != null && to != null) ...{'from': from, 'to': to},
         if (kind == AlertKind.battery) 'threshold': threshold,
+        'enabled': enabled,
       };
   static AlertRule fromJson(Map<String, dynamic> j) => AlertRule(
         id: j['id'] as String? ?? '',
@@ -285,6 +290,7 @@ class AlertRule {
         from: j['from'] as String?,
         to: j['to'] as String?,
         threshold: (j['threshold'] as num?)?.toInt() ?? 20,
+        enabled: j['enabled'] != false,
       );
 
   AlertRule copyWith(
@@ -292,7 +298,8 @@ class AlertRule {
           List<AlertDevice>? devices,
           String? Function()? from,
           String? Function()? to,
-          int? threshold}) =>
+          int? threshold,
+          bool? enabled}) =>
       AlertRule(
         id: id,
         kind: kind ?? this.kind,
@@ -300,5 +307,6 @@ class AlertRule {
         from: from != null ? from() : this.from,
         to: to != null ? to() : this.to,
         threshold: threshold ?? this.threshold,
+        enabled: enabled ?? this.enabled,
       );
 }
