@@ -7,6 +7,7 @@ import 'package:mqtt_client/mqtt_client.dart' as mc;
 import 'package:typed_data/typed_data.dart' as typed;
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
+import 'package:zigdash/mqtt/connection_failure.dart';
 import 'package:zigdash/mqtt/endpoint.dart';
 import 'package:zigdash/mqtt/mqtt_manager.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
@@ -137,6 +138,43 @@ void main() {
       );
       expect(manager.status, MqttStatus.error);
 
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('lastFailure keeps the local failure kind, then clears on connect', () {
+    fakeAsync((async) {
+      final manager = MqttManager(
+        config: configWithRemote(),
+        password: '',
+        clientFactory: factoryFor({
+          localHost: _Behavior.hang,
+          remoteHost: _Behavior.fail,
+        }),
+      );
+      expect(manager.lastFailure, isNull);
+      manager.connect();
+      async.elapse(const Duration(milliseconds: 8100));
+      expect(manager.status, MqttStatus.error);
+      // The remote refusal doesn't overwrite why the local address failed.
+      expect(manager.lastFailure, FailureKind.timedOut);
+      manager.dispose();
+      async.flushMicrotasks();
+    });
+    fakeAsync((async) {
+      final manager = MqttManager(
+        config: configWithRemote(),
+        password: '',
+        clientFactory: factoryFor({
+          localHost: _Behavior.succeed,
+          remoteHost: _Behavior.succeed,
+        }),
+      );
+      manager.connect();
+      async.elapse(const Duration(milliseconds: 100));
+      expect(manager.status, MqttStatus.connected);
+      expect(manager.lastFailure, isNull);
       manager.dispose();
       async.flushMicrotasks();
     });
