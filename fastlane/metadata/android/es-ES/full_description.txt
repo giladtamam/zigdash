@@ -4,12 +4,9 @@ Requiere Zigbee2MQTT en marcha y un broker MQTT en tu red. ¿Aún no tienes Zigb
 
 DETECCIÓN AUTOMÁTICA PARA ZIGBEE2MQTT
 • Escanea tu bridge Zigbee2MQTT y crea un panel por cada dispositivo con un solo toque, sin configurar topics a mano.
-• Extracción por ruta JSON en cada panel, para que ZigDash entienda los mensajes reales de Zigbee2MQTT desde el principio.
-• Topics personalizados, QoS y retain por panel cuando quieras control total.
 
 CONÉCTATE A CUALQUIER BRÓKER
 • Cualquier bróker MQTT: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• La detección de brókers escanea tu red local automáticamente.
 • Usuario y contraseña en almacenamiento seguro respaldado por hardware, nunca en texto plano.
 • Estado en vivo con reconexión automática (backoff exponencial).
 • Compatible con Tailscale: acceso remoto por tu malla WireGuard, sin abrir puertos.
@@ -24,6 +21,15 @@ ACCESOS DIRECTOS: SIN ABRIR LA APP
 • Control de dispositivos de Android: cada dispositivo de tus paneles como tarjeta, con deslizadores de brillo y posición.
 • Widgets en la pantalla de inicio: un dispositivo, una escena o un grupo de hasta cinco dispositivos con botones de escena.
 
+ALERTAS, INCLUSO CON LA APP CERRADA
+
+• Fuga, humo, una puerta abierta de noche o batería baja: Node-RED en tu hub vigila, ZigDash lo configura con un toque y la notificación llega a tu móvil por el push de Google, cifrada de extremo a extremo. Sin cuenta, sin app extra, sin gastar batería.
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMATIZACIÓN QUE FUNCIONA CON EL MÓVIL APAGADO
 • Paneles de programación: temporizadores diarios de abrir/cerrar guardados como configuración MQTT retenida.
 • Reglas de autoapagado: apaga un dispositivo N segundos después de encenderse, ideal para ventiladores, bombas y luces temporizadas.
@@ -33,7 +39,7 @@ PULIDO PARA MÓVIL Y TABLET
 • Material 3 con tema claro, oscuro y del sistema; color dinámico Material You en Android 12+.
 • Móvil y tablet, vertical y horizontal: ideal como panel domótico de pared.
 • Disponible en español, inglés, francés, alemán, neerlandés, sueco, noruego, ruso, polaco, portugués y hebreo, con RTL automático.
-• Cuadrícula adaptable (ancho completo, mitad, tercio), bloqueo del panel, copia de seguridad y restauración en JSON portable, escenas.
+• Cuadrícula adaptable, bloqueo del panel, copia de seguridad y restauración en JSON portable, escenas.
 
 100 % PRIVADO. SIN NUBE.
 • Sin anuncios. Sin cuenta. Datos de uso anónimos solo si lo aceptas.

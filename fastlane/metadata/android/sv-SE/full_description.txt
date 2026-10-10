@@ -4,8 +4,6 @@ Kräver ett körande Zigbee2MQTT och en MQTT-broker i ditt nätverk. Inget Zigbe
 
 AUTOMATISK IDENTIFIERING FÖR ZIGBEE2MQTT
 • Skanna din Zigbee2MQTT-bridge och skapa en panel för varje enhet med ett tryck, utan att koppla topics manuellt.
-• JSON-sökvägsextraktion i varje panel, så ZigDash förstår riktiga Zigbee2MQTT-meddelanden direkt.
-• Egna topics, QoS och retain per panel när du vill ha full kontroll.
 
 ANSLUT TILL VILKEN BROKER SOM HELST
 • Alla MQTT-brokers: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
@@ -24,6 +22,16 @@ GENVÄGAR – UTAN ATT ÖPPNA APPEN
 • Androids enhetsstyrning: varje enhet på dina dashboards som ett kort, med reglage för ljusstyrka och position.
 • Widgetar på hemskärmen: en enhet, en scen eller en grupp med upp till fem enheter och scenknappar.
 
+LARM, ÄVEN NÄR APPEN ÄR STÄNGD
+
+• Läcka, rök, en dörr som öppnas på natten eller lågt batteri: Node-RED på hubben vakar, ZigDash ställer in det med ett tryck, och aviseringen når din telefon via Googles push, totalsträckskrypterad. Inget konto, ingen extra app, ingen batteridränering.
+
+• Dela ett hems larm med familjen, eller få dem med ntfy-appen på en telefon utan Google-tjänster.
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMATION – KÖRS ÄVEN NÄR MOBILEN ÄR AV
 • Schemapaneler: dagliga öppna/stäng-timers sparade som retained MQTT-konfiguration.
 • Auto-av-regler: stäng av en enhet N sekunder efter att den slagits på, perfekt för fläktar, pumpar och tidsstyrd belysning.
@@ -33,7 +41,7 @@ GENOMARBETAD – MOBIL OCH SURFPLATTA
 • Material 3 med ljust, mörkt och systemtema; Material You dynamiska färger på Android 12+.
 • Mobil och surfplatta, stående och liggande, perfekt som väggmonterad hemautomationsdashboard.
 • Finns på svenska, engelska, franska, tyska, spanska, nederländska, norska, ryska, polska, portugisiska och hebreiska, med automatisk RTL.
-• Responsivt panelrutnät (hel, halv, tredjedels bredd), dashboardlås, säkerhetskopiering/återställning som portabel JSON, scener.
+• Responsivt panelrutnät, dashboardlås, säkerhetskopiering/återställning som portabel JSON, scener.
 
 100 % PRIVAT. INGET MOLN.
 • Ingen reklam. Inget konto. Anonym användningsdata bara om du väljer det.

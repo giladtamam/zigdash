@@ -48,6 +48,10 @@ SHORTCUTS — WITHOUT OPENING THE APP
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
+ALERTS — EVEN WHEN THE APP IS CLOSED
+• A leak, smoke, a door opened at night or a low battery: Node-RED on your hub watches, ZigDash sets it up in one tap, and the notification reaches your phone through Google's push, encrypted end to end. No account, no extra app, no battery drain.
+• Share a Home's alerts with the household, or get them with the ntfy app on a phone without Google services.
+
 AUTOMATION — RUNS WHEN YOUR PHONE IS OFF
 • Schedule panels: daily open/close timers saved as retained MQTT config.
 • Auto-Close Rules: turn a device off N seconds after it turns on — perfect for fans, pumps, and timed lights.

@@ -1,5 +1,5 @@
 ZigDash is the MQTT dashboard built for Zigbee2MQTT — control your Zigbee smart home from your phone. It discovers your devices automatically, so your dashboard builds itself. No cloud, no ads, no account: free and open source.
- Control lights, shutters, switches and sensors from your phone or a wall-mounted tablet — and automate on your hub, even when your phone is off.
+ Control lights, shutters, switches and sensors from your phone or a wall-mounted tablet — and automate on your hub, even when your phone is off. Get alerted when something happens.
 
 Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQTT yet? The app includes a demo home to look around.
 
@@ -7,18 +7,14 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
 
    AUTO-DISCOVERY FOR ZIGBEE2MQTT
    • Scan your Zigbee2MQTT bridge and create a panel for every device with a single tap — no manual topic wiring.
-   • JSON path extraction on every panel, so ZigDash understands real Zigbee2MQTT messages out of the box.
-   • Per-panel custom topics, QoS, and retain when you want full control.
 
    ━━━━━━━━━━━━━━━━━━━━━━
 
    CONNECT TO ANY BROKER
    • Any MQTT broker — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-   • Broker discovery auto-scans your local network.
    • Username/password in hardware-backed secure storage — never plain text.
    • Live status with automatic exponential-backoff reconnect.
    • Tailscale support: remote access over your WireGuard mesh, no port forwarding.
-   • Multiple brokers with instant switching.
 
    ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -35,10 +31,19 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
 
    ━━━━━━━━━━━━━━━━━━━━━━
 
+   ALERTS — EVEN WHEN THE APP IS CLOSED
+
+   • A leak, smoke, a door opened at night or a low battery: Node-RED on your hub watches, ZigDash sets it up in one tap, and the notification reaches your phone through Google's push, encrypted end to end. No account, no extra app, no battery drain.
+
+
+
+   ━━━━━━━━━━━━━━━━━━━━━━
+
+
    AUTOMATION — RUNS WHEN YOUR PHONE IS OFF
    • Schedule panels: daily open/close timers saved as retained MQTT config.
-   • Auto-Close Rules: turn a device off N seconds after it turns on — perfect for fans, pumps, and timed lights.
-   • Both run on your always-on hub (Node-RED on SMLIGHT, Raspberry Pi, or any MQTT-aware device). Bundled Node-RED flows included.
+   • Auto-Close Rules: turn a device off N seconds after it turns on — for fans, pumps and timed lights.
+   • Both run on your always-on hub (Node-RED on SMLIGHT, Raspberry Pi…).
 
    ━━━━━━━━━━━━━━━━━━━━━━
 

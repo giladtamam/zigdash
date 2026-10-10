@@ -29,6 +29,11 @@ MQTT.
 - **16 panel types** — toggle, button, slider, cover (open/stop/close with
   presets), multi-state, combo, radio, LED indicator, node status, progress,
   text input, text log, scene, schedule, auto-close rule, Z2M discovery.
+- **Alerts** — a leak, smoke, a door opened at night or a low battery: Node-RED
+  on your hub watches, ZigDash sets it up in one tap, and the notification
+  reaches your phone through Google's push, encrypted end to end — no account,
+  no second app, nothing running on the phone. Share a Home's alerts with the
+  household through ntfy.
 - **Hub-side automation** — schedules and auto-close rules run as retained MQTT
   config executed by Node-RED on your always-on hub (SMLIGHT, Raspberry Pi, …).
   Your phone can be off; the automation still runs. Bundled Node-RED flows in

@@ -16,6 +16,16 @@ ATALHOS SEM ABRIR O APP
 • Controles de dispositivos do Android: cada dispositivo dos seus painéis como um cartão, com controles de brilho e posição.
 • Widgets na tela inicial: um dispositivo, uma cena ou um grupo de até cinco dispositivos com botões de cena.
 
+ALERTAS, MESMO COM O APP FECHADO
+
+• Vazamento, fumaça, uma porta aberta à noite ou bateria fraca: o Node-RED no seu hub vigia, o ZigDash configura com um toque e a notificação chega ao celular pelo push do Google, criptografada de ponta a ponta. Sem conta, sem app extra, sem gastar bateria.
+
+• Compartilhe os alertas de uma casa com a família, ou receba-os com o app ntfy em um celular sem serviços do Google.
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMAÇÃO SEM O CELULAR
 • Agendamentos e regras de desligamento automático rodam no seu hub (Node-RED), mesmo com o celular desligado.
 

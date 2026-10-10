@@ -1,0 +1,1 @@
+ZigDash 2.3: larm. Få en avisering vid läcka, rök, en dörr som öppnas på natten eller lågt batteri, även när ZigDash är stängt. Node-RED på hubben vakar; ZigDash ställer in det med ett tryck, och aviseringen når telefonen via Googles push, totalsträckskrypterad. Inget konto, ingen extra app. Dela ett hems larm med familjen, eller få dem med ntfy-appen utan Google-tjänster.

@@ -4,16 +4,12 @@ Vereist een draaiende Zigbee2MQTT en een MQTT-broker in je netwerk. Nog geen Zig
 
 AUTOMATISCHE DETECTIE VOOR ZIGBEE2MQTT
 • Scan je Zigbee2MQTT-bridge en maak met één tik een paneel voor elk apparaat, zonder topics handmatig te koppelen.
-• JSON-pad-extractie op elk paneel, zodat ZigDash echte Zigbee2MQTT-berichten direct begrijpt.
-• Eigen topics, QoS en retain per paneel wanneer je volledige controle wilt.
 
 VERBIND MET ELKE BROKER
 • Elke MQTT-broker: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Brokerdetectie scant je lokale netwerk automatisch.
 • Gebruikersnaam en wachtwoord in hardwarematig beveiligde opslag, nooit als platte tekst.
 • Livestatus met automatisch opnieuw verbinden (exponentiële backoff).
 • Tailscale-ondersteuning: toegang op afstand via je WireGuard-mesh, zonder port forwarding.
-• Meerdere brokers met direct wisselen.
 • Een volledige MQTT-client onder de motorkap: publiceer en abonneer op elk topic.
 
 16 PANEELTYPES – BEDIEN ALLES
@@ -24,6 +20,16 @@ SNELKOPPELINGEN – ZONDER DE APP TE OPENEN
 • Android-apparaatbediening: elk apparaat van je dashboards als kaart, met schuifregelaars voor helderheid en rolluikstand.
 • Widgets op het startscherm: één apparaat, een scène, of een groep van maximaal vijf apparaten met scèneknoppen.
 
+ALARMEN, OOK ALS DE APP DICHT IS
+
+• Een lek, rook, een deur die 's nachts opengaat of een bijna lege batterij: Node-RED op je hub houdt de wacht, ZigDash stelt het met één tik in, en de melding bereikt je telefoon via Googles push, end-to-end versleuteld. Geen account, geen extra app, geen batterijverbruik.
+
+• Deel de alarmen van een huis met het gezin, of ontvang ze met de ntfy-app op een telefoon zonder Google-diensten.
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMATISERING – WERKT OOK ALS JE TELEFOON UIT STAAT
 • Schemapanelen: dagelijkse open/dicht-timers opgeslagen als retained MQTT-configuratie.
 • Auto-uit-regels: schakel een apparaat N seconden na inschakelen weer uit, perfect voor ventilatoren, pompen en tijdgeschakelde verlichting.
@@ -33,7 +39,7 @@ VERZORGD – TELEFOON EN TABLET
 • Material 3 met licht, donker en systeemthema; Material You dynamische kleuren op Android 12+.
 • Telefoon en tablet, staand en liggend, ideaal als wandgemonteerd domotica-dashboard.
 • Beschikbaar in het Nederlands, Engels, Frans, Duits, Spaans, Zweeds, Noors, Russisch, Pools, Portugees en Hebreeuws, met automatische RTL.
-• Responsief paneelraster (volle, halve, derde breedte), dashboardvergrendeling, back-up/herstel als draagbare JSON, scènes.
+• Responsief paneelraster, dashboardvergrendeling, back-up/herstel als draagbare JSON, scènes.
 
 100% PRIVÉ. GEEN CLOUD.
 • Geen advertenties. Geen account. Anonieme gebruiksgegevens alleen als je daarvoor kiest.

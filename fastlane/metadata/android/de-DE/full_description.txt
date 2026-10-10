@@ -4,16 +4,12 @@ Voraussetzung: ein laufendes Zigbee2MQTT und ein MQTT-Broker in deinem Netz. Noc
 
 AUTOMATISCHE ERKENNUNG FÜR ZIGBEE2MQTT
 • Scanne deine Zigbee2MQTT-Bridge und erstelle mit einem Tipp ein Panel für jedes Gerät, ohne Topics von Hand zu verdrahten.
-• JSON-Pfad-Extraktion in jedem Panel, damit ZigDash echte Zigbee2MQTT-Nachrichten sofort versteht.
-• Eigene Topics, QoS und Retain pro Panel, wenn du volle Kontrolle willst.
 
 MIT JEDEM BROKER VERBINDEN
 • Jeder MQTT-Broker: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Broker-Erkennung scannt dein lokales Netzwerk automatisch.
 • Benutzername und Passwort im hardwaregesicherten Speicher, nie im Klartext.
 • Live-Status mit automatischem Reconnect (exponentielles Backoff).
 • Tailscale-Unterstützung: Fernzugriff über dein WireGuard-Mesh, ohne Portweiterleitung.
-• Mehrere Broker mit sofortigem Wechsel.
 • Ein vollwertiger MQTT-Client: Publish und Subscribe auf beliebige Topics.
 
 16 PANEL-TYPEN – ALLES STEUERN
@@ -24,6 +20,15 @@ KURZBEFEHLE – OHNE DIE APP ZU ÖFFNEN
 • Android-Gerätesteuerung: jedes Gerät deiner Dashboards als Karte, mit Reglern für Helligkeit und Rollladenposition.
 • Startbildschirm-Widgets: ein Gerät, eine Szene oder eine Gruppe mit bis zu fünf Geräten und Szenen-Tasten.
 
+ALARME – AUCH BEI GESCHLOSSENER APP
+
+• Leck, Rauch, nachts geöffnete Tür oder schwache Batterie: Node-RED auf deinem Hub überwacht, ZigDash richtet es mit einem Tippen ein, und die Benachrichtigung erreicht dein Handy Ende-zu-Ende verschlüsselt über Googles Push. Kein Konto, keine Extra-App, kein Akkuverbrauch.
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMATISIERUNG – LÄUFT AUCH BEI AUSGESCHALTETEM HANDY
 • Zeitplan-Panels: tägliche Öffnen/Schließen-Timer, gespeichert als retained MQTT-Konfiguration.
 • Auto-Aus-Regeln: ein Gerät N Sekunden nach dem Einschalten wieder ausschalten, ideal für Lüfter, Pumpen und Zeitlicht.
@@ -33,7 +38,7 @@ AUSGEREIFT – HANDY UND TABLET
 • Material 3 mit hellem, dunklem und System-Design; Material You Dynamic Color ab Android 12.
 • Handy und Tablet, Hoch- und Querformat, ideal als Wand-Dashboard für die Hausautomation.
 • Verfügbar auf Deutsch, Englisch, Französisch, Spanisch, Niederländisch, Schwedisch, Norwegisch, Russisch, Polnisch, Portugiesisch und Hebräisch, mit automatischem RTL.
-• Responsives Panel-Raster (volle, halbe, drittel Breite), Dashboard-Sperre, Backup/Wiederherstellung als portables JSON, Szenen.
+• Responsives Panel-Raster, Dashboard-Sperre, Backup/Wiederherstellung als portables JSON, Szenen.
 
 100 % PRIVAT. KEINE CLOUD.
 • Keine Werbung. Kein Konto. Anonyme Nutzungsdaten nur mit deiner Zustimmung.

@@ -4,7 +4,6 @@ Krever et kjørende Zigbee2MQTT og en MQTT-broker i nettverket ditt. Ikke Zigbee
 
 AUTOMATISK OPPDAGELSE FOR ZIGBEE2MQTT
 • Skann Zigbee2MQTT-bridgen din og lag et panel for hver enhet med ett trykk, uten å koble topics manuelt.
-• JSON-sti-uttrekk i hvert panel, så ZigDash forstår ekte Zigbee2MQTT-meldinger med en gang.
 • Egne topics, QoS og retain per panel når du vil ha full kontroll.
 
 KOBLE TIL HVILKEN SOM HELST BROKER
@@ -24,6 +23,16 @@ SNARVEIER – UTEN Å ÅPNE APPEN
 • Android-enhetsstyring: hver enhet på dashbordene dine som et kort, med glidebrytere for lysstyrke og posisjon.
 • Widgets på startskjermen: én enhet, en scene, eller en gruppe på opptil fem enheter med sceneknapper.
 
+VARSLER, SELV NÅR APPEN ER LUKKET
+
+• Lekkasje, røyk, en dør som åpnes om natten eller lavt batteri: Node-RED på huben passer på, ZigDash setter det opp med ett trykk, og varselet når telefonen din via Googles push, ende-til-ende-kryptert. Ingen konto, ingen ekstra app, ingen batteribruk.
+
+• Del hjemmets varsler med familien, eller få dem med ntfy-appen på en telefon uten Google-tjenester.
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMATISERING – KJØRER SELV NÅR MOBILEN ER AV
 • Tidsplanpaneler: daglige åpne/lukke-timere lagret som retained MQTT-konfigurasjon.
 • Auto-av-regler: slå av en enhet N sekunder etter at den slås på, perfekt for vifter, pumper og tidsstyrt lys.
@@ -33,7 +42,7 @@ GJENNOMFØRT – MOBIL OG NETTBRETT
 • Material 3 med lyst, mørkt og systemtema; Material You dynamiske farger på Android 12+.
 • Mobil og nettbrett, stående og liggende, ideelt som veggmontert dashbord for hjemmeautomasjon.
 • Tilgjengelig på norsk, engelsk, fransk, tysk, spansk, nederlandsk, svensk, russisk, polsk, portugisisk og hebraisk, med automatisk RTL.
-• Responsivt panelrutenett (full, halv, tredjedels bredde), dashbordlås, sikkerhetskopi/gjenoppretting som portabel JSON, scener.
+• Responsivt panelrutenett, dashbordlås, sikkerhetskopi/gjenoppretting som portabel JSON, scener.
 
 100 % PRIVAT. INGEN SKY.
 • Ingen reklame. Ingen konto. Anonyme bruksdata bare hvis du velger det.

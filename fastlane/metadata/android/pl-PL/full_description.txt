@@ -16,6 +16,16 @@ SKRÓTY BEZ OTWIERANIA APLIKACJI
 • Sterowanie urządzeniami w Androidzie: każde urządzenie z dashboardów jako karta, z suwakami jasności i położenia.
 • Widżety na ekranie głównym: jedno urządzenie, scena albo grupa do pięciu urządzeń z przyciskami scen.
 
+ALARMY, NAWET GDY APLIKACJA JEST ZAMKNIĘTA
+
+• Wyciek, dym, drzwi otwarte w nocy lub słaba bateria: Node-RED na hubie czuwa, ZigDash konfiguruje go jednym dotknięciem, a powiadomienie dociera na telefon przez push Google, szyfrowane od końca do końca. Bez konta, bez dodatkowej aplikacji, bez zużycia baterii.
+
+• Udostępnij alarmy domu rodzinie albo odbieraj je aplikacją ntfy na telefonie bez usług Google.
+
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+
 AUTOMATYZACJA BEZ TELEFONU
 • Harmonogramy i reguły automatycznego wyłączania działają na Twoim hubie (Node-RED), nawet gdy telefon jest wyłączony.
 

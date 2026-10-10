@@ -1,0 +1,1 @@
+ZigDash 2.3: varsler. Få et varsel ved lekkasje, røyk, en dør som åpnes om natten eller lavt batteri, selv når ZigDash er lukket. Node-RED på huben passer på; ZigDash setter det opp med ett trykk, og varselet når telefonen via Googles push, ende-til-ende-kryptert. Ingen konto, ingen ekstra app. Del hjemmets varsler med familien, eller få dem med ntfy-appen uten Google-tjenester.
