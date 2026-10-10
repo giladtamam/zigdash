@@ -4945,6 +4945,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn on'**
   String get alertsTurnOn;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Share alerts'**
+  String get alertsShare;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone with this link gets this Home\'s alerts in the ntfy app, with no ZigDash needed. The alert text goes through ntfy.sh unencrypted.'**
+  String get alertsShareBody;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get alertsShareLink;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'New link'**
+  String get alertsShareNewLink;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get alertsShareCopied;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop sharing'**
+  String get alertsShareOff;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notifications with ntfy'**
+  String get alertsGetWithNtfy;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Pushover'**
+  String get alertsPushover;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoke and leak alerts repeat until acknowledged. Needs a Pushover account (\$4.99 once after a trial); its keys are kept on your broker.'**
+  String get alertsPushoverBody;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'User key'**
+  String get alertsPushoverUser;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'App token'**
+  String get alertsPushoverToken;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide device names'**
+  String get alertsHideNames;
+
+  /// Alerts screen: sharing with the household (ntfy) and Pushover.
+  ///
+  /// In en, this message translates to:
+  /// **'ntfy server'**
+  String get alertsNtfyServer;
 }
 
 class _AppLocalizationsDelegate

@@ -25,11 +25,14 @@ class _AlertsPausedBannerState extends ConsumerState<AlertsPausedBanner> {
   @override
   Widget build(BuildContext context) {
     final config = ref.watch(alertsConfigProvider(widget.connectionId)).valueOrNull;
+    // Only a Home with alerts listens for the hub's heartbeat (listening
+    // opens the connection).
+    if (config == null) return const SizedBox.shrink();
     final online = ref.watch(alertsBridgeOnlineProvider(widget.connectionId)).valueOrNull;
     ref.listen(alertsBridgeOnlineProvider(widget.connectionId), (_, next) {
       if (next.valueOrNull == true && _dismissed) setState(() => _dismissed = false);
     });
-    if (config == null || online != false || _dismissed) return const SizedBox.shrink();
+    if (online != false || _dismissed) return const SizedBox.shrink();
     final l10n = context.l10n;
     final theme = Theme.of(context);
     return Material(

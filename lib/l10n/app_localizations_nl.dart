@@ -2722,4 +2722,45 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get alertsTurnOn => 'Aanzetten';
+
+  @override
+  String get alertsShare => 'Alarmen delen';
+
+  @override
+  String get alertsShareBody =>
+      'Iedereen met deze link krijgt de alarmen van dit huis in de ntfy-app, zonder ZigDash. De alarmtekst gaat onversleuteld via ntfy.sh.';
+
+  @override
+  String get alertsShareLink => 'Link';
+
+  @override
+  String get alertsShareNewLink => 'Nieuwe link';
+
+  @override
+  String get alertsShareCopied => 'Link gekopieerd';
+
+  @override
+  String get alertsShareOff => 'Stoppen met delen';
+
+  @override
+  String get alertsGetWithNtfy => 'Meldingen krijgen via ntfy';
+
+  @override
+  String get alertsPushover => 'Pushover';
+
+  @override
+  String get alertsPushoverBody =>
+      'Rook- en lekalarmen herhalen tot ze bevestigd zijn. Vereist een Pushover-account (eenmalig \$ 4,99 na een proefperiode); de sleutels blijven op je broker.';
+
+  @override
+  String get alertsPushoverUser => 'Gebruikerssleutel';
+
+  @override
+  String get alertsPushoverToken => 'App-token';
+
+  @override
+  String get alertsHideNames => 'Apparaatnamen verbergen';
+
+  @override
+  String get alertsNtfyServer => 'ntfy-server';
 }

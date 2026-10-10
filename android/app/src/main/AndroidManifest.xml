@@ -3,6 +3,9 @@
     <!-- Widget taps run as a short foreground task (WidgetActionService). -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Android 17 (targetSdk 37) needs this to reach the hub on the LAN;
+         asked for at start on phones that enforce it (alerts-2.3.md §3). -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK"/>
     <application
         android:label="ZigDash"
         android:name="${applicationName}"

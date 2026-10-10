@@ -948,5 +948,18 @@
   "alertsOff": "כבויה",
   "alertsSuggested": "התראות מוצעות",
   "alertsSuggestedCount": "{count, plural, =1{מכשיר אחד} other{{count} מכשירים}}",
-  "alertsTurnOn": "הפעלה"
+  "alertsTurnOn": "הפעלה",
+  "alertsShare": "שיתוף התראות",
+  "alertsShareBody": "כל מי שיש לו את הקישור מקבל את ההתראות של הבית הזה באפליקציית ntfy, בלי צורך ב-ZigDash. טקסט ההתראה עובר דרך ntfy.sh ללא הצפנה.",
+  "alertsShareLink": "קישור",
+  "alertsShareNewLink": "קישור חדש",
+  "alertsShareCopied": "הקישור הועתק",
+  "alertsShareOff": "הפסקת השיתוף",
+  "alertsGetWithNtfy": "קבלת התראות עם ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "התראות עשן ונזילה חוזרות עד שמאשרים אותן. נדרש חשבון Pushover (‏4.99 $ פעם אחת אחרי תקופת ניסיון); המפתחות נשמרים ב-broker שלכם.",
+  "alertsPushoverUser": "מפתח משתמש",
+  "alertsPushoverToken": "טוקן אפליקציה",
+  "alertsHideNames": "הסתרת שמות מכשירים",
+  "alertsNtfyServer": "שרת ntfy"
 }

@@ -879,5 +879,18 @@
   "alertsOff": "Uit",
   "alertsSuggested": "Voorgestelde alarmen",
   "alertsSuggestedCount": "{count, plural, =1{1 apparaat} other{{count} apparaten}}",
-  "alertsTurnOn": "Aanzetten"
+  "alertsTurnOn": "Aanzetten",
+  "alertsShare": "Alarmen delen",
+  "alertsShareBody": "Iedereen met deze link krijgt de alarmen van dit huis in de ntfy-app, zonder ZigDash. De alarmtekst gaat onversleuteld via ntfy.sh.",
+  "alertsShareLink": "Link",
+  "alertsShareNewLink": "Nieuwe link",
+  "alertsShareCopied": "Link gekopieerd",
+  "alertsShareOff": "Stoppen met delen",
+  "alertsGetWithNtfy": "Meldingen krijgen via ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Rook- en lekalarmen herhalen tot ze bevestigd zijn. Vereist een Pushover-account (eenmalig $ 4,99 na een proefperiode); de sleutels blijven op je broker.",
+  "alertsPushoverUser": "Gebruikerssleutel",
+  "alertsPushoverToken": "App-token",
+  "alertsHideNames": "Apparaatnamen verbergen",
+  "alertsNtfyServer": "ntfy-server"
 }

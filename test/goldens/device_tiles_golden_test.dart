@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/alerts/alerts_service.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
@@ -279,6 +280,9 @@ List<Override> _shellOverrides({bool editing = false}) => [
       dashboardsForConnectionProvider
           .overrideWith((ref, _) => Stream.value([_dashboard, _upstairs])),
       mqttManagerProvider.overrideWith((ref, _) => Completer<Never>().future),
+      // No alerts: the dashboard's paused banner stays hidden (and no drift
+      // stream is opened for it).
+      alertsConfigProvider.overrideWith((ref, _) => Stream.value(null)),
       bridgeDevicesStreamProvider.overrideWith((ref, _) => Stream.value(_devices)),
       deviceHealthProvider.overrideWith((ref, _) => Stream.value(_health)),
       availabilityConfigProvider.overrideWith(

@@ -804,5 +804,18 @@
   "alertsOff": "Désactivée",
   "alertsSuggested": "Alertes suggérées",
   "alertsSuggestedCount": "{count, plural, =1{1 appareil} other{{count} appareils}}",
-  "alertsTurnOn": "Activer"
+  "alertsTurnOn": "Activer",
+  "alertsShare": "Partager les alertes",
+  "alertsShareBody": "Quiconque a ce lien reçoit les alertes de cette maison dans l'app ntfy, sans ZigDash. Le texte de l'alerte passe par ntfy.sh sans chiffrement.",
+  "alertsShareLink": "Lien",
+  "alertsShareNewLink": "Nouveau lien",
+  "alertsShareCopied": "Lien copié",
+  "alertsShareOff": "Arrêter le partage",
+  "alertsGetWithNtfy": "Recevoir les notifications avec ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Les alertes fumée et fuite se répètent jusqu'à confirmation. Nécessite un compte Pushover (4,99 $ une fois après l'essai) ; ses clés restent sur votre broker.",
+  "alertsPushoverUser": "Clé utilisateur",
+  "alertsPushoverToken": "Jeton d'app",
+  "alertsHideNames": "Masquer les noms des appareils",
+  "alertsNtfyServer": "Serveur ntfy"
 }

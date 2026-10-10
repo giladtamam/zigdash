@@ -839,5 +839,18 @@
   "alertsOff": "Desligado",
   "alertsSuggested": "Alertas sugeridos",
   "alertsSuggestedCount": "{count, plural, =1{1 dispositivo} other{{count} dispositivos}}",
-  "alertsTurnOn": "Ativar"
+  "alertsTurnOn": "Ativar",
+  "alertsShare": "Compartilhar alertas",
+  "alertsShareBody": "Quem tiver este link recebe os alertas desta casa no app ntfy, sem precisar do ZigDash. O texto do alerta passa pelo ntfy.sh sem criptografia.",
+  "alertsShareLink": "Link",
+  "alertsShareNewLink": "Novo link",
+  "alertsShareCopied": "Link copiado",
+  "alertsShareOff": "Parar de compartilhar",
+  "alertsGetWithNtfy": "Receber notificações com o ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Alertas de fumaça e vazamento se repetem até serem confirmados. Precisa de uma conta Pushover (US$ 4,99 uma vez após o teste); as chaves ficam no seu broker.",
+  "alertsPushoverUser": "Chave de usuário",
+  "alertsPushoverToken": "Token do app",
+  "alertsHideNames": "Ocultar nomes dos dispositivos",
+  "alertsNtfyServer": "Servidor ntfy"
 }

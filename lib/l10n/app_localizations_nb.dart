@@ -2711,4 +2711,45 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get alertsTurnOn => 'Slå på';
+
+  @override
+  String get alertsShare => 'Del varsler';
+
+  @override
+  String get alertsShareBody =>
+      'Alle med denne lenken får dette hjemmets varsler i ntfy-appen, uten ZigDash. Varselteksten går ukryptert gjennom ntfy.sh.';
+
+  @override
+  String get alertsShareLink => 'Lenke';
+
+  @override
+  String get alertsShareNewLink => 'Ny lenke';
+
+  @override
+  String get alertsShareCopied => 'Lenke kopiert';
+
+  @override
+  String get alertsShareOff => 'Slutt å dele';
+
+  @override
+  String get alertsGetWithNtfy => 'Få varsler med ntfy';
+
+  @override
+  String get alertsPushover => 'Pushover';
+
+  @override
+  String get alertsPushoverBody =>
+      'Røyk- og lekkasjevarsler gjentas til de bekreftes. Krever en Pushover-konto (4,99 \$ én gang etter prøveperioden); nøklene lagres på brokeren din.';
+
+  @override
+  String get alertsPushoverUser => 'Brukernøkkel';
+
+  @override
+  String get alertsPushoverToken => 'App-token';
+
+  @override
+  String get alertsHideNames => 'Skjul enhetsnavn';
+
+  @override
+  String get alertsNtfyServer => 'ntfy-server';
 }

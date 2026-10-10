@@ -879,5 +879,18 @@
   "alertsOff": "Desactivada",
   "alertsSuggested": "Alertas sugeridas",
   "alertsSuggestedCount": "{count, plural, =1{1 dispositivo} other{{count} dispositivos}}",
-  "alertsTurnOn": "Activar"
+  "alertsTurnOn": "Activar",
+  "alertsShare": "Compartir alertas",
+  "alertsShareBody": "Cualquiera con este enlace recibe las alertas de esta casa en la app ntfy, sin necesidad de ZigDash. El texto de la alerta pasa por ntfy.sh sin cifrar.",
+  "alertsShareLink": "Enlace",
+  "alertsShareNewLink": "Nuevo enlace",
+  "alertsShareCopied": "Enlace copiado",
+  "alertsShareOff": "Dejar de compartir",
+  "alertsGetWithNtfy": "Recibir notificaciones con ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Las alertas de humo y fuga se repiten hasta que las confirmes. Requiere una cuenta de Pushover (4,99 $ una vez tras la prueba); sus claves se guardan en tu broker.",
+  "alertsPushoverUser": "Clave de usuario",
+  "alertsPushoverToken": "Token de la app",
+  "alertsHideNames": "Ocultar nombres de dispositivos",
+  "alertsNtfyServer": "Servidor ntfy"
 }

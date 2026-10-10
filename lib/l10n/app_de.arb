@@ -879,5 +879,18 @@
   "alertsOff": "Aus",
   "alertsSuggested": "Vorgeschlagene Alarme",
   "alertsSuggestedCount": "{count, plural, =1{1 Gerät} other{{count} Geräte}}",
-  "alertsTurnOn": "Einschalten"
+  "alertsTurnOn": "Einschalten",
+  "alertsShare": "Alarme teilen",
+  "alertsShareBody": "Wer diesen Link hat, bekommt die Alarme dieses Zuhauses in der ntfy-App, ganz ohne ZigDash. Der Alarmtext läuft unverschlüsselt über ntfy.sh.",
+  "alertsShareLink": "Link",
+  "alertsShareNewLink": "Neuer Link",
+  "alertsShareCopied": "Link kopiert",
+  "alertsShareOff": "Teilen beenden",
+  "alertsGetWithNtfy": "Benachrichtigungen über ntfy erhalten",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Rauch- und Leck-Alarme wiederholen sich, bis sie bestätigt werden. Braucht ein Pushover-Konto (einmalig 4,99 $ nach einer Testphase); die Schlüssel bleiben auf deinem Broker.",
+  "alertsPushoverUser": "Benutzerschlüssel",
+  "alertsPushoverToken": "App-Token",
+  "alertsHideNames": "Gerätenamen verbergen",
+  "alertsNtfyServer": "ntfy-Server"
 }

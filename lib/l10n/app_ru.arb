@@ -874,5 +874,18 @@
   "alertsOff": "Выкл.",
   "alertsSuggested": "Предлагаемые тревоги",
   "alertsSuggestedCount": "{count, plural, =1{1 устройство} few{{count} устройства} other{{count} устройств}}",
-  "alertsTurnOn": "Включить"
+  "alertsTurnOn": "Включить",
+  "alertsShare": "Поделиться тревогами",
+  "alertsShareBody": "Любой, у кого есть эта ссылка, получает тревоги этого дома в приложении ntfy, без ZigDash. Текст тревоги проходит через ntfy.sh без шифрования.",
+  "alertsShareLink": "Ссылка",
+  "alertsShareNewLink": "Новая ссылка",
+  "alertsShareCopied": "Ссылка скопирована",
+  "alertsShareOff": "Прекратить делиться",
+  "alertsGetWithNtfy": "Получать уведомления через ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Тревоги о дыме и протечке повторяются до подтверждения. Нужен аккаунт Pushover (4,99 $ однократно после пробного периода); ключи хранятся на вашем брокере.",
+  "alertsPushoverUser": "Ключ пользователя",
+  "alertsPushoverToken": "Токен приложения",
+  "alertsHideNames": "Скрывать названия устройств",
+  "alertsNtfyServer": "Сервер ntfy"
 }

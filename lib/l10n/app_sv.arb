@@ -879,5 +879,18 @@
   "alertsOff": "Av",
   "alertsSuggested": "Föreslagna larm",
   "alertsSuggestedCount": "{count, plural, =1{1 enhet} other{{count} enheter}}",
-  "alertsTurnOn": "Slå på"
+  "alertsTurnOn": "Slå på",
+  "alertsShare": "Dela larm",
+  "alertsShareBody": "Alla med den här länken får hemmets larm i ntfy-appen, utan ZigDash. Larmtexten går okrypterad via ntfy.sh.",
+  "alertsShareLink": "Länk",
+  "alertsShareNewLink": "Ny länk",
+  "alertsShareCopied": "Länk kopierad",
+  "alertsShareOff": "Sluta dela",
+  "alertsGetWithNtfy": "Få aviseringar med ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Rök- och läcklarm upprepas tills de kvitteras. Kräver ett Pushover-konto (4,99 $ en gång efter provperioden); nycklarna sparas på din broker.",
+  "alertsPushoverUser": "Användarnyckel",
+  "alertsPushoverToken": "App-token",
+  "alertsHideNames": "Dölj enhetsnamn",
+  "alertsNtfyServer": "ntfy-server"
 }

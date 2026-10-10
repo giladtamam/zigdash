@@ -2713,4 +2713,45 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get alertsTurnOn => 'Slå på';
+
+  @override
+  String get alertsShare => 'Dela larm';
+
+  @override
+  String get alertsShareBody =>
+      'Alla med den här länken får hemmets larm i ntfy-appen, utan ZigDash. Larmtexten går okrypterad via ntfy.sh.';
+
+  @override
+  String get alertsShareLink => 'Länk';
+
+  @override
+  String get alertsShareNewLink => 'Ny länk';
+
+  @override
+  String get alertsShareCopied => 'Länk kopierad';
+
+  @override
+  String get alertsShareOff => 'Sluta dela';
+
+  @override
+  String get alertsGetWithNtfy => 'Få aviseringar med ntfy';
+
+  @override
+  String get alertsPushover => 'Pushover';
+
+  @override
+  String get alertsPushoverBody =>
+      'Rök- och läcklarm upprepas tills de kvitteras. Kräver ett Pushover-konto (4,99 \$ en gång efter provperioden); nycklarna sparas på din broker.';
+
+  @override
+  String get alertsPushoverUser => 'Användarnyckel';
+
+  @override
+  String get alertsPushoverToken => 'App-token';
+
+  @override
+  String get alertsHideNames => 'Dölj enhetsnamn';
+
+  @override
+  String get alertsNtfyServer => 'ntfy-server';
 }

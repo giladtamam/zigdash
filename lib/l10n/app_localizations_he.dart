@@ -2688,4 +2688,45 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get alertsTurnOn => 'הפעלה';
+
+  @override
+  String get alertsShare => 'שיתוף התראות';
+
+  @override
+  String get alertsShareBody =>
+      'כל מי שיש לו את הקישור מקבל את ההתראות של הבית הזה באפליקציית ntfy, בלי צורך ב-ZigDash. טקסט ההתראה עובר דרך ntfy.sh ללא הצפנה.';
+
+  @override
+  String get alertsShareLink => 'קישור';
+
+  @override
+  String get alertsShareNewLink => 'קישור חדש';
+
+  @override
+  String get alertsShareCopied => 'הקישור הועתק';
+
+  @override
+  String get alertsShareOff => 'הפסקת השיתוף';
+
+  @override
+  String get alertsGetWithNtfy => 'קבלת התראות עם ntfy';
+
+  @override
+  String get alertsPushover => 'Pushover';
+
+  @override
+  String get alertsPushoverBody =>
+      'התראות עשן ונזילה חוזרות עד שמאשרים אותן. נדרש חשבון Pushover (‏4.99 \$ פעם אחת אחרי תקופת ניסיון); המפתחות נשמרים ב-broker שלכם.';
+
+  @override
+  String get alertsPushoverUser => 'מפתח משתמש';
+
+  @override
+  String get alertsPushoverToken => 'טוקן אפליקציה';
+
+  @override
+  String get alertsHideNames => 'הסתרת שמות מכשירים';
+
+  @override
+  String get alertsNtfyServer => 'שרת ntfy';
 }

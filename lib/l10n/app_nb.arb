@@ -879,5 +879,18 @@
   "alertsOff": "Av",
   "alertsSuggested": "Foreslåtte varsler",
   "alertsSuggestedCount": "{count, plural, =1{1 enhet} other{{count} enheter}}",
-  "alertsTurnOn": "Slå på"
+  "alertsTurnOn": "Slå på",
+  "alertsShare": "Del varsler",
+  "alertsShareBody": "Alle med denne lenken får dette hjemmets varsler i ntfy-appen, uten ZigDash. Varselteksten går ukryptert gjennom ntfy.sh.",
+  "alertsShareLink": "Lenke",
+  "alertsShareNewLink": "Ny lenke",
+  "alertsShareCopied": "Lenke kopiert",
+  "alertsShareOff": "Slutt å dele",
+  "alertsGetWithNtfy": "Få varsler med ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Røyk- og lekkasjevarsler gjentas til de bekreftes. Krever en Pushover-konto (4,99 $ én gang etter prøveperioden); nøklene lagres på brokeren din.",
+  "alertsPushoverUser": "Brukernøkkel",
+  "alertsPushoverToken": "App-token",
+  "alertsHideNames": "Skjul enhetsnavn",
+  "alertsNtfyServer": "ntfy-server"
 }

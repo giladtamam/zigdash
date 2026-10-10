@@ -2729,4 +2729,45 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get alertsTurnOn => 'Включить';
+
+  @override
+  String get alertsShare => 'Поделиться тревогами';
+
+  @override
+  String get alertsShareBody =>
+      'Любой, у кого есть эта ссылка, получает тревоги этого дома в приложении ntfy, без ZigDash. Текст тревоги проходит через ntfy.sh без шифрования.';
+
+  @override
+  String get alertsShareLink => 'Ссылка';
+
+  @override
+  String get alertsShareNewLink => 'Новая ссылка';
+
+  @override
+  String get alertsShareCopied => 'Ссылка скопирована';
+
+  @override
+  String get alertsShareOff => 'Прекратить делиться';
+
+  @override
+  String get alertsGetWithNtfy => 'Получать уведомления через ntfy';
+
+  @override
+  String get alertsPushover => 'Pushover';
+
+  @override
+  String get alertsPushoverBody =>
+      'Тревоги о дыме и протечке повторяются до подтверждения. Нужен аккаунт Pushover (4,99 \$ однократно после пробного периода); ключи хранятся на вашем брокере.';
+
+  @override
+  String get alertsPushoverUser => 'Ключ пользователя';
+
+  @override
+  String get alertsPushoverToken => 'Токен приложения';
+
+  @override
+  String get alertsHideNames => 'Скрывать названия устройств';
+
+  @override
+  String get alertsNtfyServer => 'Сервер ntfy';
 }

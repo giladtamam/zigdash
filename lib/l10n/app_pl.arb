@@ -874,5 +874,18 @@
   "alertsOff": "Wył.",
   "alertsSuggested": "Proponowane alarmy",
   "alertsSuggestedCount": "{count, plural, =1{1 urządzenie} few{{count} urządzenia} other{{count} urządzeń}}",
-  "alertsTurnOn": "Włącz"
+  "alertsTurnOn": "Włącz",
+  "alertsShare": "Udostępnij alarmy",
+  "alertsShareBody": "Każdy z tym linkiem dostaje alarmy tego domu w aplikacji ntfy, bez ZigDash. Treść alarmu przechodzi przez ntfy.sh bez szyfrowania.",
+  "alertsShareLink": "Link",
+  "alertsShareNewLink": "Nowy link",
+  "alertsShareCopied": "Link skopiowany",
+  "alertsShareOff": "Przestań udostępniać",
+  "alertsGetWithNtfy": "Odbieraj powiadomienia przez ntfy",
+  "alertsPushover": "Pushover",
+  "alertsPushoverBody": "Alarmy dymu i wycieku powtarzają się do potwierdzenia. Wymaga konta Pushover (4,99 $ jednorazowo po okresie próbnym); klucze są trzymane na Twoim brokerze.",
+  "alertsPushoverUser": "Klucz użytkownika",
+  "alertsPushoverToken": "Token aplikacji",
+  "alertsHideNames": "Ukryj nazwy urządzeń",
+  "alertsNtfyServer": "Serwer ntfy"
 }

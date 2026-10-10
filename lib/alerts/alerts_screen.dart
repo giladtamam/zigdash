@@ -21,6 +21,7 @@ import '../features/devices/device_profile.dart' show classifyExposes;
 import '../features/discovery/providers/discovery_provider.dart';
 import '../features/panels/providers/panel_value_provider.dart' show composeTopic;
 import 'node_red_installer.dart';
+import 'share_alerts_sheet.dart';
 
 /// A Home's alerts (docs/design/alerts-2.3.md, "Alerts screen"): status,
 /// Recent alerts, the alerts with their switches, and the buttons that set
@@ -133,6 +134,12 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                   title: Text(l10n.alertsSendTest),
                   enabled: thisPhone && !_busy,
                   onTap: () => _test(l10n),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.share_outlined),
+                  title: Text(l10n.alertsShare),
+                  subtitle: push == PushAvailability.none ? Text(l10n.alertsGetWithNtfy) : null,
+                  onTap: () => ShareAlertsSheet.show(context, _id),
                 ),
                 ListTile(
                   leading: const Icon(Icons.hub_outlined),

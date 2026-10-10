@@ -57,6 +57,19 @@ class MainActivity : FlutterActivity() {
         channel = ch
     }
 
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Local-network permission (alerts-2.3.md §3): Android 17 blocks LAN
+        // connections without it, so ask once at start where it exists.
+        // Android's own prompt explains what it is for.
+        if (Build.VERSION.SDK_INT >= 37) {
+            val p = "android.permission.ACCESS_LOCAL_NETWORK"
+            if (checkSelfPermission(p) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(p), 1701)
+            }
+        }
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
