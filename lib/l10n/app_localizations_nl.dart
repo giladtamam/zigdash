@@ -2412,4 +2412,27 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get shortcutSlotEmpty => 'Not used';
+
+  @override
+  String get deviceRename => 'Rename';
+
+  @override
+  String get deviceRenameTitle => 'Rename device';
+
+  @override
+  String get deviceRenameHint =>
+      'A name for the room or the device, like Bedroom';
+
+  @override
+  String deviceRenamed(Object name) {
+    return 'Renamed to $name';
+  }
+
+  @override
+  String deviceRenameFailed(Object reason) {
+    return 'Couldn\'t rename: $reason';
+  }
+
+  @override
+  String get deviceRenameNoAnswer => 'Zigbee2MQTT didn\'t answer';
 }

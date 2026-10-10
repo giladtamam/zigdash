@@ -73,6 +73,42 @@ class _DevicePageState extends ConsumerState<DevicePage> {
     if (old.ieee != widget.ieee) _acknowledge();
   }
 
+  /// Renames the device in Zigbee2MQTT; tiles follow (device registry).
+  Future<void> _rename(BuildContext context, String base, String current) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final controller = TextEditingController(text: current);
+    final to = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.deviceRenameTitle),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(helperText: l10n.deviceRenameHint),
+          onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              child: Text(l10n.deviceRename)),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (to == null || to.isEmpty || to == current) return;
+    final error = await renameDevice(ref, widget.connectionId, base,
+        from: current, to: to);
+    messenger.showSnackBar(SnackBar(
+        content: Text(error == null
+            ? l10n.deviceRenamed(to)
+            : l10n.deviceRenameFailed(
+                error.isEmpty ? l10n.deviceRenameNoAnswer : error))));
+  }
+
   /// Opening the page is seeing the device: its low battery stops lighting
   /// the Devices dot.
   void _acknowledge() => DeviceRegistryDao(ref.read(appDatabaseProvider))
@@ -144,6 +180,13 @@ class _DevicePageState extends ConsumerState<DevicePage> {
         ? AddTileButton(
             connectionId: widget.connectionId, ieee: widget.ieee, name: title)
         : null;
+    final rename = device == null
+        ? null
+        : IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            tooltip: l10n.deviceRename,
+            onPressed: () => _rename(context, base, device.friendlyName),
+          );
 
     if (widget.embedded) {
       return Column(
@@ -158,6 +201,7 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                       style: Theme.of(context).textTheme.headlineSmall,
                       semanticsLabel: title),
                 ),
+                ?rename,
                 ?addTile,
               ],
             ),
@@ -167,7 +211,8 @@ class _DevicePageState extends ConsumerState<DevicePage> {
       );
     }
     return Scaffold(
-        appBar: AppBar(title: Text(title), actions: [?addTile]), body: body);
+        appBar: AppBar(title: Text(title), actions: [?rename, ?addTile]),
+        body: body);
   }
 }
 

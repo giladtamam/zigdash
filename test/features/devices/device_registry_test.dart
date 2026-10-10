@@ -106,6 +106,26 @@ void main() {
         'zigbee2mqtt/living_room_bulb');
   });
 
+  test('a tile named after the device takes the new name; a custom one stays',
+      () async {
+    Future<String> tile(String name) => panels.create(
+          dashboardId: dash,
+          name: name,
+          type: PanelType.device,
+          topic: 'set',
+          subscribeTopic: '',
+          topicPrefixOverride: 'zigbee2mqtt/0xc02cedfffec0b9d5',
+          deviceIeee: '0xc02cedfffec0b9d5',
+          config: PanelConfig.defaultFor(PanelType.device),
+        );
+    final plain = await tile('0xc02cedfffec0b9d5');
+    final custom = await tile('Kids room');
+    await registry.sync('c1', 'zigbee2mqtt',
+        [_dev('Bedroom', '0xc02cedfffec0b9d5')]);
+    expect((await PanelDao(db).getById(plain))!.name, 'Bedroom');
+    expect((await PanelDao(db).getById(custom))!.name, 'Kids room');
+  });
+
   test('tiles on the dashboard prefix link too; unrelated topics do not',
       () async {
     final viaDashboard = await panels.create(

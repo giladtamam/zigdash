@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -271,6 +272,40 @@ Future<void> restartZigbee2mqtt(
   final mgr = await ref.read(mqttManagerProvider(connectionId).future);
   final request = restartRequest(base);
   mgr.publish(request.topic, request.payload, '');
+}
+
+/// Asks Zigbee2MQTT to rename a device; null when it did, otherwise its
+/// error (or that it didn't answer within 5 s). ZigDash's tiles follow the
+/// new name through the device registry.
+Future<String?> renameDevice(
+  WidgetRef ref,
+  String connectionId,
+  String base, {
+  required String from,
+  required String to,
+}) async {
+  final mgr = await ref.read(mqttManagerProvider(connectionId).future);
+  final responseTopic = '$base/bridge/response/device/rename';
+  final answer = Completer<String?>();
+  final sub = mgr.subscribe(responseTopic).listen((m) {
+    try {
+      final j = jsonDecode(m.payload) as Map<String, dynamic>;
+      final data = j['data'];
+      if (data is Map && data['to'] != to) return; // another rename
+      if (!answer.isCompleted) {
+        answer.complete(j['status'] == 'ok' ? null : '${j['error'] ?? '?'}');
+      }
+    } catch (_) {}
+  });
+  try {
+    final request = renameRequest(base, from, to);
+    mgr.publish(request.topic, request.payload, '');
+    return await answer.future
+        .timeout(const Duration(seconds: 5), onTimeout: () => '');
+  } finally {
+    unawaited(sub.cancel());
+    mgr.unsubscribe(responseTopic);
+  }
 }
 
 /// Sets permit-join on or off for the given connection + base topic.

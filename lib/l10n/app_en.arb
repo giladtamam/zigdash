@@ -808,5 +808,13 @@
   "shortcutSlotsFull": "All 4 ZigDash tiles are in use. Which one should show this device instead?",
   "shortcutSlotLabel": "ZigDash {slot}",
   "@shortcutSlotLabel": {"placeholders": {"slot": {}}},
-  "shortcutSlotEmpty": "Not used"
+  "shortcutSlotEmpty": "Not used",
+  "deviceRename": "Rename",
+  "deviceRenameTitle": "Rename device",
+  "deviceRenameHint": "A name for the room or the device, like Bedroom",
+  "deviceRenamed": "Renamed to {name}",
+  "@deviceRenamed": {"placeholders": {"name": {}}},
+  "deviceRenameFailed": "Couldn't rename: {reason}",
+  "@deviceRenameFailed": {"placeholders": {"reason": {}}},
+  "deviceRenameNoAnswer": "Zigbee2MQTT didn't answer"
 }

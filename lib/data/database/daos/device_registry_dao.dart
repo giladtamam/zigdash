@@ -83,6 +83,10 @@ class DeviceRegistryDao extends DatabaseAccessor<AppDatabase>
       (update(panels)..where((p) => p.id.equals(panelId)))
           .write(PanelsCompanion(deviceIeee: Value(ieee)));
 
+  Future<void> setName(String panelId, String name) =>
+      (update(panels)..where((p) => p.id.equals(panelId))).write(
+          PanelsCompanion(name: Value(name), updatedAt: Value(DateTime.now())));
+
   Future<void> setPrefix(String panelId, String prefix) =>
       (update(panels)..where((p) => p.id.equals(panelId))).write(
           PanelsCompanion(

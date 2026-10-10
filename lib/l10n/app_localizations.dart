@@ -4411,6 +4411,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not used'**
   String get shortcutSlotEmpty;
+
+  /// No description provided for @deviceRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get deviceRename;
+
+  /// No description provided for @deviceRenameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename device'**
+  String get deviceRenameTitle;
+
+  /// No description provided for @deviceRenameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A name for the room or the device, like Bedroom'**
+  String get deviceRenameHint;
+
+  /// No description provided for @deviceRenamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Renamed to {name}'**
+  String deviceRenamed(Object name);
+
+  /// No description provided for @deviceRenameFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t rename: {reason}'**
+  String deviceRenameFailed(Object reason);
+
+  /// No description provided for @deviceRenameNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT didn\'t answer'**
+  String get deviceRenameNoAnswer;
 }
 
 class _AppLocalizationsDelegate
