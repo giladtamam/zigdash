@@ -1,0 +1,318 @@
+[
+ {
+  "id": "zigdash_alerts_tab",
+  "type": "tab",
+  "label": "ZigDash alerts",
+  "disabled": false,
+  "info": "Installed by ZigDash (docs/design/alerts-2.3.md). ZigDash rewrites this tab when alerts change; edits here are lost."
+ },
+ {
+  "id": "zigdash_alerts_broker",
+  "type": "mqtt-broker",
+  "name": "ZigDash alerts broker",
+  "broker": "192.168.1.1",
+  "port": "1883",
+  "clientid": "zigdash-alerts",
+  "autoConnect": true,
+  "usetls": false,
+  "protocolVersion": "4",
+  "keepalive": "60",
+  "cleansession": true,
+  "birthTopic": "",
+  "birthQos": "0",
+  "birthPayload": "",
+  "closeTopic": "",
+  "closeQos": "0",
+  "closePayload": "",
+  "willTopic": "zigdash/alerts/bridge/state",
+  "willQos": "1",
+  "willRetain": "true",
+  "willPayload": "offline"
+ },
+ {
+  "id": "zda_in_config",
+  "type": "mqtt in",
+  "z": "zigdash_alerts_tab",
+  "name": "config",
+  "topic": "zigdash/alerts/config",
+  "qos": "1",
+  "datatype": "utf8",
+  "broker": "zigdash_alerts_broker",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "x": 120,
+  "y": 60,
+  "wires": [
+   [
+    "zda_fn_ingest"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_ingest",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "ingest config",
+  "func": "// Function node \"ingest config\". In: retained zigdash/alerts/config.\n// Keeps the config and an index from device state topic to the alerts that\n// watch it. An empty payload (ZigDash turned alerts off) drops everything.\nconst raw = msg.payload;\nconst empty = raw === undefined || raw === null ||\n    (typeof raw === 'string' && raw.trim() === '') ||\n    (Buffer.isBuffer(raw) && raw.length === 0);\nif (empty) {\n    flow.set('cfg', null);\n    flow.set('index', {});\n    return null;\n}\nconst cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());\nconst index = {};\nfor (const a of cfg.alerts || []) {\n    for (const d of a.devices || []) {\n        if (!d.topic) continue;\n        (index[d.topic] = index[d.topic] || []).push({\n            id: a.id, kind: a.kind, from: a.from, to: a.to,\n            threshold: a.threshold === undefined ? 20 : a.threshold,\n            ieee: d.ieee, name: d.name,\n        });\n    }\n}\nflow.set('cfg', cfg);\nflow.set('index', index);\n// Forget devices that are no longer watched.\nconst mem = flow.get('mem') || {};\nlet changed = false;\nfor (const t of Object.keys(mem)) if (!index[t]) { delete mem[t]; changed = true; }\nif (changed) {\n    flow.set('mem', mem);\n    return { topic: 'zigdash/alerts/state', retain: true,\n             payload: JSON.stringify({ mem, dead: flow.get('dead') || {} }) };\n}\nreturn null;\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 60,
+  "wires": [
+   [
+    "zda_out"
+   ]
+  ]
+ },
+ {
+  "id": "zda_in_state",
+  "type": "mqtt in",
+  "z": "zigdash_alerts_tab",
+  "name": "memory",
+  "topic": "zigdash/alerts/state",
+  "qos": "1",
+  "datatype": "utf8",
+  "broker": "zigdash_alerts_broker",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "x": 120,
+  "y": 120,
+  "wires": [
+   [
+    "zda_fn_restore"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_restore",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "restore memory",
+  "func": "// Function node \"restore memory\". In: retained zigdash/alerts/state.\n// Node-RED's context on the hub is memory only, so what the flow remembers\n// (each device's last values, which batteries were reported, dead phones)\n// comes back from the broker once, on start.\nif (flow.get('memLoaded')) return null;\nflow.set('memLoaded', true);\nconst raw = msg.payload;\nif (raw === undefined || raw === null || raw === '' || (Buffer.isBuffer(raw) && raw.length === 0)) return null;\ntry {\n    const s = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());\n    flow.set('mem', s.mem || {});\n    flow.set('dead', s.dead || {});\n} catch (e) {\n    node.warn('alerts: bad state ' + e);\n}\nreturn null;\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 120,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "zda_in_devices",
+  "type": "mqtt in",
+  "z": "zigdash_alerts_tab",
+  "name": "devices",
+  "topic": "zigbee2mqtt/#",
+  "qos": "0",
+  "datatype": "utf8",
+  "broker": "zigdash_alerts_broker",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "x": 120,
+  "y": 200,
+  "wires": [
+   [
+    "zda_fn_watch"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_watch",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "watch devices",
+  "func": "// Function node \"watch devices\". In: every message under the Home's\n// Zigbee2MQTT base topic. Out 1: alert events to send. Out 2: retained\n// state and recent-alerts publishes. Fires on changes, never on values:\n// Zigbee2MQTT republishes a device's whole state whenever anything asks.\nconst index = flow.get('index') || {};\nconst cfg = flow.get('cfg');\nconst topic = msg.topic;\nif (!cfg || topic.endsWith('/set') || topic.endsWith('/get') || topic.includes('/bridge/')) return null;\nconst hits = index[topic];\nif (!hits) return null;\nlet state;\ntry {\n    const raw = msg.payload;\n    state = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());\n} catch (e) { return null; }\nif (!state || typeof state !== 'object') return null;\n\nconst mem = flow.get('mem') || {};\nconst fresh = !mem[topic];           // first sight since the flow (re)started with no memory\nconst m = mem[topic] || (mem[topic] = {});\nconst now = new Date();\nconst hhmm = now.toLocaleTimeString('en-GB', { timeZone: cfg.timeZone || 'UTC', hour12: false }).slice(0, 5);\nconst within = (from, to) => {\n    if (!from || !to) return true;\n    return from <= to ? (hhmm >= from && hhmm < to) : (hhmm >= from || hhmm < to);\n};\nconst events = [];\nlet changed = false;\nconst event = (h, kind, cleared, value) => ({\n    v: 1, kind, device: h.ieee, name: h.name, home: cfg.home, cleared, value: value === undefined ? null : value,\n    at: now.toISOString(),\n});\n\nfor (const h of hits) {\n    switch (h.kind) {\n        case 'leak':\n        case 'smoke': {\n            const v = h.kind === 'leak' ? state.water_leak : state.smoke;\n            if (typeof v !== 'boolean') break;\n            const was = m[h.kind];\n            if (was === undefined ? (fresh && v) : v !== was) events.push(event(h, h.kind, !v));\n            if (was !== v) { m[h.kind] = v; changed = true; }\n            break;\n        }\n        case 'opened': {\n            const v = state.contact;\n            if (typeof v !== 'boolean') break;\n            // contact: true = closed. An opening is closed -> open.\n            if (m.contact === true && v === false && within(h.from, h.to)) events.push(event(h, 'opened', false));\n            if (m.contact !== v) { m.contact = v; changed = true; }\n            break;\n        }\n        case 'battery': {\n            const level = typeof state.battery === 'number' ? state.battery : undefined;\n            const flag = state.battery_low;\n            if (level === undefined && typeof flag !== 'boolean') break;\n            const low = flag === true || (level !== undefined && level <= h.threshold);\n            const was = m.batteryLow;\n            if (low && (was === false || (was === undefined && fresh))) events.push(event(h, 'battery', false, level));\n            if (was !== low) { m.batteryLow = low; changed = true; }\n            break;\n        }\n    }\n}\nif (fresh) changed = true;\nflow.set('mem', mem);\n\nconst out2 = [];\nif (changed) {\n    out2.push({ topic: 'zigdash/alerts/state', retain: true,\n                payload: JSON.stringify({ mem, dead: flow.get('dead') || {} }) });\n}\nif (events.length) {\n    const recent = [...events.slice().reverse(), ...(flow.get('recent') || [])].slice(0, 20);\n    flow.set('recent', recent);\n    out2.push({ topic: 'zigdash/alerts/recent', retain: true, payload: JSON.stringify(recent) });\n}\nreturn [events.map(e => ({ payload: e })), out2];\n",
+  "outputs": 2,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 200,
+  "wires": [
+   [
+    "zda_fn_push"
+   ],
+   [
+    "zda_out"
+   ]
+  ]
+ },
+ {
+  "id": "zda_in_test",
+  "type": "mqtt in",
+  "z": "zigdash_alerts_tab",
+  "name": "test",
+  "topic": "zigdash/alerts/test",
+  "qos": "1",
+  "datatype": "utf8",
+  "broker": "zigdash_alerts_broker",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "x": 120,
+  "y": 280,
+  "wires": [
+   [
+    "zda_fn_test"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_test",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "test",
+  "func": "// Function node \"test\". In: zigdash/alerts/test, {\"phone\": \"<id>\"} or {}.\n// Sends a test alert to that phone, or to every channel.\nconst cfg = flow.get('cfg');\nif (!cfg) return null;\nlet req = {};\ntry { req = typeof msg.payload === 'object' && !Buffer.isBuffer(msg.payload) ? msg.payload : JSON.parse(msg.payload.toString() || '{}'); } catch (e) {}\nreturn { onlyPhone: req.phone || null,\n         payload: { v: 1, kind: 'test', device: null, name: 'ZigDash', home: cfg.home, cleared: false, value: null,\n                    at: new Date().toISOString() } };\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 280,
+  "wires": [
+   [
+    "zda_fn_push"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_push",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "send",
+  "func": "// Function node \"send\". In: one alert event (msg.payload). Out: one HTTP\n// request per phone (Web Push, RFC 8291 aes128gcm + VAPID ES256, built-in\n// crypto only), plus ntfy and Pushover when set. msg.onlyPhone limits a\n// test to one phone.\nconst cfg = flow.get('cfg');\nif (!cfg) return null;\nconst ev = msg.payload;\nconst dead = flow.get('dead') || {};\nconst b64 = s => Buffer.from(s, 'base64url');\nconst out = [];\n\nconst text = () => {\n    const key = ev.kind === 'test' ? 'test' : ev.cleared ? ev.kind + 'Cleared' : ev.kind;\n    const t = (cfg.text || {})[key] || key;\n    return t.replace('{name}', cfg.hideNames ? '' : (ev.name || '')).replace('{home}', ev.home || '')\n            .replace('{value}', ev.value === null || ev.value === undefined ? '' : String(ev.value))\n            .replace(/\\s+/g, ' ').replace(/\\(\\s*\\)/, '').trim();\n};\n\n// Web Push to each phone.\nif (cfg.vapid && cfg.vapid.privateJwk) {\n    const key = crypto.createPrivateKey({ key: cfg.vapid.privateJwk, format: 'jwk' });\n    const enc = o => Buffer.from(JSON.stringify(o)).toString('base64url');\n    const jwts = flow.get('jwts') || {};\n    const nowS = Math.floor(Date.now() / 1000);\n    const jwtFor = origin => {\n        const c = jwts[origin];\n        if (c && c.exp - nowS > 3600) return c.jwt;\n        const exp = nowS + 12 * 3600;\n        const unsigned = enc({ typ: 'JWT', alg: 'ES256' }) + '.' +\n            enc({ aud: origin, exp, sub: 'mailto:alerts@zigdash.app' });\n        const sig = crypto.sign('sha256', Buffer.from(unsigned), { key, dsaEncoding: 'ieee-p1363' }).toString('base64url');\n        jwts[origin] = { jwt: unsigned + '.' + sig, exp };\n        return jwts[origin].jwt;\n    };\n    const plain = Buffer.from(JSON.stringify(ev));\n    for (const p of cfg.phones || []) {\n        if (dead[p.id] || !p.endpoint || !p.p256dh || !p.auth) continue;\n        if (msg.onlyPhone && p.id !== msg.onlyPhone) continue;\n        const uaPub = b64(p.p256dh), auth = b64(p.auth);\n        const ecdh = crypto.createECDH('prime256v1'); ecdh.generateKeys();\n        const asPub = ecdh.getPublicKey();\n        const secret = ecdh.computeSecret(uaPub);\n        const salt = crypto.randomBytes(16);\n        const ikm = Buffer.from(crypto.hkdfSync('sha256', secret, auth, Buffer.concat([Buffer.from('WebPush: info\\0'), uaPub, asPub]), 32));\n        const cek = Buffer.from(crypto.hkdfSync('sha256', ikm, salt, Buffer.from('Content-Encoding: aes128gcm\\0'), 16));\n        const nonce = Buffer.from(crypto.hkdfSync('sha256', ikm, salt, Buffer.from('Content-Encoding: nonce\\0'), 12));\n        const c = crypto.createCipheriv('aes-128-gcm', cek, nonce);\n        const body = Buffer.concat([c.update(Buffer.concat([plain, Buffer.from([2])])), c.final(), c.getAuthTag()]);\n        const rs = Buffer.alloc(4); rs.writeUInt32BE(4096);\n        const origin = new URL(p.endpoint).origin;\n        out.push({\n            url: p.endpoint, method: 'POST', phone: p.id, isTest: ev.kind === 'test',\n            headers: { 'Content-Encoding': 'aes128gcm', 'TTL': '86400', 'Urgency': 'high',\n                       'Authorization': 'vapid t=' + jwtFor(origin) + ',k=' + cfg.vapid.publicKey },\n            payload: Buffer.concat([salt, rs, Buffer.from([65]), asPub, body]),\n        });\n    }\n    flow.set('jwts', jwts);\n}\n\nconst urgent = ev.kind === 'leak' || ev.kind === 'smoke';\nif (cfg.ntfy && cfg.ntfy.topic && !msg.onlyPhone) {\n    out.push({\n        url: (cfg.ntfy.server || 'https://ntfy.sh').replace(/\\/$/, '') + '/' + cfg.ntfy.topic,\n        method: 'POST', channel: 'ntfy', isTest: ev.kind === 'test',\n        headers: { 'Title': ev.home || 'ZigDash', 'Priority': urgent && !ev.cleared ? '5' : '4', 'Tags': 'zigdash' },\n        payload: text(),\n    });\n}\nif (cfg.pushover && cfg.pushover.user && cfg.pushover.token && !msg.onlyPhone) {\n    const m = { token: cfg.pushover.token, user: cfg.pushover.user, title: ev.home || 'ZigDash', message: text(),\n                priority: urgent && !ev.cleared ? 2 : 1 };\n    if (m.priority === 2) { m.retry = 60; m.expire = 3600; }\n    out.push({ url: 'https://api.pushover.net/1/messages.json', method: 'POST', channel: 'pushover',\n               isTest: ev.kind === 'test', headers: { 'Content-Type': 'application/json' }, payload: m });\n}\nreturn [out];\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [
+   {
+    "var": "crypto",
+    "module": "crypto"
+   }
+  ],
+  "x": 540,
+  "y": 240,
+  "wires": [
+   [
+    "zda_http"
+   ]
+  ]
+ },
+ {
+  "id": "zda_http",
+  "type": "http request",
+  "z": "zigdash_alerts_tab",
+  "name": "post",
+  "method": "use",
+  "ret": "txt",
+  "paytoqs": "ignore",
+  "url": "",
+  "tls": "",
+  "persist": false,
+  "proxy": "",
+  "insecureHTTPParser": false,
+  "authType": "",
+  "senderr": false,
+  "headers": [],
+  "x": 700,
+  "y": 240,
+  "wires": [
+   [
+    "zda_fn_result"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_result",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "result",
+  "func": "// Function node \"result\". In: the HTTP answer. A 404 or 410 from Google's\n// push means that phone's registration is gone: mark it dead (ZigDash\n// removes it from the config). A test reports its result to ZigDash.\nconst status = msg.statusCode;\nconst out = [];\nif (msg.phone && (status === 404 || status === 410)) {\n    const dead = flow.get('dead') || {};\n    if (!dead[msg.phone]) {\n        dead[msg.phone] = true;\n        flow.set('dead', dead);\n        out.push({ topic: 'zigdash/alerts/state', retain: true,\n                   payload: JSON.stringify({ mem: flow.get('mem') || {}, dead }) });\n    }\n}\nif (msg.isTest) {\n    out.push({ topic: 'zigdash/alerts/test/result', retain: false,\n               payload: JSON.stringify({ phone: msg.phone || null, channel: msg.channel || 'push',\n                                         status, ok: status >= 200 && status < 300,\n                                         body: String(msg.payload || '').slice(0, 200) }) });\n}\nif (status < 200 || status >= 300) node.warn('alerts: ' + (msg.channel || 'push') + ' answered ' + status);\nreturn [out];\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 860,
+  "y": 240,
+  "wires": [
+   [
+    "zda_out"
+   ]
+  ]
+ },
+ {
+  "id": "zda_hb",
+  "type": "inject",
+  "z": "zigdash_alerts_tab",
+  "name": "every 30s",
+  "props": [
+   {
+    "p": "payload"
+   }
+  ],
+  "repeat": "30",
+  "crontab": "",
+  "once": true,
+  "onceDelay": "1",
+  "topic": "",
+  "payload": "",
+  "payloadType": "date",
+  "x": 120,
+  "y": 360,
+  "wires": [
+   [
+    "zda_fn_hb"
+   ]
+  ]
+ },
+ {
+  "id": "zda_fn_hb",
+  "type": "function",
+  "z": "zigdash_alerts_tab",
+  "name": "online heartbeat",
+  "func": "return { topic: 'zigdash/alerts/bridge/state', payload: 'online', retain: true };\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 360,
+  "wires": [
+   [
+    "zda_out"
+   ]
+  ]
+ },
+ {
+  "id": "zda_out",
+  "type": "mqtt out",
+  "z": "zigdash_alerts_tab",
+  "name": "publish (msg.topic / msg.retain)",
+  "topic": "",
+  "qos": "1",
+  "retain": "",
+  "respTopic": "",
+  "contentType": "",
+  "userProps": "",
+  "correl": "",
+  "expiry": "",
+  "broker": "zigdash_alerts_broker",
+  "x": 1080,
+  "y": 200,
+  "wires": []
+ }
+]

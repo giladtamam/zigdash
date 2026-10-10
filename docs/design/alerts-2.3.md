@@ -214,6 +214,8 @@ The Home name is left out when the app has one Home.
 - Recent alerts (kept on the hub) shows missed alerts when ZigDash opens.
 - Setup checks whether Android has put ZigDash to sleep, and explains Samsung's "Never sleeping apps".
 
+**Flow on the hub (2026-10-10, later):** `node-red/alerts-flow.json`, installed on the SMHUB through `POST /flow`, with a config naming a fake sensor topic: dry → wet sent a push that woke the closed ZigDash on the emulator; `zigdash/alerts/test` answered `{"ok":true}` on `test/result`; state and recent were retained as specified. The flow's 29-check harness (`node-red/alerts/test/harness.mjs`) passes.
+
 **Still to test on the user's Samsung phone:** delivery in real Doze, and Samsung's own app sleeping.
 
 **What changes in the spec:**
