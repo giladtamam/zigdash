@@ -120,7 +120,7 @@ void main() {
           .toggle(m, _device(_light, 'lamp'), lastPayload: '{"state":"OFF"}')
           .then((v) => r = v);
       async.elapse(const Duration(milliseconds: 100));
-      expect(b.sent.single, ('zigbee2mqtt/lamp/set', '{"state":"TOGGLE"}'));
+      expect(b.sent.single, ('zigbee2mqtt/lamp/set', '{"state":"ON"}'));
       expect(r!.outcome, ShortcutOutcome.confirmed);
       expect(r!.on, isTrue);
       expect(r!.line, 'On');
@@ -146,6 +146,28 @@ void main() {
       async.elapse(const Duration(milliseconds: 50));
       expect(r!.outcome, ShortcutOutcome.confirmed);
       expect(r!.on, isTrue);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('a first tap learns the current state, then sends its target value',
+      () {
+    fakeAsync((async) {
+      final b = _Broker();
+      final m = _manager(b);
+      ShortcutResult? r;
+      ShortcutCommander(l10n: l10n)
+          .toggle(m, _device(_light, 'lamp'))
+          .then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 50));
+      expect(b.sent, isEmpty, reason: 'waiting briefly for the state');
+      b.emit('zigbee2mqtt/lamp', '{"state":"ON"}');
+      async.elapse(const Duration(milliseconds: 50));
+      expect(b.sent.single.$2, '{"state":"OFF"}');
+      async.elapse(const Duration(milliseconds: 50));
+      expect(r!.outcome, ShortcutOutcome.confirmed);
+      expect(r!.on, isFalse);
       m.dispose();
       async.flushMicrotasks();
     });

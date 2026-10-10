@@ -55,10 +55,16 @@ void main() {
     expect(await db.select(db.shortcuts).get(), hasLength(1));
   });
 
-  test('a widget id or tile slot is used once', () async {
+  test('a widget id or tile slot is used once: a new row replaces the old',
+      () async {
     await dao.put(row('a', widget: 41));
-    expect(() => db.into(db.shortcuts).insert(row('b', widget: 41)),
-        throwsA(anything));
+    await dao.put(row('b', widget: 41, targets: ['0x7']));
+    await dao.put(row('c', slot: 3));
+    await dao.put(row('d', slot: 3));
+    final rows = await db.select(db.shortcuts).get();
+    expect(rows.map((r) => r.id), unorderedEquals(['b', 'd']));
+    expect(() => db.into(db.shortcuts).insert(row('e', widget: 41)),
+        throwsA(anything), reason: 'the column itself stays unique');
   });
 
   test('deleting a home deletes its shortcuts', () async {

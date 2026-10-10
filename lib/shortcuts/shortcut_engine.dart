@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui' show DartPluginRegistrant, Locale;
 
+import 'package:drift/native.dart';
 import 'package:flutter/services.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,20 +55,54 @@ void _serve() {
 }
 
 class ShortcutEngine {
-  AppDatabase? _db;
-  final _managers = <String, MqttManager>{};
+  Future<AppDatabase>? _db;
 
-  AppDatabase get _database => _db ??= AppDatabase();
+  /// The app's database, read-only: the app may be running (and migrating
+  /// after an update) at the same time.
+  Future<AppDatabase> get _database => _db ??= _openReadOnly();
+
+  static Future<AppDatabase> _openReadOnly() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dir.path, 'zigdash.sqlite'));
+    late final AppDatabase db;
+    db = AppDatabase.readOnly(NativeDatabase(file, setup: (raw) {
+      db.fileVersion = raw.userVersion;
+      raw.execute('PRAGMA query_only = ON');
+      raw.execute('PRAGMA busy_timeout = 2000');
+    }));
+    return db;
+  }
 
   Future<SharedPreferences> get _prefs => SharedPreferences.getInstance();
 
-  Future<MqttManager?> _manager(String connectionId) async {
-    final cached = _managers[connectionId];
-    if (cached != null) return cached;
-    final conn = await ConnectionDao(_database).getById(connectionId);
+  /// One manager per home, rebuilt when the home's settings or password
+  /// change in the app.
+  final _managers = <String, ({String key, MqttManager mgr})>{};
+
+  /// Per home, the setup in progress: two quick taps wait for one setup
+  /// instead of each creating a manager.
+  final _setups = <String, Future<MqttManager?>>{};
+
+  Future<MqttManager?> _manager(String connectionId) {
+    final previous = _setups[connectionId] ?? Future<MqttManager?>.value();
+    final next = previous
+        .catchError((Object _) => null)
+        .then((_) => _setUp(connectionId));
+    _setups[connectionId] = next;
+    return next;
+  }
+
+  Future<MqttManager?> _setUp(String connectionId) async {
+    final db = await _database;
+    final conn = await ConnectionDao(db).getById(connectionId);
     if (conn == null) return null;
     final password = await createSecureStore().readPassword(connectionId) ?? '';
-    return _managers[connectionId] = MqttManager(
+    final key = [conn.host, conn.port, conn.protocol.name, conn.username,
+        conn.keepAliveSeconds, conn.remoteHost, password].join('|');
+    final cached = _managers[connectionId];
+    if (cached != null && cached.key == key) return cached.mgr;
+    unawaited(cached?.mgr.dispose()); // settings changed: stop the old one
+    final mgr = MqttManager(
       config: BrokerConfig(
         id: conn.id,
         host: conn.host,
@@ -76,10 +114,12 @@ class ShortcutEngine {
       ),
       password: password,
     );
+    _managers[connectionId] = (key: key, mgr: mgr);
+    return mgr;
   }
 
-  Future<ShortcutDevice?> _device(String connectionId, String ieee) =>
-      resolveShortcutDevice(_database, connectionId, ieee);
+  Future<ShortcutDevice?> _device(String connectionId, String ieee) async =>
+      resolveShortcutDevice(await _database, connectionId, ieee);
 
   Future<ShortcutCommander> _commander() async {
     final code = (await _prefs).getString('locale');
@@ -116,7 +156,7 @@ class ShortcutEngine {
   }
 
   Future<Map<String, Object?>> scene(String connectionId, String sceneId) async {
-    final scene = await SceneDao(_database).getById(sceneId);
+    final scene = await SceneDao(await _database).getById(sceneId);
     final mgr = await _manager(connectionId);
     if (scene == null || mgr == null) return {'outcome': 'removed'};
     final outcome = await (await _commander())

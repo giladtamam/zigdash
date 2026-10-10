@@ -88,6 +88,7 @@ class ShortcutCommander {
     this.connectWithin = const Duration(seconds: 8),
     this.confirmWithin = const Duration(seconds: 5),
     this.maxSilence = const Duration(seconds: 3),
+    this.knownStateWithin = const Duration(milliseconds: 300),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
@@ -98,10 +99,15 @@ class ShortcutCommander {
   /// A connection quiet for longer is replaced before sending: between taps
   /// Android freezes the app and its socket dies unnoticed (measured).
   final Duration maxSilence;
+
+  /// How long a first tap waits for the device's current state.
+  final Duration knownStateWithin;
   final DateTime Function() _now;
 
-  /// The command a tap sends: covers open or close, everything else toggles
-  /// its first switch, from the last-known state.
+  /// The command a tap sends: covers open or close, everything else switches
+  /// its first switch. With the state known it sends the target value (ON or
+  /// OFF), never TOGGLE, so only a reply holding that value confirms the
+  /// tap; TOGGLE is left for a device whose state is unknown.
   static Map<String, Object?> commandFor(ShortcutDevice d, String? lastPayload) {
     final state = DeviceState(d.profile, decodeDeviceState(lastPayload));
     if (d.profile.deviceClass == DeviceClass.cover) {
@@ -111,7 +117,9 @@ class ShortcutCommander {
       return DeviceCommand.cover(open ? 'CLOSE' : 'OPEN');
     }
     final f = d.profile.switches.first;
-    return DeviceCommand.toggle(f, state.isOn(f));
+    final on = state.isOn(f);
+    if (on == null) return DeviceCommand.toggle(f, null);
+    return {f.property: on ? (f.valueOff ?? false) : (f.valueOn ?? true)};
   }
 
   /// Whether a state the device reported answers [command]: every commanded
@@ -164,6 +172,14 @@ class ShortcutCommander {
     );
   }
 
+  bool _unknown(ShortcutDevice d, Map<String, Object?> before) {
+    if (d.profile.deviceClass == DeviceClass.cover) {
+      return before['state'] == null && before['position'] == null;
+    }
+    final f = d.profile.switches.firstOrNull;
+    return f == null || before[f.property] == null;
+  }
+
   /// What a shortcut shows for [payload] (received at [at]), without a tap:
   /// used while the app runs to keep shortcuts current.
   ShortcutResult describe(ShortcutDevice d, String payload, DateTime at) =>
@@ -181,19 +197,35 @@ class ShortcutCommander {
       return _result(ShortcutOutcome.unreachable, d, lastPayload, lastAt);
     }
     final reply = Completer<String>();
-    final command = commandFor(d, lastPayload);
-    final before = decodeDeviceState(lastPayload);
+    final current = Completer<String>();
+    var command = commandFor(d, lastPayload);
+    var before = decodeDeviceState(lastPayload);
     var sent = false;
     final sub = mgr.subscribe(d.subscribeTopic).listen((m) {
-      // Only a state that arrives after the command and matches it is the
-      // device's answer; a fresh subscription first gets the broker's old copy.
-      if (sent &&
-          !reply.isCompleted &&
+      if (m.payload.isEmpty) return;
+      if (!sent) {
+        if (!current.isCompleted) current.complete(m.payload);
+        return;
+      }
+      // Only a state matching the command is the device's answer: the
+      // broker's old copy can still arrive after sending.
+      if (!reply.isCompleted &&
           confirms(command, decodeDeviceState(m.payload), before)) {
         reply.complete(m.payload);
       }
     });
     try {
+      // State unknown (a first tap): take the device's current state if it
+      // arrives quickly, so the command can name its target value.
+      if (_unknown(d, before)) {
+        final now = await current.future
+            .timeout(knownStateWithin, onTimeout: () => '');
+        if (now.isNotEmpty) {
+          lastPayload = now;
+          before = decodeDeviceState(now);
+          command = commandFor(d, now);
+        }
+      }
       mgr.publish(d.publishTopic, jsonEncode(command), '');
       sent = true;
       final payload = await reply.future.timeout(confirmWithin);

@@ -116,13 +116,18 @@ class MqttManager {
   /// abandoned by [ensureConnected] and must not touch any state.
   int _attempt = 0;
 
-  /// Set once the current attempt has run for [_hungAfter]: only then does
-  /// [ensureConnected] abandon it. A connect normally takes ~50 ms on a
-  /// phone, so a younger attempt is simply waited for (and two quick resumes
-  /// don't start two connections).
+  /// Set once the current attempt has outlived its whole time budget (every
+  /// candidate's timeout): only then does [ensureConnected] abandon it, which
+  /// happens when Android froze the app mid-connect. A live attempt is waited
+  /// for, so a tap away from home never cuts the remote try short, and two
+  /// quick resumes don't start two connections.
   bool _attemptHung = false;
   Timer? _hungTimer;
-  static const _hungAfter = Duration(seconds: 1);
+
+  Duration get _attemptBudget => Duration(
+      milliseconds: endpointCandidates(config)
+              .fold<int>(0, (sum, c) => sum + c.timeoutMs) +
+          500);
 
   /// When the broker last showed it's there (a message, a PINGRESP or the
   /// CONNACK). A connection silent for longer than the keep-alive is dead,
@@ -226,8 +231,16 @@ class MqttManager {
   }
 
   /// [ensureConnected] callers, told directly (not through the stream) when
-  /// the connection comes up.
+  /// the connection comes up, or that every candidate failed.
   final _connectedWaiters = <Completer<bool>>[];
+  StreamSubscription<Object?>? _ackSub;
+
+  void _failWaiters() {
+    for (final w in _connectedWaiters) {
+      if (!w.isCompleted) w.complete(false);
+    }
+    _connectedWaiters.clear();
+  }
 
   Future<void> connect() async {
     if (_disposed) return;
@@ -237,7 +250,8 @@ class MqttManager {
     final attempt = ++_attempt;
     _attemptHung = false;
     _hungTimer?.cancel();
-    _hungTimer = Timer(_hungAfter, () => _attemptHung = true);
+    _hungTimer = Timer(_attemptBudget, () => _attemptHung = true);
+    _clientId = _clientIdOverride ?? _shortClientId(config.id);
     try {
       await _connect(attempt);
     } finally {
@@ -266,6 +280,7 @@ class MqttManager {
         // entirely without scheduling a reconnect.
         _lastError = e.toString();
         _emit(MqttStatus.error);
+        _failWaiters();
         return;
       } catch (e) {
         _lastError = e.toString();
@@ -330,7 +345,11 @@ class MqttManager {
       _lastError = null;
       _lastFailure = null;
       _lastActivity = _now();
+      // Any sign the broker is there counts: PINGRESP, SUBACK, PUBACK.
       client.pongCallback = () => _lastActivity = _now();
+      client.onSubscribed = (_) => _lastActivity = _now();
+      _ackSub?.cancel();
+      _ackSub = client.published?.listen((_) => _lastActivity = _now());
       _emitEndpoint(cand.kind);
       _backoffMs = _initialBackoffMs;
       await _updatesSub?.cancel();
@@ -349,6 +368,7 @@ class MqttManager {
     if (attempt != _attempt) return;
     _lastFailure = _attemptFailure ?? FailureKind.unknown;
     _emit(MqttStatus.error);
+    _failWaiters();
     _scheduleReconnect();
   }
 
@@ -454,6 +474,7 @@ class MqttManager {
   Future<void> dispose() async {
     _disposed = true;
     _hungTimer?.cancel();
+    _ackSub?.cancel();
     for (final w in _connectedWaiters) {
       if (!w.isCompleted) w.complete(false);
     }
@@ -590,7 +611,6 @@ class MqttManager {
   }
 
   mc.MqttClient _buildClient(String host, int timeoutMs) {
-    _clientId = _clientIdOverride ?? _shortClientId(config.id);
     final client = _clientFactory(config, _clientId, host: host);
     client.logging(on: false);
     // Stay on mqtt_client's default protocol (MQTT 3.1, ProtocolName=MQIsdp).

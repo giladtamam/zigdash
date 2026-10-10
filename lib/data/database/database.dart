@@ -24,14 +24,35 @@ part 'database.g.dart';
   Shortcuts,
 ])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_open());
-  AppDatabase.test(super.executor);
+  AppDatabase()
+      : _readOnly = false,
+        super(_open());
+  AppDatabase.test(super.executor) : _readOnly = false;
+
+  /// For the headless shortcut engine (2.1 §1), which runs beside the app:
+  /// takes the file at whatever version it's at ([fileVersion], set when the
+  /// executor opens) and never migrates or writes. Only the app migrates.
+  AppDatabase.readOnly(super.executor) : _readOnly = true;
+
+  final bool _readOnly;
+
+  /// The file's own schema version, for [AppDatabase.readOnly].
+  int? fileVersion;
+
+  static const _version = 8;
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => _readOnly ? (fileVersion ?? _version) : _version;
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
+  MigrationStrategy get migration => _readOnly
+      ? MigrationStrategy(
+          onCreate: (_) async {},
+          onUpgrade: (_, __, ___) async {},
+        )
+      : _migration;
+
+  MigrationStrategy get _migration => MigrationStrategy(
         onCreate: (m) => m.createAll(),
         onUpgrade: (m, from, to) async {
           if (from < 2) {

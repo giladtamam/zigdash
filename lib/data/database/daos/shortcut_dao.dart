@@ -36,10 +36,24 @@ class ShortcutDao extends DatabaseAccessor<AppDatabase>
           s.tileSlot!,
       };
 
-  /// Inserts, or replaces the row for the same widget or tile slot
-  /// (reconfiguring a widget keeps its launcher id).
-  Future<void> put(ShortcutsCompanion row) =>
-      into(shortcuts).insertOnConflictUpdate(row);
+  /// Inserts, replacing any row with the same id, widget or tile slot
+  /// (reconfiguring a widget keeps its launcher id; reassigning a slot keeps
+  /// the slot).
+  Future<void> put(ShortcutsCompanion row) => transaction(() async {
+        final widget = row.appWidgetId.present ? row.appWidgetId.value : null;
+        final slot = row.tileSlot.present ? row.tileSlot.value : null;
+        await (delete(shortcuts)
+              ..where((s) =>
+                  s.id.equals(row.id.value) |
+                  (widget == null
+                      ? const Constant(false)
+                      : s.appWidgetId.equals(widget)) |
+                  (slot == null
+                      ? const Constant(false)
+                      : s.tileSlot.equals(slot))))
+            .go();
+        await into(shortcuts).insert(row);
+      });
 
   Future<int> deleteByWidget(int appWidgetId) =>
       (delete(shortcuts)..where((s) => s.appWidgetId.equals(appWidgetId))).go();

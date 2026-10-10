@@ -207,26 +207,41 @@ void main() {
       });
     });
 
-    test('a hung attempt is abandoned and a new one starts', () {
+    test('a live attempt is waited for, so the remote try isn\'t cut short',
+        () {
+      fakeAsync((async) {
+        final made = <_FakeClient>[];
+        final m = MqttManager(
+            config: configWithRemote(),
+            password: '',
+            clientFactory: sequence([_Behavior.hang, _Behavior.succeed], made));
+        m.connect();
+        // 1.5 s into the 3 s local probe: still within the attempt's budget.
+        async.elapse(const Duration(milliseconds: 1500));
+        bool? ok;
+        m.ensureConnected().then((v) => ok = v);
+        async.elapse(const Duration(milliseconds: 2000));
+        async.flushMicrotasks();
+        expect(ok, isTrue);
+        expect(made, hasLength(2), reason: 'local probe, then remote: no restart');
+        expect(m.activeEndpoint, MqttEndpoint.remote);
+        m.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('when every candidate fails, waiters hear it at once', () {
       fakeAsync((async) {
         final made = <_FakeClient>[];
         final m = MqttManager(
             config: local,
             password: '',
-            clientFactory: sequence([_Behavior.hang, _Behavior.succeed], made));
-        m.connect();
-        // Stuck for 1.5 s: past the 1 s "hung" mark.
-        async.elapse(const Duration(milliseconds: 1500));
-        expect(m.status, MqttStatus.connecting);
+            clientFactory: sequence([_Behavior.fail], made));
         bool? ok;
         m.ensureConnected().then((v) => ok = v);
         async.elapse(const Duration(milliseconds: 50));
         async.flushMicrotasks();
-        expect(ok, isTrue, reason: 'must not wait for the hung attempt');
-        expect(made, hasLength(2));
-        // The abandoned attempt finishing later changes nothing.
-        async.elapse(const Duration(seconds: 10));
-        expect(m.status, MqttStatus.connected);
+        expect(ok, isFalse, reason: 'not after the 8 s timeout');
         m.dispose();
         async.flushMicrotasks();
       });
@@ -253,7 +268,7 @@ void main() {
     test('every attempt sends a fresh client id', () {
       fakeAsync((async) {
         final ids = <String>[];
-        final behaviors = [_Behavior.hang, _Behavior.succeed];
+        final behaviors = [_Behavior.fail, _Behavior.succeed];
         final m = MqttManager(
           config: local,
           password: '',
@@ -263,15 +278,14 @@ void main() {
           },
         );
         m.connect();
-        async.elapse(const Duration(milliseconds: 1500));
+        async.flushMicrotasks();
         m.ensureConnected();
         async.elapse(const Duration(milliseconds: 50));
         expect(ids, hasLength(2));
         expect(ids[0], startsWith('zd-conn1'));
+        expect(ids[1], startsWith('zd-conn1'));
         expect(ids[0], isNot(ids[1]),
             reason: 'a late abandoned attempt must not take over the session');
-        expect(ids[1], startsWith('zd-conn1'),
-            reason: 'same connection tail for broker logs and ACLs');
         m.dispose();
         async.flushMicrotasks();
       });
