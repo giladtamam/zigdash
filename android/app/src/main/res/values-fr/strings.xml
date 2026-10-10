@@ -8,4 +8,11 @@
     <string name="widget_device_sample_line">Allumé</string>
     <string name="widget_scene_sample">Soirée</string>
     <string name="widget_scene_sample_line">Confirmée</string>
+    <string name="widget_group_label">Groupe ZigDash</string>
+    <string name="widget_group_description">Commandez plusieurs appareils et lancez des scènes depuis un widget</string>
+    <string name="widget_group_sample_1">Plafonnier</string>
+    <string name="widget_group_sample_2">Lampadaire</string>
+    <string name="widget_group_sample_off">Éteint</string>
+    <string name="widget_group_sample_3">Volets</string>
+    <string name="widget_group_sample_scene">Nuit</string>
 </resources>

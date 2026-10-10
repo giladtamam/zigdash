@@ -8,4 +8,11 @@
     <string name="widget_device_sample_line">På</string>
     <string name="widget_scene_sample">Kväll</string>
     <string name="widget_scene_sample_line">Bekräftad</string>
+    <string name="widget_group_label">ZigDash-grupp</string>
+    <string name="widget_group_description">Styr flera enheter och kör scener från en widget</string>
+    <string name="widget_group_sample_1">Taklampa</string>
+    <string name="widget_group_sample_2">Golvlampa</string>
+    <string name="widget_group_sample_off">Av</string>
+    <string name="widget_group_sample_3">Rullgardiner</string>
+    <string name="widget_group_sample_scene">Natt</string>
 </resources>

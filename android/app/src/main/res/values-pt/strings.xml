@@ -8,4 +8,11 @@
     <string name="widget_device_sample_line">Ligado</string>
     <string name="widget_scene_sample">Noite</string>
     <string name="widget_scene_sample_line">Confirmada</string>
+    <string name="widget_group_label">Grupo do ZigDash</string>
+    <string name="widget_group_description">Controle vários dispositivos e ative cenas em um só widget</string>
+    <string name="widget_group_sample_1">Luz do teto</string>
+    <string name="widget_group_sample_2">Luminária</string>
+    <string name="widget_group_sample_off">Desligado</string>
+    <string name="widget_group_sample_3">Persianas</string>
+    <string name="widget_group_sample_scene">Noite</string>
 </resources>

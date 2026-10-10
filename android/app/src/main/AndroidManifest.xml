@@ -63,6 +63,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_scene_info" />
         </receiver>
+        <!-- Shortcuts: the group widget. -->
+        <receiver
+            android:name=".GroupWidget"
+            android:exported="true"
+            android:label="@string/widget_group_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_group_info" />
+        </receiver>
         <activity
             android:name=".WidgetConfigActivity"
             android:exported="true"

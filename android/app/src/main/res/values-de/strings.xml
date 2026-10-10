@@ -8,4 +8,11 @@
     <string name="widget_device_sample_line">An</string>
     <string name="widget_scene_sample">Abend</string>
     <string name="widget_scene_sample_line">Bestätigt</string>
+    <string name="widget_group_label">ZigDash-Gruppe</string>
+    <string name="widget_group_description">Schalte mehrere Geräte und starte Szenen mit einem Widget</string>
+    <string name="widget_group_sample_1">Deckenlicht</string>
+    <string name="widget_group_sample_2">Stehlampe</string>
+    <string name="widget_group_sample_off">Aus</string>
+    <string name="widget_group_sample_3">Rollladen</string>
+    <string name="widget_group_sample_scene">Nacht</string>
 </resources>

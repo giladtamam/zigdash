@@ -15,7 +15,8 @@ import android.widget.TextView
  * widget is added, and by long-press › Reconfigure on Android 12+. A device
  * widget lists the devices on the dashboards, the same list Device Controls
  * offer (shortcut.controls); a scene widget lists the scenes
- * (shortcut.scenes). Both are written by the app.
+ * (shortcut.scenes); a group widget the dashboard sections
+ * (shortcut.groups). All are written by the app.
  */
 class WidgetConfigActivity : Activity() {
     private var id = AppWidgetManager.INVALID_APPWIDGET_ID
@@ -29,8 +30,9 @@ class WidgetConfigActivity : Activity() {
         if (id == AppWidgetManager.INVALID_APPWIDGET_ID) return finish()
 
         // The launcher says which widget it's adding: a device or a scene.
-        val scene = AppWidgetManager.getInstance(this).getAppWidgetInfo(id)
-            ?.provider?.className == SceneWidget::class.java.name
+        val provider = AppWidgetManager.getInstance(this).getAppWidgetInfo(id)?.provider?.className
+        val scene = provider == SceneWidget::class.java.name
+        val group = provider == GroupWidget::class.java.name
 
         val pad = dp(20)
         val list = LinearLayout(this).apply {
@@ -39,16 +41,28 @@ class WidgetConfigActivity : Activity() {
             minimumWidth = dp(300)
         }
         list.addView(TextView(this).apply {
-            text = if (scene) ShortcutPrefs.word(context, "chooseScene", "Choose a scene")
-                   else ShortcutPrefs.word(context, "chooseDevice", "Choose a device")
+            text = when {
+                scene -> ShortcutPrefs.word(context, "chooseScene", "Choose a scene")
+                group -> ShortcutPrefs.word(context, "chooseGroup", "Choose a group")
+                else -> ShortcutPrefs.word(context, "chooseDevice", "Choose a device")
+            }
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
             setPadding(0, 0, 0, dp(12))
         })
-        // (name, Home, what a tap does)
-        val rows: List<Triple<String, String, () -> Unit>> = if (scene) {
-            ShortcutPrefs.scenes(this).map { e -> Triple(e.name, e.home) { chooseScene(e) } }
-        } else {
-            ShortcutPrefs.controls(this).map { e -> Triple(e.name, e.home) { choose(e) } }
+        // (name, where it is, what a tap does)
+        val rows: List<Triple<String, String, () -> Unit>> = when {
+            scene -> ShortcutPrefs.scenes(this).map { e -> Triple(e.name, e.home) { chooseScene(e) } }
+            group -> {
+                // A section is named within its dashboard (and Home, if several).
+                val all = ShortcutPrefs.groups(this)
+                val homes = all.map { it.home }.distinct().size > 1
+                all.map { g ->
+                    Triple(g.name, if (homes) "${g.home} · ${g.dashboard}" else g.dashboard) {
+                        chooseGroup(g)
+                    }
+                }
+            }
+            else -> ShortcutPrefs.controls(this).map { e -> Triple(e.name, e.home) { choose(e) } }
         }
         if (rows.isEmpty()) {
             list.addView(TextView(this).apply {
@@ -64,7 +78,7 @@ class WidgetConfigActivity : Activity() {
                 }
             })
         }
-        val homes = rows.map { it.second }.distinct().size > 1
+        val homes = group || rows.map { it.second }.distinct().size > 1
         for ((name, home, pick) in rows) {
             list.addView(LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
@@ -90,6 +104,24 @@ class WidgetConfigActivity : Activity() {
         })
     }
 
+    private fun chooseGroup(g: ShortcutPrefs.GroupEntry) {
+        ShortcutPrefs.setGroupWidget(this, id, g)
+        GroupWidget.render(this, AppWidgetManager.getInstance(this), id)
+        ShortcutPrefs.mark(this, "shortcut.added.group_widget")
+        askState()
+        setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id))
+        finish()
+    }
+
+    /** Asks the new widget's devices for their state so it isn't blank:
+     *  through the foreground service, as this screen closes right away. */
+    private fun askState() {
+        val ask = Intent(this, WidgetActionService::class.java)
+            .setAction(WidgetActionService.ACTION_WATCH)
+            .putExtra(DeviceWidget.EXTRA_ID, id)
+        if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(ask) else startService(ask)
+    }
+
     private fun chooseScene(e: ShortcutPrefs.SceneEntry) {
         ShortcutPrefs.setSceneWidget(this, id, e)
         SceneWidget.render(this, AppWidgetManager.getInstance(this), id)
@@ -102,12 +134,7 @@ class WidgetConfigActivity : Activity() {
         ShortcutPrefs.setWidget(this, id, e)
         DeviceWidget.render(this, AppWidgetManager.getInstance(this), id)
         ShortcutPrefs.mark(this, "shortcut.added.widget")
-        // Ask the device for its state so the new widget isn't blank.
-        // Through the foreground service: this screen closes right away.
-        val ask = Intent(this, WidgetActionService::class.java)
-            .setAction(WidgetActionService.ACTION_WATCH)
-            .putExtra(DeviceWidget.EXTRA_ID, id)
-        if (android.os.Build.VERSION.SDK_INT >= 26) startForegroundService(ask) else startService(ask)
+        askState()
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id))
         finish()
     }

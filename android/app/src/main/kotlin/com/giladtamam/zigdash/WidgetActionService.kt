@@ -27,7 +27,11 @@ class WidgetActionService : Service() {
     private var running = 0
     private val changes = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         if (key != null && key.startsWith("flutter.shortcut.state.")) {
-            main.post { DeviceWidget.refreshAll(this); SceneWidget.refreshAll(this) }
+            main.post {
+                DeviceWidget.refreshAll(this)
+                SceneWidget.refreshAll(this)
+                GroupWidget.refreshAll(this)
+            }
         }
     }
 
@@ -47,6 +51,10 @@ class WidgetActionService : Service() {
         startForeground()
         val id = intent?.getIntExtra(DeviceWidget.EXTRA_ID, -1) ?: -1
         val action = intent?.action ?: ""
+        ShortcutPrefs.groupWidget(this, id)?.let {
+            runGroup(id, it, action, intent)
+            return START_NOT_STICKY
+        }
         if (action == ACTION_SCENE) {
             runScene(id)
             return START_NOT_STICKY
@@ -96,6 +104,58 @@ class WidgetActionService : Service() {
             else -> done("{}")
         }
         return START_NOT_STICKY
+    }
+
+    /** The words a tap's outcome shows, or null when it went well. */
+    private fun problemFor(json: String): String? {
+        val outcome = try { JSONObject(json).optString("outcome") } catch (_: Exception) { "" }
+        return when (outcome) {
+            "confirmed", "sent" -> null
+            "unreachable" -> ShortcutPrefs.word(this, "cantReach", "Can't reach home")
+            "removed" -> ShortcutPrefs.word(this, "removed", "Removed")
+            else -> ShortcutPrefs.word(this, "notConfirmed", "Not confirmed")
+        }
+    }
+
+    /**
+     * A group widget's tap: a row's toggle (its IEEE in the intent), a scene
+     * button (its scene id), or the new widget asking its devices for state.
+     */
+    private fun runGroup(id: Int, g: ShortcutPrefs.GroupEntry, action: String, intent: Intent?) {
+        val mgr = AppWidgetManager.getInstance(this)
+        if (action == ACTION_WATCH) {
+            running++
+            ShortcutEngine.watch(this, g.connectionId, g.ieees) {
+                running--
+                finishSoon(WATCH_MS)
+            }
+            return
+        }
+        val ieee = intent?.getStringExtra(GroupWidget.EXTRA_IEEE)
+        val scene = intent?.getStringExtra(GroupWidget.EXTRA_SCENE)
+        val about = (if (action == ACTION_SCENE) scene else ieee)
+        if (about == null) {
+            finishSoon(0)
+            return
+        }
+        ShortcutPrefs.mark(this, "shortcut.used.group_widget")
+        GroupWidget.render(this, mgr, id, about, working = true)
+        running++
+        val done = { json: String ->
+            android.util.Log.i("ZigDashShortcuts", "group widget $id $action $about: $json")
+            val problem = problemFor(json)
+            GroupWidget.render(this, mgr, id, about, problem = problem)
+            running--
+            if (problem != null) {
+                main.postDelayed({ GroupWidget.render(this, mgr, id) }, 10_000L)
+            }
+            finishSoon(if (problem != null) 10_000L else 0L)
+        }
+        if (action == ACTION_SCENE) {
+            ShortcutEngine.scene(this, g.connectionId, about, done)
+        } else {
+            ShortcutEngine.toggle(this, g.connectionId, about, done)
+        }
     }
 
     /** Runs scene widget [id]'s scene; the engine writes "Sent", then "Confirmed". */

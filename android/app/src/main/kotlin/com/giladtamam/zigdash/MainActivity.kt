@@ -37,6 +37,7 @@ class MainActivity : FlutterActivity() {
                     }
                     DeviceWidget.refreshAll(this)
                     SceneWidget.refreshAll(this)
+                    GroupWidget.refreshAll(this)
                     result.success(null)
                 }
                 else -> result.notImplemented()
