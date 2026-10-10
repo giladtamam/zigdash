@@ -75,7 +75,8 @@ class ShortcutService {
             ieee: ieee,
             name: name,
             cover: cover,
-            position: cover && device?.profile.position != null));
+            position: cover && device?.profile.position != null,
+            deviceClass: device?.profile.deviceClass.name));
   }
 
   /// Rewrites what every tile reads from the database: run at app start,
@@ -97,7 +98,8 @@ class ShortcutService {
               ieee: targets.first,
               name: device.name,
               cover: cover,
-              position: cover && device.profile.position != null));
+              position: cover && device.profile.position != null,
+              deviceClass: device.profile.deviceClass.name));
     }
   }
 

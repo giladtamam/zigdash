@@ -22,13 +22,23 @@ object ShortcutPrefs {
     data class Tile(
         val connectionId: String, val ieee: String, val name: String,
         val cover: Boolean = false, val position: Boolean = false,
-    )
+        val deviceClass: String = "",
+    ) {
+        /** The tile and widget icon for this kind of device. */
+        val icon: Int get() = when (deviceClass) {
+            "cover" -> R.drawable.w_ic_cover
+            "light", "colorLight" -> R.drawable.w_ic_light
+            "switchPlug" -> R.drawable.w_ic_plug
+            "climate", "contact", "motion", "leakSmoke" -> R.drawable.w_ic_sensor
+            else -> R.drawable.ic_shortcut_tile
+        }
+    }
 
     data class State(val line: String?, val on: Boolean?, val at: Long?)
 
     fun tile(ctx: Context, slot: Int): Tile? = json(ctx, "shortcut.tile.$slot")?.let {
         Tile(it.optString("connectionId"), it.optString("ieee"), it.optString("name"),
-            it.optBoolean("cover"), it.optBoolean("position"))
+            it.optBoolean("cover"), it.optBoolean("position"), it.optString("class"))
     }
 
     /** The shutter position (0–100) in the stored state payload, if any. */

@@ -24,17 +24,20 @@ String shortcutTileKey(int slot) => 'shortcut.tile.$slot';
 const shortcutStringsKey = 'shortcut.strings';
 
 /// [cover]: a shutter, whose tile opens the slider pop-up instead of
-/// toggling; [position]: it can be set to a position.
+/// toggling; [position]: it can be set to a position; [deviceClass]: picks
+/// the tile's icon (a shutter, a bulb, a plug).
 String encodeTileAssignment(
         {required String connectionId,
         required String ieee,
         required String name,
         bool cover = false,
-        bool position = false}) =>
+        bool position = false,
+        String? deviceClass}) =>
     jsonEncode({
       'connectionId': connectionId,
       'ieee': ieee,
       'name': name,
+      if (deviceClass != null) 'class': deviceClass,
       if (cover) 'cover': true,
       if (position) 'position': true,
     });

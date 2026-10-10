@@ -79,6 +79,7 @@ abstract class ShortcutTileService : TileService() {
         val tile = qsTile ?: return
         val t = ShortcutPrefs.tile(this, slot)
         if (t == null) {
+            tile.icon = android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_shortcut_tile)
             tile.label = "ZigDash"
             setSubtitle(tile, ShortcutPrefs.word(this, "chooseDevice", "Choose a device"))
             tile.state = Tile.STATE_INACTIVE
@@ -87,6 +88,7 @@ abstract class ShortcutTileService : TileService() {
         }
         val s = ShortcutPrefs.state(this, t.connectionId, t.ieee)
         tile.label = t.name
+        tile.icon = android.graphics.drawable.Icon.createWithResource(this, t.icon)
         setSubtitle(tile, when {
             working -> ShortcutPrefs.word(this, "working", "working…")
             flash != null -> flash
