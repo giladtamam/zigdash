@@ -170,6 +170,40 @@ A device page for a leak, smoke, contact or battery device shows **Notify me…*
    - The no-ntfy-installed case is still to check on the phone.
 3. **Doze delivery: not run yet.** It needs ntfy installed on the phone.
 
+### Prototype results: delivery into ZigDash (2026-10-10, branch `prototype/in-app-push`)
+
+**Setup:**
+- `unifiedpush` 6.2.0 (`unifiedpush_android` 3.5.0) and `org.unifiedpush.android:embedded-fcm-distributor:3.1.0`.
+- No Firebase project, no `google-services.json`, no second app, no ZigDash server.
+- A release build on an Android 16 emulator with Google Play services.
+- The sender was Web Push (RFC 8291 `aes128gcm` + VAPID ES256) using only `node:crypto`, run both from the Mac and from a throwaway Node-RED function node on the user's SMHUB (built-in `crypto` through the function node's Setup modules, posted by an `http request` node).
+
+| Test | Result |
+|---|---|
+| Register | ZigDash lists itself as a distributor, gets an `https://fcm.googleapis.com/fcm/send/…` endpoint in ~5 s |
+| App open | Delivered, decrypted, shown as a ZigDash notification, < 1 s |
+| App process killed (swiped / reclaimed) | Google starts ZigDash in the background; Dart shows the notification ~0.16 s after the process starts |
+| Forced Doze, screen off, app killed, `Urgency: high` | Delivered at once; the device stays in Doze |
+| Forced Doze, `Urgency: normal` (control) | Held until the device woke. **Alerts must be sent with `Urgency: high`.** |
+| Force-stopped app | Dropped (`GCM: broadcast … result=CANCELLED`) and not redelivered after reopening. Standard Android; ntfy would be hit the same way. The endpoint stayed the same after reopening. |
+| Sent by Node-RED on the SMHUB | Delivered and decrypted |
+
+**Build notes:**
+- Tink classes clash (`tink` 1.23.0 from the push library versus `tink-android` 1.9.0 from secure storage). Fixed with the plugin README's `configurations.all { force tink-android 1.23.0 + substitute tink }`.
+- `flutter_local_notifications` needs core-library desugaring.
+
+**Decision: delivery into ZigDash is the 2.3 path.** Mitigations for the force-stop case:
+- Recent alerts (kept on the hub) shows missed alerts when ZigDash opens.
+- Setup checks whether Android has put ZigDash to sleep, and explains Samsung's "Never sleeping apps".
+
+**Still to test on the user's Samsung phone:** delivery in real Doze, and Samsung's own app sleeping.
+
+**What changes in the spec:**
+- **Delivery:** ntfy is no longer the default. It becomes the optional household-sharing path, and the fallback for phones without Google Play services (where ZigDash isn't listed as a distributor).
+- **The hub's keys:** the hub keeps a VAPID key pair; ZigDash fetches the public key before registering.
+- **What each phone sends the hub:** its endpoint and keys, through the retained config (one entry per phone, so several phones get alerts).
+- **Tapping a notification** opens ZigDash directly, so the `zigdash://` scheme is only needed for ntfy.
+
 ## 6. Effort
 
 - Spikes: half a day.
