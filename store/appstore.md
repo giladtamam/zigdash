@@ -56,17 +56,29 @@ by the user in their own mail app, outside ZigDash.
 
 Facts for the questionnaire:
 
-- HTTPS/TLS through the OS and Dart's TLS (MQTT over TLS, Home Assistant,
-  the relay API).
+- TLS for MQTT, Home Assistant and the relay API comes from Dart's own TLS
+  library (BoringSSL inside the Flutter engine), not iOS's.
 - AES-256-GCM, a standard algorithm, implemented in the app with
-  pointycastle, for the remote relay: messages between the user's hub and
-  phones are sealed end to end (lib/remote, hub/src/engine.js).
-- The app's full source, including that encryption, is public (MIT, GitHub).
+  pointycastle, seals relay messages end to end between hub and phones
+  (lib/remote, hub/src/engine.js).
+- No proprietary algorithms. The app's full source is public (MIT, GitHub).
 
-So the app does use encryption beyond the OS's, with standard algorithms
-only, and its source is publicly available. Answering is the developer's
-call; once decided, `ITSAppUsesNonExemptEncryption` in ios/Runner/Info.plist
-can record the answer so each build doesn't ask again.
+Apple's table ([export compliance documentation](https://developer.apple.com/help/app-store-connect/reference/export-compliance-documentation-for-encryption))
+puts that in the middle row, "an industry standard algorithm, not provided
+within the Apple operating system": no US document (no CCATS) is needed, but
+**a French encryption declaration is required if the app is offered in
+France**. France is ZigDash's largest Android country, so the choice is:
+
+1. File the declaration with ANSSI (France's cybersecurity agency) and upload
+   it in App Store Connect; France opens when it's accepted.
+2. Launch without France (Pricing and Availability), add it once the
+   declaration is in.
+
+Either way the questionnaire answers are: uses encryption — yes; qualifies
+for an exemption — no; standard algorithms instead of or in addition to the
+OS's — yes. Not legal advice; ANSSI's own page is the authority. Once
+decided, `ITSAppUsesNonExemptEncryption` (true) in ios/Runner/Info.plist,
+with the code App Store Connect issues, records it so each build doesn't ask.
 
 ## Review notes
 
