@@ -15,6 +15,7 @@ import '../../../data/last_known/last_known_store.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../home_rename.dart';
+import '../../../alerts/alert_push.dart' show AlertPush;
 import '../../devices/devices_providers.dart';
 
 /// One home's page in Settings (devices-tablet-1.13.md §6): its name, its
@@ -81,12 +82,15 @@ class HomeSettingsScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.go(Routes.homeAutomations(home.id)),
               ),
-              ListTile(
-                leading: const Icon(Icons.notifications_outlined),
-                title: Text(l10n.alertsTitle),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.push(Routes.homeAlerts(home.id)),
-              ),
+              // Alerts arrive through Android's push (alerts-2.3.md); iOS
+              // gets them over APNs in a later release (docs/design/ios.md).
+              if (AlertPush.available)
+                ListTile(
+                  leading: const Icon(Icons.notifications_outlined),
+                  title: Text(l10n.alertsTitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(Routes.homeAlerts(home.id)),
+                ),
               ListTile(
                 leading: const Icon(Icons.download_outlined),
                 title: Text(l10n.haImportTitle),

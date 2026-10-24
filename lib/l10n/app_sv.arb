@@ -1134,6 +1134,7 @@
   "proGetFuture": "Alla Pro-funktioner som kommer senare, utan extra kostnad",
   "proFreeTitle": "Gratis för alltid",
   "proFreeBody": "Konfiguration, instrumentpaneler, styrning av alla enheter, widgetar, snabbinställningsrutor, aviseringar, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.",
+  "proFreeBodyIos": "Konfiguration, instrumentpaneler, styrning av alla enheter, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.",
   "proBuy": "Skaffa Pro",
   "proBuyPrice": "Skaffa Pro · {price}",
   "proOnce": "En betalning, ingen prenumeration. Köpt på en annan telefon med samma Google-konto? Det låses upp automatiskt.",

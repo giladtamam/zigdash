@@ -6414,6 +6414,12 @@ abstract class AppLocalizations {
   /// **'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.'**
   String get proFreeBody;
 
+  /// No description provided for @proFreeBodyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.'**
+  String get proFreeBodyIos;
+
   /// No description provided for @proBuy.
   ///
   /// In en, this message translates to:

@@ -3603,6 +3603,10 @@ class AppLocalizationsPl extends AppLocalizations {
       'Konfiguracja, pulpity, sterowanie każdym urządzeniem, widżety, kafelki szybkich ustawień, alerty, trzy automatyzacje na dom i sam tablet na ścianie pozostają darmowe. Nic, czego używasz dziś, nie zostanie zablokowane.';
 
   @override
+  String get proFreeBodyIos =>
+      'Konfiguracja, pulpity, sterowanie każdym urządzeniem, trzy automatyzacje na dom i sam tablet na ścianie pozostają darmowe. Nic, czego używasz dziś, nie zostanie zablokowane.';
+
+  @override
   String get proBuy => 'Kup Pro';
 
   @override

@@ -1134,6 +1134,7 @@
   "proGetFuture": "Todas las funciones Pro que lleguen después, sin coste extra",
   "proFreeTitle": "Gratis para siempre",
   "proFreeBody": "La configuración, los paneles, el control de cada dispositivo, los widgets, los iconos de ajustes rápidos, las alertas, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que usas hoy se bloquea.",
+  "proFreeBodyIos": "La configuración, los paneles, el control de cada dispositivo, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que usas hoy se bloquea.",
   "proBuy": "Obtener Pro",
   "proBuyPrice": "Obtener Pro · {price}",
   "proOnce": "Un solo pago, sin suscripción. ¿Lo compraste en otro teléfono con la misma cuenta de Google? Se desbloquea solo.",

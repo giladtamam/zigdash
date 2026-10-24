@@ -1268,6 +1268,7 @@
   "proGetFuture": "Every Pro feature that comes later, at no extra cost",
   "proFreeTitle": "Free forever",
   "proFreeBody": "Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.",
+  "proFreeBodyIos": "Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.",
   "proBuy": "Get Pro",
   "proBuyPrice": "Get Pro · {price}",
   "@proBuyPrice": {"placeholders": {"price": {"type": "String"}}},

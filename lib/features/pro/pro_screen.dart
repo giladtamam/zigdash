@@ -83,7 +83,10 @@ class _ProScreenState extends ConsumerState<ProScreen> {
             const SizedBox(height: 24),
             Text(l10n.proFreeTitle, style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
-            Text(l10n.proFreeBody, style: theme.textTheme.bodyLarge),
+            Text(
+              proFlavor == 'appstore' ? l10n.proFreeBodyIos : l10n.proFreeBody,
+              style: theme.textTheme.bodyLarge,
+            ),
             const SizedBox(height: 32),
             if (unlocked)
               Semantics(

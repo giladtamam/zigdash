@@ -1134,6 +1134,7 @@
   "proGetFuture": "Elke Pro-functie die later komt, zonder extra kosten",
   "proFreeTitle": "Altijd gratis",
   "proFreeBody": "Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.",
+  "proFreeBodyIos": "Instellen, dashboards, de bediening van elk apparaat, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.",
   "proBuy": "Pro nemen",
   "proBuyPrice": "Pro nemen · {price}",
   "proOnce": "Eén betaling, geen abonnement. Gekocht op een andere telefoon met hetzelfde Google-account? Het wordt automatisch ontgrendeld.",

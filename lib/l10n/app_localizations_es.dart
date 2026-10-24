@@ -3608,6 +3608,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'La configuración, los paneles, el control de cada dispositivo, los widgets, los iconos de ajustes rápidos, las alertas, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que usas hoy se bloquea.';
 
   @override
+  String get proFreeBodyIos =>
+      'La configuración, los paneles, el control de cada dispositivo, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que usas hoy se bloquea.';
+
+  @override
   String get proBuy => 'Obtener Pro';
 
   @override

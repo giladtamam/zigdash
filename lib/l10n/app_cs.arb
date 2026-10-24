@@ -1049,6 +1049,7 @@
   "proGetFuture": "Každá funkce Pro, která přijde později, bez příplatku",
   "proFreeTitle": "Navždy zdarma",
   "proFreeBody": "Nastavení, nástěnky, ovládání všech zařízení, widgety, dlaždice Rychlého nastavení, upozornění, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.",
+  "proFreeBodyIos": "Nastavení, nástěnky, ovládání všech zařízení, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.",
   "proBuy": "Získat Pro",
   "proBuyPrice": "Získat Pro · {price}",
   "proOnce": "Jedna platba, žádné předplatné. Koupil jsi to na jiném telefonu se stejným účtem Google? Odemkne se automaticky.",

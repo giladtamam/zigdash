@@ -3593,6 +3593,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Konfiguration, instrumentpaneler, styrning av alla enheter, widgetar, snabbinställningsrutor, aviseringar, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.';
 
   @override
+  String get proFreeBodyIos =>
+      'Konfiguration, instrumentpaneler, styrning av alla enheter, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.';
+
+  @override
   String get proBuy => 'Skaffa Pro';
 
   @override

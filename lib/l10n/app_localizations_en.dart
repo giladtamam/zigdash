@@ -3590,6 +3590,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.';
 
   @override
+  String get proFreeBodyIos =>
+      'Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.';
+
+  @override
   String get proBuy => 'Get Pro';
 
   @override

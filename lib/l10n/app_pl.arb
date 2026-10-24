@@ -1129,6 +1129,7 @@
   "proGetFuture": "Każdą przyszłą funkcję Pro bez dopłaty",
   "proFreeTitle": "Za darmo na zawsze",
   "proFreeBody": "Konfiguracja, pulpity, sterowanie każdym urządzeniem, widżety, kafelki szybkich ustawień, alerty, trzy automatyzacje na dom i sam tablet na ścianie pozostają darmowe. Nic, czego używasz dziś, nie zostanie zablokowane.",
+  "proFreeBodyIos": "Konfiguracja, pulpity, sterowanie każdym urządzeniem, trzy automatyzacje na dom i sam tablet na ścianie pozostają darmowe. Nic, czego używasz dziś, nie zostanie zablokowane.",
   "proBuy": "Kup Pro",
   "proBuyPrice": "Kup Pro · {price}",
   "proOnce": "Jedna płatność, bez subskrypcji. Kupione na innym telefonie z tym samym kontem Google? Odblokuje się automatycznie.",

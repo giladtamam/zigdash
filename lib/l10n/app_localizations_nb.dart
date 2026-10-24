@@ -3592,6 +3592,10 @@ class AppLocalizationsNb extends AppLocalizations {
       'Oppsett, dashbord, styring av alle enheter, moduler, hurtiginnstillingsfliser, varsler, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.';
 
   @override
+  String get proFreeBodyIos =>
+      'Oppsett, dashbord, styring av alle enheter, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.';
+
+  @override
   String get proBuy => 'Skaff Pro';
 
   @override

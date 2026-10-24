@@ -1049,6 +1049,7 @@
   "proGetFuture": "Ogni funzione Pro che arriverà in futuro, senza costi aggiuntivi",
   "proFreeTitle": "Gratis per sempre",
   "proFreeBody": "Configurazione, dashboard, il controllo di ogni dispositivo, i widget, i riquadri delle impostazioni rapide, gli avvisi, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.",
+  "proFreeBodyIos": "Configurazione, dashboard, il controllo di ogni dispositivo, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.",
   "proBuy": "Ottieni Pro",
   "proBuyPrice": "Ottieni Pro · {price}",
   "proOnce": "Un solo pagamento, nessun abbonamento. L'hai acquistato su un altro telefono con lo stesso account Google? Si sblocca da solo.",

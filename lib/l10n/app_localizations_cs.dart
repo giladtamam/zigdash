@@ -3599,6 +3599,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Nastavení, nástěnky, ovládání všech zařízení, widgety, dlaždice Rychlého nastavení, upozornění, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.';
 
   @override
+  String get proFreeBodyIos =>
+      'Nastavení, nástěnky, ovládání všech zařízení, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.';
+
+  @override
   String get proBuy => 'Získat Pro';
 
   @override

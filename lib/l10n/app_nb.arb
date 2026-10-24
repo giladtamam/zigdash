@@ -1134,6 +1134,7 @@
   "proGetFuture": "Alle Pro-funksjoner som kommer senere, uten ekstra kostnad",
   "proFreeTitle": "Gratis for alltid",
   "proFreeBody": "Oppsett, dashbord, styring av alle enheter, moduler, hurtiginnstillingsfliser, varsler, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.",
+  "proFreeBodyIos": "Oppsett, dashbord, styring av alle enheter, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.",
   "proBuy": "Skaff Pro",
   "proBuyPrice": "Skaff Pro · {price}",
   "proOnce": "Én betaling, ikke abonnement. Kjøpt på en annen telefon med samme Google-konto? Det låses opp automatisk.",

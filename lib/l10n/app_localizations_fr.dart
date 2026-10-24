@@ -3618,6 +3618,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'La configuration, les tableaux de bord, le contrôle de chaque appareil, les widgets, les tuiles des réglages rapides, les alertes, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce que vous utilisez aujourd\'hui ne sera verrouillé.';
 
   @override
+  String get proFreeBodyIos =>
+      'La configuration, les tableaux de bord, le contrôle de chaque appareil, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce que vous utilisez aujourd\'hui ne sera verrouillé.';
+
+  @override
   String get proBuy => 'Obtenir Pro';
 
   @override

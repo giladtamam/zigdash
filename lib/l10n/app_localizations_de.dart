@@ -3612,6 +3612,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Einrichtung, Dashboards, jede Gerätesteuerung, Widgets, Schnelleinstellungen-Kacheln, Warnungen, drei Automationen pro Zuhause und das Wandtablet selbst bleiben kostenlos. Nichts, was Sie heute nutzen, wird gesperrt.';
 
   @override
+  String get proFreeBodyIos =>
+      'Einrichtung, Dashboards, jede Gerätesteuerung, drei Automationen pro Zuhause und das Wandtablet selbst bleiben kostenlos. Nichts, was Sie heute nutzen, wird gesperrt.';
+
+  @override
   String get proBuy => 'Pro holen';
 
   @override

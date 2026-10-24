@@ -3607,6 +3607,10 @@ class AppLocalizationsNl extends AppLocalizations {
       'Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.';
 
   @override
+  String get proFreeBodyIos =>
+      'Instellen, dashboards, de bediening van elk apparaat, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.';
+
+  @override
   String get proBuy => 'Pro nemen';
 
   @override

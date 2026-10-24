@@ -1134,6 +1134,7 @@
   "proGetFuture": "Jede spätere Pro-Funktion ohne Aufpreis",
   "proFreeTitle": "Für immer kostenlos",
   "proFreeBody": "Einrichtung, Dashboards, jede Gerätesteuerung, Widgets, Schnelleinstellungen-Kacheln, Warnungen, drei Automationen pro Zuhause und das Wandtablet selbst bleiben kostenlos. Nichts, was Sie heute nutzen, wird gesperrt.",
+  "proFreeBodyIos": "Einrichtung, Dashboards, jede Gerätesteuerung, drei Automationen pro Zuhause und das Wandtablet selbst bleiben kostenlos. Nichts, was Sie heute nutzen, wird gesperrt.",
   "proBuy": "Pro holen",
   "proBuyPrice": "Pro holen · {price}",
   "proOnce": "Eine Zahlung, kein Abo. Auf einem anderen Telefon mit demselben Google-Konto gekauft? Es wird automatisch freigeschaltet.",

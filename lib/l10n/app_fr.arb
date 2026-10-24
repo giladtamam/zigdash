@@ -1059,6 +1059,7 @@
   "proGetFuture": "Toutes les fonctions Pro à venir, sans supplément",
   "proFreeTitle": "Gratuit pour toujours",
   "proFreeBody": "La configuration, les tableaux de bord, le contrôle de chaque appareil, les widgets, les tuiles des réglages rapides, les alertes, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce que vous utilisez aujourd'hui ne sera verrouillé.",
+  "proFreeBodyIos": "La configuration, les tableaux de bord, le contrôle de chaque appareil, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce que vous utilisez aujourd'hui ne sera verrouillé.",
   "proBuy": "Obtenir Pro",
   "proBuyPrice": "Obtenir Pro · {price}",
   "proOnce": "Un seul paiement, sans abonnement. Acheté sur un autre téléphone avec le même compte Google ? Il se débloque automatiquement.",

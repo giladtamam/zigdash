@@ -3607,6 +3607,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Configurazione, dashboard, il controllo di ogni dispositivo, i widget, i riquadri delle impostazioni rapide, gli avvisi, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.';
 
   @override
+  String get proFreeBodyIos =>
+      'Configurazione, dashboard, il controllo di ogni dispositivo, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.';
+
+  @override
   String get proBuy => 'Ottieni Pro';
 
   @override
