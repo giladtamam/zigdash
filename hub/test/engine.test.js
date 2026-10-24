@@ -425,6 +425,25 @@ test('remote: device states go up sealed under an opaque id; bridge topics never
   await z.engine.stop();
 });
 
+test('remote: changes while the relay is unreachable go up on reconnect, latest only', async () => {
+  const { z, relay } = await withRemote();
+  const lamp = `homes/h1/s/${H.opaqueId(remoteKey, 'zigbee2mqtt/Kitchen lamp')}`;
+  const ups = () => relay.published.filter((p) => p.topic.startsWith('homes/h1/s/'));
+  relay.emit('close');
+  z.z2mPublished('zigbee2mqtt/Kitchen lamp', { state: 'ON' });
+  z.z2mPublished('zigbee2mqtt/Kitchen lamp', { state: 'OFF' });
+  z.z2mPublished('zigbee2mqtt/bridge/devices', [{ big: true }]);
+  assert.equal(ups().length, 0, 'nothing is sent while disconnected');
+  relay.emit('connect');
+  assert.equal(ups().length, 1, 'one per device, the bridge never');
+  assert.equal(ups()[0].topic, lamp);
+  assert.deepEqual(JSON.parse(H.unseal(remoteKey, ups()[0].payload).payload), { state: 'OFF' });
+  relay.emit('close');
+  relay.emit('connect');
+  assert.equal(ups().length, 1, 'nothing is sent twice');
+  await z.engine.stop();
+});
+
 test('remote: sealed commands reach Zigbee2MQTT; anything else is dropped', async () => {
   const { z, relay } = await withRemote();
   const send = (obj, key = remoteKey) => relay.emit('message', 'homes/h1/c', H.seal(key, obj));

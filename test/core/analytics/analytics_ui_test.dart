@@ -10,6 +10,7 @@ import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/dashboards/widgets/analytics_consent_card.dart';
 import 'package:zigdash/features/onboarding/demo_service.dart';
+import 'package:zigdash/features/onboarding/setup/ai_help.dart';
 import 'package:zigdash/features/onboarding/setup/setup_analytics.dart';
 import 'package:zigdash/features/onboarding/setup/setup_candidate.dart';
 import 'package:zigdash/features/connections/discovery/hub_probe.dart';
@@ -174,7 +175,50 @@ void main() {
             SetupResult(connectionId: 'c', dashboardId: 'd', panelCount: 12),
           ),
         )?.props,
-        {'step': 'complete', 'devices': '6-20'},
+        {'step': 'complete', 'devices': '6-20', 'via': 'scan', 'ai': 'no'},
+      );
+      // 3.1.3: how setup succeeded rides on complete.
+      expect(
+        setupStepFor(
+          null,
+          const SetupComplete(
+            SetupResult(connectionId: 'c', dashboardId: 'd', panelCount: 3),
+            via: SetupVia.homeAssistant,
+          ),
+        )?.props,
+        {
+          'step': 'complete',
+          'devices': '1-5',
+          'via': 'home_assistant',
+          'ai': 'no',
+        },
+      );
+      // 3.1.5: whether "Ask your AI" came first rides on complete too.
+      expect(
+        setupStepFor(
+          null,
+          const SetupComplete(
+            SetupResult(connectionId: 'c', dashboardId: 'd', panelCount: 3),
+          ),
+          aiHelped: true,
+        )?.props['ai'],
+        'yes',
+      );
+      expect(
+        const SetupStep(
+          SetupStepKind.aiHelp,
+          choice: AiHelpFrom.haConnect,
+          result: AiHelpAction.shared,
+        ).props,
+        {'step': 'ai_help', 'result': 'shared', 'choice': 'ha_connect'},
+      );
+      expect(
+        const SetupStep(
+          SetupStepKind.complete,
+          devices: 4,
+          via: SetupVia.brokerForm,
+        ).props,
+        {'step': 'complete', 'devices': '1-5', 'via': 'broker_form'},
       );
     });
 

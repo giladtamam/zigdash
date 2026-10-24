@@ -1,0 +1,5 @@
+Setup tells you what's wrong, and always has a way out:
+• Home Assistant sign-in checks your address first, and says if nothing answers
+• Not sure of your Home Assistant address? Setup tells you where to find it
+• Cancel on every "Checking…" screen
+• Back in the middle of setup starts it over instead of closing the app

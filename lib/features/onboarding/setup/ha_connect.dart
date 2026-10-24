@@ -13,6 +13,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/analytics/analytics.dart';
+import '../../../mqtt/endpoint.dart';
 import '../../../mqtt/ha_address.dart';
 import '../../../mqtt/ha_mqtt_client.dart';
 import '../../../mqtt/ha_token.dart';
@@ -77,6 +78,34 @@ typedef HaProbe = Future<HaConnectProblem?> Function(Uri base, String stored);
 /// Hands the checked home to the setup coordinator.
 typedef HaAdopt = Future<void> Function(Uri address, String signIn);
 
+/// Whether anything answers at [base], before the browser opens; null
+/// when it does.
+typedef HaReach = Future<HaConnectProblem?> Function(Uri base);
+
+/// The real reach (3.1.4): one request to Home Assistant's sign-in
+/// providers. Only silence or a bad certificate stops the sign-in: a page
+/// that answers in any way goes on to the browser, which shows it.
+Future<HaConnectProblem?> reachHomeAssistant(Uri base) async {
+  // The same budget as connecting through Home Assistant: a remote
+  // address over mobile data can be slow, and must not read as down.
+  const budget = Duration(milliseconds: homeAssistantConnectTimeoutMs);
+  final client = HttpClient()..connectionTimeout = budget;
+  try {
+    final request = await client
+        .getUrl(base.replace(path: '/auth/providers'))
+        .timeout(budget);
+    final response = await request.close().timeout(budget);
+    await response.drain<void>().catchError((_) {});
+    return null;
+  } on HandshakeException {
+    return HaConnectProblem.certificate;
+  } catch (_) {
+    return HaConnectProblem.unreachable;
+  } finally {
+    client.close(force: true);
+  }
+}
+
 /// The real probe: a [HaMqttClient] connect, then disconnect.
 Future<HaConnectProblem?> probeHomeAssistant(Uri base, String stored) async {
   final client = HaMqttClient(haWebSocketUri(base), 'zd-check')
@@ -111,15 +140,26 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     required HaAdopt adopt,
     HaProbe probe = probeHomeAssistant,
     HaSignIn? signIn,
+    HaReach? reach,
     this.onEvent,
   }) : _adopt = adopt,
        _probe = probe,
        _signIn = signIn,
+       _reach = reach,
        super(HaConnectAsk(address: address));
 
   final HaAdopt _adopt;
   final HaProbe _probe;
   final HaSignIn? _signIn;
+  final HaReach? _reach;
+
+  /// Bumped by [cancel] and [dispose]: a try that finds it changed stops
+  /// where it is and hands nothing on.
+  var _try = 0;
+  var _disposed = false;
+
+  /// The address of the try under way, for [cancel].
+  var _tryAddress = '';
 
   /// Usage events: how each try ended. Never the address or a token.
   final void Function(AnalyticsEvent event)? onEvent;
@@ -131,8 +171,15 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     _ => '',
   };
 
-  void _ask(String address, HaConnectProblem? problem) =>
-      value = HaConnectAsk(address: address, problem: problem);
+  void _ask(String address, HaConnectProblem? problem) {
+    if (_disposed) return;
+    value = HaConnectAsk(address: address, problem: problem);
+  }
+
+  void _checking(String address) {
+    _tryAddress = address;
+    value = const HaConnectChecking();
+  }
 
   void _count(HaConnectOutcome outcome) =>
       onEvent?.call(SetupStep(SetupStepKind.haConnect, result: outcome));
@@ -146,8 +193,22 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       _count(HaConnectOutcome.noAddress);
       return _ask(address, HaConnectProblem.noAddress);
     }
-    value = const HaConnectChecking();
+    final t = ++_try;
+    _checking(address);
+    // A Home Assistant that can't be reached would open the browser on an
+    // error page, and closing it read as nothing happening (3.1.4).
+    final unreached = await _reach?.call(base);
+    if (t != _try) return;
+    if (unreached != null) {
+      _count(
+        unreached == HaConnectProblem.certificate
+            ? HaConnectOutcome.certificate
+            : HaConnectOutcome.unreachable,
+      );
+      return _ask(address, unreached);
+    }
     final signed = await signIn(base);
+    if (t != _try) return;
     final access = signed.accessToken;
     if (access == null) {
       switch (signed.error) {
@@ -166,6 +227,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     // 30 minutes. Without one, the access token still connects for now.
     final refresh = signed.refreshToken;
     await _check(
+      t,
       base,
       address,
       refresh != null ? haStoredRefresh(refresh) : access,
@@ -180,12 +242,14 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       return _ask(address, HaConnectProblem.noAddress);
     }
     if (token.trim().isEmpty) return _ask(address, HaConnectProblem.noToken);
-    value = const HaConnectChecking();
-    await _check(base, address, token.trim());
+    final t = ++_try;
+    _checking(address);
+    await _check(t, base, address, token.trim());
   }
 
-  Future<void> _check(Uri base, String address, String stored) async {
+  Future<void> _check(int t, Uri base, String address, String stored) async {
     final problem = await _probe(base, stored);
+    if (t != _try) return;
     if (problem != null) {
       _count(switch (problem) {
         HaConnectProblem.unreachable => HaConnectOutcome.unreachable,
@@ -204,4 +268,18 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   }
 
   void back() => _ask(_address, null);
+
+  /// Stops the try under way (3.1.4): back to the address, nothing kept.
+  void cancel() {
+    if (value is! HaConnectChecking) return;
+    _try++;
+    _ask(_tryAddress, null);
+  }
+
+  @override
+  void dispose() {
+    _try++;
+    _disposed = true;
+    super.dispose();
+  }
 }

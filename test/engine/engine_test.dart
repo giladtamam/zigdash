@@ -95,7 +95,7 @@ void main() {
 
   test('the bundled engine source carries its version', () {
     final source = File('hub/zigdash-engine.js').readAsStringSync();
-    expect(bundledEngineVersion(source), '3.1.3');
+    expect(bundledEngineVersion(source), '3.1.5');
   });
 
   group('EngineInstaller', () {

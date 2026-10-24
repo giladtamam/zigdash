@@ -1570,6 +1570,34 @@ class AppLocalizationsNb extends AppLocalizations {
   String get haConnectChecking => 'Sjekker Home Assistant…';
 
   @override
+  String get setupStillChecking =>
+      'Sjekker fortsatt. Dette kan ta opptil 30 sekunder.';
+
+  @override
+  String get aiHelpTitle => 'Står du fast? Spør KI-assistenten din';
+
+  @override
+  String get aiHelpBody =>
+      'ZigDash skriver opp hva den fant for ChatGPT, Claude, Gemini eller en annen KI-app, uten passord eller adresser. Du ser det før det deles.';
+
+  @override
+  String get aiHelpButton => 'Spør en KI';
+
+  @override
+  String get aiHelpPreviewTitle => 'Dette blir delt';
+
+  @override
+  String get aiHelpShare => 'Del til en KI-app';
+
+  @override
+  String get aiHelpCopied =>
+      'Kopiert. Lim det inn i en hvilken som helst KI-chat.';
+
+  @override
+  String get haConnectWhereAddress =>
+      'Usikker på hva den er? I Home Assistant-appen åpner du Innstillinger › Companion-app og trykker på serveren din: adressen står der. På en datamaskin er det adressen nettleseren viser når Home Assistant er åpen.';
+
+  @override
   String get haConnectNotAdmin =>
       'Home Assistant-brukeren din er ikke administrator. ZigDash trenger en for Home Assistants MQTT. Logg inn som administrator, eller lim inn et token en administrator har laget.';
 
@@ -1852,6 +1880,13 @@ class AppLocalizationsNb extends AppLocalizations {
   String get setupPlatformPi => 'Raspberry Pi eller Docker';
 
   @override
+  String get setupPlatformZha => 'ZHA, ikke Zigbee2MQTT';
+
+  @override
+  String get setupZhaNote =>
+      'ZigDash viser enheter fra Zigbee2MQTT, så den ser ikke enheter i ZHA, Home Assistants egen Zigbee. Du kan prøve demohjemmet for å se hvordan ZigDash fungerer.';
+
+  @override
   String get setupPlatformNotSure => 'Ikke sikker';
 
   @override
@@ -2007,6 +2042,16 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return '$host kunne ikke slås opp. Navn som slutter på .local feiler ofte på Android; prøv IP-adressen i stedet. Home Assistant viser den under Innstillinger › System › Nettverk.';
+  }
+
+  @override
+  String setupAddressNotResolvedHa(String host, String button) {
+    return '$host finnes ikke fra denne telefonen; Android klarer ofte ikke å slå opp .local-navn. Trykk på $button ovenfor og bruk adressen du åpner Home Assistant med i nettleseren, eller skriv IP-adressen her. Home Assistant viser den under Innstillinger › System › Nettverk.';
+  }
+
+  @override
+  String setupAddressNotResolvedHaIos(String host, String button) {
+    return '$host finnes ikke fra denne telefonen. Trykk på $button ovenfor og bruk adressen du åpner Home Assistant med i nettleseren, eller skriv IP-adressen her. Home Assistant viser den under Innstillinger › System › Nettverk.';
   }
 
   @override

@@ -1578,6 +1578,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get haConnectChecking => 'Comprobando Home Assistant…';
 
   @override
+  String get setupStillChecking =>
+      'Seguimos comprobando. Puede tardar hasta 30 segundos.';
+
+  @override
+  String get aiHelpTitle => '¿Atascado? Pregunta a tu asistente de IA';
+
+  @override
+  String get aiHelpBody =>
+      'ZigDash resume lo que encontró para ChatGPT, Claude, Gemini o cualquier app de IA, sin contraseñas ni direcciones. Lo ves antes de compartirlo.';
+
+  @override
+  String get aiHelpButton => 'Preguntar a una IA';
+
+  @override
+  String get aiHelpPreviewTitle => 'Lo que se compartirá';
+
+  @override
+  String get aiHelpShare => 'Compartir con una app de IA';
+
+  @override
+  String get aiHelpCopied => 'Copiado. Pégalo en cualquier chat de IA.';
+
+  @override
+  String get haConnectWhereAddress =>
+      '¿No sabes cuál es? En la app de Home Assistant, abre Ajustes › Companion app y toca tu servidor: ahí está la dirección. En un ordenador, es la que muestra el navegador con Home Assistant abierto.';
+
+  @override
   String get haConnectNotAdmin =>
       'Tu usuario de Home Assistant no es administrador. ZigDash necesita uno para el MQTT de Home Assistant. Inicia sesión como administrador o pega un token creado por un administrador.';
 
@@ -1861,6 +1888,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setupPlatformPi => 'Raspberry Pi o Docker';
 
   @override
+  String get setupPlatformZha => 'ZHA, sin Zigbee2MQTT';
+
+  @override
+  String get setupZhaNote =>
+      'ZigDash muestra dispositivos de Zigbee2MQTT, así que no ve los dispositivos de ZHA, el Zigbee propio de Home Assistant. Puedes probar la casa de demostración para ver cómo funciona ZigDash.';
+
+  @override
   String get setupPlatformNotSure => 'No lo sé';
 
   @override
@@ -2016,6 +2050,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return 'No se pudo resolver $host. Los nombres acabados en .local suelen fallar en Android; prueba con la dirección IP. Home Assistant la muestra en Ajustes › Sistema › Red.';
+  }
+
+  @override
+  String setupAddressNotResolvedHa(String host, String button) {
+    return 'No se encuentra $host desde este teléfono; Android a menudo no puede resolver los nombres .local. Toca $button arriba y usa la dirección con la que abres Home Assistant en el navegador, o escribe aquí su dirección IP. Home Assistant la muestra en Ajustes › Sistema › Red.';
+  }
+
+  @override
+  String setupAddressNotResolvedHaIos(String host, String button) {
+    return 'No se encuentra $host desde este teléfono. Toca $button arriba y usa la dirección con la que abres Home Assistant en el navegador, o escribe aquí su dirección IP. Home Assistant la muestra en Ajustes › Sistema › Red.';
   }
 
   @override

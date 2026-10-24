@@ -1557,6 +1557,32 @@ class AppLocalizationsHe extends AppLocalizations {
   String get haConnectChecking => 'בודק את Home Assistant…';
 
   @override
+  String get setupStillChecking => 'עדיין בודקים. זה יכול לקחת עד 30 שניות.';
+
+  @override
+  String get aiHelpTitle => 'נתקעתם? שאלו את עוזר ה-AI שלכם';
+
+  @override
+  String get aiHelpBody =>
+      'ZigDash מסכם את מה שמצא עבור ChatGPT, Claude, Gemini או כל אפליקציית AI, בלי סיסמאות או כתובות. תראו את הטקסט לפני השיתוף.';
+
+  @override
+  String get aiHelpButton => 'שאלו AI';
+
+  @override
+  String get aiHelpPreviewTitle => 'מה ישותף';
+
+  @override
+  String get aiHelpShare => 'שיתוף לאפליקציית AI';
+
+  @override
+  String get aiHelpCopied => 'הועתק. הדביקו בכל צ\'אט AI.';
+
+  @override
+  String get haConnectWhereAddress =>
+      'לא בטוחים מה הכתובת? באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית והקישו על השרת שלכם: הכתובת מופיעה שם. במחשב, זו הכתובת שהדפדפן מציג כש-Home Assistant פתוח.';
+
+  @override
   String get haConnectNotAdmin =>
       'המשתמש שלכם ב-Home Assistant אינו מנהל. ZigDash צריך מנהל בשביל ה-MQTT של Home Assistant. היכנסו כמנהל, או הדביקו אסימון שמנהל יצר.';
 
@@ -1836,6 +1862,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get setupPlatformPi => 'Raspberry Pi או Docker';
 
   @override
+  String get setupPlatformZha => 'ZHA, בלי Zigbee2MQTT';
+
+  @override
+  String get setupZhaNote =>
+      'ZigDash מציג מכשירים מ‑Zigbee2MQTT, ולכן הוא לא רואה מכשירים ב‑ZHA, ה‑Zigbee המובנה של Home Assistant. אפשר לנסות את בית ההדגמה כדי לראות איך ZigDash עובד.';
+
+  @override
   String get setupPlatformNotSure => 'לא בטוח';
 
   @override
@@ -1988,6 +2021,16 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return 'לא ניתן היה לפענח את $host. שמות שמסתיימים ב‑.local נכשלים לעיתים קרובות באנדרואיד; נסו את כתובת ה‑IP במקום. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.';
+  }
+
+  @override
+  String setupAddressNotResolvedHa(String host, String button) {
+    return 'לא ניתן למצוא את $host מהטלפון הזה; אנדרואיד לרוב לא מצליח לפענח שמות ‎.local. הקישו על $button למעלה והשתמשו בכתובת שבה אתם פותחים את Home Assistant בדפדפן, או הקלידו כאן את כתובת ה‑IP שלו. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.';
+  }
+
+  @override
+  String setupAddressNotResolvedHaIos(String host, String button) {
+    return 'לא ניתן למצוא את $host מהטלפון הזה. הקישו על $button למעלה והשתמשו בכתובת שבה אתם פותחים את Home Assistant בדפדפן, או הקלידו כאן את כתובת ה‑IP שלו. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.';
   }
 
   @override

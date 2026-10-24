@@ -42,7 +42,7 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.1.3';
+const ENGINE_VERSION = '3.1.5';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
 const STATE_EVERY_MS = 30000;
@@ -1093,7 +1093,7 @@ class ZigDashEngine {
       clean: true,
       will: { topic: `${prefix}/hub`, payload: Buffer.from('offline'), qos: 1, retain: true },
     });
-    const remote = { config: cfg, key, client, prefix, connected: false, error: undefined, sent: new Set() };
+    const remote = { config: cfg, key, client, prefix, connected: false, error: undefined, sent: new Set(), pending: new Map() };
     this.remote = remote;
     // An mqtt client without an error listener would crash Zigbee2MQTT.
     const current = () => this.remote === remote;
@@ -1108,6 +1108,9 @@ class ZigDashEngine {
       remote.error = undefined;
       client.publish(`${prefix}/hub`, 'online', { qos: 1, retain: true });
       client.subscribe(`${prefix}/c`, { qos: 1, nl: true });
+      const missed = [...remote.pending];
+      remote.pending.clear();
+      for (const [topic, payload] of missed) this.remoteSend(remote, topic, payload);
       this.publishState();
     }));
     client.on('close', this.guard('remote close', () => {
@@ -1154,10 +1157,21 @@ class ZigDashEngine {
   /** A device state Zigbee2MQTT published: sealed up to the relay, retained. */
   remoteUp(topic, payload) {
     const r = this.remote;
-    if (!r || !r.connected) return;
+    if (!r) return;
     const base = this.base();
     if (topic.startsWith(`${base}/bridge/`) || topic.endsWith('/set') || topic.endsWith('/get')) return;
-    const body = seal(r.key, { topic, payload: String(payload), at: Date.now() });
+    // 3.1.5: while the relay can't be reached (the home's internet down),
+    // keep the latest of each device and send it on reconnect, so a phone
+    // away never sees a value from before the outage. One entry per topic.
+    if (!r.connected) {
+      r.pending.set(topic, String(payload));
+      return;
+    }
+    this.remoteSend(r, topic, String(payload));
+  }
+
+  remoteSend(r, topic, payload) {
+    const body = seal(r.key, { topic, payload, at: Date.now() });
     const up = `${r.prefix}/s/${opaqueId(r.key, topic)}`;
     r.sent.add(up);
     r.client.publish(up, body, { qos: 0, retain: true });

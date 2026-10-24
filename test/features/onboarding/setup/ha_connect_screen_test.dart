@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,11 +19,12 @@ void main() {
     List<(Uri, String)>? adopted,
     String? initialHost,
     String? again,
+    Future<HaConnectProblem?>? slowProbe,
   }) async {
     final controller = HaConnectController(
       address: initialHost ?? '',
       adopt: (a, s) async => adopted?.add((a, s)),
-      probe: (_, __) async => problem,
+      probe: (_, __) async => slowProbe != null ? await slowProbe : problem,
       signIn: signIn == null ? null : (_) async => signIn,
     );
     tester.view.physicalSize = const Size(1200, 2600);
@@ -163,5 +166,50 @@ void main() {
     expect(adopted.single.$2, 'eyJ.new');
     await tester.pumpAndSettle();
     expect(find.text('setup'), findsOneWidget, reason: 'popped back');
+  });
+
+  testWidgets('3.1.4: a long check says so and can be cancelled', (
+    tester,
+  ) async {
+    final answer = Completer<HaConnectProblem?>();
+    final adopted = <(Uri, String)>[];
+    await pump(tester, adopted: adopted, slowProbe: answer.future);
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Home Assistant address'),
+      '192.168.1.20',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Long-lived access token'),
+      'eyJ.tok',
+    );
+    await tester.tap(find.text('Connect with token'));
+    await tester.pump();
+    expect(find.text('Checking Home Assistant…'), findsOneWidget);
+    expect(find.text('Cancel'), findsOneWidget);
+    expect(find.textContaining('up to 30 seconds'), findsNothing);
+    await tester.pump(const Duration(seconds: 6));
+    expect(find.textContaining('up to 30 seconds'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pump();
+    expect(find.widgetWithText(TextField, '192.168.1.20'), findsOneWidget);
+    answer.complete(null);
+    await tester.pumpAndSettle();
+    expect(adopted, isEmpty);
+    expect(find.text('setup'), findsNothing, reason: 'still on this screen');
+  });
+
+  testWidgets('3.1.4: an empty address says where to find it', (tester) async {
+    await pump(
+      tester,
+      signIn: (accessToken: 'a', refreshToken: 'r', error: null),
+    );
+    expect(find.textContaining('Companion app'), findsNothing);
+    await tester.tap(find.text('Sign in with Home Assistant'));
+    await tester.pump();
+    expect(
+      find.text('Type the address you open Home Assistant with.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Companion app'), findsOneWidget);
   });
 }

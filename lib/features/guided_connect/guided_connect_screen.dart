@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../onboarding/setup/ai_help.dart' show aiHelpUsedProvider;
 import '../support/support_details.dart';
 import '../support/get_help_screen.dart' show GetHelpLink;
 import '../support/community.dart';
@@ -313,7 +314,17 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton.icon(
-              onPressed: () => context.push(Routes.haConnect),
+              onPressed: () {
+                ref
+                    .read(analyticsProvider)
+                    .track(
+                      const SetupStep(
+                        SetupStepKind.haOpened,
+                        choice: HaSignInFrom.manualForm,
+                      ),
+                    );
+                context.push(Routes.haConnect);
+              },
               icon: const Icon(Icons.home_outlined),
               label: Text(l10n.haConnectManualLink),
             ),
@@ -526,6 +537,18 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                   if (!zeroDevices) await _buildFirstDashboard(id);
                   if (!mounted) return;
                   setState(() => _building = false);
+                  // 3.1.3: a home made here is a finished setup too.
+                  ref
+                      .read(analyticsProvider)
+                      .track(
+                        SetupStep(
+                          SetupStepKind.complete,
+                          devices: count,
+                          via: SetupVia.brokerForm,
+                          aiHelped: ref.read(aiHelpUsedProvider),
+                        ),
+                      );
+                  ref.read(aiHelpUsedProvider.notifier).state = false;
                   try {
                     await ref.read(firstRunProvider).finish(id);
                   } catch (_) {

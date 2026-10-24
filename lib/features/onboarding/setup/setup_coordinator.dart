@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../../core/analytics/analytics_events.dart' show SetupVia;
 import '../../../data/database/tables/connections.dart';
 import '../../../mqtt/broker_config.dart';
 import '../../../mqtt/ha_address.dart';
@@ -48,7 +49,10 @@ typedef ScanRunFactory = ScanRun Function(String deviceIp, Set<HubKind> hubs);
 /// Where the user says Zigbee2MQTT runs, asked while the scan runs (2.5).
 /// Not an answer and [notSure] both mean the plain scan; the others add a
 /// pass or change what the empty result says.
-enum SetupPlatform { homeAssistant, smlight, piOrDocker, notSure }
+/// The answer to "where does Zigbee2MQTT run?". [zha] (3.1.3) is Home
+/// Assistant's own Zigbee with no Zigbee2MQTT, which ZigDash can't serve;
+/// counted to size a move from ZHA (wayfinder map "ZHA to ZigDash").
+enum SetupPlatform { homeAssistant, smlight, piOrDocker, zha, notSure }
 
 /// The hub kinds a platform answer makes the scan look for, on top of the
 /// default ones (Home Assistant and the Zigbee2MQTT frontend).
@@ -283,8 +287,11 @@ class SetupCreating extends SetupState {
 
 /// Done — the dashboard is ready.
 class SetupComplete extends SetupState {
-  const SetupComplete(this.result);
+  const SetupComplete(this.result, {this.via = SetupVia.scan});
   final SetupResult result;
+
+  /// The scan's review, or Home Assistant's sign-in (3.1.3, analytics).
+  final SetupVia via;
 }
 
 // --- Coordinator ----------------------------------------------------------
@@ -829,7 +836,14 @@ class SetupCoordinator {
         // failing must not turn a working setup into an error.
       }
       if (op != _op) return;
-      _emit(SetupComplete(result));
+      _emit(
+        SetupComplete(
+          result,
+          via: candidate.transport == ConnectionTransport.homeAssistant
+              ? SetupVia.homeAssistant
+              : SetupVia.scan,
+        ),
+      );
     } catch (_) {
       if (op != _op) return;
       _emit(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
@@ -8,23 +10,33 @@ void main() {
   late List<(Uri, String)> probed;
   late List<(Uri, String)> adopted;
   late List<Map<String, String>> events;
+  late int browsers;
 
   HaConnectController make({
     HaSignInResult? signIn,
     HaConnectProblem? problem,
     String address = '',
+    HaReach? reach,
+    Future<HaConnectProblem?> Function()? slowProbe,
   }) {
     probed = [];
     adopted = [];
     events = [];
+    browsers = 0;
     return HaConnectController(
       address: address,
       adopt: (a, s) async => adopted.add((a, s)),
       probe: (base, stored) async {
         probed.add((base, stored));
-        return problem;
+        return slowProbe != null ? slowProbe() : problem;
       },
-      signIn: signIn == null ? null : (_) async => signIn,
+      signIn: signIn == null
+          ? null
+          : (_) async {
+              browsers++;
+              return signIn;
+            },
+      reach: reach,
       onEvent: (e) => events.add(e.props),
     );
   }
@@ -127,5 +139,73 @@ void main() {
       ).props,
       {'step': 'ha_connect', 'result': 'not_admin'},
     );
+  });
+
+  group('3.1.4: no silent sign-in, a way out', () {
+    const ok = (accessToken: 'acc', refreshToken: 'ref', error: null);
+
+    test('nothing answers: says so, the browser never opens', () async {
+      final reached = <Uri>[];
+      final c = make(
+        signIn: ok,
+        reach: (base) async {
+          reached.add(base);
+          return HaConnectProblem.unreachable;
+        },
+      );
+      await c.signInAndConnect('homeassistant.local');
+      expect(reached.single, Uri.parse('http://homeassistant.local:8123'));
+      expect(browsers, 0);
+      expect(c.value, isA<HaConnectAsk>());
+      expect((c.value as HaConnectAsk).problem, HaConnectProblem.unreachable);
+      expect((c.value as HaConnectAsk).address, 'homeassistant.local');
+      expect(outcomes(), ['unreachable']);
+    });
+
+    test('an untrusted certificate is named', () async {
+      final c = make(
+        signIn: ok,
+        reach: (_) async => HaConnectProblem.certificate,
+      );
+      await c.signInAndConnect('https://ha.example');
+      expect((c.value as HaConnectAsk).problem, HaConnectProblem.certificate);
+      expect(outcomes(), ['certificate']);
+    });
+
+    test('Home Assistant answers: on to the browser as before', () async {
+      final c = make(signIn: ok, reach: (_) async => null);
+      await c.signInAndConnect('192.168.1.20');
+      expect(browsers, 1);
+      expect(c.value, isA<HaConnectDone>());
+    });
+
+    test(
+      'cancel while checking: back to the address, nothing handed on',
+      () async {
+        final answer = Completer<HaConnectProblem?>();
+        final c = make(slowProbe: () => answer.future);
+        final going = c.connectWithToken('192.168.1.20', 'tok');
+        expect(c.value, isA<HaConnectChecking>());
+        c.cancel();
+        expect(c.value, isA<HaConnectAsk>());
+        expect((c.value as HaConnectAsk).address, '192.168.1.20');
+        expect((c.value as HaConnectAsk).problem, isNull);
+        answer.complete(null);
+        await going;
+        expect(adopted, isEmpty);
+        expect(c.value, isA<HaConnectAsk>());
+        expect(outcomes(), isEmpty);
+      },
+    );
+
+    test('leaving the screen mid-check stops the try', () async {
+      final answer = Completer<HaConnectProblem?>();
+      final c = make(slowProbe: () => answer.future);
+      final going = c.connectWithToken('192.168.1.20', 'tok');
+      c.dispose();
+      answer.complete(null);
+      await going;
+      expect(adopted, isEmpty);
+    });
   });
 }

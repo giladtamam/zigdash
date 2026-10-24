@@ -44,15 +44,21 @@ const _mystery = Z2mDevice(
 );
 
 class _FakeDiagnostics extends ConnectDiagnostics {
-  _FakeDiagnostics(this.reports);
+  _FakeDiagnostics(this.reports, {this.hold});
   final List<DiagnosticsReport> reports;
+
+  /// Keeps the check running until it completes.
+  final Future<void>? hold;
 
   @override
   Future<DiagnosticsReport> run({
     required BrokerConfig config,
     required String password,
     String base = 'zigbee2mqtt',
-  }) async => reports.removeAt(0);
+  }) async {
+    await hold;
+    return reports.removeAt(0);
+  }
 }
 
 DiagnosticsReport _ok() => const DiagnosticsReport(
@@ -139,6 +145,7 @@ Future<SetupCoordinator> _pump(
   NoNetwork? noNetwork,
   _FakeReminder? reminder,
   Z2mBrokerLookup? askZ2m,
+  Future<void>? holdDiagnostics,
 }) async {
   // The setup screens are lists that grew in 2.5 (progress, the platform
   // question); a tall view keeps every action built and tappable.
@@ -159,7 +166,7 @@ Future<SetupCoordinator> _pump(
         ),
     deviceIp: () async => noNetwork == null ? '192.168.1.5' : null,
     noNetwork: () async => noNetwork ?? NoNetwork.unknown,
-    diagnostics: _FakeDiagnostics(reports ?? [_ok()]),
+    diagnostics: _FakeDiagnostics(reports ?? [_ok()], hold: holdDiagnostics),
     fetchDevices: (config, password, base) async =>
         fetchFor?.call(base) ?? fetch,
     creator: _FakeStore(),
@@ -211,6 +218,55 @@ Future<SetupCoordinator> _pump(
 }
 
 void main() {
+  group('3.1.4: a way out of setup', () {
+    // A scan still running, with one broker found to tap.
+    Future<SetupCoordinator> found(
+      WidgetTester tester, {
+      Future<void>? hold,
+    }) async {
+      final scan = StreamController<ProbeResult>();
+      addTearDown(scan.close);
+      final coordinator = await _pump(
+        tester,
+        scan: (_) => scan.stream,
+        holdDiagnostics: hold,
+      );
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      scan.add(const ProbeResult(host: '192.168.1.10', port: 1883));
+      await tester.pump();
+      await tester.tap(find.text('Possible connection found'));
+      await tester.pump();
+      await tester.pump();
+      return coordinator;
+    }
+
+    testWidgets('back in the middle of setup starts it over', (tester) async {
+      final coordinator = await found(tester);
+      expect(coordinator.state, isA<SetupReview>());
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      expect(coordinator.state, isA<SetupIdle>());
+      expect(find.text('Find my setup'), findsOneWidget);
+    });
+
+    testWidgets('a long check says so and can be cancelled', (tester) async {
+      final hold = Completer<void>();
+      final coordinator = await found(tester, hold: hold.future);
+      expect(coordinator.state, isA<SetupVerifying>());
+      expect(find.textContaining('up to 30 seconds'), findsNothing);
+      await tester.pump(const Duration(seconds: 6));
+      expect(find.textContaining('up to 30 seconds'), findsOneWidget);
+      await tester.tap(find.text('Cancel'));
+      await tester.pump();
+      expect(find.text('Find my setup'), findsOneWidget);
+      hold.complete();
+      await tester.pump();
+      await tester.pump();
+      expect(coordinator.state, isA<SetupIdle>());
+    });
+  });
+
   testWidgets('welcome offers Find my setup and manual entry', (tester) async {
     await _pump(tester);
     expect(find.text('Find my setup'), findsOneWidget);
@@ -589,11 +645,34 @@ void main() {
         find.widgetWithText(TextField, 'homeassistant.local'),
         findsOneWidget,
       );
+      // 3.1.3: a Home Assistant user is sent to its sign-in, above.
       expect(
-        find.textContaining('homeassistant.local could not be looked up'),
+        find.textContaining("homeassistant.local can't be found"),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Tap Connect through Home Assistant above'),
         findsOneWidget,
       );
       expect(choices(), ['home_assistant']);
+
+      // Which way into the sign-in is counted (3.1.3).
+      await tester.ensureVisible(find.byKey(const Key('setup-ha-shortcut')));
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('setup-ha-shortcut')),
+          matching: find.text('Connect through Home Assistant'),
+        ),
+      );
+      await tester.pump();
+      expect(
+        [
+          for (final (name, props) in sent)
+            if (name == 'setup_step' && props['step'] == 'ha_opened')
+              props['choice'],
+        ],
+        ['empty_card'],
+      );
     });
 
     testWidgets('another network explains, and checks a usual name', (
@@ -809,6 +888,47 @@ void main() {
     expect(find.byKey(const Key('setup-ha-shortcut')), findsOneWidget);
     expect(find.text('Connect through Home Assistant'), findsOneWidget);
   });
+
+  testWidgets(
+    'a ZHA answer is counted and says ZigDash cannot see ZHA (3.1.3)',
+    (tester) async {
+      final sent = <(String, Map<String, String>)>[];
+      final controller = StreamController<ScanEvent>();
+      addTearDown(controller.close);
+      await _pump(
+        tester,
+        run: (_, __) => ScanRun(events: controller.stream, addHub: (_) {}),
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      );
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      expect(find.byKey(const Key('setup-zha-note')), findsNothing);
+
+      await tester.tap(find.text('ZHA, no Zigbee2MQTT'));
+      await tester.pump();
+      expect(find.byKey(const Key('setup-zha-note')), findsOneWidget);
+      expect(find.textContaining("can't see devices in ZHA"), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('setup-zha-note')),
+          matching: find.text('Try demo'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        [
+          for (final (name, props) in sent)
+            if (name == 'setup_step' && props['step'] == 'platform_chosen')
+              props['platform'],
+        ],
+        ['zha'],
+      );
+    },
+  );
 
   testWidgets('the login prompt offers Home Assistant sign-in to its users', (
     tester,
