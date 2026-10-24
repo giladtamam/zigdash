@@ -34,6 +34,8 @@ final class AppChannel {
     case "alarmSound":
       setAlarm((args?["on"] as? Bool) ?? false)
       result(nil)
+    case "shareText":
+      result(share((args?["text"] as? String) ?? ""))
     case "openWifiSettings":
       // iOS only opens the app's own page in Settings.
       if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -43,6 +45,25 @@ final class AppChannel {
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+
+  /// The share sheet for [text] (Ask your AI); false when there's no window
+  /// to show it from, and the caller copies instead.
+  private func share(_ text: String) -> Bool {
+    guard let root = UIApplication.shared.connectedScenes
+      .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController }).first
+    else { return false }
+    var top = root
+    while let presented = top.presentedViewController { top = presented }
+    let sheet = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+    // iPad shows it as a popover, which needs an anchor.
+    if let popover = sheet.popoverPresentationController {
+      popover.sourceView = top.view
+      popover.sourceRect = CGRect(x: top.view.bounds.midX, y: top.view.bounds.maxY - 80, width: 0, height: 0)
+      popover.permittedArrowDirections = []
+    }
+    top.present(sheet, animated: true)
+    return true
   }
 
   /// The alert tone, repeated every two seconds while on (alarm takeover).
