@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -153,7 +155,12 @@ class _EnterPinDialogState extends State<_EnterPinDialog> {
           ],
           const SizedBox(height: 8),
           if (_forgot)
-            Text(l10n.kioskPinForgotBody, style: theme.textTheme.bodySmall)
+            Text(
+              Platform.isIOS
+                  ? l10n.kioskPinForgotBodyIos
+                  : l10n.kioskPinForgotBody,
+              style: theme.textTheme.bodySmall,
+            )
           else
             Align(
               alignment: AlignmentDirectional.centerStart,

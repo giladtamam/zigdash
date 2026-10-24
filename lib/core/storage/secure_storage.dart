@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _passwordPrefix = 'mqtt_pw::';
 
@@ -24,6 +25,20 @@ SecureStore createSecureStore() => SecureStore(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   ),
 );
+
+const _keychainOwnedKey = 'keychain.owned';
+
+/// iOS keeps the Keychain when an app is deleted, while the database and
+/// preferences go: a reinstall would find an old kiosk PIN and passwords for
+/// Homes that no longer exist (docs/design/ios.md, Known traps). The first
+/// start of an install clears it; [prefs] remembers that it has been done.
+Future<void> clearKeychainOfOldInstall(SharedPreferences prefs) async {
+  if (prefs.getBool(_keychainOwnedKey) ?? false) return;
+  try {
+    await const FlutterSecureStorage().deleteAll();
+  } catch (_) {}
+  await prefs.setBool(_keychainOwnedKey, true);
+}
 
 final secureStorageProvider = Provider<SecureStore>(
   (ref) => createSecureStore(),

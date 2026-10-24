@@ -1380,6 +1380,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Telefonen hittade inte det här namnet. Android kan ofta inte slå upp namn som slutar på .local, så ange IP-adressen i stället (Home Assistant visar den under Inställningar › System › Nätverk).';
 
   @override
+  String get diagResolveLocalNameIos =>
+      'Telefonen hittade inte det här namnet. Kontrollera att det är rätt stavat, eller ange IP-adressen i stället (Home Assistant visar den under Inställningar › System › Nätverk).';
+
+  @override
   String get diagTcpHaNoBroker =>
       'Det här är din Home Assistant, men ingen MQTT-broker körs på den. Installera och starta tillägget Mosquitto broker (Inställningar › Tillägg) och försök igen.';
 
@@ -1512,6 +1516,10 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Aviseringar är avstängda för ZigDash, så det blir ingen påminnelse. Du kan slå på dem i Androids inställningar.';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Notiser är avstängda för ZigDash, så det blir ingen påminnelse. Du kan slå på dem i Inställningar › ZigDash › Notiser.';
 
   @override
   String get reminderChannel => 'Påminnelse om konfiguration';
@@ -1896,6 +1904,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'En VPN är på, och den kan dölja ditt hemnätverk för sökningen. Är du hemma, stäng av VPN:en och tryck på Försök igen.';
 
   @override
+  String get setupLocalNetworkIos =>
+      'ZigDash behöver åtkomst till lokalt nätverk för att hitta din hubb. Om du sa nej, tillåt det i Inställningar › Integritet och säkerhet › Lokalt nätverk.';
+
+  @override
   String get setupNoBrokerZ2mTitle =>
       'Hittade Zigbee2MQTT, men dess broker går inte att nå';
 
@@ -1994,6 +2006,11 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return '$host kunde inte slås upp. Namn som slutar på .local misslyckas ofta på Android; prova IP-adressen i stället. Home Assistant visar den under Inställningar › System › Nätverk.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return '$host kunde inte slås upp. Kontrollera namnet, eller prova IP-adressen i stället. Home Assistant visar den under Inställningar › System › Nätverk.';
   }
 
   @override
@@ -2761,6 +2778,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Namn som slutar på .local fungerar inte på alla Android-telefoner. Prova hubbens sifferadress, till exempel 192.168.1.20.';
 
   @override
+  String get tipNumberAddressBodyIos =>
+      'Om namnet inte fungerar, prova hubbens sifferadress, till exempel 192.168.1.20.';
+
+  @override
   String get tipPortProtocolTitle => 'Port och protokoll';
 
   @override
@@ -3300,6 +3321,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Döljer även Androids status- och navigeringsfält.';
 
   @override
+  String get wallFullscreenSubtitleIos =>
+      'Döljer även statusfältet; hemindikatorn tonas ned.';
+
+  @override
   String get wallDimAfter => 'Dämpa efter';
 
   @override
@@ -3446,6 +3471,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'En glömd PIN kan bara återställas genom att rensa ZigDashs data i Androids inställningar, vilket tar bort det här hemmet om du inte har en säkerhetskopia. Exportera en innan du anger en PIN.';
 
   @override
+  String get kioskPinForgotBodyIos =>
+      'En glömd PIN kan bara återställas genom att radera och installera om ZigDash, vilket tar bort det här hemmet om du inte har en säkerhetskopia. Exportera en innan du anger en PIN.';
+
+  @override
   String get kioskExportBackup => 'Exportera säkerhetskopia';
 
   @override
@@ -3574,6 +3603,17 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get proOnce =>
       'En betalning, ingen prenumeration. Köpt på en annan telefon med samma Google-konto? Det låses upp automatiskt.';
+
+  @override
+  String get proOnceIos =>
+      'En betalning, ingen prenumeration. Köpt på en annan iPhone eller iPad med samma Apple-konto? Det låses upp automatiskt, eller tryck på Återställ köp.';
+
+  @override
+  String get proRestore => 'Återställ köp';
+
+  @override
+  String get proRestoreNone =>
+      'Inget köp av ZigDash Pro hittades för detta Apple-ID.';
 
   @override
   String get historyNotRecorded =>

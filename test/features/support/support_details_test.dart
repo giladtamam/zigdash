@@ -144,6 +144,18 @@ void main() {
   });
 
   group('SupportDetails.format', () {
+    test('an iPhone names iOS and the model code', () {
+      const d = SupportDetails(
+        appVersion: '3.2.0',
+        build: '72',
+        ios: '18.1',
+        phone: 'iPhone17,1',
+        openedFrom: 'Settings',
+      );
+      expect(d.format().split('\n').first,
+          'ZigDash 3.2.0 (72) · iOS 18.1 · iPhone17,1');
+    });
+
     test('full snapshot', () {
       const d = SupportDetails(
         appVersion: '2.0.1',

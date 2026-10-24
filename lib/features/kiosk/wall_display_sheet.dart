@@ -88,7 +88,11 @@ class WallDisplaySheet extends ConsumerWidget {
           SwitchListTile(
             secondary: const Icon(Icons.fullscreen),
             title: Text(l10n.wallFullscreen),
-            subtitle: Text(l10n.wallFullscreenSubtitle),
+            subtitle: Text(
+              Platform.isIOS
+                  ? l10n.wallFullscreenSubtitleIos
+                  : l10n.wallFullscreenSubtitle,
+            ),
             value: fullscreen,
             onChanged: (on) =>
                 ref.read(wallFullscreenProvider(id).notifier).set(on),
@@ -221,7 +225,9 @@ class WallDisplaySheet extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10n.kioskPinForgotBody,
+                    Platform.isIOS
+                        ? l10n.kioskPinForgotBodyIos
+                        : l10n.kioskPinForgotBody,
                     style: theme.textTheme.bodySmall,
                   ),
                   TextButton.icon(

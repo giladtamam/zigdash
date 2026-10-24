@@ -165,6 +165,7 @@ class SupportDetails {
     required this.build,
     required this.openedFrom,
     this.android,
+    this.ios,
     this.phone,
     this.connection,
     this.z2m,
@@ -176,6 +177,7 @@ class SupportDetails {
   final String build;
   final String openedFrom;
   final String? android;
+  final String? ios;
   final String? phone;
   final ConnectionFacts? connection;
   final Z2mFacts? z2m;
@@ -189,6 +191,7 @@ class SupportDetails {
       [
         'ZigDash $appVersion ($build)',
         if (android != null) 'Android $android',
+        if (ios != null) 'iOS $ios',
         if (phone != null) phone!,
       ].join(' · '),
       'Opened from: $openedFrom',

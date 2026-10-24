@@ -14,6 +14,8 @@
 #   tool/build_release.sh github  # -> build/github-release/zigdash-<version>-<abi>.apk
 #                                 #    per-ABI APKs for GitHub releases and IzzyOnDroid;
 #                                 #    always WITHOUT the analytics key (ADR 0006)
+#   tool/build_release.sh ipa     # -> build/ios/ipa/ZigDash.ipa (App Store, docs/design/ios.md);
+#                                 #    needs the Apple team in Xcode's signing settings
 #
 # Opt-in analytics (ADR 0006) need the Aptabase app key: $ZIGDASH_ANALYTICS_KEY,
 # else the gitignored tool/.analytics_key. Without one the build has no
@@ -31,6 +33,12 @@ if [[ -n "$KEY" ]]; then DEFINES+=(--dart-define=ZIGDASH_ANALYTICS_KEY="$KEY"); 
 PLAY=(--dart-define=ZIGDASH_FLAVOR=play)
 if [[ "${ZIGDASH_PRO_LIVE:-}" == 1 ]]; then PLAY+=(--dart-define=ZIGDASH_PRO_LIVE=true); fi
 
+# The App Store build sells Pro through StoreKit, the same way; Rate needs the
+# App Store id ($ZIGDASH_APPSTORE_ID) from App Store Connect.
+APPSTORE=(--dart-define=ZIGDASH_FLAVOR=appstore)
+if [[ "${ZIGDASH_PRO_LIVE:-}" == 1 ]]; then APPSTORE+=(--dart-define=ZIGDASH_PRO_LIVE=true); fi
+if [[ -n "${ZIGDASH_APPSTORE_ID:-}" ]]; then APPSTORE+=(--dart-define=ZIGDASH_APPSTORE_ID="$ZIGDASH_APPSTORE_ID"); fi
+
 TARGET="${1:-apk}"
 if [[ "$TARGET" == github ]]; then
   # Builds outside Play never contain the analytics key, so they can't send data.
@@ -47,5 +55,6 @@ fi
 case "$TARGET" in
   apk)    tool/flutter build apk --release --no-tree-shake-icons --flavor play "${PLAY[@]}" "${DEFINES[@]}" ;;
   bundle) tool/flutter build appbundle --release --no-tree-shake-icons --flavor play "${PLAY[@]}" "${DEFINES[@]}" ;;
-  *) echo "usage: $0 [apk|bundle|github]"; exit 2 ;;
+  ipa)    tool/flutter build ipa --release --no-tree-shake-icons --flavor appstore "${APPSTORE[@]}" "${DEFINES[@]}" ;;
+  *) echo "usage: $0 [apk|bundle|github|ipa]"; exit 2 ;;
 esac

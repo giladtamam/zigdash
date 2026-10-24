@@ -2586,6 +2586,12 @@ abstract class AppLocalizations {
   /// **'Your phone couldn\'t find this name. Android often can\'t look up names ending in .local, so enter the IP address instead (Home Assistant shows it under Settings › System › Network).'**
   String get diagResolveLocalName;
 
+  /// iOS variant of diagResolveLocalName: iOS resolves .local, so no Android claim. Settings › System › Network is Home Assistant's own menu path.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone couldn\'t find this name. Check that it\'s spelled right, or enter the IP address instead (Home Assistant shows it under Settings › System › Network).'**
+  String get diagResolveLocalNameIos;
+
   /// No description provided for @diagTcpHaNoBroker.
   ///
   /// In en, this message translates to:
@@ -2801,6 +2807,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications are off for ZigDash, so there\'s no reminder. You can turn them on in Android\'s settings.'**
   String get reminderNoPermission;
+
+  /// No description provided for @reminderNoPermissionIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off for ZigDash, so there\'s no reminder. You can turn them on in Settings › ZigDash › Notifications.'**
+  String get reminderNoPermissionIos;
 
   /// No description provided for @reminderChannel.
   ///
@@ -3438,6 +3450,12 @@ abstract class AppLocalizations {
   /// **'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again.'**
   String get setupVpnHint;
 
+  /// No description provided for @setupLocalNetworkIos.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash needs Local Network access to find your hub. If you said no, allow it in Settings › Privacy & Security › Local Network.'**
+  String get setupLocalNetworkIos;
+
   /// No description provided for @setupNoBrokerZ2mTitle.
   ///
   /// In en, this message translates to:
@@ -3581,6 +3599,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{host} could not be looked up. Names ending in .local often fail on Android; try the IP address instead. Home Assistant shows it under Settings › System › Network.'**
   String setupAddressNotResolved(String host);
+
+  /// No description provided for @setupAddressNotResolvedIos.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} could not be looked up. Check the name, or try the IP address instead. Home Assistant shows it under Settings › System › Network.'**
+  String setupAddressNotResolvedIos(String host);
 
   /// No description provided for @setupAddressNotLocal.
   ///
@@ -4974,6 +4998,12 @@ abstract class AppLocalizations {
   /// **'Names ending in .local don\'t work on every Android phone. Try the hub\'s number address, like 192.168.1.20.'**
   String get tipNumberAddressBody;
 
+  /// No description provided for @tipNumberAddressBodyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'If the name doesn\'t work, try the hub\'s number address, like 192.168.1.20.'**
+  String get tipNumberAddressBodyIos;
+
   /// No description provided for @tipPortProtocolTitle.
   ///
   /// In en, this message translates to:
@@ -5898,6 +5928,12 @@ abstract class AppLocalizations {
   /// **'Hides Android\'s status and navigation bars too.'**
   String get wallFullscreenSubtitle;
 
+  /// No description provided for @wallFullscreenSubtitleIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Hides the status bar too; the Home indicator dims.'**
+  String get wallFullscreenSubtitleIos;
+
   /// No description provided for @wallDimAfter.
   ///
   /// In en, this message translates to:
@@ -6168,6 +6204,12 @@ abstract class AppLocalizations {
   /// **'A forgotten PIN can only be reset by clearing ZigDash\'s data in Android\'s settings, which removes this Home unless you have a backup. Export one before setting a PIN.'**
   String get kioskPinForgotBody;
 
+  /// No description provided for @kioskPinForgotBodyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'A forgotten PIN can only be reset by deleting and reinstalling ZigDash, which removes this Home unless you have a backup. Export one before setting a PIN.'**
+  String get kioskPinForgotBodyIos;
+
   /// No description provided for @kioskExportBackup.
   ///
   /// In en, this message translates to:
@@ -6389,6 +6431,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'One payment, no subscription. Bought on another phone with the same Google account? It unlocks automatically.'**
   String get proOnce;
+
+  /// No description provided for @proOnceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'One payment, no subscription. Bought on another iPhone or iPad with the same Apple Account? It unlocks automatically, or tap Restore purchase.'**
+  String get proOnceIos;
+
+  /// No description provided for @proRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchase'**
+  String get proRestore;
+
+  /// No description provided for @proRestoreNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No ZigDash Pro purchase found for this Apple ID.'**
+  String get proRestoreNone;
 
   /// No description provided for @historyNotRecorded.
   ///

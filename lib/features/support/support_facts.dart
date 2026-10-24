@@ -21,12 +21,13 @@ typedef PlatformFacts = ({
   String appVersion,
   String build,
   String? android,
+  String? ios,
   String? phone,
 });
 
 final platformFactsProvider = FutureProvider<PlatformFacts>((ref) async {
   var version = '?', build = '?';
-  String? android, phone;
+  String? android, ios, phone;
   try {
     final info = await PackageInfo.fromPlatform();
     version = info.version;
@@ -40,8 +41,14 @@ final platformFactsProvider = FutureProvider<PlatformFacts>((ref) async {
           '${a.manufacturer[0].toUpperCase()}${a.manufacturer.substring(1)} '
           '${a.model}';
     } catch (_) {}
+  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+    try {
+      final i = await DeviceInfoPlugin().iosInfo;
+      ios = i.systemVersion;
+      phone = i.utsname.machine; // "iPhone17,1": the model without a name.
+    } catch (_) {}
   }
-  return (appVersion: version, build: build, android: android, phone: phone);
+  return (appVersion: version, build: build, android: android, ios: ios, phone: phone);
 });
 
 /// Zigbee2MQTT's version from a `bridge/info` payload, read by name: the
@@ -166,6 +173,7 @@ final supportDetailsProvider = FutureProvider.autoDispose
         appVersion: platform.appVersion,
         build: platform.build,
         android: platform.android,
+        ios: platform.ios,
         phone: platform.phone,
         openedFrom: q.openedFrom,
         connection: connection,

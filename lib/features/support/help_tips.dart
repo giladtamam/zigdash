@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../core/analytics/analytics_events.dart';
 import '../../l10n/app_localizations.dart';
 import '../onboarding/setup/setup_error_guidance.dart';
@@ -50,7 +52,8 @@ List<HelpTip> tipsFor(
       _ => noConnection,
     },
     HelpFrom.manualConnect || HelpFrom.manualForm => [
-      t(l.tipNumberAddressTitle, l.tipNumberAddressBody),
+      t(l.tipNumberAddressTitle,
+          Platform.isIOS ? l.tipNumberAddressBodyIos : l.tipNumberAddressBody),
       t(l.tipPortProtocolTitle, l.tipPortProtocolBody),
       t(l.tipManualLoginTitle, l.tipManualLoginBody),
     ],

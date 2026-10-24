@@ -1390,6 +1390,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ihr Telefon konnte diesen Namen nicht finden. Android kann Namen mit .local oft nicht auflösen. Geben Sie stattdessen die IP-Adresse ein (Home Assistant zeigt sie unter Einstellungen › System › Netzwerk).';
 
   @override
+  String get diagResolveLocalNameIos =>
+      'Dein Telefon konnte diesen Namen nicht finden. Prüfe die Schreibweise oder gib stattdessen die IP-Adresse ein (Home Assistant zeigt sie unter Einstellungen › System › Netzwerk).';
+
+  @override
   String get diagTcpHaNoBroker =>
       'Das ist Ihr Home Assistant, aber darauf läuft kein MQTT-Broker. Installieren und starten Sie das Add-on „Mosquitto broker“ (Einstellungen › Add-ons) und versuchen Sie es erneut.';
 
@@ -1522,6 +1526,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Benachrichtigungen sind für ZigDash aus, daher gibt es keine Erinnerung. Du kannst sie in den Android-Einstellungen einschalten.';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Mitteilungen sind für ZigDash aus, daher gibt es keine Erinnerung. Du kannst sie unter Einstellungen › ZigDash › Mitteilungen einschalten.';
 
   @override
   String get reminderChannel => 'Einrichtungserinnerung';
@@ -1908,6 +1916,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein VPN ist aktiv und kann dein Heimnetz vor der Suche verbergen. Wenn du zu Hause bist, schalte das VPN aus und tippe auf Erneut versuchen.';
 
   @override
+  String get setupLocalNetworkIos =>
+      'ZigDash braucht Zugriff auf das lokale Netzwerk, um deinen Hub zu finden. Falls du abgelehnt hast, erlaube ihn unter Einstellungen › Datenschutz & Sicherheit › Lokales Netzwerk.';
+
+  @override
   String get setupNoBrokerZ2mTitle =>
       'Zigbee2MQTT gefunden, aber sein Broker ist nicht erreichbar';
 
@@ -2006,6 +2018,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return '$host konnte nicht aufgelöst werden. Namen auf .local scheitern unter Android oft; versuche stattdessen die IP-Adresse. Home Assistant zeigt sie unter Einstellungen › System › Netzwerk.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return '$host konnte nicht aufgelöst werden. Prüfe den Namen oder versuche stattdessen die IP-Adresse. Home Assistant zeigt sie unter Einstellungen › System › Netzwerk.';
   }
 
   @override
@@ -2774,6 +2791,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Namen auf .local funktionieren nicht auf jedem Android-Handy. Versuch die Zahlenadresse des Hubs, etwa 192.168.1.20.';
 
   @override
+  String get tipNumberAddressBodyIos =>
+      'Wenn der Name nicht funktioniert, versuch die Zahlenadresse des Hubs, etwa 192.168.1.20.';
+
+  @override
   String get tipPortProtocolTitle => 'Port und Protokoll';
 
   @override
@@ -3317,6 +3338,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Blendet auch Androids Status- und Navigationsleiste aus.';
 
   @override
+  String get wallFullscreenSubtitleIos =>
+      'Blendet auch die Statusleiste aus; der Home-Indikator wird gedimmt.';
+
+  @override
   String get wallDimAfter => 'Abdunkeln nach';
 
   @override
@@ -3464,6 +3489,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Eine vergessene PIN lässt sich nur zurücksetzen, indem du die Daten von ZigDash in den Android-Einstellungen löschst. Das entfernt dieses Zuhause, sofern du kein Backup hast. Exportiere eines, bevor du eine PIN festlegst.';
 
   @override
+  String get kioskPinForgotBodyIos =>
+      'Eine vergessene PIN lässt sich nur zurücksetzen, indem du ZigDash löschst und neu installierst. Das entfernt dieses Zuhause, sofern du kein Backup hast. Exportiere eines, bevor du eine PIN festlegst.';
+
+  @override
   String get kioskExportBackup => 'Backup exportieren';
 
   @override
@@ -3593,6 +3622,17 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get proOnce =>
       'Eine Zahlung, kein Abo. Auf einem anderen Telefon mit demselben Google-Konto gekauft? Es wird automatisch freigeschaltet.';
+
+  @override
+  String get proOnceIos =>
+      'Eine Zahlung, kein Abo. Auf einem anderen iPhone oder iPad mit demselben Apple Account gekauft? Es wird automatisch freigeschaltet, oder tippe auf Kauf wiederherstellen.';
+
+  @override
+  String get proRestore => 'Kauf wiederherstellen';
+
+  @override
+  String get proRestoreNone =>
+      'Für diese Apple-ID wurde kein Kauf von ZigDash Pro gefunden.';
 
   @override
   String get historyNotRecorded =>

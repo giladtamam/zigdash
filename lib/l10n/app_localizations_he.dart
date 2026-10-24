@@ -1368,6 +1368,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'הטלפון לא מצא את השם הזה. אנדרואיד לרוב לא מזהה שמות שמסתיימים ב‑.local, אז הזינו את כתובת ה‑IP במקום (Home Assistant מציג אותה תחת הגדרות › מערכת › רשת).';
 
   @override
+  String get diagResolveLocalNameIos =>
+      'הטלפון לא מצא את השם הזה. בדקו שהוא כתוב נכון, או הזינו את כתובת ה‑IP במקום (Home Assistant מציג אותה תחת הגדרות › מערכת › רשת).';
+
+  @override
   String get diagTcpHaNoBroker =>
       'זה ה‑Home Assistant שלכם, אבל לא פועל בו ברוקר MQTT. התקינו והפעילו את התוסף Mosquitto broker (הגדרות › תוספים), ונסו שוב.';
 
@@ -1499,6 +1503,10 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'ההתראות של ZigDash כבויות, ולכן לא תהיה תזכורת. אפשר להפעיל אותן בהגדרות של Android.';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'ההתראות של ZigDash כבויות, ולכן לא תהיה תזכורת. אפשר להפעיל אותן בהגדרות › ZigDash › עדכונים.';
 
   @override
   String get reminderChannel => 'תזכורת להגדרה';
@@ -1880,6 +1888,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'VPN פועל, והוא יכול להסתיר את הרשת הביתית מהסריקה. אם אתם בבית, כבו את ה-VPN והקישו על נסו שוב.';
 
   @override
+  String get setupLocalNetworkIos =>
+      'ZigDash צריך גישה לרשת המקומית כדי למצוא את ההאב. אם סירבתם, אפשרו אותה בהגדרות › פרטיות ואבטחה › רשת מקומית.';
+
+  @override
   String get setupNoBrokerZ2mTitle =>
       'נמצא Zigbee2MQTT, אבל אי אפשר להגיע ל-broker שלו';
 
@@ -1976,6 +1988,11 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return 'לא ניתן היה לפענח את $host. שמות שמסתיימים ב‑.local נכשלים לעיתים קרובות באנדרואיד; נסו את כתובת ה‑IP במקום. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return 'לא ניתן היה לפענח את $host. בדקו את השם, או נסו את כתובת ה‑IP במקום. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.';
   }
 
   @override
@@ -2739,6 +2756,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'שמות שמסתיימים ב‑.local לא עובדים בכל טלפון Android. נסו את הכתובת המספרית של ההאב, למשל 192.168.1.20.';
 
   @override
+  String get tipNumberAddressBodyIos =>
+      'אם השם לא עובד, נסו את הכתובת המספרית של ההאב, למשל 192.168.1.20.';
+
+  @override
   String get tipPortProtocolTitle => 'פורט ופרוטוקול';
 
   @override
@@ -3272,6 +3293,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'מסתיר גם את סרגלי המצב והניווט של אנדרואיד.';
 
   @override
+  String get wallFullscreenSubtitleIos =>
+      'מסתיר גם את שורת המצב; מחוון הבית מתעמעם.';
+
+  @override
   String get wallDimAfter => 'עמעום אחרי';
 
   @override
@@ -3417,6 +3442,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'קוד שנשכח אפשר לאפס רק במחיקת הנתונים של ZigDash בהגדרות אנדרואיד, וזה מסיר את הבית הזה אלא אם יש לכם גיבוי. ייצאו גיבוי לפני הגדרת קוד.';
 
   @override
+  String get kioskPinForgotBodyIos =>
+      'קוד שנשכח אפשר לאפס רק במחיקה והתקנה מחדש של ZigDash, וזה מסיר את הבית הזה אלא אם יש לכם גיבוי. ייצאו גיבוי לפני הגדרת קוד.';
+
+  @override
   String get kioskExportBackup => 'ייצוא גיבוי';
 
   @override
@@ -3543,6 +3572,17 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get proOnce =>
       'תשלום אחד, בלי מנוי. קניתם בטלפון אחר עם אותו חשבון Google? זה נפתח אוטומטית.';
+
+  @override
+  String get proOnceIos =>
+      'תשלום אחד, בלי מנוי. קניתם באייפון או אייפד אחר עם אותו חשבון Apple? זה נפתח אוטומטית, או הקישו על שחזור רכישה.';
+
+  @override
+  String get proRestore => 'שחזור רכישה';
+
+  @override
+  String get proRestoreNone =>
+      'לא נמצאה רכישה של ZigDash Pro עבור ה‑Apple ID הזה.';
 
   @override
   String get historyNotRecorded =>

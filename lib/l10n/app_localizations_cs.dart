@@ -1383,6 +1383,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Telefon tento název nenašel. Android často neumí vyhledat názvy končící na .local, takže místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
 
   @override
+  String get diagResolveLocalNameIos =>
+      'Telefon tento název nenašel. Zkontroluj, jestli je správně napsaný, nebo místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
+
+  @override
   String get diagTcpHaNoBroker =>
       'Tohle je tvůj Home Assistant, ale neběží na něm žádný MQTT broker. Nainstaluj a spusť doplněk Mosquitto broker (Nastavení › Doplňky) a zkus to znovu.';
 
@@ -1516,6 +1520,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Oznámení ZigDash jsou vypnutá, takže připomenutí nebude. Můžeš je zapnout v nastavení Androidu.';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Oznámení ZigDash jsou vypnutá, takže připomenutí nebude. Můžeš je zapnout v Nastavení › ZigDash › Oznámení.';
 
   @override
   String get reminderChannel => 'Připomenutí nastavení';
@@ -1900,6 +1908,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Máš zapnutou VPN a ta může domácí síť před hledáním skrýt. Pokud jsi doma, vypni VPN a klepni na Zkusit znovu.';
 
   @override
+  String get setupLocalNetworkIos =>
+      'ZigDash potřebuje přístup k místní síti, aby našel tvůj hub. Pokud byl přístup odmítnut, povol ho v Nastavení › Soukromí a zabezpečení › Místní síť.';
+
+  @override
   String get setupNoBrokerZ2mTitle =>
       'Zigbee2MQTT nalezen, ale jeho broker není dostupný';
 
@@ -1997,6 +2009,11 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return '$host se nepodařilo vyhledat. Názvy končící na .local na Androidu často nefungují; zkus místo toho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return '$host se nepodařilo vyhledat. Zkontroluj název, nebo zkus místo toho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
   }
 
   @override
@@ -2766,6 +2783,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Názvy končící na .local nefungují na každém telefonu s Androidem. Zkus číselnou adresu hubu, třeba 192.168.1.20.';
 
   @override
+  String get tipNumberAddressBodyIos =>
+      'Pokud název nefunguje, zkus číselnou adresu hubu, třeba 192.168.1.20.';
+
+  @override
   String get tipPortProtocolTitle => 'Port a protokol';
 
   @override
@@ -3304,6 +3325,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Skryje i stavový a navigační panel Androidu.';
 
   @override
+  String get wallFullscreenSubtitleIos =>
+      'Skryje i stavový řádek; indikátor plochy ztlumí.';
+
+  @override
   String get wallDimAfter => 'Ztlumit po';
 
   @override
@@ -3451,6 +3476,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Zapomenutý PIN jde resetovat jen vymazáním dat ZigDash v nastavení Androidu, což odstraní tento domov, pokud nemáš zálohu. Než PIN nastavíš, zálohu si vyexportuj.';
 
   @override
+  String get kioskPinForgotBodyIos =>
+      'Zapomenutý PIN jde resetovat jen smazáním a novou instalací ZigDash, což odstraní tento domov, pokud nemáš zálohu. Než PIN nastavíš, zálohu si vyexportuj.';
+
+  @override
   String get kioskExportBackup => 'Exportovat zálohu';
 
   @override
@@ -3580,6 +3609,17 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get proOnce =>
       'Jedna platba, žádné předplatné. Koupil jsi to na jiném telefonu se stejným účtem Google? Odemkne se automaticky.';
+
+  @override
+  String get proOnceIos =>
+      'Jedna platba, žádné předplatné. Koupil jsi to na jiném iPhonu nebo iPadu se stejným Apple účtem? Odemkne se automaticky, nebo klepni na Obnovit nákup.';
+
+  @override
+  String get proRestore => 'Obnovit nákup';
+
+  @override
+  String get proRestoreNone =>
+      'Pro toto Apple ID se nenašel žádný nákup ZigDash Pro.';
 
   @override
   String get historyNotRecorded =>

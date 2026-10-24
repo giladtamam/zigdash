@@ -29,6 +29,18 @@ class _ProScreenState extends ConsumerState<ProScreen> {
     ref.read(analyticsProvider).track(const ProEvent(ProStep.screenShown));
   }
 
+  /// App Review requires a way to restore a purchase (iOS build only).
+  /// Says so when the Apple ID has none; success shows as Unlocked.
+  Future<void> _restore() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final none = context.l10n.proRestoreNone;
+    await ref.read(proBillingProvider.notifier).restore();
+    if (!mounted) return;
+    if (ref.read(proStatusProvider) != ProStatus.unlocked) {
+      messenger.showSnackBar(SnackBar(content: Text(none)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -98,10 +110,14 @@ class _ProScreenState extends ConsumerState<ProScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                l10n.proOnce,
+                proFlavor == 'appstore' ? l10n.proOnceIos : l10n.proOnce,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall,
               ),
+              if (proFlavor == 'appstore') ...[
+                const SizedBox(height: 8),
+                TextButton(onPressed: _restore, child: Text(l10n.proRestore)),
+              ],
             ],
           ],
         ),

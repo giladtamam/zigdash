@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'alerts/alert_push.dart';
 import 'app.dart';
 import 'core/analytics/analytics.dart' show readTestDevice, testDeviceProvider;
+import 'core/storage/secure_storage.dart' show clearKeychainOfOldInstall;
 import 'mqtt/dropped_connection.dart';
 import 'core/theme/font_licenses.dart';
 import 'features/settings/providers/settings_controller.dart';
@@ -32,6 +33,9 @@ Future<void> main([List<String> args = const []]) async {
   }
   registerFontLicenses();
   final prefs = await SharedPreferences.getInstance();
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+    await clearKeychainOfOldInstall(prefs);
+  }
   await AlertPush.init(prefs, background: false);
   final testDevice = await readTestDevice();
   runApp(

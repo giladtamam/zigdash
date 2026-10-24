@@ -17,6 +17,7 @@ Widget _app(Widget child, {SupportLog? log}) => ProviderScope(
               appVersion: '2.0.1',
               build: '31',
               android: '15',
+              ios: null,
               phone: 'Samsung SM-S721B',
             )),
         supportLogProvider.overrideWithValue(

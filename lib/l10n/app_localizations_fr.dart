@@ -1393,6 +1393,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre téléphone n\'a pas trouvé ce nom. Android ne résout souvent pas les noms en .local : saisissez plutôt l\'adresse IP (Home Assistant l\'affiche dans Paramètres › Système › Réseau).';
 
   @override
+  String get diagResolveLocalNameIos =>
+      'Votre téléphone n\'a pas trouvé ce nom. Vérifiez son orthographe ou saisissez plutôt l\'adresse IP (Home Assistant l\'affiche dans Paramètres › Système › Réseau).';
+
+  @override
   String get diagTcpHaNoBroker =>
       'C\'est bien votre Home Assistant, mais aucun broker MQTT n\'y tourne. Installez et démarrez le module complémentaire Mosquitto broker (Paramètres › Modules complémentaires), puis réessayez.';
 
@@ -1527,6 +1531,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Les notifications de ZigDash sont désactivées, il n\'y aura donc pas de rappel. Vous pouvez les activer dans les paramètres d\'Android.';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Les notifications de ZigDash sont désactivées, il n\'y aura donc pas de rappel. Vous pouvez les activer dans Réglages › ZigDash › Notifications.';
 
   @override
   String get reminderChannel => 'Rappel de configuration';
@@ -1912,6 +1920,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Un VPN est actif et peut masquer votre réseau domestique à la recherche. Si vous êtes chez vous, coupez le VPN et touchez Réessayer.';
 
   @override
+  String get setupLocalNetworkIos =>
+      'ZigDash a besoin de l\'accès au réseau local pour trouver votre hub. Si vous avez refusé, autorisez-le dans Réglages › Confidentialité et sécurité › Réseau local.';
+
+  @override
   String get setupNoBrokerZ2mTitle =>
       'Zigbee2MQTT trouvé, mais son broker est injoignable';
 
@@ -2011,6 +2023,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String setupAddressNotResolved(String host) {
     return 'Impossible de résoudre $host. Les noms en .local échouent souvent sur Android ; essayez l\'adresse IP. Home Assistant l\'affiche dans Paramètres › Système › Réseau.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return 'Impossible de résoudre $host. Vérifiez le nom ou essayez l\'adresse IP. Home Assistant l\'affiche dans Paramètres › Système › Réseau.';
   }
 
   @override
@@ -2781,6 +2798,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les noms en .local ne fonctionnent pas sur tous les téléphones Android. Essayez l\'adresse en chiffres du hub, par exemple 192.168.1.20.';
 
   @override
+  String get tipNumberAddressBodyIos =>
+      'Si le nom ne fonctionne pas, essayez l\'adresse en chiffres du hub, par exemple 192.168.1.20.';
+
+  @override
   String get tipPortProtocolTitle => 'Port et protocole';
 
   @override
@@ -3322,6 +3343,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Masque aussi les barres d\'état et de navigation d\'Android.';
 
   @override
+  String get wallFullscreenSubtitleIos =>
+      'Masque aussi la barre d\'état ; l\'indicateur d\'accueil s\'atténue.';
+
+  @override
   String get wallDimAfter => 'Atténuer après';
 
   @override
@@ -3469,6 +3494,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Un code PIN oublié ne peut être réinitialisé qu\'en effaçant les données de ZigDash dans les réglages d\'Android, ce qui supprime cette maison sauf si vous avez une sauvegarde. Exportez-en une avant de définir un code.';
 
   @override
+  String get kioskPinForgotBodyIos =>
+      'Un code PIN oublié ne peut être réinitialisé qu\'en supprimant puis en réinstallant ZigDash, ce qui supprime cette maison sauf si vous avez une sauvegarde. Exportez-en une avant de définir un code.';
+
+  @override
   String get kioskExportBackup => 'Exporter une sauvegarde';
 
   @override
@@ -3599,6 +3628,17 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get proOnce =>
       'Un seul paiement, sans abonnement. Acheté sur un autre téléphone avec le même compte Google ? Il se débloque automatiquement.';
+
+  @override
+  String get proOnceIos =>
+      'Un seul paiement, sans abonnement. Acheté sur un autre iPhone ou iPad avec le même compte Apple ? Il se débloque automatiquement, ou touchez Restaurer l\'achat.';
+
+  @override
+  String get proRestore => 'Restaurer l\'achat';
+
+  @override
+  String get proRestoreNone =>
+      'Aucun achat de ZigDash Pro trouvé pour cet identifiant Apple.';
 
   @override
   String get historyNotRecorded =>

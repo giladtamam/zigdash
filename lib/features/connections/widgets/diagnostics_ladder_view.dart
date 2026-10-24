@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
@@ -34,6 +36,9 @@ class DiagnosticsLadderView extends StatelessWidget {
   String? _detail(BuildContext context, String? key) => switch (key) {
     'diagResolveFail' => context.l10n.diagResolveFail,
     'diagResolveTimeout' => context.l10n.diagResolveTimeout,
+    // iOS resolves .local names, so its text drops the Android claim.
+    'diagResolveLocalName' when Platform.isIOS =>
+      context.l10n.diagResolveLocalNameIos,
     'diagResolveLocalName' => context.l10n.diagResolveLocalName,
     'diagTcpHaNoBroker' => context.l10n.diagTcpHaNoBroker,
     'diagTcpSmlightClosed' => context.l10n.diagTcpSmlightClosed,

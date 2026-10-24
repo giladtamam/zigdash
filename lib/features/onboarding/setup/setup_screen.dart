@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -604,6 +606,12 @@ class _ScanEmpty extends StatelessWidget {
           liveRegion: true,
           child: Text(title, style: theme.textTheme.titleMedium),
         ),
+        // iOS asks for Local Network access on the first scan; a no
+        // leaves every scan empty, and iOS never asks again.
+        if (Platform.isIOS && hub == null) ...[
+          const SizedBox(height: 12),
+          _VpnHint(text: l10n.setupLocalNetworkIos, icon: Icons.lan_outlined),
+        ],
         // 2.6.7: a VPN on the phone hides the home network from the scan.
         // One 2.6.4 user scanned with a VPN up, found nothing and left.
         if (state.network?.vpn ?? false) ...[
@@ -1006,8 +1014,9 @@ class _Z2mAnswerNote extends StatelessWidget {
 
 /// The VPN note on the empty result: tinted so it reads before the body.
 class _VpnHint extends StatelessWidget {
-  const _VpnHint({required this.text});
+  const _VpnHint({required this.text, this.icon = Icons.vpn_lock});
   final String text;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -1021,7 +1030,7 @@ class _VpnHint extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.vpn_lock, color: scheme.onTertiaryContainer),
+          Icon(icon, color: scheme.onTertiaryContainer),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -1091,9 +1100,10 @@ class _AddressFieldState extends State<_AddressField> {
     };
     final String? outcome = switch (check?.status) {
       AddressCheckStatus.nothing => l10n.setupAddressNothing(check!.host),
-      AddressCheckStatus.notResolved => l10n.setupAddressNotResolved(
-        check!.host,
-      ),
+      AddressCheckStatus.notResolved =>
+        Platform.isIOS
+            ? l10n.setupAddressNotResolvedIos(check!.host)
+            : l10n.setupAddressNotResolved(check!.host),
       AddressCheckStatus.notLocal => l10n.setupAddressNotLocal(check!.host),
       AddressCheckStatus.invalid => l10n.setupAddressInvalid,
       _ => null,
