@@ -1096,6 +1096,8 @@
   "kioskExportBackup": "Back-up exporteren",
   "kioskOsPin": "ZigDash ook vastzetten in Android",
   "kioskOsPinSubtitle": "Android blokkeert Home en recente apps tot ZigDash wordt losgemaakt. Een tablet zonder vergrendelscherm maakt het los met een gebaar, dus dit is niet de vergrendeling.",
+  "kioskGuidedAccessTitle": "Vastzetten op ZigDash met Begeleide toegang",
+  "kioskGuidedAccess": "iOS houdt ZigDash in beeld tot je Begeleide toegang beëindigt: zet het aan in Instellingen › Toegankelijkheid › Begeleide toegang en klik dan in ZigDash drie keer op de zijknop.",
   "kioskOn": "Kiosk aan. Houd de titel ingedrukt om te stoppen.",
   "kioskLeaveTitle": "Kiosk verlaten?",
   "kioskLeave": "Verlaten",

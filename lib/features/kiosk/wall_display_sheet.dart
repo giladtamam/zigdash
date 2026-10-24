@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -231,14 +233,22 @@ class WallDisplaySheet extends ConsumerWidget {
                 ],
               ),
             ),
-          SwitchListTile(
-            secondary: const Icon(Icons.push_pin_outlined),
-            title: Text(l10n.kioskOsPin),
-            subtitle: Text(l10n.kioskOsPinSubtitle),
-            value: kiosk.osPinning,
-            onChanged: (on) =>
-                ref.read(kioskProvider.notifier).setOsPinning(on),
-          ),
+          // iOS can't pin from an app; Guided Access is the user's own switch.
+          if (Platform.isIOS)
+            ListTile(
+              leading: const Icon(Icons.push_pin_outlined),
+              title: Text(l10n.kioskGuidedAccessTitle),
+              subtitle: Text(l10n.kioskGuidedAccess),
+            )
+          else
+            SwitchListTile(
+              secondary: const Icon(Icons.push_pin_outlined),
+              title: Text(l10n.kioskOsPin),
+              subtitle: Text(l10n.kioskOsPinSubtitle),
+              value: kiosk.osPinning,
+              onChanged: (on) =>
+                  ref.read(kioskProvider.notifier).setOsPinning(on),
+            ),
         ],
       ),
     );

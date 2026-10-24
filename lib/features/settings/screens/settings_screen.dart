@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import '../../../mqtt/endpoint.dart';
@@ -53,13 +55,30 @@ final playStoreAppUrl = Uri.parse('market://details?id=$playPackage');
 final playStoreWebUrl =
     Uri.https('play.google.com', '/store/apps/details', {'id': playPackage});
 
-/// Opens ZigDash on Google Play so the user can rate it.
+/// ZigDash's App Store id (docs/design/ios.md), known once the App Store
+/// Connect record exists; empty hides Rate on iOS until then.
+const appStoreId = String.fromEnvironment('ZIGDASH_APPSTORE_ID');
+
+/// The App Store's review page for ZigDash.
+final appStoreReviewUrl =
+    Uri.parse('https://apps.apple.com/app/id$appStoreId?action=write-review');
+
+/// Whether this build has a store page to rate: Play everywhere on Android,
+/// the App Store on iOS once [appStoreId] is set.
+bool get canRateApp => !Platform.isIOS || appStoreId.isNotEmpty;
+
+/// Opens ZigDash's store page (Google Play, or the App Store on iOS) so the
+/// user can rate it.
 ///
 /// Not the in-app review dialog: Play rations it and gives no signal when it
 /// shows nothing, so a Rate button that relies on it often does nothing at
 /// all, and Google advises against calling it from a button. The automatic
 /// prompt (lib/core/review) still uses it.
-Future<void> openPlayListing() async {
+Future<void> openStoreListing() async {
+  if (Platform.isIOS) {
+    await launchUrl(appStoreReviewUrl, mode: LaunchMode.externalApplication);
+    return;
+  }
   try {
     if (await launchUrl(playStoreAppUrl,
         mode: LaunchMode.externalApplication)) {
@@ -215,14 +234,15 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const Divider(),
               _SectionHeader(l10n.settingsAbout),
-              ListTile(
-                leading: const Icon(Icons.star_outline),
-                title: Text(l10n.settingsRateApp),
-                subtitle: Text(l10n.settingsRateAppSubtitle),
-                onTap: openPlayListing,
-              ),
+              if (canRateApp)
+                ListTile(
+                  leading: const Icon(Icons.star_outline),
+                  title: Text(l10n.settingsRateApp),
+                  subtitle: Text(l10n.settingsRateAppSubtitle),
+                  onTap: openStoreListing,
+                ),
               // ZigDash Pro (history-2.7.md): only where it can be bought.
-              if (proFlavor == 'play' &&
+              if (proSold &&
                   ref.watch(proStatusProvider) != ProStatus.unavailable)
                 ListTile(
                   leading: const Icon(Icons.workspace_premium_outlined),

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
-import '../features/pro/pro.dart' show proPurchaseToken;
+import '../features/pro/pro.dart' show proPurchaseToken, proStore;
 import '../mqtt/endpoint.dart';
 import '../mqtt/mqtt_manager.dart';
 import '../mqtt/providers/mqtt_manager_provider.dart';
@@ -73,7 +73,7 @@ class RemoteSetup {
     if (!mgr.isConnected || mgr.activeEndpoint == MqttEndpoint.relay) return RemoteSetupResult.notAtHome;
     final token = await _purchaseToken() ?? (relayIsTest && kDebugMode ? 'test-pro-$connectionId' : null);
     if (token == null) return RemoteSetupResult.noPro;
-    final (status, body) = await _call('POST', '/v1/homes', body: {'purchaseToken': token});
+    final (status, body) = await _call('POST', '/v1/homes', body: {'purchaseToken': token, 'store': proStore});
     if (status == 0) return RemoteSetupResult.unreachable;
     if (status == 402) return RemoteSetupResult.noPro;
     if (status != 200 || body == null) return RemoteSetupResult.refused;

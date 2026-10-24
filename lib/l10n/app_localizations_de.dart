@@ -3474,6 +3474,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Android blockiert Home und die letzten Apps, bis ZigDash gelöst wird. Ein Tablet ohne Sperrbildschirm löst es mit einer Geste, also ist das nicht die Sperre.';
 
   @override
+  String get kioskGuidedAccessTitle =>
+      'Mit Geführtem Zugriff an ZigDash binden';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS lässt ZigDash auf dem Bildschirm, bis du den Geführten Zugriff beendest: Schalte ihn unter Einstellungen › Bedienungshilfen › Geführter Zugriff ein und drücke dann in ZigDash dreimal die Seitentaste.';
+
+  @override
   String get kioskOn => 'Kiosk an. Titel lange drücken, um zu beenden.';
 
   @override

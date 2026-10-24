@@ -1096,6 +1096,8 @@
   "kioskExportBackup": "Exportar copia",
   "kioskOsPin": "Fijar también ZigDash en Android",
   "kioskOsPinSubtitle": "Android bloquea Inicio y las apps recientes hasta que ZigDash se desfija. Una tablet sin pantalla de bloqueo se desfija con un gesto, así que esto no es el bloqueo.",
+  "kioskGuidedAccessTitle": "Bloquear en ZigDash con Acceso Guiado",
+  "kioskGuidedAccess": "iOS mantiene ZigDash en pantalla hasta que termines el Acceso Guiado: actívalo en Ajustes › Accesibilidad › Acceso Guiado y luego pulsa tres veces el botón lateral en ZigDash.",
   "kioskOn": "Quiosco activado. Mantén pulsado el título para salir.",
   "kioskLeaveTitle": "¿Salir del quiosco?",
   "kioskLeave": "Salir",

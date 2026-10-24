@@ -3467,6 +3467,14 @@ class AppLocalizationsPl extends AppLocalizations {
       'Android blokuje przycisk Home i ostatnie aplikacje, dopóki ZigDash nie zostanie odpięty. Tablet bez ekranu blokady odpina gestem, więc to nie jest blokada.';
 
   @override
+  String get kioskGuidedAccessTitle =>
+      'Zablokuj na ZigDash przez Dostęp nadzorowany';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS trzyma ZigDash na ekranie, dopóki nie zakończysz Dostępu nadzorowanego: włącz go w Ustawienia › Dostępność › Dostęp nadzorowany, a potem w ZigDash naciśnij trzy razy boczny przycisk.';
+
+  @override
   String get kioskOn => 'Kiosk włączony. Przytrzymaj tytuł, aby wyjść.';
 
   @override

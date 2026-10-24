@@ -10,7 +10,13 @@ import UIKit
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
+  private var appChannel: AppChannel?
+  private var proBilling: ProBilling?
+
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    let messenger = engineBridge.pluginRegistry.registrar(forPlugin: "ZigDash")!.messenger()
+    appChannel = AppChannel(messenger: messenger)
+    proBilling = ProBilling(messenger: messenger)
   }
 }

@@ -1021,6 +1021,8 @@
   "kioskExportBackup": "Exporter une sauvegarde",
   "kioskOsPin": "Épingler aussi ZigDash dans Android",
   "kioskOsPinSubtitle": "Android bloque Accueil et les applications récentes jusqu'à ce que ZigDash soit désépinglé. Une tablette sans écran de verrouillage se désépingle d'un geste : ce n'est donc pas le verrou.",
+  "kioskGuidedAccessTitle": "Verrouiller sur ZigDash avec l'Accès guidé",
+  "kioskGuidedAccess": "iOS garde ZigDash à l'écran jusqu'à la fin de l'Accès guidé : activez-le dans Réglages › Accessibilité › Accès guidé, puis appuyez trois fois sur le bouton latéral dans ZigDash.",
   "kioskOn": "Kiosque activé. Appui long sur le titre pour quitter.",
   "kioskLeaveTitle": "Quitter le kiosque ?",
   "kioskLeave": "Quitter",

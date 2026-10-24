@@ -21,12 +21,15 @@ enum ProStatus {
 }
 
 /// Which build this is: `foss` (GitHub, IzzyOnDroid, F-Droid: no billing,
-/// everything unlocked) or `play`. Set by tool/build_release.sh together
-/// with the Android flavor of the same name.
+/// everything unlocked), `play`, or `appstore` (docs/design/ios.md). Set by
+/// tool/build_release.sh together with the flavor of the same name.
 const proFlavor = String.fromEnvironment(
   'ZIGDASH_FLAVOR',
   defaultValue: 'foss',
 );
+
+/// Whether this build sells Pro through its store: Play or the App Store.
+const proSold = proFlavor == 'play' || proFlavor == 'appstore';
 
 /// Whether the Play build offers Pro yet (the payments profile and the
 /// product exist). Until then Pro views are hidden in the Play build.
@@ -67,6 +70,10 @@ class ProBilling extends Notifier<ProStatus> {
       analytics.track(const ProEvent(ProStep.unlocked));
     }
   }
+
+  /// Asks the App Store again for a Pro bought on another device or before
+  /// a reinstall; App Review requires the button.
+  Future<void> restore() => _ask('restore');
 }
 
 final proBillingProvider = NotifierProvider<ProBilling, ProStatus>(
@@ -75,7 +82,7 @@ final proBillingProvider = NotifierProvider<ProBilling, ProStatus>(
 
 /// This build's Pro status.
 final proStatusProvider = Provider<ProStatus>((ref) {
-  if (proFlavor != 'play') return ProStatus.unlocked;
+  if (!proSold) return ProStatus.unlocked;
   if (!proLive) return ProStatus.unavailable;
   return ref.watch(proBillingProvider);
 });
@@ -83,15 +90,18 @@ final proStatusProvider = Provider<ProStatus>((ref) {
 /// Starts buying Pro; null when this build can't (outside Play, before Pro
 /// is live, or once it's bought), which disables Unlock.
 final proPurchaseProvider = Provider<VoidCallback?>((ref) {
-  if (proFlavor != 'play' || !proLive) return null;
+  if (!proSold || !proLive) return null;
   if (ref.watch(proStatusProvider) != ProStatus.locked) return null;
   return () => ref.read(proBillingProvider.notifier).buy();
 });
 
-/// The Play purchase token of an owned Pro, for the ZigDash relay (3.1);
-/// null outside Play or without Pro.
+/// The proof of an owned Pro for the ZigDash relay (3.1): Play's purchase
+/// token, or the App Store's signed transaction; null without Pro.
+/// Which store [proPurchaseToken] comes from, for the relay.
+const proStore = proFlavor == 'appstore' ? 'apple' : 'play';
+
 Future<String?> proPurchaseToken() async {
-  if (proFlavor != 'play') return null;
+  if (!proSold) return null;
   try {
     final t = await _billing.invokeMethod<String>('token');
     return (t == null || t.isEmpty) ? null : t;
@@ -105,7 +115,7 @@ Future<String?> proPurchaseToken() async {
 /// Pro's price as Play formats it for this user ("€7.99"), or null where
 /// Pro can't be bought or Play doesn't say (2.9.6).
 final proPriceProvider = FutureProvider<String?>((ref) async {
-  if (proFlavor != 'play' || !proLive) return null;
+  if (!proSold || !proLive) return null;
   try {
     final price = await _billing.invokeMethod<String>('price');
     return (price == null || price.isEmpty) ? null : price;

@@ -3470,6 +3470,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Android blocca Home e le app recenti finché ZigDash non viene sbloccato. Un tablet senza blocco schermo si sblocca con un gesto, quindi questo non è il blocco vero e proprio.';
 
   @override
+  String get kioskGuidedAccessTitle => 'Blocca su ZigDash con Accesso Guidato';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS tiene ZigDash sullo schermo finché non termini l\'Accesso Guidato: attivalo in Impostazioni › Accessibilità › Accesso Guidato, poi premi tre volte il tasto laterale in ZigDash.';
+
+  @override
   String get kioskOn => 'Kiosk attivo. Tieni premuto il titolo per uscire.';
 
   @override

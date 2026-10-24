@@ -3456,6 +3456,13 @@ class AppLocalizationsSv extends AppLocalizations {
       'Android spärrar Hem och senaste appar tills ZigDash lossas. En surfplatta utan låsskärm lossar med en gest, så det här är inte låset.';
 
   @override
+  String get kioskGuidedAccessTitle => 'Lås till ZigDash med Guidad åtkomst';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS håller ZigDash på skärmen tills du avslutar Guidad åtkomst: slå på det i Inställningar › Hjälpmedel › Guidad åtkomst och trippelklicka sedan på sidoknappen i ZigDash.';
+
+  @override
   String get kioskOn => 'Kiosk på. Håll in titeln för att avsluta.';
 
   @override

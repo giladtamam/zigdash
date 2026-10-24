@@ -3470,6 +3470,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Android bloquea Inicio y las apps recientes hasta que ZigDash se desfija. Una tablet sin pantalla de bloqueo se desfija con un gesto, así que esto no es el bloqueo.';
 
   @override
+  String get kioskGuidedAccessTitle => 'Bloquear en ZigDash con Acceso Guiado';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS mantiene ZigDash en pantalla hasta que termines el Acceso Guiado: actívalo en Ajustes › Accesibilidad › Acceso Guiado y luego pulsa tres veces el botón lateral en ZigDash.';
+
+  @override
   String get kioskOn =>
       'Quiosco activado. Mantén pulsado el título para salir.';
 

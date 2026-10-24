@@ -3455,6 +3455,13 @@ class AppLocalizationsNb extends AppLocalizations {
       'Android blokkerer Hjem og nylige apper til ZigDash løsnes. Et nettbrett uten låseskjerm løsner med en bevegelse, så dette er ikke låsen.';
 
   @override
+  String get kioskGuidedAccessTitle => 'Lås til ZigDash med Veiledet tilgang';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS holder ZigDash på skjermen til du avslutter Veiledet tilgang: slå det på i Innstillinger › Tilgjengelighet › Veiledet tilgang, og trykk deretter tre ganger på sideknappen i ZigDash.';
+
+  @override
   String get kioskOn => 'Kiosk på. Hold inne tittelen for å avslutte.';
 
   @override

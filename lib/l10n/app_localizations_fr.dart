@@ -3479,6 +3479,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Android bloque Accueil et les applications récentes jusqu\'à ce que ZigDash soit désépinglé. Une tablette sans écran de verrouillage se désépingle d\'un geste : ce n\'est donc pas le verrou.';
 
   @override
+  String get kioskGuidedAccessTitle =>
+      'Verrouiller sur ZigDash avec l\'Accès guidé';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS garde ZigDash à l\'écran jusqu\'à la fin de l\'Accès guidé : activez-le dans Réglages › Accessibilité › Accès guidé, puis appuyez trois fois sur le bouton latéral dans ZigDash.';
+
+  @override
   String get kioskOn => 'Kiosque activé. Appui long sur le titre pour quitter.';
 
   @override

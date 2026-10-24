@@ -3427,6 +3427,13 @@ class AppLocalizationsHe extends AppLocalizations {
       'אנדרואיד חוסם את כפתור הבית והאפליקציות האחרונות עד לביטול ההצמדה של ZigDash. טאבלט בלי מסך נעילה מבטל את ההצמדה במחווה, כך שזו לא הנעילה.';
 
   @override
+  String get kioskGuidedAccessTitle => 'נעילה ל-ZigDash עם גישה מודרכת';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS משאיר את ZigDash על המסך עד שמסיימים את הגישה המודרכת: מפעילים אותה בהגדרות › נגישות › גישה מודרכת, ואז לוחצים שלוש פעמים על הכפתור הצדדי ב-ZigDash.';
+
+  @override
   String get kioskOn => 'קיוסק פעיל. לחיצה ארוכה על הכותרת כדי לצאת.';
 
   @override

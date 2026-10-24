@@ -1096,6 +1096,8 @@
   "kioskExportBackup": "Eksporter sikkerhetskopi",
   "kioskOsPin": "Fest også ZigDash i Android",
   "kioskOsPinSubtitle": "Android blokkerer Hjem og nylige apper til ZigDash løsnes. Et nettbrett uten låseskjerm løsner med en bevegelse, så dette er ikke låsen.",
+  "kioskGuidedAccessTitle": "Lås til ZigDash med Veiledet tilgang",
+  "kioskGuidedAccess": "iOS holder ZigDash på skjermen til du avslutter Veiledet tilgang: slå det på i Innstillinger › Tilgjengelighet › Veiledet tilgang, og trykk deretter tre ganger på sideknappen i ZigDash.",
   "kioskOn": "Kiosk på. Hold inne tittelen for å avslutte.",
   "kioskLeaveTitle": "Avslutte kiosk?",
   "kioskLeave": "Avslutt",

@@ -3461,6 +3461,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Android блокирует кнопку «Домой» и недавние приложения, пока ZigDash не откреплён. Планшет без экрана блокировки открепляется жестом, так что это не замок.';
 
   @override
+  String get kioskGuidedAccessTitle => 'Закрепить ZigDash через Гид-доступ';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS держит ZigDash на экране, пока вы не завершите Гид-доступ: включите его в Настройки › Универсальный доступ › Гид-доступ, затем трижды нажмите боковую кнопку в ZigDash.';
+
+  @override
   String get kioskOn => 'Киоск включён. Удерживайте заголовок, чтобы выйти.';
 
   @override

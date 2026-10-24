@@ -1096,6 +1096,8 @@
   "kioskExportBackup": "Backup exportieren",
   "kioskOsPin": "ZigDash auch in Android anheften",
   "kioskOsPinSubtitle": "Android blockiert Home und die letzten Apps, bis ZigDash gelöst wird. Ein Tablet ohne Sperrbildschirm löst es mit einer Geste, also ist das nicht die Sperre.",
+  "kioskGuidedAccessTitle": "Mit Geführtem Zugriff an ZigDash binden",
+  "kioskGuidedAccess": "iOS lässt ZigDash auf dem Bildschirm, bis du den Geführten Zugriff beendest: Schalte ihn unter Einstellungen › Bedienungshilfen › Geführter Zugriff ein und drücke dann in ZigDash dreimal die Seitentaste.",
   "kioskOn": "Kiosk an. Titel lange drücken, um zu beenden.",
   "kioskLeaveTitle": "Kiosk beenden?",
   "kioskLeave": "Beenden",

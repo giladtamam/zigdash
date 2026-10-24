@@ -3461,6 +3461,14 @@ class AppLocalizationsCs extends AppLocalizations {
       'Android zablokuje Domů a nedávné aplikace, dokud ZigDash neodepneš. Tablet bez zámku obrazovky se odepne gestem, takže tohle zámek není.';
 
   @override
+  String get kioskGuidedAccessTitle =>
+      'Zamknout na ZigDash přes Řízený přístup';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS nechá ZigDash na obrazovce, dokud Řízený přístup neukončíš: zapni ho v Nastavení › Zpřístupnění › Řízený přístup a pak v ZigDash třikrát stiskni boční tlačítko.';
+
+  @override
   String get kioskOn => 'Kiosk zapnutý. Pro odchod dlouze podrž název.';
 
   @override

@@ -147,9 +147,9 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen> {
               onPressed: () => context.go(Routes.homeAutomations(widget.connectionId)),
               child: Text(l10n.automationsTitle),
             ),
-          ] else if (proFlavor != 'play' && !relayIsTest)
+          ] else if (!proSold && !relayIsTest)
             Text(l10n.remotePlayOnly)
-          else if (proFlavor == 'play' && !relayIsTest && ref.watch(proStatusProvider) != ProStatus.unlocked) ...[
+          else if (proSold && !relayIsTest && ref.watch(proStatusProvider) != ProStatus.unlocked) ...[
             Text(l10n.remoteNeedsPro),
             const SizedBox(height: 12),
             FilledButton(onPressed: () => openPro(context), child: Text(l10n.autoCeilingSeePro)),

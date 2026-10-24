@@ -1091,6 +1091,8 @@
   "kioskExportBackup": "Eksportuj kopię",
   "kioskOsPin": "Przypnij też ZigDash w Androidzie",
   "kioskOsPinSubtitle": "Android blokuje przycisk Home i ostatnie aplikacje, dopóki ZigDash nie zostanie odpięty. Tablet bez ekranu blokady odpina gestem, więc to nie jest blokada.",
+  "kioskGuidedAccessTitle": "Zablokuj na ZigDash przez Dostęp nadzorowany",
+  "kioskGuidedAccess": "iOS trzyma ZigDash na ekranie, dopóki nie zakończysz Dostępu nadzorowanego: włącz go w Ustawienia › Dostępność › Dostęp nadzorowany, a potem w ZigDash naciśnij trzy razy boczny przycisk.",
   "kioskOn": "Kiosk włączony. Przytrzymaj tytuł, aby wyjść.",
   "kioskLeaveTitle": "Wyjść z kiosku?",
   "kioskLeave": "Wyjdź",

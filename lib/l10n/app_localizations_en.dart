@@ -3453,6 +3453,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Android blocks Home and recent apps until ZigDash is unpinned. A tablet without a lock screen unpins with a gesture, so this is not the lock.';
 
   @override
+  String get kioskGuidedAccessTitle => 'Lock to ZigDash with Guided Access';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS keeps ZigDash on screen until you end Guided Access: turn it on in Settings › Accessibility › Guided Access, then triple-click the side button in ZigDash.';
+
+  @override
   String get kioskOn => 'Kiosk on. Long-press the title to leave.';
 
   @override

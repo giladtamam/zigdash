@@ -3468,6 +3468,14 @@ class AppLocalizationsNl extends AppLocalizations {
       'Android blokkeert Home en recente apps tot ZigDash wordt losgemaakt. Een tablet zonder vergrendelscherm maakt het los met een gebaar, dus dit is niet de vergrendeling.';
 
   @override
+  String get kioskGuidedAccessTitle =>
+      'Vastzetten op ZigDash met Begeleide toegang';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS houdt ZigDash in beeld tot je Begeleide toegang beëindigt: zet het aan in Instellingen › Toegankelijkheid › Begeleide toegang en klik dan in ZigDash drie keer op de zijknop.';
+
+  @override
   String get kioskOn => 'Kiosk aan. Houd de titel ingedrukt om te stoppen.';
 
   @override
