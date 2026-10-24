@@ -1,22 +1,24 @@
 // ZigDash relay verifier (3.1, zigdash-3.0.md §5).
 //
 // A small HTTP service beside the relay broker. It admits a Home only after
-// checking a Google Play purchase of Pro, then creates the Home's broker
+// checking a purchase of Pro (Google Play, or the App Store: apple.mjs), then creates the Home's broker
 // logins through Mosquitto's dynamic-security plugin: one role confined to
 // homes/<id>/#, one client for the hub and one per phone. Phones it paired
 // can ask for more phone logins (for the QR code) and remove phones.
 //
 // It never sees device data: that travels sealed between hub and phones.
-// It stores: purchase-token hash → home, and scrypt hashes of phone passwords.
+// It stores: purchase hash (Play token, or Apple original transaction) → home, and scrypt hashes of phone passwords.
 //
 // Env: PORT, DB, MQTT_URL, ADMIN_USER, ADMIN_PASSWORD, HUB_URL, PHONE_URL,
-//      VERIFY (play | fake), PLAY_PACKAGE, PLAY_PRODUCT, GOOGLE_SA (path to JSON key).
+//      VERIFY (play | fake), PLAY_PACKAGE, PLAY_PRODUCT, GOOGLE_SA (path to JSON key),
+//      APPLE_BUNDLE, APPLE_ENVIRONMENTS (Production[,Sandbox]).
 
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import mqtt from 'mqtt';
+import { verifyAppleTransaction } from './apple.mjs';
 
 export function createVerifier(env = process.env) {
   const cfg = {
@@ -31,6 +33,8 @@ export function createVerifier(env = process.env) {
     playPackage: env.PLAY_PACKAGE || 'com.giladtamam.zigdash',
     playProduct: env.PLAY_PRODUCT || 'zigdash_pro',
     googleSa: env.GOOGLE_SA,
+    appleBundle: env.APPLE_BUNDLE || 'com.giladtamam.zigdash',
+    appleEnvironments: (env.APPLE_ENVIRONMENTS || 'Production').split(','),
     maxPhones: Number(env.MAX_PHONES || 5),
     pairPerHour: Number(env.PAIR_PER_HOUR || 10),
   };
@@ -135,6 +139,22 @@ export function createVerifier(env = process.env) {
     return state === 'PURCHASED' && items.some((i) => i.productId === cfg.playProduct);
   }
 
+  /**
+   * What binds a purchase to its Home, or null without Pro: the Play token,
+   * or the App Store's original transaction id (the same across reinstalls
+   * and restores, unlike the signed transaction itself).
+   */
+  async function purchaseKey(store, token) {
+    if (store === 'apple') {
+      if (cfg.verify === 'fake') return token.startsWith('test-pro-') ? `apple:${token}` : null;
+      const t = verifyAppleTransaction(token, {
+        bundleId: cfg.appleBundle, product: cfg.playProduct, environments: cfg.appleEnvironments,
+      });
+      return t ? `apple:${t.originalTransactionId}` : null;
+    }
+    return (await purchaseValid(token)) ? token : null;
+  }
+
   // ---------- HTTP ----------
   const attempts = new Map(); // ip -> [times]
   function rateLimited(ip) {
@@ -150,7 +170,7 @@ export function createVerifier(env = process.env) {
   };
   const readJson = (req) => new Promise((resolve) => {
     let raw = '';
-    req.on('data', (c) => { raw += c; if (raw.length > 16384) req.destroy(); });
+    req.on('data', (c) => { raw += c; if (raw.length > 32768) req.destroy(); });
     req.on('end', () => { try { resolve(JSON.parse(raw || '{}')); } catch { resolve(null); } });
   });
   /** The phone a request's Basic credentials belong to, if any. */
@@ -180,9 +200,11 @@ export function createVerifier(env = process.env) {
       if (rateLimited(ip)) return send(res, 429, { error: 'too many attempts' });
       const body = await readJson(req);
       const token = body && typeof body.purchaseToken === 'string' ? body.purchaseToken : '';
-      if (!token || token.length > 4096) return send(res, 400, { error: 'purchaseToken missing' });
-      if (!(await purchaseValid(token))) return send(res, 402, { error: 'no Pro purchase' });
-      const tokenHash = sha(token);
+      if (!token || token.length > 16384) return send(res, 400, { error: 'purchaseToken missing' });
+      const store = body.store === 'apple' ? 'apple' : 'play';
+      const key = await purchaseKey(store, token);
+      if (!key) return send(res, 402, { error: 'no Pro purchase' });
+      const tokenHash = sha(key);
       const bound = db.prepare('select id from homes where token_hash = ?').get(tokenHash);
       // One purchase, one Home. Pairing the same purchase again (a reinstall)
       // returns the same Home with a fresh hub login and a new phone.

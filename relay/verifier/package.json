@@ -3,12 +3,12 @@
   "private": true,
   "version": "3.1.0",
   "type": "module",
-  "description": "Admits a Home to the ZigDash relay after a Google Play Pro purchase and creates its broker logins.",
+  "description": "Admits a Home to the ZigDash relay after a Pro purchase on Google Play or the App Store and creates its broker logins.",
   "main": "server.mjs",
   "engines": { "node": ">=22.13" },
   "scripts": {
     "start": "node server.mjs",
-    "test": "node --test test/verifier.test.mjs"
+    "test": "node --test test/apple.test.mjs test/verifier.test.mjs"
   },
   "dependencies": {
     "mqtt": "5.16.1"

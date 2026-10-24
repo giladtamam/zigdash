@@ -115,6 +115,13 @@ test('verifier against a real broker', { skip }, async (t) => {
     assert.equal((await api('POST', `/v1/homes/${H}/phones`, null, other.body.phone)).status, 401);
   });
 
+  await t.test('an App Store purchase gets its own home; an unknown one gets none', async () => {
+    const apple = await api('POST', '/v1/homes', { purchaseToken: 'test-pro-AAA', store: 'apple' });
+    assert.equal(apple.status, 200);
+    assert.notEqual(apple.body.homeId, H);
+    assert.equal((await api('POST', '/v1/homes', { purchaseToken: 'free-user', store: 'apple' })).status, 402);
+  });
+
   await t.test('pairing is limited per address', async () => {
     let last;
     for (let i = 0; i < 12; i++) last = await api('POST', '/v1/homes', { purchaseToken: `test-pro-L${i}` });
