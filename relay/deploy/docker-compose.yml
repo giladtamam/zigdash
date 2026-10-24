@@ -36,6 +36,8 @@ services:
       PHONE_URL: wss://relay.zigdash.app/mqtt
       VERIFY: ${VERIFY:-play}
       GOOGLE_SA: /secrets/play-service-account.json
+      # App Store purchases (apple.mjs): add Sandbox for TestFlight testers.
+      APPLE_ENVIRONMENTS: ${APPLE_ENVIRONMENTS:-Production}
     volumes:
       - ./verifier-data:/data
       - ./secrets:/secrets:ro

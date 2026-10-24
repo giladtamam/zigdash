@@ -2,7 +2,10 @@
 
 Remote control from away for Pro (docs/design/zigdash-3.0.md §5). Two parts:
 
-- `verifier/` — admits a Home after a Google Play Pro purchase and creates its
+- `verifier/` — admits a Home after a Pro purchase (Google Play, checked with
+  Google's API; or the App Store, whose signed transaction is checked offline
+  in `apple.mjs`; `APPLE_ENVIRONMENTS=Production,Sandbox` admits TestFlight
+  purchases too) and creates its
   broker logins (one role per Home, a hub login, phone logins); paired phones
   add and remove phones. Tests run against a real local Mosquitto:
   `cd relay/verifier && pnpm install && pnpm test`.
