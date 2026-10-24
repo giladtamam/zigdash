@@ -1,0 +1,68 @@
+# App Store uploads for the iOS app (docs/design/ios.md). Android releases
+# don't use fastlane; only fastlane/metadata/android is read by F-Droid.
+#
+# Needs an App Store Connect API key (Users and Access › Integrations › Team
+# keys, role App Manager) saved as JSON outside the repo:
+#   {"key_id": "...", "issuer_id": "...", "key": "-----BEGIN PRIVATE KEY-----\n...", "in_house": false}
+# and its path in ASC_KEY (default ~/keys/asc_api_key.json).
+#
+#   fastlane ios listing     # name, subtitle, description, keywords, URLs,
+#                            # review notes and screenshots, all 13 languages
+#   fastlane ios beta        # tool/build_release.sh ipa, then TestFlight
+#   fastlane ios check       # what listing would upload, without uploading
+require 'fileutils'
+require 'tmpdir'
+
+default_platform(:ios)
+
+ROOT = File.expand_path('..', __dir__)
+API_KEY = ENV['ASC_KEY'] || File.expand_path('~/keys/asc_api_key.json')
+
+platform :ios do
+  # store/captures-ios/<locale>/{iphone,ipad}/NN-name.png → one folder per
+  # locale, as deliver expects; it tells iPhone 6.9" and iPad 13" apart by size.
+  def screenshots_dir
+    out = Dir.mktmpdir('zigdash-shots')
+    Dir.glob(File.join(ROOT, 'store/captures-ios/*')).each do |loc_dir|
+      loc = File.basename(loc_dir)
+      FileUtils.mkdir_p(File.join(out, loc))
+      %w[iphone ipad].each do |form|
+        Dir.glob(File.join(loc_dir, form, '*.png')).sort.each do |png|
+          FileUtils.cp(png, File.join(out, loc, "#{form}-#{File.basename(png)}"))
+        end
+      end
+    end
+    out
+  end
+
+  def listing(verify_only:)
+    deliver(
+      api_key_path: API_KEY,
+      app_identifier: 'com.giladtamam.zigdash',
+      metadata_path: File.join(ROOT, 'fastlane/metadata/ios'),
+      screenshots_path: screenshots_dir,
+      overwrite_screenshots: true,
+      skip_binary_upload: true,
+      skip_app_version_update: false,
+      submit_for_review: false,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      verify_only: verify_only,
+      app_review_information: {
+        notes: File.read(File.join(ROOT, 'fastlane/metadata/ios/review_information/notes.txt'))
+      }
+    )
+  end
+
+  lane(:listing) { listing(verify_only: false) }
+  lane(:check) { listing(verify_only: true) }
+
+  lane :beta do
+    sh("cd #{ROOT} && tool/build_release.sh ipa")
+    upload_to_testflight(
+      api_key_path: API_KEY,
+      ipa: Dir.glob(File.join(ROOT, 'build/ios/ipa/*.ipa')).first,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
