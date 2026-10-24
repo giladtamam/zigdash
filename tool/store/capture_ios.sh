@@ -4,7 +4,7 @@
 # 2064x2752), the two sizes App Store Connect requires. Same scenes as Play
 # (integration_test/store_screenshots_test.dart), from the demo home.
 #
-#   tool/store/capture_ios.sh                 both forms, all 11 store languages
+#   tool/store/capture_ios.sh                 both forms, all 13 store languages
 #   tool/store/capture_ios.sh phone en        one form, one locale
 #
 # Output: store/captures-ios/<App Store locale>/{iphone,ipad}/NN-name.png
@@ -14,7 +14,7 @@ cd "$root"
 out_root="${STORE_ROOT:-$root/store/captures-ios}"
 
 forms=(phone tablet)
-locales=(en fr de es he ru pl pt nl sv nb)
+locales=(en fr de es he ru pl pt nl sv nb cs it)
 if [[ $# -ge 1 ]]; then forms=("$1"); fi
 if [[ $# -ge 2 ]]; then locales=("${@:2}"); fi
 
@@ -24,7 +24,7 @@ store_locale() {
   case "$1" in
     en) echo en-US ;; fr) echo fr-FR ;; de) echo de-DE ;; es) echo es-ES ;;
     he) echo he ;; ru) echo ru ;; pl) echo pl ;; pt) echo pt-BR ;;
-    nl) echo nl-NL ;; sv) echo sv ;; nb) echo no ;; *) echo "$1" ;;
+    nl) echo nl-NL ;; sv) echo sv ;; nb) echo no ;; cs) echo cs ;; it) echo it ;; *) echo "$1" ;;
   esac
 }
 
