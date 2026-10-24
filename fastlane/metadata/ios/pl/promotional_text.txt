@@ -1,0 +1,1 @@
+Mały hub z Zigbee2MQTT i ZigDash na Twoim iPhonie: bez Home Assistanta, bez serwera, bez chmury. Pulpit tworzy się sam z Twoich urządzeń.

@@ -1,0 +1,1 @@
+zigbee,zigbee2mqtt,mqtt,умный дом,дашборд,mosquitto,smlight,raspberry pi,z2m

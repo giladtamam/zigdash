@@ -1,0 +1,1 @@
+zigbee,zigbee2mqtt,mqtt,smarthus,dashbord,mosquitto,smlight,raspberry pi,hjemmeautomasjon,z2m

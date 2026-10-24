@@ -1,0 +1,1 @@
+Zigbee sem Home Assistant

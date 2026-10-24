@@ -1,0 +1,37 @@
+ZigDash is een dashboard voor Zigbee2MQTT. Een kleine hub met Zigbee2MQTT en ZigDash op je iPhone of iPad is alles wat je nodig hebt: geen Home Assistant, geen server om te onderhouden, geen cloud. Heb je al Home Assistant? ZigDash werkt daar ook mee.
+
+ZigDash vindt je hub op je thuisnetwerk en bouwt je dashboard op uit je apparaten, zodat je lampen, rolluiken, stekkers en sensoren een minuut na de installatie bedient. Geen account, geen advertenties.
+
+Vereist Zigbee2MQTT en een MQTT-broker op je netwerk (een SMLIGHT-hub, een Raspberry Pi of een willekeurige Linux-computer). Nog geen Zigbee2MQTT? Probeer het demohuis.
+
+IN EEN MINUUT INGESTELD
+• „Vind mijn installatie” zoekt op je netwerk naar de broker en Zigbee2MQTT en vertelt in gewone woorden wat je moet oplossen als er iets misgaat.
+• Kies je apparaten en krijg een dashboard, gegroepeerd per ruimte en soort.
+• Gebruik je Home Assistant? Maak verbinding via Home Assistant en importeer je apparaatnamen, ruimtes en dashboards.
+
+BEDIEN ALLES
+• Lampen met helderheid, wittint en kleur; rolluiken met openen, stoppen, sluiten en positie; stekkers met verbruiksmetingen; scènes; sensoren in één oogopslag.
+• Elk apparaat heeft een eigen pagina met alle bediening en de geschiedenis van vandaag.
+• De laatst bekende waarden blijven in beeld als de hub onbereikbaar is, gemarkeerd als verouderd.
+
+AUTOMATISERINGEN DIE OP DE HUB DRAAIEN
+• Eenvoudige regels en schema's draaien op je hub, dus ze blijven werken als je telefoon uit staat of niet thuis is.
+
+DE WANDTABLET
+• Maak van een iPad een wandscherm: volledig scherm, dimmen, een klok in rust en een pincodeslot voor kioskgebruik (met Begeleide toegang).
+• Met Pro: metingen op de klok, wakker worden bij beweging, een nachtschema en alarmen die het hele scherm vullen bij lekkage en rook.
+
+BEDIENING OP AFSTAND
+• Bereik je huis overal via de ZigDash-relay, end-to-end versleuteld tussen je hub en je telefoons. Of gebruik je eigen VPN, zoals Tailscale.
+
+ZIGDASH PRO
+Instellen, dashboards, de bediening van elk apparaat, drie automatiseringen per huis en de wandtablet blijven gratis. ZigDash Pro is een eenmalige in-app-aankoop, geen abonnement: onbeperkte automatiseringen, bediening op afstand via de relay, 7- en 30-dagengeschiedenis, de extra's van de wandtablet en elke Pro-functie die nog komt. Het houdt een app draaiende die door één persoon wordt gemaakt.
+
+PRIVÉ ALS UITGANGSPUNT
+• Je huizen en apparaten blijven op je telefoon en je broker. Wachtwoorden worden bewaard in de iOS-sleutelhanger.
+• Anonieme gebruiksgegevens helpen om installatieproblemen op te lossen; je zet ze met één tik uit.
+• Open source (MIT): de code is openbaar.
+
+In 13 talen: Engels, Tsjechisch, Nederlands, Frans, Duits, Hebreeuws, Italiaans, Noors, Pools, Portugees (Brazilië), Russisch, Spaans en Zweeds.
+
+Vragen en ideeën: t.me/zigdash_app

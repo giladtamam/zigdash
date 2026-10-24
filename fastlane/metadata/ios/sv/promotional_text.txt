@@ -1,0 +1,1 @@
+En liten hubb med Zigbee2MQTT och ZigDash på din iPhone: ingen Home Assistant, ingen server, inget moln. Instrumentpanelen bygger sig själv från dina enheter.

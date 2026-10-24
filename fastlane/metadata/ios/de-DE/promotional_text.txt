@@ -1,0 +1,1 @@
+Ein kleiner Hub mit Zigbee2MQTT und ZigDash auf Ihrem iPhone: kein Home Assistant, kein Server, keine Cloud. Ihr Dashboard baut sich aus Ihren Geräten selbst auf.

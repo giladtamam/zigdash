@@ -1,0 +1,37 @@
+ZigDash är en instrumentpanel för Zigbee2MQTT. En liten hubb med Zigbee2MQTT och ZigDash på din iPhone eller iPad är allt som behövs: ingen Home Assistant, ingen server att underhålla, inget moln. Har du redan Home Assistant? ZigDash fungerar med det också.
+
+ZigDash hittar din hubb i hemnätverket och bygger instrumentpanelen från dina enheter, så att du styr lampor, persienner, uttag och sensorer en minut efter installationen. Inget konto, ingen reklam.
+
+Kräver Zigbee2MQTT och en MQTT-broker i ditt nätverk (en SMLIGHT-hubb, en Raspberry Pi eller valfri Linux-dator). Har du inte Zigbee2MQTT än? Prova demohemmet.
+
+KLART PÅ EN MINUT
+• ”Hitta min installation” söker efter brokern och Zigbee2MQTT i nätverket och säger med enkla ord vad du ska åtgärda när något går fel.
+• Välj dina enheter och få en instrumentpanel grupperad efter rum och typ.
+• Använder du Home Assistant? Anslut via det och importera enhetsnamn, rum och instrumentpaneler.
+
+STYR ALLT
+• Lampor med ljusstyrka, vitton och färg; persienner med öppna, stopp, stäng och position; uttag med effektmätning; scener; sensorer i en överblick.
+• Varje enhet har en egen sida med alla reglage och dagens historik.
+• Senast kända värden ligger kvar på skärmen när hubben inte kan nås, markerade som inaktuella.
+
+AUTOMATIONER SOM KÖRS PÅ HUBBEN
+• Enkla regler och scheman körs på din hubb, så de fortsätter att fungera när telefonen är avstängd eller borta.
+
+VÄGGPLATTAN
+• Gör en iPad till en väggskärm: helskärm, dimning, en klocka i viloläge och PIN-lås för kioskbruk (med Guidad åtkomst).
+• Med Pro: mätvärden på klockan, väckning vid rörelse, nattschema och alarm som fyller skärmen vid vattenläckor och rök.
+
+FJÄRRSTYRNING
+• Nå ditt hem var du än är via ZigDash-reläet, end-to-end-krypterat mellan din hubb och dina telefoner. Eller använd ditt eget VPN, till exempel Tailscale.
+
+ZIGDASH PRO
+Konfiguration, instrumentpaneler, styrning av alla enheter, tre automationer per hem och väggplattan förblir gratis. ZigDash Pro är ett engångsköp i appen, ingen prenumeration: obegränsade automationer, fjärrstyrning via reläet, historik för 7 och 30 dagar, väggplattans extrafunktioner och alla Pro-funktioner som kommer senare. Det håller igång en app som byggs av en enda person.
+
+PRIVAT FRÅN GRUNDEN
+• Dina hem och enheter stannar på din telefon och din broker. Lösenord sparas i iOS-nyckelringen.
+• Anonym användningsdata hjälper till att lösa konfigurationsproblem; du kan stänga av den med ett tryck.
+• Öppen källkod (MIT): koden är offentlig.
+
+På 13 språk: engelska, tjeckiska, nederländska, franska, tyska, hebreiska, italienska, norska, polska, portugisiska (Brasilien), ryska, spanska och svenska.
+
+Frågor och idéer: t.me/zigdash_app

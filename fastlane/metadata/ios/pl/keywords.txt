@@ -1,0 +1,1 @@
+zigbee,zigbee2mqtt,mqtt,inteligentny dom,smart home,pulpit,mosquitto,smlight,raspberry pi,z2m

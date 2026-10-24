@@ -1,0 +1,1 @@
+Zigbee senza Home Assistant

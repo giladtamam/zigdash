@@ -1,0 +1,1 @@
+Zigbee home, no Home Assistant

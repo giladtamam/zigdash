@@ -1,0 +1,37 @@
+ZigDash je nástěnka pro Zigbee2MQTT. Malý hub se Zigbee2MQTT a ZigDash na tvém iPhonu nebo iPadu – to je celé nastavení: bez Home Assistantu, bez serveru na údržbu, bez cloudu. Už máš Home Assistant? ZigDash funguje i s ním.
+
+ZigDash najde tvůj hub v domácí síti a sestaví nástěnku z tvých zařízení, takže světla, žaluzie, zásuvky a senzory ovládáš minutu po instalaci. Žádný účet, žádné reklamy.
+
+Vyžaduje Zigbee2MQTT a MQTT broker ve tvé síti (hub SMLIGHT, Raspberry Pi nebo jakýkoli počítač s Linuxem). Ještě nemáš Zigbee2MQTT? Vyzkoušej ukázkovou domácnost.
+
+NASTAVENO ZA MINUTU
+• „Najít moje zařízení“ prohledá síť, najde broker a Zigbee2MQTT, a když něco selže, řekne srozumitelně, co opravit.
+• Vyber si zařízení a dostaneš nástěnku seskupenou podle místností a druhu.
+• Používáš Home Assistant? Připoj se přes něj a importuj názvy zařízení, místnosti a nástěnky.
+
+OVLÁDEJ VŠECHNO
+• Světla s jasem, bílou a barvou; žaluzie s otevřením, zastavením, zavřením a polohou; zásuvky s měřením spotřeby; scény; senzory na první pohled.
+• Každé zařízení má vlastní stránku se všemi ovládacími prvky a dnešní historií.
+• Poslední známé hodnoty zůstanou na obrazovce, i když hub není dostupný, označené jako zastaralé.
+
+AUTOMATIZACE, KTERÉ BĚŽÍ NA HUBU
+• Jednoduchá pravidla a plány běží na tvém hubu, takže fungují dál, i když je telefon vypnutý nebo mimo domov.
+
+TABLET NA ZDI
+• Udělej z iPadu displej na zeď: celá obrazovka, ztlumení, hodiny v klidu a zámek PIN pro režim kiosku (s Řízeným přístupem).
+• S Pro: měření na hodinách, probuzení pohybem, noční plán a alarmy přes celou obrazovku při úniku vody a kouři.
+
+OVLÁDÁNÍ NA DÁLKU
+• Dostaň se ke svému domovu odkudkoli přes relay ZigDash, s koncovým šifrováním mezi hubem a tvými telefony. Nebo použij vlastní VPN, třeba Tailscale.
+
+ZIGDASH PRO
+Nastavení, nástěnky, ovládání všech zařízení, tři automatizace na domácnost i tablet na zdi zůstávají zdarma. ZigDash Pro je jednorázový nákup v aplikaci, žádné předplatné: neomezené automatizace, ovládání na dálku přes relay, historie za 7 a 30 dní, doplňky pro tablet na zdi a každá funkce Pro, která přibude později. Pomáhá udržet při životě aplikaci, kterou vyvíjí jeden člověk.
+
+SOUKROMÍ OD ZÁKLADU
+• Tvoje domácnosti a zařízení zůstávají v telefonu a na tvém brokeru. Hesla jsou uložená v Klíčence iOS.
+• Anonymní data o používání pomáhají opravovat problémy s nastavením; vypneš je jedním klepnutím.
+• Open source (MIT): kód je veřejný.
+
+Ve 13 jazycích: angličtina, čeština, nizozemština, francouzština, němčina, hebrejština, italština, norština, polština, portugalština (Brazílie), ruština, španělština a švédština.
+
+Otázky a nápady: t.me/zigdash_app

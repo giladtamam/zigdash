@@ -1,0 +1,37 @@
+ZigDash ist ein Dashboard für Zigbee2MQTT. Ein kleiner Hub mit Zigbee2MQTT und ZigDash auf Ihrem iPhone oder iPad – mehr braucht es nicht: kein Home Assistant, kein Server zu warten, keine Cloud. Sie haben schon Home Assistant? ZigDash funktioniert auch damit.
+
+ZigDash findet Ihren Hub im Heimnetz und baut Ihr Dashboard aus Ihren Geräten, sodass Sie Lampen, Rollos, Steckdosen und Sensoren eine Minute nach der Installation steuern. Kein Konto, keine Werbung.
+
+Benötigt Zigbee2MQTT und einen MQTT-Broker in Ihrem Netzwerk (einen SMLIGHT-Hub, einen Raspberry Pi oder einen beliebigen Linux-Rechner). Noch kein Zigbee2MQTT? Probieren Sie das Demo-Zuhause aus.
+
+IN EINER MINUTE EINGERICHTET
+• „Mein Setup finden“ durchsucht Ihr Netzwerk nach dem Broker und Zigbee2MQTT und sagt in klaren Worten, was zu beheben ist, wenn etwas fehlschlägt.
+• Wählen Sie Ihre Geräte und erhalten Sie ein Dashboard, gruppiert nach Raum und Art.
+• Sie nutzen Home Assistant? Verbinden Sie sich darüber und importieren Sie Ihre Gerätenamen, Räume und Dashboards.
+
+ALLES STEUERN
+• Lampen mit Helligkeit, Weißton und Farbe; Rollos mit Öffnen, Stopp, Schließen und Position; Steckdosen mit Verbrauchswerten; Szenen; Sensoren auf einen Blick.
+• Jedes Gerät hat eine eigene Seite mit allen Steuerelementen und dem Verlauf von heute.
+• Die letzten bekannten Werte bleiben sichtbar, wenn der Hub nicht erreichbar ist, und werden als veraltet markiert.
+
+AUTOMATIONEN, DIE AUF DEM HUB LAUFEN
+• Einfache Regeln und Zeitpläne laufen auf Ihrem Hub und funktionieren daher weiter, wenn Ihr Telefon aus oder unterwegs ist.
+
+DAS WANDTABLET
+• Machen Sie ein iPad zum Wanddisplay: Vollbild, Dimmen, eine Uhr im Ruhezustand und eine PIN-Sperre für den Kioskbetrieb (mit Geführtem Zugriff).
+• Mit Pro: Messwerte auf der Uhr, Aufwecken bei Bewegung, ein Nachtplan und Alarme, die bei Wasserlecks und Rauch den ganzen Bildschirm füllen.
+
+FERNSTEUERUNG
+• Erreichen Sie Ihr Zuhause von überall über das ZigDash-Relay, Ende-zu-Ende-verschlüsselt zwischen Ihrem Hub und Ihren Telefonen. Oder nutzen Sie Ihr eigenes VPN, etwa Tailscale.
+
+ZIGDASH PRO
+Einrichtung, Dashboards, jede Gerätesteuerung, drei Automationen pro Zuhause und das Wandtablet bleiben kostenlos. ZigDash Pro ist ein einmaliger In-App-Kauf, kein Abo: unbegrenzte Automationen, Fernsteuerung über das Relay, 7- und 30-Tage-Verlauf, die Extras fürs Wandtablet und jede künftige Pro-Funktion. Er hält eine App am Laufen, die eine einzelne Person entwickelt.
+
+PRIVAT VON GRUND AUF
+• Ihre Zuhause und Geräte bleiben auf Ihrem Telefon und Ihrem Broker. Passwörter werden im iOS-Schlüsselbund gespeichert.
+• Anonyme Nutzungsdaten helfen, Einrichtungsprobleme zu beheben; Sie können sie mit einem Tippen abschalten.
+• Open Source (MIT): Der Code ist öffentlich.
+
+In 13 Sprachen: Englisch, Tschechisch, Niederländisch, Französisch, Deutsch, Hebräisch, Italienisch, Norwegisch, Polnisch, Portugiesisch (Brasilien), Russisch, Spanisch und Schwedisch.
+
+Fragen und Ideen: t.me/zigdash_app

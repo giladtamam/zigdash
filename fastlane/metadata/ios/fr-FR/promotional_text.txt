@@ -1,0 +1,1 @@
+Un petit hub avec Zigbee2MQTT et ZigDash sur votre iPhone : sans Home Assistant, sans serveur, sans cloud. Votre tableau de bord se crée à partir de vos appareils.

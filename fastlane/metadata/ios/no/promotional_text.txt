@@ -1,0 +1,1 @@
+En liten hub med Zigbee2MQTT og ZigDash på iPhonen din: ingen Home Assistant, ingen server, ingen sky. Dashbordet bygger seg selv fra enhetene dine.

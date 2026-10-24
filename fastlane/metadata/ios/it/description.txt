@@ -1,0 +1,37 @@
+ZigDash è una dashboard per Zigbee2MQTT. Un piccolo hub con Zigbee2MQTT e ZigDash sul tuo iPhone o iPad e non serve altro: niente Home Assistant, nessun server da gestire, niente cloud. Hai già Home Assistant? ZigDash funziona anche con quello.
+
+ZigDash trova il tuo hub sulla rete di casa e crea la dashboard dai tuoi dispositivi, così controlli luci, tapparelle, prese e sensori un minuto dopo l'installazione. Nessun account, nessuna pubblicità.
+
+Richiede Zigbee2MQTT e un broker MQTT sulla tua rete (un hub SMLIGHT, un Raspberry Pi o qualsiasi macchina Linux). Non hai ancora Zigbee2MQTT? Prova la casa demo.
+
+PRONTO IN UN MINUTO
+• «Trova la mia configurazione» cerca il broker e Zigbee2MQTT sulla tua rete e ti dice con parole semplici cosa sistemare quando qualcosa non va.
+• Scegli i tuoi dispositivi e ottieni una dashboard raggruppata per stanza e tipo.
+• Usi Home Assistant? Collegati tramite Home Assistant e importa i nomi dei dispositivi, le stanze e le dashboard.
+
+CONTROLLA TUTTO
+• Luci con luminosità, bianco e colore; tapparelle con apri, stop, chiudi e posizione; prese con letture dei consumi; scene; sensori a colpo d'occhio.
+• Ogni dispositivo ha una pagina dedicata con tutti i suoi controlli e la cronologia di oggi.
+• Gli ultimi valori noti restano sullo schermo quando l'hub non è raggiungibile, segnati come non aggiornati.
+
+AUTOMAZIONI CHE GIRANO SULL'HUB
+• Regole e programmazioni semplici girano sul tuo hub, quindi continuano a funzionare quando il telefono è spento o fuori casa.
+
+LO SCHERMO A PARETE
+• Trasforma un iPad in uno schermo a parete: schermo intero, attenuazione, un orologio a riposo e un blocco con PIN per l'uso in modalità kiosk (con Accesso Guidato).
+• Con Pro: letture sull'orologio, risveglio al movimento, orario notturno e allarmi a tutto schermo per perdite d'acqua e fumo.
+
+CONTROLLO REMOTO
+• Raggiungi casa tua da ovunque tramite il relay di ZigDash, con crittografia end-to-end tra il tuo hub e i tuoi telefoni. Oppure usa la tua VPN, come Tailscale.
+
+ZIGDASH PRO
+Configurazione, dashboard, il controllo di ogni dispositivo, tre automazioni per casa e lo schermo a parete restano gratuiti. ZigDash Pro è un acquisto in-app una tantum, senza abbonamento: automazioni illimitate, controllo remoto tramite il relay, cronologia di 7 e 30 giorni, gli extra dello schermo a parete e ogni funzione Pro che arriverà in futuro. Fa andare avanti un'app creata da una sola persona.
+
+PRIVATA PER SCELTA
+• Le tue case e i tuoi dispositivi restano sul tuo telefono e sul tuo broker. Le password sono conservate nel Portachiavi di iOS.
+• I dati di utilizzo anonimi aiutano a risolvere i problemi di configurazione; puoi disattivarli con un tocco.
+• Open source (MIT): il codice è pubblico.
+
+In 13 lingue: inglese, ceco, olandese, francese, tedesco, ebraico, italiano, norvegese, polacco, portoghese (Brasile), russo, spagnolo e svedese.
+
+Domande e idee: t.me/zigdash_app

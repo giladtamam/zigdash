@@ -1,0 +1,1 @@
+zigbee,zigbee2mqtt,mqtt,casa inteligente,automação,dashboard,mosquitto,smlight,raspberry pi,z2m

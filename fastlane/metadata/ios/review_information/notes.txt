@@ -1,0 +1,10 @@
+ZigDash controls a Zigbee2MQTT smart home over MQTT on the user's local network. Reviewing it does not need any hardware:
+
+1. Open the app and tap "Try the demo home" on the first screen. A complete demo home opens with lights, blinds, plugs and sensors that respond to taps.
+2. Device pages, Scenes, Automations, the Wall display (⋮ menu) and Settings all work in the demo.
+
+ZigDash Pro (in-app purchase "zigdash_pro", non-consumable) is in Settings › ZigDash Pro, with Restore purchase on the same screen.
+
+The Local Network permission is asked when "Find my setup" scans the home network for the user's MQTT broker; the demo does not need it.
+
+Remote control uses the ZigDash relay (relay.zigdash.app) and needs a real hub; it is a Pro feature.

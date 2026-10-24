@@ -1,0 +1,1 @@
+zigbee,zigbee2mqtt,mqtt,slim huis,smart home,dashboard,mosquitto,smlight,raspberry pi,domotica,z2m

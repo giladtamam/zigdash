@@ -1,0 +1,37 @@
+ZigDash is a dashboard for Zigbee2MQTT. A small hub running Zigbee2MQTT and ZigDash on your iPhone or iPad are the whole setup: no Home Assistant, no server to maintain, no cloud. Already have Home Assistant? ZigDash works with it too.
+
+ZigDash finds your hub on your home network and builds your dashboard from your devices, so you control lights, blinds, plugs and sensors a minute after installing. No account, no ads.
+
+Needs Zigbee2MQTT and an MQTT broker on your network (an SMLIGHT hub, a Raspberry Pi or any Linux box). No Zigbee2MQTT yet? Try the demo home.
+
+SET UP IN A MINUTE
+• Find my setup scans your network for the broker and Zigbee2MQTT, and says in plain words what to fix when something fails.
+• Pick your devices and get a dashboard grouped by room and kind.
+• Using Home Assistant? Connect through it and import your device names, rooms and dashboards.
+
+CONTROL EVERYTHING
+• Lights with brightness, white and colour; blinds with open, stop, close and position; plugs with power readings; scenes; sensors at a glance.
+• Every device has its own page with all its controls and today's history.
+• Last known values stay on screen when the hub can't be reached, marked as stale.
+
+AUTOMATIONS THAT RUN ON THE HUB
+• Simple rules and schedules run on your hub, so they keep working when your phone is off or away.
+
+THE WALL TABLET
+• Turn an iPad into a wall display: fullscreen, dimming, a clock when idle and a PIN lock for kiosk use (with Guided Access).
+• With Pro: readings on the clock, wake on motion, a night schedule, and alarms that fill the screen for leaks and smoke.
+
+REMOTE CONTROL
+• Reach your home from anywhere through the ZigDash relay, end-to-end encrypted between your hub and your phones. Or use your own VPN, such as Tailscale.
+
+ZIGDASH PRO
+Setup, dashboards, every device control, three automations per home and the wall tablet stay free. ZigDash Pro is a one-time in-app purchase, no subscription: unlimited automations, remote control through the relay, 7- and 30-day history, the wall tablet's extras, and every Pro feature that comes later. It keeps an app built by one person going.
+
+PRIVATE BY DESIGN
+• Your homes and devices stay on your phone and your broker. Passwords are kept in the iOS Keychain.
+• Anonymous usage data helps fix setup problems; you can turn it off in one tap.
+• Open source (MIT): the code is public.
+
+In 13 languages: English, Czech, Dutch, French, German, Hebrew, Italian, Norwegian, Polish, Portuguese (Brazil), Russian, Spanish and Swedish.
+
+Questions and ideas: t.me/zigdash_app

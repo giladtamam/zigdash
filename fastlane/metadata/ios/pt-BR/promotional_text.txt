@@ -1,0 +1,1 @@
+Um pequeno hub com Zigbee2MQTT e o ZigDash no seu iPhone: sem Home Assistant, sem servidor, sem nuvem. Seu painel se monta sozinho a partir dos seus dispositivos.
