@@ -91,3 +91,19 @@ exists early and the review notes stay small.
   must never show Google Play text (Rate, Pro, support details).
 - `device_info_plus` calls are Android-only in support details and alerts;
   iOS reads `iosInfo` (model, system version).
+
+## Status (2026-10-24)
+
+iOS 1 is ready for signing. Done on `ios/prep`: everything in the iOS 1 row
+above, the share sheet for Ask your AI, a privacy manifest
+(ios/Runner/PrivacyInfo.xcprivacy), Apple in store/PRIVACY.md, the App Store
+listing and review notes in 13 languages (fastlane/metadata/ios), the App
+Store Connect answers (store/appstore.md) and screenshots for iPhone 6.9" and
+iPad 13" (store/captures-ios, from tool/store/capture_ios.sh).
+integration_test/ios_smoke_test.dart passes on a simulator with
+`--flavor appstore`.
+
+Left for the developer account: Xcode signing (team), the App Store Connect
+record (its id becomes ZIGDASH_APPSTORE_ID), the zigdash_pro in-app purchase,
+the export-compliance answer, a TestFlight build with the relay allowing
+Sandbox, then the first submission with ZIGDASH_PRO_LIVE=1.
