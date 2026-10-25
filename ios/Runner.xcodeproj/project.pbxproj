@@ -20,6 +20,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		BA0E139461386D75F09C5575 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2312619B6B9B2A60AE085703 /* PrivacyInfo.xcprivacy */; };
 		E5474E6B5982A2266E38287A /* ProBilling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35291AF8B9EBAD0AD6ECE4B /* ProBilling.swift */; };
+		F6239BB0560FD9D77BC3AA6B /* ServiceFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F6466C32E3C09788810DE /* ServiceFinder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7BBA980CF91E3CDE1C910B84 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E26D49AB65DE3AEC19A781F /* Pods-RunnerTests.debug-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug-foss.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug-foss.xcconfig"; sourceTree = "<group>"; };
+		840F6466C32E3C09788810DE /* ServiceFinder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServiceFinder.swift; sourceTree = "<group>"; };
 		86B1C467757171FBEA741AB0 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		8CBA422BB5BF4E2081F9A271 /* Profile-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Profile-play.xcconfig"; path = "Flutter/Profile-play.xcconfig"; sourceTree = "<group>"; };
 		8E1C8B83E25A2354B8589591 /* Release-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Release-play.xcconfig"; path = "Flutter/Release-play.xcconfig"; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				BF2B933C00E66A99803837FC /* AppChannel.swift */,
 				A35291AF8B9EBAD0AD6ECE4B /* ProBilling.swift */,
 				2312619B6B9B2A60AE085703 /* PrivacyInfo.xcprivacy */,
+				840F6466C32E3C09788810DE /* ServiceFinder.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				464AE08AB9B96844039875F6 /* AppChannel.swift in Sources */,
 				E5474E6B5982A2266E38287A /* ProBilling.swift in Sources */,
+				F6239BB0560FD9D77BC3AA6B /* ServiceFinder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -60,6 +60,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_home-assistant._tcp</string>
+	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>ZigDash looks for your Zigbee2MQTT hub and MQTT broker on your home network, and connects to them there.</string>
 	<key>UIApplicationSceneManifest</key>

@@ -36,6 +36,14 @@ final class AppChannel {
       result(nil)
     case "shareText":
       result(share((args?["text"] as? String) ?? ""))
+    case "findServices":
+      // Kept alive by its own callback until the timeout.
+      let finder = ServiceFinder()
+      finder.find(type: (args?["type"] as? String) ?? "",
+                  timeoutMs: (args?["timeoutMs"] as? Int) ?? 3000) { services in
+        _ = finder
+        result(services)
+      }
     case "openWifiSettings":
       // iOS only opens the app's own page in Settings.
       if let url = URL(string: UIApplication.openSettingsURLString) {
