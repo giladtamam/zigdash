@@ -84,12 +84,16 @@ void main() {
     expect(await c.recordSuccessfulSession(), isFalse);
     expect(launcher.requests, 0);
     clock.advance(1);
-    // Day 2 (Sep 2): second session, a day after the first.
+    // Day 2 (Sep 2): second session, but only a day after the first.
+    expect(await c.recordSuccessfulSession(), isFalse);
+    expect(launcher.requests, 0);
+    clock.advance(1);
+    // Day 3 (Sep 3): two days after the first.
     expect(await c.recordSuccessfulSession(), isTrue);
     expect(launcher.requests, 1);
     expect(
       prefs.getString(ReviewPromptController.kLastPromptDay),
-      '2026-09-02',
+      '2026-09-03',
     );
 
     // Same day again: nothing new.
@@ -152,6 +156,10 @@ void main() {
 
       await c.recordSuccessfulSession();
       expect(sink.sent, isEmpty, reason: 'first day: policy not met');
+
+      clock.advance(1);
+      await c.recordSuccessfulSession();
+      expect(sink.sent, isEmpty, reason: 'a day later: still too soon');
 
       clock.advance(1);
       await c.recordSuccessfulSession();

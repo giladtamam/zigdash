@@ -19,6 +19,7 @@ import '../../../mqtt/ha_mqtt_client.dart';
 import '../../../mqtt/ha_token.dart';
 import '../../ha_import/ha_auth.dart';
 import '../../ha_import/ha_import_controller.dart' show HaSignIn;
+import 'ha_discovery.dart';
 
 /// Why connecting stopped, for the screen.
 enum HaConnectProblem {
@@ -74,6 +75,9 @@ class HaConnectDone extends HaConnectState {
 /// Connects once to Home Assistant with [stored] (the stored form of the
 /// sign-in) and says what is wrong, or null when it is usable.
 typedef HaProbe = Future<HaConnectProblem?> Function(Uri base, String stored);
+
+/// Looks for Home Assistant on the network (3.1.8); see [findHomeAssistant].
+typedef HaFind = Future<List<HaFound>> Function();
 
 /// Hands the checked home to the setup coordinator.
 typedef HaAdopt = Future<void> Function(Uri address, String signIn);
@@ -141,17 +145,34 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     HaProbe probe = probeHomeAssistant,
     HaSignIn? signIn,
     HaReach? reach,
+    HaFind? find,
     this.onEvent,
   }) : _adopt = adopt,
        _probe = probe,
        _signIn = signIn,
        _reach = reach,
+       _find = find,
        super(HaConnectAsk(address: address));
 
   final HaAdopt _adopt;
   final HaProbe _probe;
   final HaSignIn? _signIn;
   final HaReach? _reach;
+  final HaFind? _find;
+
+  /// The look for Home Assistant on the network, once started.
+  Future<List<HaFound>>? _looking;
+
+  /// What the look found; empty until it ends, or when nothing answered.
+  List<HaFound> get found => _found;
+  var _found = const <HaFound>[];
+
+  /// Whether the look is under way.
+  bool get looking => _looking != null && !_lookDone;
+
+  /// Whether a look ended.
+  bool get looked => _lookDone;
+  var _lookDone = false;
 
   /// Bumped by [cancel] and [dispose]: a try that finds it changed stops
   /// where it is and hands nothing on.
@@ -184,16 +205,71 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   void _count(HaConnectOutcome outcome) =>
       onEvent?.call(SetupStep(SetupStepKind.haConnect, result: outcome));
 
+  /// Looks for Home Assistant on the network (3.1.8), once; the screen
+  /// fills the address with what it finds.
+  Future<List<HaFound>> look() {
+    final find = _find;
+    if (find == null) return Future.value(const []);
+    return _looking ??= () async {
+      List<HaFound> found;
+      try {
+        found = await find();
+      } catch (_) {
+        found = const [];
+      }
+      _found = found;
+      _lookDone = true;
+      onEvent?.call(
+        SetupStep(
+          SetupStepKind.haDiscovery,
+          result: switch (found.length) {
+            0 => HaDiscoveryOutcome.none,
+            1 when found.single.byName => HaDiscoveryOutcome.byName,
+            1 => HaDiscoveryOutcome.one,
+            _ => HaDiscoveryOutcome.several,
+          },
+        ),
+      );
+      if (!_disposed) notifyListeners();
+      return found;
+    }();
+  }
+
   /// Home Assistant's own login page in the browser, then the check.
   Future<void> signInAndConnect(String address) async {
     final signIn = _signIn;
     if (signIn == null) return;
-    final base = haBaseUri(address);
+    var base = haBaseUri(address);
+    final t = ++_try;
+    if (base == null && _looking != null) {
+      // Signed in before the look ended, with nothing typed: wait for it.
+      _checking(address);
+      final found = await _looking!;
+      if (t != _try) return;
+      if (found.isNotEmpty) {
+        address = found.first.address;
+        base = haBaseUri(address);
+      }
+    } else if (base != null &&
+        base.host.toLowerCase().endsWith('.local') &&
+        _found.length == 1) {
+      // A `.local` name Android may not resolve: the one Home Assistant
+      // found, by its address.
+      address = _found.single.address;
+      base = haBaseUri(address);
+    }
     if (base == null) {
       _count(HaConnectOutcome.noAddress);
       return _ask(address, HaConnectProblem.noAddress);
     }
-    final t = ++_try;
+    if (_found.any((f) => haBaseUri(f.address) == base)) {
+      onEvent?.call(
+        const SetupStep(
+          SetupStepKind.haDiscovery,
+          result: HaDiscoveryOutcome.used,
+        ),
+      );
+    }
     _checking(address);
     // A Home Assistant that can't be reached would open the browser on an
     // error page, and closing it read as nothing happening (3.1.4).

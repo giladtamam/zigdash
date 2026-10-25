@@ -1,0 +1,1 @@
+Home Assistant: sign in from mobile data too, with its remote address (Nabu Casa, Cloudflare or your own domain).

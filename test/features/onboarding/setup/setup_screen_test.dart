@@ -204,6 +204,14 @@ Future<SetupCoordinator> _pump(
               ),
             ),
             GoRoute(
+              path: '/setup/home-assistant',
+              builder: (_, state) => Text(
+                state.uri.hasQuery
+                    ? 'home assistant ${state.uri.query}'
+                    : 'home assistant',
+              ),
+            ),
+            GoRoute(
               path: '/connections/:id/dashboards',
               builder: (_, state) =>
                   Text('dashboards of ${state.pathParameters['id']}'),
@@ -242,14 +250,16 @@ void main() {
     }
 
     testWidgets('back in the middle of setup starts it over', (tester) async {
-      final coordinator = await found(tester);
-      expect(coordinator.state, isA<SetupReview>());
+      final hold = Completer<void>();
+      final coordinator = await found(tester, hold: hold.future);
+      expect(coordinator.state, isA<SetupVerifying>());
       await tester.binding.handlePopRoute();
       await tester.pump();
       expect(coordinator.state, isA<SetupIdle>());
       expect(find.text('Find my setup'), findsOneWidget);
+      hold.complete();
+      await tester.pump();
     });
-
     testWidgets('a long check says so and can be cancelled', (tester) async {
       final hold = Completer<void>();
       final coordinator = await found(tester, hold: hold.future);
@@ -264,6 +274,87 @@ void main() {
       await tester.pump();
       await tester.pump();
       expect(coordinator.state, isA<SetupIdle>());
+    });
+  });
+
+  group('3.1.6: the device list keeps people', () {
+    late List<(String, Map<String, String>)> sent;
+
+    Future<SetupCoordinator> onList(WidgetTester tester) async {
+      sent = [];
+      final scan = StreamController<ProbeResult>();
+      addTearDown(scan.close);
+      final coordinator = await _pump(
+        tester,
+        scan: (_) => scan.stream,
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      );
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      scan.add(const ProbeResult(host: '192.168.1.10', port: 1883));
+      await tester.pump();
+      await tester.tap(find.text('Possible connection found'));
+      await tester.pump();
+      await tester.pump();
+      expect(coordinator.state, isA<SetupReview>());
+      return coordinator;
+    }
+
+    List<String?> answers() => [
+      for (final (name, props) in sent)
+        if (name == 'setup_step' && props['step'] == 'review_back')
+          props['result'],
+    ];
+
+    testWidgets('it says it is the last step', (tester) async {
+      await onList(tester);
+      expect(find.byKey(const Key('setup-review-last-step')), findsOneWidget);
+      expect(find.textContaining('Last step'), findsOneWidget);
+    });
+
+    testWidgets('back asks; Create finishes setup', (tester) async {
+      final coordinator = await onList(tester);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.text('Create your dashboard?'), findsOneWidget);
+      expect(coordinator.state, isA<SetupReview>(), reason: 'nothing lost yet');
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.text('Create dashboard with 1'),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.pumpAndSettle();
+      expect(answers(), ['create']);
+      expect(find.text('dashboards of c1'), findsOneWidget);
+    });
+
+    testWidgets('back asks; Start over goes back to the start', (tester) async {
+      final coordinator = await onList(tester);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Start over'));
+      await tester.pumpAndSettle();
+      expect(coordinator.state, isA<SetupIdle>());
+      expect(find.text('Find my setup'), findsOneWidget);
+      expect(answers(), ['start_over']);
+    });
+
+    testWidgets('dismissing the question stays on the list', (tester) async {
+      final coordinator = await onList(tester);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+      expect(find.text('Create your dashboard?'), findsNothing);
+      expect(coordinator.state, isA<SetupReview>());
+      expect(answers(), ['stay']);
     });
   });
 
@@ -1040,6 +1131,14 @@ void main() {
     await tester.tap(find.text('Open Wi-Fi settings'));
     await tester.pump();
     expect(calls, ['openWifiSettings']);
+
+    // 3.1.9: Home Assistant by its remote address works on mobile data.
+    final remote = find.text('Use Home Assistant? Sign in');
+    await tester.ensureVisible(remote);
+    await tester.tap(remote);
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('home assistant wifi=off'), findsOneWidget);
     await c.cancel();
   });
 

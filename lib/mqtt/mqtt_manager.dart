@@ -188,7 +188,23 @@ class MqttManager {
   void _emitEndpoint(MqttEndpoint? e) {
     if (_disposed || _endpoint.isClosed) return;
     _endpoint.add(e);
+    // 3.1.7: through the relay the device list never arrives; a screen
+    // already waiting for it gets the one saved at home.
+    if (e == MqttEndpoint.relay) {
+      for (final entry in _subs.values) {
+        final saved = _lastKnown[entry.pattern];
+        if (saved != null && !entry.subject.hasValue && _replayable(entry.pattern)) {
+          entry.subject.add(saved);
+        }
+      }
+    }
   }
+
+  /// Saved Zigbee2MQTT bridge data (the device list, 3.1.7) stands in only
+  /// through the relay. At home the live list always wins: a saved one could
+  /// miss a device paired since.
+  bool _replayable(String topic) =>
+      !topic.contains('/bridge/') || activeEndpoint == MqttEndpoint.relay;
 
   String? _lastError;
   String? get lastError => _lastError;
@@ -219,7 +235,16 @@ class MqttManager {
         for (final m in _latest.values)
           if (m.topic.startsWith(prefix)) m,
         for (final m in _lastKnown.values)
-          if (m.topic.startsWith(prefix) && !_latest.containsKey(m.topic)) m,
+          if (m.topic.startsWith(prefix) && !_latest.containsKey(m.topic) && !m.topic.contains('/bridge/')) m,
+      ];
+
+  /// The newest message for every topic starting with [prefix] received
+  /// in this app session only, never a value saved from an earlier one
+  /// (3.1.7). Through the relay every retained message arrives once, at
+  /// connect, so a wildcard subscriber opened later starts from these.
+  List<MqttRxMessage> liveUnder(String prefix) => [
+        for (final m in _latest.values)
+          if (m.topic.startsWith(prefix)) m,
       ];
 
   /// Seeds saved values (loaded before [connect]). A later subscription to
@@ -228,7 +253,7 @@ class MqttManager {
     for (final m in messages) {
       _lastKnown[m.topic] = m;
       final entry = _subs[m.topic];
-      if (entry != null && !entry.subject.hasValue) entry.subject.add(m);
+      if (entry != null && !entry.subject.hasValue && _replayable(m.topic)) entry.subject.add(m);
     }
   }
 
@@ -550,7 +575,7 @@ class MqttManager {
       // else one saved from an earlier session. Without this, a tile that
       // was off screen past the grace period came back empty, and since
       // devices are asked for state once per connection, stayed empty.
-      final saved = _latest[pattern] ?? _lastKnown[pattern];
+      final saved = _latest[pattern] ?? (_replayable(pattern) ? _lastKnown[pattern] : null);
       if (saved != null) e.subject.add(saved);
       return e;
     });

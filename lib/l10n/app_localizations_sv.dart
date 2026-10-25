@@ -1549,7 +1549,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get haConnectAddressHelp =>
-      'Adressen du öppnar Home Assistant med: 192.168.1.20:8123, homeassistant.local eller din fjärradress, som https://xyz.ui.nabu.casa';
+      'Adressen du öppnar Home Assistant med: 192.168.1.20:8123, eller en fjärradress som din Nabu Casa- eller Cloudflare-adress';
 
   @override
   String get haConnectSignInHelp =>
@@ -1595,6 +1595,20 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get haConnectWhereAddress =>
       'Osäker på vilken den är? I Home Assistant-appen öppnar du Inställningar › Companion-app och trycker på din server: adressen finns där. På en dator är det adressen webbläsaren visar när Home Assistant är öppet.';
+
+  @override
+  String get haFindLooking => 'Letar efter Home Assistant i det här nätverket…';
+
+  @override
+  String get haFindSeveral =>
+      'Hittade mer än en Home Assistant. Tryck på den du vill använda:';
+
+  @override
+  String get haFindNone =>
+      'Home Assistant svarade inte i det här nätverket. Skriv in adressen: den hemma, eller en fjärradress.';
+
+  @override
+  String get setupNoWifiHa => 'Använder du Home Assistant? Logga in';
 
   @override
   String get haConnectNotAdmin =>
@@ -1684,6 +1698,20 @@ class AppLocalizationsSv extends AppLocalizations {
     );
     return '$_temp0 Välj vad som hamnar på din första dashboard.';
   }
+
+  @override
+  String get setupReviewLastStep =>
+      'Sista steget: bocka för enheterna du vill ha och tryck på Skapa instrumentpanel längst ner.';
+
+  @override
+  String get setupLeaveTitle => 'Skapa instrumentpanelen?';
+
+  @override
+  String get setupLeaveBody =>
+      'Dina enheter är hittade. Skapa instrumentpanelen nu, eller börja om och förlora den här listan.';
+
+  @override
+  String get setupStartOver => 'Börja om';
 
   @override
   String setupCreateWithCount(Object count) {
@@ -3083,6 +3111,31 @@ class AppLocalizationsSv extends AppLocalizations {
   String get pollThanks => 'Tack! Det hjälper oss att välja vad som kommer.';
 
   @override
+  String get whyTitle => 'Varför testade du ZigDash?';
+
+  @override
+  String get whyBody =>
+      'Ett tryck hjälper oss att välja vad vi bygger. Svaret skickas med dina anonyma användningsdata.';
+
+  @override
+  String get whyFaster => 'Snabbare än min andra app';
+
+  @override
+  String get whyFamily => 'Enkelt för familjen';
+
+  @override
+  String get whyWallTablet => 'En surfplatta på väggen';
+
+  @override
+  String get whyWithoutHa => 'Fungerar utan Home Assistant';
+
+  @override
+  String get whyOther => 'Något annat';
+
+  @override
+  String get whyThanks => 'Tack för svaret!';
+
+  @override
   String get pollNoAnalytics =>
       'Användningsdata är avstängt, så inget skickas härifrån. Berätta för oss via Föreslå en funktion istället.';
 
@@ -3867,6 +3920,17 @@ class AppLocalizationsSv extends AppLocalizations {
   String get engineChecking => 'Kontrollerar hubben…';
 
   @override
+  String get engineAwayNoHubTitle => 'Din hubb går inte att nå just nu';
+
+  @override
+  String get engineAwayNoHubBody =>
+      'Du är borta, och hubben är inte ansluten till ZigDash fjärråtkomst, eller så saknar den internet. Dina automatiseringar fortsätter att köras på hubben.';
+
+  @override
+  String get engineAwayReinstallAtHome =>
+      'Du kan installera om Engine när du är hemma.';
+
+  @override
   String get engineNoConnection =>
       'ZigDash når inte hemmets broker just nu. Automationer ställs in hemma, med anslutning.';
 
@@ -4327,6 +4391,70 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get statusConnectedRelay => 'Ansluten · Borta via ZigDash';
+
+  @override
+  String get shareHomeTitle => 'Dela med en annan telefon';
+
+  @override
+  String get shareHomeSubtitle =>
+      'Lägg till hemmet på en annan telefon med en QR-kod';
+
+  @override
+  String get shareHomeIntro =>
+      'På den andra telefonen, hemma på samma wifi, skanna koden med kameran. ZigDash lägger till hemmet med inloggning och dina instrumentpaneler.';
+
+  @override
+  String get shareHomeLoginWarning =>
+      'Koden innehåller hemmets broker-inloggning. Den visas i 2 minuter; visa den bara för personer du litar på.';
+
+  @override
+  String get shareHomeShow => 'Visa koden';
+
+  @override
+  String get shareHomeAtHome =>
+      'Anslut hemma först: delning fungerar bara på hemnätverket.';
+
+  @override
+  String get shareHomeScanHint =>
+      'Skanna med den andra telefonens kamera. Koden döljs om 2 minuter.';
+
+  @override
+  String get shareHomeHide => 'Dölj koden';
+
+  @override
+  String get shareHomeViaHa =>
+      'Det här hemmet ansluter via Home Assistant. Installera ZigDash på den andra telefonen och logga in med Home Assistant.';
+
+  @override
+  String get joinHomeTitle => 'Lägg till ett delat hem';
+
+  @override
+  String get joinHomeInvalid =>
+      'Koden är ingen ZigDash-inbjudan, eller så är den skadad.';
+
+  @override
+  String joinHomeAlready(String name) {
+    return '$name finns redan på den här telefonen.';
+  }
+
+  @override
+  String get joinHomeOpen => 'Öppna';
+
+  @override
+  String joinHomeAsk(String name) {
+    return 'Lägga till $name på den här telefonen?';
+  }
+
+  @override
+  String get joinHomeBody =>
+      'ZigDash lägger till hemmet med samma anslutning och inloggning och hämtar instrumentpanelerna från den andra telefonen. Håll telefonen på hemmets wifi.';
+
+  @override
+  String get joinHomeAdd => 'Lägg till hem';
+
+  @override
+  String get joinHomeNoDashboards =>
+      'Hemmet är tillagt. Instrumentpanelerna kom inte fram; dina enheter finns under fliken Enheter.';
 
   @override
   String get remoteTitle => 'Fjärrstyrning';

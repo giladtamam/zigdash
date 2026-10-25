@@ -14,6 +14,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../ha_import/ha_auth.dart';
 import 'ai_help.dart';
 import 'ha_connect.dart';
+import 'ha_discovery.dart';
 import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
 import 'setup_waiting.dart';
@@ -27,6 +28,7 @@ class HaConnectScreen extends ConsumerStatefulWidget {
     this.initialHost,
     this.controller,
     this.again,
+    this.offWifi = false,
   });
 
   /// The Home Assistant the scan saw, if any.
@@ -35,6 +37,10 @@ class HaConnectScreen extends ConsumerStatefulWidget {
   /// Signing in again for this existing home (2.10.1): the new sign-in
   /// replaces the stored one, and the screen returns to the home's form.
   final String? again;
+
+  /// Opened from the no-Wi-Fi screen (3.1.9): no network to look on, so
+  /// the address is typed (a remote one, on mobile data).
+  final bool offWifi;
 
   /// Tests pass one; the screen builds its own otherwise.
   final HaConnectController? controller;
@@ -56,6 +62,12 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
       _ => widget.initialHost ?? '',
     };
     _controller.addListener(_onState);
+    // 3.1.8: nothing to go on, so look for Home Assistant on the network.
+    if (_address.text.trim().isEmpty &&
+        widget.again == null &&
+        !widget.offWifi) {
+      _controller.look();
+    }
   }
 
   HaConnectController _make() => HaConnectController(
@@ -67,6 +79,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
               .adoptHomeAssistant(address: address, signIn: signIn)
         : _replaceSignIn(widget.again!, address, signIn),
     reach: reachHomeAssistant,
+    find: findHomeAssistant,
     signIn: (base) => signInToHa(
       base,
       browser: (url) => FlutterWebAuth2.authenticate(
@@ -109,6 +122,17 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
       context.go(Routes.setup);
       return;
     }
+    // What the look found, or the address a try went to, fills an empty
+    // field; a typed address is never replaced.
+    if (_address.text.trim().isEmpty) {
+      final state = _controller.value;
+      final found = _controller.found;
+      if (state is HaConnectAsk && state.address.isNotEmpty) {
+        _address.text = state.address;
+      } else if (found.length == 1) {
+        _address.text = found.single.address;
+      }
+    }
     setState(() {});
   }
 
@@ -134,6 +158,10 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
             address: _address,
             token: _token,
             canSignIn: _controller.canSignIn,
+            looking: _controller.looking,
+            looked: _controller.looked,
+            found: _controller.found,
+            onPick: (address) => setState(() => _address.text = address),
             onSignIn: () => _controller.signInAndConnect(_address.text),
             onToken: () =>
                 _controller.connectWithToken(_address.text, _token.text),
@@ -166,8 +194,18 @@ class _Ask extends StatefulWidget {
     required this.canSignIn,
     required this.onSignIn,
     required this.onToken,
+    this.looking = false,
+    this.looked = false,
+    this.found = const [],
+    this.onPick,
   });
   final HaConnectAsk state;
+
+  /// Looking for Home Assistant on the network (3.1.8), and what it found.
+  final bool looking;
+  final bool looked;
+  final List<HaFound> found;
+  final ValueChanged<String>? onPick;
   final TextEditingController address;
   final TextEditingController token;
   final bool canSignIn;
@@ -212,8 +250,54 @@ class _AskState extends State<_Ask> {
                 : null,
           ),
         ),
+        if (widget.looking) ...[
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const SizedBox.square(
+                dimension: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  l10n.haFindLooking,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+        ] else if (widget.found.length == 1 &&
+            widget.address.text == widget.found.single.address) ...[
+          const SizedBox(height: 12),
+          Text(
+            l10n.setupHubSeenHa(_hostOf(widget.found.single)),
+            style: theme.textTheme.bodyMedium,
+          ),
+        ] else if (widget.found.length > 1) ...[
+          const SizedBox(height: 12),
+          Text(l10n.haFindSeveral, style: theme.textTheme.bodyMedium),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final f in widget.found)
+                ActionChip(
+                  label: Text(
+                    f.name == null ? _hostOf(f) : '${f.name} · ${_hostOf(f)}',
+                  ),
+                  onPressed: () => widget.onPick?.call(f.address),
+                ),
+            ],
+          ),
+        ],
         // 3.1.4: an empty address was every try on 3.1.3's first night.
         if (problem == HaConnectProblem.noAddress) ...[
+          if (widget.looked && widget.found.isEmpty) ...[
+            const SizedBox(height: 12),
+            Text(l10n.haFindNone, style: theme.textTheme.bodyMedium),
+          ],
           const SizedBox(height: 12),
           Text(l10n.haConnectWhereAddress, style: theme.textTheme.bodyMedium),
         ],
@@ -292,6 +376,12 @@ class _AskState extends State<_Ask> {
       ],
     );
   }
+}
+
+/// Where a found Home Assistant is, as people read it: host and port.
+String _hostOf(HaFound found) {
+  final base = haBaseUri(found.address);
+  return base == null ? found.address : '${base.host}:${base.port}';
 }
 
 /// What a failed try says, visible for tests.

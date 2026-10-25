@@ -66,8 +66,17 @@ class AutomationsRepo {
     final mgr = await _managerOf(connectionId);
     final rules = <String, Automation>{};
     final stream = mgr.subscribe(_rulesPattern);
+    List<Automation> sorted() =>
+        rules.values.toList()..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    // 3.1.7: through the relay the rules arrived once, at connect, before
+    // this screen listened. Start from this session's copies (never saved
+    // ones: a rule deleted elsewhere must not come back).
+    for (final m in mgr.liveUnder('zigdash/automations/rules/')) {
+      final rule = Automation.decode(m.topic.split('/').last, m.payload);
+      if (rule != null) rules[rule.id] = rule;
+    }
     try {
-      yield const [];
+      yield sorted();
       await for (final m in stream) {
         final id = m.topic.split('/').last;
         final rule = Automation.decode(id, m.payload);
@@ -76,7 +85,7 @@ class AutomationsRepo {
         } else {
           rules[id] = rule;
         }
-        yield rules.values.toList()..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        yield sorted();
       }
     } finally {
       mgr.unsubscribe(_rulesPattern);

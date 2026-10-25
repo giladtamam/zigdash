@@ -41,7 +41,7 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.1.5';
+const ENGINE_VERSION = '3.1.7';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
 const STATE_EVERY_MS = 30000;
@@ -235,7 +235,17 @@ function remoteCommandAllowed(base, topic) {
   if (topic.startsWith(`${base}/`) && !topic.startsWith(`${base}/bridge/`)) {
     return topic.endsWith('/set') || topic.endsWith('/get');
   }
-  return /^zigdash\/automations\/rules\/[A-Za-z0-9_-]+$/.test(topic);
+  return /^zigdash\/automations\/rules\/[A-Za-z0-9_-]+$/.test(topic) || topic === 'zigdash/automations/control';
+}
+
+/**
+ * The Engine's own topics an away phone needs (3.1.7): the rules, whether
+ * the Engine runs, and its last runs. Never zigdash/remote/set (the relay
+ * login) and never the alerts or history flows' data.
+ */
+function remoteMirrored(topic) {
+  return /^zigdash\/automations\/rules\/[A-Za-z0-9_-]+$/.test(topic) ||
+    topic === 'zigdash/automations/state' || topic === 'zigdash/automations/recent';
 }
 
 // ---------- the extension ----------
@@ -252,6 +262,7 @@ class ZigDashEngine {
     this.unknown = {};
     this.meta = {};
     this.lastValue = new Map(); // `${ieee}|${property}` -> last value seen
+    this.mirrored = new Map(); // Engine topics an away phone needs (3.1.7)
     this.firedOn = new Map(); // rule id -> local date it last fired (time triggers)
     this.recent = [];
     this.crashTimes = [];
@@ -330,6 +341,12 @@ class ZigDashEngine {
       const p = this.mqtt.publish(`${PREFIX}/${sub}`, payload, { clientOptions: { retain: !!retain, qos: 1 }, baseTopic: ROOT });
       if (p && typeof p.catch === 'function') p.catch(() => {});
     } catch (_) {}
+    // 3.1.7: an away phone sees the Engine's state and last runs too.
+    const topic = `${ROOT}/${PREFIX}/${sub}`;
+    if (remoteMirrored(topic)) {
+      this.mirrored.set(topic, String(payload));
+      this.remoteForward(topic, String(payload));
+    }
   }
 
   /** Publishes to a full topic like zigdash/alerts/recent. */
@@ -427,12 +444,27 @@ class ZigDashEngine {
 
   onMqtt(data) {
     if (data.topic === `${ROOT}/remote/set`) return this.onRemoteSet(data.message);
+    // 3.1.7: the retained state and last runs found on the broker at start
+    // go up too, so an away phone has them before the next run.
+    if ((data.topic === `${ROOT}/${PREFIX}/recent` || data.topic === `${ROOT}/${PREFIX}/state`) && data.message &&
+        !this.mirrored.has(data.topic)) {
+      this.mirrored.set(data.topic, String(data.message));
+      this.remoteForward(data.topic, String(data.message));
+      return;
+    }
     this.flowInput(data.topic, data.message);
     const prefix = `${ROOT}/${PREFIX}/`;
     if (!data.topic.startsWith(prefix)) return;
     const sub = data.topic.slice(prefix.length);
     if (sub.startsWith('rules/')) {
       const id = sub.slice('rules/'.length);
+      // 3.1.7: the phone publishes rules, so they never pass onPublished;
+      // mirror them here, a cleared one included.
+      if (remoteMirrored(data.topic)) {
+        if (data.message) this.mirrored.set(data.topic, String(data.message));
+        else this.mirrored.delete(data.topic);
+        this.remoteForward(data.topic, String(data.message || ''));
+      }
       if (!data.message) {
         this.rules.delete(id);
         delete this.unknown[id];
@@ -655,8 +687,11 @@ class ZigDashEngine {
       remote.error = undefined;
       client.publish(`${prefix}/hub`, 'online', { qos: 1, retain: true });
       client.subscribe(`${prefix}/c`, { qos: 1, nl: true });
-      const missed = [...remote.pending];
+      const missed = new Map(remote.pending);
       remote.pending.clear();
+      // 3.1.7: the rules, the Engine's state and last runs, every time, so
+      // a phone that connects later finds them retained on the relay.
+      for (const [topic, payload] of this.mirrored) if (!missed.has(topic)) missed.set(topic, payload);
       for (const [topic, payload] of missed) this.remoteSend(remote, topic, payload);
       this.publishState();
     }));
@@ -707,14 +742,23 @@ class ZigDashEngine {
     if (!r) return;
     const base = this.base();
     if (topic.startsWith(`${base}/bridge/`) || topic.endsWith('/set') || topic.endsWith('/get')) return;
-    // 3.1.5: while the relay can't be reached (the home's internet down),
-    // keep the latest of each device and send it on reconnect, so a phone
-    // away never sees a value from before the outage. One entry per topic.
+    this.remoteForward(topic, String(payload));
+  }
+
+  /**
+   * Sends one real topic up, sealed. While the relay can't be reached (the
+   * home's internet down) the latest of each topic waits and goes up on
+   * reconnect (3.1.5), so an away phone never sees a value from before the
+   * outage. One entry per topic.
+   */
+  remoteForward(topic, payload) {
+    const r = this.remote;
+    if (!r) return;
     if (!r.connected) {
-      r.pending.set(topic, String(payload));
+      r.pending.set(topic, payload);
       return;
     }
-    this.remoteSend(r, topic, String(payload));
+    this.remoteSend(r, topic, payload);
   }
 
   remoteSend(r, topic, payload) {
@@ -743,7 +787,9 @@ class ZigDashEngine {
     if (msg.topic.startsWith(`${base}/`)) {
       this.mqtt.onMessage(msg.topic, Buffer.from(body));
     } else {
-      this.publishFull(msg.topic, body, true);
+      // A rule is kept (retained) like one saved at home; "start again" is
+      // a one-off. Both come back to this Engine, which applies them.
+      this.publishFull(msg.topic, body, msg.topic.includes('/rules/'), true);
     }
   }
 

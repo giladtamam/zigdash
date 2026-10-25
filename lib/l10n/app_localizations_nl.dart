@@ -1557,7 +1557,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get haConnectAddressHelp =>
-      'Het adres waarmee je Home Assistant opent: 192.168.1.20:8123, homeassistant.local of je externe adres, zoals https://xyz.ui.nabu.casa';
+      'Het adres waarmee je Home Assistant opent: 192.168.1.20:8123, of een extern adres zoals je Nabu Casa- of Cloudflare-adres';
 
   @override
   String get haConnectSignInHelp =>
@@ -1603,6 +1603,20 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get haConnectWhereAddress =>
       'Weet je het niet zeker? Open in de Home Assistant-app Instellingen › Companion-app en tik op je server: daar staat het adres. Op een computer is het het adres dat de browser toont als Home Assistant open is.';
+
+  @override
+  String get haFindLooking => 'Zoeken naar Home Assistant op dit netwerk…';
+
+  @override
+  String get haFindSeveral =>
+      'Meer dan één Home Assistant gevonden. Tik op de juiste:';
+
+  @override
+  String get haFindNone =>
+      'Home Assistant gaf geen antwoord op dit netwerk. Typ het adres: dat van thuis, of een extern adres.';
+
+  @override
+  String get setupNoWifiHa => 'Gebruik je Home Assistant? Inloggen';
 
   @override
   String get haConnectNotAdmin =>
@@ -1692,6 +1706,20 @@ class AppLocalizationsNl extends AppLocalizations {
     );
     return '$_temp0 Kies wat op je eerste dashboard komt.';
   }
+
+  @override
+  String get setupReviewLastStep =>
+      'Laatste stap: vink de apparaten aan die je wilt en tik onderaan op Dashboard maken.';
+
+  @override
+  String get setupLeaveTitle => 'Je dashboard maken?';
+
+  @override
+  String get setupLeaveBody =>
+      'Je apparaten zijn gevonden. Maak het dashboard nu, of begin opnieuw en verlies deze lijst.';
+
+  @override
+  String get setupStartOver => 'Opnieuw beginnen';
 
   @override
   String setupCreateWithCount(Object count) {
@@ -3095,6 +3123,31 @@ class AppLocalizationsNl extends AppLocalizations {
   String get pollThanks => 'Bedankt! Dat helpt kiezen wat er komt.';
 
   @override
+  String get whyTitle => 'Waarom heb je ZigDash geprobeerd?';
+
+  @override
+  String get whyBody =>
+      'Eén tik helpt kiezen wat we bouwen. Je antwoord wordt met je anonieme gebruiksgegevens verstuurd.';
+
+  @override
+  String get whyFaster => 'Sneller dan mijn andere app';
+
+  @override
+  String get whyFamily => 'Makkelijk voor het gezin';
+
+  @override
+  String get whyWallTablet => 'Een tablet aan de muur';
+
+  @override
+  String get whyWithoutHa => 'Werkt zonder Home Assistant';
+
+  @override
+  String get whyOther => 'Iets anders';
+
+  @override
+  String get whyThanks => 'Bedankt voor je antwoord!';
+
+  @override
   String get pollNoAnalytics =>
       'Gebruiksgegevens staan uit, dus van hier wordt niets verstuurd. Laat het ons weten via Functie aanvragen.';
 
@@ -3882,6 +3935,17 @@ class AppLocalizationsNl extends AppLocalizations {
   String get engineChecking => 'Hub controleren…';
 
   @override
+  String get engineAwayNoHubTitle => 'Je hub is nu niet bereikbaar';
+
+  @override
+  String get engineAwayNoHubBody =>
+      'Je bent weg en je hub is niet verbonden met de toegang op afstand van ZigDash, of het internet is weg. Je automatiseringen blijven op de hub draaien.';
+
+  @override
+  String get engineAwayReinstallAtHome =>
+      'Je kunt de Engine opnieuw installeren als je thuis bent.';
+
+  @override
   String get engineNoConnection =>
       'ZigDash bereikt de broker van dit huis nu niet. Automatiseringen stel je thuis in, met verbinding.';
 
@@ -4344,6 +4408,70 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get statusConnectedRelay => 'Verbonden · Onderweg via ZigDash';
+
+  @override
+  String get shareHomeTitle => 'Delen met een andere telefoon';
+
+  @override
+  String get shareHomeSubtitle =>
+      'Voeg dit huis met één QR-code toe aan een andere telefoon';
+
+  @override
+  String get shareHomeIntro =>
+      'Scan op de andere telefoon, thuis op dezelfde wifi, de code met de camera. ZigDash voegt dit huis toe met de inloggegevens en je dashboards.';
+
+  @override
+  String get shareHomeLoginWarning =>
+      'De code bevat de broker-inlog van dit huis. Hij staat 2 minuten in beeld; laat hem alleen zien aan mensen die je vertrouwt.';
+
+  @override
+  String get shareHomeShow => 'Code tonen';
+
+  @override
+  String get shareHomeAtHome =>
+      'Maak eerst thuis verbinding: delen werkt alleen op je thuisnetwerk.';
+
+  @override
+  String get shareHomeScanHint =>
+      'Scan met de camera van de andere telefoon. De code verdwijnt na 2 minuten.';
+
+  @override
+  String get shareHomeHide => 'Code verbergen';
+
+  @override
+  String get shareHomeViaHa =>
+      'Dit huis maakt verbinding via Home Assistant. Installeer ZigDash op de andere telefoon en log in met Home Assistant.';
+
+  @override
+  String get joinHomeTitle => 'Een gedeeld huis toevoegen';
+
+  @override
+  String get joinHomeInvalid =>
+      'Deze code is geen ZigDash-uitnodiging, of hij is beschadigd.';
+
+  @override
+  String joinHomeAlready(String name) {
+    return '$name staat al op deze telefoon.';
+  }
+
+  @override
+  String get joinHomeOpen => 'Openen';
+
+  @override
+  String joinHomeAsk(String name) {
+    return '$name aan deze telefoon toevoegen?';
+  }
+
+  @override
+  String get joinHomeBody =>
+      'ZigDash voegt het huis toe met dezelfde verbinding en inlog, en neemt de dashboards over van de andere telefoon. Houd deze telefoon op de wifi thuis.';
+
+  @override
+  String get joinHomeAdd => 'Huis toevoegen';
+
+  @override
+  String get joinHomeNoDashboards =>
+      'Huis toegevoegd. De dashboards kwamen niet aan; je apparaten staan op het tabblad Apparaten.';
 
   @override
   String get remoteTitle => 'Bediening op afstand';

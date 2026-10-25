@@ -1,0 +1,1 @@
+Home Assistant: ZigDash now finds it on your network and fills in the address, and signing in works on a new phone.

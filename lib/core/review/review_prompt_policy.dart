@@ -6,7 +6,7 @@
 class ReviewPromptPolicy {
   const ReviewPromptPolicy({
     this.minSessions = 2,
-    this.minAge = const Duration(days: 1),
+    this.minAge = const Duration(days: 2),
     this.cooldown = const Duration(days: 90),
   });
 
@@ -16,8 +16,10 @@ class ReviewPromptPolicy {
   /// which produced no visible rating in three weeks of production.
   final int minSessions;
 
-  /// Minimum time since the first successful session. With [minSessions] at
-  /// two this only rules out a same-day double count across midnight.
+  /// Minimum time since the first successful session. Days are calendar
+  /// days, so one day still let a setup at 22:35 and a light at 01:00 ask
+  /// for a review 2.5 hours after install (3.1.9); two days means the
+  /// earliest ask is the day after tomorrow.
   final Duration minAge;
 
   /// Minimum gap between review requests. Google gives no signal whether the
@@ -31,10 +33,19 @@ class ReviewPromptPolicy {
     required DateTime today,
   }) {
     if (firstSessionDay == null || sessions < minSessions) return false;
-    if (today.difference(firstSessionDay) < minAge) return false;
-    if (lastPromptDay != null && today.difference(lastPromptDay) < cooldown) {
+    if (_daysBetween(firstSessionDay, today) < minAge.inDays) return false;
+    if (lastPromptDay != null &&
+        _daysBetween(lastPromptDay, today) < cooldown.inDays) {
       return false;
     }
     return true;
   }
+
+  /// Whole calendar days from [from] to [to]; a daylight-saving change in
+  /// between (a 47- or 49-hour "two days") doesn't move the count.
+  static int _daysBetween(DateTime from, DateTime to) => DateTime.utc(
+    to.year,
+    to.month,
+    to.day,
+  ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
 }

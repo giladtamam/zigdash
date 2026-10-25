@@ -34,12 +34,19 @@ class LastKnownStore {
   /// not tile values and are never stored.
   static const maxPayload = 16 * 1024;
 
+  /// Zigbee2MQTT's device list, with each device's definition, runs to a few
+  /// KB per device.
+  static const maxDeviceList = 4 * 1024 * 1024;
+
   final _pending = <(String, String), (String, DateTime)>{};
   Timer? _timer;
 
   /// Whether a message is a tile value worth keeping: not Zigbee2MQTT's
   /// bridge metadata, not our own commands echoed back, not huge.
   static bool keeps(MqttRxMessage m) =>
+      // 3.1.7: the device list, so the Devices tab works through the relay,
+      // which never carries Zigbee2MQTT's bridge topics.
+      (m.topic.endsWith('/bridge/devices') && m.payload.length <= maxDeviceList) ||
       // History's day records (2.7) are read fresh from the broker each
       // time; caching them would push device values out of this store.
       !m.topic.startsWith('zigdash/history/') &&

@@ -870,5 +870,39 @@ void main() {
         async.flushMicrotasks();
       });
     });
+
+    test('on the relay, the device list saved at home stands in (3.1.7)', () {
+      fakeAsync((async) {
+        final relay = RemoteHome(homeId: 'h', url: 'wss://r/mqtt', username: 'u', password: 'p', key: Uint8List(32));
+        final manager = MqttManager(
+          config: BrokerConfig(id: 'c', host: localHost, port: 1883, protocol: MqttProtocol.tcp, relay: relay),
+          password: '',
+          homeProbe: (host, port) async => false,
+          clientFactory: (c, id, {host}) => _FakeClient(
+              host ?? c.host, (host ?? c.host) == relayCandidateHost ? _Behavior.succeed : _Behavior.fail),
+        );
+        manager.seedLastKnown([
+          MqttRxMessage(
+              topic: 'zigbee2mqtt/bridge/devices',
+              payload: '[{"friendly_name":"lamp"}]',
+              receivedAt: DateTime(2026, 10, 24),
+              connectionGeneration: -1),
+        ]);
+        final early = <MqttRxMessage>[];
+        manager.subscribe('zigbee2mqtt/bridge/devices').listen(early.add);
+        async.flushMicrotasks();
+        expect(early, isEmpty, reason: 'not before the relay is known');
+        manager.connect();
+        async.flushMicrotasks();
+        expect(manager.activeEndpoint, MqttEndpoint.relay);
+        expect(early.single.payload, contains('lamp'), reason: 'a screen already waiting gets it');
+        final late = <MqttRxMessage>[];
+        manager.subscribe('zigbee2mqtt/bridge/devices').listen(late.add);
+        async.flushMicrotasks();
+        expect(late.single.payload, contains('lamp'));
+        manager.dispose();
+        async.flushMicrotasks();
+      });
+    });
   });
 }

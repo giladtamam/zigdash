@@ -1,0 +1,1 @@
+After your first setup, one optional question: what made you try ZigDash? (Only if you share usage data.) The review request no longer pops up the night you install.

@@ -159,9 +159,16 @@ class SetupScreen extends ConsumerWidget {
         state is! SetupCreating &&
         state is! SetupComplete;
     return PopScope(
-      canPop: !midway || Navigator.canPop(context),
+      // 3.1.6: back on the device list asks first. A third of the people
+      // who reached it left without the one tap that finishes setup.
+      canPop: state is! SetupReview && (!midway || Navigator.canPop(context)),
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) coordinator.cancel();
+        if (didPop) return;
+        if (state is SetupReview) {
+          _askBeforeLeavingReview(context, ref, state, coordinator);
+        } else {
+          coordinator.cancel();
+        }
       },
       child: Scaffold(
         appBar: AppBar(title: Text(l10n.setupWelcomeTitle)),
@@ -212,6 +219,17 @@ class SetupScreen extends ConsumerWidget {
             SetupFailed(kind: SetupErrorKind.scanFailed) => _NoNetwork(
               state: state,
               onManual: manual,
+              onHa: () {
+                ref
+                    .read(analyticsProvider)
+                    .track(
+                      const SetupStep(
+                        SetupStepKind.haOpened,
+                        choice: HaSignInFrom.noWifi,
+                      ),
+                    );
+                context.push(Routes.haConnectOffWifi);
+              },
             ),
             SetupFailed() => _Failure(
               state: state,
@@ -1673,9 +1691,17 @@ class _Failure extends StatelessWidget {
 /// network), opens the Wi-Fi panel, and waits; the coordinator scans again
 /// by itself once Wi-Fi is back, so there is no Try again to tap repeatedly.
 class _NoNetwork extends StatelessWidget {
-  const _NoNetwork({required this.state, required this.onManual});
+  const _NoNetwork({
+    required this.state,
+    required this.onManual,
+    required this.onHa,
+  });
   final SetupFailed state;
   final VoidCallback onManual;
+
+  /// Home Assistant's sign-in (3.1.9): with its remote address it works
+  /// on mobile data, where the scan can't.
+  final VoidCallback onHa;
 
   static Future<void> _openWifi() async {
     try {
@@ -1743,6 +1769,12 @@ class _NoNetwork extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: onHa,
+          icon: const Icon(Icons.home_outlined),
+          label: Text(l10n.setupNoWifiHa),
+        ),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
         const RemindMeLater(),
@@ -1797,6 +1829,13 @@ class _Review extends StatelessWidget {
                   style: theme.textTheme.titleMedium,
                 ),
               ),
+              const SizedBox(height: 4),
+              // 3.1.6: say this is the last step, and where it finishes.
+              Text(
+                l10n.setupReviewLastStep,
+                key: const Key('setup-review-last-step'),
+                style: theme.textTheme.bodyMedium,
+              ),
               const SizedBox(height: 8),
               for (var i = 0; i < rows.length; i++) ...[
                 if (i == firstOther) _GroupHeader(title: l10n.setupGroupOther),
@@ -1823,7 +1862,9 @@ class _Review extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
               ],
-              Center(
+              // 3.1.6: full width, the one way on from here.
+              SizedBox(
+                height: 52,
                 child: FilledButton.icon(
                   onPressed: busy ? null : onCreate,
                   icon: busy
@@ -1943,5 +1984,61 @@ class _GuideLink extends StatelessWidget {
       ),
       onTap: () => launchUrl(url, mode: LaunchMode.externalApplication),
     );
+  }
+}
+
+/// What back on the device list was answered (3.1.6).
+enum ReviewBackAnswer { create, startOver, stay }
+
+/// Back on the device list (3.1.6): create the dashboard, start setup over,
+/// or stay on the list. Leaving used to throw the found devices away
+/// without a word.
+Future<void> _askBeforeLeavingReview(
+  BuildContext context,
+  WidgetRef ref,
+  SetupReview review,
+  SetupCoordinator coordinator,
+) async {
+  final l10n = context.l10n;
+  final answer = await showDialog<ReviewBackAnswer>(
+    context: context,
+    builder: (dialog) => AlertDialog(
+      title: Text(l10n.setupLeaveTitle),
+      content: Text(l10n.setupLeaveBody),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialog).pop(ReviewBackAnswer.startOver),
+          child: Text(l10n.setupStartOver),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(dialog).pop(ReviewBackAnswer.create),
+          child: Text(
+            review.selectedCount == 0
+                ? l10n.setupCreateEmpty
+                : l10n.setupCreateWithCount(review.selectedCount),
+          ),
+        ),
+      ],
+    ),
+  );
+  final picked = answer ?? ReviewBackAnswer.stay;
+  ref
+      .read(analyticsProvider)
+      .track(
+        SetupStep(
+          SetupStepKind.reviewBack,
+          result: picked,
+          devices: review.rows.length,
+          selected: review.selectedCount,
+          platform: coordinator.platform,
+        ),
+      );
+  switch (picked) {
+    case ReviewBackAnswer.create:
+      await coordinator.createDashboard();
+    case ReviewBackAnswer.startOver:
+      await coordinator.cancel();
+    case ReviewBackAnswer.stay:
+      break;
   }
 }

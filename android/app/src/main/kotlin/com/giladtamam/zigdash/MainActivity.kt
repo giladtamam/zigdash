@@ -56,6 +56,11 @@ class MainActivity : FlutterActivity() {
                         result.success(false)
                     }
                 }
+                // Setup (3.1.8): Home Assistant on the network, by DNS-SD.
+                "findServices" -> ServiceFinder(this).find(
+                    call.argument<String>("type") ?: "",
+                    (call.argument<Int>("timeoutMs") ?: 3000).toLong(),
+                ) { result.success(it) }
                 // Setup's no-network screen (2.9.4): the Wi-Fi panel over the
                 // app on Android 10+, the Wi-Fi settings page before.
                 "openWifiSettings" -> {

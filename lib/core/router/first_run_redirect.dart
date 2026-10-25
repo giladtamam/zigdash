@@ -1,10 +1,16 @@
 import 'routes.dart';
 
 /// Screens a first-run user may be on: the setup flow, its manual entry,
-/// help and Get help. Everything else waits until there is a home or the demo.
+/// help and Get help, and joining a home another phone shared (3.1.7: a
+/// new phone is exactly who scans that code). Everything else waits until
+/// there is a home or the demo.
 const _firstRunLocations = {
   Routes.setup,
+  Routes.joinHome,
   Routes.guidedConnect,
+  // 3.1.8: Home Assistant's sign-in, opened from setup and from manual
+  // entry; without it every button to it led back to setup.
+  Routes.haConnect,
   Routes.help,
   Routes.getHelp,
 };

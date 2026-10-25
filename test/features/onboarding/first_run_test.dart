@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/core/router/last_dashboard_store.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
 import 'package:zigdash/data/database/database.dart';
+import 'package:zigdash/features/dashboards/widgets/why_card.dart';
 import 'package:zigdash/features/onboarding/demo_service.dart';
 import 'package:zigdash/features/onboarding/first_run.dart';
 import 'package:zigdash/features/onboarding/onboarding_provider.dart';
@@ -129,6 +130,18 @@ void main() {
     expect(c.read(onboardingProvider).needsOnboarding, isFalse);
     expect(c.read(lastDashboardStoreProvider).startLocation,
         '/connections/$realId/dashboards');
+  });
+
+  test('the first home is asked "What made you try ZigDash?"', () async {
+    final realId = await _insertConnection(db, host: '10.0.0.2');
+    await c.read(firstRunProvider).finish(realId);
+    expect(c.read(sharedPreferencesProvider).getString(whyAskKey), realId);
+  });
+
+  test('a later home is not asked', () async {
+    await c.read(onboardingProvider.notifier).completeOnboarding();
+    await c.read(firstRunProvider).finish(await _insertConnection(db, host: 'h'));
+    expect(c.read(sharedPreferencesProvider).getString(whyAskKey), isNull);
   });
 }
 

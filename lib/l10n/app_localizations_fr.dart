@@ -1564,7 +1564,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get haConnectAddressHelp =>
-      'L\'adresse avec laquelle vous ouvrez Home Assistant : 192.168.1.20:8123, homeassistant.local, ou votre adresse distante, comme https://xyz.ui.nabu.casa';
+      'L\'adresse avec laquelle vous ouvrez Home Assistant : 192.168.1.20:8123, ou une adresse distante comme votre adresse Nabu Casa ou Cloudflare';
 
   @override
   String get haConnectSignInHelp =>
@@ -1611,6 +1611,20 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get haConnectWhereAddress =>
       'Vous ne la connaissez pas ? Dans l\'app Home Assistant, ouvrez Paramètres › Application compagnon et touchez votre serveur : l\'adresse y figure. Sur un ordinateur, c\'est celle qu\'affiche le navigateur quand Home Assistant est ouvert.';
+
+  @override
+  String get haFindLooking => 'Recherche de Home Assistant sur ce réseau…';
+
+  @override
+  String get haFindSeveral =>
+      'Plusieurs Home Assistant trouvés. Touchez celui à utiliser :';
+
+  @override
+  String get haFindNone =>
+      'Home Assistant n\'a pas répondu sur ce réseau. Saisissez son adresse : celle de la maison, ou une adresse distante.';
+
+  @override
+  String get setupNoWifiHa => 'Vous utilisez Home Assistant ? Se connecter';
 
   @override
   String get haConnectNotAdmin =>
@@ -1700,6 +1714,20 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0 Choisissez ce qui ira sur votre premier tableau de bord.';
   }
+
+  @override
+  String get setupReviewLastStep =>
+      'Dernière étape : cochez les appareils voulus, puis touchez Créer le tableau de bord en bas.';
+
+  @override
+  String get setupLeaveTitle => 'Créer votre tableau de bord ?';
+
+  @override
+  String get setupLeaveBody =>
+      'Vos appareils sont trouvés. Créez le tableau de bord maintenant, ou recommencez la configuration et perdez cette liste.';
+
+  @override
+  String get setupStartOver => 'Recommencer';
 
   @override
   String setupCreateWithCount(Object count) {
@@ -3105,6 +3133,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get pollThanks => 'Merci ! Cela aide à choisir la suite.';
 
   @override
+  String get whyTitle => 'Qu\'est-ce qui vous a fait essayer ZigDash ?';
+
+  @override
+  String get whyBody =>
+      'Un appui aide à décider quoi développer. La réponse est envoyée avec vos données d\'utilisation anonymes.';
+
+  @override
+  String get whyFaster => 'Plus rapide que mon autre app';
+
+  @override
+  String get whyFamily => 'Simple pour la famille';
+
+  @override
+  String get whyWallTablet => 'Une tablette murale';
+
+  @override
+  String get whyWithoutHa => 'Fonctionne sans Home Assistant';
+
+  @override
+  String get whyOther => 'Autre chose';
+
+  @override
+  String get whyThanks => 'Merci de nous l\'avoir dit !';
+
+  @override
   String get pollNoAnalytics =>
       'Les données d\'utilisation sont désactivées : rien n\'est envoyé d\'ici. Dites-le-nous plutôt via Proposer une fonction.';
 
@@ -3895,6 +3948,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get engineChecking => 'Vérification du hub…';
 
   @override
+  String get engineAwayNoHubTitle => 'Votre hub est injoignable pour le moment';
+
+  @override
+  String get engineAwayNoHubBody =>
+      'Vous êtes absent, et votre hub n\'est pas connecté à l\'accès à distance de ZigDash, ou son internet est coupé. Vos automatisations continuent sur le hub.';
+
+  @override
+  String get engineAwayReinstallAtHome =>
+      'Vous pourrez réinstaller l\'Engine une fois chez vous.';
+
+  @override
   String get engineNoConnection =>
       'ZigDash ne joint pas le broker de ce domicile pour l\'instant. Les automatisations se configurent connecté, à la maison.';
 
@@ -4359,6 +4423,70 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get statusConnectedRelay => 'Connecté · À distance via ZigDash';
+
+  @override
+  String get shareHomeTitle => 'Partager avec un autre téléphone';
+
+  @override
+  String get shareHomeSubtitle =>
+      'Ajoutez ce domicile à un autre téléphone avec un seul QR code';
+
+  @override
+  String get shareHomeIntro =>
+      'Sur l\'autre téléphone, à la maison sur le même Wi-Fi, scannez le code avec l\'appareil photo. ZigDash ajoute ce domicile avec ses identifiants et vos tableaux de bord.';
+
+  @override
+  String get shareHomeLoginWarning =>
+      'Le code contient les identifiants du broker de ce domicile. Il s\'affiche 2 minutes ; ne le montrez qu\'à des personnes de confiance.';
+
+  @override
+  String get shareHomeShow => 'Afficher le code';
+
+  @override
+  String get shareHomeAtHome =>
+      'Connectez-vous d\'abord à la maison : le partage ne marche que sur votre réseau local.';
+
+  @override
+  String get shareHomeScanHint =>
+      'Scannez avec l\'appareil photo de l\'autre téléphone. Le code disparaît dans 2 minutes.';
+
+  @override
+  String get shareHomeHide => 'Masquer le code';
+
+  @override
+  String get shareHomeViaHa =>
+      'Ce domicile se connecte via Home Assistant. Sur l\'autre téléphone, installez ZigDash et connectez-vous avec Home Assistant.';
+
+  @override
+  String get joinHomeTitle => 'Ajouter un domicile partagé';
+
+  @override
+  String get joinHomeInvalid =>
+      'Ce code n\'est pas une invitation ZigDash, ou il est abîmé.';
+
+  @override
+  String joinHomeAlready(String name) {
+    return '$name est déjà sur ce téléphone.';
+  }
+
+  @override
+  String get joinHomeOpen => 'Ouvrir';
+
+  @override
+  String joinHomeAsk(String name) {
+    return 'Ajouter $name à ce téléphone ?';
+  }
+
+  @override
+  String get joinHomeBody =>
+      'ZigDash ajoute le domicile avec la même connexion et les mêmes identifiants, et reprend les tableaux de bord de l\'autre téléphone. Restez sur le Wi-Fi de la maison.';
+
+  @override
+  String get joinHomeAdd => 'Ajouter le domicile';
+
+  @override
+  String get joinHomeNoDashboards =>
+      'Domicile ajouté. Les tableaux de bord ne sont pas arrivés ; vos appareils sont dans l\'onglet Appareils.';
 
   @override
   String get remoteTitle => 'Contrôle à distance';

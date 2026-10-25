@@ -69,6 +69,15 @@ class HomeSettingsScreen extends ConsumerWidget {
                 subtitle: Text(base),
                 onTap: () => _editBase(context, ref, home, base),
               ),
+              // 3.1.7: one QR code adds this home to another phone at home.
+              ListTile(
+                key: const Key('home-share'),
+                leading: const Icon(Icons.qr_code_2),
+                title: Text(l10n.shareHomeTitle),
+                subtitle: Text(l10n.shareHomeSubtitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(Routes.homeShare(home.id)),
+              ),
               ListTile(
                 leading: const Icon(Icons.public),
                 title: Text(l10n.remoteTitle),

@@ -86,7 +86,8 @@ MQTT.
 
 ## Install
 
-- [Google Play](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash)
+- [Google Play](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash): the way to get ZigDash, with automatic updates.
+- Phones without Google Play: APKs on [GitHub Releases](https://github.com/giladtamam/zigdash/releases), published less often.
 - F-Droid / IzzyOnDroid / Obtainium: in progress.
 
 ## Getting help

@@ -44,6 +44,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="zigdash" android:host="remote" />
             </intent-filter>
+            <!-- Share this home (3.1.7): zigdash://home/join?c=… from another
+                 phone's QR code. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="zigdash" android:host="home" />
+            </intent-filter>
         </activity>
         <!-- The shutter pop-up, opened by a shutter's tile or widget. -->
         <activity

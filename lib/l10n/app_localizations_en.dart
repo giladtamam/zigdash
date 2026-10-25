@@ -1547,7 +1547,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get haConnectAddressHelp =>
-      'The address you open Home Assistant with: 192.168.1.20:8123, homeassistant.local, or your remote address, like https://xyz.ui.nabu.casa';
+      'The address you open Home Assistant with: 192.168.1.20:8123, or a remote address like your Nabu Casa or Cloudflare address';
 
   @override
   String get haConnectSignInHelp =>
@@ -1593,6 +1593,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get haConnectWhereAddress =>
       'Not sure what it is? In the Home Assistant app, open Settings › Companion app and tap your server: its address is there. On a computer, it\'s what the browser shows when Home Assistant is open.';
+
+  @override
+  String get haFindLooking => 'Looking for Home Assistant on this network…';
+
+  @override
+  String get haFindSeveral =>
+      'Found more than one Home Assistant. Tap the one to use:';
+
+  @override
+  String get haFindNone =>
+      'Home Assistant didn\'t answer on this network. Type its address: the home one, or a remote one.';
+
+  @override
+  String get setupNoWifiHa => 'Use Home Assistant? Sign in';
 
   @override
   String get haConnectNotAdmin =>
@@ -1682,6 +1696,20 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0 Choose what goes on your first dashboard.';
   }
+
+  @override
+  String get setupReviewLastStep =>
+      'Last step: tick the devices you want, then tap Create dashboard below.';
+
+  @override
+  String get setupLeaveTitle => 'Create your dashboard?';
+
+  @override
+  String get setupLeaveBody =>
+      'Your devices are found. Create the dashboard now, or start setup over and lose this list.';
+
+  @override
+  String get setupStartOver => 'Start over';
 
   @override
   String setupCreateWithCount(Object count) {
@@ -3081,6 +3109,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pollThanks => 'Thanks! That helps decide what comes next.';
 
   @override
+  String get whyTitle => 'What made you try ZigDash?';
+
+  @override
+  String get whyBody =>
+      'One tap helps decide what to build. Your answer is sent with your anonymous usage data.';
+
+  @override
+  String get whyFaster => 'Quicker than my other app';
+
+  @override
+  String get whyFamily => 'Easy for the family';
+
+  @override
+  String get whyWallTablet => 'A wall tablet';
+
+  @override
+  String get whyWithoutHa => 'Works without Home Assistant';
+
+  @override
+  String get whyOther => 'Something else';
+
+  @override
+  String get whyThanks => 'Thanks for telling us!';
+
+  @override
   String get pollNoAnalytics =>
       'Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.';
 
@@ -3866,6 +3919,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get engineChecking => 'Checking your hub…';
 
   @override
+  String get engineAwayNoHubTitle => 'Can\'t reach your hub right now';
+
+  @override
+  String get engineAwayNoHubBody =>
+      'You\'re away, and your hub isn\'t connected to ZigDash\'s remote access, or its internet is down. Your automations keep running on the hub.';
+
+  @override
+  String get engineAwayReinstallAtHome =>
+      'You can reinstall the Engine when you\'re at home.';
+
+  @override
   String get engineNoConnection =>
       'ZigDash can\'t reach this Home\'s broker right now. Automations are set up while connected at home.';
 
@@ -4327,6 +4391,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusConnectedRelay => 'Connected · Away via ZigDash';
+
+  @override
+  String get shareHomeTitle => 'Share with another phone';
+
+  @override
+  String get shareHomeSubtitle =>
+      'Add this home to another phone with one QR code';
+
+  @override
+  String get shareHomeIntro =>
+      'On the other phone, at home on the same Wi-Fi, scan the code with the camera. ZigDash adds this home with its login and your dashboards.';
+
+  @override
+  String get shareHomeLoginWarning =>
+      'The code includes this home\'s broker login. It shows for 2 minutes; show it only to people you trust.';
+
+  @override
+  String get shareHomeShow => 'Show the code';
+
+  @override
+  String get shareHomeAtHome =>
+      'Connect at home first: sharing works only on your home network.';
+
+  @override
+  String get shareHomeScanHint =>
+      'Scan with the other phone\'s camera. The code hides in 2 minutes.';
+
+  @override
+  String get shareHomeHide => 'Hide the code';
+
+  @override
+  String get shareHomeViaHa =>
+      'This home connects through Home Assistant. On the other phone, install ZigDash and sign in with Home Assistant.';
+
+  @override
+  String get joinHomeTitle => 'Add a shared home';
+
+  @override
+  String get joinHomeInvalid =>
+      'This code isn\'t a ZigDash home invitation, or it\'s damaged.';
+
+  @override
+  String joinHomeAlready(String name) {
+    return '$name is already on this phone.';
+  }
+
+  @override
+  String get joinHomeOpen => 'Open it';
+
+  @override
+  String joinHomeAsk(String name) {
+    return 'Add $name to this phone?';
+  }
+
+  @override
+  String get joinHomeBody =>
+      'ZigDash adds the home with the same connection and login, and takes the dashboards from the other phone. Keep this phone on your home Wi-Fi.';
+
+  @override
+  String get joinHomeAdd => 'Add home';
+
+  @override
+  String get joinHomeNoDashboards =>
+      'Home added. The dashboards didn\'t arrive; your devices are on the Devices tab.';
 
   @override
   String get remoteTitle => 'Remote control';

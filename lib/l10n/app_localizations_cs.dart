@@ -1553,7 +1553,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haConnectAddressHelp =>
-      'Adresa, kterou otevíráš Home Assistant: 192.168.1.20:8123, homeassistant.local nebo tvoje vzdálená adresa, třeba https://xyz.ui.nabu.casa';
+      'Adresa, kterou otevíráš Home Assistant: 192.168.1.20:8123, nebo vzdálená adresa, třeba tvoje adresa Nabu Casa nebo Cloudflare';
 
   @override
   String get haConnectSignInHelp =>
@@ -1598,6 +1598,20 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haConnectWhereAddress =>
       'Nevíte, jaká je? V aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace a klepněte na svůj server: adresa je tam. Na počítači je to adresa, kterou prohlížeč ukazuje při otevřeném Home Assistantu.';
+
+  @override
+  String get haFindLooking => 'Hledám Home Assistant v této síti…';
+
+  @override
+  String get haFindSeveral =>
+      'Nalezeno více instancí Home Assistant. Klepněte na tu, kterou chcete použít:';
+
+  @override
+  String get haFindNone =>
+      'Home Assistant v této síti neodpověděl. Zadejte jeho adresu: domácí, nebo vzdálenou.';
+
+  @override
+  String get setupNoWifiHa => 'Používáte Home Assistant? Přihlásit se';
 
   @override
   String get haConnectNotAdmin =>
@@ -1688,6 +1702,20 @@ class AppLocalizationsCs extends AppLocalizations {
     );
     return '$_temp0 Vyber, co bude na tvé první nástěnce.';
   }
+
+  @override
+  String get setupReviewLastStep =>
+      'Poslední krok: zaškrtněte zařízení, která chcete, a dole klepněte na Vytvořit nástěnku.';
+
+  @override
+  String get setupLeaveTitle => 'Vytvořit nástěnku?';
+
+  @override
+  String get setupLeaveBody =>
+      'Vaše zařízení jsou nalezena. Vytvořte nástěnku hned, nebo začněte nastavení znovu a tento seznam ztratíte.';
+
+  @override
+  String get setupStartOver => 'Začít znovu';
 
   @override
   String setupCreateWithCount(Object count) {
@@ -3086,6 +3114,31 @@ class AppLocalizationsCs extends AppLocalizations {
   String get pollThanks => 'Díky! Pomůže to rozhodnout, co přijde dál.';
 
   @override
+  String get whyTitle => 'Proč jsi vyzkoušel ZigDash?';
+
+  @override
+  String get whyBody =>
+      'Jedno klepnutí pomůže rozhodnout, co dál. Tvoje odpověď se odešle s anonymními daty o používání.';
+
+  @override
+  String get whyFaster => 'Rychlejší než moje jiná aplikace';
+
+  @override
+  String get whyFamily => 'Jednoduchý pro rodinu';
+
+  @override
+  String get whyWallTablet => 'Tablet na zdi';
+
+  @override
+  String get whyWithoutHa => 'Funguje bez Home Assistantu';
+
+  @override
+  String get whyOther => 'Něco jiného';
+
+  @override
+  String get whyThanks => 'Díky za odpověď!';
+
+  @override
   String get pollNoAnalytics =>
       'Data o používání jsou vypnutá, takže odsud se nic neodešle. Napiš nám raději přes Navrhnout funkci.';
 
@@ -3875,6 +3928,17 @@ class AppLocalizationsCs extends AppLocalizations {
   String get engineChecking => 'Kontrola hubu…';
 
   @override
+  String get engineAwayNoHubTitle => 'Teď se nedaří spojit s vaším hubem';
+
+  @override
+  String get engineAwayNoHubBody =>
+      'Jste pryč a váš hub není připojen ke vzdálenému přístupu ZigDash, nebo nemá internet. Vaše automatizace na hubu dál běží.';
+
+  @override
+  String get engineAwayReinstallAtHome =>
+      'Engine můžete přeinstalovat, až budete doma.';
+
+  @override
   String get engineNoConnection =>
       'ZigDash teď nedosáhne na broker této domácnosti. Automatizace se nastavují doma, s připojením.';
 
@@ -4334,6 +4398,70 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get statusConnectedRelay => 'Připojeno · Mimo domov přes ZigDash';
+
+  @override
+  String get shareHomeTitle => 'Sdílet s dalším telefonem';
+
+  @override
+  String get shareHomeSubtitle =>
+      'Přidejte tento domov do dalšího telefonu jedním QR kódem';
+
+  @override
+  String get shareHomeIntro =>
+      'Na druhém telefonu, doma na stejné Wi-Fi, naskenujte kód fotoaparátem. ZigDash přidá tento domov s přihlášením i vašimi nástěnkami.';
+
+  @override
+  String get shareHomeLoginWarning =>
+      'Kód obsahuje přihlášení k brokeru tohoto domova. Zobrazí se na 2 minuty; ukazujte ho jen lidem, kterým věříte.';
+
+  @override
+  String get shareHomeShow => 'Zobrazit kód';
+
+  @override
+  String get shareHomeAtHome =>
+      'Nejdřív se připojte doma: sdílení funguje jen ve vaší domácí síti.';
+
+  @override
+  String get shareHomeScanHint =>
+      'Naskenujte fotoaparátem druhého telefonu. Kód se za 2 minuty skryje.';
+
+  @override
+  String get shareHomeHide => 'Skrýt kód';
+
+  @override
+  String get shareHomeViaHa =>
+      'Tento domov se připojuje přes Home Assistant. Na druhém telefonu nainstalujte ZigDash a přihlaste se přes Home Assistant.';
+
+  @override
+  String get joinHomeTitle => 'Přidat sdílený domov';
+
+  @override
+  String get joinHomeInvalid =>
+      'Tento kód není pozvánka do domova ZigDash, nebo je poškozený.';
+
+  @override
+  String joinHomeAlready(String name) {
+    return '$name už v tomto telefonu je.';
+  }
+
+  @override
+  String get joinHomeOpen => 'Otevřít';
+
+  @override
+  String joinHomeAsk(String name) {
+    return 'Přidat $name do tohoto telefonu?';
+  }
+
+  @override
+  String get joinHomeBody =>
+      'ZigDash přidá domov se stejným připojením a přihlášením a převezme nástěnky z druhého telefonu. Nechte tento telefon na domácí Wi-Fi.';
+
+  @override
+  String get joinHomeAdd => 'Přidat domov';
+
+  @override
+  String get joinHomeNoDashboards =>
+      'Domov přidán. Nástěnky nedorazily; zařízení najdete na kartě Zařízení.';
 
   @override
   String get remoteTitle => 'Dálkové ovládání';

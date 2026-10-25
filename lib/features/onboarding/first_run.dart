@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/router/last_dashboard_store.dart';
 import '../settings/providers/settings_controller.dart';
+import '../dashboards/widgets/why_card.dart' show whyAskKey;
 import 'demo_service.dart';
 import 'onboarding_provider.dart';
 
@@ -35,6 +36,8 @@ class FirstRun {
   }
 
   Future<void> finish(String connectionId) async {
+    // Read before first run is marked done: only the first home is asked.
+    final first = !_ref.read(onboardingProvider).isComplete;
     await _tabletDefaults();
     if (_ref.read(demoServiceProvider)) {
       await _ref.read(demoServiceProvider.notifier).deactivate();
@@ -43,6 +46,12 @@ class FirstRun {
     await onboarding.disableDemo();
     await onboarding.completeOnboarding();
     await _ref.read(lastDashboardStoreProvider).remember(connectionId);
+    if (first) {
+      // "What made you try ZigDash?" on its dashboard, once (3.1.10).
+      await _ref
+          .read(sharedPreferencesProvider)
+          .setString(whyAskKey, connectionId);
+    }
   }
 
   /// Creates the demo home, ends first run in demo mode, and returns the demo

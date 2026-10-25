@@ -37,6 +37,7 @@ import '../widgets/export_dialog.dart';
 import '../../../alerts/alerts_paused_banner.dart';
 import '../../../engine/automations_paused_chip.dart';
 import '../widgets/poll_card.dart';
+import '../widgets/why_card.dart';
 import '../widgets/connection_status_banner.dart';
 
 /// Per-connection dashboards screen. Shows a TabBar of all dashboards
@@ -293,6 +294,7 @@ class _DashboardsTabbed extends ConsumerWidget {
                     if (!kiosk) ...[
                       HaImportOfferCard(connectionId: connectionId),
                       AnalyticsConsentCard(connectionId: connectionId),
+                      WhyCard(connectionId: connectionId),
                       PollCard(connectionId: connectionId),
                     ],
                     AlertsPausedBanner(connectionId: connectionId),

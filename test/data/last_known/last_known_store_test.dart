@@ -43,7 +43,9 @@ void main() {
   });
 
   test('bridge metadata, command echoes and huge payloads are not kept', () {
-    expect(LastKnownStore.keeps(_m('zigbee2mqtt/bridge/devices', '[]', now)),
+    // The device list is kept since 3.1.7 (for the relay); the rest of the
+    // bridge is not.
+    expect(LastKnownStore.keeps(_m('zigbee2mqtt/bridge/info', '{}', now)),
         isFalse);
     expect(LastKnownStore.keeps(_m('zigbee2mqtt/lamp/set', '{}', now)), isFalse);
     expect(LastKnownStore.keeps(_m('zigbee2mqtt/lamp/get', '{}', now)), isFalse);
@@ -97,5 +99,55 @@ void main() {
     final first = await mgr.subscribe('zigbee2mqtt/lamp').first;
     expect(first.payload, '{"state":"ON"}');
     expect(first.connectionGeneration, -1);
+  });
+
+  // 3.1.7: the device list is kept, for the relay, which never carries it.
+  test('keeps the device list, not other bridge data', () {
+    MqttRxMessage m(String t, String p) =>
+        MqttRxMessage(topic: t, payload: p, receivedAt: now, connectionGeneration: 1);
+    expect(LastKnownStore.keeps(m('zigbee2mqtt/bridge/devices', '[${'x' * 100000}]')), isTrue);
+    expect(LastKnownStore.keeps(m('zigbee2mqtt/bridge/info', '{}')), isFalse);
+    expect(LastKnownStore.keeps(m('zigbee2mqtt/bridge/extensions', '[]')), isFalse);
+  });
+
+  test('a saved device list is not replayed at home', () async {
+    final mgr = MqttManager(
+      config: const BrokerConfig(
+          id: 'c1', host: 'h', port: 1883, protocol: MqttProtocol.tcp),
+      password: '',
+    );
+    addTearDown(mgr.dispose);
+    mgr.seedLastKnown([
+      MqttRxMessage(
+          topic: 'zigbee2mqtt/bridge/devices',
+          payload: '[]',
+          receivedAt: now,
+          connectionGeneration: -1),
+    ]);
+    final got = <MqttRxMessage>[];
+    final sub = mgr.subscribe('zigbee2mqtt/bridge/devices').listen(got.add);
+    addTearDown(sub.cancel);
+    await Future<void>.delayed(Duration.zero);
+    expect(got, isEmpty, reason: 'at home the live list always wins');
+    expect(mgr.latestUnder('zigbee2mqtt/'), isEmpty);
+  });
+
+  // 3.1.7: a wildcard reader opened after the relay delivered starts from
+  // this session's messages, never from saved ones.
+  test('liveUnder holds this session only', () async {
+    final mgr = MqttManager(
+      config: const BrokerConfig(
+          id: 'c1', host: 'h', port: 1883, protocol: MqttProtocol.tcp),
+      password: '',
+    );
+    addTearDown(mgr.dispose);
+    mgr.seedLastKnown([
+      MqttRxMessage(
+          topic: 'zigdash/automations/rules/old',
+          payload: '{}',
+          receivedAt: now,
+          connectionGeneration: -1),
+    ]);
+    expect(mgr.liveUnder('zigdash/automations/rules/'), isEmpty);
   });
 }

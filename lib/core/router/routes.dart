@@ -21,6 +21,13 @@ class Routes {
       ? haConnect
       : Uri(path: haConnect, queryParameters: {'host': host}).toString();
 
+  /// Connecting through Home Assistant from the no-Wi-Fi screen (3.1.9):
+  /// no network to look on, so the address (a remote one) is typed.
+  static final haConnectOffWifi = Uri(
+    path: haConnect,
+    queryParameters: {'wifi': 'off'},
+  ).toString();
+
   /// Signing in again for a home that connects through Home Assistant
   /// (2.10.1): a new phone, or a token the user removed.
   static String haConnectAgain(String connectionId, String host) => Uri(
@@ -38,6 +45,12 @@ class Routes {
   /// The Automations tab (3.1.1): the fourth destination of a home.
   static String homeAutomations(String connectionId) =>
       '/connections/$connectionId/automations';
+  /// Joining a home another phone shared (3.1.7): zigdash://home/join?c=…
+  static const joinHome = '/join';
+
+  /// Share this home with another phone at home (3.1.7).
+  static String homeShare(String connectionId) =>
+      '/settings/home/$connectionId/share';
   static String homeAlerts(String connectionId) =>
       '/settings/home/$connectionId/alerts';
 

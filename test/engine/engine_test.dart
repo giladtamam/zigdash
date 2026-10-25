@@ -80,6 +80,17 @@ void main() {
     test('stopped itself', () {
       expect(phase(ext: const [engineExtensionName], r: report(stopped: true), heard: now), HubEnginePhase.stoppedSelf);
     });
+    // 3.1.7: through the relay the bridge topics never come; the Engine's
+    // forwarded report decides alone.
+    test('away: the forwarded report decides, never the bridge', () {
+      HubEnginePhase away({EngineReport? r, DateTime? heard, bool gaveUp = false}) => EngineHealth.phase(
+          hub: null, extensions: null, report: r, lastHeardAt: heard, now: now, viaRelay: true, gaveUp: gaveUp);
+      expect(away(r: report(), heard: now), HubEnginePhase.running);
+      expect(away(r: report(stopped: true), heard: now), HubEnginePhase.stoppedSelf);
+      expect(away(r: report(), heard: now.subtract(const Duration(seconds: 91))), HubEnginePhase.paused);
+      expect(away(), HubEnginePhase.checking, reason: 'still waiting');
+      expect(away(gaveUp: true), HubEnginePhase.unreachable, reason: 'never a spinner forever');
+    });
   });
 
   test('report decoding, outdated and clock checks', () {
@@ -95,7 +106,7 @@ void main() {
 
   test('the bundled engine source carries its version', () {
     final source = File('hub/zigdash-engine.js').readAsStringSync();
-    expect(bundledEngineVersion(source), '3.1.5');
+    expect(bundledEngineVersion(source), '3.1.7');
   });
 
   group('EngineInstaller', () {

@@ -374,6 +374,14 @@ function fakeRelay() {
 const remoteKey = crypto.randomBytes(32);
 const remoteCfg = { url: 'mqtts://relay.example:8883', homeId: 'h1', username: 'hub-h1', password: 'pw', key: remoteKey.toString('base64') };
 
+// Only device states (zigbee2mqtt/...), not the Engine's own mirrored topics (3.1.7).
+const deviceUps = (relay) => relay.published.filter((p) => {
+  if (!p.topic.startsWith('homes/h1/s/') || !p.payload || !p.payload.length) return false;
+  const inner = H.unseal(remoteKey, p.payload);
+  return inner && inner.topic.startsWith('zigbee2mqtt/');
+});
+const sealedUp = (relay, topic) => relay.published.filter((p) => p.topic === `homes/h1/s/${H.opaqueId(remoteKey, topic)}` && p.payload && p.payload.length);
+
 async function withRemote() {
   const z = fakeZ2m();
   const relay = fakeRelay();
@@ -413,7 +421,7 @@ test('remote: device states go up sealed under an opaque id; bridge topics never
   z.z2mPublished('zigbee2mqtt/Kitchen lamp', { state: 'ON', brightness: 120 });
   z.z2mPublished('zigbee2mqtt/bridge/devices', [{ big: true }]);
   z.z2mPublished('zigbee2mqtt/Kitchen lamp/set', { state: 'OFF' });
-  const up = relay.published.filter((p) => p.topic.startsWith('homes/h1/s/'));
+  const up = deviceUps(relay);
   assert.equal(up.length, 1);
   assert.ok(!up[0].topic.includes('Kitchen'), 'the relay never sees a device name');
   assert.equal(up[0].opts.retain, true);
@@ -428,7 +436,7 @@ test('remote: device states go up sealed under an opaque id; bridge topics never
 test('remote: changes while the relay is unreachable go up on reconnect, latest only', async () => {
   const { z, relay } = await withRemote();
   const lamp = `homes/h1/s/${H.opaqueId(remoteKey, 'zigbee2mqtt/Kitchen lamp')}`;
-  const ups = () => relay.published.filter((p) => p.topic.startsWith('homes/h1/s/'));
+  const ups = () => deviceUps(relay);
   relay.emit('close');
   z.z2mPublished('zigbee2mqtt/Kitchen lamp', { state: 'ON' });
   z.z2mPublished('zigbee2mqtt/Kitchen lamp', { state: 'OFF' });
@@ -478,7 +486,8 @@ test('remote: turning off deletes the sealed copies on the relay, older ones inc
   relay.published.length = 0;
   z.mqttIn('zigdash/remote/set', JSON.stringify({ off: true }));
   const cleared = () => relay.published.filter((p) => p.payload === '' && p.opts.retain).map((p) => p.topic);
-  assert.deepEqual(cleared().sort(), ['homes/h1/hub', lamp].sort());
+  const state = `homes/h1/s/${H.opaqueId(remoteKey, 'zigdash/automations/state')}`;
+  assert.deepEqual(cleared().sort(), ['homes/h1/hub', lamp, state].sort());
   assert.ok(relay.subscribed.some((s) => s.topic === 'homes/h1/s/#'));
   assert.ok(!relay.ended, 'stays a moment to hear older copies');
   // An older copy from before a restart comes back retained: deleted too.
@@ -513,3 +522,69 @@ test('remote: an error from the relay connection is caught and reported, never t
   assert.equal(z.last('state').remote.error, 'ECONNREFUSED');
   await z.engine.stop();
 });
+
+// ---------- remote: what an away phone needs from the Engine (3.1.7) ----------
+
+const ruleA = JSON.stringify({ v: 1, id: 'a1', name: 'Morning', enabled: true, trigger: { type: 'time', at: '07:00' }, conditions: [], action: { type: 'device', commands: [{ ieee: '0xlight', payload: { state: 'ON' } }] } });
+
+test('remote: the rules, the Engine state and last runs go up sealed; the relay login never', async () => {
+  const { z, relay } = await withRemote();
+  assert.ok(sealedUp(relay, 'zigdash/automations/state').length >= 1, 'state on connect');
+  z.mqttIn('zigdash/automations/rules/a1', ruleA);
+  const rule = sealedUp(relay, 'zigdash/automations/rules/a1');
+  assert.equal(rule.length, 1);
+  assert.equal(rule[0].opts.retain, true);
+  assert.equal(H.unseal(remoteKey, rule[0].payload).payload, ruleA);
+  // A cleared rule clears on the relay too.
+  z.mqttIn('zigdash/automations/rules/a1', '');
+  const cleared = sealedUp(relay, 'zigdash/automations/rules/a1').map((p) => H.unseal(remoteKey, p.payload).payload);
+  assert.deepEqual(cleared, [ruleA, '']);
+  for (const p of relay.published.filter((x) => x.topic.startsWith('homes/h1/s/') && x.payload && x.payload.length)) {
+    const inner = H.unseal(remoteKey, p.payload);
+    assert.ok(!inner.topic.startsWith('zigdash/remote'), 'never the relay login');
+    assert.ok(!inner.topic.startsWith('zigdash/alerts') && !inner.topic.startsWith('zigdash/history'));
+  }
+  await z.engine.stop();
+});
+
+test('remote: a phone that connects later finds the rules and state; each reconnect sends them again', async () => {
+  const z = fakeZ2m();
+  const relay = fakeRelay();
+  z.engine.mqttConnect = () => relay;
+  await z.engine.start();
+  z.mqttIn('zigdash/automations/rules/a1', ruleA);
+  z.mqttIn('zigdash/remote/set', JSON.stringify(remoteCfg));
+  assert.equal(sealedUp(relay, 'zigdash/automations/rules/a1').length, 0, 'not before the relay answers');
+  relay.emit('connect');
+  assert.equal(sealedUp(relay, 'zigdash/automations/rules/a1').length, 1);
+  assert.ok(sealedUp(relay, 'zigdash/automations/state').length >= 1);
+  relay.emit('close');
+  relay.emit('connect');
+  assert.equal(sealedUp(relay, 'zigdash/automations/rules/a1').length, 2, 'sent again after an outage');
+  await z.engine.stop();
+});
+
+test('remote: Start again works from away and is not kept', async () => {
+  const { z, relay } = await withRemote();
+  relay.emit('message', 'homes/h1/c', H.seal(remoteKey, { topic: 'zigdash/automations/control', payload: '{"cmd":"start"}', at: Date.now() }));
+  const control = z.published.find((p) => p.topic === 'zigdash/automations/control');
+  assert.ok(control, 'reaches the hub');
+  assert.ok(!control.retain, 'a one-off, never retained');
+  await z.engine.stop();
+});
+
+test('remote: the last runs found on the broker at start go up before any new run', async () => {
+  const z = fakeZ2m();
+  const relay = fakeRelay();
+  z.engine.mqttConnect = () => relay;
+  await z.engine.start();
+  const recent = '[{"id":"a1","at":"2026-10-24T04:00:07.988Z","commands":1}]';
+  z.mqttIn('zigdash/automations/recent', recent);
+  z.mqttIn('zigdash/remote/set', JSON.stringify(remoteCfg));
+  relay.emit('connect');
+  const up = sealedUp(relay, 'zigdash/automations/recent');
+  assert.equal(up.length, 1);
+  assert.equal(H.unseal(remoteKey, up[0].payload).payload, recent);
+  await z.engine.stop();
+});
+

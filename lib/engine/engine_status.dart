@@ -156,6 +156,11 @@ enum HubEnginePhase {
 
   /// The Engine stopped itself after repeated errors.
   stoppedSelf,
+
+  /// Away, through the relay, and no word from the Engine (3.1.7): the hub
+  /// isn't connected to the relay, or its internet is down. Automations
+  /// still run on the hub.
+  unreachable,
 }
 
 /// Decides the phase from what the hub reported. Pure, so it is tested
@@ -174,7 +179,21 @@ abstract final class EngineHealth {
     required EngineReport? report,
     required DateTime? lastHeardAt,
     required DateTime now,
+    bool viaRelay = false,
+    bool gaveUp = false,
   }) {
+    // 3.1.7: through the relay Zigbee2MQTT's bridge topics never arrive;
+    // the Engine's own report, forwarded by the Engine, is all there is.
+    if (viaRelay) {
+      if (report == null || lastHeardAt == null) {
+        return gaveUp ? HubEnginePhase.unreachable : HubEnginePhase.checking;
+      }
+      if (report.stoppedSelf) return HubEnginePhase.stoppedSelf;
+      if (now.difference(lastHeardAt) > pausedAfter) return HubEnginePhase.paused;
+      final at = report.at;
+      if (at != null && now.difference(at) > staleReport) return HubEnginePhase.paused;
+      return HubEnginePhase.running;
+    }
     if (hub == null || extensions == null) return HubEnginePhase.checking;
     if (!hub.versionSupported) return HubEnginePhase.tooOld;
     if (!extensions.contains(engineExtensionName)) {

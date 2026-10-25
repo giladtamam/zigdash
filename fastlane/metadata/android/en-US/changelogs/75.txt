@@ -1,0 +1,1 @@
+Found your devices? Setup now makes the last step clear, and pressing back on the device list asks before throwing them away.

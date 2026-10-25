@@ -9,6 +9,7 @@ import 'package:zigdash/core/router/routes.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect_screen.dart';
+import 'package:zigdash/features/onboarding/setup/ha_discovery.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 
 void main() {
@@ -20,12 +21,16 @@ void main() {
     String? initialHost,
     String? again,
     Future<HaConnectProblem?>? slowProbe,
+    HaFind? findHa,
+    bool settle = true,
+    bool offWifi = false,
   }) async {
     final controller = HaConnectController(
       address: initialHost ?? '',
       adopt: (a, s) async => adopted?.add((a, s)),
       probe: (_, __) async => slowProbe != null ? await slowProbe : problem,
       signIn: signIn == null ? null : (_) async => signIn,
+      find: findHa,
     );
     tester.view.physicalSize = const Size(1200, 2600);
     tester.view.devicePixelRatio = 1;
@@ -41,6 +46,7 @@ void main() {
             initialHost: initialHost,
             controller: controller,
             again: again,
+            offWifi: offWifi,
           ),
         ),
       ],
@@ -55,7 +61,13 @@ void main() {
       ),
     );
     router.push(Routes.haConnect);
-    await tester.pumpAndSettle();
+    if (settle) {
+      await tester.pumpAndSettle();
+    } else {
+      // A spinner never settles: past the route's transition.
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+    }
     return controller;
   }
 
@@ -211,5 +223,101 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('Companion app'), findsOneWidget);
+  });
+
+  group('3.1.8: Home Assistant found on the network', () {
+    const signIn = (accessToken: 'a', refreshToken: 'r', error: null);
+    TextField field(WidgetTester tester) =>
+        tester.widget<TextField>(find.byType(TextField).first);
+
+    testWidgets('one: fills the address and says so', (tester) async {
+      final found = Completer<List<HaFound>>();
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () => found.future,
+        settle: false,
+      );
+      expect(
+        find.text('Looking for Home Assistant on this network…'),
+        findsOneWidget,
+      );
+      found.complete([
+        const HaFound(address: 'http://192.168.68.64:8123', name: 'Home'),
+      ]);
+      await tester.pumpAndSettle();
+      expect(field(tester).controller!.text, 'http://192.168.68.64:8123');
+      expect(
+        find.text('Found Home Assistant at 192.168.68.64:8123'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('a typed address is not replaced, and no look', (tester) async {
+      var looks = 0;
+      await pump(
+        tester,
+        signIn: signIn,
+        initialHost: '192.168.1.5',
+        findHa: () async {
+          looks++;
+          return [];
+        },
+      );
+      expect(looks, 0);
+      expect(field(tester).controller!.text, '192.168.1.5');
+    });
+
+    testWidgets('several: one chip each, a tap fills it', (tester) async {
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () async => const [
+          HaFound(address: 'http://192.168.68.64:8123', name: 'Home'),
+          HaFound(address: 'http://192.168.68.70:8123'),
+        ],
+      );
+      expect(
+        find.text('Found more than one Home Assistant. Tap the one to use:'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('192.168.68.70:8123'));
+      await tester.pump();
+      expect(field(tester).controller!.text, 'http://192.168.68.70:8123');
+      expect(find.text('Home · 192.168.68.64:8123'), findsOneWidget);
+    });
+
+    testWidgets('none, then an empty sign-in: check the Wi-Fi', (tester) async {
+      await pump(tester, signIn: signIn, findHa: () async => []);
+      expect(find.textContaining("didn't answer"), findsNothing);
+      await tester.tap(find.text('Sign in with Home Assistant'));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining("didn't answer on this network"),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Companion app'), findsOneWidget);
+    });
+  });
+
+  testWidgets('3.1.9: from the no-Wi-Fi screen, no look; remote is named', (
+    tester,
+  ) async {
+    var looks = 0;
+    await pump(
+      tester,
+      signIn: (accessToken: 'a', refreshToken: 'r', error: null),
+      offWifi: true,
+      findHa: () async {
+        looks++;
+        return [];
+      },
+    );
+    expect(looks, 0);
+    expect(
+      find.text('Looking for Home Assistant on this network…'),
+      findsNothing,
+    );
+    expect(find.textContaining('Nabu Casa or Cloudflare'), findsOneWidget);
   });
 }

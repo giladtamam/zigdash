@@ -6,6 +6,8 @@ import '../../data/database/tables/panels.dart';
 import '../../alerts/alert_editor_screen.dart';
 import '../../alerts/alerts_screen.dart';
 import '../../engine/automations_screen.dart';
+import '../../features/share_home/join_home_screen.dart';
+import '../../features/share_home/share_home_screen.dart';
 import '../../remote/pair_phone_screen.dart';
 import '../../remote/remote_screen.dart';
 import '../../features/ha_import/ha_import_screen.dart';
@@ -83,6 +85,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Retired carousel address; the redirect above always leaves it.
       GoRoute(path: Routes.onboarding, redirect: (_, __) => Routes.setup),
       // Remote control (3.1): another phone's QR code, opened by the camera app.
+      // Share this home (3.1.7): another phone's QR code, opened by the camera app.
+      GoRoute(
+        path: Routes.joinHome,
+        builder: (_, state) => JoinHomeScreen(code: state.uri.queryParameters['c']),
+      ),
       GoRoute(
         path: '/pair-phone',
         builder: (_, state) => PairPhoneScreen(code: state.uri.queryParameters['c']),
@@ -109,6 +116,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               HaConnectScreen(
                 initialHost: state.uri.queryParameters['host'],
                 again: state.uri.queryParameters['again'],
+                offWifi: state.uri.queryParameters['wifi'] == 'off',
               ),
             ),
           ),
@@ -329,6 +337,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: 'remote',
                 builder: (_, state) =>
                     RemoteScreen(connectionId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'share',
+                builder: (_, state) =>
+                    ShareHomeScreen(connectionId: state.pathParameters['id']!),
               ),
               // Automations were here before they became a tab (3.1.1).
               GoRoute(

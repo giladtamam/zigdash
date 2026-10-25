@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect.dart';
+import 'package:zigdash/features/onboarding/setup/ha_discovery.dart';
 import 'package:zigdash/mqtt/ha_token.dart';
 
 void main() {
@@ -18,6 +19,7 @@ void main() {
     String address = '',
     HaReach? reach,
     Future<HaConnectProblem?> Function()? slowProbe,
+    HaFind? find,
   }) {
     probed = [];
     adopted = [];
@@ -37,9 +39,15 @@ void main() {
               return signIn;
             },
       reach: reach,
+      find: find,
       onEvent: (e) => events.add(e.props),
     );
   }
+
+  List<String?> looks() => [
+    for (final e in events)
+      if (e['step'] == 'ha_discovery') e['result'],
+  ];
 
   List<String?> outcomes() => [
     for (final e in events)
@@ -206,6 +214,83 @@ void main() {
       answer.complete(null);
       await going;
       expect(adopted, isEmpty);
+    });
+  });
+
+  group('3.1.8: finding Home Assistant', () {
+    const home = HaFound(address: 'http://192.168.68.64:8123', name: 'Home');
+    const signedIn = (accessToken: 'acc', refreshToken: 'ref', error: null);
+
+    test('a look is counted once, by what it found', () async {
+      final c = make(find: () async => [home]);
+      expect(c.looking, isFalse);
+      final f = c.look();
+      expect(c.looking, isTrue);
+      expect(await f, [home]);
+      await c.look();
+      expect(c.looking, isFalse);
+      expect(c.looked, isTrue);
+      expect(c.found, [home]);
+      expect(looks(), ['one']);
+    });
+
+    test('several, by name, none', () async {
+      expect(await make(find: () async => [home, home]).look(), hasLength(2));
+      expect(looks(), ['several']);
+      await make(
+        find: () async => [
+          const HaFound(address: 'http://homeassistant:8123', byName: true),
+        ],
+      ).look();
+      expect(looks(), ['by_name']);
+      await make(find: () async => throw StateError('no nsd')).look();
+      expect(looks(), ['none']);
+    });
+
+    test('no look without a finder', () async {
+      final c = make();
+      expect(await c.look(), isEmpty);
+      expect(c.looked, isFalse);
+      expect(events, isEmpty);
+    });
+
+    test('signed in with nothing typed: waits for the look, uses it', () async {
+      final done = Completer<List<HaFound>>();
+      final c = make(signIn: signedIn, find: () => done.future);
+      c.look();
+      final signing = c.signInAndConnect('');
+      expect(c.value, isA<HaConnectChecking>());
+      done.complete([home]);
+      await signing;
+      expect(probed.single.$1, Uri.parse('http://192.168.68.64:8123'));
+      expect(looks(), ['one', 'used']);
+      expect(outcomes(), ['ok']);
+    });
+
+    test('nothing typed, nothing found: asks for the address', () async {
+      final c = make(signIn: signedIn, find: () async => []);
+      c.look();
+      await c.signInAndConnect('');
+      expect(c.value, isA<HaConnectAsk>());
+      expect((c.value as HaConnectAsk).problem, HaConnectProblem.noAddress);
+      expect(browsers, 0);
+      expect(outcomes(), ['no_address']);
+    });
+
+    test('a .local name goes to the one Home Assistant found', () async {
+      final c = make(signIn: signedIn, find: () async => [home]);
+      await c.look();
+      await c.signInAndConnect('homeassistant.local:8123');
+      expect(probed.single.$1, Uri.parse('http://192.168.68.64:8123'));
+      expect(looks(), ['one', 'used']);
+    });
+
+    test('a typed address is kept, whatever was found', () async {
+      final c = make(signIn: signedIn, find: () async => [home]);
+      await c.look();
+      await c.signInAndConnect('https://abc.ui.nabu.casa');
+      expect(probed.single.$1, Uri.parse('https://abc.ui.nabu.casa'));
+      expect(looks(), ['one']);
     });
   });
 }
