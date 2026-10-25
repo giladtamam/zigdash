@@ -1,0 +1,2 @@
+// The widget extension: Flutter's version name and number only (no Pods).
+#include "Generated.xcconfig"

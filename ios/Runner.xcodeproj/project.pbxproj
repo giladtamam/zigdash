@@ -8,17 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		1F6F79D66C8850E9F8D2D90F /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196E407B8571F920DA96495A /* WidgetStore.swift */; };
+		25EC71A0C7B41F1359F9EF27 /* DeviceWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81A6B916C6F3F0AE304014C8 /* DeviceWidget.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
+		3A945D82877B2B683A9A464F /* MiniMqtt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216FBD64E5AED98E2FA32981 /* MiniMqtt.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		464AE08AB9B96844039875F6 /* AppChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2B933C00E66A99803837FC /* AppChannel.swift */; };
 		722BE57CC2A104DF5256484F /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D658972671406A39E5FA940 /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		75CFB040EA8AAA289CC5F5AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F1CD51E38B09F71D6B3204 /* Foundation.framework */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		7EB86FE416DE07D25647A758 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00459A6EAEE0177D7B5DF7FB /* Pods_RunnerTests.framework */; };
+		8C317C175CC38C30F31A86EE /* WidgetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196E407B8571F920DA96495A /* WidgetStore.swift */; };
+		95C2C7BF56A51DD7782D4369 /* DeviceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4C5B5A45393361441119C9 /* DeviceCommand.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		BA0E139461386D75F09C5575 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2312619B6B9B2A60AE085703 /* PrivacyInfo.xcprivacy */; };
+		BAB9BE371BFD01CA1E6D0DE5 /* ZigDashWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A09016305B8CEC341EB76E10 /* ZigDashWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E5474E6B5982A2266E38287A /* ProBilling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35291AF8B9EBAD0AD6ECE4B /* ProBilling.swift */; };
 		F6239BB0560FD9D77BC3AA6B /* ServiceFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F6466C32E3C09788810DE /* ServiceFinder.swift */; };
 /* End PBXBuildFile section */
@@ -31,9 +38,27 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
+		DA8A467ED2D6568AF4343798 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1904B9341EE9A3C3D0A6DDD5;
+			remoteInfo = ZigDashWidgets;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		4E2103CB5A02DCFE0ED104D2 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BAB9BE371BFD01CA1E6D0DE5 /* ZigDashWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -50,9 +75,12 @@
 		00459A6EAEE0177D7B5DF7FB /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0814283FCD02B3D8EAB683F2 /* Pods-Runner.profile-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-foss.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-foss.xcconfig"; sourceTree = "<group>"; };
 		0CE6880BF8840E498D283488 /* Pods-Runner.release-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-play.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-play.xcconfig"; sourceTree = "<group>"; };
+		1031C35274CF11342AF98AA5 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		196E407B8571F920DA96495A /* WidgetStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetStore.swift; sourceTree = "<group>"; };
 		1AD38A7C047940C5792814DF /* Debug-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Debug-foss.xcconfig"; path = "Flutter/Debug-foss.xcconfig"; sourceTree = "<group>"; };
+		216FBD64E5AED98E2FA32981 /* MiniMqtt.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiniMqtt.swift; sourceTree = "<group>"; };
 		2312619B6B9B2A60AE085703 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		25E41F37ECAEF40EEB870853 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		2690130EE9B5880C49BDC8B8 /* Pods-RunnerTests.release-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release-foss.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release-foss.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +94,7 @@
 		4D7955F5BAFBE5E6C1550D68 /* Release-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Release-foss.xcconfig"; path = "Flutter/Release-foss.xcconfig"; sourceTree = "<group>"; };
 		4DF8E0910DBE9E55B8C7DAFD /* Pods-RunnerTests.profile-appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile-appstore.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile-appstore.xcconfig"; sourceTree = "<group>"; };
 		51EE7B2FA66EBEA6B7A53567 /* Pods-RunnerTests.release-appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release-appstore.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release-appstore.xcconfig"; sourceTree = "<group>"; };
+		55E847A28F6162DFAFC24BEA /* Runner.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		58671FE67FC64B335C3E8356 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		5ECB2293FDEB6B9018BCAA50 /* Release-appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Release-appstore.xcconfig"; path = "Flutter/Release-appstore.xcconfig"; sourceTree = "<group>"; };
 		6A98DF2CF9D2181A0DFF4F1F /* Pods-Runner.debug-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-play.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-play.xcconfig"; sourceTree = "<group>"; };
@@ -78,7 +107,9 @@
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7BBA980CF91E3CDE1C910B84 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7E26D49AB65DE3AEC19A781F /* Pods-RunnerTests.debug-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug-foss.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug-foss.xcconfig"; sourceTree = "<group>"; };
+		81A6B916C6F3F0AE304014C8 /* DeviceWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceWidget.swift; sourceTree = "<group>"; };
 		840F6466C32E3C09788810DE /* ServiceFinder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServiceFinder.swift; sourceTree = "<group>"; };
+		84C894DCA45FBF4745030442 /* ZigDashWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = ZigDashWidgets.entitlements; sourceTree = "<group>"; };
 		86B1C467757171FBEA741AB0 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		8CBA422BB5BF4E2081F9A271 /* Profile-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Profile-play.xcconfig"; path = "Flutter/Profile-play.xcconfig"; sourceTree = "<group>"; };
 		8E1C8B83E25A2354B8589591 /* Release-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Release-play.xcconfig"; path = "Flutter/Release-play.xcconfig"; sourceTree = "<group>"; };
@@ -89,10 +120,14 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A09016305B8CEC341EB76E10 /* ZigDashWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ZigDashWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A35291AF8B9EBAD0AD6ECE4B /* ProBilling.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProBilling.swift; sourceTree = "<group>"; };
+		AB4C5B5A45393361441119C9 /* DeviceCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceCommand.swift; sourceTree = "<group>"; };
+		AC441976F59576BAA829510E /* Widgets.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Widgets.xcconfig; path = Flutter/Widgets.xcconfig; sourceTree = "<group>"; };
 		B5A1CD69E3D76CCB892D7308 /* Pods-Runner.profile-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-play.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-play.xcconfig"; sourceTree = "<group>"; };
 		B5F984A8A93A792C1BA44B69 /* Pods-RunnerTests.debug-appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug-appstore.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug-appstore.xcconfig"; sourceTree = "<group>"; };
 		BF2B933C00E66A99803837FC /* AppChannel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppChannel.swift; sourceTree = "<group>"; };
+		C2F1CD51E38B09F71D6B3204 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		D407A753DF7AA0D7133B36AF /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		D80832E69FE8DC801B96318C /* Profile-foss.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Profile-foss.xcconfig"; path = "Flutter/Profile-foss.xcconfig"; sourceTree = "<group>"; };
 		DB201A52DB2F252B9AB0E785 /* Debug-play.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Debug-play.xcconfig"; path = "Flutter/Debug-play.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +157,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A9B16D9123A8306E9514DDE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75CFB040EA8AAA289CC5F5AA /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -131,6 +174,28 @@
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
 			);
 			path = RunnerTests;
+			sourceTree = "<group>";
+		};
+		866F86CBAE286F50A3F03419 /* ZigDashWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				216FBD64E5AED98E2FA32981 /* MiniMqtt.swift */,
+				196E407B8571F920DA96495A /* WidgetStore.swift */,
+				AB4C5B5A45393361441119C9 /* DeviceCommand.swift */,
+				81A6B916C6F3F0AE304014C8 /* DeviceWidget.swift */,
+				1031C35274CF11342AF98AA5 /* Info.plist */,
+				84C894DCA45FBF4745030442 /* ZigDashWidgets.entitlements */,
+			);
+			name = ZigDashWidgets;
+			path = ZigDashWidgets;
+			sourceTree = "<group>";
+		};
+		90C17A1492209D4A21725CF2 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				C2F1CD51E38B09F71D6B3204 /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -150,6 +215,7 @@
 				EE5AD801BA3C3DE76891231F /* Profile-appstore.xcconfig */,
 				8CBA422BB5BF4E2081F9A271 /* Profile-play.xcconfig */,
 				D80832E69FE8DC801B96318C /* Profile-foss.xcconfig */,
+				AC441976F59576BAA829510E /* Widgets.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -163,6 +229,7 @@
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				EA71C674006A854CD6493AC1 /* Pods */,
 				B96C55CFFECD2897E29B5020 /* Frameworks */,
+				866F86CBAE286F50A3F03419 /* ZigDashWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -171,6 +238,7 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
+				A09016305B8CEC341EB76E10 /* ZigDashWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -190,6 +258,7 @@
 				A35291AF8B9EBAD0AD6ECE4B /* ProBilling.swift */,
 				2312619B6B9B2A60AE085703 /* PrivacyInfo.xcprivacy */,
 				840F6466C32E3C09788810DE /* ServiceFinder.swift */,
+				55E847A28F6162DFAFC24BEA /* Runner.entitlements */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -199,6 +268,7 @@
 			children = (
 				4D658972671406A39E5FA940 /* Pods_Runner.framework */,
 				00459A6EAEE0177D7B5DF7FB /* Pods_RunnerTests.framework */,
+				90C17A1492209D4A21725CF2 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -238,6 +308,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1904B9341EE9A3C3D0A6DDD5 /* ZigDashWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6FB16FE5408B96E7007F7BF /* Build configuration list for PBXNativeTarget "ZigDashWidgets" */;
+			buildPhases = (
+				1F1C9BE9D605BB6FEA8C1F4E /* Sources */,
+				A9B16D9123A8306E9514DDE7 /* Frameworks */,
+				4C73F8F8703D71183790CDEE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZigDashWidgets;
+			productName = ZigDashWidgets;
+			productReference = A09016305B8CEC341EB76E10 /* ZigDashWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		331C8080294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
@@ -267,12 +354,14 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				4E2103CB5A02DCFE0ED104D2 /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				19A59333692B960D238389BB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8F2C615470DB7CC4E5A995C3 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			packageProductDependencies = (
@@ -320,12 +409,20 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
+				1904B9341EE9A3C3D0A6DDD5 /* ZigDashWidgets */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		331C807F294A63A400263BE5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C73F8F8703D71183790CDEE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -442,6 +539,17 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1F1C9BE9D605BB6FEA8C1F4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A945D82877B2B683A9A464F /* MiniMqtt.swift in Sources */,
+				8C317C175CC38C30F31A86EE /* WidgetStore.swift in Sources */,
+				95C2C7BF56A51DD7782D4369 /* DeviceCommand.swift in Sources */,
+				25EC71A0C7B41F1359F9EF27 /* DeviceWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		331C807D294A63A400263BE5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -459,6 +567,7 @@
 				464AE08AB9B96844039875F6 /* AppChannel.swift in Sources */,
 				E5474E6B5982A2266E38287A /* ProBilling.swift in Sources */,
 				F6239BB0560FD9D77BC3AA6B /* ServiceFinder.swift in Sources */,
+				1F6F79D66C8850E9F8D2D90F /* WidgetStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +578,12 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		8F2C615470DB7CC4E5A995C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ZigDashWidgets;
+			target = 1904B9341EE9A3C3D0A6DDD5 /* ZigDashWidgets */;
+			targetProxy = DA8A467ED2D6568AF4343798 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -498,6 +613,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -519,6 +635,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -587,6 +704,55 @@
 			};
 			name = "Profile-play";
 		};
+		2125E9C9C543BB759F027186 /* Release-foss */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-foss";
+		};
+		226EBC76E70DDE86098A0558 /* Debug-play */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-play";
+		};
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -645,6 +811,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -735,6 +902,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -833,12 +1001,38 @@
 			};
 			name = "Profile-play";
 		};
+		3DB51627A461D103622EC06C /* Profile */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
 		4739AB26C54F47DC15F72D0A /* Debug-appstore */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E5B02BF091D5EE9CE98BF07C /* Debug-appstore.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -854,6 +1048,56 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-appstore";
+		};
+		4CFE92CEC8452F5A77714E78 /* Profile-foss */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Profile-foss";
+		};
+		4E4ACBFEE472313CE464F2A6 /* Release-appstore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-appstore";
 		};
 		59A6C07F5CA5612704BCA8A6 /* Release-play */ = {
 			isa = XCBuildConfiguration;
@@ -1005,6 +1249,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1036,6 +1281,31 @@
 			};
 			name = "Release-play";
 		};
+		6BE2D6BF77D395EE5609BD68 /* Profile-appstore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Profile-appstore";
+		};
 		728D18CB68D2A57D00231256 /* Profile-appstore */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4DF8E0910DBE9E55B8C7DAFD /* Pods-RunnerTests.profile-appstore.xcconfig */;
@@ -1051,6 +1321,30 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = "Profile-appstore";
+		};
+		7759EDB056B5B156D706D6EC /* Debug-appstore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-appstore";
 		};
 		7C1F11616FA4829D1BB98E2D /* Debug-play */ = {
 			isa = XCBuildConfiguration;
@@ -1164,6 +1458,31 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Release-appstore";
+		};
+		7DBA093683F55602B9A110B9 /* Release-play */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-play";
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1282,6 +1601,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1304,6 +1624,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1325,6 +1646,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1405,6 +1727,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1420,12 +1743,38 @@
 			};
 			name = "Release-play";
 		};
+		AECD841BA87DAA8B3E6D4AEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		BA114DC939BF54CAF940848D /* Release-appstore */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5ECB2293FDEB6B9018BCAA50 /* Release-appstore.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1440,6 +1789,31 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-appstore";
+		};
+		BD58E8AAEA930E63BE5BF9A2 /* Profile-play */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Profile-play";
 		};
 		CD006EA5CB2CE187ED036CD2 /* Profile-appstore */ = {
 			isa = XCBuildConfiguration;
@@ -1552,12 +1926,61 @@
 			};
 			name = "Debug-foss";
 		};
+		D749AB2FAED1824AF78A9FF2 /* Debug-foss */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-foss";
+		};
+		DDCA19E70D1C3C02959C6FB3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC441976F59576BAA829510E /* Widgets.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = ZigDashWidgets/ZigDashWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ZigDashWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		E57DDE8DC6716FBED0CCCDB3 /* Profile-foss */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D80832E69FE8DC801B96318C /* Profile-foss.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -1665,6 +2088,25 @@
 				0FFD7C15C505A86BB576EF1D /* Profile-appstore */,
 				11BB1B2C8286A69831327568 /* Profile-play */,
 				E57DDE8DC6716FBED0CCCDB3 /* Profile-foss */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A6FB16FE5408B96E7007F7BF /* Build configuration list for PBXNativeTarget "ZigDashWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDCA19E70D1C3C02959C6FB3 /* Debug */,
+				AECD841BA87DAA8B3E6D4AEE /* Release */,
+				3DB51627A461D103622EC06C /* Profile */,
+				7759EDB056B5B156D706D6EC /* Debug-appstore */,
+				226EBC76E70DDE86098A0558 /* Debug-play */,
+				D749AB2FAED1824AF78A9FF2 /* Debug-foss */,
+				4E4ACBFEE472313CE464F2A6 /* Release-appstore */,
+				7DBA093683F55602B9A110B9 /* Release-play */,
+				2125E9C9C543BB759F027186 /* Release-foss */,
+				6BE2D6BF77D395EE5609BD68 /* Profile-appstore */,
+				BD58E8AAEA930E63BE5BF9A2 /* Profile-play */,
+				4CFE92CEC8452F5A77714E78 /* Profile-foss */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

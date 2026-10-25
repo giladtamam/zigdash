@@ -19,6 +19,7 @@ import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
 import '../mqtt/providers/mqtt_manager_provider.dart';
+import 'ios_widgets.dart';
 import 'shortcut_commander.dart';
 import 'shortcut_service.dart';
 import 'shortcut_store.dart';
@@ -91,6 +92,7 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
           await service.resyncControls();
           await service.resyncScenes();
           await service.resyncGroups();
+          await _shareIos();
           // Tiles follow renames and deleted Homes without a restart.
           await service.resyncTiles();
           await refreshShortcutTiles();
@@ -152,13 +154,25 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
     }
   }
 
+  AppLocalizations? _l10n;
+
+  /// The iOS widgets' copy of the dashboards (ios_widgets.dart).
+  Future<void> _shareIos() async {
+    final l10n = _l10n;
+    if (l10n == null) return;
+    await shareIosWidgets(
+        ref.read(appDatabaseProvider), ref.read(sharedPreferencesProvider), l10n);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final locale = l10n.localeName;
+    _l10n = l10n;
     if (_wordsFor != locale) {
       _wordsFor = locale;
       unawaited(ref.read(shortcutServiceProvider).writeStrings(l10n));
+      unawaited(_shareIos());
     }
     ref.watch(shortcutLiveStateProvider(l10n));
     return widget.child;

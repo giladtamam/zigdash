@@ -1,6 +1,7 @@
 import AudioToolbox
 import Flutter
 import UIKit
+import WidgetKit
 
 /// The iOS side of `zigdash/app` (MainActivity.kt on Android). Methods with
 /// no iOS counterpart (tiles, widgets, screen pinning, VAPID keys) answer
@@ -36,6 +37,12 @@ final class AppChannel {
       result(nil)
     case "shareText":
       result(share((args?["text"] as? String) ?? ""))
+    case "shareWidgets":
+      // ios_widgets.dart: the widgets' data and the direct Homes' passwords.
+      WidgetStore.defaults.set(args?["data"] as? String, forKey: WidgetStore.dataKey)
+      WidgetStore.setPasswords((args?["passwords"] as? [String: String]) ?? [:])
+      WidgetCenter.shared.reloadAllTimelines()
+      result(nil)
     case "findServices":
       // Kept alive by its own callback until the timeout.
       let finder = ServiceFinder()
