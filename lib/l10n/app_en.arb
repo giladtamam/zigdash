@@ -1620,5 +1620,15 @@
   "remoteReconnectHub": "Reconnect the hub",
   "remoteTurnOffConfirm": "This phone leaves remote control and your hub disconnects from the relay. A key backup saved from this phone stops working; other phones keep their access until you remove them.",
   "remoteHomeId": "Home ID {id}",
-  "@remoteHomeId": {"placeholders": {"id": {}}}
+  "@remoteHomeId": {"placeholders": {"id": {}}},
+  "alertsHintTitle": "Get notified on this phone",
+  "@alertsHintTitle": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "alertsHintBody": "A leak, smoke, an opened door or a low battery can send a notification to this phone, even with ZigDash closed.",
+  "@alertsHintBody": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "alertsHintButton": "Set up Alerts",
+  "@alertsHintButton": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "alertsHintNotNow": "Not now",
+  "@alertsHintNotNow": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "guidedNoZ2mBody": "An MQTT broker answers here, but Zigbee2MQTT isn't sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant's ZHA, ZigDash can't see them: it works with Zigbee2MQTT.",
+  "@guidedNoZ2mBody": {"description": "Test & connect: a broker with no Zigbee2MQTT on it (3.2.1)."}
 }

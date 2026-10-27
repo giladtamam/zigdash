@@ -1443,5 +1443,10 @@
   "remotePairDone": "Fernsteuerung ist an für {home}",
   "remoteReconnectHub": "Hub neu verbinden",
   "remoteTurnOffConfirm": "Dieses Telefon verlässt die Fernsteuerung, und Ihr Hub trennt sich vom Relay. Ein von diesem Telefon gespeichertes Schlüssel-Backup funktioniert dann nicht mehr; andere Telefone behalten ihren Zugang, bis Sie sie entfernen.",
-  "remoteHomeId": "Zuhause-ID {id}"
+  "remoteHomeId": "Zuhause-ID {id}",
+  "alertsHintTitle": "Benachrichtigungen auf diesem Telefon",
+  "alertsHintBody": "Ein Leck, Rauch, eine geöffnete Tür oder eine schwache Batterie können eine Benachrichtigung an dieses Telefon senden, auch wenn ZigDash geschlossen ist.",
+  "alertsHintButton": "Alarme einrichten",
+  "alertsHintNotNow": "Nicht jetzt",
+  "guidedNoZ2mBody": "Hier antwortet ein MQTT-Broker, aber Zigbee2MQTT sendet nichts darüber. Prüfen Sie, ob Zigbee2MQTT gestartet ist und diesen Broker nutzt und ob das Basis-Topic zu seinen Einstellungen passt. Wenn Ihre Zigbee-Geräte in ZHA von Home Assistant sind, kann ZigDash sie nicht sehen: Es arbeitet mit Zigbee2MQTT."
 }

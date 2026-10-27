@@ -1443,5 +1443,10 @@
   "remotePairDone": "Bediening op afstand staat aan voor {home}",
   "remoteReconnectHub": "Hub opnieuw verbinden",
   "remoteTurnOffConfirm": "Deze telefoon stopt met bediening op afstand en je hub verbreekt de verbinding met de relay. Een sleutelback-up van deze telefoon werkt dan niet meer; andere telefoons houden hun toegang tot je ze verwijdert.",
-  "remoteHomeId": "Huis-ID {id}"
+  "remoteHomeId": "Huis-ID {id}",
+  "alertsHintTitle": "Meldingen op deze telefoon",
+  "alertsHintBody": "Een lek, rook, een geopende deur of een bijna lege batterij kan een melding naar deze telefoon sturen, ook als ZigDash dicht is.",
+  "alertsHintButton": "Alarmen instellen",
+  "alertsHintNotNow": "Niet nu",
+  "guidedNoZ2mBody": "Hier antwoordt een MQTT-broker, maar Zigbee2MQTT stuurt er niets over. Controleer of Zigbee2MQTT gestart is en deze broker gebruikt, en of het basistopic overeenkomt met de instellingen. Staan je Zigbee-apparaten in ZHA van Home Assistant, dan kan ZigDash ze niet zien: het werkt met Zigbee2MQTT."
 }

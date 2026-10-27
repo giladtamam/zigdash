@@ -35,9 +35,30 @@ import '../discovery/models/z2m_device.dart';
 import '../discovery/providers/discovery_provider.dart';
 import '../onboarding/first_run.dart';
 import '../onboarding/setup/recommendation_policy.dart';
+import '../onboarding/setup/setup_coordinator.dart' show Z2mFetchResult;
 import '../onboarding/setup/setup_creator.dart';
+import '../onboarding/setup/z2m_probe.dart';
+import '../connections/discovery/z2m_frontend_fetch.dart';
 
 enum _Phase { form, running, failed, success }
+
+/// Why a broker that connected with no devices isn't a home yet (3.2.1).
+enum _Empty { none, notZigbee2Mqtt, listMissing }
+
+/// Asks the broker whether Zigbee2MQTT is there (3.2.1), as setup does.
+final guidedZ2mCheckProvider =
+    Provider<Future<Z2mFetchResult> Function(BrokerConfig, String, String)>(
+      (ref) => Z2mProbeFetcher().fetch,
+    );
+
+/// The device list from Zigbee2MQTT's web page, for a broker that lost it.
+final guidedPageDevicesProvider =
+    Provider<Future<List<Z2mDevice>?> Function(String host)>(
+      (ref) => (host) async {
+        final list = await fetchZ2mDeviceList(host, 8080);
+        return list == null ? null : parseBridgeDevices(list);
+      },
+    );
 
 /// The guided-connect wizard (v1.9): Z2M preset → diagnostic ladder →
 /// "Found N devices" success moment. Auto-saves the connection on success.
@@ -77,6 +98,11 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
   bool _pairingRequested = false;
   bool _saveFailed = false;
   bool _building = false;
+  _Empty _empty = _Empty.none;
+
+  /// The list from Zigbee2MQTT's page, when the broker lost it (3.2.1).
+  List<Z2mDevice>? _pageDevices;
+  bool _triedOtherBase = false;
 
   @override
   void dispose() {
@@ -140,8 +166,10 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
       _report = null;
       _pairingRequested = false;
       _saveFailed = false;
+      _empty = _Empty.none;
+      _pageDevices = null;
     });
-    final DiagnosticsReport report;
+    DiagnosticsReport report;
     try {
       report = await diagnostics.run(
         config: cfg,
@@ -171,6 +199,56 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
             portClass: portClassOf(port),
           ),
         );
+
+    if (report.connected && report.deviceNames.isEmpty) {
+      // 3.2.1: a broker with nothing on it isn't a home. Ask, as setup
+      // does, whether Zigbee2MQTT is there before saving one.
+      Z2mFetchResult? check;
+      try {
+        check = await ref.read(guidedZ2mCheckProvider)(cfg, _password.text, base);
+      } catch (_) {}
+      if (!mounted) return;
+      if (check != null && !check.detected) {
+        final other = check.otherBases.firstOrNull;
+        if (other != null && !_triedOtherBase) {
+          // Zigbee2MQTT under its own base topic: use it and check again.
+          _triedOtherBase = true;
+          _base.text = other;
+          return _start();
+        }
+        setState(() {
+          _report = report;
+          _empty = _Empty.notZigbee2Mqtt;
+          _failures++;
+          _phase = _Phase.failed;
+        });
+        return;
+      }
+      if (check != null && check.devicesMissing) {
+        // The broker lost the list: Zigbee2MQTT's web page still has it.
+        List<Z2mDevice>? page;
+        try {
+          page = await ref.read(guidedPageDevicesProvider)(host);
+        } catch (_) {}
+        if (!mounted) return;
+        if (page == null || page.isEmpty) {
+          setState(() {
+            _report = report;
+            _empty = _Empty.listMissing;
+            _failures++;
+            _phase = _Phase.failed;
+          });
+          return;
+        }
+        _pageDevices = page;
+        report = DiagnosticsReport(
+          steps: report.steps,
+          connected: true,
+          candidatesTried: report.candidatesTried,
+          deviceNames: [for (final d in page) d.displayName]..sort(),
+        );
+      }
+    }
 
     if (report.connected) {
       // Auto-save per the spec: on success the connection saves with
@@ -244,7 +322,9 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
       );
       final List<Z2mDevice> devices;
       try {
-        devices = await ref.read(discoveredDevicesProvider(args).future);
+        devices =
+            _pageDevices ??
+            await ref.read(discoveredDevicesProvider(args).future);
       } finally {
         keepAlive.close();
       }
@@ -450,7 +530,17 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
               child: Text(context.l10n.guidedSaveFailed),
             ),
           ),
-        if (!_saveFailed) ...[
+        if (_empty != _Empty.none) ...[
+          _EmptyBrokerCard(
+            title: _empty == _Empty.notZigbee2Mqtt
+                ? context.l10n.setupErrNotZ2mTitle
+                : context.l10n.setupErrListMissingTitle,
+            body: _empty == _Empty.notZigbee2Mqtt
+                ? context.l10n.guidedNoZ2mBody
+                : context.l10n.setupErrListMissingBody,
+          ),
+          const SizedBox(height: 24),
+        ] else if (!_saveFailed) ...[
           DiagnosticsLadderView(
             steps: report.steps,
             showTriedHint: true,
@@ -617,6 +707,35 @@ class _PairingButton extends ConsumerWidget {
       onPressed: connected ? onPressed : null,
       icon: const Icon(Icons.add_circle_outline),
       label: Text(context.l10n.startPairing),
+    );
+  }
+}
+
+/// A broker that answered with no Zigbee2MQTT, or without its device list
+/// (3.2.1): said plainly instead of saving an empty home.
+class _EmptyBrokerCard extends StatelessWidget {
+  const _EmptyBrokerCard({required this.title, required this.body});
+
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      key: const Key('guided-empty-broker'),
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(body, style: theme.textTheme.bodyMedium),
+          ],
+        ),
+      ),
     );
   }
 }

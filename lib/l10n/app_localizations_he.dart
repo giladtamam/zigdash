@@ -4645,4 +4645,21 @@ class AppLocalizationsHe extends AppLocalizations {
   String remoteHomeId(Object id) {
     return 'מזהה בית $id';
   }
+
+  @override
+  String get alertsHintTitle => 'קבלו התראות בטלפון הזה';
+
+  @override
+  String get alertsHintBody =>
+      'נזילה, עשן, דלת שנפתחה או סוללה חלשה יכולים לשלוח התראה לטלפון הזה, גם כש-ZigDash סגור.';
+
+  @override
+  String get alertsHintButton => 'הגדרת התראות';
+
+  @override
+  String get alertsHintNotNow => 'לא עכשיו';
+
+  @override
+  String get guidedNoZ2mBody =>
+      'ברוקר MQTT עונה כאן, אבל Zigbee2MQTT לא שולח דרכו כלום. בדקו ש-Zigbee2MQTT פועל ומשתמש בברוקר הזה, ושה-base topic תואם להגדרות שלו. אם מכשירי ה-Zigbee שלכם נמצאים ב-ZHA של Home Assistant, ‏ZigDash לא יכול לראות אותם: הוא עובד עם Zigbee2MQTT.';
 }

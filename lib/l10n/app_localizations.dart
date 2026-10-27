@@ -8273,6 +8273,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home ID {id}'**
   String remoteHomeId(Object id);
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified on this phone'**
+  String get alertsHintTitle;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'A leak, smoke, an opened door or a low battery can send a notification to this phone, even with ZigDash closed.'**
+  String get alertsHintBody;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Alerts'**
+  String get alertsHintButton;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get alertsHintNotNow;
+
+  /// Test & connect: a broker with no Zigbee2MQTT on it (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'An MQTT broker answers here, but Zigbee2MQTT isn\'t sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant\'s ZHA, ZigDash can\'t see them: it works with Zigbee2MQTT.'**
+  String get guidedNoZ2mBody;
 }
 
 class _AppLocalizationsDelegate

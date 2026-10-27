@@ -4712,4 +4712,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String remoteHomeId(Object id) {
     return 'ID del hogar $id';
   }
+
+  @override
+  String get alertsHintTitle => 'Recibe avisos en este teléfono';
+
+  @override
+  String get alertsHintBody =>
+      'Una fuga, humo, una puerta abierta o una batería baja pueden enviar una notificación a este teléfono, incluso con ZigDash cerrado.';
+
+  @override
+  String get alertsHintButton => 'Configurar alertas';
+
+  @override
+  String get alertsHintNotNow => 'Ahora no';
+
+  @override
+  String get guidedNoZ2mBody =>
+      'Aquí responde un broker MQTT, pero Zigbee2MQTT no envía nada por él. Comprueba que Zigbee2MQTT está iniciado y usa este broker, y que el topic base coincide con su configuración. Si tus dispositivos Zigbee están en ZHA de Home Assistant, ZigDash no puede verlos: funciona con Zigbee2MQTT.';
 }

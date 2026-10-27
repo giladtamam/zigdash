@@ -1,0 +1,1 @@
+Alerts are easier to find: the Automations tab now offers to send notifications to this phone for leaks, smoke, opened doors and low batteries. And entering broker details by hand no longer ends in an empty home: if Zigbee2MQTT isn't on that broker, or its device list is missing, ZigDash says so and what to check.

@@ -1368,5 +1368,10 @@
   "remotePairDone": "Contrôle à distance activé pour {home}",
   "remoteReconnectHub": "Reconnecter le hub",
   "remoteTurnOffConfirm": "Ce téléphone quitte le contrôle à distance et votre hub se déconnecte du relais. Une sauvegarde de clé enregistrée depuis ce téléphone ne fonctionne plus ; les autres téléphones gardent leur accès jusqu'à ce que vous les retiriez.",
-  "remoteHomeId": "ID de la maison {id}"
+  "remoteHomeId": "ID de la maison {id}",
+  "alertsHintTitle": "Soyez prévenu sur ce téléphone",
+  "alertsHintBody": "Une fuite, de la fumée, une porte ouverte ou une pile faible peuvent envoyer une notification à ce téléphone, même ZigDash fermé.",
+  "alertsHintButton": "Configurer les alertes",
+  "alertsHintNotNow": "Pas maintenant",
+  "guidedNoZ2mBody": "Un broker MQTT répond ici, mais Zigbee2MQTT n'y envoie rien. Vérifiez que Zigbee2MQTT est démarré et utilise ce broker, et que le topic de base correspond à ses réglages. Si vos appareils Zigbee sont dans ZHA de Home Assistant, ZigDash ne peut pas les voir : il fonctionne avec Zigbee2MQTT."
 }
