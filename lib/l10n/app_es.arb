@@ -1443,5 +1443,9 @@
   "remotePairDone": "Control remoto activado para {home}",
   "remoteReconnectHub": "Volver a conectar el hub",
   "remoteTurnOffConfirm": "Este teléfono deja el control remoto y tu hub se desconecta del relé. Una copia de clave guardada desde este teléfono deja de funcionar; los demás teléfonos conservan su acceso hasta que los quites.",
-  "remoteHomeId": "ID del hogar {id}"
+  "remoteHomeId": "ID del hogar {id}",
+  "alertsHintTitle": "Recibe avisos en este teléfono",
+  "alertsHintBody": "Una fuga, humo, una puerta abierta o una batería baja pueden enviar una notificación a este teléfono, incluso con ZigDash cerrado.",
+  "alertsHintButton": "Configurar alertas",
+  "alertsHintNotNow": "Ahora no"
 }

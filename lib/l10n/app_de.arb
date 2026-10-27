@@ -1443,5 +1443,9 @@
   "remotePairDone": "Fernsteuerung ist an für {home}",
   "remoteReconnectHub": "Hub neu verbinden",
   "remoteTurnOffConfirm": "Dieses Telefon verlässt die Fernsteuerung, und Ihr Hub trennt sich vom Relay. Ein von diesem Telefon gespeichertes Schlüssel-Backup funktioniert dann nicht mehr; andere Telefone behalten ihren Zugang, bis Sie sie entfernen.",
-  "remoteHomeId": "Zuhause-ID {id}"
+  "remoteHomeId": "Zuhause-ID {id}",
+  "alertsHintTitle": "Benachrichtigungen auf diesem Telefon",
+  "alertsHintBody": "Ein Leck, Rauch, eine geöffnete Tür oder eine schwache Batterie können eine Benachrichtigung an dieses Telefon senden, auch wenn ZigDash geschlossen ist.",
+  "alertsHintButton": "Alarme einrichten",
+  "alertsHintNotNow": "Nicht jetzt"
 }

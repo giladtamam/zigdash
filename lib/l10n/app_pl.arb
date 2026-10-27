@@ -1438,5 +1438,9 @@
   "remotePairDone": "Sterowanie zdalne włączone dla: {home}",
   "remoteReconnectHub": "Połącz hub ponownie",
   "remoteTurnOffConfirm": "Ten telefon opuszcza sterowanie zdalne, a hub rozłącza się z przekaźnikiem. Kopia klucza zapisana z tego telefonu przestanie działać; inne telefony zachowają dostęp, dopóki ich nie usuniesz.",
-  "remoteHomeId": "ID domu {id}"
+  "remoteHomeId": "ID domu {id}",
+  "alertsHintTitle": "Powiadomienia na tym telefonie",
+  "alertsHintBody": "Wyciek, dym, otwarte drzwi lub słaba bateria mogą wysłać powiadomienie na ten telefon, nawet gdy ZigDash jest zamknięty.",
+  "alertsHintButton": "Skonfiguruj alarmy",
+  "alertsHintNotNow": "Nie teraz"
 }

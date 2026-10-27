@@ -1358,5 +1358,9 @@
   "remotePairDone": "Dálkové ovládání zapnuto pro {home}",
   "remoteReconnectHub": "Znovu připojit hub",
   "remoteTurnOffConfirm": "Tento telefon opustí dálkové ovládání a hub se odpojí od relé. Záloha klíče uložená z tohoto telefonu přestane fungovat; ostatní telefony si přístup ponechají, dokud je neodeberete.",
-  "remoteHomeId": "ID domova {id}"
+  "remoteHomeId": "ID domova {id}",
+  "alertsHintTitle": "Upozornění na tento telefon",
+  "alertsHintBody": "Únik vody, kouř, otevřené dveře nebo slabá baterie mohou poslat upozornění na tento telefon, i když je ZigDash zavřený.",
+  "alertsHintButton": "Nastavit upozornění",
+  "alertsHintNotNow": "Teď ne"
 }

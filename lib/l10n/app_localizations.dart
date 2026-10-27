@@ -8273,6 +8273,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home ID {id}'**
   String remoteHomeId(Object id);
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified on this phone'**
+  String get alertsHintTitle;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'A leak, smoke, an opened door or a low battery can send a notification to this phone, even with ZigDash closed.'**
+  String get alertsHintBody;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Alerts'**
+  String get alertsHintButton;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get alertsHintNotNow;
 }
 
 class _AppLocalizationsDelegate

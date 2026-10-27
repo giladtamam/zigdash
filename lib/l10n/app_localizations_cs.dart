@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4694,4 +4695,17 @@ class AppLocalizationsCs extends AppLocalizations {
   String remoteHomeId(Object id) {
     return 'ID domova $id';
   }
+
+  @override
+  String get alertsHintTitle => 'Upozornění na tento telefon';
+
+  @override
+  String get alertsHintBody =>
+      'Únik vody, kouř, otevřené dveře nebo slabá baterie mohou poslat upozornění na tento telefon, i když je ZigDash zavřený.';
+
+  @override
+  String get alertsHintButton => 'Nastavit upozornění';
+
+  @override
+  String get alertsHintNotNow => 'Teď ne';
 }

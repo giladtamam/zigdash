@@ -9,6 +9,7 @@ import '../l10n/app_localizations.dart';
 import '../features/pro/pro.dart';
 import '../features/pro/pro_screen.dart';
 import '../core/analytics/analytics.dart';
+import '../alerts/alerts_hint_card.dart';
 import '../features/home/home_shell.dart' show HomeTitle, SettingsAction;
 import 'automation.dart';
 import 'automation_editor_screen.dart';
@@ -338,6 +339,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       case HubEnginePhase.running:
         final r = v.report;
         return [
+          AlertsHintCard(connectionId: widget.connectionId),
           if ((r?.rulesLoaded ?? 0) == 0)
             _Message(title: l10n.engineRunningTitle, body: l10n.autoEmptyBody),
           if (v.clockOff) ...[

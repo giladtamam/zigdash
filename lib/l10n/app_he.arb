@@ -1512,5 +1512,9 @@
   "remotePairDone": "שליטה מרחוק פעילה עבור {home}",
   "remoteReconnectHub": "חיבור הרכזת מחדש",
   "remoteTurnOffConfirm": "הטלפון הזה יוצא מהשליטה מרחוק והרכזת מתנתקת מהממסר. גיבוי מפתח שנשמר מהטלפון הזה יפסיק לעבוד; טלפונים אחרים שומרים על הגישה עד שמסירים אותם.",
-  "remoteHomeId": "מזהה בית {id}"
+  "remoteHomeId": "מזהה בית {id}",
+  "alertsHintTitle": "קבלו התראות בטלפון הזה",
+  "alertsHintBody": "נזילה, עשן, דלת שנפתחה או סוללה חלשה יכולים לשלוח התראה לטלפון הזה, גם כש-ZigDash סגור.",
+  "alertsHintButton": "הגדרת התראות",
+  "alertsHintNotNow": "לא עכשיו"
 }

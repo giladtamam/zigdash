@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4692,4 +4693,17 @@ class AppLocalizationsNb extends AppLocalizations {
   String remoteHomeId(Object id) {
     return 'Hjem-ID $id';
   }
+
+  @override
+  String get alertsHintTitle => 'Få varsler på denne telefonen';
+
+  @override
+  String get alertsHintBody =>
+      'En lekkasje, røyk, en åpnet dør eller et svakt batteri kan sende et varsel til denne telefonen, også når ZigDash er lukket.';
+
+  @override
+  String get alertsHintButton => 'Sett opp varsler';
+
+  @override
+  String get alertsHintNotNow => 'Ikke nå';
 }

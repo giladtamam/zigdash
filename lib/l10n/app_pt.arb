@@ -1403,5 +1403,9 @@
   "remotePairDone": "Controle remoto ativado para {home}",
   "remoteReconnectHub": "Reconectar o hub",
   "remoteTurnOffConfirm": "Este celular sai do controle remoto e seu hub se desconecta do relay. Um backup de chave salvo deste celular para de funcionar; os outros celulares mantêm o acesso até você removê-los.",
-  "remoteHomeId": "ID da casa {id}"
+  "remoteHomeId": "ID da casa {id}",
+  "alertsHintTitle": "Receba avisos neste telefone",
+  "alertsHintBody": "Um vazamento, fumaça, uma porta aberta ou uma bateria fraca podem enviar uma notificação para este telefone, mesmo com o ZigDash fechado.",
+  "alertsHintButton": "Configurar alertas",
+  "alertsHintNotNow": "Agora não"
 }

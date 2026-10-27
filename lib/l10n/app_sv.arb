@@ -1443,5 +1443,9 @@
   "remotePairDone": "Fjärrstyrning är på för {home}",
   "remoteReconnectHub": "Anslut hubben igen",
   "remoteTurnOffConfirm": "Den här telefonen lämnar fjärrstyrningen och hubben kopplas från reläet. En nyckelbackup sparad från den här telefonen slutar fungera; andra telefoner behåller sin åtkomst tills du tar bort dem.",
-  "remoteHomeId": "Hem-ID {id}"
+  "remoteHomeId": "Hem-ID {id}",
+  "alertsHintTitle": "Få aviseringar på den här telefonen",
+  "alertsHintBody": "En läcka, rök, en öppnad dörr eller ett svagt batteri kan skicka en avisering till den här telefonen, även när ZigDash är stängt.",
+  "alertsHintButton": "Ställ in larm",
+  "alertsHintNotNow": "Inte nu"
 }
