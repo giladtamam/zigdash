@@ -8303,6 +8303,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An MQTT broker answers here, but Zigbee2MQTT isn\'t sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant\'s ZHA, ZigDash can\'t see them: it works with Zigbee2MQTT.'**
   String get guidedNoZ2mBody;
+
+  /// Devices tab: Zigbee2MQTT found under another base topic (3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT is on this broker with the base topic “{found}”, but this Home looks for “{current}”.'**
+  String devicesOtherBaseBody(String found, String current);
+
+  /// Devices tab: button that switches the Home to the base topic found (3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Use “{found}”'**
+  String devicesUseBase(String found);
+
+  /// Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Change connection'**
+  String get devicesChangeConnection;
 }
 
 class _AppLocalizationsDelegate

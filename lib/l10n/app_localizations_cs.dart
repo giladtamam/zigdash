@@ -4711,4 +4711,17 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get guidedNoZ2mBody =>
       'Odpovídá tu MQTT broker, ale Zigbee2MQTT přes něj nic neposílá. Zkontrolujte, že Zigbee2MQTT běží a používá tento broker a že základní topic odpovídá jeho nastavení. Pokud máte zařízení Zigbee v ZHA v Home Assistantu, ZigDash je nevidí: pracuje se Zigbee2MQTT.';
+
+  @override
+  String devicesOtherBaseBody(String found, String current) {
+    return 'Zigbee2MQTT je na tomto brokeru se základním topicem „$found“, ale tento domov hledá „$current“.';
+  }
+
+  @override
+  String devicesUseBase(String found) {
+    return 'Použít „$found“';
+  }
+
+  @override
+  String get devicesChangeConnection => 'Změnit připojení';
 }

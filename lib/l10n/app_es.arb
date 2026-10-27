@@ -1448,5 +1448,8 @@
   "alertsHintBody": "Una fuga, humo, una puerta abierta o una batería baja pueden enviar una notificación a este teléfono, incluso con ZigDash cerrado.",
   "alertsHintButton": "Configurar alertas",
   "alertsHintNotNow": "Ahora no",
-  "guidedNoZ2mBody": "Aquí responde un broker MQTT, pero Zigbee2MQTT no envía nada por él. Comprueba que Zigbee2MQTT está iniciado y usa este broker, y que el topic base coincide con su configuración. Si tus dispositivos Zigbee están en ZHA de Home Assistant, ZigDash no puede verlos: funciona con Zigbee2MQTT."
+  "guidedNoZ2mBody": "Aquí responde un broker MQTT, pero Zigbee2MQTT no envía nada por él. Comprueba que Zigbee2MQTT está iniciado y usa este broker, y que el topic base coincide con su configuración. Si tus dispositivos Zigbee están en ZHA de Home Assistant, ZigDash no puede verlos: funciona con Zigbee2MQTT.",
+  "devicesOtherBaseBody": "Zigbee2MQTT está en este broker con el topic base «{found}», pero esta casa busca «{current}».",
+  "devicesUseBase": "Usar «{found}»",
+  "devicesChangeConnection": "Cambiar conexión"
 }

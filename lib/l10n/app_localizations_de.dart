@@ -4737,4 +4737,17 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get guidedNoZ2mBody =>
       'Hier antwortet ein MQTT-Broker, aber Zigbee2MQTT sendet nichts darüber. Prüfen Sie, ob Zigbee2MQTT gestartet ist und diesen Broker nutzt und ob das Basis-Topic zu seinen Einstellungen passt. Wenn Ihre Zigbee-Geräte in ZHA von Home Assistant sind, kann ZigDash sie nicht sehen: Es arbeitet mit Zigbee2MQTT.';
+
+  @override
+  String devicesOtherBaseBody(String found, String current) {
+    return 'Zigbee2MQTT ist auf diesem Broker mit dem Basis-Topic „$found“, dieses Zuhause sucht aber „$current“.';
+  }
+
+  @override
+  String devicesUseBase(String found) {
+    return '„$found“ verwenden';
+  }
+
+  @override
+  String get devicesChangeConnection => 'Verbindung ändern';
 }

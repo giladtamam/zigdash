@@ -1630,5 +1630,11 @@
   "alertsHintNotNow": "Not now",
   "@alertsHintNotNow": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
   "guidedNoZ2mBody": "An MQTT broker answers here, but Zigbee2MQTT isn't sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant's ZHA, ZigDash can't see them: it works with Zigbee2MQTT.",
-  "@guidedNoZ2mBody": {"description": "Test & connect: a broker with no Zigbee2MQTT on it (3.2.1)."}
+  "@guidedNoZ2mBody": {"description": "Test & connect: a broker with no Zigbee2MQTT on it (3.2.1)."},
+  "devicesOtherBaseBody": "Zigbee2MQTT is on this broker with the base topic “{found}”, but this Home looks for “{current}”.",
+  "@devicesOtherBaseBody": {"description": "Devices tab: Zigbee2MQTT found under another base topic (3.2.2).", "placeholders": {"found": {"type": "String"}, "current": {"type": "String"}}},
+  "devicesUseBase": "Use “{found}”",
+  "@devicesUseBase": {"description": "Devices tab: button that switches the Home to the base topic found (3.2.2).", "placeholders": {"found": {"type": "String"}}},
+  "devicesChangeConnection": "Change connection",
+  "@devicesChangeConnection": {"description": "Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2)."}
 }

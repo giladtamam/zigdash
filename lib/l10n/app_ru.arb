@@ -1443,5 +1443,8 @@
   "alertsHintBody": "Протечка, дым, открытая дверь или слабая батарея могут прислать уведомление на этот телефон, даже когда ZigDash закрыт.",
   "alertsHintButton": "Настроить тревоги",
   "alertsHintNotNow": "Не сейчас",
-  "guidedNoZ2mBody": "Здесь отвечает MQTT-брокер, но Zigbee2MQTT ничего через него не отправляет. Проверьте, что Zigbee2MQTT запущен и использует этот брокер, а базовый топик совпадает с его настройками. Если ваши Zigbee-устройства в ZHA Home Assistant, ZigDash их не видит: он работает с Zigbee2MQTT."
+  "guidedNoZ2mBody": "Здесь отвечает MQTT-брокер, но Zigbee2MQTT ничего через него не отправляет. Проверьте, что Zigbee2MQTT запущен и использует этот брокер, а базовый топик совпадает с его настройками. Если ваши Zigbee-устройства в ZHA Home Assistant, ZigDash их не видит: он работает с Zigbee2MQTT.",
+  "devicesOtherBaseBody": "Zigbee2MQTT есть на этом брокере с базовым топиком «{found}», но этот дом ищет «{current}».",
+  "devicesUseBase": "Использовать «{found}»",
+  "devicesChangeConnection": "Изменить подключение"
 }

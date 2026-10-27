@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/analytics/analytics_events.dart' show HelpFrom;
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
+import '../../../data/repositories/connection_repo.dart' show connectionRepoProvider;
 import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../../home/home_shell.dart';
@@ -442,6 +443,8 @@ class _NoDevicesState extends ConsumerState<_NoDevices> {
         ref.watch(bridgeDevicesMissingProvider(widget.args)).valueOrNull ??
             false;
     if (!missing) return Center(child: Text(l10n.devicesNone));
+    final presence = ref.watch(z2mPresenceProvider(widget.args)).valueOrNull;
+    if (presence != null && !presence.here) return _NoZ2m(args: widget.args, otherBases: presence.otherBases);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -461,6 +464,63 @@ class _NoDevicesState extends ConsumerState<_NoDevices> {
                 onPressed: () => context.push(Routes.getHelpFrom(
                     HelpFrom.deviceListMissing.name,
                     home: widget.args.connectionId))),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The Home's broker has no Zigbee2MQTT under its base topic (3.2.2): a Home
+/// saved before 3.2.1 checked for it. Offers the base topic Zigbee2MQTT was
+/// seen under, else the connection settings.
+class _NoZ2m extends ConsumerWidget {
+  const _NoZ2m({required this.args, required this.otherBases});
+
+  final DiscoveryArgs args;
+  final List<String> otherBases;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final found = otherBases.isEmpty ? null : otherBases.first;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          key: const Key('devices-no-z2m'),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.setupErrNotZ2mTitle,
+                style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
+            const SizedBox(height: 8),
+            Text(
+              found == null
+                  ? l10n.guidedNoZ2mBody
+                  : l10n.devicesOtherBaseBody(found, args.base),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            if (found != null)
+              FilledButton(
+                key: const Key('devices-use-base'),
+                onPressed: () => ref
+                    .read(connectionRepoProvider)
+                    .setBaseTopic(args.connectionId, found),
+                child: Text(l10n.devicesUseBase(found)),
+              )
+            else
+              FilledButton(
+                key: const Key('devices-edit-connection'),
+                onPressed: () =>
+                    context.push('/connections/${args.connectionId}/edit'),
+                child: Text(l10n.devicesChangeConnection),
+              ),
+            GetHelpLink(
+                onPressed: () => context.push(Routes.getHelpFrom(
+                    HelpFrom.deviceListMissing.name,
+                    home: args.connectionId))),
           ],
         ),
       ),

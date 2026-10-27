@@ -54,3 +54,45 @@ final bridgeDevicesStreamProvider = StreamProvider.autoDispose
     yield parseBridgeDevices(msg.payload);
   }
 });
+
+/// Whether Zigbee2MQTT is on this broker under the Home's base topic, and the
+/// base topics it was seen under instead (3.2.2). Asked only when the device
+/// list never arrived, so a Home saved before 3.2.1 on a broker without
+/// Zigbee2MQTT, or with the wrong base topic, says why it's empty instead of
+/// offering a restart that can't help.
+typedef Z2mPresence = ({bool here, List<String> otherBases});
+
+final z2mPresenceProvider =
+    FutureProvider.autoDispose.family<Z2mPresence, DiscoveryArgs>((ref, args) async {
+  final mgr = await ref.read(mqttManagerProvider(args.connectionId).future);
+  final patterns = [
+    '${args.base}/bridge/state',
+    '${args.base}/bridge/info',
+    '+/bridge/state',
+    '+/+/bridge/state',
+  ];
+  final others = <String>{};
+  final here = Completer<void>();
+  final subs = [
+    for (final p in patterns)
+      mgr.subscribe(p).listen((msg) {
+        if (msg.topic.startsWith('${args.base}/bridge/')) {
+          if (!here.isCompleted) here.complete();
+        } else if (msg.topic.endsWith('/bridge/state')) {
+          others.add(msg.topic.substring(0, msg.topic.length - '/bridge/state'.length));
+        }
+      }),
+  ];
+  ref.onDispose(() {
+    for (final s in subs) {
+      s.cancel();
+    }
+    patterns.forEach(mgr.unsubscribe);
+  });
+  try {
+    await here.future.timeout(bridgeDevicesMissingAfter);
+    return (here: true, otherBases: const <String>[]);
+  } on TimeoutException {
+    return (here: false, otherBases: others.toList()..sort());
+  }
+});

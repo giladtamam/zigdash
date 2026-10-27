@@ -4662,4 +4662,17 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get guidedNoZ2mBody =>
       'ברוקר MQTT עונה כאן, אבל Zigbee2MQTT לא שולח דרכו כלום. בדקו ש-Zigbee2MQTT פועל ומשתמש בברוקר הזה, ושה-base topic תואם להגדרות שלו. אם מכשירי ה-Zigbee שלכם נמצאים ב-ZHA של Home Assistant, ‏ZigDash לא יכול לראות אותם: הוא עובד עם Zigbee2MQTT.';
+
+  @override
+  String devicesOtherBaseBody(String found, String current) {
+    return 'Zigbee2MQTT נמצא על הברוקר הזה עם נושא הבסיס ‎“$found”‎, אבל הבית הזה מחפש ‎“$current”‎.';
+  }
+
+  @override
+  String devicesUseBase(String found) {
+    return 'להשתמש ב-‎“$found”‎';
+  }
+
+  @override
+  String get devicesChangeConnection => 'שינוי החיבור';
 }
