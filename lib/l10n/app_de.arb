@@ -1447,5 +1447,6 @@
   "alertsHintTitle": "Benachrichtigungen auf diesem Telefon",
   "alertsHintBody": "Ein Leck, Rauch, eine geöffnete Tür oder eine schwache Batterie können eine Benachrichtigung an dieses Telefon senden, auch wenn ZigDash geschlossen ist.",
   "alertsHintButton": "Alarme einrichten",
-  "alertsHintNotNow": "Nicht jetzt"
+  "alertsHintNotNow": "Nicht jetzt",
+  "guidedNoZ2mBody": "Hier antwortet ein MQTT-Broker, aber Zigbee2MQTT sendet nichts darüber. Prüfen Sie, ob Zigbee2MQTT gestartet ist und diesen Broker nutzt und ob das Basis-Topic zu seinen Einstellungen passt. Wenn Ihre Zigbee-Geräte in ZHA von Home Assistant sind, kann ZigDash sie nicht sehen: Es arbeitet mit Zigbee2MQTT."
 }

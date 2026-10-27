@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4720,4 +4719,8 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get alertsHintNotNow => 'Niet nu';
+
+  @override
+  String get guidedNoZ2mBody =>
+      'Hier antwoordt een MQTT-broker, maar Zigbee2MQTT stuurt er niets over. Controleer of Zigbee2MQTT gestart is en deze broker gebruikt, en of het basistopic overeenkomt met de instellingen. Staan je Zigbee-apparaten in ZHA van Home Assistant, dan kan ZigDash ze niet zien: het werkt met Zigbee2MQTT.';
 }

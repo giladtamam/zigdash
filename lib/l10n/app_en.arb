@@ -1628,5 +1628,7 @@
   "alertsHintButton": "Set up Alerts",
   "@alertsHintButton": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
   "alertsHintNotNow": "Not now",
-  "@alertsHintNotNow": {"description": "Automations tab: card pointing to Alerts (3.2.1)."}
+  "@alertsHintNotNow": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "guidedNoZ2mBody": "An MQTT broker answers here, but Zigbee2MQTT isn't sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant's ZHA, ZigDash can't see them: it works with Zigbee2MQTT.",
+  "@guidedNoZ2mBody": {"description": "Test & connect: a broker with no Zigbee2MQTT on it (3.2.1)."}
 }
