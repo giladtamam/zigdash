@@ -162,6 +162,7 @@ void main() {
     expect(find.textContaining('base topic “z2m”'), findsOneWidget);
     expect(find.textContaining('looks for “zigbee2mqtt”'), findsOneWidget);
     expect(find.text('Use “z2m”'), findsOneWidget);
+    expect(find.text('No Zigbee2MQTT here'), findsNothing);
     expect(find.text('Restart Zigbee2MQTT'), findsNothing);
   });
 

@@ -442,9 +442,12 @@ class _NoDevicesState extends ConsumerState<_NoDevices> {
     final missing =
         ref.watch(bridgeDevicesMissingProvider(widget.args)).valueOrNull ??
             false;
+    // Asked alongside, so both answers land together (8 s, not 16).
+    final presence = ref.watch(z2mPresenceProvider(widget.args));
     if (!missing) return Center(child: Text(l10n.devicesNone));
-    final presence = ref.watch(z2mPresenceProvider(widget.args)).valueOrNull;
-    if (presence != null && !presence.here) return _NoZ2m(args: widget.args, otherBases: presence.otherBases);
+    if (presence.isLoading) return const Center(child: CircularProgressIndicator());
+    final p = presence.valueOrNull;
+    if (p != null && !p.here) return _NoZ2m(args: widget.args, otherBases: p.otherBases);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -492,9 +495,12 @@ class _NoZ2m extends ConsumerWidget {
           key: const Key('devices-no-z2m'),
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(l10n.setupErrNotZ2mTitle,
-                style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
-            const SizedBox(height: 8),
+            if (found == null) ...[
+              Text(l10n.setupErrNotZ2mTitle,
+                  style: theme.textTheme.titleMedium,
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 8),
+            ],
             Text(
               found == null
                   ? l10n.guidedNoZ2mBody
