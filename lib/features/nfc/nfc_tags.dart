@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/l10n_ext.dart';
+import 'nfc_tag_store.dart';
 
 /// NFC tags (3.3): a tag runs a scene or toggles a device when the phone
 /// taps it (NfcTagActivity.kt). Free, Android only.
@@ -39,7 +40,14 @@ String nfcTagUri({
 
 enum NfcState { on, off, none }
 
-enum NfcWriteOutcome { written, readonly, tooSmall, unsupported, failed, cancelled }
+enum NfcWriteOutcome {
+  written,
+  readonly,
+  tooSmall,
+  unsupported,
+  failed,
+  cancelled,
+}
 
 /// The "zigdash/nfc" channel (NfcTags.kt); a fake in tests.
 class NfcBridge {
@@ -60,23 +68,30 @@ class NfcBridge {
     }
   }
 
-  /// Waits for a tag and writes [uri] to it.
-  Future<NfcWriteOutcome> write(String uri) async {
+  /// Waits for a tag and writes [uri] to it; a written tag's serial number
+  /// comes back with it.
+  Future<({NfcWriteOutcome outcome, String? serial})> write(String uri) async {
     try {
-      return switch (await _channel.invokeMethod<String>('write', {
-        'uri': uri,
-      })) {
-        'written' => NfcWriteOutcome.written,
+      final r =
+          await _channel.invokeMethod<String>('write', {'uri': uri}) ?? '';
+      if (r.startsWith('written')) {
+        final serial = r.length > 'written:'.length
+            ? r.substring('written:'.length)
+            : null;
+        return (outcome: NfcWriteOutcome.written, serial: serial);
+      }
+      final outcome = switch (r) {
         'readonly' => NfcWriteOutcome.readonly,
         'too_small' => NfcWriteOutcome.tooSmall,
         'unsupported' => NfcWriteOutcome.unsupported,
         'cancelled' => NfcWriteOutcome.cancelled,
         _ => NfcWriteOutcome.failed,
       };
+      return (outcome: outcome, serial: null);
     } on PlatformException {
-      return NfcWriteOutcome.failed;
+      return (outcome: NfcWriteOutcome.failed, serial: null);
     } on MissingPluginException {
-      return NfcWriteOutcome.failed;
+      return (outcome: NfcWriteOutcome.failed, serial: null);
     }
   }
 
@@ -110,20 +125,25 @@ Future<void> showWriteNfcTag(
   showDragHandle: true,
   isDismissible: true,
   builder: (_) => WriteNfcTagSheet(
-    uri: nfcTagUri(
-      connectionId: connectionId,
-      action: action,
-      target: target,
-      label: label,
-    ),
+    connectionId: connectionId,
+    action: action,
+    target: target,
     label: label,
   ),
 );
 
 class WriteNfcTagSheet extends ConsumerStatefulWidget {
-  const WriteNfcTagSheet({super.key, required this.uri, required this.label});
+  const WriteNfcTagSheet({
+    super.key,
+    required this.connectionId,
+    required this.action,
+    required this.target,
+    required this.label,
+  });
 
-  final String uri;
+  final String connectionId;
+  final NfcTagAction action;
+  final String target;
   final String label;
 
   @override
@@ -137,11 +157,13 @@ class _WriteNfcTagSheetState extends ConsumerState<WriteNfcTagSheet> {
 
   // Kept from initState: dispose can't use ref.
   late final NfcBridge _bridge;
+  late final NfcTagStore _store;
 
   @override
   void initState() {
     super.initState();
     _bridge = ref.read(nfcBridgeProvider);
+    _store = ref.read(nfcTagStoreProvider);
     unawaited(_start());
   }
 
@@ -162,11 +184,32 @@ class _WriteNfcTagSheetState extends ConsumerState<WriteNfcTagSheet> {
       _waiting = nfc == NfcState.on;
     });
     if (nfc != NfcState.on) return;
-    final outcome = await bridge.write(widget.uri);
+    final r = await bridge.write(
+      nfcTagUri(
+        connectionId: widget.connectionId,
+        action: widget.action,
+        target: widget.target,
+        label: widget.label,
+      ),
+    );
+    if (r.outcome == NfcWriteOutcome.written &&
+        r.serial != null &&
+        r.serial!.isNotEmpty) {
+      await _store.written(
+        NfcTagRecord(
+          serial: r.serial!,
+          connectionId: widget.connectionId,
+          action: widget.action,
+          target: widget.target,
+          label: widget.label,
+          writtenAt: DateTime.now(),
+        ),
+      );
+    }
     if (!mounted) return;
     setState(() {
       _waiting = false;
-      _outcome = outcome;
+      _outcome = r.outcome;
     });
   }
 

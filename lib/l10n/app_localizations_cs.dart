@@ -4795,4 +4795,50 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'Tento telefon tento typ tagu neumí zapsat (často MIFARE Classic). Použij nálepku NTAG213, 215 nebo 216.';
+
+  @override
+  String get nfcTagsTitle => 'NFC tagy';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Tagy, které spustí scénu nebo přepnou zařízení';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Zatím žádné tagy. Podrž dlaždici scény, světla, zásuvky nebo rolety a zvol Zapsat na NFC tag.';
+
+  @override
+  String get nfcTagRunsScene => 'Spustí scénu';
+
+  @override
+  String get nfcTagSwitches => 'Zapíná a vypíná';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'zapsáno $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'naposledy použito $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'zatím nepoužito';
+
+  @override
+  String get nfcTagOffLabel => 'Vypnuto';
+
+  @override
+  String get nfcTagRewrite => 'Přepsat';
+
+  @override
+  String get nfcTagForget => 'Odebrat ze seznamu';
+
+  @override
+  String get nfcTagOffToast => 'Tento tag je v ZigDash vypnutý';
+
+  @override
+  String get nfcTagsNote =>
+      'Vypnutý tag na tomto telefonu nic neudělá. Tagy zapsané před tímto seznamem tu nejsou: jednou je přepiš.';
 }

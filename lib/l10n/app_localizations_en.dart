@@ -4795,4 +4795,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'This kind of tag can\'t be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.';
+
+  @override
+  String get nfcTagsTitle => 'NFC tags';
+
+  @override
+  String get nfcTagsSubtitle => 'Tags that run a scene or switch a device';
+
+  @override
+  String get nfcTagsEmpty =>
+      'No tags yet. Long-press a scene, light, plug or shutter tile and choose Write to NFC tag.';
+
+  @override
+  String get nfcTagRunsScene => 'Runs the scene';
+
+  @override
+  String get nfcTagSwitches => 'Switches on and off';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'written $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'last tapped $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'not tapped yet';
+
+  @override
+  String get nfcTagOffLabel => 'Off';
+
+  @override
+  String get nfcTagRewrite => 'Rewrite';
+
+  @override
+  String get nfcTagForget => 'Remove from list';
+
+  @override
+  String get nfcTagOffToast => 'This tag is turned off in ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'A tag you turn off does nothing on this phone. Tags written before this list aren\'t shown: rewrite them once.';
 }

@@ -4810,4 +4810,50 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'Este telefone não consegue gravar esse tipo de tag (muitas vezes MIFARE Classic). Use um adesivo NTAG213, 215 ou 216.';
+
+  @override
+  String get nfcTagsTitle => 'Tags NFC';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Tags que executam uma cena ou ligam e desligam um dispositivo';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Nenhuma tag ainda. Mantenha pressionado um bloco de cena, luz, tomada ou persiana e escolha Gravar em tag NFC.';
+
+  @override
+  String get nfcTagRunsScene => 'Executa a cena';
+
+  @override
+  String get nfcTagSwitches => 'Liga e desliga';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'gravada $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'último toque $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'ainda não usada';
+
+  @override
+  String get nfcTagOffLabel => 'Desativada';
+
+  @override
+  String get nfcTagRewrite => 'Regravar';
+
+  @override
+  String get nfcTagForget => 'Remover da lista';
+
+  @override
+  String get nfcTagOffToast => 'Esta tag está desativada no ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'Uma tag desativada não faz nada neste telefone. Tags gravadas antes desta lista não aparecem: regrave-as uma vez.';
 }

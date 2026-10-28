@@ -1432,5 +1432,18 @@
   "nfcNoneTitle": "Este telefone não tem NFC",
   "nfcNoneBody": "Este telefone não consegue ler nem gravar tags NFC.",
   "nfcWriteAnother": "Gravar outra tag",
-  "nfcUnsupportedBody": "Este telefone não consegue gravar esse tipo de tag (muitas vezes MIFARE Classic). Use um adesivo NTAG213, 215 ou 216."
+  "nfcUnsupportedBody": "Este telefone não consegue gravar esse tipo de tag (muitas vezes MIFARE Classic). Use um adesivo NTAG213, 215 ou 216.",
+  "nfcTagsTitle": "Tags NFC",
+  "nfcTagsSubtitle": "Tags que executam uma cena ou ligam e desligam um dispositivo",
+  "nfcTagsEmpty": "Nenhuma tag ainda. Mantenha pressionado um bloco de cena, luz, tomada ou persiana e escolha Gravar em tag NFC.",
+  "nfcTagRunsScene": "Executa a cena",
+  "nfcTagSwitches": "Liga e desliga",
+  "nfcTagWritten": "gravada {when}",
+  "nfcTagLastTap": "último toque {when}",
+  "nfcTagNeverTapped": "ainda não usada",
+  "nfcTagOffLabel": "Desativada",
+  "nfcTagRewrite": "Regravar",
+  "nfcTagForget": "Remover da lista",
+  "nfcTagOffToast": "Esta tag está desativada no ZigDash",
+  "nfcTagsNote": "Uma tag desativada não faz nada neste telefone. Tags gravadas antes desta lista não aparecem: regrave-as uma vez."
 }

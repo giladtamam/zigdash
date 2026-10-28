@@ -1472,5 +1472,18 @@
   "nfcNoneTitle": "Ingen NFC på denne telefonen",
   "nfcNoneBody": "Denne telefonen kan ikke lese eller skrive NFC-brikker.",
   "nfcWriteAnother": "Skriv en brikke til",
-  "nfcUnsupportedBody": "Denne telefonen kan ikke skrive til denne typen brikke (ofte MIFARE Classic). Bruk et NTAG213-, 215- eller 216-klistremerke."
+  "nfcUnsupportedBody": "Denne telefonen kan ikke skrive til denne typen brikke (ofte MIFARE Classic). Bruk et NTAG213-, 215- eller 216-klistremerke.",
+  "nfcTagsTitle": "NFC-brikker",
+  "nfcTagsSubtitle": "Brikker som kjører en scene eller slår en enhet av og på",
+  "nfcTagsEmpty": "Ingen brikker ennå. Hold inne en scene-, lys-, stikkontakt- eller persienneflis og velg Skriv til NFC-brikke.",
+  "nfcTagRunsScene": "Kjører scenen",
+  "nfcTagSwitches": "Slår av og på",
+  "nfcTagWritten": "skrevet {when}",
+  "nfcTagLastTap": "sist brukt {when}",
+  "nfcTagNeverTapped": "ikke brukt ennå",
+  "nfcTagOffLabel": "Av",
+  "nfcTagRewrite": "Skriv på nytt",
+  "nfcTagForget": "Fjern fra listen",
+  "nfcTagOffToast": "Denne brikken er slått av i ZigDash",
+  "nfcTagsNote": "En brikke som er slått av, gjør ingenting på denne telefonen. Brikker skrevet før denne listen vises ikke: skriv dem på nytt én gang."
 }

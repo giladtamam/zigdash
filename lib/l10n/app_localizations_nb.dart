@@ -4795,4 +4795,50 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'Denne telefonen kan ikke skrive til denne typen brikke (ofte MIFARE Classic). Bruk et NTAG213-, 215- eller 216-klistremerke.';
+
+  @override
+  String get nfcTagsTitle => 'NFC-brikker';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Brikker som kjører en scene eller slår en enhet av og på';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Ingen brikker ennå. Hold inne en scene-, lys-, stikkontakt- eller persienneflis og velg Skriv til NFC-brikke.';
+
+  @override
+  String get nfcTagRunsScene => 'Kjører scenen';
+
+  @override
+  String get nfcTagSwitches => 'Slår av og på';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'skrevet $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'sist brukt $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'ikke brukt ennå';
+
+  @override
+  String get nfcTagOffLabel => 'Av';
+
+  @override
+  String get nfcTagRewrite => 'Skriv på nytt';
+
+  @override
+  String get nfcTagForget => 'Fjern fra listen';
+
+  @override
+  String get nfcTagOffToast => 'Denne brikken er slått av i ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'En brikke som er slått av, gjør ingenting på denne telefonen. Brikker skrevet før denne listen vises ikke: skriv dem på nytt én gang.';
 }

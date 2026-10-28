@@ -4796,4 +4796,50 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'Этот телефон не может записать такую метку (часто это MIFARE Classic). Используйте наклейку NTAG213, 215 или 216.';
+
+  @override
+  String get nfcTagsTitle => 'NFC-метки';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Метки, которые запускают сцену или переключают устройство';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Меток пока нет. Нажмите и удерживайте плитку сцены, света, розетки или шторы и выберите «Записать на NFC-метку».';
+
+  @override
+  String get nfcTagRunsScene => 'Запускает сцену';
+
+  @override
+  String get nfcTagSwitches => 'Включает и выключает';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'записана $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'последнее касание $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'ещё не использовалась';
+
+  @override
+  String get nfcTagOffLabel => 'Выключена';
+
+  @override
+  String get nfcTagRewrite => 'Перезаписать';
+
+  @override
+  String get nfcTagForget => 'Убрать из списка';
+
+  @override
+  String get nfcTagOffToast => 'Эта метка выключена в ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'Выключенная метка ничего не делает на этом телефоне. Метки, записанные до появления списка, здесь не видны: перезапишите их один раз.';
 }

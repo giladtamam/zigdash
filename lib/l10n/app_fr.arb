@@ -1397,5 +1397,18 @@
   "nfcNoneTitle": "Pas de NFC sur ce téléphone",
   "nfcNoneBody": "Ce téléphone ne peut pas lire ni écrire de tags NFC.",
   "nfcWriteAnother": "Écrire un autre tag",
-  "nfcUnsupportedBody": "Ce téléphone ne peut pas écrire ce type de tag (souvent MIFARE Classic). Utilisez un sticker NTAG213, 215 ou 216."
+  "nfcUnsupportedBody": "Ce téléphone ne peut pas écrire ce type de tag (souvent MIFARE Classic). Utilisez un sticker NTAG213, 215 ou 216.",
+  "nfcTagsTitle": "Tags NFC",
+  "nfcTagsSubtitle": "Tags qui lancent une scène ou commutent un appareil",
+  "nfcTagsEmpty": "Aucun tag pour l'instant. Appuyez longuement sur une tuile de scène, lumière, prise ou volet et choisissez Écrire sur un tag NFC.",
+  "nfcTagRunsScene": "Lance la scène",
+  "nfcTagSwitches": "Allume et éteint",
+  "nfcTagWritten": "écrit le {when}",
+  "nfcTagLastTap": "dernier appui {when}",
+  "nfcTagNeverTapped": "pas encore utilisé",
+  "nfcTagOffLabel": "Désactivé",
+  "nfcTagRewrite": "Réécrire",
+  "nfcTagForget": "Retirer de la liste",
+  "nfcTagOffToast": "Ce tag est désactivé dans ZigDash",
+  "nfcTagsNote": "Un tag désactivé ne fait rien sur ce téléphone. Les tags écrits avant cette liste n'y figurent pas : réécrivez-les une fois."
 }

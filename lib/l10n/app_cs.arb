@@ -1387,5 +1387,18 @@
   "nfcNoneTitle": "Tento telefon nemá NFC",
   "nfcNoneBody": "Tento telefon neumí číst ani zapisovat NFC tagy.",
   "nfcWriteAnother": "Zapsat další tag",
-  "nfcUnsupportedBody": "Tento telefon tento typ tagu neumí zapsat (často MIFARE Classic). Použij nálepku NTAG213, 215 nebo 216."
+  "nfcUnsupportedBody": "Tento telefon tento typ tagu neumí zapsat (často MIFARE Classic). Použij nálepku NTAG213, 215 nebo 216.",
+  "nfcTagsTitle": "NFC tagy",
+  "nfcTagsSubtitle": "Tagy, které spustí scénu nebo přepnou zařízení",
+  "nfcTagsEmpty": "Zatím žádné tagy. Podrž dlaždici scény, světla, zásuvky nebo rolety a zvol Zapsat na NFC tag.",
+  "nfcTagRunsScene": "Spustí scénu",
+  "nfcTagSwitches": "Zapíná a vypíná",
+  "nfcTagWritten": "zapsáno {when}",
+  "nfcTagLastTap": "naposledy použito {when}",
+  "nfcTagNeverTapped": "zatím nepoužito",
+  "nfcTagOffLabel": "Vypnuto",
+  "nfcTagRewrite": "Přepsat",
+  "nfcTagForget": "Odebrat ze seznamu",
+  "nfcTagOffToast": "Tento tag je v ZigDash vypnutý",
+  "nfcTagsNote": "Vypnutý tag na tomto telefonu nic neudělá. Tagy zapsané před tímto seznamem tu nejsou: jednou je přepiš."
 }

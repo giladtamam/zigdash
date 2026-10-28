@@ -1541,5 +1541,18 @@
   "nfcNoneTitle": "אין NFC בטלפון הזה",
   "nfcNoneBody": "הטלפון הזה לא יכול לקרוא או לכתוב תגי NFC.",
   "nfcWriteAnother": "כתיבת תג נוסף",
-  "nfcUnsupportedBody": "הטלפון הזה לא יכול לכתוב לסוג התג הזה (לרוב MIFARE Classic). השתמשו במדבקת NTAG213, ‏215 או 216."
+  "nfcUnsupportedBody": "הטלפון הזה לא יכול לכתוב לסוג התג הזה (לרוב MIFARE Classic). השתמשו במדבקת NTAG213, ‏215 או 216.",
+  "nfcTagsTitle": "תגי NFC",
+  "nfcTagsSubtitle": "תגים שמפעילים סצנה או מדליקים ומכבים מכשיר",
+  "nfcTagsEmpty": "אין עדיין תגים. לחצו לחיצה ארוכה על אריח של סצנה, אור, שקע או תריס ובחרו כתיבה לתג NFC.",
+  "nfcTagRunsScene": "מפעיל את הסצנה",
+  "nfcTagSwitches": "מדליק ומכבה",
+  "nfcTagWritten": "נכתב {when}",
+  "nfcTagLastTap": "נגיעה אחרונה {when}",
+  "nfcTagNeverTapped": "עוד לא נעשה בו שימוש",
+  "nfcTagOffLabel": "כבוי",
+  "nfcTagRewrite": "כתיבה מחדש",
+  "nfcTagForget": "הסרה מהרשימה",
+  "nfcTagOffToast": "התג הזה כבוי ב-ZigDash",
+  "nfcTagsNote": "תג כבוי לא עושה כלום בטלפון הזה. תגים שנכתבו לפני הרשימה הזו לא מופיעים: כתבו אותם מחדש פעם אחת."
 }

@@ -23,7 +23,7 @@ import java.io.IOException
  *
  * Channel "zigdash/nfc":
  *  - state  -> "on" | "off" (NFC turned off in Settings) | "none" (no NFC)
- *  - write  {uri} -> "written" | "readonly" | "too_small" | "unsupported" | "failed" (after a tag)
+ *  - write  {uri} -> "written:<serial hex>" | "readonly" | "too_small" | "unsupported" | "failed"
  *  - cancel -> stops waiting for a tag
  */
 class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
@@ -72,8 +72,10 @@ class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
             { tag ->
                 // Written already: the same tag held again does nothing.
                 if (pending == null) return@enableReaderMode
-                val outcome = writeTo(tag, full)
-                finish(if (outcome == "too_small") writeTo(tag, bare) else outcome)
+                var outcome = writeTo(tag, full)
+                if (outcome == "too_small") outcome = writeTo(tag, bare)
+                // The tag's serial number goes with "written", for the list of tags.
+                finish(if (outcome == "written") "written:${hex(tag.id)}" else outcome)
             },
             // No FLAG_READER_SKIP_NDEF_CHECK: without the NDEF check Android
             // offers neither Ndef nor NdefFormatable, and nothing can be
@@ -152,6 +154,8 @@ class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
     }
 
     companion object {
+        fun hex(id: ByteArray?): String = id?.joinToString("") { "%02x".format(it) } ?: ""
+
         const val CHANNEL = "zigdash/nfc"
         private const val TAG = "ZigDashNfc"
 

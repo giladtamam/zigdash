@@ -4810,4 +4810,50 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'Deze telefoon kan dit soort tag niet beschrijven (vaak MIFARE Classic). Gebruik een NTAG213-, 215- of 216-sticker.';
+
+  @override
+  String get nfcTagsTitle => 'NFC-tags';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Tags die een scène starten of een apparaat schakelen';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Nog geen tags. Houd een scène-, lamp-, stekker- of rolluiktegel ingedrukt en kies Naar NFC-tag schrijven.';
+
+  @override
+  String get nfcTagRunsScene => 'Start de scène';
+
+  @override
+  String get nfcTagSwitches => 'Zet aan en uit';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'geschreven $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'laatst getikt $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'nog niet gebruikt';
+
+  @override
+  String get nfcTagOffLabel => 'Uit';
+
+  @override
+  String get nfcTagRewrite => 'Opnieuw schrijven';
+
+  @override
+  String get nfcTagForget => 'Uit de lijst halen';
+
+  @override
+  String get nfcTagOffToast => 'Deze tag staat uit in ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'Een tag die uit staat doet niets op deze telefoon. Tags die vóór deze lijst zijn geschreven staan er niet in: schrijf ze één keer opnieuw.';
 }

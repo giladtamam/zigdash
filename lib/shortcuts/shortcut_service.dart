@@ -401,6 +401,7 @@ class ShortcutService {
         'groupLimit': l10n.shortcutGroupLimit,
         'save': l10n.save,
         'scenes': l10n.scenesTitle,
+        'nfcTagOff': l10n.nfcTagOffToast,
       }));
 }
 

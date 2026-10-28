@@ -1472,5 +1472,18 @@
   "nfcNoneTitle": "Ingen NFC i den här telefonen",
   "nfcNoneBody": "Den här telefonen kan inte läsa eller skriva NFC-taggar.",
   "nfcWriteAnother": "Skriv en tagg till",
-  "nfcUnsupportedBody": "Den här telefonen kan inte skriva till den här typen av tagg (ofta MIFARE Classic). Använd ett NTAG213-, 215- eller 216-klistermärke."
+  "nfcUnsupportedBody": "Den här telefonen kan inte skriva till den här typen av tagg (ofta MIFARE Classic). Använd ett NTAG213-, 215- eller 216-klistermärke.",
+  "nfcTagsTitle": "NFC-taggar",
+  "nfcTagsSubtitle": "Taggar som kör en scen eller slår av och på en enhet",
+  "nfcTagsEmpty": "Inga taggar än. Håll in en scen-, lamp-, uttags- eller persiennbricka och välj Skriv till NFC-tagg.",
+  "nfcTagRunsScene": "Kör scenen",
+  "nfcTagSwitches": "Slår på och av",
+  "nfcTagWritten": "skriven {when}",
+  "nfcTagLastTap": "senast använd {when}",
+  "nfcTagNeverTapped": "inte använd än",
+  "nfcTagOffLabel": "Av",
+  "nfcTagRewrite": "Skriv om",
+  "nfcTagForget": "Ta bort från listan",
+  "nfcTagOffToast": "Den här taggen är avstängd i ZigDash",
+  "nfcTagsNote": "En avstängd tagg gör ingenting på den här telefonen. Taggar som skrevs före listan visas inte: skriv om dem en gång."
 }

@@ -1472,5 +1472,18 @@
   "nfcNoneTitle": "Geen NFC op deze telefoon",
   "nfcNoneBody": "Deze telefoon kan geen NFC-tags lezen of schrijven.",
   "nfcWriteAnother": "Nog een tag schrijven",
-  "nfcUnsupportedBody": "Deze telefoon kan dit soort tag niet beschrijven (vaak MIFARE Classic). Gebruik een NTAG213-, 215- of 216-sticker."
+  "nfcUnsupportedBody": "Deze telefoon kan dit soort tag niet beschrijven (vaak MIFARE Classic). Gebruik een NTAG213-, 215- of 216-sticker.",
+  "nfcTagsTitle": "NFC-tags",
+  "nfcTagsSubtitle": "Tags die een scène starten of een apparaat schakelen",
+  "nfcTagsEmpty": "Nog geen tags. Houd een scène-, lamp-, stekker- of rolluiktegel ingedrukt en kies Naar NFC-tag schrijven.",
+  "nfcTagRunsScene": "Start de scène",
+  "nfcTagSwitches": "Zet aan en uit",
+  "nfcTagWritten": "geschreven {when}",
+  "nfcTagLastTap": "laatst getikt {when}",
+  "nfcTagNeverTapped": "nog niet gebruikt",
+  "nfcTagOffLabel": "Uit",
+  "nfcTagRewrite": "Opnieuw schrijven",
+  "nfcTagForget": "Uit de lijst halen",
+  "nfcTagOffToast": "Deze tag staat uit in ZigDash",
+  "nfcTagsNote": "Een tag die uit staat doet niets op deze telefoon. Tags die vóór deze lijst zijn geschreven staan er niet in: schrijf ze één keer opnieuw."
 }

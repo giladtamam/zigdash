@@ -8447,6 +8447,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This kind of tag can\'t be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.'**
   String get nfcUnsupportedBody;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'NFC tags'**
+  String get nfcTagsTitle;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Tags that run a scene or switch a device'**
+  String get nfcTagsSubtitle;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'No tags yet. Long-press a scene, light, plug or shutter tile and choose Write to NFC tag.'**
+  String get nfcTagsEmpty;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Runs the scene'**
+  String get nfcTagRunsScene;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Switches on and off'**
+  String get nfcTagSwitches;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'written {when}'**
+  String nfcTagWritten(String when);
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'last tapped {when}'**
+  String nfcTagLastTap(String when);
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'not tapped yet'**
+  String get nfcTagNeverTapped;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get nfcTagOffLabel;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Rewrite'**
+  String get nfcTagRewrite;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from list'**
+  String get nfcTagForget;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This tag is turned off in ZigDash'**
+  String get nfcTagOffToast;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'A tag you turn off does nothing on this phone. Tags written before this list aren\'t shown: rewrite them once.'**
+  String get nfcTagsNote;
 }
 
 class _AppLocalizationsDelegate

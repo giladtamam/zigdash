@@ -17,7 +17,20 @@ import android.os.Bundle
 class NfcTagActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tagUri(intent)?.let { run(it) }
+        tagUri(intent)?.let { uri ->
+            val serial = NfcTags.hex(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))
+            if (ShortcutPrefs.nfcTagOff(this, serial)) {
+                // Turned off in the app's list of tags: ignored.
+                android.widget.Toast.makeText(
+                    this,
+                    ShortcutPrefs.word(this, "nfcTagOff", "This tag is turned off in ZigDash"),
+                    android.widget.Toast.LENGTH_SHORT,
+                ).show()
+            } else {
+                ShortcutPrefs.nfcTagTapped(this, serial)
+                run(uri)
+            }
+        }
         finish()
     }
 

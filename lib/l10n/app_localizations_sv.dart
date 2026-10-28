@@ -4797,4 +4797,50 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'Den här telefonen kan inte skriva till den här typen av tagg (ofta MIFARE Classic). Använd ett NTAG213-, 215- eller 216-klistermärke.';
+
+  @override
+  String get nfcTagsTitle => 'NFC-taggar';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Taggar som kör en scen eller slår av och på en enhet';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Inga taggar än. Håll in en scen-, lamp-, uttags- eller persiennbricka och välj Skriv till NFC-tagg.';
+
+  @override
+  String get nfcTagRunsScene => 'Kör scenen';
+
+  @override
+  String get nfcTagSwitches => 'Slår på och av';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'skriven $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'senast använd $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'inte använd än';
+
+  @override
+  String get nfcTagOffLabel => 'Av';
+
+  @override
+  String get nfcTagRewrite => 'Skriv om';
+
+  @override
+  String get nfcTagForget => 'Ta bort från listan';
+
+  @override
+  String get nfcTagOffToast => 'Den här taggen är avstängd i ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'En avstängd tagg gör ingenting på den här telefonen. Taggar som skrevs före listan visas inte: skriv om dem en gång.';
 }

@@ -4745,4 +4745,49 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get nfcUnsupportedBody =>
       'הטלפון הזה לא יכול לכתוב לסוג התג הזה (לרוב MIFARE Classic). השתמשו במדבקת NTAG213, ‏215 או 216.';
+
+  @override
+  String get nfcTagsTitle => 'תגי NFC';
+
+  @override
+  String get nfcTagsSubtitle => 'תגים שמפעילים סצנה או מדליקים ומכבים מכשיר';
+
+  @override
+  String get nfcTagsEmpty =>
+      'אין עדיין תגים. לחצו לחיצה ארוכה על אריח של סצנה, אור, שקע או תריס ובחרו כתיבה לתג NFC.';
+
+  @override
+  String get nfcTagRunsScene => 'מפעיל את הסצנה';
+
+  @override
+  String get nfcTagSwitches => 'מדליק ומכבה';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'נכתב $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'נגיעה אחרונה $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'עוד לא נעשה בו שימוש';
+
+  @override
+  String get nfcTagOffLabel => 'כבוי';
+
+  @override
+  String get nfcTagRewrite => 'כתיבה מחדש';
+
+  @override
+  String get nfcTagForget => 'הסרה מהרשימה';
+
+  @override
+  String get nfcTagOffToast => 'התג הזה כבוי ב-ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'תג כבוי לא עושה כלום בטלפון הזה. תגים שנכתבו לפני הרשימה הזו לא מופיעים: כתבו אותם מחדש פעם אחת.';
 }
