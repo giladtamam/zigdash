@@ -40,6 +40,30 @@ final _plug = classifyExposes([
   _num('energy', 'kWh'),
 ]);
 
+final _door = classifyExposes([
+  {
+    'type': 'binary',
+    'name': 'contact',
+    'property': 'contact',
+    'access': 1,
+    'value_on': false,
+    'value_off': true,
+  },
+  _num('battery', '%'),
+]);
+
+final _motion = classifyExposes([
+  {
+    'type': 'binary',
+    'name': 'occupancy',
+    'property': 'occupancy',
+    'access': 1,
+    'value_on': true,
+    'value_off': false,
+  },
+  _num('illuminance', 'lx'),
+]);
+
 var _n = 0;
 Panel _tile(
   PanelType type,
@@ -215,5 +239,131 @@ void main() {
   test('a broken retained config reads as none', () {
     expect(decodeHistoryReadings('not json'), isEmpty);
     expect(decodeHistoryReadings(''), isEmpty);
+  });
+
+  group('tallies (3.3)', () {
+    test(
+      'lights and plugs count on, doors openings, motion sensors motion',
+      () {
+        final tallies = historyTalliesOf([
+          _tile(
+            PanelType.device,
+            DeviceTileConfig(profile: _plug),
+            ieee: '0xb2',
+            topic: 'zigbee2mqtt/Plug',
+          ),
+          _tile(
+            PanelType.device,
+            DeviceTileConfig(profile: _door),
+            ieee: '0xd1',
+            topic: 'zigbee2mqtt/Door',
+          ),
+          _tile(
+            PanelType.device,
+            DeviceTileConfig(profile: _motion),
+            ieee: '0xe1',
+            topic: 'zigbee2mqtt/Hall',
+          ),
+          _tile(
+            PanelType.device,
+            DeviceTileConfig(profile: _climate),
+            ieee: '0xa1',
+            topic: 'zigbee2mqtt/Living room',
+          ),
+          _tile(
+            PanelType.device,
+            DeviceTileConfig(profile: _plug),
+            ieee: '0xb2',
+            topic: 'zigbee2mqtt/Plug',
+          ),
+          _tile(
+            PanelType.device,
+            DeviceTileConfig(profile: _door),
+            topic: 'zigbee2mqtt/Unlinked',
+          ),
+        ]);
+        expect(tallies, const [
+          HistoryTally(
+            ieee: '0xb2',
+            path: 'state',
+            topic: 'zigbee2mqtt/Plug',
+            kind: HistoryTallyKind.on,
+          ),
+          HistoryTally(
+            ieee: '0xd1',
+            path: 'contact',
+            topic: 'zigbee2mqtt/Door',
+            kind: HistoryTallyKind.open,
+          ),
+          HistoryTally(
+            ieee: '0xe1',
+            path: 'occupancy',
+            topic: 'zigbee2mqtt/Hall',
+            kind: HistoryTallyKind.motion,
+          ),
+        ]);
+      },
+    );
+
+    test(
+      'the config carries them and reads them back; none leaves the key out',
+      () {
+        const t = HistoryTally(
+          ieee: '0xd1',
+          path: 'contact',
+          topic: 'zigbee2mqtt/Door',
+          kind: HistoryTallyKind.open,
+        );
+        final payload = encodeHistoryConfig(
+          home: 'H',
+          base: 'zigbee2mqtt',
+          timeZone: 'UTC',
+          readings: const [],
+          tallies: const [t],
+        );
+        expect((jsonDecode(payload) as Map)['tallies'], [
+          {
+            'ieee': '0xd1',
+            'attr': 'contact',
+            'topic': 'zigbee2mqtt/Door',
+            'path': 'contact',
+            'kind': 'open',
+          },
+        ]);
+        expect(decodeHistoryTallies(payload), const [t]);
+        final none = encodeHistoryConfig(
+          home: 'H',
+          base: 'zigbee2mqtt',
+          timeZone: 'UTC',
+          readings: const [],
+        );
+        expect((jsonDecode(none) as Map).containsKey('tallies'), isFalse);
+        expect(
+          decodeHistoryTallies(
+            '{"tallies":[{"ieee":"x","path":"p","topic":"t","kind":"blink"}]}',
+          ),
+          isEmpty,
+        );
+      },
+    );
+
+    test('another phone\'s tallies stay when merging', () {
+      const theirs = HistoryTally(
+        ieee: '0xd1',
+        path: 'contact',
+        topic: 'zigbee2mqtt/Door',
+        kind: HistoryTallyKind.open,
+      );
+      const mine = HistoryTally(
+        ieee: '0xb2',
+        path: 'state',
+        topic: 'zigbee2mqtt/Plug',
+        kind: HistoryTallyKind.on,
+      );
+      expect(mergeHistoryTallies(const [theirs], const [mine]), const [
+        theirs,
+        mine,
+      ]);
+    });
   });
 }

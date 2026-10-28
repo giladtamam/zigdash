@@ -66,7 +66,7 @@ void main() {
     expect(tab['label'], NodeRedInstaller.historyTabLabel);
     final nodes = (tab['nodes'] as List).cast<Map>();
     expect(nodes.singleWhere((n) => n['name'] == 'devices')['topic'], 'z2m/#');
-    expect(nodes.where((n) => n['type'] == 'function').length, 5);
+    expect(nodes.where((n) => n['type'] == 'function').length, 7);
     final installer = NodeRedInstaller.history(host: 'h');
     expect(installer.asset, 'node-red/history-flow.json');
     expect(installer.label, 'ZigDash history');
