@@ -26,12 +26,30 @@ if [[ -z "$KEY" && -f tool/.analytics_key ]]; then KEY="$(tr -d '[:space:]' < to
 DEFINES=()
 if [[ -n "$KEY" ]]; then DEFINES+=(--dart-define=ZIGDASH_ANALYTICS_KEY="$KEY"); else echo "note: no analytics key, building without analytics"; fi
 
-# The Play build carries billing for ZigDash Pro (history-2.7.md). Pro shows
-# only once ZIGDASH_PRO_LIVE=1 (the payments profile and product exist).
+# The Play build carries billing for ZigDash Pro (history-2.7.md). Pro has
+# been on sale since 2.9: a Play build without ZIGDASH_PRO_LIVE hides Pro from
+# the people who bought it (3.1.12 to 3.2.1 shipped so). On by default;
+# ZIGDASH_PRO_LIVE=0 builds without it, for tests only.
 PLAY=(--dart-define=ZIGDASH_FLAVOR=play)
-if [[ "${ZIGDASH_PRO_LIVE:-}" == 1 ]]; then PLAY+=(--dart-define=ZIGDASH_PRO_LIVE=true); fi
+if [[ "${ZIGDASH_PRO_LIVE:-1}" == 1 ]]; then PLAY+=(--dart-define=ZIGDASH_PRO_LIVE=true); fi
 
 TARGET="${1:-apk}"
+
+# A Play bundle must have what users of the last one had: the upload key (a
+# worktree without key.properties signs with the debug key, which Play
+# refuses), the analytics key (3.2.1 shipped without it and went silent) and
+# Pro.
+if [[ "$TARGET" == bundle ]]; then
+  missing=()
+  [[ -f android/key.properties ]] || missing+=("android/key.properties (copy it from the main checkout)")
+  [[ -n "$KEY" ]] || missing+=("the analytics key (tool/.analytics_key, copy it from the main checkout)")
+  [[ "${ZIGDASH_PRO_LIVE:-1}" == 1 ]] || missing+=("Pro (ZIGDASH_PRO_LIVE is not 1)")
+  if (( ${#missing[@]} )); then
+    printf 'refusing to build a Play bundle without:\n' >&2
+    printf '  - %s\n' "${missing[@]}" >&2
+    exit 1
+  fi
+fi
 if [[ "$TARGET" == github ]]; then
   # Builds outside Play never contain the analytics key, so they can't send data.
   tool/flutter build apk --release --split-per-abi --no-tree-shake-icons \
