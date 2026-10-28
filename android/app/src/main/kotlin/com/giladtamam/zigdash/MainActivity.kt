@@ -23,6 +23,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         ProBilling.register(this, flutterEngine.dartExecutor.binaryMessenger)
+        PlayUpdates.register(this, flutterEngine.dartExecutor.binaryMessenger)
         val ch = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "zigdash/app")
         ch.setMethodCallHandler { call, result ->
             when (call.method) {

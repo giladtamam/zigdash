@@ -8321,6 +8321,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change connection'**
   String get devicesChangeConnection;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of ZigDash is ready'**
+  String get updateAvailableTitle;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'It downloads while you keep using ZigDash.'**
+  String get updateAvailableBody;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateAvailableButton;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading the update…'**
+  String get updateDownloading;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Update downloaded'**
+  String get updateReadyTitle;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Restart to finish'**
+  String get updateReadyButton;
 }
 
 class _AppLocalizationsDelegate

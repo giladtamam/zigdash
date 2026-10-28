@@ -4730,4 +4730,23 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get devicesChangeConnection => 'Zmień połączenie';
+
+  @override
+  String get updateAvailableTitle => 'Jest nowa wersja ZigDash';
+
+  @override
+  String get updateAvailableBody =>
+      'Pobiera się, gdy dalej korzystasz z ZigDash.';
+
+  @override
+  String get updateAvailableButton => 'Aktualizuj';
+
+  @override
+  String get updateDownloading => 'Pobieranie aktualizacji…';
+
+  @override
+  String get updateReadyTitle => 'Aktualizacja pobrana';
+
+  @override
+  String get updateReadyButton => 'Uruchom ponownie, aby dokończyć';
 }

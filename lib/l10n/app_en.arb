@@ -1636,5 +1636,17 @@
   "devicesUseBase": "Use “{found}”",
   "@devicesUseBase": {"description": "Devices tab: button that switches the Home to the base topic found (3.2.2).", "placeholders": {"found": {"type": "String"}}},
   "devicesChangeConnection": "Change connection",
-  "@devicesChangeConnection": {"description": "Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2)."}
+  "@devicesChangeConnection": {"description": "Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2)."},
+  "updateAvailableTitle": "A new version of ZigDash is ready",
+  "@updateAvailableTitle": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "updateAvailableBody": "It downloads while you keep using ZigDash.",
+  "@updateAvailableBody": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "updateAvailableButton": "Update",
+  "@updateAvailableButton": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "updateDownloading": "Downloading the update…",
+  "@updateDownloading": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "updateReadyTitle": "Update downloaded",
+  "@updateReadyTitle": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "updateReadyButton": "Restart to finish",
+  "@updateReadyButton": {"description": "Dashboard: Play in-app update banner (3.2.3)."}
 }

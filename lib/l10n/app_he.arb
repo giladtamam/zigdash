@@ -1520,5 +1520,11 @@
   "guidedNoZ2mBody": "ברוקר MQTT עונה כאן, אבל Zigbee2MQTT לא שולח דרכו כלום. בדקו ש-Zigbee2MQTT פועל ומשתמש בברוקר הזה, ושה-base topic תואם להגדרות שלו. אם מכשירי ה-Zigbee שלכם נמצאים ב-ZHA של Home Assistant, ‏ZigDash לא יכול לראות אותם: הוא עובד עם Zigbee2MQTT.",
   "devicesOtherBaseBody": "Zigbee2MQTT נמצא על הברוקר הזה עם נושא הבסיס ‎“{found}”‎, אבל הבית הזה מחפש ‎“{current}”‎.",
   "devicesUseBase": "להשתמש ב-‎“{found}”‎",
-  "devicesChangeConnection": "שינוי החיבור"
+  "devicesChangeConnection": "שינוי החיבור",
+  "updateAvailableTitle": "גרסה חדשה של ZigDash מוכנה",
+  "updateAvailableBody": "היא יורדת בזמן שאתם ממשיכים להשתמש ב-ZigDash.",
+  "updateAvailableButton": "עדכון",
+  "updateDownloading": "מוריד את העדכון…",
+  "updateReadyTitle": "העדכון ירד",
+  "updateReadyButton": "הפעלה מחדש לסיום"
 }

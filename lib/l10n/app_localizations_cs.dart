@@ -4724,4 +4724,22 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get devicesChangeConnection => 'Změnit připojení';
+
+  @override
+  String get updateAvailableTitle => 'Je tu nová verze ZigDash';
+
+  @override
+  String get updateAvailableBody => 'Stáhne se, zatímco ZigDash dál používáš.';
+
+  @override
+  String get updateAvailableButton => 'Aktualizovat';
+
+  @override
+  String get updateDownloading => 'Stahuji aktualizaci…';
+
+  @override
+  String get updateReadyTitle => 'Aktualizace stažena';
+
+  @override
+  String get updateReadyButton => 'Dokončit restartem';
 }

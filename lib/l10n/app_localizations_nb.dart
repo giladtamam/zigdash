@@ -4722,4 +4722,23 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get devicesChangeConnection => 'Endre tilkobling';
+
+  @override
+  String get updateAvailableTitle => 'En ny versjon av ZigDash er klar';
+
+  @override
+  String get updateAvailableBody =>
+      'Den lastes ned mens du fortsetter å bruke ZigDash.';
+
+  @override
+  String get updateAvailableButton => 'Oppdater';
+
+  @override
+  String get updateDownloading => 'Laster ned oppdateringen …';
+
+  @override
+  String get updateReadyTitle => 'Oppdateringen er lastet ned';
+
+  @override
+  String get updateReadyButton => 'Start på nytt for å fullføre';
 }

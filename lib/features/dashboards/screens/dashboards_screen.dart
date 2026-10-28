@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/analytics/analytics_events.dart' show HelpFrom;
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../core/update/update_banner.dart';
 import '../../../core/utils/window_class.dart';
 import '../../settings/screens/settings_screen.dart' show homeStatusLabel;
 import '../../../core/review/review_prompt_trigger.dart';
@@ -291,6 +292,7 @@ class _DashboardsTabbed extends ConsumerWidget {
                     RememberHome(connectionId: connectionId),
                     DemoBanner(connectionId: connectionId),
                     if (!kiosk) ...[
+                      const UpdateBanner(),
                       HaImportOfferCard(connectionId: connectionId),
                       AnalyticsConsentCard(connectionId: connectionId),
                       RemoteOfferCard(connectionId: connectionId),

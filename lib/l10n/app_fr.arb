@@ -1376,5 +1376,11 @@
   "guidedNoZ2mBody": "Un broker MQTT répond ici, mais Zigbee2MQTT n'y envoie rien. Vérifiez que Zigbee2MQTT est démarré et utilise ce broker, et que le topic de base correspond à ses réglages. Si vos appareils Zigbee sont dans ZHA de Home Assistant, ZigDash ne peut pas les voir : il fonctionne avec Zigbee2MQTT.",
   "devicesOtherBaseBody": "Zigbee2MQTT est sur ce broker avec le topic de base « {found} », mais cette maison cherche « {current} ».",
   "devicesUseBase": "Utiliser « {found} »",
-  "devicesChangeConnection": "Modifier la connexion"
+  "devicesChangeConnection": "Modifier la connexion",
+  "updateAvailableTitle": "Une nouvelle version de ZigDash est prête",
+  "updateAvailableBody": "Elle se télécharge pendant que vous utilisez ZigDash.",
+  "updateAvailableButton": "Mettre à jour",
+  "updateDownloading": "Téléchargement de la mise à jour…",
+  "updateReadyTitle": "Mise à jour téléchargée",
+  "updateReadyButton": "Redémarrer pour terminer"
 }

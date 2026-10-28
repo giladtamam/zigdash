@@ -1451,5 +1451,11 @@
   "guidedNoZ2mBody": "Hier antwortet ein MQTT-Broker, aber Zigbee2MQTT sendet nichts darüber. Prüfen Sie, ob Zigbee2MQTT gestartet ist und diesen Broker nutzt und ob das Basis-Topic zu seinen Einstellungen passt. Wenn Ihre Zigbee-Geräte in ZHA von Home Assistant sind, kann ZigDash sie nicht sehen: Es arbeitet mit Zigbee2MQTT.",
   "devicesOtherBaseBody": "Zigbee2MQTT ist auf diesem Broker mit dem Basis-Topic „{found}“, dieses Zuhause sucht aber „{current}“.",
   "devicesUseBase": "„{found}“ verwenden",
-  "devicesChangeConnection": "Verbindung ändern"
+  "devicesChangeConnection": "Verbindung ändern",
+  "updateAvailableTitle": "Eine neue Version von ZigDash ist da",
+  "updateAvailableBody": "Sie wird geladen, während du ZigDash weiter nutzt.",
+  "updateAvailableButton": "Aktualisieren",
+  "updateDownloading": "Update wird geladen …",
+  "updateReadyTitle": "Update geladen",
+  "updateReadyButton": "Zum Abschließen neu starten"
 }

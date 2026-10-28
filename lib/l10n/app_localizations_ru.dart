@@ -4722,4 +4722,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get devicesChangeConnection => 'Изменить подключение';
+
+  @override
+  String get updateAvailableTitle => 'Готова новая версия ZigDash';
+
+  @override
+  String get updateAvailableBody =>
+      'Она загрузится, пока вы пользуетесь ZigDash.';
+
+  @override
+  String get updateAvailableButton => 'Обновить';
+
+  @override
+  String get updateDownloading => 'Загрузка обновления…';
+
+  @override
+  String get updateReadyTitle => 'Обновление загружено';
+
+  @override
+  String get updateReadyButton => 'Перезапустить, чтобы завершить';
 }

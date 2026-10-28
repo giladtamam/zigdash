@@ -4750,4 +4750,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get devicesChangeConnection => 'Verbindung ändern';
+
+  @override
+  String get updateAvailableTitle => 'Eine neue Version von ZigDash ist da';
+
+  @override
+  String get updateAvailableBody =>
+      'Sie wird geladen, während du ZigDash weiter nutzt.';
+
+  @override
+  String get updateAvailableButton => 'Aktualisieren';
+
+  @override
+  String get updateDownloading => 'Update wird geladen …';
+
+  @override
+  String get updateReadyTitle => 'Update geladen';
+
+  @override
+  String get updateReadyButton => 'Zum Abschließen neu starten';
 }
