@@ -2101,7 +2101,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Ein VPN ist aktiv und kann dein Heimnetz vor der Suche verbergen. Wenn du zu Hause bist, schalte das VPN aus und tippe auf Erneut versuchen.';
+      'Ein VPN ist aktiv und kann dein Heimnetz vor der Suche verbergen. Wenn du zu Hause bist, schalte das VPN aus und tippe auf Erneut versuchen. Oder lass es an und erlaube in den Einstellungen der VPN-App den Zugriff aufs lokale Netzwerk (LAN).';
 
   @override
   String get setupNoBrokerZ2mTitle =>

@@ -3771,7 +3771,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupVpnHint.
   ///
   /// In en, this message translates to:
-  /// **'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again.'**
+  /// **'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again. Or keep it on and allow local network (LAN) access in the VPN app\'s settings.'**
   String get setupVpnHint;
 
   /// No description provided for @setupNoBrokerZ2mTitle.

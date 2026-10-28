@@ -2092,7 +2092,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Há uma VPN ligada, e ela pode esconder sua rede de casa da busca. Se você estiver em casa, desligue a VPN e toque em Tentar de novo.';
+      'Há uma VPN ligada, e ela pode esconder sua rede de casa da busca. Se você estiver em casa, desligue a VPN e toque em Tentar de novo. Ou mantenha a VPN ligada e permita o acesso à rede local (LAN) nas configurações do app de VPN.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

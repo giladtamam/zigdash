@@ -2096,7 +2096,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Er staat een VPN aan, en die kan je thuisnetwerk voor de scan verbergen. Ben je thuis, zet de VPN dan uit en tik op Opnieuw proberen.';
+      'Er staat een VPN aan, en die kan je thuisnetwerk voor de scan verbergen. Ben je thuis, zet de VPN dan uit en tik op Opnieuw proberen. Of laat hem aan en sta in de instellingen van de VPN-app toegang tot het lokale netwerk (LAN) toe.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

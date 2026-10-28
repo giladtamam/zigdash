@@ -2086,7 +2086,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Máš zapnutou VPN a ta může domácí síť před hledáním skrýt. Pokud jsi doma, vypni VPN a klepni na Zkusit znovu.';
+      'Máš zapnutou VPN a ta může domácí síť před hledáním skrýt. Pokud jsi doma, vypni VPN a klepni na Zkusit znovu. Nebo ji nech zapnutou a v nastavení aplikace VPN povol přístup k místní síti (LAN).';
 
   @override
   String get setupNoBrokerZ2mTitle =>

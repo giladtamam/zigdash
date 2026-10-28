@@ -2104,7 +2104,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Un VPN est actif et peut masquer votre réseau domestique à la recherche. Si vous êtes chez vous, coupez le VPN et touchez Réessayer.';
+      'Un VPN est actif et peut masquer votre réseau domestique à la recherche. Si vous êtes chez vous, coupez le VPN et touchez Réessayer. Ou gardez-le et autorisez l\'accès au réseau local (LAN) dans les réglages de l\'app VPN.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

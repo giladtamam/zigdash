@@ -2094,7 +2094,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'C\'è una VPN attiva, e può nascondere la rete di casa alla scansione. Se sei a casa, disattiva la VPN e tocca Riprova.';
+      'C\'è una VPN attiva, e può nascondere la rete di casa alla scansione. Se sei a casa, disattiva la VPN e tocca Riprova. Oppure lasciala attiva e consenti l\'accesso alla rete locale (LAN) nelle impostazioni dell\'app VPN.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

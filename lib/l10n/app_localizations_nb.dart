@@ -2086,7 +2086,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Et VPN er på, og det kan skjule hjemmenettet ditt for søket. Er du hjemme, slå av VPN-et og trykk Prøv igjen.';
+      'Et VPN er på, og det kan skjule hjemmenettet ditt for søket. Er du hjemme, slå av VPN-et og trykk Prøv igjen. Eller la det være på og tillat tilgang til lokalt nettverk (LAN) i innstillingene til VPN-appen.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

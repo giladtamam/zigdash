@@ -2093,7 +2093,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Włączony jest VPN, który może ukryć sieć domową przed skanowaniem. Jeśli jesteś w domu, wyłącz VPN i dotknij Spróbuj ponownie.';
+      'Włączony jest VPN, który może ukryć sieć domową przed skanowaniem. Jeśli jesteś w domu, wyłącz VPN i dotknij Spróbuj ponownie. Albo zostaw go włączonego i zezwól w ustawieniach aplikacji VPN na dostęp do sieci lokalnej (LAN).';
 
   @override
   String get setupNoBrokerZ2mTitle =>

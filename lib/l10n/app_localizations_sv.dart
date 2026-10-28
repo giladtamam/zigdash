@@ -2085,7 +2085,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'En VPN är på, och den kan dölja ditt hemnätverk för sökningen. Är du hemma, stäng av VPN:en och tryck på Försök igen.';
+      'En VPN är på, och den kan dölja ditt hemnätverk för sökningen. Är du hemma, stäng av VPN:en och tryck på Försök igen. Eller låt den vara på och tillåt åtkomst till lokalt nätverk (LAN) i VPN-appens inställningar.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

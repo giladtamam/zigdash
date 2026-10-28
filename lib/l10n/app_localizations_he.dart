@@ -2066,7 +2066,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'VPN פועל, והוא יכול להסתיר את הרשת הביתית מהסריקה. אם אתם בבית, כבו את ה-VPN והקישו על נסו שוב.';
+      'VPN פועל, והוא יכול להסתיר את הרשת הביתית מהסריקה. אם אתם בבית, כבו את ה-VPN והקישו על נסו שוב. או השאירו אותו פועל ואפשרו גישה לרשת המקומית (LAN) בהגדרות אפליקציית ה-VPN.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

@@ -757,7 +757,7 @@
   "setupNoBrokerHaBody": "Home Assistant נמצא בכתובת {host}, אבל שום דבר לא עונה בפורט MQTT 1883. ב-Home Assistant פתחו הגדרות › תוספים, התקינו והפעילו את התוסף Mosquitto broker ונסו שוב.",
   "@setupNoBrokerHaBody": {"placeholders": {"host": {"type": "String"}}},
   "setupNoBrokerHaZha": "משתמשים ב-Zigbee המובנה של Home Assistant ‏(ZHA) במקום Zigbee2MQTT? ZigDash עובד רק עם Zigbee2MQTT, ולכן לא רואה מכשירי ZHA. ההדגמה מראה מה הייתם מקבלים.",
-  "setupVpnHint": "VPN פועל, והוא יכול להסתיר את הרשת הביתית מהסריקה. אם אתם בבית, כבו את ה-VPN והקישו על נסו שוב.",
+  "setupVpnHint": "VPN פועל, והוא יכול להסתיר את הרשת הביתית מהסריקה. אם אתם בבית, כבו את ה-VPN והקישו על נסו שוב. או השאירו אותו פועל ואפשרו גישה לרשת המקומית (LAN) בהגדרות אפליקציית ה-VPN.",
   "setupNoBrokerZ2mTitle": "נמצא Zigbee2MQTT, אבל אי אפשר להגיע ל-broker שלו",
   "setupNoBrokerZ2mBody": "Zigbee2MQTT נמצא בכתובת {host}, אבל ה-MQTT broker שלו לא מקבל חיבורים מהטלפון. Mosquitto 2 מאזין רק ברכזת עצמה עד שבקובץ ההגדרות יופיעו 'listener 1883' ו-'allow_anonymous true' (או פרטי התחברות). הפעילו אותו מחדש ונסו שוב.",
   "@setupNoBrokerZ2mBody": {"placeholders": {"host": {"type": "String"}}},

@@ -2083,7 +2083,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again.';
+      'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again. Or keep it on and allow local network (LAN) access in the VPN app\'s settings.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

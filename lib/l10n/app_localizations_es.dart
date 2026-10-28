@@ -2095,7 +2095,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Hay una VPN activa, y puede ocultar tu red de casa a la búsqueda. Si estás en casa, desactiva la VPN y pulsa Reintentar.';
+      'Hay una VPN activa, y puede ocultar tu red de casa a la búsqueda. Si estás en casa, desactiva la VPN y pulsa Reintentar. O déjala activa y permite el acceso a la red local (LAN) en los ajustes de la app de VPN.';
 
   @override
   String get setupNoBrokerZ2mTitle =>

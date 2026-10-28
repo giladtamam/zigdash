@@ -2085,7 +2085,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get setupVpnHint =>
-      'Включён VPN, и он может скрыть домашнюю сеть от поиска. Если вы дома, выключите VPN и нажмите «Повторить».';
+      'Включён VPN, и он может скрыть домашнюю сеть от поиска. Если вы дома, выключите VPN и нажмите «Повторить». Или оставьте его включённым и разрешите доступ к локальной сети (LAN) в настройках VPN-приложения.';
 
   @override
   String get setupNoBrokerZ2mTitle =>
