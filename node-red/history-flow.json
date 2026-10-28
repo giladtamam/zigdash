@@ -54,7 +54,7 @@
   "type": "function",
   "z": "zigdash_history_tab",
   "name": "ingest config",
-  "func": "// Function node \"ingest config\". In: retained zigdash/history/config.\n// Keeps the config and an index from device state topic to the readings\n// recorded from it. An empty payload stops recording; records already on\n// the broker stay until they age out.\nconst raw = msg.payload;\nconst empty = raw === undefined || raw === null ||\n    (typeof raw === 'string' && raw.trim() === '') ||\n    (Buffer.isBuffer(raw) && raw.length === 0);\nif (empty) {\n    flow.set('cfg', null);\n    flow.set('index', {});\n    return null;\n}\nconst cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());\nconst index = {};\nconst keys = new Set();\nfor (const r of (cfg.readings || []).slice(0, 50)) {\n    if (!r.topic || !r.ieee || !r.attr || !r.path) continue;\n    const key = r.ieee + '/' + r.attr;\n    keys.add(key);\n    (index[r.topic] = index[r.topic] || []).push({ key, path: r.path, unit: r.unit || '' });\n}\nflow.set('cfg', cfg);\nflow.set('index', index);\n// Forget readings that are no longer recorded.\nconst mem = flow.get('mem') || {};\nfor (const k of Object.keys(mem)) if (!keys.has(k)) delete mem[k];\nflow.set('mem', mem);\nreturn null;\n",
+  "func": "// Function node \"ingest config\". In: retained zigdash/history/config.\n// Keeps the config and an index from device state topic to the readings\n// recorded from it, and another to the tallies (3.3: on time and openings\n// of lights, plugs, doors and motion sensors). An empty payload stops recording; records already on\n// the broker stay until they age out.\nconst raw = msg.payload;\nconst empty = raw === undefined || raw === null ||\n    (typeof raw === 'string' && raw.trim() === '') ||\n    (Buffer.isBuffer(raw) && raw.length === 0);\nif (empty) {\n    flow.set('cfg', null);\n    flow.set('index', {});\n    flow.set('tindex', {});\n    return null;\n}\nconst cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());\nconst index = {};\nconst keys = new Set();\nfor (const r of (cfg.readings || []).slice(0, 50)) {\n    if (!r.topic || !r.ieee || !r.attr || !r.path) continue;\n    const key = r.ieee + '/' + r.attr;\n    keys.add(key);\n    (index[r.topic] = index[r.topic] || []).push({ key, path: r.path, unit: r.unit || '' });\n}\nconst tindex = {};\nconst tkeys = new Set();\nfor (const t of (cfg.tallies || []).slice(0, 50)) {\n    if (!t.topic || !t.ieee || !t.attr || !t.path || !['on', 'open', 'motion'].includes(t.kind)) continue;\n    const key = t.ieee + '/' + t.attr;\n    tkeys.add(key);\n    (tindex[t.topic] = tindex[t.topic] || []).push({ key, path: t.path, kind: t.kind });\n}\nflow.set('cfg', cfg);\nflow.set('index', index);\nflow.set('tindex', tindex);\n// Forget readings that are no longer recorded.\nconst mem = flow.get('mem') || {};\nfor (const k of Object.keys(mem)) if (!keys.has(k)) delete mem[k];\nflow.set('mem', mem);\nconst tmem = flow.get('tmem') || {};\nfor (const k of Object.keys(tmem)) if (!tkeys.has(k)) delete tmem[k];\nflow.set('tmem', tmem);\nreturn null;\n",
   "outputs": 1,
   "noerr": 0,
   "initialize": "",
@@ -104,6 +104,43 @@
   ]
  },
  {
+  "id": "zdh_in_tallies",
+  "type": "mqtt in",
+  "z": "zigdash_history_tab",
+  "name": "tally records",
+  "topic": "zigdash/history/tally/+/+/+",
+  "qos": "1",
+  "datatype": "utf8",
+  "broker": "zigdash_history_broker",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "x": 120,
+  "y": 160,
+  "wires": [
+   [
+    "zdh_fn_restoretally"
+   ]
+  ]
+ },
+ {
+  "id": "zdh_fn_restoretally",
+  "type": "function",
+  "z": "zigdash_history_tab",
+  "name": "restore tallies",
+  "func": "// Function node \"restore tallies\" (3.3). In: retained\n// zigdash/history/tally/+/+/+ (tally day records, read back on connect and\n// echoed after each publish). Like \"restore today\": after a restart today's\n// record is the only copy of today's counts, and of whether a device was\n// still on. Slots already in memory win.\nconst parts = msg.topic.split('/'); // zigdash history tally <ieee> <attr> <date>\nif (parts.length !== 6) return null;\nconst key = parts[3] + '/' + parts[4];\nconst date = parts[5];\nconst cfg = flow.get('cfg');\nconst tz = (cfg && cfg.timeZone) || 'UTC';\nconst now = new Date();\nconst today = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);\nif (date !== today) return null;\nconst raw = msg.payload;\nif (raw === undefined || raw === null || raw === '' || (Buffer.isBuffer(raw) && raw.length === 0)) return null;\nlet rec;\ntry { rec = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString()); } catch (e) { return null; }\nconst tmem = flow.get('tmem') || {};\nlet m = tmem[key];\nif (!m || m.date !== date) {\n    m = { date, slots: {}, pub: -1, kind: rec.kind, last: null, since: null };\n    tmem[key] = m;\n}\nfor (const b of rec.b || []) {\n    const [slot, n, minutes] = b;\n    if (m.slots[slot]) continue;\n    m.slots[slot] = [n, minutes];\n}\n// Still on when the record was written: keep crediting from then.\nif (m.last === null && typeof rec.last === 'boolean') {\n    m.last = rec.last;\n    m.since = rec.last && typeof rec.since === 'number' ? rec.since : null;\n}\nflow.set('tmem', tmem);\nreturn null;\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 160,
+  "wires": [
+   []
+  ]
+ },
+ {
   "id": "zdh_in_devices",
   "type": "mqtt in",
   "z": "zigdash_history_tab",
@@ -116,10 +153,11 @@
   "rap": true,
   "rh": 0,
   "x": 120,
-  "y": 200,
+  "y": 220,
   "wires": [
    [
-    "zdh_fn_record"
+    "zdh_fn_record",
+    "zdh_fn_tally"
    ]
   ]
  },
@@ -136,6 +174,23 @@
   "libs": [],
   "x": 330,
   "y": 200,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "zdh_fn_tally",
+  "type": "function",
+  "z": "zigdash_history_tab",
+  "name": "tally",
+  "func": "// Function node \"tally\" (3.3). In: <base>/# device state messages.\n// For each configured light, plug, door or motion sensor, counts the times\n// it turned on, opened or saw motion, per 15-minute slot of today, and\n// credits on time to the slot when it turns off (\"tick\" credits devices\n// still on every minute). Repeated reports of the same value count once.\n// Publishing happens in \"tick\".\nconst tindex = flow.get('tindex') || {};\nconst tallies = tindex[msg.topic];\nif (!tallies) return null;\nlet state = msg.payload;\nif (Buffer.isBuffer(state)) state = state.toString();\nif (typeof state === 'string') { try { state = JSON.parse(state); } catch (e) { return null; } }\nif (!state || typeof state !== 'object') return null;\nconst cfg = flow.get('cfg') || {};\nconst tz = cfg.timeZone || 'UTC';\nconst now = new Date();\nconst p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n    .formatToParts(now).map(x => [x.type, x.value]));\nconst date = `${p.year}-${p.month}-${p.day}`;\nconst slot = Math.floor((Number(p.hour) * 60 + Number(p.minute)) / 15);\n// Zigbee2MQTT: lights and plugs say \"ON\"/\"OFF\", contact true means closed,\n// occupancy true means motion.\nconst active = (kind, v) => {\n    if (kind === 'on') return v === 'ON' || v === 'on' || v === true;\n    if (kind === 'open') return v === false;\n    return v === true;\n};\nconst tmem = flow.get('tmem') || {};\nfor (const t of tallies) {\n    let v = state;\n    for (const seg of t.path.split('.')) v = v === null || v === undefined ? undefined : v[seg];\n    if (v === undefined || v === null) continue;\n    const on = active(t.kind, v);\n    let m = tmem[t.key];\n    if (!m || m.date !== date) {\n        // A new day before \"tick\" closed the old one: tick publishes it.\n        if (m && m.date !== date) {\n            const done = flow.get('tdone') || [];\n            done.push({ key: t.key, rec: m });\n            flow.set('tdone', done);\n        }\n        m = { date, slots: {}, pub: -1, kind: t.kind, last: m ? m.last : null, since: m ? m.since : null };\n        tmem[t.key] = m;\n    }\n    m.kind = t.kind;\n    const s = m.slots[slot] || (m.slots[slot] = [0, 0]);\n    if (on && m.last !== true) {\n        // The first value after a start isn't a change unless it was off.\n        if (m.last === false) s[0] += 1;\n        m.since = now.getTime();\n    } else if (!on && m.last === true) {\n        if (m.since) s[1] += Math.max(0, now.getTime() - m.since) / 60000;\n        m.since = null;\n    }\n    m.last = on;\n}\nflow.set('tmem', tmem);\nreturn null;\n",
+  "outputs": 1,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 330,
+  "y": 240,
   "wires": [
    []
   ]
@@ -170,7 +225,7 @@
   "type": "function",
   "z": "zigdash_history_tab",
   "name": "tick",
-  "func": "// Function node \"tick\", every minute. Publishes each reading's day record\n// when a 15-minute slot closes, publishes yesterday's final record after\n// midnight, and on a new day clears records older than keepDays.\nconst cfg = flow.get('cfg');\nif (!cfg) return null;\nconst tz = cfg.timeZone || 'UTC';\nconst keep = cfg.keepDays || 30;\nconst fmt = d => {\n    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n        .formatToParts(d).map(x => [x.type, x.value]));\n    return { date: `${p.year}-${p.month}-${p.day}`, slot: Math.floor((Number(p.hour) * 60 + Number(p.minute)) / 15) };\n};\nconst now = new Date();\nconst { date, slot } = fmt(now);\nconst round = x => Math.round(x * 100) / 100;\nconst record = (key, m, upTo) => {\n    const b = Object.keys(m.slots).map(Number).filter(s => s < upTo).sort((a, c) => a - c)\n        .map(s => { const [n, sum, min, max] = m.slots[s]; return [s, round(sum / n), round(min), round(max)]; });\n    return { topic: `zigdash/history/${key}/${m.date}`, retain: true, payload: JSON.stringify({ v: 1, unit: m.unit || '', b }) };\n};\nconst out = [];\nconst mem = flow.get('mem') || {};\n// Days that \"record\" closed early.\nfor (const d of flow.get('done') || []) out.push(record(d.key, d.rec, 96));\nflow.set('done', []);\nfor (const key of Object.keys(mem)) {\n    const m = mem[key];\n    if (m.date !== date) { // the day ended with no new value since\n        out.push(record(key, m, 96));\n        mem[key] = { date, slots: {}, pub: -1, unit: m.unit };\n        continue;\n    }\n    if (m.pub !== slot && Object.keys(m.slots).some(s => Number(s) < slot)) {\n        out.push(record(key, m, slot));\n        m.pub = slot;\n    }\n}\nflow.set('mem', mem);\n// A new day (or the first tick after a start): clear old records. A week\n// of dates beyond the window, so a recorder that was off for days still\n// cleans up.\nif (flow.get('day') !== date) {\n    flow.set('day', date);\n    const index = flow.get('index') || {};\n    const keys = new Set();\n    for (const rs of Object.values(index)) for (const r of rs) keys.add(r.key);\n    for (let back = keep; back < keep + 7; back++) {\n        const old = fmt(new Date(now.getTime() - back * 86400000)).date;\n        for (const key of keys) out.push({ topic: `zigdash/history/${key}/${old}`, retain: true, payload: '' });\n    }\n}\nreturn out.length ? [out] : null;\n",
+  "func": "// Function node \"tick\", every minute. Publishes each reading's day record\n// when a 15-minute slot closes, publishes yesterday's final record after\n// midnight, and on a new day clears records older than keepDays. The same\n// for tallies (3.3), after crediting this minute to devices still on.\nconst cfg = flow.get('cfg');\nif (!cfg) return null;\nconst tz = cfg.timeZone || 'UTC';\nconst keep = cfg.keepDays || 30;\nconst fmt = d => {\n    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })\n        .formatToParts(d).map(x => [x.type, x.value]));\n    return { date: `${p.year}-${p.month}-${p.day}`, slot: Math.floor((Number(p.hour) * 60 + Number(p.minute)) / 15) };\n};\nconst now = new Date();\nconst { date, slot } = fmt(now);\nconst round = x => Math.round(x * 100) / 100;\nconst record = (key, m, upTo) => {\n    const b = Object.keys(m.slots).map(Number).filter(s => s < upTo).sort((a, c) => a - c)\n        .map(s => { const [n, sum, min, max] = m.slots[s]; return [s, round(sum / n), round(min), round(max)]; });\n    return { topic: `zigdash/history/${key}/${m.date}`, retain: true, payload: JSON.stringify({ v: 1, unit: m.unit || '', b }) };\n};\nconst out = [];\nconst mem = flow.get('mem') || {};\n// Days that \"record\" closed early.\nfor (const d of flow.get('done') || []) out.push(record(d.key, d.rec, 96));\nflow.set('done', []);\nfor (const key of Object.keys(mem)) {\n    const m = mem[key];\n    if (m.date !== date) { // the day ended with no new value since\n        out.push(record(key, m, 96));\n        mem[key] = { date, slots: {}, pub: -1, unit: m.unit };\n        continue;\n    }\n    if (m.pub !== slot && Object.keys(m.slots).some(s => Number(s) < slot)) {\n        out.push(record(key, m, slot));\n        m.pub = slot;\n    }\n}\nflow.set('mem', mem);\n// Tallies: [slot, times turned on or opened, minutes on].\nconst tally = (key, m, upTo) => {\n    const b = Object.keys(m.slots).map(Number).filter(s => s < upTo).sort((a, c) => a - c)\n        .map(s => [s, m.slots[s][0], Math.round(m.slots[s][1] * 10) / 10]);\n    return { topic: `zigdash/history/tally/${key}/${m.date}`, retain: true,\n        payload: JSON.stringify({ v: 1, kind: m.kind, b, last: m.last, since: m.since }) };\n};\nfor (const d of flow.get('tdone') || []) out.push(tally(d.key, d.rec, 96));\nflow.set('tdone', []);\nconst tmem = flow.get('tmem') || {};\nconst nowMs = now.getTime();\nfor (const key of Object.keys(tmem)) {\n    let m = tmem[key];\n    if (m.date !== date) {\n        if (m.last === true && m.since) {\n            // Still on at midnight: the rest of the old day goes to its last slot.\n            const s = m.slots[95] || (m.slots[95] = [0, 0]);\n            s[1] += Math.max(0, Math.min(nowMs - m.since, 15 * 60000)) / 60000;\n            m.since = nowMs;\n        }\n        out.push(tally(key, m, 96));\n        m = tmem[key] = { date, slots: {}, pub: -1, kind: m.kind, last: m.last, since: m.since };\n    }\n    if (m.last === true && m.since) {\n        // The minute just past belongs to the slot it started in.\n        const from = fmt(new Date(m.since));\n        const at = from.date === date ? from.slot : slot;\n        const s = m.slots[at] || (m.slots[at] = [0, 0]);\n        s[1] += Math.max(0, nowMs - m.since) / 60000;\n        m.since = nowMs;\n    }\n    if (m.pub !== slot && Object.keys(m.slots).some(s => Number(s) < slot)) {\n        out.push(tally(key, m, slot));\n        m.pub = slot;\n    }\n}\nflow.set('tmem', tmem);\n// A new day (or the first tick after a start): clear old records. A week\n// of dates beyond the window, so a recorder that was off for days still\n// cleans up.\nif (flow.get('day') !== date) {\n    flow.set('day', date);\n    const index = flow.get('index') || {};\n    const keys = new Set();\n    for (const rs of Object.values(index)) for (const r of rs) keys.add(r.key);\n    for (let back = keep; back < keep + 7; back++) {\n        const old = fmt(new Date(now.getTime() - back * 86400000)).date;\n        for (const key of keys) out.push({ topic: `zigdash/history/${key}/${old}`, retain: true, payload: '' });\n        for (const key of Object.keys(tmem)) out.push({ topic: `zigdash/history/tally/${key}/${old}`, retain: true, payload: '' });\n    }\n}\nreturn out.length ? [out] : null;\n",
   "outputs": 1,
   "noerr": 0,
   "initialize": "",
