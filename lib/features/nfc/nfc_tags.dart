@@ -147,7 +147,8 @@ class _WriteNfcTagSheetState extends ConsumerState<WriteNfcTagSheet> {
 
   @override
   void dispose() {
-    if (_waiting) unawaited(_bridge.cancel());
+    // Also after a write: the phone keeps reading tags until the sheet closes.
+    unawaited(_bridge.cancel());
     super.dispose();
   }
 

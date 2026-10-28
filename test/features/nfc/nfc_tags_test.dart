@@ -127,7 +127,7 @@ void main() {
       expect(find.text('NFC is off'), findsOneWidget);
     });
 
-    testWidgets('closing while waiting stops the wait', (tester) async {
+    testWidgets('closing stops the phone reading tags', (tester) async {
       final bridge = await _pump(tester, NfcState.on);
       await tester.pumpWidget(const SizedBox());
       expect(bridge.cancels, 1);
