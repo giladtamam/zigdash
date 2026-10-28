@@ -122,8 +122,10 @@ Future<void> showWriteNfcTag(
   required String label,
 }) => showModalBottomSheet<void>(
   context: context,
-  showDragHandle: true,
-  isDismissible: true,
+  // Only Cancel or Close end it: holding a phone and a tag, a stray touch
+  // outside the sheet closed it before "Tag ready" showed (S24 FE).
+  isDismissible: false,
+  enableDrag: false,
   builder: (_) => WriteNfcTagSheet(
     connectionId: connectionId,
     action: action,
