@@ -4755,4 +4755,55 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Reiniciar para concluir';
+
+  @override
+  String get nfcWriteTag => 'Gravar em tag NFC';
+
+  @override
+  String get nfcHoldTitle => 'Aproxime uma tag do telefone';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Aproxime um adesivo NFC vazio da parte de trás do telefone. Tocar nele depois vai executar $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Tag pronta';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Toque o telefone nesta tag para executar $name. Funciona com o ZigDash fechado.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Não foi possível gravar a tag';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Esta tag está bloqueada e não pode ser alterada. Tente outra.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Esta tag é pequena demais. Use um adesivo NTAG213 ou maior.';
+
+  @override
+  String get nfcFailedBody =>
+      'Segure a tag parada na parte de trás do telefone e tente de novo.';
+
+  @override
+  String get nfcOffTitle => 'O NFC está desligado';
+
+  @override
+  String get nfcOffBody =>
+      'Ligue o NFC nas configurações do Android e tente de novo.';
+
+  @override
+  String get nfcNoneTitle => 'Este telefone não tem NFC';
+
+  @override
+  String get nfcNoneBody =>
+      'Este telefone não consegue ler nem gravar tags NFC.';
+
+  @override
+  String get nfcWriteAnother => 'Gravar outra tag';
 }

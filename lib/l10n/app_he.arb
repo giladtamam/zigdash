@@ -1526,5 +1526,19 @@
   "updateAvailableButton": "עדכון",
   "updateDownloading": "מוריד את העדכון…",
   "updateReadyTitle": "העדכון ירד",
-  "updateReadyButton": "הפעלה מחדש לסיום"
+  "updateReadyButton": "הפעלה מחדש לסיום",
+  "nfcWriteTag": "כתיבה לתג NFC",
+  "nfcHoldTitle": "קרבו תג לטלפון",
+  "nfcHoldBody": "קרבו מדבקת NFC ריקה לגב הטלפון. נגיעה בה בהמשך תפעיל את {name}.",
+  "nfcWrittenTitle": "התג מוכן",
+  "nfcWrittenBody": "געו בתג הזה עם הטלפון כדי להפעיל את {name}. זה עובד גם כש-ZigDash סגור.",
+  "nfcFailedTitle": "לא ניתן לכתוב לתג",
+  "nfcReadonlyBody": "התג הזה נעול ואי אפשר לשנות אותו. נסו תג אחר.",
+  "nfcTooSmallBody": "התג הזה קטן מדי. השתמשו במדבקת NTAG213 או גדולה יותר.",
+  "nfcFailedBody": "החזיקו את התג יציב על גב הטלפון ונסו שוב.",
+  "nfcOffTitle": "ה-NFC כבוי",
+  "nfcOffBody": "הפעילו NFC בהגדרות של אנדרואיד ונסו שוב.",
+  "nfcNoneTitle": "אין NFC בטלפון הזה",
+  "nfcNoneBody": "הטלפון הזה לא יכול לקרוא או לכתוב תגי NFC.",
+  "nfcWriteAnother": "כתיבת תג נוסף"
 }

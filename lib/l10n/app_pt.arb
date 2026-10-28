@@ -1417,5 +1417,19 @@
   "updateAvailableButton": "Atualizar",
   "updateDownloading": "Baixando a atualização…",
   "updateReadyTitle": "Atualização baixada",
-  "updateReadyButton": "Reiniciar para concluir"
+  "updateReadyButton": "Reiniciar para concluir",
+  "nfcWriteTag": "Gravar em tag NFC",
+  "nfcHoldTitle": "Aproxime uma tag do telefone",
+  "nfcHoldBody": "Aproxime um adesivo NFC vazio da parte de trás do telefone. Tocar nele depois vai executar {name}.",
+  "nfcWrittenTitle": "Tag pronta",
+  "nfcWrittenBody": "Toque o telefone nesta tag para executar {name}. Funciona com o ZigDash fechado.",
+  "nfcFailedTitle": "Não foi possível gravar a tag",
+  "nfcReadonlyBody": "Esta tag está bloqueada e não pode ser alterada. Tente outra.",
+  "nfcTooSmallBody": "Esta tag é pequena demais. Use um adesivo NTAG213 ou maior.",
+  "nfcFailedBody": "Segure a tag parada na parte de trás do telefone e tente de novo.",
+  "nfcOffTitle": "O NFC está desligado",
+  "nfcOffBody": "Ligue o NFC nas configurações do Android e tente de novo.",
+  "nfcNoneTitle": "Este telefone não tem NFC",
+  "nfcNoneBody": "Este telefone não consegue ler nem gravar tags NFC.",
+  "nfcWriteAnother": "Gravar outra tag"
 }

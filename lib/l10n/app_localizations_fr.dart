@@ -4777,4 +4777,55 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Redémarrer pour terminer';
+
+  @override
+  String get nfcWriteTag => 'Écrire sur un tag NFC';
+
+  @override
+  String get nfcHoldTitle => 'Approchez un tag du téléphone';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Approchez un sticker NFC vierge du dos du téléphone. Le toucher ensuite lancera $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Tag prêt';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Touchez ce tag avec le téléphone pour lancer $name. Ça marche même app fermée.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Impossible d\'écrire le tag';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Ce tag est verrouillé et ne peut pas être modifié. Essayez-en un autre.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Ce tag est trop petit. Utilisez un sticker NTAG213 ou plus grand.';
+
+  @override
+  String get nfcFailedBody =>
+      'Tenez le tag immobile contre le dos du téléphone et réessayez.';
+
+  @override
+  String get nfcOffTitle => 'Le NFC est désactivé';
+
+  @override
+  String get nfcOffBody =>
+      'Activez le NFC dans les réglages Android, puis réessayez.';
+
+  @override
+  String get nfcNoneTitle => 'Pas de NFC sur ce téléphone';
+
+  @override
+  String get nfcNoneBody =>
+      'Ce téléphone ne peut pas lire ni écrire de tags NFC.';
+
+  @override
+  String get nfcWriteAnother => 'Écrire un autre tag';
 }

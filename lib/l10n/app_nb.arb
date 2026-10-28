@@ -1457,5 +1457,19 @@
   "updateAvailableButton": "Oppdater",
   "updateDownloading": "Laster ned oppdateringen …",
   "updateReadyTitle": "Oppdateringen er lastet ned",
-  "updateReadyButton": "Start på nytt for å fullføre"
+  "updateReadyButton": "Start på nytt for å fullføre",
+  "nfcWriteTag": "Skriv til NFC-brikke",
+  "nfcHoldTitle": "Hold en brikke mot telefonen",
+  "nfcHoldBody": "Hold et tomt NFC-klistremerke mot baksiden av telefonen. Å trykke på det senere kjører {name}.",
+  "nfcWrittenTitle": "Brikken er klar",
+  "nfcWrittenBody": "Trykk telefonen mot brikken for å kjøre {name}. Det virker selv om ZigDash er lukket.",
+  "nfcFailedTitle": "Kunne ikke skrive til brikken",
+  "nfcReadonlyBody": "Denne brikken er låst og kan ikke endres. Prøv en annen.",
+  "nfcTooSmallBody": "Denne brikken er for liten. Bruk et NTAG213-klistremerke eller større.",
+  "nfcFailedBody": "Hold brikken i ro mot baksiden av telefonen og prøv igjen.",
+  "nfcOffTitle": "NFC er av",
+  "nfcOffBody": "Slå på NFC i Android-innstillingene og prøv igjen.",
+  "nfcNoneTitle": "Ingen NFC på denne telefonen",
+  "nfcNoneBody": "Denne telefonen kan ikke lese eller skrive NFC-brikker.",
+  "nfcWriteAnother": "Skriv en brikke til"
 }

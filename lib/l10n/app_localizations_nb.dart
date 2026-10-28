@@ -4741,4 +4741,54 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Start på nytt for å fullføre';
+
+  @override
+  String get nfcWriteTag => 'Skriv til NFC-brikke';
+
+  @override
+  String get nfcHoldTitle => 'Hold en brikke mot telefonen';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Hold et tomt NFC-klistremerke mot baksiden av telefonen. Å trykke på det senere kjører $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Brikken er klar';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Trykk telefonen mot brikken for å kjøre $name. Det virker selv om ZigDash er lukket.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Kunne ikke skrive til brikken';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Denne brikken er låst og kan ikke endres. Prøv en annen.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Denne brikken er for liten. Bruk et NTAG213-klistremerke eller større.';
+
+  @override
+  String get nfcFailedBody =>
+      'Hold brikken i ro mot baksiden av telefonen og prøv igjen.';
+
+  @override
+  String get nfcOffTitle => 'NFC er av';
+
+  @override
+  String get nfcOffBody => 'Slå på NFC i Android-innstillingene og prøv igjen.';
+
+  @override
+  String get nfcNoneTitle => 'Ingen NFC på denne telefonen';
+
+  @override
+  String get nfcNoneBody =>
+      'Denne telefonen kan ikke lese eller skrive NFC-brikker.';
+
+  @override
+  String get nfcWriteAnother => 'Skriv en brikke til';
 }

@@ -4769,4 +4769,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Zum Abschließen neu starten';
+
+  @override
+  String get nfcWriteTag => 'Auf NFC-Tag schreiben';
+
+  @override
+  String get nfcHoldTitle => 'Tag ans Handy halten';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Halte einen leeren NFC-Sticker an die Rückseite deines Handys. Später startet ein Antippen $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Tag fertig';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Tippe mit dem Handy auf diesen Tag, um $name zu starten. Das klappt auch bei geschlossener App.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Tag konnte nicht beschrieben werden';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Dieser Tag ist gesperrt und lässt sich nicht ändern. Versuch einen anderen.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Dieser Tag ist zu klein. Nimm einen NTAG213-Sticker oder größer.';
+
+  @override
+  String get nfcFailedBody =>
+      'Halte den Tag ruhig an die Rückseite des Handys und versuch es noch einmal.';
+
+  @override
+  String get nfcOffTitle => 'NFC ist aus';
+
+  @override
+  String get nfcOffBody =>
+      'Schalte NFC in den Android-Einstellungen ein und versuch es dann noch einmal.';
+
+  @override
+  String get nfcNoneTitle => 'Kein NFC auf diesem Handy';
+
+  @override
+  String get nfcNoneBody =>
+      'Dieses Handy kann keine NFC-Tags lesen oder schreiben.';
+
+  @override
+  String get nfcWriteAnother => 'Weiteren Tag schreiben';
 }

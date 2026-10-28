@@ -1382,5 +1382,19 @@
   "updateAvailableButton": "Mettre à jour",
   "updateDownloading": "Téléchargement de la mise à jour…",
   "updateReadyTitle": "Mise à jour téléchargée",
-  "updateReadyButton": "Redémarrer pour terminer"
+  "updateReadyButton": "Redémarrer pour terminer",
+  "nfcWriteTag": "Écrire sur un tag NFC",
+  "nfcHoldTitle": "Approchez un tag du téléphone",
+  "nfcHoldBody": "Approchez un sticker NFC vierge du dos du téléphone. Le toucher ensuite lancera {name}.",
+  "nfcWrittenTitle": "Tag prêt",
+  "nfcWrittenBody": "Touchez ce tag avec le téléphone pour lancer {name}. Ça marche même app fermée.",
+  "nfcFailedTitle": "Impossible d'écrire le tag",
+  "nfcReadonlyBody": "Ce tag est verrouillé et ne peut pas être modifié. Essayez-en un autre.",
+  "nfcTooSmallBody": "Ce tag est trop petit. Utilisez un sticker NTAG213 ou plus grand.",
+  "nfcFailedBody": "Tenez le tag immobile contre le dos du téléphone et réessayez.",
+  "nfcOffTitle": "Le NFC est désactivé",
+  "nfcOffBody": "Activez le NFC dans les réglages Android, puis réessayez.",
+  "nfcNoneTitle": "Pas de NFC sur ce téléphone",
+  "nfcNoneBody": "Ce téléphone ne peut pas lire ni écrire de tags NFC.",
+  "nfcWriteAnother": "Écrire un autre tag"
 }

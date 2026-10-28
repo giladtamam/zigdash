@@ -4741,4 +4741,55 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Перезапустить, чтобы завершить';
+
+  @override
+  String get nfcWriteTag => 'Записать на NFC-метку';
+
+  @override
+  String get nfcHoldTitle => 'Поднесите метку к телефону';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Поднесите пустую NFC-наклейку к задней стороне телефона. Потом касание к ней запустит $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Метка готова';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Коснитесь телефоном этой метки, чтобы запустить $name. Работает даже при закрытом ZigDash.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Не удалось записать метку';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Эта метка заблокирована, её нельзя изменить. Попробуйте другую.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Эта метка слишком мала. Используйте наклейку NTAG213 или больше.';
+
+  @override
+  String get nfcFailedBody =>
+      'Держите метку неподвижно у задней стороны телефона и попробуйте снова.';
+
+  @override
+  String get nfcOffTitle => 'NFC выключен';
+
+  @override
+  String get nfcOffBody =>
+      'Включите NFC в настройках Android и попробуйте снова.';
+
+  @override
+  String get nfcNoneTitle => 'На этом телефоне нет NFC';
+
+  @override
+  String get nfcNoneBody =>
+      'Этот телефон не умеет читать и записывать NFC-метки.';
+
+  @override
+  String get nfcWriteAnother => 'Записать ещё метку';
 }

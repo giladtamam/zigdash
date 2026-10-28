@@ -1372,5 +1372,19 @@
   "updateAvailableButton": "Aggiorna",
   "updateDownloading": "Download dell'aggiornamento…",
   "updateReadyTitle": "Aggiornamento scaricato",
-  "updateReadyButton": "Riavvia per completare"
+  "updateReadyButton": "Riavvia per completare",
+  "nfcWriteTag": "Scrivi su tag NFC",
+  "nfcHoldTitle": "Avvicina un tag al telefono",
+  "nfcHoldBody": "Avvicina un adesivo NFC vuoto al retro del telefono. Toccarlo poi avvierà {name}.",
+  "nfcWrittenTitle": "Tag pronto",
+  "nfcWrittenBody": "Tocca questo tag con il telefono per avviare {name}. Funziona anche con ZigDash chiuso.",
+  "nfcFailedTitle": "Impossibile scrivere il tag",
+  "nfcReadonlyBody": "Questo tag è bloccato e non si può modificare. Provane un altro.",
+  "nfcTooSmallBody": "Questo tag è troppo piccolo. Usa un adesivo NTAG213 o più grande.",
+  "nfcFailedBody": "Tieni fermo il tag sul retro del telefono e riprova.",
+  "nfcOffTitle": "L'NFC è disattivato",
+  "nfcOffBody": "Attiva l'NFC nelle impostazioni di Android, poi riprova.",
+  "nfcNoneTitle": "Nessun NFC su questo telefono",
+  "nfcNoneBody": "Questo telefono non può leggere né scrivere tag NFC.",
+  "nfcWriteAnother": "Scrivi un altro tag"
 }

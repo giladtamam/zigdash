@@ -4742,4 +4742,55 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Starta om för att slutföra';
+
+  @override
+  String get nfcWriteTag => 'Skriv till NFC-tagg';
+
+  @override
+  String get nfcHoldTitle => 'Håll en tagg mot telefonen';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Håll ett tomt NFC-klistermärke mot baksidan av telefonen. Att trycka på det sedan kör $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Taggen är klar';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Tryck telefonen mot taggen för att köra $name. Det fungerar även när ZigDash är stängt.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Taggen kunde inte skrivas';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Taggen är låst och kan inte ändras. Prova en annan.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Taggen är för liten. Använd ett NTAG213-klistermärke eller större.';
+
+  @override
+  String get nfcFailedBody =>
+      'Håll taggen stilla mot telefonens baksida och försök igen.';
+
+  @override
+  String get nfcOffTitle => 'NFC är avstängt';
+
+  @override
+  String get nfcOffBody =>
+      'Slå på NFC i Androids inställningar och försök igen.';
+
+  @override
+  String get nfcNoneTitle => 'Ingen NFC i den här telefonen';
+
+  @override
+  String get nfcNoneBody =>
+      'Den här telefonen kan inte läsa eller skriva NFC-taggar.';
+
+  @override
+  String get nfcWriteAnother => 'Skriv en tagg till';
 }

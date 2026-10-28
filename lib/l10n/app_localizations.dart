@@ -8357,6 +8357,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restart to finish'**
   String get updateReadyButton;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Write to NFC tag'**
+  String get nfcWriteTag;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Hold a tag to your phone'**
+  String get nfcHoldTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Hold a blank NFC sticker to the back of your phone. Tapping it later runs {name}.'**
+  String nfcHoldBody(String name);
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Tag ready'**
+  String get nfcWrittenTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your phone on this tag to run {name}. It works with ZigDash closed.'**
+  String nfcWrittenBody(String name);
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t write the tag'**
+  String get nfcFailedTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This tag is locked and can\'t be changed. Try another one.'**
+  String get nfcReadonlyBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This tag is too small. Use an NTAG213 sticker or larger.'**
+  String get nfcTooSmallBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the tag still against the back of the phone and try again.'**
+  String get nfcFailedBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'NFC is off'**
+  String get nfcOffTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on NFC in Android\'s settings, then try again.'**
+  String get nfcOffBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'No NFC on this phone'**
+  String get nfcNoneTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t read or write NFC tags.'**
+  String get nfcNoneBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Write another tag'**
+  String get nfcWriteAnother;
 }
 
 class _AppLocalizationsDelegate

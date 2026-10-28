@@ -1457,5 +1457,19 @@
   "updateAvailableButton": "Aktualisieren",
   "updateDownloading": "Update wird geladen …",
   "updateReadyTitle": "Update geladen",
-  "updateReadyButton": "Zum Abschließen neu starten"
+  "updateReadyButton": "Zum Abschließen neu starten",
+  "nfcWriteTag": "Auf NFC-Tag schreiben",
+  "nfcHoldTitle": "Tag ans Handy halten",
+  "nfcHoldBody": "Halte einen leeren NFC-Sticker an die Rückseite deines Handys. Später startet ein Antippen {name}.",
+  "nfcWrittenTitle": "Tag fertig",
+  "nfcWrittenBody": "Tippe mit dem Handy auf diesen Tag, um {name} zu starten. Das klappt auch bei geschlossener App.",
+  "nfcFailedTitle": "Tag konnte nicht beschrieben werden",
+  "nfcReadonlyBody": "Dieser Tag ist gesperrt und lässt sich nicht ändern. Versuch einen anderen.",
+  "nfcTooSmallBody": "Dieser Tag ist zu klein. Nimm einen NTAG213-Sticker oder größer.",
+  "nfcFailedBody": "Halte den Tag ruhig an die Rückseite des Handys und versuch es noch einmal.",
+  "nfcOffTitle": "NFC ist aus",
+  "nfcOffBody": "Schalte NFC in den Android-Einstellungen ein und versuch es dann noch einmal.",
+  "nfcNoneTitle": "Kein NFC auf diesem Handy",
+  "nfcNoneBody": "Dieses Handy kann keine NFC-Tags lesen oder schreiben.",
+  "nfcWriteAnother": "Weiteren Tag schreiben"
 }

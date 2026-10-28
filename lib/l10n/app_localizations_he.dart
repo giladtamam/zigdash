@@ -4694,4 +4694,51 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'הפעלה מחדש לסיום';
+
+  @override
+  String get nfcWriteTag => 'כתיבה לתג NFC';
+
+  @override
+  String get nfcHoldTitle => 'קרבו תג לטלפון';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'קרבו מדבקת NFC ריקה לגב הטלפון. נגיעה בה בהמשך תפעיל את $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'התג מוכן';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'געו בתג הזה עם הטלפון כדי להפעיל את $name. זה עובד גם כש-ZigDash סגור.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'לא ניתן לכתוב לתג';
+
+  @override
+  String get nfcReadonlyBody => 'התג הזה נעול ואי אפשר לשנות אותו. נסו תג אחר.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'התג הזה קטן מדי. השתמשו במדבקת NTAG213 או גדולה יותר.';
+
+  @override
+  String get nfcFailedBody => 'החזיקו את התג יציב על גב הטלפון ונסו שוב.';
+
+  @override
+  String get nfcOffTitle => 'ה-NFC כבוי';
+
+  @override
+  String get nfcOffBody => 'הפעילו NFC בהגדרות של אנדרואיד ונסו שוב.';
+
+  @override
+  String get nfcNoneTitle => 'אין NFC בטלפון הזה';
+
+  @override
+  String get nfcNoneBody => 'הטלפון הזה לא יכול לקרוא או לכתוב תגי NFC.';
+
+  @override
+  String get nfcWriteAnother => 'כתיבת תג נוסף';
 }

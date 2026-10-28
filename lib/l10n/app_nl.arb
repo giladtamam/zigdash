@@ -1457,5 +1457,19 @@
   "updateAvailableButton": "Bijwerken",
   "updateDownloading": "Update downloaden…",
   "updateReadyTitle": "Update gedownload",
-  "updateReadyButton": "Opnieuw starten om af te ronden"
+  "updateReadyButton": "Opnieuw starten om af te ronden",
+  "nfcWriteTag": "Naar NFC-tag schrijven",
+  "nfcHoldTitle": "Houd een tag tegen je telefoon",
+  "nfcHoldBody": "Houd een lege NFC-sticker tegen de achterkant van je telefoon. Erop tikken start later {name}.",
+  "nfcWrittenTitle": "Tag klaar",
+  "nfcWrittenBody": "Tik met je telefoon op deze tag om {name} te starten. Het werkt ook als ZigDash dicht is.",
+  "nfcFailedTitle": "Tag kon niet worden geschreven",
+  "nfcReadonlyBody": "Deze tag is vergrendeld en kan niet worden gewijzigd. Probeer een andere.",
+  "nfcTooSmallBody": "Deze tag is te klein. Gebruik een NTAG213-sticker of groter.",
+  "nfcFailedBody": "Houd de tag stil tegen de achterkant van de telefoon en probeer het opnieuw.",
+  "nfcOffTitle": "NFC staat uit",
+  "nfcOffBody": "Zet NFC aan in de Android-instellingen en probeer het opnieuw.",
+  "nfcNoneTitle": "Geen NFC op deze telefoon",
+  "nfcNoneBody": "Deze telefoon kan geen NFC-tags lezen of schrijven.",
+  "nfcWriteAnother": "Nog een tag schrijven"
 }

@@ -9,9 +9,11 @@ import '../../../data/database/tables/panels.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../../../data/repositories/panel_repo.dart';
 import '../../../data/repositories/section_repo.dart';
+import '../../devices/device_profile.dart';
 import '../../devices/device_tiles.dart';
 import '../../devices/devices_providers.dart';
 import '../../discovery/providers/discovery_provider.dart';
+import '../../nfc/nfc_tags.dart';
 import '../services/auto_close_config_publisher.dart';
 import '../services/automation_config_publisher.dart';
 import '../models/panel_config.dart';
@@ -122,6 +124,26 @@ Future<void> showTileActions(
                     name: panel.name);
               },
             ),
+          // 3.3: a tag that runs the scene or switches the device.
+          if (AddShortcutButton.available &&
+              container.read(nfcStateProvider).valueOrNull != NfcState.none &&
+              (_sceneId(panel) != null || _nfcToggleable(panel)))
+            ListTile(
+              key: const Key('tile-write-nfc'),
+              leading: const Icon(Icons.nfc),
+              title: Text(l10n.nfcWriteTag),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                final scene = _sceneId(panel);
+                showWriteNfcTag(host,
+                    connectionId: connectionId,
+                    action: scene != null
+                        ? NfcTagAction.scene
+                        : NfcTagAction.toggle,
+                    target: scene ?? panel.deviceIeee!,
+                    label: panel.name);
+              },
+            ),
           if (panel.type != PanelType.device && panel.deviceIeee != null)
             ListTile(
               leading: const Icon(Icons.auto_fix_high),
@@ -151,6 +173,15 @@ Future<void> showTileActions(
 }
 
 /// The scene a scene tile runs, or null.
+/// A device tile whose tap switches or moves something: what a tag toggles.
+bool _nfcToggleable(Panel panel) {
+  if (panel.type != PanelType.device || panel.deviceIeee == null) return false;
+  final c = PanelConfig.decode(panel.type, panel.config);
+  return c is DeviceTileConfig &&
+      (c.profile.switches.isNotEmpty ||
+          c.profile.deviceClass == DeviceClass.cover);
+}
+
 String? _sceneId(Panel panel) {
   if (panel.type != PanelType.scene) return null;
   final c = PanelConfig.decode(panel.type, panel.config);

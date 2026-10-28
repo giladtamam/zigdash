@@ -156,8 +156,9 @@ List<HistoryTally> historyTalliesOf(Iterable<Panel> tiles) {
     if (tile.type != PanelType.device ||
         ieee == null ||
         topic == null ||
-        topic.isEmpty)
+        topic.isEmpty) {
       continue;
+    }
     final c = PanelConfig.decode(PanelType.device, tile.config);
     if (c is! DeviceTileConfig) continue;
     final profile = c.profile;

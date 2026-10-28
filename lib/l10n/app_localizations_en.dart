@@ -4741,4 +4741,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Restart to finish';
+
+  @override
+  String get nfcWriteTag => 'Write to NFC tag';
+
+  @override
+  String get nfcHoldTitle => 'Hold a tag to your phone';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Hold a blank NFC sticker to the back of your phone. Tapping it later runs $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Tag ready';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Tap your phone on this tag to run $name. It works with ZigDash closed.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Couldn\'t write the tag';
+
+  @override
+  String get nfcReadonlyBody =>
+      'This tag is locked and can\'t be changed. Try another one.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'This tag is too small. Use an NTAG213 sticker or larger.';
+
+  @override
+  String get nfcFailedBody =>
+      'Hold the tag still against the back of the phone and try again.';
+
+  @override
+  String get nfcOffTitle => 'NFC is off';
+
+  @override
+  String get nfcOffBody =>
+      'Turn on NFC in Android\'s settings, then try again.';
+
+  @override
+  String get nfcNoneTitle => 'No NFC on this phone';
+
+  @override
+  String get nfcNoneBody => 'This phone can\'t read or write NFC tags.';
+
+  @override
+  String get nfcWriteAnother => 'Write another tag';
 }

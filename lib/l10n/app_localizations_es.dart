@@ -4761,4 +4761,55 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Reiniciar para terminar';
+
+  @override
+  String get nfcWriteTag => 'Escribir en etiqueta NFC';
+
+  @override
+  String get nfcHoldTitle => 'Acerca una etiqueta al teléfono';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Acerca una pegatina NFC vacía a la parte trasera del teléfono. Al tocarla después se ejecutará $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Etiqueta lista';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Toca esta etiqueta con el teléfono para ejecutar $name. Funciona con ZigDash cerrado.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'No se pudo escribir la etiqueta';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Esta etiqueta está bloqueada y no se puede cambiar. Prueba con otra.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Esta etiqueta es demasiado pequeña. Usa una pegatina NTAG213 o mayor.';
+
+  @override
+  String get nfcFailedBody =>
+      'Mantén la etiqueta quieta contra la parte trasera del teléfono e inténtalo de nuevo.';
+
+  @override
+  String get nfcOffTitle => 'El NFC está desactivado';
+
+  @override
+  String get nfcOffBody =>
+      'Activa el NFC en los ajustes de Android y vuelve a intentarlo.';
+
+  @override
+  String get nfcNoneTitle => 'Este teléfono no tiene NFC';
+
+  @override
+  String get nfcNoneBody =>
+      'Este teléfono no puede leer ni escribir etiquetas NFC.';
+
+  @override
+  String get nfcWriteAnother => 'Escribir otra etiqueta';
 }

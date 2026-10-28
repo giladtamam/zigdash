@@ -1457,5 +1457,19 @@
   "updateAvailableButton": "Uppdatera",
   "updateDownloading": "Laddar ner uppdateringen …",
   "updateReadyTitle": "Uppdateringen är nedladdad",
-  "updateReadyButton": "Starta om för att slutföra"
+  "updateReadyButton": "Starta om för att slutföra",
+  "nfcWriteTag": "Skriv till NFC-tagg",
+  "nfcHoldTitle": "Håll en tagg mot telefonen",
+  "nfcHoldBody": "Håll ett tomt NFC-klistermärke mot baksidan av telefonen. Att trycka på det sedan kör {name}.",
+  "nfcWrittenTitle": "Taggen är klar",
+  "nfcWrittenBody": "Tryck telefonen mot taggen för att köra {name}. Det fungerar även när ZigDash är stängt.",
+  "nfcFailedTitle": "Taggen kunde inte skrivas",
+  "nfcReadonlyBody": "Taggen är låst och kan inte ändras. Prova en annan.",
+  "nfcTooSmallBody": "Taggen är för liten. Använd ett NTAG213-klistermärke eller större.",
+  "nfcFailedBody": "Håll taggen stilla mot telefonens baksida och försök igen.",
+  "nfcOffTitle": "NFC är avstängt",
+  "nfcOffBody": "Slå på NFC i Androids inställningar och försök igen.",
+  "nfcNoneTitle": "Ingen NFC i den här telefonen",
+  "nfcNoneBody": "Den här telefonen kan inte läsa eller skriva NFC-taggar.",
+  "nfcWriteAnother": "Skriv en tagg till"
 }

@@ -59,6 +59,10 @@ class WidgetActionService : Service() {
             runScene(id)
             return START_NOT_STICKY
         }
+        if (action == ACTION_TAG) {
+            runTag(intent)
+            return START_NOT_STICKY
+        }
         val t = ShortcutPrefs.widget(this, id)
         if (t == null) {
             finishSoon(0)
@@ -187,6 +191,40 @@ class WidgetActionService : Service() {
         }
     }
 
+    /**
+     * An NFC tag (3.3, [NfcTagActivity]): its scene or device toggle, with
+     * a short message instead of a widget to redraw.
+     */
+    private fun runTag(intent: Intent?) {
+        val home = intent?.getStringExtra(EXTRA_TAG_HOME)
+        val action = intent?.getStringExtra(EXTRA_TAG_ACTION)
+        val target = intent?.getStringExtra(EXTRA_TAG_TARGET)
+        if (home == null || action == null || target == null) {
+            finishSoon(0)
+            return
+        }
+        val label = intent.getStringExtra(EXTRA_TAG_LABEL).orEmpty()
+        ShortcutPrefs.mark(this, "shortcut.used.nfc_tag")
+        running++
+        val done = { json: String ->
+            android.util.Log.i("ZigDashShortcuts", "nfc tag $action: $json")
+            val problem = problemFor(json)
+            val text = when {
+                problem != null && label.isNotEmpty() -> "$label: $problem"
+                problem != null -> problem
+                else -> label.ifEmpty { "ZigDash" } + " ✓"
+            }
+            main.post { android.widget.Toast.makeText(this, text, android.widget.Toast.LENGTH_SHORT).show() }
+            running--
+            finishSoon(0)
+        }
+        if (action == "scene") {
+            ShortcutEngine.scene(this, home, target, done)
+        } else {
+            ShortcutEngine.toggle(this, home, target, done)
+        }
+    }
+
     private fun finishSoon(delay: Long, redraw: Boolean = false) {
         main.postDelayed({
             if (redraw) DeviceWidget.refreshAll(this)
@@ -225,5 +263,10 @@ class WidgetActionService : Service() {
         private const val WATCH_MS = 10_000L
         const val ACTION_WATCH = "WATCH"
         const val ACTION_SCENE = "SCENE"
+        const val ACTION_TAG = "TAG"
+        const val EXTRA_TAG_HOME = "tag_home"
+        const val EXTRA_TAG_ACTION = "tag_action"
+        const val EXTRA_TAG_TARGET = "tag_target"
+        const val EXTRA_TAG_LABEL = "tag_label"
     }
 }

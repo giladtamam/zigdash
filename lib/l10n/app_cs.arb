@@ -1372,5 +1372,19 @@
   "updateAvailableButton": "Aktualizovat",
   "updateDownloading": "Stahuji aktualizaci…",
   "updateReadyTitle": "Aktualizace stažena",
-  "updateReadyButton": "Dokončit restartem"
+  "updateReadyButton": "Dokončit restartem",
+  "nfcWriteTag": "Zapsat na NFC tag",
+  "nfcHoldTitle": "Přilož tag k telefonu",
+  "nfcHoldBody": "Přilož prázdnou NFC nálepku k zadní straně telefonu. Klepnutím na ni pak spustíš {name}.",
+  "nfcWrittenTitle": "Tag je hotový",
+  "nfcWrittenBody": "Klepni telefonem na tento tag a spustíš {name}. Funguje to i se zavřenou aplikací.",
+  "nfcFailedTitle": "Tag se nepodařilo zapsat",
+  "nfcReadonlyBody": "Tento tag je zamčený a nejde změnit. Zkus jiný.",
+  "nfcTooSmallBody": "Tento tag je moc malý. Použij nálepku NTAG213 nebo větší.",
+  "nfcFailedBody": "Drž tag v klidu u zadní strany telefonu a zkus to znovu.",
+  "nfcOffTitle": "NFC je vypnuté",
+  "nfcOffBody": "Zapni NFC v nastavení Androidu a zkus to znovu.",
+  "nfcNoneTitle": "Tento telefon nemá NFC",
+  "nfcNoneBody": "Tento telefon neumí číst ani zapisovat NFC tagy.",
+  "nfcWriteAnother": "Zapsat další tag"
 }

@@ -4742,4 +4742,53 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get updateReadyButton => 'Dokončit restartem';
+
+  @override
+  String get nfcWriteTag => 'Zapsat na NFC tag';
+
+  @override
+  String get nfcHoldTitle => 'Přilož tag k telefonu';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Přilož prázdnou NFC nálepku k zadní straně telefonu. Klepnutím na ni pak spustíš $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Tag je hotový';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Klepni telefonem na tento tag a spustíš $name. Funguje to i se zavřenou aplikací.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Tag se nepodařilo zapsat';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Tento tag je zamčený a nejde změnit. Zkus jiný.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Tento tag je moc malý. Použij nálepku NTAG213 nebo větší.';
+
+  @override
+  String get nfcFailedBody =>
+      'Drž tag v klidu u zadní strany telefonu a zkus to znovu.';
+
+  @override
+  String get nfcOffTitle => 'NFC je vypnuté';
+
+  @override
+  String get nfcOffBody => 'Zapni NFC v nastavení Androidu a zkus to znovu.';
+
+  @override
+  String get nfcNoneTitle => 'Tento telefon nemá NFC';
+
+  @override
+  String get nfcNoneBody => 'Tento telefon neumí číst ani zapisovat NFC tagy.';
+
+  @override
+  String get nfcWriteAnother => 'Zapsat další tag';
 }
