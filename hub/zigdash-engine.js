@@ -42,7 +42,7 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.3.0';
+const ENGINE_VERSION = '3.2.2';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
 const STATE_EVERY_MS = 30000;
