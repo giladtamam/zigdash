@@ -4791,4 +4791,8 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Zapsat další tag';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Tento telefon tento typ tagu neumí zapsat (často MIFARE Classic). Použij nálepku NTAG213, 215 nebo 216.';
 }

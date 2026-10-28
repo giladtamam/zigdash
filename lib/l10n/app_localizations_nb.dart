@@ -4791,4 +4791,8 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Skriv en brikke til';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Denne telefonen kan ikke skrive til denne typen brikke (ofte MIFARE Classic). Bruk et NTAG213-, 215- eller 216-klistremerke.';
 }

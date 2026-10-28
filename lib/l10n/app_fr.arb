@@ -1396,5 +1396,6 @@
   "nfcOffBody": "Activez le NFC dans les réglages Android, puis réessayez.",
   "nfcNoneTitle": "Pas de NFC sur ce téléphone",
   "nfcNoneBody": "Ce téléphone ne peut pas lire ni écrire de tags NFC.",
-  "nfcWriteAnother": "Écrire un autre tag"
+  "nfcWriteAnother": "Écrire un autre tag",
+  "nfcUnsupportedBody": "Ce téléphone ne peut pas écrire ce type de tag (souvent MIFARE Classic). Utilisez un sticker NTAG213, 215 ou 216."
 }

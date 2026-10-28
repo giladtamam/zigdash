@@ -8441,6 +8441,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write another tag'**
   String get nfcWriteAnother;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This kind of tag can\'t be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.'**
+  String get nfcUnsupportedBody;
 }
 
 class _AppLocalizationsDelegate

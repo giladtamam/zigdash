@@ -4806,4 +4806,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Gravar outra tag';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Este telefone não consegue gravar esse tipo de tag (muitas vezes MIFARE Classic). Use um adesivo NTAG213, 215 ou 216.';
 }

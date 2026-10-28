@@ -4741,4 +4741,8 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'כתיבת תג נוסף';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'הטלפון הזה לא יכול לכתוב לסוג התג הזה (לרוב MIFARE Classic). השתמשו במדבקת NTAG213, ‏215 או 216.';
 }

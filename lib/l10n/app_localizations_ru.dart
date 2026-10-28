@@ -4792,4 +4792,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Записать ещё метку';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Этот телефон не может записать такую метку (часто это MIFARE Classic). Используйте наклейку NTAG213, 215 или 216.';
 }

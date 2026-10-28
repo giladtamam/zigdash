@@ -1540,5 +1540,6 @@
   "nfcOffBody": "הפעילו NFC בהגדרות של אנדרואיד ונסו שוב.",
   "nfcNoneTitle": "אין NFC בטלפון הזה",
   "nfcNoneBody": "הטלפון הזה לא יכול לקרוא או לכתוב תגי NFC.",
-  "nfcWriteAnother": "כתיבת תג נוסף"
+  "nfcWriteAnother": "כתיבת תג נוסף",
+  "nfcUnsupportedBody": "הטלפון הזה לא יכול לכתוב לסוג התג הזה (לרוב MIFARE Classic). השתמשו במדבקת NTAG213, ‏215 או 216."
 }

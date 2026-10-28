@@ -4791,4 +4791,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Write another tag';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'This kind of tag can\'t be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.';
 }

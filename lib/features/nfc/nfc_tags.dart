@@ -39,7 +39,7 @@ String nfcTagUri({
 
 enum NfcState { on, off, none }
 
-enum NfcWriteOutcome { written, readonly, tooSmall, failed, cancelled }
+enum NfcWriteOutcome { written, readonly, tooSmall, unsupported, failed, cancelled }
 
 /// The "zigdash/nfc" channel (NfcTags.kt); a fake in tests.
 class NfcBridge {
@@ -69,6 +69,7 @@ class NfcBridge {
         'written' => NfcWriteOutcome.written,
         'readonly' => NfcWriteOutcome.readonly,
         'too_small' => NfcWriteOutcome.tooSmall,
+        'unsupported' => NfcWriteOutcome.unsupported,
         'cancelled' => NfcWriteOutcome.cancelled,
         _ => NfcWriteOutcome.failed,
       };
@@ -192,6 +193,11 @@ class _WriteNfcTagSheetState extends ConsumerState<WriteNfcTagSheet> {
         Icons.error_outline,
         l10n.nfcFailedTitle,
         l10n.nfcTooSmallBody,
+      ),
+      (_, NfcWriteOutcome.unsupported) => (
+        Icons.error_outline,
+        l10n.nfcFailedTitle,
+        l10n.nfcUnsupportedBody,
       ),
       (_, NfcWriteOutcome.failed) => (
         Icons.error_outline,

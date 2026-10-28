@@ -4793,4 +4793,8 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Skriv en tagg till';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Den här telefonen kan inte skriva till den här typen av tagg (ofta MIFARE Classic). Använd ett NTAG213-, 215- eller 216-klistermärke.';
 }

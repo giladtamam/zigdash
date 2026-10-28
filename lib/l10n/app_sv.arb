@@ -1471,5 +1471,6 @@
   "nfcOffBody": "Slå på NFC i Androids inställningar och försök igen.",
   "nfcNoneTitle": "Ingen NFC i den här telefonen",
   "nfcNoneBody": "Den här telefonen kan inte läsa eller skriva NFC-taggar.",
-  "nfcWriteAnother": "Skriv en tagg till"
+  "nfcWriteAnother": "Skriv en tagg till",
+  "nfcUnsupportedBody": "Den här telefonen kan inte skriva till den här typen av tagg (ofta MIFARE Classic). Använd ett NTAG213-, 215- eller 216-klistermärke."
 }

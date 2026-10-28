@@ -1471,5 +1471,6 @@
   "nfcOffBody": "Zet NFC aan in de Android-instellingen en probeer het opnieuw.",
   "nfcNoneTitle": "Geen NFC op deze telefoon",
   "nfcNoneBody": "Deze telefoon kan geen NFC-tags lezen of schrijven.",
-  "nfcWriteAnother": "Nog een tag schrijven"
+  "nfcWriteAnother": "Nog een tag schrijven",
+  "nfcUnsupportedBody": "Deze telefoon kan dit soort tag niet beschrijven (vaak MIFARE Classic). Gebruik een NTAG213-, 215- of 216-sticker."
 }

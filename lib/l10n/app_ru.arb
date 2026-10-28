@@ -1466,5 +1466,6 @@
   "nfcOffBody": "Включите NFC в настройках Android и попробуйте снова.",
   "nfcNoneTitle": "На этом телефоне нет NFC",
   "nfcNoneBody": "Этот телефон не умеет читать и записывать NFC-метки.",
-  "nfcWriteAnother": "Записать ещё метку"
+  "nfcWriteAnother": "Записать ещё метку",
+  "nfcUnsupportedBody": "Этот телефон не может записать такую метку (часто это MIFARE Classic). Используйте наклейку NTAG213, 215 или 216."
 }

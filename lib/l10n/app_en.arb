@@ -1676,5 +1676,7 @@
   "nfcNoneBody": "This phone can't read or write NFC tags.",
   "@nfcNoneBody": {"description": "NFC tags (3.3)."},
   "nfcWriteAnother": "Write another tag",
-  "@nfcWriteAnother": {"description": "NFC tags (3.3)."}
+  "@nfcWriteAnother": {"description": "NFC tags (3.3)."},
+  "nfcUnsupportedBody": "This kind of tag can't be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.",
+  "@nfcUnsupportedBody": {"description": "NFC tags (3.3)."}
 }

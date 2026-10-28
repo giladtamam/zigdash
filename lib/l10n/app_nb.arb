@@ -1471,5 +1471,6 @@
   "nfcOffBody": "Slå på NFC i Android-innstillingene og prøv igjen.",
   "nfcNoneTitle": "Ingen NFC på denne telefonen",
   "nfcNoneBody": "Denne telefonen kan ikke lese eller skrive NFC-brikker.",
-  "nfcWriteAnother": "Skriv en brikke til"
+  "nfcWriteAnother": "Skriv en brikke til",
+  "nfcUnsupportedBody": "Denne telefonen kan ikke skrive til denne typen brikke (ofte MIFARE Classic). Bruk et NTAG213-, 215- eller 216-klistremerke."
 }

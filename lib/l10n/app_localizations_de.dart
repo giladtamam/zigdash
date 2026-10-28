@@ -4820,4 +4820,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Weiteren Tag schreiben';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Diese Art Tag kann dieses Handy nicht beschreiben (oft MIFARE Classic). Nimm einen NTAG213-, 215- oder 216-Sticker.';
 }

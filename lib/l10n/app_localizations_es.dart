@@ -4812,4 +4812,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Escribir otra etiqueta';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Este teléfono no puede escribir este tipo de etiqueta (a menudo MIFARE Classic). Usa una pegatina NTAG213, 215 o 216.';
 }

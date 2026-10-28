@@ -1386,5 +1386,6 @@
   "nfcOffBody": "Zapni NFC v nastavení Androidu a zkus to znovu.",
   "nfcNoneTitle": "Tento telefon nemá NFC",
   "nfcNoneBody": "Tento telefon neumí číst ani zapisovat NFC tagy.",
-  "nfcWriteAnother": "Zapsat další tag"
+  "nfcWriteAnother": "Zapsat další tag",
+  "nfcUnsupportedBody": "Tento telefon tento typ tagu neumí zapsat (často MIFARE Classic). Použij nálepku NTAG213, 215 nebo 216."
 }

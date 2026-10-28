@@ -10,6 +10,7 @@ import android.nfc.tech.Ndef
 import android.nfc.tech.NdefFormatable
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import java.io.IOException
@@ -22,7 +23,7 @@ import java.io.IOException
  *
  * Channel "zigdash/nfc":
  *  - state  -> "on" | "off" (NFC turned off in Settings) | "none" (no NFC)
- *  - write  {uri} -> "written" | "readonly" | "too_small" | "failed" (after a tag)
+ *  - write  {uri} -> "written" | "readonly" | "too_small" | "unsupported" | "failed" (after a tag)
  *  - cancel -> stops waiting for a tag
  */
 class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
@@ -80,10 +81,12 @@ class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
     }
 
     private fun writeTo(tag: Tag, message: NdefMessage): String {
+        Log.i(TAG, "tag ${tag.techList.joinToString()} message ${message.toByteArray().size} bytes")
         try {
             Ndef.get(tag)?.let { ndef ->
                 ndef.connect()
                 try {
+                    Log.i(TAG, "ndef writable=${ndef.isWritable} max=${ndef.maxSize} type=${ndef.type}")
                     if (!ndef.isWritable) return "readonly"
                     if (ndef.maxSize < message.toByteArray().size) return "too_small"
                     ndef.writeNdefMessage(message)
@@ -101,10 +104,14 @@ class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
                     f.close()
                 }
             }
-            return "failed"
+            return "unsupported"
         } catch (e: IOException) {
-            return "failed"
+            Log.w(TAG, "write failed: $e")
+            // A blank tag that can't take the full message reports an I/O
+            // error rather than its size: the caller retries with the link alone.
+            return if (NdefFormatable.get(tag) != null) "too_small" else "failed"
         } catch (e: FormatException) {
+            Log.w(TAG, "write failed: $e")
             return "failed"
         }
     }
@@ -127,6 +134,7 @@ class NfcTags(private val activity: Activity, messenger: BinaryMessenger) {
 
     companion object {
         const val CHANNEL = "zigdash/nfc"
+        private const val TAG = "ZigDashNfc"
 
         fun register(activity: Activity, messenger: BinaryMessenger) {
             NfcTags(activity, messenger)

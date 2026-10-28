@@ -4800,4 +4800,8 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get nfcWriteAnother => 'Zapisz kolejny tag';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Ten telefon nie zapisze tego rodzaju tagu (często MIFARE Classic). Użyj naklejki NTAG213, 215 lub 216.';
 }
