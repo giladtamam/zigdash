@@ -4856,4 +4856,30 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'Een tag die uit staat doet niets op deze telefoon. Tags die vóór deze lijst zijn geschreven staan er niet in: schrijf ze één keer opnieuw.';
+
+  @override
+  String get nfcPopupHeader => 'ZigDash-tag';
+
+  @override
+  String get nfcPopupRunning => 'Bezig…';
+
+  @override
+  String get nfcPopupSwitching => 'Schakelen…';
+
+  @override
+  String get nfcPopupDone => 'Klaar';
+
+  @override
+  String get nfcPopupClosing => 'Sluit over 2 seconden';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Deze telefoon bereikt het huis nu niet. Controleer de wifi of zet bediening op afstand aan.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Er is niets geschakeld. Zet hem weer aan in de instellingen van het huis, onder NFC-tags.';
+
+  @override
+  String get nfcPopupOpenApp => 'ZigDash openen';
 }

@@ -4790,4 +4790,30 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'תג כבוי לא עושה כלום בטלפון הזה. תגים שנכתבו לפני הרשימה הזו לא מופיעים: כתבו אותם מחדש פעם אחת.';
+
+  @override
+  String get nfcPopupHeader => 'תג ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'מפעיל…';
+
+  @override
+  String get nfcPopupSwitching => 'מחליף מצב…';
+
+  @override
+  String get nfcPopupDone => 'בוצע';
+
+  @override
+  String get nfcPopupClosing => 'ייסגר בעוד 2 שניות';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'הטלפון הזה לא מגיע לבית כרגע. בדקו את ה-Wi-Fi, או הפעילו שליטה מרחוק.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'שום דבר לא הופעל. אפשר להפעיל אותו מחדש בהגדרות הבית, תחת תגי NFC.';
+
+  @override
+  String get nfcPopupOpenApp => 'פתיחת ZigDash';
 }

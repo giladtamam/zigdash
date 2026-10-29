@@ -1400,5 +1400,13 @@
   "nfcTagRewrite": "Přepsat",
   "nfcTagForget": "Odebrat ze seznamu",
   "nfcTagOffToast": "Tento tag je v ZigDash vypnutý",
-  "nfcTagsNote": "Vypnutý tag na tomto telefonu nic neudělá. Tagy zapsané před tímto seznamem tu nejsou: jednou je přepiš."
+  "nfcTagsNote": "Vypnutý tag na tomto telefonu nic neudělá. Tagy zapsané před tímto seznamem tu nejsou: jednou je přepiš.",
+  "nfcPopupHeader": "Tag ZigDash",
+  "nfcPopupRunning": "Probíhá…",
+  "nfcPopupSwitching": "Přepínám…",
+  "nfcPopupDone": "Hotovo",
+  "nfcPopupClosing": "Zavře se za 2 sekundy",
+  "nfcPopupUnreachable": "Tento telefon teď na domov nedosáhne. Zkontroluj Wi-Fi nebo zapni vzdálené ovládání.",
+  "nfcPopupOffBody": "Nic se nepřeplo. Znovu ho zapneš v nastavení domova, v části NFC tagy.",
+  "nfcPopupOpenApp": "Otevřít ZigDash"
 }

@@ -1410,5 +1410,13 @@
   "nfcTagRewrite": "Réécrire",
   "nfcTagForget": "Retirer de la liste",
   "nfcTagOffToast": "Ce tag est désactivé dans ZigDash",
-  "nfcTagsNote": "Un tag désactivé ne fait rien sur ce téléphone. Les tags écrits avant cette liste n'y figurent pas : réécrivez-les une fois."
+  "nfcTagsNote": "Un tag désactivé ne fait rien sur ce téléphone. Les tags écrits avant cette liste n'y figurent pas : réécrivez-les une fois.",
+  "nfcPopupHeader": "Tag ZigDash",
+  "nfcPopupRunning": "En cours…",
+  "nfcPopupSwitching": "Commutation…",
+  "nfcPopupDone": "Terminé",
+  "nfcPopupClosing": "Se ferme dans 2 secondes",
+  "nfcPopupUnreachable": "Ce téléphone ne joint pas la maison pour l'instant. Vérifiez le Wi-Fi ou activez le contrôle à distance.",
+  "nfcPopupOffBody": "Rien n'a été commuté. Réactivez-le dans les réglages de la maison, sous Tags NFC.",
+  "nfcPopupOpenApp": "Ouvrir ZigDash"
 }

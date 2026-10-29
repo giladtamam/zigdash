@@ -4870,4 +4870,30 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'Ein ausgeschalteter Tag bewirkt auf diesem Handy nichts. Tags, die vor dieser Liste geschrieben wurden, fehlen hier: schreib sie einmal neu.';
+
+  @override
+  String get nfcPopupHeader => 'ZigDash-Tag';
+
+  @override
+  String get nfcPopupRunning => 'Läuft …';
+
+  @override
+  String get nfcPopupSwitching => 'Schaltet …';
+
+  @override
+  String get nfcPopupDone => 'Erledigt';
+
+  @override
+  String get nfcPopupClosing => 'Schließt in 2 Sekunden';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Dieses Handy erreicht das Zuhause gerade nicht. Prüfe das WLAN oder schalte den Fernzugriff ein.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Nichts wurde geschaltet. Schalte ihn in den Einstellungen des Zuhauses unter NFC-Tags wieder ein.';
+
+  @override
+  String get nfcPopupOpenApp => 'ZigDash öffnen';
 }

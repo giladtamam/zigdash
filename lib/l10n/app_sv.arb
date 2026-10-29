@@ -1485,5 +1485,13 @@
   "nfcTagRewrite": "Skriv om",
   "nfcTagForget": "Ta bort från listan",
   "nfcTagOffToast": "Den här taggen är avstängd i ZigDash",
-  "nfcTagsNote": "En avstängd tagg gör ingenting på den här telefonen. Taggar som skrevs före listan visas inte: skriv om dem en gång."
+  "nfcTagsNote": "En avstängd tagg gör ingenting på den här telefonen. Taggar som skrevs före listan visas inte: skriv om dem en gång.",
+  "nfcPopupHeader": "ZigDash-tagg",
+  "nfcPopupRunning": "Kör…",
+  "nfcPopupSwitching": "Växlar…",
+  "nfcPopupDone": "Klart",
+  "nfcPopupClosing": "Stängs om 2 sekunder",
+  "nfcPopupUnreachable": "Telefonen når inte hemmet just nu. Kontrollera wifi eller slå på fjärrstyrning.",
+  "nfcPopupOffBody": "Inget växlades. Slå på den igen i hemmets inställningar, under NFC-taggar.",
+  "nfcPopupOpenApp": "Öppna ZigDash"
 }

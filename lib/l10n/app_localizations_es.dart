@@ -4862,4 +4862,30 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'Una etiqueta desactivada no hace nada en este teléfono. Las escritas antes de esta lista no aparecen: reescríbelas una vez.';
+
+  @override
+  String get nfcPopupHeader => 'Etiqueta ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'Ejecutando…';
+
+  @override
+  String get nfcPopupSwitching => 'Cambiando…';
+
+  @override
+  String get nfcPopupDone => 'Hecho';
+
+  @override
+  String get nfcPopupClosing => 'Se cierra en 2 segundos';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Este teléfono no llega a la casa ahora mismo. Revisa el Wi-Fi o activa el control remoto.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'No se cambió nada. Vuelve a activarla en los ajustes de la casa, en Etiquetas NFC.';
+
+  @override
+  String get nfcPopupOpenApp => 'Abrir ZigDash';
 }

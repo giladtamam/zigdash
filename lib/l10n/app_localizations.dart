@@ -8525,6 +8525,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A tag you turn off does nothing on this phone. Tags written before this list aren\'t shown: rewrite them once.'**
   String get nfcTagsNote;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash tag'**
+  String get nfcPopupHeader;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Running…'**
+  String get nfcPopupRunning;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching…'**
+  String get nfcPopupSwitching;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get nfcPopupDone;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Closes in 2 seconds'**
+  String get nfcPopupClosing;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t reach the home right now. Check the Wi-Fi, or turn on remote control.'**
+  String get nfcPopupUnreachable;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was switched. Turn it back on in the Home\'s settings, under NFC tags.'**
+  String get nfcPopupOffBody;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ZigDash'**
+  String get nfcPopupOpenApp;
 }
 
 class _AppLocalizationsDelegate

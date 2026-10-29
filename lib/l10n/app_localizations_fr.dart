@@ -4878,4 +4878,30 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'Un tag désactivé ne fait rien sur ce téléphone. Les tags écrits avant cette liste n\'y figurent pas : réécrivez-les une fois.';
+
+  @override
+  String get nfcPopupHeader => 'Tag ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'En cours…';
+
+  @override
+  String get nfcPopupSwitching => 'Commutation…';
+
+  @override
+  String get nfcPopupDone => 'Terminé';
+
+  @override
+  String get nfcPopupClosing => 'Se ferme dans 2 secondes';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Ce téléphone ne joint pas la maison pour l\'instant. Vérifiez le Wi-Fi ou activez le contrôle à distance.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Rien n\'a été commuté. Réactivez-le dans les réglages de la maison, sous Tags NFC.';
+
+  @override
+  String get nfcPopupOpenApp => 'Ouvrir ZigDash';
 }

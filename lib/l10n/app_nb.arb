@@ -1485,5 +1485,13 @@
   "nfcTagRewrite": "Skriv på nytt",
   "nfcTagForget": "Fjern fra listen",
   "nfcTagOffToast": "Denne brikken er slått av i ZigDash",
-  "nfcTagsNote": "En brikke som er slått av, gjør ingenting på denne telefonen. Brikker skrevet før denne listen vises ikke: skriv dem på nytt én gang."
+  "nfcTagsNote": "En brikke som er slått av, gjør ingenting på denne telefonen. Brikker skrevet før denne listen vises ikke: skriv dem på nytt én gang.",
+  "nfcPopupHeader": "ZigDash-brikke",
+  "nfcPopupRunning": "Kjører …",
+  "nfcPopupSwitching": "Slår av/på …",
+  "nfcPopupDone": "Ferdig",
+  "nfcPopupClosing": "Lukkes om 2 sekunder",
+  "nfcPopupUnreachable": "Telefonen når ikke hjemmet akkurat nå. Sjekk wifi eller slå på fjernstyring.",
+  "nfcPopupOffBody": "Ingenting ble slått av eller på. Slå den på igjen i hjemmets innstillinger, under NFC-brikker.",
+  "nfcPopupOpenApp": "Åpne ZigDash"
 }

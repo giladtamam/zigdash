@@ -4841,4 +4841,30 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'Vypnutý tag na tomto telefonu nic neudělá. Tagy zapsané před tímto seznamem tu nejsou: jednou je přepiš.';
+
+  @override
+  String get nfcPopupHeader => 'Tag ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'Probíhá…';
+
+  @override
+  String get nfcPopupSwitching => 'Přepínám…';
+
+  @override
+  String get nfcPopupDone => 'Hotovo';
+
+  @override
+  String get nfcPopupClosing => 'Zavře se za 2 sekundy';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Tento telefon teď na domov nedosáhne. Zkontroluj Wi-Fi nebo zapni vzdálené ovládání.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Nic se nepřeplo. Znovu ho zapneš v nastavení domova, v části NFC tagy.';
+
+  @override
+  String get nfcPopupOpenApp => 'Otevřít ZigDash';
 }

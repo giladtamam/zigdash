@@ -4841,4 +4841,30 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'En brikke som er slått av, gjør ingenting på denne telefonen. Brikker skrevet før denne listen vises ikke: skriv dem på nytt én gang.';
+
+  @override
+  String get nfcPopupHeader => 'ZigDash-brikke';
+
+  @override
+  String get nfcPopupRunning => 'Kjører …';
+
+  @override
+  String get nfcPopupSwitching => 'Slår av/på …';
+
+  @override
+  String get nfcPopupDone => 'Ferdig';
+
+  @override
+  String get nfcPopupClosing => 'Lukkes om 2 sekunder';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Telefonen når ikke hjemmet akkurat nå. Sjekk wifi eller slå på fjernstyring.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Ingenting ble slått av eller på. Slå den på igjen i hjemmets innstillinger, under NFC-brikker.';
+
+  @override
+  String get nfcPopupOpenApp => 'Åpne ZigDash';
 }

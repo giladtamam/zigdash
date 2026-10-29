@@ -4843,4 +4843,30 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'En avstängd tagg gör ingenting på den här telefonen. Taggar som skrevs före listan visas inte: skriv om dem en gång.';
+
+  @override
+  String get nfcPopupHeader => 'ZigDash-tagg';
+
+  @override
+  String get nfcPopupRunning => 'Kör…';
+
+  @override
+  String get nfcPopupSwitching => 'Växlar…';
+
+  @override
+  String get nfcPopupDone => 'Klart';
+
+  @override
+  String get nfcPopupClosing => 'Stängs om 2 sekunder';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Telefonen når inte hemmet just nu. Kontrollera wifi eller slå på fjärrstyrning.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Inget växlades. Slå på den igen i hemmets inställningar, under NFC-taggar.';
+
+  @override
+  String get nfcPopupOpenApp => 'Öppna ZigDash';
 }

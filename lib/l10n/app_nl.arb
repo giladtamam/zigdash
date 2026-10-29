@@ -1485,5 +1485,13 @@
   "nfcTagRewrite": "Opnieuw schrijven",
   "nfcTagForget": "Uit de lijst halen",
   "nfcTagOffToast": "Deze tag staat uit in ZigDash",
-  "nfcTagsNote": "Een tag die uit staat doet niets op deze telefoon. Tags die vóór deze lijst zijn geschreven staan er niet in: schrijf ze één keer opnieuw."
+  "nfcTagsNote": "Een tag die uit staat doet niets op deze telefoon. Tags die vóór deze lijst zijn geschreven staan er niet in: schrijf ze één keer opnieuw.",
+  "nfcPopupHeader": "ZigDash-tag",
+  "nfcPopupRunning": "Bezig…",
+  "nfcPopupSwitching": "Schakelen…",
+  "nfcPopupDone": "Klaar",
+  "nfcPopupClosing": "Sluit over 2 seconden",
+  "nfcPopupUnreachable": "Deze telefoon bereikt het huis nu niet. Controleer de wifi of zet bediening op afstand aan.",
+  "nfcPopupOffBody": "Er is niets geschakeld. Zet hem weer aan in de instellingen van het huis, onder NFC-tags.",
+  "nfcPopupOpenApp": "ZigDash openen"
 }

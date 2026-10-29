@@ -4842,4 +4842,30 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'Выключенная метка ничего не делает на этом телефоне. Метки, записанные до появления списка, здесь не видны: перезапишите их один раз.';
+
+  @override
+  String get nfcPopupHeader => 'Метка ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'Выполняется…';
+
+  @override
+  String get nfcPopupSwitching => 'Переключаю…';
+
+  @override
+  String get nfcPopupDone => 'Готово';
+
+  @override
+  String get nfcPopupClosing => 'Закроется через 2 секунды';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Этот телефон сейчас не связывается с домом. Проверьте Wi-Fi или включите удалённое управление.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Ничего не переключено. Включите метку снова в настройках дома, в разделе NFC-метки.';
+
+  @override
+  String get nfcPopupOpenApp => 'Открыть ZigDash';
 }

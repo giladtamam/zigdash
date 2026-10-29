@@ -4840,4 +4840,30 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get nfcTagsNote =>
       'A tag you turn off does nothing on this phone. Tags written before this list aren\'t shown: rewrite them once.';
+
+  @override
+  String get nfcPopupHeader => 'ZigDash tag';
+
+  @override
+  String get nfcPopupRunning => 'Running…';
+
+  @override
+  String get nfcPopupSwitching => 'Switching…';
+
+  @override
+  String get nfcPopupDone => 'Done';
+
+  @override
+  String get nfcPopupClosing => 'Closes in 2 seconds';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'This phone can\'t reach the home right now. Check the Wi-Fi, or turn on remote control.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Nothing was switched. Turn it back on in the Home\'s settings, under NFC tags.';
+
+  @override
+  String get nfcPopupOpenApp => 'Open ZigDash';
 }

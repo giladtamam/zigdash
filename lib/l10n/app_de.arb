@@ -1485,5 +1485,13 @@
   "nfcTagRewrite": "Neu schreiben",
   "nfcTagForget": "Aus der Liste entfernen",
   "nfcTagOffToast": "Dieser Tag ist in ZigDash ausgeschaltet",
-  "nfcTagsNote": "Ein ausgeschalteter Tag bewirkt auf diesem Handy nichts. Tags, die vor dieser Liste geschrieben wurden, fehlen hier: schreib sie einmal neu."
+  "nfcTagsNote": "Ein ausgeschalteter Tag bewirkt auf diesem Handy nichts. Tags, die vor dieser Liste geschrieben wurden, fehlen hier: schreib sie einmal neu.",
+  "nfcPopupHeader": "ZigDash-Tag",
+  "nfcPopupRunning": "Läuft …",
+  "nfcPopupSwitching": "Schaltet …",
+  "nfcPopupDone": "Erledigt",
+  "nfcPopupClosing": "Schließt in 2 Sekunden",
+  "nfcPopupUnreachable": "Dieses Handy erreicht das Zuhause gerade nicht. Prüfe das WLAN oder schalte den Fernzugriff ein.",
+  "nfcPopupOffBody": "Nichts wurde geschaltet. Schalte ihn in den Einstellungen des Zuhauses unter NFC-Tags wieder ein.",
+  "nfcPopupOpenApp": "ZigDash öffnen"
 }
