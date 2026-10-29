@@ -149,7 +149,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'IP брокера — это IP-адрес хаба. Его можно найти в веб-интерфейсе SMLIGHT в разделе Settings → Network или в роутере. Порт 1883, по умолчанию без логина и пароля.';
+      'IP брокера — это IP-адрес хаба. Откройте веб-страницу хаба (smhub.local): на Dashboard блок Network показывает его рядом с IPv4. Приложение роутера тоже показывает хаб как SMHUB. Порт 1883, по умолчанию без логина и пароля.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
@@ -2162,6 +2162,14 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get setupAddressQuestionSmlight =>
       'Какой адрес у вашего хаба SMLIGHT?';
+
+  @override
+  String get setupAddressWhereSmlight =>
+      'Откройте веб-страницу хаба: smhub.local, а на первых хабах smhub.local:3000. На Dashboard блок Network показывает адрес рядом с IPv4. Введите его здесь. Если страница не открывается, приложение роутера показывает хаб как SMHUB вместе с его IP.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'SLZB-06, MR или UltimaX — это только Zigbee-радио, брокера в нём нет. Введите вместо этого адрес компьютера, на котором работают Zigbee2MQTT и Mosquitto.';
 
   @override
   String get setupAddressQuestionPi =>

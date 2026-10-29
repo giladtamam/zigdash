@@ -381,7 +381,7 @@ abstract class AppLocalizations {
   /// No description provided for @connHelpSmhubBody.
   ///
   /// In en, this message translates to:
-  /// **'The broker IP is the hub\'s IP address. Find it in the SMLIGHT web interface under Settings → Network, or in your router. Port is 1883, with no username/password by default.'**
+  /// **'The broker IP is the hub\'s IP address. Open the hub\'s web page (smhub.local): on the Dashboard, the Network box shows it next to IPv4. Your router\'s app also lists the hub as SMHUB. Port is 1883, with no username/password by default.'**
   String get connHelpSmhubBody;
 
   /// No description provided for @connHelpZhaTitle.
@@ -3881,6 +3881,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What is your SMLIGHT hub\'s address?'**
   String get setupAddressQuestionSmlight;
+
+  /// Setup, SMLIGHT address step (3.2.6): where an SMHUB shows its IP. Dashboard, Network and IPv4 are the hub's own English labels; keep them in English.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your hub\'s web page: smhub.local, or smhub.local:3000 on early hubs. On the Dashboard, the Network box shows the address next to IPv4. Type it here. If the page doesn\'t open, your router\'s app lists the hub as SMHUB, with its IP.'**
+  String get setupAddressWhereSmlight;
+
+  /// Setup, SMLIGHT address step (3.2.6): SLZB models run no broker (SLZB-OS manual).
+  ///
+  /// In en, this message translates to:
+  /// **'An SLZB-06, MR or UltimaX is only the Zigbee radio and has no broker. Type the address of the computer that runs Zigbee2MQTT and Mosquitto instead.'**
+  String get setupAddressSlzbSmlight;
 
   /// No description provided for @setupAddressQuestionPi.
   ///

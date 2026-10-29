@@ -149,7 +149,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'IP adresa brokeru je IP adresa hubu. Najdeš ji ve webovém rozhraní SMLIGHT v Settings → Network, nebo v routeru. Port je 1883, ve výchozím stavu bez uživatelského jména a hesla.';
+      'IP adresa brokeru je IP adresa hubu. Otevři webovou stránku hubu (smhub.local): na Dashboard ji najdeš v rámečku Network u IPv4. Hub uvidíš i v aplikaci routeru jako SMHUB. Port je 1883, ve výchozím stavu bez uživatelského jména a hesla.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
@@ -2162,6 +2162,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupAddressQuestionSmlight => 'Jakou adresu má tvůj hub SMLIGHT?';
+
+  @override
+  String get setupAddressWhereSmlight =>
+      'Otevři webovou stránku hubu: smhub.local, u prvních hubů smhub.local:3000. Na Dashboard ukazuje rámeček Network adresu u IPv4. Napiš ji sem. Pokud se stránka neotevře, aplikace routeru ukazuje hub jako SMHUB i s jeho IP.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'SLZB-06, MR nebo UltimaX je jen Zigbee rádio a nemá broker. Napiš místo toho adresu počítače, na kterém běží Zigbee2MQTT a Mosquitto.';
 
   @override
   String get setupAddressQuestionPi =>

@@ -150,7 +150,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'IP brokera to adres IP huba. Znajdziesz go w interfejsie webowym SMLIGHT w Settings → Network lub w routerze. Port to 1883, domyślnie bez nazwy użytkownika i hasła.';
+      'IP brokera to adres IP huba. Otwórz stronę huba (smhub.local): na Dashboard ramka Network pokazuje go obok IPv4. Aplikacja routera też pokazuje hub jako SMHUB. Port to 1883, domyślnie bez nazwy użytkownika i hasła.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
@@ -2170,6 +2170,14 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get setupAddressQuestionSmlight =>
       'Jaki jest adres Twojego huba SMLIGHT?';
+
+  @override
+  String get setupAddressWhereSmlight =>
+      'Otwórz stronę swojego huba: smhub.local, a na pierwszych hubach smhub.local:3000. Na Dashboard ramka Network pokazuje adres obok IPv4. Wpisz go tutaj. Jeśli strona się nie otwiera, aplikacja routera pokazuje hub jako SMHUB, razem z jego IP.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'SLZB-06, MR lub UltimaX to tylko radio Zigbee i nie ma brokera. Wpisz zamiast tego adres komputera, na którym działają Zigbee2MQTT i Mosquitto.';
 
   @override
   String get setupAddressQuestionPi =>

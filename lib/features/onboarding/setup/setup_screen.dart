@@ -1327,6 +1327,13 @@ class _AddressFieldState extends State<_AddressField> {
       children: [
         Text(question, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
+        // 3.2.6: SMLIGHT users who reach this field leave without typing
+        // (a 2026-10-29 user scanned three times, then went to manual
+        // entry). Their hub's Dashboard shows the address; say where.
+        if (widget.platform == SetupPlatform.smlight) ...[
+          const _SmhubAddressHint(),
+          const SizedBox(height: 12),
+        ],
         TextField(
           controller: _controller,
           enabled: !checking,
@@ -1358,6 +1365,82 @@ class _AddressFieldState extends State<_AddressField> {
                   )
                 : const Icon(Icons.travel_explore),
             label: Text(l10n.setupAddressCheck),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Where an SMHUB shows its address (3.2.6): a sketch of the Network box on
+/// its Dashboard, then a line for SLZB owners, whose radio has no broker.
+/// The sketch keeps the hub's own English labels.
+class _SmhubAddressHint extends StatelessWidget {
+  const _SmhubAddressHint();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final mono = theme.textTheme.bodyMedium?.copyWith(
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    return Column(
+      key: const Key('setup-smhub-address-hint'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.setupAddressWhereSmlight, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 8),
+        ExcludeSemantics(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border.all(color: scheme.outlineVariant),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.lan_outlined, size: 18, color: scheme.primary),
+                    const SizedBox(width: 8),
+                    Text('Network', style: theme.textTheme.titleSmall),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    SizedBox(width: 48, child: Text('IPv4', style: mono)),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: scheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '192.168.1.20',
+                        style: mono?.copyWith(
+                          color: scheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l10n.setupAddressSlzbSmlight,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: scheme.onSurfaceVariant,
           ),
         ),
       ],

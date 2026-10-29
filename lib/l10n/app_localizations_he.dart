@@ -149,7 +149,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'כתובת הברוקר היא כתובת ה‑IP של ההאב. מצא אותה בממשק הווב של SMLIGHT תחת Settings → Network, או בנתב. הפורט הוא 1883, ללא שם משתמש/סיסמה כברירת מחדל.';
+      'כתובת הברוקר היא כתובת ה‑IP של ההאב. פתחו את דף הווב של ההאב (smhub.local): ב‑Dashboard, תיבת Network מציגה אותה ליד IPv4. גם האפליקציה של הנתב מציגה את ההאב בשם SMHUB. הפורט הוא 1883, ללא שם משתמש/סיסמה כברירת מחדל.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
@@ -2142,6 +2142,14 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get setupAddressQuestionSmlight =>
       'מה הכתובת של ה‑hub של SMLIGHT שלכם?';
+
+  @override
+  String get setupAddressWhereSmlight =>
+      'פתחו את דף הווב של ההאב: smhub.local, או smhub.local:3000 בהאבים הראשונים. ב‑Dashboard, תיבת Network מציגה את הכתובת ליד IPv4. הקלידו אותה כאן. אם הדף לא נפתח, האפליקציה של הנתב מציגה את ההאב בשם SMHUB, עם ה‑IP שלו.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'SLZB-06,‏ MR או UltimaX הם רק רדיו Zigbee ואין בהם ברוקר. הקלידו במקום זאת את הכתובת של המחשב שמריץ את Zigbee2MQTT ו‑Mosquitto.';
 
   @override
   String get setupAddressQuestionPi => 'מה הכתובת של המחשב שמריץ את Mosquitto?';

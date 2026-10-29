@@ -508,6 +508,31 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Check this address'), findsOneWidget);
+    expect(find.byKey(const Key('setup-smhub-address-hint')), findsNothing);
+  });
+
+  testWidgets('an SMLIGHT empty result says where the hub shows its address', (
+    tester,
+  ) async {
+    final controller = StreamController<ScanEvent>();
+    await _pump(
+      tester,
+      run: (_, __) => ScanRun(events: controller.stream, addHub: (_) {}),
+    );
+    await tester.tap(find.text('Find my setup'));
+    await tester.pump();
+    await tester.tap(find.text('SMLIGHT hub'));
+    await tester.pump();
+    // Not awaited: its future waits on the listener, under the fake clock.
+    unawaited(controller.close());
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.text("What is your SMLIGHT hub's address?"), findsOneWidget);
+    expect(find.byKey(const Key('setup-smhub-address-hint')), findsOneWidget);
+    expect(find.textContaining('the Network box shows the address next to IPv4'),
+        findsOneWidget);
+    expect(find.textContaining('An SLZB-06, MR or UltimaX'), findsOneWidget);
   });
 
   testWidgets('a broker at the typed address goes on to the devices', (

@@ -150,7 +150,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'Brokerens IP er hubens IP-adresse. Finn den i SMLIGHT-nettgrensesnittet under Innstillinger → Nettverk, eller i ruteren. Porten er 1883, uten brukernavn/passord som standard.';
+      'Brokerens IP er hubens IP-adresse. Åpne hubens nettside (smhub.local): på Dashboard viser Network-boksen den ved siden av IPv4. Ruterens app viser også huben som SMHUB. Porten er 1883, uten brukernavn/passord som standard.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
@@ -2163,6 +2163,14 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get setupAddressQuestionSmlight =>
       'Hva er adressen til SMLIGHT-huben din?';
+
+  @override
+  String get setupAddressWhereSmlight =>
+      'Åpne nettsiden til huben: smhub.local, eller smhub.local:3000 på tidlige huber. På Dashboard viser Network-boksen adressen ved siden av IPv4. Skriv den inn her. Hvis siden ikke åpnes, viser ruterens app huben som SMHUB, med IP-en.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'En SLZB-06, MR eller UltimaX er bare Zigbee-radioen og har ingen broker. Skriv i stedet adressen til datamaskinen som kjører Zigbee2MQTT og Mosquitto.';
 
   @override
   String get setupAddressQuestionPi =>
