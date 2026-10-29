@@ -851,6 +851,19 @@ class _ScanEmpty extends StatelessWidget {
         if (haHub) ...[
           const SizedBox(height: 12),
           Text(l10n.setupNoBrokerHaZha, style: theme.textTheme.bodyMedium),
+          // 3.2.6: Home Assistant Container has no Apps, so "install the
+          // Mosquitto broker app" cannot be done; its broker is a container
+          // on whatever machine the user put it.
+          const SizedBox(height: 12),
+          Text(l10n.setupNoBrokerHaDocker, style: theme.textTheme.bodyMedium),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              key: const Key('setup-ha-docker-manual'),
+              onPressed: onManual,
+              child: Text(l10n.setupManualEntryAdvanced),
+            ),
+          ),
         ],
         if (state.z2m case final z?) ...[
           const SizedBox(height: 12),

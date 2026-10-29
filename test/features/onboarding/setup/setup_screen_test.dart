@@ -447,7 +447,15 @@ void main() {
       find.text('Found Home Assistant, but no MQTT broker'),
       findsOneWidget,
     );
-    expect(find.textContaining('Mosquitto broker add-on'), findsOneWidget);
+    // 3.2.6: Home Assistant 2026.2 calls add-ons Apps.
+    expect(
+      find.textContaining('Settings › Apps, install and start the Mosquitto'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('add-on'), findsNothing);
+    // Home Assistant Container has no Apps: its broker is typed by hand.
+    expect(find.textContaining('Home Assistant Container'), findsOneWidget);
+    expect(find.byKey(const Key('setup-ha-docker-manual')), findsOneWidget);
     // 2.6.6: ZHA users are told why, and the demo is a button.
     expect(find.textContaining('(ZHA)'), findsOneWidget);
     expect(find.widgetWithText(OutlinedButton, 'Try demo'), findsOneWidget);
@@ -1004,7 +1012,7 @@ void main() {
     await tester.pump();
 
     expect(find.text("The broker didn't answer the login"), findsOneWidget);
-    expect(find.textContaining('Mosquitto add-on'), findsOneWidget);
+    expect(find.textContaining('Mosquitto broker app checks logins'), findsOneWidget);
     expect(find.text('Something went wrong'), findsNothing);
 
     // Try again re-checks the same login.

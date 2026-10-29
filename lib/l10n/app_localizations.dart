@@ -393,7 +393,7 @@ abstract class AppLocalizations {
   /// No description provided for @connHelpZhaBody.
   ///
   /// In en, this message translates to:
-  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant add-on or a Docker container), which provides an MQTT broker.'**
+  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which provides an MQTT broker.'**
   String get connHelpZhaBody;
 
   /// No description provided for @connHelpSameNetwork.
@@ -2589,7 +2589,7 @@ abstract class AppLocalizations {
   /// No description provided for @diagTcpHaNoBroker.
   ///
   /// In en, this message translates to:
-  /// **'This is your Home Assistant, but no MQTT broker is running on it. Install and start the Mosquitto broker add-on (Settings › Add-ons), then try again.'**
+  /// **'This is your Home Assistant, but no MQTT broker is running on it. Install and start the Mosquitto broker app (Settings › Apps), then try again.'**
   String get diagTcpHaNoBroker;
 
   /// Broker test: port 1883 refused on an SMLIGHT hub (2.9.5). Settings › MQTT and Allow External are the hub's own English labels; keep them in English.
@@ -2775,7 +2775,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAskHaSub.
   ///
   /// In en, this message translates to:
-  /// **'With the Zigbee2MQTT add-on, or ZHA'**
+  /// **'With the Zigbee2MQTT app, or ZHA'**
   String get setupAskHaSub;
 
   /// No description provided for @setupAskSmlight.
@@ -2805,7 +2805,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAskHaZ2m.
   ///
   /// In en, this message translates to:
-  /// **'The Zigbee2MQTT add-on'**
+  /// **'The Zigbee2MQTT app'**
   String get setupAskHaZ2m;
 
   /// No description provided for @setupAskHaZ2mSub.
@@ -2937,7 +2937,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuideHa.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant: make sure the MQTT broker add-on (e.g. Mosquitto) and the Zigbee2MQTT add-on are installed and running.'**
+  /// **'Home Assistant: make sure the Mosquitto broker app and the Zigbee2MQTT app are installed and running (Settings › Apps).'**
   String get setupGuideHa;
 
   /// No description provided for @setupGuidePi.
@@ -3159,7 +3159,7 @@ abstract class AppLocalizations {
   /// No description provided for @haConnectNoMqtt.
   ///
   /// In en, this message translates to:
-  /// **'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker add-on and the MQTT integration, then try again.'**
+  /// **'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker app (Settings › Apps) and the MQTT integration, then try again.'**
   String get haConnectNoMqtt;
 
   /// No description provided for @haConnectSignInFailed.
@@ -3249,7 +3249,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAuthHintHa.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant: use a Home Assistant user. Most people create one just for MQTT under Settings › People › Users, and the Mosquitto add-on accepts it.'**
+  /// **'Home Assistant: use a Home Assistant user. Most people create one just for MQTT under Settings › People › Users, and the Mosquitto broker app accepts it.'**
   String get setupAuthHintHa;
 
   /// No description provided for @setupAuthHintPi.
@@ -3495,7 +3495,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupErrHaNoZ2mBody.
   ///
   /// In en, this message translates to:
-  /// **'You\'re signed in to Home Assistant, but Zigbee2MQTT isn\'t sending anything on its MQTT. If your Zigbee devices are in ZHA (Home Assistant\'s built-in Zigbee), ZigDash can\'t see them: it works with Zigbee2MQTT. If you use the Zigbee2MQTT add-on, open it in Home Assistant, check that it\'s started, then try again.'**
+  /// **'You\'re signed in to Home Assistant, but Zigbee2MQTT isn\'t sending anything on its MQTT. If your Zigbee devices are in ZHA (Home Assistant\'s built-in Zigbee), ZigDash can\'t see them: it works with Zigbee2MQTT. If you use the Zigbee2MQTT app, open it under Settings › Apps, check that it\'s started, then try again.'**
   String get setupErrHaNoZ2mBody;
 
   /// No description provided for @setupErrHaNoZ2mAction.
@@ -3603,7 +3603,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupErrLoginNoAnswerBody.
   ///
   /// In en, this message translates to:
-  /// **'Your broker was found, but it didn\'t answer the username and password in time. Home Assistant\'s Mosquitto add-on checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant.'**
+  /// **'Your broker was found, but it didn\'t answer the username and password in time. Home Assistant\'s Mosquitto broker app checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant.'**
   String get setupErrLoginNoAnswerBody;
 
   /// No description provided for @setupErrLoginNoAnswerAction.
@@ -3759,7 +3759,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupNoBrokerHaBody.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant is at {host}, but nothing answers on MQTT port 1883. In Home Assistant, open Settings › Add-ons, install and start the Mosquitto broker add-on, then try again.'**
+  /// **'Home Assistant is at {host}, but nothing answers on MQTT port 1883. In Home Assistant, open Settings › Apps, install and start the Mosquitto broker app, then try again.'**
   String setupNoBrokerHaBody(String host);
 
   /// No description provided for @setupNoBrokerHaZha.
@@ -3767,6 +3767,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Using Home Assistant\'s own Zigbee (ZHA) instead of Zigbee2MQTT? ZigDash works only with Zigbee2MQTT, so it can\'t see ZHA devices. The demo shows what you\'d get.'**
   String get setupNoBrokerHaZha;
+
+  /// Setup, Home Assistant found without a broker (3.2.6): Home Assistant Container has no Apps, so Mosquitto runs in its own container. Use Home Assistant's own name for Settings › Apps in this language.
+  ///
+  /// In en, this message translates to:
+  /// **'No Apps in your Home Assistant\'s Settings? Then it runs in Docker (Home Assistant Container), which has no apps: Mosquitto runs in its own container. Enter the address of the machine that runs it below.'**
+  String get setupNoBrokerHaDocker;
 
   /// No description provided for @setupVpnHint.
   ///
@@ -3981,7 +3987,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupChoiceHaNote.
   ///
   /// In en, this message translates to:
-  /// **'ZigDash connects to Home Assistant\'s MQTT broker, the Mosquitto broker add-on under Settings › Add-ons, and Zigbee2MQTT has to use it too. If homeassistant.local isn\'t found, enter Home Assistant\'s IP address below. It\'s under Settings › System › Network.'**
+  /// **'ZigDash connects to Home Assistant\'s MQTT broker, the Mosquitto broker app under Settings › Apps, and Zigbee2MQTT has to use it too. If homeassistant.local isn\'t found, enter Home Assistant\'s IP address below. It\'s under Settings › System › Network.'**
   String get setupChoiceHaNote;
 
   /// No description provided for @setupChoiceOther.
@@ -5145,7 +5151,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipBrokerRunningBody.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant: the Mosquitto add-on is started. Raspberry Pi: Mosquitto is running. SMLIGHT: Settings › MQTT is on.'**
+  /// **'Home Assistant: the Mosquitto broker app is started. Raspberry Pi: Mosquitto is running. SMLIGHT: Settings › MQTT is on.'**
   String get tipBrokerRunningBody;
 
   /// No description provided for @tipBrokerAcceptsTitle.
@@ -5229,7 +5235,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipStartBrokerBody.
   ///
   /// In en, this message translates to:
-  /// **'Start Mosquitto or the broker add-on, then try again.'**
+  /// **'Start Mosquitto or the Mosquitto broker app, then try again.'**
   String get tipStartBrokerBody;
 
   /// No description provided for @tipMosquitto2Title.
@@ -5253,7 +5259,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipMqttLoginBody.
   ///
   /// In en, this message translates to:
-  /// **'Your hub\'s web page password is usually not the MQTT one. Home Assistant: use a Home Assistant user, or the login set in the Mosquitto add-on.'**
+  /// **'Your hub\'s web page password is usually not the MQTT one. Home Assistant: use a Home Assistant user, or the login set in the Mosquitto broker app.'**
   String get tipMqttLoginBody;
 
   /// No description provided for @tipSpacesTitle.
