@@ -12,7 +12,10 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../ha_import/ha_auth.dart';
+import '../../connections/discovery/network_info.dart';
+import '../../connections/discovery/subnet.dart';
 import 'ai_help.dart';
+import 'ha_address_shape.dart';
 import 'ha_connect.dart';
 import 'ha_discovery.dart';
 import 'setup_coordinator.dart' show SetupPlatform;
@@ -80,6 +83,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
         : _replaceSignIn(widget.again!, address, signIn),
     reach: reachHomeAssistant,
     find: findHomeAssistant,
+    phoneIp: () async => (await homeIpv4())?.ip,
     signIn: (base) => signInToHa(
       base,
       browser: (url) => FlutterWebAuth2.authenticate(
@@ -161,6 +165,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
             looking: _controller.looking,
             looked: _controller.looked,
             found: _controller.found,
+            phoneIp: _controller.phoneIp,
             onPick: (address) => setState(() => _address.text = address),
             onSignIn: () => _controller.signInAndConnect(_address.text),
             onToken: () =>
@@ -197,9 +202,13 @@ class _Ask extends StatefulWidget {
     this.looking = false,
     this.looked = false,
     this.found = const [],
+    this.phoneIp,
     this.onPick,
   });
   final HaConnectAsk state;
+
+  /// The phone's own address, for "that address is on another network".
+  final String? phoneIp;
 
   /// Looking for Home Assistant on the network (3.1.8), and what it found.
   final bool looking;
@@ -292,12 +301,16 @@ class _AskState extends State<_Ask> {
             ],
           ),
         ],
+        // 3.1.12: a look that found nothing says so at once, and points to
+        // the remote address: the stuck 3.1.11 users were all on Wi-Fi with
+        // Home Assistant out of the phone's sight, and many left right here.
+        if (widget.looked && widget.found.isEmpty) ...[
+          const SizedBox(height: 12),
+          Text(l10n.haFindNone, style: theme.textTheme.bodyMedium),
+        ],
         // 3.1.4: an empty address was every try on 3.1.3's first night.
-        if (problem == HaConnectProblem.noAddress) ...[
-          if (widget.looked && widget.found.isEmpty) ...[
-            const SizedBox(height: 12),
-            Text(l10n.haFindNone, style: theme.textTheme.bodyMedium),
-          ],
+        if (problem == HaConnectProblem.noAddress ||
+            (widget.looked && widget.found.isEmpty)) ...[
           const SizedBox(height: 12),
           Text(l10n.haConnectWhereAddress, style: theme.textTheme.bodyMedium),
         ],
@@ -306,7 +319,12 @@ class _AskState extends State<_Ask> {
             problem != HaConnectProblem.noToken) ...[
           const SizedBox(height: 16),
           Text(
-            problemText(l10n, problem),
+            problemText(
+              l10n,
+              problem,
+              shape: widget.state.shape,
+              phoneIp: widget.phoneIp,
+            ),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.error,
             ),
@@ -384,11 +402,17 @@ String _hostOf(HaFound found) {
   return base == null ? found.address : '${base.host}:${base.port}';
 }
 
-/// What a failed try says, visible for tests.
-String problemText(AppLocalizations l10n, HaConnectProblem p) => switch (p) {
+/// What a failed try says, visible for tests. Nothing answering is told by
+/// the [shape] of the address it went to (3.1.12).
+String problemText(
+  AppLocalizations l10n,
+  HaConnectProblem p, {
+  HaAddressShape? shape,
+  String? phoneIp,
+}) => switch (p) {
   HaConnectProblem.noAddress => l10n.haImportNoAddress,
   HaConnectProblem.noToken => l10n.haImportNoToken,
-  HaConnectProblem.unreachable => l10n.haImportUnreachable,
+  HaConnectProblem.unreachable => _unreachableText(l10n, shape, phoneIp),
   HaConnectProblem.notHomeAssistant => l10n.haImportNotHa,
   HaConnectProblem.certificate => l10n.haImportCertificate,
   HaConnectProblem.signInRefused => l10n.haImportSignInRefused,
@@ -397,3 +421,20 @@ String problemText(AppLocalizations l10n, HaConnectProblem p) => switch (p) {
   HaConnectProblem.notAdmin => l10n.haConnectNotAdmin,
   HaConnectProblem.noMqtt => l10n.haConnectNoMqtt,
 };
+
+String _unreachableText(
+  AppLocalizations l10n,
+  HaAddressShape? shape,
+  String? phoneIp,
+) {
+  final phoneBase = phoneIp == null ? null : subnetBaseFromIp(phoneIp);
+  return switch (shape) {
+    HaAddressShape.otherNetwork when phoneBase != null =>
+      l10n.haConnectOtherNetwork('$phoneBase.x'),
+    HaAddressShape.localName => l10n.haConnectLocalNameUnreachable,
+    HaAddressShape.nabuCasa ||
+    HaAddressShape.remoteName ||
+    HaAddressShape.publicIp => l10n.haConnectRemoteUnreachable,
+    _ => l10n.haImportUnreachable,
+  };
+}

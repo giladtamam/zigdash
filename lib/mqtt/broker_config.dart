@@ -35,6 +35,12 @@ class BrokerConfig {
 
   bool get viaHomeAssistant => transport == ConnectionTransport.homeAssistant;
 
+  /// Through Zigbee2MQTT's web page, no broker (3.2 spike).
+  bool get viaZ2mPage => transport == ConnectionTransport.z2mPage;
+
+  /// Not an MQTT broker: no broker ladder, no relay.
+  bool get notBroker => viaHomeAssistant || viaZ2mPage;
+
   /// This phone's login to the ZigDash relay for the Home (3.1), tried after
   /// the broker's own addresses fail.
   final RemoteHome? relay;

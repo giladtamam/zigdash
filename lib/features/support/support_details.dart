@@ -46,7 +46,10 @@ FailureKind failureKindFromSetup(SetupErrorKind kind) => switch (kind) {
   SetupErrorKind.authRejected => FailureKind.loginRejected,
   SetupErrorKind.loginNoAnswer => FailureKind.timedOut,
   SetupErrorKind.notZigbee2Mqtt => FailureKind.noZigbee2mqtt,
-  SetupErrorKind.noDevices => FailureKind.noDevices,
+  SetupErrorKind.noDevices ||
+  SetupErrorKind.devicesListMissing => FailureKind.noDevices,
+  SetupErrorKind.haNoZigbee2Mqtt ||
+  SetupErrorKind.pageNoAnswer => FailureKind.noZigbee2mqtt,
   SetupErrorKind.scanFailed => FailureKind.noLocalNetwork,
   SetupErrorKind.saveFailed => FailureKind.saveFailed,
   SetupErrorKind.unknown => FailureKind.unknown,

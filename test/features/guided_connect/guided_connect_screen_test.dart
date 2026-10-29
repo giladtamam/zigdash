@@ -19,6 +19,7 @@ import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
 import 'package:zigdash/features/guided_connect/guided_connect_screen.dart';
 import 'package:zigdash/features/onboarding/first_run.dart';
+import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart' show Z2mFetchResult;
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/mqtt_manager.dart';
@@ -197,6 +198,11 @@ Widget _wrap({
     connectDiagnosticsProvider.overrideWithValue(diagnostics),
     firstRunProvider.overrideWithValue(_firstRun),
     deviceIpProvider.overrideWith((ref) async => '192.168.1.37'),
+    // Zigbee2MQTT there with nothing paired, unless a test says otherwise.
+    guidedZ2mCheckProvider.overrideWithValue(
+      (_, __, ___) async => const Z2mFetchResult(detected: true, devices: []),
+    ),
+    guidedPageDevicesProvider.overrideWithValue((_) async => null),
     ...extraOverrides.values,
   ];
   return ProviderScope(
@@ -494,5 +500,94 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  // 3.2.1: an empty broker is checked for Zigbee2MQTT before a home is saved.
+  Future<AppDatabase> runEmpty(
+    WidgetTester tester, {
+    required Future<Z2mFetchResult> Function(BrokerConfig, String, String) check,
+    Future<List<Z2mDevice>?> Function(String)? page,
+  }) async {
+    _tall(tester);
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    await tester.pumpWidget(
+      _wrap(
+        db: db,
+        diagnostics: _FakeDiagnostics([_successReport(count: 0)]),
+        extraOverrides: {
+          'check': guidedZ2mCheckProvider.overrideWithValue(check),
+          if (page != null) 'page': guidedPageDevicesProvider.overrideWithValue(page),
+          'devices': _devicesOverride,
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Test & connect'));
+    await tester.pumpAndSettle();
+    return db;
+  }
+
+  testWidgets('no Zigbee2MQTT on the broker: says so and saves no home', (
+    tester,
+  ) async {
+    final db = await runEmpty(
+      tester,
+      check: (_, __, ___) async => const Z2mFetchResult(detected: false, devices: []),
+    );
+    expect(find.byKey(const Key('guided-empty-broker')), findsOneWidget);
+    expect(find.text('No Zigbee2MQTT here'), findsOneWidget);
+    expect(find.textContaining('ZHA'), findsOneWidget);
+    expect(await db.select(db.connections).get(), isEmpty);
+    expect(_firstRun.finished, isEmpty);
+  });
+
+  testWidgets('Zigbee2MQTT under another base topic is checked again with it', (
+    tester,
+  ) async {
+    final bases = <String>[];
+    final db = await runEmpty(
+      tester,
+      check: (_, __, base) async {
+        bases.add(base);
+        return base == 'z2m'
+            ? const Z2mFetchResult(detected: true, devices: [])
+            : const Z2mFetchResult(detected: false, devices: [], otherBases: ['z2m']);
+      },
+    );
+    expect(bases, ['zigbee2mqtt', 'z2m']);
+    expect(find.text('Connected — no devices found yet'), findsOneWidget);
+    final homes = await db.select(db.connections).get();
+    expect(homes.single.z2mBaseTopic, 'z2m');
+  });
+
+  testWidgets('device list missing: says so when the page has none either', (
+    tester,
+  ) async {
+    final db = await runEmpty(
+      tester,
+      check: (_, __, ___) async =>
+          const Z2mFetchResult(detected: true, devices: [], devicesMissing: true),
+    );
+    expect(find.text("Zigbee2MQTT didn't send its device list"), findsOneWidget);
+    expect(await db.select(db.connections).get(), isEmpty);
+  });
+
+  testWidgets('device list missing: the page has it, so the home is made', (
+    tester,
+  ) async {
+    final db = await runEmpty(
+      tester,
+      check: (_, __, ___) async =>
+          const Z2mFetchResult(detected: true, devices: [], devicesMissing: true),
+      page: (_) async => parseBridgeDevices(
+        jsonEncode([
+          {'friendly_name': 'lamp', 'ieee_address': '0x02', 'type': 'Router', 'supported': true},
+        ]),
+      ),
+    );
+    expect(find.text('Found 1 device'), findsOneWidget);
+    expect(find.text('lamp'), findsOneWidget);
+    expect(await db.select(db.connections).get(), hasLength(1));
   });
 }

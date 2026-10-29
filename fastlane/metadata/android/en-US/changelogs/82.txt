@@ -1,0 +1,1 @@
+Home Assistant sign-in explains more. When your phone can't see Home Assistant on your Wi-Fi, ZigDash says so right away and points you to the address your Home Assistant app opens, often a remote one. When an address doesn't answer, it says why: it's on another network than your phone, it's a .local name Android can't open, or it's a remote address to check in the browser.

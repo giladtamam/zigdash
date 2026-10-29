@@ -33,6 +33,8 @@ class SetupCandidate {
   final ConnectionTransport transport;
 
   bool get viaHomeAssistant => transport == ConnectionTransport.homeAssistant;
+  bool get viaZ2mPage => transport == ConnectionTransport.z2mPage;
+  bool get notBroker => viaHomeAssistant || viaZ2mPage;
 
   String get identity => '$host:$port:${protocol.name}:${transport.name}';
 

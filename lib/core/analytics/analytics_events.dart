@@ -148,7 +148,8 @@ enum ScanEmptyChoice { noHub, homeAssistant, otherNetwork }
 /// How setup succeeded (3.1.3), on [SetupStepKind.complete]: the scan and
 /// its review, Home Assistant's sign-in (which also ends in the review), or
 /// the broker form, which until 3.1.3 sent no complete at all.
-enum SetupVia { scan, homeAssistant, brokerForm, shared }
+/// [z2mPage] (3.2): through Zigbee2MQTT's own web page, no broker.
+enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 
 /// Where setup opened the Home Assistant sign-in (3.1.3): while scanning,
 /// the card on an empty result, the note under "I use Home Assistant",
@@ -163,6 +164,9 @@ enum HaSignInFrom {
   login,
   manualForm,
   noWifi,
+
+  /// The welcome question's "Home Assistant" › "Zigbee2MQTT add-on" (3.2).
+  welcome,
 }
 
 /// How Test & connect on the broker form ended (2.7.2): connected, or the
@@ -228,9 +232,15 @@ class SetupStep extends AnalyticsEvent {
     this.portClass,
     this.via,
     this.aiHelped,
+    this.shape,
   });
 
   final SetupStepKind step;
+
+  /// The kind of address a Home Assistant try went to (an
+  /// [HaAddressShape]), on [SetupStepKind.haConnect] (3.1.12). Never the
+  /// address.
+  final Enum? shape;
 
   /// Whether "Ask your AI" was shared or copied earlier in this setup, on
   /// [SetupStepKind.complete] (3.1.5).
@@ -351,6 +361,7 @@ class SetupStep extends AnalyticsEvent {
     if (portClass != null) 'port': portClass!,
     if (noNetwork != null) 'why': _snake(noNetwork!.name),
     if (choice != null) 'choice': _snake(choice!.name),
+    if (shape != null) 'shape': _snake(shape!.name),
   };
 
   /// The interface kind as a fixed label: wifi, ethernet or other.
@@ -797,6 +808,27 @@ class ProEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': _snake(step.name)};
+}
+
+/// Remote control (3.1.11): the one-time offer on the dashboard was shown,
+/// opened or put away, and remote control was turned on or off. [pro] is
+/// whether this phone has Pro. Nothing about the home or the relay.
+enum RemoteStep { offerShown, offerOpened, offerNotNow, turnedOn, turnedOff }
+
+class RemoteEvent extends AnalyticsEvent {
+  const RemoteEvent(this.step, {this.pro});
+
+  final RemoteStep step;
+  final bool? pro;
+
+  @override
+  String get name => 'remote';
+
+  @override
+  Map<String, String> get props => {
+        'step': _snake(step.name),
+        if (pro != null) 'pro': pro! ? 'yes' : 'no',
+      };
 }
 
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from

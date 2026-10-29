@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
+import 'package:zigdash/features/onboarding/setup/ha_address_shape.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect.dart';
 import 'package:zigdash/features/onboarding/setup/ha_discovery.dart';
 import 'package:zigdash/mqtt/ha_token.dart';
@@ -20,6 +21,7 @@ void main() {
     HaReach? reach,
     Future<HaConnectProblem?> Function()? slowProbe,
     HaFind? find,
+    String? phoneIp,
   }) {
     probed = [];
     adopted = [];
@@ -40,6 +42,7 @@ void main() {
             },
       reach: reach,
       find: find,
+      phoneIp: phoneIp == null ? null : () async => phoneIp,
       onEvent: (e) => events.add(e.props),
     );
   }
@@ -291,6 +294,67 @@ void main() {
       await c.signInAndConnect('https://abc.ui.nabu.casa');
       expect(probed.single.$1, Uri.parse('https://abc.ui.nabu.casa'));
       expect(looks(), ['one']);
+    });
+  });
+
+  group('3.1.12: the kind of address, never the address', () {
+    const ok = (accessToken: 'acc', refreshToken: 'ref', error: null);
+
+    test('an address on another network than the phone', () async {
+      final c = make(
+        signIn: ok,
+        phoneIp: '192.168.68.40',
+        reach: (_) async => HaConnectProblem.unreachable,
+      );
+      await c.signInAndConnect('192.168.1.20');
+      final ask = c.value as HaConnectAsk;
+      expect(ask.shape, HaAddressShape.otherNetwork);
+      expect(c.phoneIp, '192.168.68.40');
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e, {
+        'step': 'ha_connect',
+        'result': 'unreachable',
+        'shape': 'other_network',
+        'port': '8123',
+      });
+      expect(events.join(), isNot(contains('192.168')));
+    });
+
+    test('an empty sign-in is counted as empty', () async {
+      final c = make(signIn: ok, phoneIp: '192.168.68.40');
+      await c.signInAndConnect('');
+      expect(events.single, {
+        'step': 'ha_connect',
+        'result': 'no_address',
+        'shape': 'empty',
+      });
+    });
+
+    test('a remote address that works is counted with its kind', () async {
+      final c = make(signIn: ok);
+      await c.signInAndConnect('https://abcd.ui.nabu.casa');
+      expect(events.last['shape'], 'nabu_casa');
+      expect(events.last['port'], '443');
+      expect(c.value, isA<HaConnectDone>());
+    });
+  
+    test('a .local name swapped for the found one: counted as typed, '
+        'no advice by kind', () async {
+      final c = make(
+        signIn: ok,
+        phoneIp: '10.0.2.15',
+        find: () async => [const HaFound(address: 'http://192.168.7.3:8123')],
+        reach: (_) async => HaConnectProblem.unreachable,
+      );
+      await c.look();
+      await c.signInAndConnect('myha.local');
+      final ask = c.value as HaConnectAsk;
+      expect(ask.problem, HaConnectProblem.unreachable);
+      expect(ask.shape, isNull);
+      expect(
+        events.lastWhere((e) => e['step'] == 'ha_connect')['shape'],
+        'local_name',
+      );
     });
   });
 }

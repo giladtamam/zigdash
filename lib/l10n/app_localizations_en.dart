@@ -1472,6 +1472,101 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupFindMySetup => 'Find my setup';
 
   @override
+  String get setupErrPageTitle => 'Zigbee2MQTT\'s page didn\'t answer';
+
+  @override
+  String get setupErrPageBody =>
+      'Nothing answered as a Zigbee2MQTT page at that address. Open it in this phone\'s browser to check it, and copy the address exactly (with its port, often 8080). If the page asks for a token, enter your broker details instead.';
+
+  @override
+  String get setupErrPageAction => 'Try again';
+
+  @override
+  String get setupLookWider => 'Look on the whole network';
+
+  @override
+  String get setupAsk => 'What runs your Zigbee?';
+
+  @override
+  String get setupAskZ2m => 'Zigbee2MQTT';
+
+  @override
+  String get setupAskZ2mSub => 'On a Raspberry Pi, a server or Docker';
+
+  @override
+  String get setupAskHa => 'Home Assistant';
+
+  @override
+  String get setupAskHaSub => 'With the Zigbee2MQTT add-on, or ZHA';
+
+  @override
+  String get setupAskSmlight => 'An SMLIGHT hub';
+
+  @override
+  String get setupAskSmlightSub => 'SLZB or SMHUB running Zigbee2MQTT';
+
+  @override
+  String get setupAskNothing => 'Nothing yet?';
+
+  @override
+  String get setupAskHaWhich => 'How does your Home Assistant run Zigbee?';
+
+  @override
+  String get setupAskHaZ2m => 'The Zigbee2MQTT add-on';
+
+  @override
+  String get setupAskHaZ2mSub => 'Sign in with Home Assistant';
+
+  @override
+  String get setupAskHaZha => 'ZHA, Home Assistant\'s own Zigbee';
+
+  @override
+  String get setupAskHaZhaSub => 'Zigbee Home Automation, no Zigbee2MQTT';
+
+  @override
+  String get setupZ2mPageEntry => 'Connect to my Zigbee2MQTT page';
+
+  @override
+  String get setupManualEntryAdvanced => 'Enter broker details (advanced)';
+
+  @override
+  String get z2mPageTitle => 'Your Zigbee2MQTT page';
+
+  @override
+  String get z2mPageBody =>
+      'The address in your browser when the Zigbee2MQTT page is open, the one you pair devices on. No MQTT username or password needed.';
+
+  @override
+  String get z2mPageLabel => 'Page address';
+
+  @override
+  String get z2mPageConnect => 'Connect';
+
+  @override
+  String z2mPageFoundName(String host, String ip) {
+    return 'Found $host at $ip';
+  }
+
+  @override
+  String z2mPageNoName(String host) {
+    return 'Nothing answered for $host on this network';
+  }
+
+  @override
+  String get engineNeedsBrokerTitle => 'Automations need your MQTT broker';
+
+  @override
+  String get engineNeedsBrokerBody =>
+      'This home connects through the Zigbee2MQTT page, which is all your dashboards need. Automations, Alerts and history run in the ZigDash Engine on your hub, which talks through your MQTT broker. Add its details once, and ZigDash connects through the broker from then on.';
+
+  @override
+  String get engineNeedsBrokerButton => 'Add broker details';
+
+  @override
+  String get connFromPageNote =>
+      'This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. After saving, ZigDash connects through the broker.';
+
+  @override
   String get setupManualEntry => 'Enter details manually';
 
   @override
@@ -1603,7 +1698,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get haFindNone =>
-      'Home Assistant didn\'t answer on this network. Type its address: the home one, or a remote one.';
+      'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.';
+
+  @override
+  String haConnectOtherNetwork(String network) {
+    return 'That address is on a different network from this phone, which is on $network. Use the address your Home Assistant app opens, often a remote one, or connect the phone to the network Home Assistant is on.';
+  }
+
+  @override
+  String get haConnectLocalNameUnreachable =>
+      'This phone couldn\'t find that name: Android often can\'t open .local names. Type Home Assistant\'s IP address (like 192.168.1.20:8123), or its remote address.';
+
+  @override
+  String get haConnectRemoteUnreachable =>
+      'Nothing answered at that remote address. Open it in this phone\'s browser to check that it works, and copy it exactly as your Home Assistant app shows it.';
 
   @override
   String get setupNoWifiHa => 'Use Home Assistant? Sign in';
@@ -1802,6 +1910,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupErrNoDevicesAction => 'Check again';
+
+  @override
+  String get setupErrListMissingTitle =>
+      'Zigbee2MQTT didn\'t send its device list';
+
+  @override
+  String get setupErrListMissingBody =>
+      'Zigbee2MQTT answers, but its device list didn\'t come. This usually happens after the MQTT broker restarts: Zigbee2MQTT before 2.14.2 only sends the list again when it restarts. Restart Zigbee2MQTT (or update it), then try again.';
+
+  @override
+  String get setupErrListMissingAction => 'Try again';
+
+  @override
+  String get setupErrHaNoZ2mTitle => 'No Zigbee2MQTT in this Home Assistant';
+
+  @override
+  String get setupErrHaNoZ2mBody =>
+      'You\'re signed in to Home Assistant, but Zigbee2MQTT isn\'t sending anything on its MQTT. If your Zigbee devices are in ZHA (Home Assistant\'s built-in Zigbee), ZigDash can\'t see them: it works with Zigbee2MQTT. If you use the Zigbee2MQTT add-on, open it in Home Assistant, check that it\'s started, then try again.';
+
+  @override
+  String get setupErrHaNoZ2mAction => 'Try again';
 
   @override
   String get setupErrScanFailedTitle => 'No local network';
@@ -4379,7 +4508,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get proGetRemote =>
-      'Remote control from anywhere, through the ZigDash relay';
+      'Remote control from anywhere, through the ZigDash relay, with no monthly fee';
 
   @override
   String get proRemoteFair =>
@@ -4465,6 +4594,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get remoteIntroTitle => 'Control your home from anywhere';
+
+  @override
+  String get remoteOfferBody =>
+      'Reach your devices when you\'re away, through ZigDash\'s encrypted relay. Part of Pro: one payment, no monthly fee. Set it up while you\'re at home.';
+
+  @override
+  String get remoteOfferBodyPro =>
+      'You have Pro: turn on remote control while you\'re at home, then reach your devices from anywhere.';
+
+  @override
+  String get remoteOfferShow => 'Show me';
 
   @override
   String get remoteIntroBody =>
@@ -4608,4 +4748,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String remoteHomeId(Object id) {
     return 'Home ID $id';
   }
+
+  @override
+  String get alertsHintTitle => 'Get notified on this phone';
+
+  @override
+  String get alertsHintBody =>
+      'A leak, smoke, an opened door or a low battery can send a notification to this phone, even with ZigDash closed.';
+
+  @override
+  String get alertsHintButton => 'Set up Alerts';
+
+  @override
+  String get alertsHintNotNow => 'Not now';
+
+  @override
+  String get guidedNoZ2mBody =>
+      'An MQTT broker answers here, but Zigbee2MQTT isn\'t sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant\'s ZHA, ZigDash can\'t see them: it works with Zigbee2MQTT.';
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/alerts/alerts_service.dart';
 import 'package:zigdash/engine/automations_repo.dart';
 import 'package:zigdash/engine/automations_screen.dart';
 import 'package:zigdash/engine/engine_installer.dart';
@@ -36,6 +37,7 @@ Future<FakeLink> _pump(WidgetTester tester, EngineView view, {Map<String, Object
       engineSourceProvider.overrideWith((ref) async => "const ENGINE_VERSION = '3.0.0';"),
       automationsProvider.overrideWith((ref, _) => Stream.value(const [])),
       automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
+      alertsConfigProvider.overrideWith((ref, _) => Stream.value(null)),
     ],
     child: MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -110,5 +112,28 @@ void main() {
         ));
     expect(find.text('Running on hub'), findsOneWidget);
     expect(find.textContaining('more than five minutes off'), findsOneWidget);
+  });
+
+  const running = EngineView(phase: HubEnginePhase.running, hub: _hub);
+
+  testWidgets('running without alerts points to Alerts; Not now hides it for good', (tester) async {
+    await _pump(tester, running);
+    expect(find.byKey(const Key('alerts-hint')), findsOneWidget);
+    expect(find.text('Set up Alerts'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('alerts-hint-dismiss')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('alerts-hint')), findsNothing);
+    final p = await SharedPreferences.getInstance();
+    expect(p.getBool('alerts.hint_dismissed.$_id'), isTrue);
+  });
+
+  testWidgets('the Alerts hint stays hidden once dismissed', (tester) async {
+    await _pump(tester, running, prefs: {'alerts.hint_dismissed.$_id': true});
+    expect(find.byKey(const Key('alerts-hint')), findsNothing);
+  });
+
+  testWidgets('no Alerts hint before the Engine runs', (tester) async {
+    await _pump(tester, const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub));
+    expect(find.byKey(const Key('alerts-hint')), findsNothing);
   });
 }

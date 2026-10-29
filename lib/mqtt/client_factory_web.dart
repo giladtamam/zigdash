@@ -10,7 +10,7 @@ mc.MqttClient buildPlatformClient(
   String clientId, {
   String? host,
 }) {
-  if (config.viaHomeAssistant) {
+  if (config.notBroker) {
     throw UnsupportedError(
       'Connecting through Home Assistant needs the Android app.',
     );

@@ -9,6 +9,7 @@ import '../l10n/app_localizations.dart';
 import '../features/pro/pro.dart';
 import '../features/pro/pro_screen.dart';
 import '../core/analytics/analytics.dart';
+import '../alerts/alerts_hint_card.dart';
 import '../features/home/home_shell.dart' show HomeTitle, SettingsAction;
 import 'automation.dart';
 import 'automation_editor_screen.dart';
@@ -57,6 +58,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       case HubEnginePhase.checking:
       case HubEnginePhase.running:
       case HubEnginePhase.unreachable:
+      case HubEnginePhase.needsBroker:
         break;
     }
   }
@@ -247,6 +249,22 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
             body: l10n.engineAwayNoHubBody,
           ),
         ];
+      case HubEnginePhase.needsBroker:
+        // 3.2: a Home set up through the Zigbee2MQTT page has no broker
+        // yet; the Engine's Automations, Alerts and history need one.
+        return [
+          _Message(
+            key: const Key('engine-needs-broker'),
+            title: l10n.engineNeedsBrokerTitle,
+            body: l10n.engineNeedsBrokerBody,
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            onPressed: () => context.push('/connections/${widget.connectionId}/edit'),
+            icon: const Icon(Icons.settings_ethernet),
+            label: Text(l10n.engineNeedsBrokerButton),
+          ),
+        ];
       case HubEnginePhase.tooOld:
         return [
           _Message(
@@ -321,6 +339,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       case HubEnginePhase.running:
         final r = v.report;
         return [
+          AlertsHintCard(connectionId: widget.connectionId),
           if ((r?.rulesLoaded ?? 0) == 0)
             _Message(title: l10n.engineRunningTitle, body: l10n.autoEmptyBody),
           if (v.clockOff) ...[

@@ -45,6 +45,9 @@ List<HelpTip> tipsFor(
         t(l.tipZ2mBrokerTitle, l.tipZ2mBrokerBody),
         t(l.tipBaseTopicTitle, l.tipBaseTopicBody),
       ],
+      SetupErrorKind.devicesListMissing => [
+        t(l.tipRestartZ2mTitle, l.tipRestartZ2mBody),
+      ],
       SetupErrorKind.noDevices => [
         t(l.tipPairFirstTitle, l.tipPairFirstBody),
         t(l.tipRestartZ2mTitle, l.tipRestartZ2mBody),

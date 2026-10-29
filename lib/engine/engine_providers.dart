@@ -1,3 +1,5 @@
+import '../data/repositories/connection_repo.dart';
+import '../data/database/tables/connections.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -76,6 +78,13 @@ class EngineView {
 /// "paused" without a new message. Silently re-saves an older Engine.
 final engineViewProvider =
     StreamProvider.autoDispose.family<EngineView, String>((ref, connectionId) async* {
+  // 3.2: through Zigbee2MQTT's page there is no broker for the Engine's
+  // topics (Automations, Alerts, history): ask for it before anything.
+  final home = await ref.read(connectionRepoProvider).getById(connectionId);
+  if (transportOf(home?.transport) == ConnectionTransport.z2mPage) {
+    yield const EngineView(phase: HubEnginePhase.needsBroker);
+    return;
+  }
   final mgr = await ref.watch(mqttManagerProvider(connectionId).future);
   final base = ref.read(homeBaseTopicProvider(connectionId)) ?? 'zigbee2mqtt';
   final prefs = ref.read(sharedPreferencesProvider);

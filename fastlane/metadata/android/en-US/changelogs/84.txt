@@ -1,0 +1,1 @@
+A simpler start. ZigDash first asks what runs your Zigbee, then connects the easiest way: through the Zigbee2MQTT page you already use, with no MQTT username or password. .local names like smhub.local now work on every phone, the search starts with your own part of the network, and it says plainly when your phone can't see your home. Fewer questions along the way.

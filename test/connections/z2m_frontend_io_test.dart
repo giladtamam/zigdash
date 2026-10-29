@@ -66,4 +66,34 @@ void main() {
       isNull,
     );
   });
+
+  // 3.1.13: the page replays bridge/devices on connect, even when the
+  // broker lost it.
+  test('reads the device list the page replays', () async {
+    await serve((ws) {
+      ws.add(jsonEncode({'topic': 'bridge/state', 'payload': 'online'}));
+      ws.add(
+        jsonEncode({
+          'topic': 'bridge/devices',
+          'payload': [
+            {'ieee_address': '0x1', 'type': 'Coordinator'},
+            {'ieee_address': '0x2', 'friendly_name': 'Lamp', 'type': 'Router'},
+          ],
+        }),
+      );
+    });
+    final list = await fetchZ2mDeviceList('127.0.0.1', server.port);
+    expect(jsonDecode(list!), hasLength(2));
+  });
+
+  test('a locked page gives no device list', () async {
+    await serve((ws) => ws.close(4401, 'Unauthorized'));
+    expect(await fetchZ2mDeviceList('127.0.0.1', server.port), isNull);
+  });
+
+  test('other frames only: no list', () {
+    expect(z2mDeviceListOf('{"topic":"bridge/info","payload":{}}'), isNull);
+    expect(z2mDeviceListOf('{"topic":"bridge/devices","payload":{}}'), isNull);
+    expect(z2mDeviceListOf('not json'), isNull);
+  });
 }

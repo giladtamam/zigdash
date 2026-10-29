@@ -177,6 +177,16 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     SetupErrorKind.noDevices =>
       'ZigDash reached Zigbee2MQTT, but it published no devices during the '
           'check.',
+    SetupErrorKind.devicesListMissing =>
+      'ZigDash reached Zigbee2MQTT, but Zigbee2MQTT never sent its device '
+          'list (bridge/devices), maybe after the MQTT broker restarted.',
+    SetupErrorKind.pageNoAnswer =>
+      "I typed my Zigbee2MQTT page's address in ZigDash, but the page didn't "
+          'answer there (or it asks for a token).',
+    SetupErrorKind.haNoZigbee2Mqtt =>
+      'I signed in to Home Assistant from ZigDash, but ZigDash found no '
+          "Zigbee2MQTT on Home Assistant's MQTT. I'm not sure whether my "
+          'Zigbee runs on ZHA or on the Zigbee2MQTT add-on.',
     _ => 'Setup stopped with an unexpected error.',
   },
   AiHelpFrom.haConnect => switch (f.haProblem) {

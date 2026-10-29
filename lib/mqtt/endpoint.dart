@@ -31,14 +31,14 @@ const int homeAssistantConnectTimeoutMs = 12000;
 const forceRelay = bool.fromEnvironment('ZIGDASH_FORCE_RELAY');
 
 List<MqttCandidate> endpointCandidates(BrokerConfig config) {
-  if (forceRelay && config.relay != null && !config.viaHomeAssistant) {
+  if (forceRelay && config.relay != null && !config.notBroker) {
     return [(kind: MqttEndpoint.relay, host: relayCandidateHost, timeoutMs: relayConnectTimeoutMs)];
   }
   final remote = config.remoteHost?.trim();
   final standard = config.viaHomeAssistant
       ? homeAssistantConnectTimeoutMs
       : standardConnectTimeoutMs;
-  final relay = config.relay != null && !config.viaHomeAssistant
+  final relay = config.relay != null && !config.notBroker
       ? [(kind: MqttEndpoint.relay, host: relayCandidateHost, timeoutMs: relayConnectTimeoutMs)]
       : const <MqttCandidate>[];
   if (remote == null || remote.isEmpty) {

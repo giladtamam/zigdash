@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/analytics/analytics.dart';
 import '../core/l10n/l10n_ext.dart';
 import '../core/router/routes.dart';
 import '../engine/engine_providers.dart';
@@ -34,6 +35,7 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen> {
     final r = await ref.read(remoteSetupProvider).setUp(widget.connectionId);
     if (!mounted) return;
     if (r == RemoteSetupResult.ready) {
+      ref.read(analyticsProvider).track(const RemoteEvent(RemoteStep.turnedOn));
       ref.invalidate(remoteHomeProvider(widget.connectionId));
       ref.invalidate(mqttManagerProvider(widget.connectionId)); // the relay joins the endpoints
     }
@@ -84,6 +86,7 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen> {
     if (yes != true || !mounted) return;
     setState(() => _busy = true);
     await ref.read(remoteSetupProvider).turnOff(widget.connectionId);
+    ref.read(analyticsProvider).track(const RemoteEvent(RemoteStep.turnedOff));
     if (!mounted) return;
     ref.invalidate(remoteHomeProvider(widget.connectionId));
     ref.invalidate(mqttManagerProvider(widget.connectionId));

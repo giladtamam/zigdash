@@ -19,6 +19,7 @@ import '../../../mqtt/ha_mqtt_client.dart';
 import '../../../mqtt/ha_token.dart';
 import '../../ha_import/ha_auth.dart';
 import '../../ha_import/ha_import_controller.dart' show HaSignIn;
+import 'ha_address_shape.dart';
 import 'ha_discovery.dart';
 
 /// Why connecting stopped, for the screen.
@@ -54,11 +55,13 @@ sealed class HaConnectState {
   const HaConnectState();
 }
 
-/// Waiting for the address and a sign-in; [problem] after a failed try.
+/// Waiting for the address and a sign-in; [problem] after a failed try,
+/// and the [shape] of the address it went to (3.1.12).
 class HaConnectAsk extends HaConnectState {
-  const HaConnectAsk({required this.address, this.problem});
+  const HaConnectAsk({required this.address, this.problem, this.shape});
   final String address;
   final HaConnectProblem? problem;
+  final HaAddressShape? shape;
 }
 
 /// Signing in, or checking Home Assistant.
@@ -78,6 +81,9 @@ typedef HaProbe = Future<HaConnectProblem?> Function(Uri base, String stored);
 
 /// Looks for Home Assistant on the network (3.1.8); see [findHomeAssistant].
 typedef HaFind = Future<List<HaFound>> Function();
+
+/// The phone's own IPv4 on the home network, or null.
+typedef HaPhoneIp = Future<String?> Function();
 
 /// Hands the checked home to the setup coordinator.
 typedef HaAdopt = Future<void> Function(Uri address, String signIn);
@@ -146,8 +152,10 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     HaSignIn? signIn,
     HaReach? reach,
     HaFind? find,
+    HaPhoneIp? phoneIp,
     this.onEvent,
   }) : _adopt = adopt,
+       _phoneIpOf = phoneIp,
        _probe = probe,
        _signIn = signIn,
        _reach = reach,
@@ -159,6 +167,21 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   final HaSignIn? _signIn;
   final HaReach? _reach;
   final HaFind? _find;
+  final HaPhoneIp? _phoneIpOf;
+
+  /// The phone's own address, once asked (3.1.12): what a typed private
+  /// address is judged against. Shown on the screen, never sent.
+  String? get phoneIp => _phoneIp;
+  String? _phoneIp;
+  Future<String?>? _askingPhone;
+
+  Future<HaAddressShape> _shapeOf(String address) async {
+    final ask = _phoneIpOf;
+    if (ask != null) {
+      _phoneIp = await (_askingPhone ??= ask().catchError((_) => null));
+    }
+    return haAddressShapeOf(address, phoneIp: _phoneIp);
+  }
 
   /// The look for Home Assistant on the network, once started.
   Future<List<HaFound>>? _looking;
@@ -192,9 +215,13 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     _ => '',
   };
 
-  void _ask(String address, HaConnectProblem? problem) {
+  void _ask(
+    String address,
+    HaConnectProblem? problem, [
+    HaAddressShape? shape,
+  ]) {
     if (_disposed) return;
-    value = HaConnectAsk(address: address, problem: problem);
+    value = HaConnectAsk(address: address, problem: problem, shape: shape);
   }
 
   void _checking(String address) {
@@ -202,8 +229,15 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     value = const HaConnectChecking();
   }
 
-  void _count(HaConnectOutcome outcome) =>
-      onEvent?.call(SetupStep(SetupStepKind.haConnect, result: outcome));
+  void _count(HaConnectOutcome outcome, HaAddressShape shape, [Uri? base]) =>
+      onEvent?.call(
+        SetupStep(
+          SetupStepKind.haConnect,
+          result: outcome,
+          shape: shape,
+          portClass: base == null ? null : haPortClassOf(base),
+        ),
+      );
 
   /// Looks for Home Assistant on the network (3.1.8), once; the screen
   /// fills the address with what it finds.
@@ -240,6 +274,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     final signIn = _signIn;
     if (signIn == null) return;
     var base = haBaseUri(address);
+    final typed = address;
     final t = ++_try;
     if (base == null && _looking != null) {
       // Signed in before the look ended, with nothing typed: wait for it.
@@ -259,8 +294,10 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       base = haBaseUri(address);
     }
     if (base == null) {
-      _count(HaConnectOutcome.noAddress);
-      return _ask(address, HaConnectProblem.noAddress);
+      final shape = await _shapeOf(address);
+      if (t != _try) return;
+      _count(HaConnectOutcome.noAddress, shape);
+      return _ask(address, HaConnectProblem.noAddress, shape);
     }
     if (_found.any((f) => haBaseUri(f.address) == base)) {
       onEvent?.call(
@@ -271,6 +308,14 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       );
     }
     _checking(address);
+    // A typed `.local` name swapped for the found Home Assistant is
+    // counted as typed, and gets no advice by kind: it would be about
+    // another address than the one in the field. An empty field took the
+    // found address, which then fills the field.
+    final swapped = address != typed && typed.trim().isNotEmpty;
+    final shape = await _shapeOf(swapped ? typed : address);
+    if (t != _try) return;
+    final advice = swapped ? null : shape;
     // A Home Assistant that can't be reached would open the browser on an
     // error page, and closing it read as nothing happening (3.1.4).
     final unreached = await _reach?.call(base);
@@ -280,8 +325,10 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
         unreached == HaConnectProblem.certificate
             ? HaConnectOutcome.certificate
             : HaConnectOutcome.unreachable,
+        shape,
+        base,
       );
-      return _ask(address, unreached);
+      return _ask(address, unreached, advice);
     }
     final signed = await signIn(base);
     if (t != _try) return;
@@ -289,14 +336,14 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     if (access == null) {
       switch (signed.error) {
         case HaSignInError.cancelled || null:
-          _count(HaConnectOutcome.signInCancelled);
-          return _ask(address, null);
+          _count(HaConnectOutcome.signInCancelled, shape, base);
+          return _ask(address, null, advice);
         case HaSignInError.refused:
-          _count(HaConnectOutcome.signInRefused);
-          return _ask(address, HaConnectProblem.signInRefused);
+          _count(HaConnectOutcome.signInRefused, shape, base);
+          return _ask(address, HaConnectProblem.signInRefused, advice);
         case HaSignInError.failed:
-          _count(HaConnectOutcome.signInFailed);
-          return _ask(address, HaConnectProblem.signInFailed);
+          _count(HaConnectOutcome.signInFailed, shape, base);
+          return _ask(address, HaConnectProblem.signInFailed, advice);
       }
     }
     // Kept as the refresh token when there is one: access tokens last
@@ -307,23 +354,34 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       base,
       address,
       refresh != null ? haStoredRefresh(refresh) : access,
+      shape,
     );
   }
 
   /// A pasted long-lived token.
   Future<void> connectWithToken(String address, String token) async {
     final base = haBaseUri(address);
+    final t = ++_try;
     if (base == null) {
-      _count(HaConnectOutcome.noAddress);
-      return _ask(address, HaConnectProblem.noAddress);
+      final shape = await _shapeOf(address);
+      if (t != _try) return;
+      _count(HaConnectOutcome.noAddress, shape);
+      return _ask(address, HaConnectProblem.noAddress, shape);
     }
     if (token.trim().isEmpty) return _ask(address, HaConnectProblem.noToken);
-    final t = ++_try;
     _checking(address);
-    await _check(t, base, address, token.trim());
+    final shape = await _shapeOf(address);
+    if (t != _try) return;
+    await _check(t, base, address, token.trim(), shape);
   }
 
-  Future<void> _check(int t, Uri base, String address, String stored) async {
+  Future<void> _check(
+    int t,
+    Uri base,
+    String address,
+    String stored,
+    HaAddressShape shape,
+  ) async {
     final problem = await _probe(base, stored);
     if (t != _try) return;
     if (problem != null) {
@@ -335,10 +393,10 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
         HaConnectProblem.notAdmin => HaConnectOutcome.notAdmin,
         HaConnectProblem.noMqtt => HaConnectOutcome.noMqtt,
         _ => HaConnectOutcome.unreachable,
-      });
-      return _ask(address, problem);
+      }, shape, base);
+      return _ask(address, problem, shape);
     }
-    _count(HaConnectOutcome.ok);
+    _count(HaConnectOutcome.ok, shape, base);
     value = const HaConnectDone();
     await _adopt(base, stored);
   }

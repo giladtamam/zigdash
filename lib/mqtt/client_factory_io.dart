@@ -10,6 +10,7 @@ import 'ha_address.dart';
 import 'endpoint.dart';
 import 'ha_mqtt_client.dart';
 import 'relay_mqtt_client.dart';
+import 'z2m_frontend_client.dart';
 
 /// Whether something answers TCP at [host]:[port] within [timeout]: used to
 /// notice the home network is back while connected through the relay (3.1).
@@ -32,6 +33,9 @@ mc.MqttClient buildPlatformClient(
   final relay = config.relay;
   if (target == relayCandidateHost && relay != null) {
     return RelayMqttClient(relay, clientId);
+  }
+  if (config.viaZ2mPage) {
+    return Z2mFrontendClient(Uri(scheme: 'ws', host: target, port: config.port, path: '/api'), clientId);
   }
   if (config.viaHomeAssistant) {
     final base = haBaseUri(target);

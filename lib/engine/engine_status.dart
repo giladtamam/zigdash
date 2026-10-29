@@ -144,6 +144,10 @@ enum HubEnginePhase {
   /// Not installed, and Zigbee2MQTT allows extensions: offer Install.
   notInstalled,
 
+  /// The Home is connected through the Zigbee2MQTT page (3.2): the Engine
+  /// talks over the broker, so its details come first.
+  needsBroker,
+
   /// Not installed, and Zigbee2MQTT blocks extensions: the consent screen.
   needsConsent,
 

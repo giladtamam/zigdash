@@ -1478,6 +1478,101 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupFindMySetup => 'Najít moje zařízení';
 
   @override
+  String get setupErrPageTitle => 'Stránka Zigbee2MQTT neodpověděla';
+
+  @override
+  String get setupErrPageBody =>
+      'Na této adrese neodpověděla žádná stránka Zigbee2MQTT. Otevřete ji v prohlížeči tohoto telefonu a zkontrolujte ji, a adresu zkopírujte přesně (i s portem, často 8080). Pokud stránka chce token, zadejte místo toho údaje brokeru.';
+
+  @override
+  String get setupErrPageAction => 'Zkusit znovu';
+
+  @override
+  String get setupLookWider => 'Hledat v celé síti';
+
+  @override
+  String get setupAsk => 'Co pohání vaše Zigbee?';
+
+  @override
+  String get setupAskZ2m => 'Zigbee2MQTT';
+
+  @override
+  String get setupAskZ2mSub => 'Na Raspberry Pi, serveru nebo v Dockeru';
+
+  @override
+  String get setupAskHa => 'Home Assistant';
+
+  @override
+  String get setupAskHaSub => 'S doplňkem Zigbee2MQTT, nebo ZHA';
+
+  @override
+  String get setupAskSmlight => 'Hub SMLIGHT';
+
+  @override
+  String get setupAskSmlightSub => 'SLZB nebo SMHUB se Zigbee2MQTT';
+
+  @override
+  String get setupAskNothing => 'Zatím nic?';
+
+  @override
+  String get setupAskHaWhich => 'Jak váš Home Assistant provozuje Zigbee?';
+
+  @override
+  String get setupAskHaZ2m => 'Doplněk Zigbee2MQTT';
+
+  @override
+  String get setupAskHaZ2mSub => 'Přihlásit se přes Home Assistant';
+
+  @override
+  String get setupAskHaZha => 'ZHA, vlastní Zigbee Home Assistantu';
+
+  @override
+  String get setupAskHaZhaSub => 'Zigbee Home Automation, bez Zigbee2MQTT';
+
+  @override
+  String get setupZ2mPageEntry => 'Připojit se k mé stránce Zigbee2MQTT';
+
+  @override
+  String get setupManualEntryAdvanced => 'Zadat údaje brokeru (pokročilé)';
+
+  @override
+  String get z2mPageTitle => 'Vaše stránka Zigbee2MQTT';
+
+  @override
+  String get z2mPageBody =>
+      'Adresa v prohlížeči, když máte otevřenou stránku Zigbee2MQTT – tu, kde párujete zařízení. Není potřeba uživatelské jméno ani heslo MQTT.';
+
+  @override
+  String get z2mPageLabel => 'Adresa stránky';
+
+  @override
+  String get z2mPageConnect => 'Připojit';
+
+  @override
+  String z2mPageFoundName(String host, String ip) {
+    return '$host nalezen na $ip';
+  }
+
+  @override
+  String z2mPageNoName(String host) {
+    return 'Pro $host v této síti nic neodpovědělo';
+  }
+
+  @override
+  String get engineNeedsBrokerTitle => 'Automatizace potřebují váš MQTT broker';
+
+  @override
+  String get engineNeedsBrokerBody =>
+      'Tento domov se připojuje přes stránku Zigbee2MQTT, což dashboardům stačí. Automatizace, upozornění a historie běží v ZigDash Engine na vašem hubu, který komunikuje přes váš MQTT broker. Zadejte jeho údaje jednou a ZigDash se od té doby bude připojovat přes broker.';
+
+  @override
+  String get engineNeedsBrokerButton => 'Zadat údaje brokeru';
+
+  @override
+  String get connFromPageNote =>
+      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Po uložení se ZigDash připojuje přes broker.';
+
+  @override
   String get setupManualEntry => 'Zadat údaje ručně';
 
   @override
@@ -1608,7 +1703,20 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haFindNone =>
-      'Home Assistant v této síti neodpověděl. Zadejte jeho adresu: domácí, nebo vzdálenou.';
+      'Tento telefon v této Wi-Fi Home Assistant nevidí. Použijte adresu, kterou otevírá vaše aplikace Home Assistant: často vzdálenou, například https://abcd1234.ui.nabu.casa nebo https://mujdum.duckdns.org.';
+
+  @override
+  String haConnectOtherNetwork(String network) {
+    return 'Tato adresa je v jiné síti než tento telefon, který je v $network. Použijte adresu, kterou otevírá vaše aplikace Home Assistant, často vzdálenou, nebo připojte telefon k síti, ve které je Home Assistant.';
+  }
+
+  @override
+  String get haConnectLocalNameUnreachable =>
+      'Tento telefon to jméno nenašel: Android často neotevře jména .local. Zadejte IP adresu Home Assistantu (například 192.168.1.20:8123) nebo jeho vzdálenou adresu.';
+
+  @override
+  String get haConnectRemoteUnreachable =>
+      'Na této vzdálené adrese nic neodpovědělo. Otevřete ji v prohlížeči tohoto telefonu a ověřte, že funguje, a zkopírujte ji přesně tak, jak ji ukazuje vaše aplikace Home Assistant.';
 
   @override
   String get setupNoWifiHa => 'Používáte Home Assistant? Přihlásit se';
@@ -1808,6 +1916,26 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrNoDevicesAction => 'Zkontrolovat znovu';
+
+  @override
+  String get setupErrListMissingTitle => 'Zigbee2MQTT neposlal seznam zařízení';
+
+  @override
+  String get setupErrListMissingBody =>
+      'Zigbee2MQTT odpovídá, ale jeho seznam zařízení nepřišel. Obvykle se to stane po restartu MQTT brokeru: Zigbee2MQTT před verzí 2.14.2 pošle seznam znovu až po svém vlastním restartu. Restartujte Zigbee2MQTT (nebo ho aktualizujte) a zkuste to znovu.';
+
+  @override
+  String get setupErrListMissingAction => 'Zkusit znovu';
+
+  @override
+  String get setupErrHaNoZ2mTitle => 'V tomto Home Assistantu není Zigbee2MQTT';
+
+  @override
+  String get setupErrHaNoZ2mBody =>
+      'Jste přihlášeni do Home Assistantu, ale Zigbee2MQTT přes jeho MQTT nic neposílá. Pokud máte zařízení Zigbee v ZHA (vestavěném Zigbee Home Assistantu), ZigDash je nevidí: pracuje se Zigbee2MQTT. Pokud používáte doplněk Zigbee2MQTT, otevřete ho v Home Assistantu, zkontrolujte, že běží, a zkuste to znovu.';
+
+  @override
+  String get setupErrHaNoZ2mAction => 'Zkusit znovu';
 
   @override
   String get setupErrScanFailedTitle => 'Žádná místní síť';
@@ -4386,7 +4514,8 @@ class AppLocalizationsCs extends AppLocalizations {
       'Neomezené automatizace; tři na domácnost jsou zdarma';
 
   @override
-  String get proGetRemote => 'Ovládání odkudkoli přes relay ZigDash';
+  String get proGetRemote =>
+      'Ovládání odkudkoli přes relay ZigDash, bez měsíčního poplatku';
 
   @override
   String get proRemoteFair =>
@@ -4472,6 +4601,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get remoteIntroTitle => 'Ovládejte domácnost odkudkoli';
+
+  @override
+  String get remoteOfferBody =>
+      'Ovládejte zařízení i mimo domov, přes šifrovaný relay ZigDash. Součást Pro: jedna platba, žádný měsíční poplatek. Nastavte to, když jste doma.';
+
+  @override
+  String get remoteOfferBodyPro =>
+      'Máte Pro: zapněte ovládání na dálku, když jste doma, a pak ovládejte zařízení odkudkoli.';
+
+  @override
+  String get remoteOfferShow => 'Ukázat';
 
   @override
   String get remoteIntroBody =>
@@ -4611,4 +4751,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String remoteHomeId(Object id) {
     return 'ID domova $id';
   }
+
+  @override
+  String get alertsHintTitle => 'Upozornění na tento telefon';
+
+  @override
+  String get alertsHintBody =>
+      'Únik vody, kouř, otevřené dveře nebo slabá baterie mohou poslat upozornění na tento telefon, i když je ZigDash zavřený.';
+
+  @override
+  String get alertsHintButton => 'Nastavit upozornění';
+
+  @override
+  String get alertsHintNotNow => 'Teď ne';
+
+  @override
+  String get guidedNoZ2mBody =>
+      'Odpovídá tu MQTT broker, ale Zigbee2MQTT přes něj nic neposílá. Zkontrolujte, že Zigbee2MQTT běží a používá tento broker a že základní topic odpovídá jeho nastavení. Pokud máte zařízení Zigbee v ZHA v Home Assistantu, ZigDash je nevidí: pracuje se Zigbee2MQTT.';
 }

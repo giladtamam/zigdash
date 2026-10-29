@@ -90,8 +90,9 @@ class BrokerScanService {
     String deviceIp, {
     Set<HubKind> hubs = defaultHubs,
     void Function(ScanStats stats)? onDone,
+    bool widen = true,
   }) {
-    final engine = _Engine(this, deviceIp, hubs.toSet(), onDone);
+    final engine = _Engine(this, deviceIp, hubs.toSet(), onDone, widen: widen);
     return ScanRun(events: engine.stream, addHub: engine.addHub);
   }
 }
@@ -128,12 +129,13 @@ class _LateTask extends _Task {
 /// the `/24` for hubs and phase C the rest of the `/22` for brokers. If
 /// still none, phase D takes the second look at the `/24`'s silent hosts.
 class _Engine {
-  _Engine(this.service, this.deviceIp, this.hubs, this.onDone) {
+  _Engine(this.service, this.deviceIp, this.hubs, this.onDone, {bool widen = true}) {
     final local = candidateHosts(deviceIp);
     _localHosts = local;
     _tasks.addAll(_brokerTasks(local));
     _phaseAEnd = _tasks.length;
-    _wider = _brokerTasks(widerCandidateHosts(deviceIp));
+    // 3.2: setup scans the phone's own /24 first and widens on request.
+    _wider = widen ? _brokerTasks(widerCandidateHosts(deviceIp)) : [];
     // Phase D counts as every local host until it starts, then shrinks to
     // the silent ones, so the bar never moves backwards.
     _total =

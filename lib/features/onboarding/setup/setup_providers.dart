@@ -15,6 +15,7 @@ import '../../connections/discovery/broker_scan_providers.dart';
 import '../../connections/discovery/hub_probe.dart';
 import '../../connections/discovery/z2m_frontend.dart';
 import '../../connections/discovery/z2m_frontend_fetch.dart';
+import '../../discovery/models/z2m_device.dart' show parseBridgeDevices;
 import '../../connections/discovery/network_info.dart';
 import '../../support/support_details.dart';
 import '../../support/support_log.dart';
@@ -41,6 +42,7 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
     scan: (ip, hubs) => scanner.run(
       ip,
       hubs: hubs,
+      widen: coordinator.widen,
       onDone: (st) => support.recordScan(
         ScanSummary(
           widened: st.widened,
@@ -62,6 +64,20 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
       await fetchZ2mMqttConfig(host, port),
       frontendHost: host,
     ),
+    // 3.2: a page that answers (bridge/info) without a token.
+    pagePresent: (host, port) async {
+      try {
+        return await fetchZ2mMqttConfig(host, port) != null;
+      } on Z2mPageLocked {
+        return false;
+      }
+    },
+    // The page's usual port; the Home Assistant add-on's sits behind
+    // ingress, where only the Home Assistant route reaches it.
+    pageDevices: (host) async {
+      final list = await fetchZ2mDeviceList(host, 8080);
+      return list == null ? null : parseBridgeDevices(list);
+    },
     probeBroker: scanner.prober.probe,
     checkAddress: createAddressChecker(
       prober: scanner.prober,

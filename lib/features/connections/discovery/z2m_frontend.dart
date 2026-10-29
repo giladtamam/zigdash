@@ -62,6 +62,19 @@ Map<String, dynamic>? z2mMqttConfigOf(String frame) {
   }
 }
 
+/// The `bridge/devices` payload of a frame from Zigbee2MQTT's web API, as
+/// JSON text for [parseBridgeDevices], or null for any other frame.
+String? z2mDeviceListOf(String frame) {
+  try {
+    final decoded = jsonDecode(frame);
+    if (decoded is! Map || decoded['topic'] != 'bridge/devices') return null;
+    final payload = decoded['payload'];
+    return payload is List ? jsonEncode(payload) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 const _sameMachineNames = {'localhost', '127.0.0.1', '::1', 'core-mosquitto'};
 
 /// What [mqtt] (Zigbee2MQTT's `mqtt` settings) means for a phone that

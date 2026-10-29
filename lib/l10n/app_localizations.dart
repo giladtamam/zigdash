@@ -2730,6 +2730,180 @@ abstract class AppLocalizations {
   /// **'Find my setup'**
   String get setupFindMySetup;
 
+  /// No description provided for @setupErrPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT\'s page didn\'t answer'**
+  String get setupErrPageTitle;
+
+  /// No description provided for @setupErrPageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing answered as a Zigbee2MQTT page at that address. Open it in this phone\'s browser to check it, and copy the address exactly (with its port, often 8080). If the page asks for a token, enter your broker details instead.'**
+  String get setupErrPageBody;
+
+  /// No description provided for @setupErrPageAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrPageAction;
+
+  /// No description provided for @setupLookWider.
+  ///
+  /// In en, this message translates to:
+  /// **'Look on the whole network'**
+  String get setupLookWider;
+
+  /// No description provided for @setupAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'What runs your Zigbee?'**
+  String get setupAsk;
+
+  /// No description provided for @setupAskZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT'**
+  String get setupAskZ2m;
+
+  /// No description provided for @setupAskZ2mSub.
+  ///
+  /// In en, this message translates to:
+  /// **'On a Raspberry Pi, a server or Docker'**
+  String get setupAskZ2mSub;
+
+  /// No description provided for @setupAskHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get setupAskHa;
+
+  /// No description provided for @setupAskHaSub.
+  ///
+  /// In en, this message translates to:
+  /// **'With the Zigbee2MQTT add-on, or ZHA'**
+  String get setupAskHaSub;
+
+  /// No description provided for @setupAskSmlight.
+  ///
+  /// In en, this message translates to:
+  /// **'An SMLIGHT hub'**
+  String get setupAskSmlight;
+
+  /// No description provided for @setupAskSmlightSub.
+  ///
+  /// In en, this message translates to:
+  /// **'SLZB or SMHUB running Zigbee2MQTT'**
+  String get setupAskSmlightSub;
+
+  /// No description provided for @setupAskNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet?'**
+  String get setupAskNothing;
+
+  /// No description provided for @setupAskHaWhich.
+  ///
+  /// In en, this message translates to:
+  /// **'How does your Home Assistant run Zigbee?'**
+  String get setupAskHaWhich;
+
+  /// No description provided for @setupAskHaZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'The Zigbee2MQTT add-on'**
+  String get setupAskHaZ2m;
+
+  /// No description provided for @setupAskHaZ2mSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Home Assistant'**
+  String get setupAskHaZ2mSub;
+
+  /// No description provided for @setupAskHaZha.
+  ///
+  /// In en, this message translates to:
+  /// **'ZHA, Home Assistant\'s own Zigbee'**
+  String get setupAskHaZha;
+
+  /// No description provided for @setupAskHaZhaSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee Home Automation, no Zigbee2MQTT'**
+  String get setupAskHaZhaSub;
+
+  /// No description provided for @setupZ2mPageEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to my Zigbee2MQTT page'**
+  String get setupZ2mPageEntry;
+
+  /// No description provided for @setupManualEntryAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter broker details (advanced)'**
+  String get setupManualEntryAdvanced;
+
+  /// No description provided for @z2mPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Zigbee2MQTT page'**
+  String get z2mPageTitle;
+
+  /// No description provided for @z2mPageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The address in your browser when the Zigbee2MQTT page is open, the one you pair devices on. No MQTT username or password needed.'**
+  String get z2mPageBody;
+
+  /// No description provided for @z2mPageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Page address'**
+  String get z2mPageLabel;
+
+  /// No description provided for @z2mPageConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get z2mPageConnect;
+
+  /// No description provided for @z2mPageFoundName.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {host} at {ip}'**
+  String z2mPageFoundName(String host, String ip);
+
+  /// No description provided for @z2mPageNoName.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing answered for {host} on this network'**
+  String z2mPageNoName(String host);
+
+  /// No description provided for @engineNeedsBrokerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations need your MQTT broker'**
+  String get engineNeedsBrokerTitle;
+
+  /// No description provided for @engineNeedsBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This home connects through the Zigbee2MQTT page, which is all your dashboards need. Automations, Alerts and history run in the ZigDash Engine on your hub, which talks through your MQTT broker. Add its details once, and ZigDash connects through the broker from then on.'**
+  String get engineNeedsBrokerBody;
+
+  /// No description provided for @engineNeedsBrokerButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add broker details'**
+  String get engineNeedsBrokerButton;
+
+  /// No description provided for @connFromPageNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. After saving, ZigDash connects through the broker.'**
+  String get connFromPageNote;
+
   /// No description provided for @setupManualEntry.
   ///
   /// In en, this message translates to:
@@ -2961,8 +3135,26 @@ abstract class AppLocalizations {
   /// No description provided for @haFindNone.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant didn\'t answer on this network. Type its address: the home one, or a remote one.'**
+  /// **'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.'**
   String get haFindNone;
+
+  /// No description provided for @haConnectOtherNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'That address is on a different network from this phone, which is on {network}. Use the address your Home Assistant app opens, often a remote one, or connect the phone to the network Home Assistant is on.'**
+  String haConnectOtherNetwork(String network);
+
+  /// No description provided for @haConnectLocalNameUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone couldn\'t find that name: Android often can\'t open .local names. Type Home Assistant\'s IP address (like 192.168.1.20:8123), or its remote address.'**
+  String get haConnectLocalNameUnreachable;
+
+  /// No description provided for @haConnectRemoteUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing answered at that remote address. Open it in this phone\'s browser to check that it works, and copy it exactly as your Home Assistant app shows it.'**
+  String get haConnectRemoteUnreachable;
 
   /// No description provided for @setupNoWifiHa.
   ///
@@ -3287,6 +3479,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check again'**
   String get setupErrNoDevicesAction;
+
+  /// No description provided for @setupErrListMissingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT didn\'t send its device list'**
+  String get setupErrListMissingTitle;
+
+  /// No description provided for @setupErrListMissingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT answers, but its device list didn\'t come. This usually happens after the MQTT broker restarts: Zigbee2MQTT before 2.14.2 only sends the list again when it restarts. Restart Zigbee2MQTT (or update it), then try again.'**
+  String get setupErrListMissingBody;
+
+  /// No description provided for @setupErrListMissingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrListMissingAction;
+
+  /// No description provided for @setupErrHaNoZ2mTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Zigbee2MQTT in this Home Assistant'**
+  String get setupErrHaNoZ2mTitle;
+
+  /// No description provided for @setupErrHaNoZ2mBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re signed in to Home Assistant, but Zigbee2MQTT isn\'t sending anything on its MQTT. If your Zigbee devices are in ZHA (Home Assistant\'s built-in Zigbee), ZigDash can\'t see them: it works with Zigbee2MQTT. If you use the Zigbee2MQTT add-on, open it in Home Assistant, check that it\'s started, then try again.'**
+  String get setupErrHaNoZ2mBody;
+
+  /// No description provided for @setupErrHaNoZ2mAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get setupErrHaNoZ2mAction;
 
   /// No description provided for @setupErrScanFailedTitle.
   ///
@@ -7731,7 +7959,7 @@ abstract class AppLocalizations {
   /// No description provided for @proGetRemote.
   ///
   /// In en, this message translates to:
-  /// **'Remote control from anywhere, through the ZigDash relay'**
+  /// **'Remote control from anywhere, through the ZigDash relay, with no monthly fee'**
   String get proGetRemote;
 
   /// No description provided for @proRemoteFair.
@@ -7871,6 +8099,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Control your home from anywhere'**
   String get remoteIntroTitle;
+
+  /// No description provided for @remoteOfferBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach your devices when you\'re away, through ZigDash\'s encrypted relay. Part of Pro: one payment, no monthly fee. Set it up while you\'re at home.'**
+  String get remoteOfferBody;
+
+  /// No description provided for @remoteOfferBodyPro.
+  ///
+  /// In en, this message translates to:
+  /// **'You have Pro: turn on remote control while you\'re at home, then reach your devices from anywhere.'**
+  String get remoteOfferBodyPro;
+
+  /// No description provided for @remoteOfferShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show me'**
+  String get remoteOfferShow;
 
   /// No description provided for @remoteIntroBody.
   ///
@@ -8111,6 +8357,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home ID {id}'**
   String remoteHomeId(Object id);
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified on this phone'**
+  String get alertsHintTitle;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'A leak, smoke, an opened door or a low battery can send a notification to this phone, even with ZigDash closed.'**
+  String get alertsHintBody;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Alerts'**
+  String get alertsHintButton;
+
+  /// Automations tab: card pointing to Alerts (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get alertsHintNotNow;
+
+  /// Test & connect: a broker with no Zigbee2MQTT on it (3.2.1).
+  ///
+  /// In en, this message translates to:
+  /// **'An MQTT broker answers here, but Zigbee2MQTT isn\'t sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant\'s ZHA, ZigDash can\'t see them: it works with Zigbee2MQTT.'**
+  String get guidedNoZ2mBody;
 }
 
 class _AppLocalizationsDelegate

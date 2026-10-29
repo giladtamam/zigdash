@@ -57,6 +57,7 @@ class Z2mProbeFetcher {
     }
 
     var detected = false;
+    var sawDevices = false;
     var devices = <Z2mDevice>[];
     final others = <String>{};
     final sub = client.updates?.listen((events) {
@@ -78,6 +79,7 @@ class Z2mProbeFetcher {
             : '';
         if (rest == 'bridge/devices') {
           detected = true;
+          sawDevices = true;
           final payload = mc.MqttPublishPayload.bytesToStringAsString(
             pub.payload.message,
           );
@@ -104,6 +106,7 @@ class Z2mProbeFetcher {
       detected: detected,
       devices: devices,
       otherBases: others.toList()..sort(),
+      devicesMissing: detected && !sawDevices,
     );
   }
 

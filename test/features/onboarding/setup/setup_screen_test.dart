@@ -361,7 +361,7 @@ void main() {
   testWidgets('welcome offers Find my setup and manual entry', (tester) async {
     await _pump(tester);
     expect(find.text('Find my setup'), findsOneWidget);
-    expect(find.text('Enter details manually'), findsOneWidget);
+    expect(find.text('Enter broker details (advanced)'), findsOneWidget);
   });
 
   testWidgets('scanning shows progressive candidates; tapping one verifies', (
@@ -477,14 +477,12 @@ void main() {
   testWidgets('no candidates with an answer: that platform only', (
     tester,
   ) async {
+    // 3.2: the platform is the welcome's question, answered before the scan.
     final coordinator = await _pump(tester, scan: (_) => const Stream.empty());
-    await tester.tap(find.text('Find my setup'));
+    await tester.tap(find.byKey(const Key('ask-z2m')));
     await tester.pump();
     await tester.pump();
     expect(find.text('No connection found'), findsOneWidget);
-
-    await tester.tap(find.text('Raspberry Pi or Docker'));
-    await tester.pump();
     expect(coordinator.platform, SetupPlatform.piOrDocker);
     expect(
       find.textContaining('No MQTT broker found on this network'),
@@ -509,10 +507,6 @@ void main() {
       ),
       findsOneWidget,
     );
-    await tester.tap(find.text('Home Assistant').first);
-    await tester.pump();
-    expect(find.text('Where do you open Home Assistant?'), findsOneWidget);
-    expect(find.textContaining('enter it below'), findsOneWidget);
     expect(find.text('Check this address'), findsOneWidget);
   });
 
@@ -612,13 +606,14 @@ void main() {
     final retry = find.widgetWithText(OutlinedButton, 'Try again');
     expect(check, findsOneWidget);
     expect(retry, findsOneWidget);
-    // Above the chips, above Try again.
+    // 3.2: the Zigbee2MQTT page first, then the address, then Try again.
+    final page = find.byKey(const Key('setup-z2m-page'));
     final question = tester.getTopLeft(
       find.text(
         'What is the address of your hub, or of the machine running Zigbee2MQTT?',
       ),
     );
-    expect(question.dy, lessThan(tester.getTopLeft(find.text('Not sure')).dy));
+    expect(tester.getTopLeft(page).dy, lessThan(question.dy));
     expect(tester.getTopLeft(check).dy, lessThan(tester.getTopLeft(retry).dy));
   });
 
@@ -691,114 +686,8 @@ void main() {
           props['choice'],
     ];
 
-    testWidgets('no hub yet opens the Hubs page', (tester) async {
-      Uri? opened;
-      final original = openSetupLink;
-      addTearDown(() => openSetupLink = original);
-      openSetupLink = (url) async {
-        opened = url;
-        return true;
-      };
-      await _pump(tester, scan: (_) => const Stream.empty(), extra: analytics);
-      await tester.tap(find.text('Find my setup'));
-      await tester.pump();
-      await tester.pump();
-      expect(find.text('Which of these fits you?'), findsOneWidget);
-      await tester.tap(find.text("I don't have a hub yet"));
-      await tester.pump();
-      expect(opened, hubsPageUrl);
-      expect(opened.toString(), 'https://zigdash.app/hubs/');
-      expect(choices(), ['no_hub']);
-    });
 
-    testWidgets('Home Assistant checks homeassistant.local', (tester) async {
-      final asked = <String>[];
-      final coordinator = await _pump(
-        tester,
-        scan: (_) => const Stream.empty(),
-        extra: analytics,
-        checkAddress: (host, port) async {
-          asked.add(host);
-          return const AddressCheckResult(AddressOutcome.notResolved);
-        },
-      );
-      await tester.tap(find.text('Find my setup'));
-      await tester.pump();
-      await tester.pump();
-      await tester.tap(find.text('I use Home Assistant'));
-      await tester.pump();
-      await tester.pump();
-      expect(asked, ['homeassistant.local']);
-      expect(coordinator.platform, SetupPlatform.homeAssistant);
-      expect(find.textContaining('Mosquitto broker add-on'), findsOneWidget);
-      // The field shows the address the choice checked, and its outcome.
-      expect(
-        find.widgetWithText(TextField, 'homeassistant.local'),
-        findsOneWidget,
-      );
-      // 3.1.3: a Home Assistant user is sent to its sign-in, above.
-      expect(
-        find.textContaining("homeassistant.local can't be found"),
-        findsOneWidget,
-      );
-      expect(
-        find.textContaining('Tap Connect through Home Assistant above'),
-        findsOneWidget,
-      );
-      expect(choices(), ['home_assistant']);
 
-      // Which way into the sign-in is counted (3.1.3).
-      await tester.ensureVisible(find.byKey(const Key('setup-ha-shortcut')));
-      await tester.tap(
-        find.descendant(
-          of: find.byKey(const Key('setup-ha-shortcut')),
-          matching: find.text('Connect through Home Assistant'),
-        ),
-      );
-      await tester.pump();
-      expect(
-        [
-          for (final (name, props) in sent)
-            if (name == 'setup_step' && props['step'] == 'ha_opened')
-              props['choice'],
-        ],
-        ['empty_card'],
-      );
-    });
-
-    testWidgets('another network explains, and checks a usual name', (
-      tester,
-    ) async {
-      final asked = <String>[];
-      await _pump(
-        tester,
-        scan: (_) => const Stream.empty(),
-        extra: analytics,
-        checkAddress: (host, port) async {
-          asked.add(host);
-          return const AddressCheckResult.nothing();
-        },
-      );
-      await tester.tap(find.text('Find my setup'));
-      await tester.pump();
-      await tester.pump();
-      expect(find.textContaining('smhub.local'), findsNothing);
-      await tester.tap(find.text('My hub is on another network'));
-      await tester.pump();
-      expect(
-        find.textContaining('A guest Wi-Fi, or a second router'),
-        findsOneWidget,
-      );
-      await tester.tap(find.textContaining('smhub.local'));
-      await tester.pump();
-      await tester.pump();
-      expect(asked, ['smhub.local']);
-      expect(
-        find.textContaining('Nothing answered at smhub.local'),
-        findsOneWidget,
-      );
-      expect(choices(), ['other_network']);
-    });
 
     testWidgets('a hub found: no choices', (tester) async {
       await _pump(
@@ -902,7 +791,7 @@ void main() {
     expect(find.textContaining('Home Assistant'), findsWidgets);
     expect(find.textContaining('SMLIGHT'), findsWidgets);
     expect(find.text('Try again'), findsOneWidget);
-    expect(find.text('Enter details manually'), findsOneWidget);
+    expect(find.text('Enter broker details (advanced)'), findsOneWidget);
   });
 
   testWidgets('anonymous rejection prompts for credentials, preserving host', (
@@ -1316,37 +1205,7 @@ void main() {
   // First-run decision: no "Creating…" or "ready" screens; selecting
   // devices lands directly on the generated dashboard.
   // 2.9.7: where setup stops, a reminder a day later; gone once it works.
-  testWidgets('Remind me tomorrow on an empty result schedules one', (
-    tester,
-  ) async {
-    final reminder = _FakeReminder();
-    await _pump(tester, scan: (_) => const Stream.empty(), reminder: reminder);
-    await tester.tap(find.text('Find my setup'));
-    await tester.pump();
-    await tester.pump();
-    await tester.tap(find.text('Remind me tomorrow'));
-    await tester.pump();
-    expect(reminder.scheduled, 1);
-    expect(
-      find.text("We'll remind you tomorrow, on this phone."),
-      findsOneWidget,
-    );
-    expect(find.text('Remind me tomorrow'), findsNothing);
-  });
 
-  testWidgets('notifications off: says so, no reminder', (tester) async {
-    await _pump(
-      tester,
-      scan: (_) => const Stream.empty(),
-      reminder: _FakeReminder(allowed: false),
-    );
-    await tester.tap(find.text('Find my setup'));
-    await tester.pump();
-    await tester.pump();
-    await tester.tap(find.text('Remind me tomorrow'));
-    await tester.pump();
-    expect(find.textContaining('Notifications are off'), findsOneWidget);
-  });
 
   testWidgets('creating the dashboard opens it directly', (tester) async {
     final reminder = _FakeReminder();
@@ -1440,15 +1299,15 @@ void main() {
         if (name == 'setup_step') props['step'],
     ];
 
-    testWidgets('Find my setup is still the only main button', (tester) async {
+    testWidgets('3.2: the welcome asks first; nothing yet leads to the demo', (tester) async {
       await _pump(tester);
-      expect(find.text('No Zigbee2MQTT yet?'), findsOneWidget);
-      expect(
-        find.widgetWithText(FilledButton, 'Find my setup'),
-        findsOneWidget,
-      );
-      expect(find.byType(FilledButton), findsOneWidget);
-      expect(find.text('Try demo'), findsNothing);
+      expect(find.text('What runs your Zigbee?'), findsOneWidget);
+      for (final k in ['ask-z2m', 'ask-ha', 'ask-smlight']) {
+        expect(find.byKey(Key(k)), findsOneWidget);
+      }
+      expect(find.text('Nothing yet?'), findsOneWidget);
+      expect(find.text('Try the demo home'), findsOneWidget);
+      expect(find.text('Find my setup'), findsOneWidget, reason: 'the not-sure scan');
     });
 
     testWidgets('the demo home opens without a scan', (tester) async {

@@ -1,0 +1,1 @@
+Setup handles two more dead ends. If Zigbee2MQTT answers but its device list is missing (usually after the MQTT broker restarts), ZigDash now reads the list from Zigbee2MQTT's web page, or tells you to restart Zigbee2MQTT. And if you sign in to Home Assistant and there's no Zigbee2MQTT on it, ZigDash says so plainly: your Zigbee may be on ZHA, or the add-on may be stopped.

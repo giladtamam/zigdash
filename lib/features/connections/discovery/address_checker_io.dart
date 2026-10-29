@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../../../core/net/mdns_lookup.dart';
+
 import 'address_check.dart';
 import 'broker_probe.dart';
 import 'broker_prober.dart';
@@ -23,17 +25,24 @@ AddressChecker createAddressChecker({
     if (isIpv4Literal(host)) {
       ip = host;
     } else {
-      try {
-        final found = await InternetAddress.lookup(
-          host,
-          type: InternetAddressType.IPv4,
-        ).timeout(const Duration(seconds: 4));
-        if (found.isEmpty) {
+      // 3.2: a `.local` name is asked on the network first; Android
+      // resolves those on some phones only (65 failed checks in 17 days).
+      final viaMdns = host.toLowerCase().endsWith('.local') ? await mdnsLookup(host) : null;
+      if (viaMdns != null) {
+        ip = viaMdns.address;
+      } else {
+        try {
+          final found = await InternetAddress.lookup(
+            host,
+            type: InternetAddressType.IPv4,
+          ).timeout(const Duration(seconds: 4));
+          if (found.isEmpty) {
+            return const AddressCheckResult(AddressOutcome.notResolved);
+          }
+          ip = found.first.address;
+        } catch (_) {
           return const AddressCheckResult(AddressOutcome.notResolved);
         }
-        ip = found.first.address;
-      } catch (_) {
-        return const AddressCheckResult(AddressOutcome.notResolved);
       }
     }
     if (!isPrivateIpv4(ip)) {
