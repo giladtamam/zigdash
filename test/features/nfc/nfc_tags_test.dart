@@ -63,55 +63,51 @@ Future<_FakeBridge> _pump(WidgetTester tester, NfcState nfc) async {
 
 void main() {
   group('nfcTagUri', () {
-    test('carries the Home, the action, the target and a short label', () {
-      final uri = Uri.parse(
-        nfcTagUri(
-          connectionId: 'c1',
-          action: NfcTagAction.toggle,
-          target: '0xc4d7fdbbfeba0000',
-          label: 'Office light',
-        ),
+    test(
+      'carries the Home, the action, the target and the tag id; no name',
+      () {
+        final uri = Uri.parse(
+          nfcTagUri(
+            connectionId: 'c1',
+            action: NfcTagAction.toggle,
+            target: '0xc4d7fdbbfeba0000',
+            id: '0a1b2c3d',
+          ),
+        );
+        expect(uri.scheme, 'zigdash');
+        expect(uri.host, 'tag');
+        expect(uri.queryParameters, {
+          'h': 'c1',
+          'a': 'toggle',
+          't': '0xc4d7fdbbfeba0000',
+          'i': '0a1b2c3d',
+        });
+      },
+    );
+
+    test('fits a small sticker with a full Home id', () {
+      final uri = nfcTagUri(
+        connectionId: '01a17ca8-8b17-75ea-8207-0632c25492bf',
+        action: NfcTagAction.toggle,
+        target: '0xc4d7fdbbfeba0000',
+        id: newNfcTagId(),
       );
-      expect(uri.scheme, 'zigdash');
-      expect(uri.host, 'tag');
-      expect(uri.queryParameters, {
-        'h': 'c1',
-        'a': 'toggle',
-        't': '0xc4d7fdbbfeba0000',
-        'n': 'Office light',
-      });
+      // NTAG213: 137 bytes, a URI record adds about 5.
+      expect(uri.length, lessThan(130));
     });
 
-    test('a long label is cut to fit a small tag; Hebrew survives', () {
-      final uri = Uri.parse(
-        nfcTagUri(
-          connectionId: 'c1',
-          action: NfcTagAction.scene,
-          target: 's1',
-          label: 'אור משרד ותריסים בחדר השינה',
-        ),
-      );
-      expect(uri.queryParameters['n']!.characters.length, nfcTagLabelMax);
-      expect(uri.queryParameters['n'], startsWith('אור משרד'));
-    });
-
-    test('no label, no n', () {
-      final uri = Uri.parse(
-        nfcTagUri(
-          connectionId: 'c1',
-          action: NfcTagAction.scene,
-          target: 's1',
-          label: '',
-        ),
-      );
-      expect(uri.queryParameters.containsKey('n'), isFalse);
+    test('tag ids are 8 hex digits', () {
+      expect(newNfcTagId(), matches(RegExp(r'^[0-9a-f]{8}$')));
     });
   });
 
   group('the write sheet', () {
     testWidgets('waits for a tag, then says it is ready', (tester) async {
       final bridge = await _pump(tester, NfcState.on);
-      expect(bridge.writes, ['zigdash://tag?h=c1&a=scene&t=s1&n=Good+night']);
+      expect(
+        bridge.writes.single,
+        startsWith('zigdash://tag?h=c1&a=scene&t=s1&i='),
+      );
       expect(find.text('Hold a tag to your phone'), findsOneWidget);
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
       bridge.next.complete((
@@ -123,7 +119,10 @@ void main() {
       expect(find.textContaining('Good night'), findsOneWidget);
       expect(find.byKey(const Key('nfc-again')), findsOneWidget);
       final saved = NfcTagStore(_prefs).all().single;
-      expect(saved.serial, '04a1b2');
+      expect(
+        saved.serial,
+        Uri.parse(bridge.writes.single).queryParameters['i'],
+      );
       expect(saved.label, 'Good night');
       expect(saved.action, NfcTagAction.scene);
     });

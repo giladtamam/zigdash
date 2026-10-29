@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -13,30 +14,36 @@ import 'nfc_tag_store.dart';
 /// taps it (NfcTagActivity.kt). Free, Android only.
 enum NfcTagAction { scene, toggle }
 
-/// Labels on a tag are cut to this many characters: a small sticker
-/// (NTAG213) holds 137 bytes, and the Home id alone takes 36.
-const nfcTagLabelMax = 16;
+/// A new tag id: 8 random hex digits, short enough for a small sticker.
+String newNfcTagId([Random? random]) {
+  final r = random ?? Random.secure();
+  return List.generate(
+    4,
+    (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0'),
+  ).join();
+}
 
 /// The link written to a tag. Nothing secret: the phone's own saved Home
-/// connects, so a tag only works on a phone that has that Home.
+/// connects, so a tag only works on a phone that has that Home. No label:
+/// the list of tags has it, and a small sticker (NTAG213, 137 bytes) has
+/// no room for a name escaped into a link.
 String nfcTagUri({
   required String connectionId,
   required NfcTagAction action,
   required String target,
-  required String label,
-}) {
-  final short = label.characters.take(nfcTagLabelMax).toString();
-  return Uri(
-    scheme: 'zigdash',
-    host: 'tag',
-    queryParameters: {
-      'h': connectionId,
-      'a': action.name,
-      't': target,
-      if (short.isNotEmpty) 'n': short,
-    },
-  ).toString();
-}
+  String? id,
+}) => Uri(
+  scheme: 'zigdash',
+  host: 'tag',
+  queryParameters: {
+    'h': connectionId,
+    'a': action.name,
+    't': target,
+    // The tag's own id for the list of tags: some stickers report a new
+    // serial number at every read (a MIFARE Classic on the S24 FE).
+    'i': ?id,
+  },
+).toString();
 
 enum NfcState { on, off, none }
 
@@ -186,20 +193,19 @@ class _WriteNfcTagSheetState extends ConsumerState<WriteNfcTagSheet> {
       _waiting = nfc == NfcState.on;
     });
     if (nfc != NfcState.on) return;
+    final id = newNfcTagId();
     final r = await bridge.write(
       nfcTagUri(
         connectionId: widget.connectionId,
         action: widget.action,
         target: widget.target,
-        label: widget.label,
+        id: id,
       ),
     );
-    if (r.outcome == NfcWriteOutcome.written &&
-        r.serial != null &&
-        r.serial!.isNotEmpty) {
+    if (r.outcome == NfcWriteOutcome.written) {
       await _store.written(
         NfcTagRecord(
-          serial: r.serial!,
+          serial: id,
           connectionId: widget.connectionId,
           action: widget.action,
           target: widget.target,

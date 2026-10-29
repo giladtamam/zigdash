@@ -226,6 +226,19 @@ object ShortcutPrefs {
         }
     }
 
+    /** A tag's name from the app's list of tags (3.3); empty when not listed. */
+    fun nfcTagLabel(ctx: Context, id: String): String {
+        if (id.isEmpty()) return ""
+        val raw = prefs(ctx).getString("flutter.nfc.tags", null) ?: return ""
+        return try {
+            val a = org.json.JSONArray(raw)
+            (0 until a.length()).map { a.getJSONObject(it) }
+                .firstOrNull { it.optString("serial") == id }?.optString("label").orEmpty()
+        } catch (_: org.json.JSONException) {
+            ""
+        }
+    }
+
     /** When a tag was last tapped, for the app's list of tags (3.3). */
     fun nfcTagTapped(ctx: Context, serial: String) {
         if (serial.isEmpty()) return

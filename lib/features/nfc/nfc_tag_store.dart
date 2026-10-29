@@ -23,7 +23,8 @@ class NfcTagRecord {
     this.off = false,
   });
 
-  /// The tag's own serial number (hex), read when it was written.
+  /// The tag's id, written into its link (`i`): not the chip's serial
+  /// number, which some stickers change at every read.
   final String serial;
   final String connectionId;
   final NfcTagAction action;

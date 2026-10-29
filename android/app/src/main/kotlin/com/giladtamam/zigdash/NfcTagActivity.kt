@@ -11,14 +11,19 @@ import android.os.Bundle
 /**
  * A ZigDash NFC tag was tapped (3.3): runs its scene or toggles its device
  * through [WidgetActionService], like a widget tap, without opening the app.
- * Invisible, gone at once. The tag holds `zigdash://tag?h=<home>&a=scene|toggle&t=<id>&n=<label>`
+ * Invisible, gone at once, with a short buzz. The tag holds
+ * `zigdash://tag?h=<home>&a=scene|toggle&t=<target>&i=<tag id>`
  * and nothing secret: the phone's own saved Home does the rest.
  */
 class NfcTagActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tagUri(intent)?.let { uri ->
-            val serial = NfcTags.hex(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))
+            // The id ZigDash wrote into the link (the chip's serial number
+            // changes at every read on some stickers).
+            val serial = uri.getQueryParameter("i") ?: ""
+            // Felt at once, like Home Assistant's tags: the action follows.
+            buzz()
             if (ShortcutPrefs.nfcTagOff(this, serial)) {
                 // Turned off in the app's list of tags: ignored.
                 android.widget.Toast.makeText(
@@ -32,6 +37,16 @@ class NfcTagActivity : Activity() {
             }
         }
         finish()
+    }
+
+    private fun buzz() {
+        val v = if (Build.VERSION.SDK_INT >= 31) {
+            (getSystemService(VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager).defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(VIBRATOR_SERVICE) as android.os.Vibrator
+        }
+        v.vibrate(android.os.VibrationEffect.createPredefined(android.os.VibrationEffect.EFFECT_CLICK))
     }
 
     private fun tagUri(intent: Intent?): Uri? {
@@ -55,7 +70,9 @@ class NfcTagActivity : Activity() {
         val action = uri.getQueryParameter("a") ?: return
         val target = uri.getQueryParameter("t") ?: return
         if (action != "scene" && action != "toggle") return
-        val label = uri.getQueryParameter("n") ?: ""
+        // Tags from before 3.3's list carried the name; newer ones are looked up.
+        val label = uri.getQueryParameter("n")
+            ?: ShortcutPrefs.nfcTagLabel(this, uri.getQueryParameter("i") ?: "")
         startForegroundService(
             Intent(this, WidgetActionService::class.java)
                 .setAction(WidgetActionService.ACTION_TAG)
