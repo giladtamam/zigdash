@@ -156,7 +156,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nemůže připojit. Pokud chceš ZigDash používat, přejdi na Zigbee2MQTT (dostupné jako doplněk Home Assistantu nebo jako kontejner Dockeru), který MQTT broker poskytuje.';
+      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nepřipojí. Chceš-li používat ZigDash, přejdi na Zigbee2MQTT (k dispozici jako aplikace Home Assistantu nebo kontejner Docker), který MQTT broker poskytuje.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1384,7 +1384,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get diagTcpHaNoBroker =>
-      'Tohle je tvůj Home Assistant, ale neběží na něm žádný MQTT broker. Nainstaluj a spusť doplněk Mosquitto broker (Nastavení › Doplňky) a zkus to znovu.';
+      'Tohle je tvůj Home Assistant, ale neběží na něm žádný MQTT broker. Nainstaluj a spusť aplikaci Mosquitto broker (Nastavení › Aplikace) a zkus to znovu.';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1499,7 +1499,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupAskHa => 'Home Assistant';
 
   @override
-  String get setupAskHaSub => 'S doplňkem Zigbee2MQTT, nebo ZHA';
+  String get setupAskHaSub => 'S aplikací Zigbee2MQTT, nebo ZHA';
 
   @override
   String get setupAskSmlight => 'Hub SMLIGHT';
@@ -1514,7 +1514,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupAskHaWhich => 'Jak váš Home Assistant provozuje Zigbee?';
 
   @override
-  String get setupAskHaZ2m => 'Doplněk Zigbee2MQTT';
+  String get setupAskHaZ2m => 'Aplikace Zigbee2MQTT';
 
   @override
   String get setupAskHaZ2mSub => 'Přihlásit se přes Home Assistant';
@@ -1589,7 +1589,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupGuideHa =>
-      'Home Assistant: zkontroluj, že doplněk MQTT brokeru (např. Mosquitto) a doplněk Zigbee2MQTT jsou nainstalované a běží.';
+      'Home Assistant: zkontroluj, že aplikace Mosquitto broker a Zigbee2MQTT jsou nainstalované a běží (Nastavení › Aplikace).';
 
   @override
   String get setupGuidePi =>
@@ -1719,7 +1719,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haConnectNoMqtt =>
-      'Tento Home Assistant nemá integraci MQTT. Zigbee2MQTT ji potřebuje taky: v Home Assistantu přidej doplněk Mosquitto broker a integraci MQTT a zkus to znovu.';
+      'Tento Home Assistant nemá integraci MQTT. Zigbee2MQTT ji potřebuje také: v Home Assistantu přidej aplikaci Mosquitto broker (Nastavení › Aplikace) a integraci MQTT, pak to zkus znovu.';
 
   @override
   String get haConnectSignInFailed =>
@@ -1775,7 +1775,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupAuthHintHa =>
-      'Home Assistant: použij uživatele Home Assistantu. Většina lidí si vytvoří samostatného jen pro MQTT v Nastavení › Osoby › Uživatelé a doplněk Mosquitto ho přijme.';
+      'Home Assistant: použij uživatele Home Assistantu. Většina lidí si vytvoří jednoho jen pro MQTT v Nastavení › Lidé › Uživatelé a aplikace Mosquitto broker ho přijme.';
 
   @override
   String get setupAuthHintPi =>
@@ -1924,7 +1924,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrHaNoZ2mBody =>
-      'Jste přihlášeni do Home Assistantu, ale Zigbee2MQTT přes jeho MQTT nic neposílá. Pokud máte zařízení Zigbee v ZHA (vestavěném Zigbee Home Assistantu), ZigDash je nevidí: pracuje se Zigbee2MQTT. Pokud používáte doplněk Zigbee2MQTT, otevřete ho v Home Assistantu, zkontrolujte, že běží, a zkuste to znovu.';
+      'Jsi přihlášen do Home Assistantu, ale Zigbee2MQTT na svém MQTT nic neposílá. Pokud máš zařízení Zigbee v ZHA (vestavěném Zigbee Home Assistantu), ZigDash je nevidí: funguje se Zigbee2MQTT. Pokud používáš aplikaci Zigbee2MQTT, otevři ji v Nastavení › Aplikace, zkontroluj, že běží, a zkus to znovu.';
 
   @override
   String get setupErrHaNoZ2mAction => 'Zkusit znovu';
@@ -1984,7 +1984,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Tvůj broker byl nalezen, ale na uživatelské jméno a heslo neodpověděl včas. Doplněk Mosquitto v Home Assistantu ověřuje přihlášení přes Home Assistant, což na Raspberry Pi může trvat pár sekund. Zkus to znovu a zkontroluj, že tento uživatel v Home Assistantu existuje.';
+      'Broker byl nalezen, ale na uživatelské jméno a heslo neodpověděl včas. Aplikace Mosquitto broker v Home Assistantu ověřuje přihlášení u Home Assistantu, což může na Raspberry Pi trvat pár sekund. Zkus to znovu a zkontroluj, že tento uživatel v Home Assistantu existuje.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Zkusit znovu';
@@ -2077,12 +2077,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String setupNoBrokerHaBody(String host) {
-    return 'Home Assistant je na $host, ale na MQTT portu 1883 nic neodpovídá. V Home Assistantu otevři Nastavení › Doplňky, nainstaluj a spusť doplněk Mosquitto broker a zkus to znovu.';
+    return 'Home Assistant je na adrese $host, ale na MQTT portu 1883 nic neodpovídá. V Home Assistantu otevři Nastavení › Aplikace, nainstaluj a spusť aplikaci Mosquitto broker a zkus to znovu.';
   }
 
   @override
   String get setupNoBrokerHaZha =>
       'Používáš vlastní Zigbee Home Assistantu (ZHA) místo Zigbee2MQTT? ZigDash funguje jen se Zigbee2MQTT, takže zařízení ZHA nevidí. Demo ukazuje, co bys dostal.';
+
+  @override
+  String get setupNoBrokerHaDocker =>
+      'V Nastavení tvého Home Assistantu nejsou Aplikace? Pak běží v Dockeru (Home Assistant Container), který aplikace nemá: Mosquitto běží ve vlastním kontejneru. Zadej níže adresu počítače, na kterém běží.';
 
   @override
   String get setupVpnHint =>
@@ -2219,7 +2223,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupChoiceHaNote =>
-      'ZigDash se připojuje k MQTT brokeru Home Assistantu, doplňku Mosquitto broker v Nastavení › Doplňky, a Zigbee2MQTT ho musí používat také. Pokud se homeassistant.local nenajde, zadej níže IP adresu Home Assistantu. Najdeš ji v Nastavení › Systém › Síť.';
+      'ZigDash se připojuje k MQTT brokeru Home Assistantu, aplikaci Mosquitto broker v Nastavení › Aplikace, a Zigbee2MQTT ho musí používat také. Pokud se homeassistant.local nenajde, zadej níže IP adresu Home Assistantu. Najdeš ji v Nastavení › Systém › Síť.';
 
   @override
   String get setupChoiceOther => 'Můj hub je v jiné síti';
@@ -2852,7 +2856,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tipBrokerRunningBody =>
-      'Home Assistant: doplněk Mosquitto je spuštěný. Raspberry Pi: Mosquitto běží. SMLIGHT: Settings › MQTT je zapnuté.';
+      'Home Assistant: aplikace Mosquitto broker je spuštěná. Raspberry Pi: Mosquitto běží. SMLIGHT: Settings › MQTT je zapnuté.';
 
   @override
   String get tipBrokerAcceptsTitle => 'Broker přijímá tvůj telefon';
@@ -2901,7 +2905,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tipStartBrokerBody =>
-      'Spusť Mosquitto nebo doplněk brokeru a zkus to znovu.';
+      'Spusť Mosquitto nebo aplikaci Mosquitto broker a zkus to znovu.';
 
   @override
   String get tipMosquitto2Title => 'Mosquitto 2';
@@ -2915,7 +2919,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tipMqttLoginBody =>
-      'Heslo k webové stránce hubu obvykle není heslo k MQTT. Home Assistant: použij uživatele Home Assistantu nebo přihlášení nastavené v doplňku Mosquitto.';
+      'Heslo k webové stránce hubu obvykle není heslo k MQTT. Home Assistant: použij uživatele Home Assistantu, nebo přihlášení nastavené v aplikaci Mosquitto broker.';
 
   @override
   String get tipSpacesTitle => 'Zkontroluj mezery';

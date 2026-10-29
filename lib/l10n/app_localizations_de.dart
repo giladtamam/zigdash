@@ -156,7 +156,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA hat keinen MQTT-Broker – es kommuniziert direkt mit Home Assistant, daher kann ZigDash nicht darauf zugreifen. Um ZigDash zu nutzen, wechsle zu Zigbee2MQTT (als Home-Assistant-Add-on oder Docker-Container verfügbar), das einen MQTT-Broker bereitstellt.';
+      'ZHA hat keinen MQTT-Broker – es spricht direkt mit Home Assistant, daher kann ZigDash sich nicht verbinden. Um ZigDash zu nutzen, wechsle zu Zigbee2MQTT (als Home-Assistant-App oder Docker-Container verfügbar), das einen MQTT-Broker mitbringt.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1391,7 +1391,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get diagTcpHaNoBroker =>
-      'Das ist Ihr Home Assistant, aber darauf läuft kein MQTT-Broker. Installieren und starten Sie das Add-on „Mosquitto broker“ (Einstellungen › Add-ons) und versuchen Sie es erneut.';
+      'Das ist dein Home Assistant, aber darauf läuft kein MQTT-Broker. Installiere und starte die App Mosquitto broker (Einstellungen › Apps) und versuche es dann erneut.';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1506,7 +1506,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get setupAskHa => 'Home Assistant';
 
   @override
-  String get setupAskHaSub => 'Mit dem Zigbee2MQTT-Add-on oder ZHA';
+  String get setupAskHaSub => 'Mit der Zigbee2MQTT-App oder ZHA';
 
   @override
   String get setupAskSmlight => 'Ein SMLIGHT-Hub';
@@ -1521,7 +1521,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get setupAskHaWhich => 'Wie betreibt dein Home Assistant Zigbee?';
 
   @override
-  String get setupAskHaZ2m => 'Das Zigbee2MQTT-Add-on';
+  String get setupAskHaZ2m => 'Die Zigbee2MQTT-App';
 
   @override
   String get setupAskHaZ2mSub => 'Mit Home Assistant anmelden';
@@ -1598,7 +1598,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupGuideHa =>
-      'Home Assistant: Stelle sicher, dass das MQTT-Broker-Add-on (z. B. Mosquitto) und das Zigbee2MQTT-Add-on installiert sind und laufen.';
+      'Home Assistant: Prüfe, dass die Apps Mosquitto broker und Zigbee2MQTT installiert sind und laufen (Einstellungen › Apps).';
 
   @override
   String get setupGuidePi =>
@@ -1730,7 +1730,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get haConnectNoMqtt =>
-      'Dieses Home Assistant hat keine MQTT-Integration. Zigbee2MQTT braucht auch eine: Füge in Home Assistant das Mosquitto-Broker-Add-on und die MQTT-Integration hinzu und versuche es dann erneut.';
+      'Dieses Home Assistant hat keine MQTT-Integration. Zigbee2MQTT braucht auch eine: Füge in Home Assistant die App Mosquitto broker (Einstellungen › Apps) und die MQTT-Integration hinzu und versuche es dann erneut.';
 
   @override
   String get haConnectSignInFailed =>
@@ -1787,7 +1787,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupAuthHintHa =>
-      'Home Assistant: verwende einen Home-Assistant-Benutzer. Die meisten legen unter Einstellungen › Personen › Benutzer einen eigenen für MQTT an; das Mosquitto-Add-on akzeptiert ihn.';
+      'Home Assistant: Verwende einen Home-Assistant-Benutzer. Die meisten legen unter Einstellungen › Personen › Benutzer einen nur für MQTT an, und die App Mosquitto broker akzeptiert ihn.';
 
   @override
   String get setupAuthHintPi =>
@@ -1937,7 +1937,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupErrHaNoZ2mBody =>
-      'Du bist bei Home Assistant angemeldet, aber Zigbee2MQTT sendet nichts über dessen MQTT. Wenn deine Zigbee-Geräte in ZHA sind (dem eingebauten Zigbee von Home Assistant), kann ZigDash sie nicht sehen: Es arbeitet mit Zigbee2MQTT. Wenn du das Zigbee2MQTT-Add-on nutzt, öffne es in Home Assistant, prüfe, ob es läuft, und versuche es dann noch einmal.';
+      'Du bist bei Home Assistant angemeldet, aber Zigbee2MQTT sendet nichts über sein MQTT. Wenn deine Zigbee-Geräte in ZHA sind (dem eingebauten Zigbee von Home Assistant), kann ZigDash sie nicht sehen: Es funktioniert mit Zigbee2MQTT. Wenn du die Zigbee2MQTT-App nutzt, öffne sie unter Einstellungen › Apps, prüfe, dass sie gestartet ist, und versuche es dann erneut.';
 
   @override
   String get setupErrHaNoZ2mAction => 'Noch einmal versuchen';
@@ -1998,7 +1998,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Dein Broker wurde gefunden, hat aber nicht rechtzeitig auf Benutzername und Passwort geantwortet. Das Mosquitto-Add-on von Home Assistant prüft Anmeldungen über Home Assistant, was auf einem Raspberry Pi ein paar Sekunden dauern kann. Versuche es noch einmal und prüfe, ob dieser Benutzer in Home Assistant existiert.';
+      'Dein Broker wurde gefunden, hat aber nicht rechtzeitig auf Benutzername und Passwort geantwortet. Die App Mosquitto broker von Home Assistant prüft Anmeldungen bei Home Assistant, was auf einem Raspberry Pi einige Sekunden dauern kann. Versuche es erneut und prüfe, dass dieser Benutzer in Home Assistant existiert.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Erneut versuchen';
@@ -2092,12 +2092,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String setupNoBrokerHaBody(String host) {
-    return 'Home Assistant läuft unter $host, aber auf MQTT-Port 1883 antwortet nichts. Öffne in Home Assistant Einstellungen › Add-ons, installiere und starte das Mosquitto-Broker-Add-on und versuche es dann erneut.';
+    return 'Home Assistant läuft unter $host, aber auf MQTT-Port 1883 antwortet nichts. Öffne in Home Assistant Einstellungen › Apps, installiere und starte die App Mosquitto broker und versuche es dann erneut.';
   }
 
   @override
   String get setupNoBrokerHaZha =>
       'Nutzt du das eingebaute Zigbee von Home Assistant (ZHA) statt Zigbee2MQTT? ZigDash funktioniert nur mit Zigbee2MQTT und sieht ZHA-Geräte daher nicht. Die Demo zeigt, was du bekommen würdest.';
+
+  @override
+  String get setupNoBrokerHaDocker =>
+      'Keine Apps in den Einstellungen deines Home Assistant? Dann läuft es in Docker (Home Assistant Container), das keine Apps hat: Mosquitto läuft in einem eigenen Container. Gib unten die Adresse des Rechners ein, auf dem er läuft.';
 
   @override
   String get setupVpnHint =>
@@ -2235,7 +2239,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupChoiceHaNote =>
-      'ZigDash verbindet sich mit dem MQTT-Broker von Home Assistant, dem Mosquitto-Broker-Add-on unter Einstellungen › Add-ons, und Zigbee2MQTT muss ihn ebenfalls nutzen. Wird homeassistant.local nicht gefunden, gib unten die IP-Adresse von Home Assistant ein. Sie steht unter Einstellungen › System › Netzwerk.';
+      'ZigDash verbindet sich mit dem MQTT-Broker von Home Assistant, der App Mosquitto broker unter Einstellungen › Apps, und Zigbee2MQTT muss ihn auch nutzen. Wenn homeassistant.local nicht gefunden wird, gib unten die IP-Adresse von Home Assistant ein. Du findest sie unter Einstellungen › System › Netzwerk.';
 
   @override
   String get setupChoiceOther => 'Mein Hub ist in einem anderen Netzwerk';
@@ -2867,7 +2871,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tipBrokerRunningBody =>
-      'Home Assistant: Das Mosquitto-Add-on ist gestartet. Raspberry Pi: Mosquitto läuft. SMLIGHT: Settings › MQTT ist an.';
+      'Home Assistant: Die App Mosquitto broker ist gestartet. Raspberry Pi: Mosquitto läuft. SMLIGHT: Settings › MQTT ist eingeschaltet.';
 
   @override
   String get tipBrokerAcceptsTitle => 'Der Broker lässt dein Handy zu';
@@ -2916,7 +2920,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tipStartBrokerBody =>
-      'Starte Mosquitto oder das Broker-Add-on und versuch es dann noch mal.';
+      'Starte Mosquitto oder die App Mosquitto broker und versuche es dann erneut.';
 
   @override
   String get tipMosquitto2Title => 'Mosquitto 2';
@@ -2930,7 +2934,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tipMqttLoginBody =>
-      'Das Passwort der Weboberfläche deines Hubs ist meist nicht das für MQTT. Home Assistant: Nimm einen Home-Assistant-Benutzer oder das Login aus dem Mosquitto-Add-on.';
+      'Das Passwort der Weboberfläche deines Hubs ist meist nicht das für MQTT. Home Assistant: Verwende einen Home-Assistant-Benutzer oder die Anmeldung aus der App Mosquitto broker.';
 
   @override
   String get tipSpacesTitle => 'Auf Leerzeichen prüfen';

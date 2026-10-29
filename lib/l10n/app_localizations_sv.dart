@@ -156,7 +156,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA har ingen MQTT-broker – den pratar direkt med Home Assistant, så ZigDash kan inte ansluta till den. För att använda ZigDash, byt till Zigbee2MQTT (tillgängligt som Home Assistant-tillägg eller Docker-container), som tillhandahåller en MQTT-broker.';
+      'ZHA har ingen MQTT-broker – den pratar direkt med Home Assistant, så ZigDash kan inte ansluta till den. För att använda ZigDash, byt till Zigbee2MQTT (finns som Home Assistant-app eller Docker-container), som ger en MQTT-broker.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1381,7 +1381,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get diagTcpHaNoBroker =>
-      'Det här är din Home Assistant, men ingen MQTT-broker körs på den. Installera och starta tillägget Mosquitto broker (Inställningar › Tillägg) och försök igen.';
+      'Det här är din Home Assistant, men ingen MQTT-broker körs på den. Installera och starta appen Mosquitto broker (Inställningar › Appar) och försök igen.';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1495,7 +1495,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get setupAskHa => 'Home Assistant';
 
   @override
-  String get setupAskHaSub => 'Med tillägget Zigbee2MQTT, eller ZHA';
+  String get setupAskHaSub => 'Med Zigbee2MQTT-appen, eller ZHA';
 
   @override
   String get setupAskSmlight => 'En SMLIGHT-hubb';
@@ -1510,7 +1510,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get setupAskHaWhich => 'Hur kör din Home Assistant Zigbee?';
 
   @override
-  String get setupAskHaZ2m => 'Tillägget Zigbee2MQTT';
+  String get setupAskHaZ2m => 'Zigbee2MQTT-appen';
 
   @override
   String get setupAskHaZ2mSub => 'Logga in med Home Assistant';
@@ -1585,7 +1585,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupGuideHa =>
-      'Home Assistant: se till att MQTT-broker-tillägget (t.ex. Mosquitto) och Zigbee2MQTT-tillägget är installerade och körs.';
+      'Home Assistant: kontrollera att apparna Mosquitto broker och Zigbee2MQTT är installerade och körs (Inställningar › Appar).';
 
   @override
   String get setupGuidePi =>
@@ -1716,7 +1716,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get haConnectNoMqtt =>
-      'Den här Home Assistant har ingen MQTT-integration. Zigbee2MQTT behöver också en: lägg till tillägget Mosquitto broker och MQTT-integrationen i Home Assistant och försök igen.';
+      'Den här Home Assistant har ingen MQTT-integration. Zigbee2MQTT behöver också en: lägg till appen Mosquitto broker (Inställningar › Appar) och MQTT-integrationen i Home Assistant och försök igen.';
 
   @override
   String get haConnectSignInFailed =>
@@ -1772,7 +1772,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupAuthHintHa =>
-      'Home Assistant: använd en Home Assistant-användare. De flesta skapar en bara för MQTT under Inställningar › Personer › Användare, och Mosquitto-tillägget godtar den.';
+      'Home Assistant: använd en Home Assistant-användare. De flesta skapar en bara för MQTT under Inställningar › Personer › Användare, och appen Mosquitto broker godtar den.';
 
   @override
   String get setupAuthHintPi =>
@@ -1921,7 +1921,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupErrHaNoZ2mBody =>
-      'Du är inloggad i Home Assistant, men Zigbee2MQTT skickar inget via dess MQTT. Om dina Zigbee-enheter finns i ZHA (Home Assistants inbyggda Zigbee) kan ZigDash inte se dem: det fungerar med Zigbee2MQTT. Om du använder tillägget Zigbee2MQTT, öppna det i Home Assistant, kontrollera att det är igång och försök igen.';
+      'Du är inloggad i Home Assistant, men Zigbee2MQTT skickar inget på sin MQTT. Om dina Zigbee-enheter finns i ZHA (Home Assistants inbyggda Zigbee) kan ZigDash inte se dem: den fungerar med Zigbee2MQTT. Om du använder Zigbee2MQTT-appen, öppna den under Inställningar › Appar, kontrollera att den är startad och försök igen.';
 
   @override
   String get setupErrHaNoZ2mAction => 'Försök igen';
@@ -1982,7 +1982,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Din broker hittades, men den svarade inte på användarnamn och lösenord i tid. Mosquitto-tillägget i Home Assistant kontrollerar inloggningar mot Home Assistant, vilket kan ta några sekunder på en Raspberry Pi. Försök igen och kontrollera att användaren finns i Home Assistant.';
+      'Din broker hittades, men den svarade inte på användarnamn och lösenord i tid. Home Assistants app Mosquitto broker kontrollerar inloggningar mot Home Assistant, vilket kan ta några sekunder på en Raspberry Pi. Försök igen och kontrollera att användaren finns i Home Assistant.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Försök igen';
@@ -2076,12 +2076,16 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String setupNoBrokerHaBody(String host) {
-    return 'Home Assistant finns på $host, men inget svarar på MQTT-port 1883. Öppna Inställningar › Tillägg i Home Assistant, installera och starta tillägget Mosquitto broker och försök igen.';
+    return 'Home Assistant finns på $host, men inget svarar på MQTT-port 1883. Öppna Inställningar › Appar i Home Assistant, installera och starta appen Mosquitto broker och försök igen.';
   }
 
   @override
   String get setupNoBrokerHaZha =>
       'Använder du Home Assistants inbyggda Zigbee (ZHA) i stället för Zigbee2MQTT? ZigDash fungerar bara med Zigbee2MQTT och ser därför inte ZHA-enheter. Demon visar vad du skulle få.';
+
+  @override
+  String get setupNoBrokerHaDocker =>
+      'Inga Appar i din Home Assistants inställningar? Då körs den i Docker (Home Assistant Container), som inte har appar: Mosquitto körs i en egen container. Ange adressen till datorn som kör den nedan.';
 
   @override
   String get setupVpnHint =>
@@ -2218,7 +2222,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupChoiceHaNote =>
-      'ZigDash ansluter till MQTT-mäklaren i Home Assistant, tillägget Mosquitto broker under Inställningar › Tillägg, och Zigbee2MQTT måste också använda den. Om homeassistant.local inte hittas anger du Home Assistants IP-adress nedan. Den finns under Inställningar › System › Nätverk.';
+      'ZigDash ansluter till Home Assistants MQTT-broker, appen Mosquitto broker under Inställningar › Appar, och Zigbee2MQTT måste också använda den. Om homeassistant.local inte hittas, ange Home Assistants IP-adress nedan. Den finns under Inställningar › System › Nätverk.';
 
   @override
   String get setupChoiceOther => 'Min hubb är på ett annat nätverk';
@@ -2850,7 +2854,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get tipBrokerRunningBody =>
-      'Home Assistant: Mosquitto-tillägget är startat. Raspberry Pi: Mosquitto körs. SMLIGHT: Settings › MQTT är påslaget.';
+      'Home Assistant: appen Mosquitto broker är startad. Raspberry Pi: Mosquitto körs. SMLIGHT: Settings › MQTT är på.';
 
   @override
   String get tipBrokerAcceptsTitle => 'Brokern släpper in telefonen';
@@ -2899,7 +2903,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get tipStartBrokerBody =>
-      'Starta Mosquitto eller broker-tillägget och försök igen.';
+      'Starta Mosquitto eller appen Mosquitto broker och försök igen.';
 
   @override
   String get tipMosquitto2Title => 'Mosquitto 2';
@@ -2913,7 +2917,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get tipMqttLoginBody =>
-      'Lösenordet till hubbens webbgränssnitt är oftast inte MQTT-lösenordet. Home Assistant: använd en Home Assistant-användare, eller inloggningen som är angiven i Mosquitto-tillägget.';
+      'Lösenordet till hubbens webbsida är oftast inte MQTT-lösenordet. Home Assistant: använd en Home Assistant-användare, eller inloggningen som är satt i appen Mosquitto broker.';
 
   @override
   String get tipSpacesTitle => 'Leta efter mellanslag';
