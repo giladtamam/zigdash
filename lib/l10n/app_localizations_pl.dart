@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1794,7 +1795,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get setupAuthHintSmlight =>
-      'SMLIGHT: login widoczny na stronie WWW huba w Settings › MQTT.';
+      'SMLIGHT: login widoczny na stronie WWW huba w Settings › MQTT. Albo włącz tam Allow Anonymous i zapisz: wtedy login nie jest potrzebny.';
 
   @override
   String get setupVerifyingTitle => 'Sprawdzanie połączenia…';
@@ -1990,7 +1991,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Broker został znaleziony, ale nie odpowiedział na czas na nazwę użytkownika i hasło. Aplikacja Mosquitto broker w Home Assistancie sprawdza logowania w Home Assistancie, co na Raspberry Pi może potrwać kilka sekund. Spróbuj ponownie i sprawdź, czy ten użytkownik istnieje w Home Assistancie.';
+      'Broker został znaleziony, ale nie odpowiedział na czas na nazwę użytkownika i hasło. Aplikacja Mosquitto broker w Home Assistancie sprawdza logowania w Home Assistancie, co na Raspberry Pi może potrwać kilka sekund. Spróbuj ponownie i sprawdź, czy ten użytkownik istnieje w Home Assistancie. Na hubie SMLIGHT włącz zamiast tego Allow Anonymous w Settings › MQTT, a login nie będzie potrzebny.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Spróbuj ponownie';

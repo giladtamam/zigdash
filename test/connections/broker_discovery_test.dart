@@ -325,6 +325,12 @@ void main() {
       expect(await identifyHost(hubs, '192.168.1.30'), HubKind.smlight);
     });
 
+    // 3.2.7: early SMHUB firmware served its web page on 3000.
+    test('an SMHUB serving its page on 3000', () async {
+      final hubs = _FakeHubs({'192.168.1.31:3000': HubKind.smlight});
+      expect(await identifyHost(hubs, '192.168.1.31'), HubKind.smlight);
+    });
+
     test('a bare Zigbee2MQTT page, or nothing', () async {
       final hubs = _FakeHubs({'192.168.1.40:8080': HubKind.zigbee2mqtt});
       expect(await identifyHost(hubs, '192.168.1.40'), HubKind.zigbee2mqtt);
@@ -403,6 +409,23 @@ void main() {
       );
       await noAsk.run('192.168.7.42').events.toList();
       expect(again.probed.any((p) => p.endsWith(':80')), isFalse);
+    });
+
+    test('the SMLIGHT pass also sees a page on 3000', () async {
+      final hubs = _FakeHubs({'192.168.7.31:3000': HubKind.smlight});
+      final service = BrokerScanService(
+        prober: _FakeProber({}),
+        hubProber: hubs,
+        ports: const [1883],
+      );
+      final run = service.run('192.168.7.42');
+      final events = <ScanEvent>[];
+      final done = run.events.listen(events.add).asFuture<void>();
+      run.addHub(HubKind.smlight);
+      await done;
+      expect(events.whereType<HubSeen>().map((e) => e.hub), [
+        const HubFound(kind: HubKind.smlight, host: '192.168.7.31', port: 3000),
+      ]);
     });
 
     test('progress never goes backwards and ends at the total', () async {

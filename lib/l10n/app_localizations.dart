@@ -3261,7 +3261,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAuthHintSmlight.
   ///
   /// In en, this message translates to:
-  /// **'SMLIGHT: the login shown on the hub\'s web page under Settings › MQTT.'**
+  /// **'SMLIGHT: the login shown on the hub\'s web page under Settings › MQTT. Or turn on Allow Anonymous there and save: then no login is needed.'**
   String get setupAuthHintSmlight;
 
   /// No description provided for @setupVerifyingTitle.
@@ -3603,7 +3603,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupErrLoginNoAnswerBody.
   ///
   /// In en, this message translates to:
-  /// **'Your broker was found, but it didn\'t answer the username and password in time. Home Assistant\'s Mosquitto broker app checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant.'**
+  /// **'Your broker was found, but it didn\'t answer the username and password in time. Home Assistant\'s Mosquitto broker app checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant. On an SMLIGHT hub, turn on Allow Anonymous under Settings › MQTT instead, and no login is needed.'**
   String get setupErrLoginNoAnswerBody;
 
   /// No description provided for @setupErrLoginNoAnswerAction.

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1789,7 +1790,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get setupAuthHintSmlight =>
-      'SMLIGHT: логин, показанный на веб-странице хаба в Settings › MQTT.';
+      'SMLIGHT: логин, показанный на веб-странице хаба в Settings › MQTT. Или включите там Allow Anonymous и сохраните: тогда логин не нужен.';
 
   @override
   String get setupVerifyingTitle => 'Проверка подключения…';
@@ -1983,7 +1984,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Брокер найден, но не ответил вовремя на логин и пароль. Приложение Mosquitto broker в Home Assistant проверяет входы через Home Assistant, а на Raspberry Pi это может занять несколько секунд. Попробуйте снова и проверьте, что этот пользователь есть в Home Assistant.';
+      'Брокер найден, но не ответил вовремя на логин и пароль. Приложение Mosquitto broker в Home Assistant проверяет входы через Home Assistant, а на Raspberry Pi это может занять несколько секунд. Попробуйте снова и проверьте, что этот пользователь есть в Home Assistant. На хабе SMLIGHT вместо этого включите Allow Anonymous в Settings › MQTT, и логин не понадобится.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Повторить';

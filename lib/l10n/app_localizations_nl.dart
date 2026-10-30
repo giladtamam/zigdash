@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1790,7 +1791,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get setupAuthHintSmlight =>
-      'SMLIGHT: de login op de webpagina van de hub onder Settings › MQTT.';
+      'SMLIGHT: de login op de webpagina van de hub onder Settings › MQTT. Of zet daar Allow Anonymous aan en sla op: dan is geen login nodig.';
 
   @override
   String get setupVerifyingTitle => 'Verbinding controleren…';
@@ -1992,7 +1993,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Je broker is gevonden, maar hij antwoordde niet op tijd op de gebruikersnaam en het wachtwoord. De app Mosquitto broker van Home Assistant controleert logins bij Home Assistant, wat op een Raspberry Pi een paar seconden kan duren. Probeer het opnieuw en controleer dat deze gebruiker bestaat in Home Assistant.';
+      'Je broker is gevonden, maar hij antwoordde niet op tijd op de gebruikersnaam en het wachtwoord. De app Mosquitto broker van Home Assistant controleert logins bij Home Assistant, wat op een Raspberry Pi een paar seconden kan duren. Probeer het opnieuw en controleer dat deze gebruiker bestaat in Home Assistant. Op een SMLIGHT-hub zet je in plaats daarvan Allow Anonymous aan onder Settings › MQTT, dan is geen login nodig.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Opnieuw proberen';
