@@ -137,7 +137,16 @@ enum SetupStepKind {
   /// setup started over. Carries [SetupStep.devices] and
   /// [SetupStep.selected], the state of the list when it was left.
   reviewLeft,
+
+  /// The welcome question's "SMLIGHT" › which device (3.2.7), with
+  /// [SetupStep.choice] (a [SmlightDevice]).
+  smlightWhich,
 }
+
+/// The SMLIGHT device named on the welcome question (3.2.7): an SMHUB runs
+/// Zigbee2MQTT itself; an SLZB adapter is only the radio, with Zigbee2MQTT
+/// on another machine.
+enum SmlightDevice { smhub, slzb }
 
 /// What the user tapped on an empty result with no hub found (2.9.6): no
 /// hub yet (opens the Hubs page), Home Assistant (checks

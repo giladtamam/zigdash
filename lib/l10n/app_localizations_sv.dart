@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1499,10 +1498,30 @@ class AppLocalizationsSv extends AppLocalizations {
   String get setupAskHaSub => 'Med Zigbee2MQTT-appen, eller ZHA';
 
   @override
-  String get setupAskSmlight => 'En SMLIGHT-hubb';
+  String get setupAskSmlight => 'SMLIGHT';
 
   @override
-  String get setupAskSmlightSub => 'SLZB eller SMHUB med Zigbee2MQTT';
+  String get setupAskSmlightSub => 'En SMHUB eller en SLZB-adapter';
+
+  @override
+  String get setupAskSmlightWhich => 'Vilken SMLIGHT-enhet har du?';
+
+  @override
+  String get setupAskSmhub => 'SMHUB';
+
+  @override
+  String get setupAskSmhubSub => 'Zigbee2MQTT körs på själva hubben';
+
+  @override
+  String get setupAskSlzb => 'En SLZB-adapter';
+
+  @override
+  String get setupAskSlzbSub =>
+      'SLZB-06, SLZB-MR och andra: bara Zigbee-radion';
+
+  @override
+  String get setupSlzbWhere =>
+      'Din SLZB är Zigbee-radion. Zigbee2MQTT körs på en annan maskin: vilken?';
 
   @override
   String get setupAskNothing => 'Inget ännu?';
@@ -2023,7 +2042,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get setupPlatformHa => 'Home Assistant';
 
   @override
-  String get setupPlatformSmlight => 'SMLIGHT-hubb';
+  String get setupPlatformSmlight => 'SMHUB';
 
   @override
   String get setupPlatformPi => 'Raspberry Pi eller Docker';
@@ -2048,7 +2067,7 @@ class AppLocalizationsSv extends AppLocalizations {
       'Letar efter Home Assistant och dess MQTT-broker…';
 
   @override
-  String get setupScanHintSmlight => 'Letar efter din SMLIGHT-hubb…';
+  String get setupScanHintSmlight => 'Letar efter din SMHUB…';
 
   @override
   String get setupScanHintPi => 'Letar efter en MQTT-broker i ditt nätverk…';

@@ -427,6 +427,86 @@ class _WelcomeState extends ConsumerState<_Welcome> {
     );
   }
 
+  /// 3.2.7: SMLIGHT was 0 of 20 setups (Oct 19-30) and no scan saw an
+  /// SMLIGHT page: most were SLZB adapters, which only carry the radio, so
+  /// Zigbee2MQTT runs on another machine. Only an SMHUB runs it itself.
+  Future<void> _smlight() async {
+    final l10n = context.l10n;
+    final device = await showModalBottomSheet<SmlightDevice>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              child: Text(l10n.setupAskSmlightWhich, style: Theme.of(context).textTheme.titleMedium),
+            ),
+            ListTile(
+              key: const Key('smlight-smhub'),
+              leading: const Icon(Icons.router_outlined),
+              title: Text(l10n.setupAskSmhub),
+              subtitle: Text(l10n.setupAskSmhubSub),
+              onTap: () => Navigator.pop(context, SmlightDevice.smhub),
+            ),
+            ListTile(
+              key: const Key('smlight-slzb'),
+              leading: const Icon(Icons.settings_input_antenna),
+              title: Text(l10n.setupAskSlzb),
+              subtitle: Text(l10n.setupAskSlzbSub),
+              onTap: () => Navigator.pop(context, SmlightDevice.slzb),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+    if (device == null || !mounted) return;
+    ref.read(analyticsProvider).track(SetupStep(SetupStepKind.smlightWhich, choice: device));
+    if (device == SmlightDevice.smhub) {
+      widget.onPlatform(SetupPlatform.smlight);
+      widget.onFind();
+      return;
+    }
+    final where = await showModalBottomSheet<SetupPlatform>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              child: Text(l10n.setupSlzbWhere, style: Theme.of(context).textTheme.titleMedium),
+            ),
+            ListTile(
+              key: const Key('slzb-ha'),
+              leading: const Icon(Icons.home_outlined),
+              title: Text(l10n.setupAskHa),
+              subtitle: Text(l10n.setupAskHaSub),
+              onTap: () => Navigator.pop(context, SetupPlatform.homeAssistant),
+            ),
+            ListTile(
+              key: const Key('slzb-z2m'),
+              leading: const Icon(Icons.memory),
+              title: Text(l10n.setupAskZ2m),
+              subtitle: Text(l10n.setupAskZ2mSub),
+              onTap: () => Navigator.pop(context, SetupPlatform.piOrDocker),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+    if (where == null || !mounted) return;
+    if (where == SetupPlatform.homeAssistant) return _homeAssistant();
+    widget.onPlatform(where);
+    widget.onFind();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -467,7 +547,7 @@ class _WelcomeState extends ConsumerState<_Welcome> {
             key: const Key('ask-z2m')),
         answer(Icons.home_outlined, l10n.setupAskHa, l10n.setupAskHaSub, () => _then(_homeAssistant),
             key: const Key('ask-ha')),
-        answer(Icons.router_outlined, l10n.setupAskSmlight, l10n.setupAskSmlightSub, () => find(SetupPlatform.smlight),
+        answer(Icons.router_outlined, l10n.setupAskSmlight, l10n.setupAskSmlightSub, () => _then(_smlight),
             key: const Key('ask-smlight')),
         // Not sure: the plain scan, as before 3.2 (23 "not sure" answers
         // in 17 days).

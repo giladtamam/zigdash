@@ -2781,14 +2781,50 @@ abstract class AppLocalizations {
   /// No description provided for @setupAskSmlight.
   ///
   /// In en, this message translates to:
-  /// **'An SMLIGHT hub'**
+  /// **'SMLIGHT'**
   String get setupAskSmlight;
 
   /// No description provided for @setupAskSmlightSub.
   ///
   /// In en, this message translates to:
-  /// **'SLZB or SMHUB running Zigbee2MQTT'**
+  /// **'An SMHUB, or an SLZB adapter'**
   String get setupAskSmlightSub;
+
+  /// Sheet title after tapping SMLIGHT on the welcome question (3.2.7).
+  ///
+  /// In en, this message translates to:
+  /// **'Which SMLIGHT device do you have?'**
+  String get setupAskSmlightWhich;
+
+  /// SMLIGHT's SMHUB product name; keep as is.
+  ///
+  /// In en, this message translates to:
+  /// **'SMHUB'**
+  String get setupAskSmhub;
+
+  /// Under SMHUB: it runs Zigbee2MQTT itself.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT runs on the hub itself'**
+  String get setupAskSmhubSub;
+
+  /// SMLIGHT's SLZB coordinators (SLZB-06, SLZB-MR); keep SLZB.
+  ///
+  /// In en, this message translates to:
+  /// **'An SLZB adapter'**
+  String get setupAskSlzb;
+
+  /// Under the SLZB choice: a network Zigbee adapter, not a Zigbee2MQTT host.
+  ///
+  /// In en, this message translates to:
+  /// **'SLZB-06, SLZB-MR and others: the Zigbee radio only'**
+  String get setupAskSlzbSub;
+
+  /// Sheet title after picking SLZB: choose Home Assistant or Zigbee2MQTT on a Pi/server.
+  ///
+  /// In en, this message translates to:
+  /// **'Your SLZB is the Zigbee radio. Zigbee2MQTT runs on another machine: which one?'**
+  String get setupSlzbWhere;
 
   /// No description provided for @setupAskNothing.
   ///
@@ -3675,7 +3711,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupPlatformSmlight.
   ///
   /// In en, this message translates to:
-  /// **'SMLIGHT hub'**
+  /// **'SMHUB'**
   String get setupPlatformSmlight;
 
   /// No description provided for @setupPlatformPi.
@@ -3717,7 +3753,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupScanHintSmlight.
   ///
   /// In en, this message translates to:
-  /// **'Looking for your SMLIGHT hub…'**
+  /// **'Looking for your SMHUB…'**
   String get setupScanHintSmlight;
 
   /// No description provided for @setupScanHintPi.
