@@ -750,6 +750,99 @@ void main() {
     });
   });
 
+  // 3.2.8: the welcome already says what runs their Zigbee; the empty
+  // result asks whether it is set up yet.
+  group('is Zigbee2MQTT running', () {
+    late List<(String, Map<String, String>)> sent;
+    late List<Override> analytics;
+    setUp(() {
+      sent = [];
+      analytics = [
+        analyticsProvider.overrideWithValue(
+          Analytics(_RecordingSink(sent), enabled: true),
+        ),
+      ];
+    });
+    List<Map<String, String>> answers() => [
+      for (final (name, props) in sent)
+        if (name == 'setup_step' && props['step'] == 'z2m_running') props,
+    ];
+    Future<void> emptyAfterPi(WidgetTester tester) async {
+      await _pump(tester, scan: (_) => const Stream.empty(), extra: analytics);
+      await tester.tap(find.byKey(const Key('ask-z2m')));
+      await tester.pump();
+      await tester.pump();
+    }
+
+    testWidgets('yes says why a running one goes unseen', (tester) async {
+      await emptyAfterPi(tester);
+      expect(find.text('Is Zigbee2MQTT already running?'), findsOneWidget);
+      expect(find.byKey(const Key('setup-running-note')), findsNothing);
+      await tester.tap(find.byKey(const Key('setup-running-yes')));
+      await tester.pump();
+      expect(find.textContaining('listener 1883'), findsOneWidget);
+      expect(answers(), [containsPair('choice', 'yes')]);
+      expect(answers().single['platform'], 'pi_or_docker');
+    });
+
+    testWidgets('not yet points to what to get and the demo', (tester) async {
+      await emptyAfterPi(tester);
+      await tester.tap(find.byKey(const Key('setup-running-notYet')));
+      await tester.pump();
+      final note = find.byKey(const Key('setup-running-note'));
+      expect(
+        find.descendant(of: note, matching: find.text('What you need')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: note, matching: find.text('Try demo')),
+        findsOneWidget,
+      );
+      expect(answers().single['choice'], 'not_yet');
+    });
+
+    testWidgets('not sure says how to tell, naming the page button', (
+      tester,
+    ) async {
+      await emptyAfterPi(tester);
+      await tester.tap(find.byKey(const Key('setup-running-notSure')));
+      await tester.pump();
+      expect(
+        find.textContaining('tap "Connect to my Zigbee2MQTT page" below'),
+        findsOneWidget,
+      );
+      // Unpicking it sends nothing; picking it again counts again.
+      await tester.tap(find.byKey(const Key('setup-running-notSure')));
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('setup-running-notSure')));
+      await tester.pump();
+      expect(answers().map((a) => a['choice']), ['not_sure', 'not_sure']);
+    });
+
+    testWidgets('a hub found: no question', (tester) async {
+      await _pump(
+        tester,
+        run: (_, _) => ScanRun(
+          events: Stream.fromIterable(const [
+            HubSeen(
+              HubFound(
+                kind: HubKind.zigbee2mqtt,
+                host: '192.168.1.20',
+                port: 8080,
+              ),
+            ),
+          ]),
+          addHub: (_) {},
+        ),
+      );
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('setup-running')), findsNothing);
+    });
+  });
+
   // 2.6.6: every address-field user tapped Check on an empty field first, so
   // Check waits for text, like the login button waits for a username.
   testWidgets('Check is disabled until an address is typed', (tester) async {

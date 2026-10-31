@@ -1535,6 +1535,34 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dein SLZB ist das Zigbee-Funkmodul. Zigbee2MQTT läuft auf einem anderen Gerät: auf welchem?';
 
   @override
+  String get setupRunningAsk => 'Läuft Zigbee2MQTT schon?';
+
+  @override
+  String get setupRunningYes => 'Ja, es läuft';
+
+  @override
+  String get setupRunningNotYet => 'Noch nicht';
+
+  @override
+  String get setupRunningNotSure => 'Nicht sicher';
+
+  @override
+  String get setupRunningYesNote =>
+      'Dann erreicht dieses Handy es von hier aus nicht. Meist ist das Handy in einem Gastnetz oder einem anderen WLAN, oder der Broker nimmt nur Verbindungen vom eigenen Gerät an (Mosquitto 2 tut das, bis seine Konfiguration \"listener 1883\" enthält). Gib unten seine Adresse ein, um sie zu prüfen.';
+
+  @override
+  String get setupRunningNotYetNote =>
+      'ZigDash verbindet sich mit einem Zigbee2MQTT, das schon läuft. Sieh dir an, was du zum Start brauchst, und probiere solange die Demo aus.';
+
+  @override
+  String setupRunningNotSureNote(String button) {
+    return 'Zigbee2MQTT hat eine eigene Webseite, auf der du deine Zigbee-Geräte koppelst. Wenn du sie schon geöffnet hast, läuft es: tippe unten auf \"$button\". Wenn du sie noch nie gesehen hast, ist es noch nicht eingerichtet.';
+  }
+
+  @override
+  String get setupRunningWhatToGet => 'Was du brauchst';
+
+  @override
   String get setupAskNothing => 'Noch nichts?';
 
   @override

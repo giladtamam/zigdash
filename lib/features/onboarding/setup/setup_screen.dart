@@ -117,6 +117,17 @@ class SetupScreen extends ConsumerWidget {
           ),
         );
 
+    // 3.2.8: whether Zigbee2MQTT runs yet, counted when picked.
+    void running(Z2mRunning answer) => ref
+        .read(analyticsProvider)
+        .track(
+          SetupStep(
+            SetupStepKind.z2mRunning,
+            choice: answer,
+            platform: coordinator.platform,
+          ),
+        );
+
     Future<void> tryDemo({SetupStepKind kind = SetupStepKind.demo}) async {
       ref.read(analyticsProvider).track(SetupStep(kind));
       final id = await ref.read(firstRunProvider).startDemo();
@@ -203,6 +214,7 @@ class SetupScreen extends ConsumerWidget {
               onPlatform: choosePlatform,
               onCheckAddress: coordinator.checkAddress,
               onChoice: emptyChoice,
+              onRunning: running,
               onManual: manual,
               onManualTo: manualTo,
               onManualPort: manualPort,
@@ -812,6 +824,7 @@ class _ScanEmpty extends StatelessWidget {
     required this.onManual,
     required this.onCheckAddress,
     required this.onChoice,
+    required this.onRunning,
     required this.onManualTo,
     required this.onManualPort,
     required this.onDemo,
@@ -828,6 +841,9 @@ class _ScanEmpty extends StatelessWidget {
   final ValueChanged<SetupPlatform?> onPlatform;
   final ValueChanged<String> onCheckAddress;
   final ValueChanged<ScanEmptyChoice> onChoice;
+
+  /// 3.2.8: the answer to "Is Zigbee2MQTT already running?".
+  final ValueChanged<Z2mRunning> onRunning;
   final VoidCallback onManual;
   final ValueChanged<HubFound> onManualTo;
 
@@ -904,6 +920,19 @@ class _ScanEmpty extends StatelessWidget {
             (state.tried?.aliveHosts ?? 99) <= 5) ...[
           const SizedBox(height: 12),
           _VpnHint(text: l10n.setupIsolatedHint),
+        ],
+        // 3.2.8: 31 of 34 people with an empty scan (Oct 27-31) had said
+        // what runs their Zigbee, so that was known; whether it was set up
+        // yet was not. Home Assistant and ZHA have their own ways on.
+        if (hub == null &&
+            platform != SetupPlatform.homeAssistant &&
+            platform != SetupPlatform.zha) ...[
+          const SizedBox(height: 16),
+          _RunningQuestion(
+            key: const Key('setup-running'),
+            onAnswer: onRunning,
+            onDemo: onDemo,
+          ),
         ],
         // 3.2: the page people pair devices on comes before any broker
         // wording; the three chips (18 "no hub" taps in 128 empty results)
@@ -1040,6 +1069,108 @@ class _ScanEmpty extends StatelessWidget {
           TextButton(onPressed: onManual, child: Text(l10n.setupManualEntryAdvanced)),
           TextButton(onPressed: onDemo, child: Text(l10n.onboardingDemo)),
         ],
+      ],
+    );
+  }
+}
+
+/// "Is Zigbee2MQTT already running?" on an empty result with no hub found
+/// (3.2.8). Each answer opens a note: yes says why a running one goes
+/// unseen, not yet points to what to get and the demo, not sure says how
+/// to tell.
+class _RunningQuestion extends StatefulWidget {
+  const _RunningQuestion({
+    super.key,
+    required this.onAnswer,
+    required this.onDemo,
+  });
+  final ValueChanged<Z2mRunning> onAnswer;
+  final VoidCallback onDemo;
+
+  @override
+  State<_RunningQuestion> createState() => _RunningQuestionState();
+}
+
+class _RunningQuestionState extends State<_RunningQuestion> {
+  Z2mRunning? _answer;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final labels = {
+      Z2mRunning.yes: l10n.setupRunningYes,
+      Z2mRunning.notYet: l10n.setupRunningNotYet,
+      Z2mRunning.notSure: l10n.setupRunningNotSure,
+    };
+    final note = switch (_answer) {
+      null => null,
+      Z2mRunning.yes => l10n.setupRunningYesNote,
+      Z2mRunning.notYet => l10n.setupRunningNotYetNote,
+      Z2mRunning.notSure => l10n.setupRunningNotSureNote(
+        l10n.setupZ2mPageEntry,
+      ),
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.setupRunningAsk,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: [
+            for (final a in Z2mRunning.values)
+              ChoiceChip(
+                key: Key('setup-running-${a.name}'),
+                label: Text(labels[a]!),
+                selected: _answer == a,
+                onSelected: (on) {
+                  if (on && _answer != a) widget.onAnswer(a);
+                  setState(() => _answer = on ? a : null);
+                },
+              ),
+          ],
+        ),
+        if (note != null)
+          Card.outlined(
+            key: const Key('setup-running-note'),
+            margin: const EdgeInsets.only(top: 12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(note),
+                  if (_answer == Z2mRunning.notYet) ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        FilledButton.tonalIcon(
+                          onPressed: () async {
+                            try {
+                              await openSetupLink(hubsPageUrl);
+                            } catch (_) {}
+                          },
+                          icon: const Icon(Icons.open_in_new),
+                          label: Text(l10n.setupRunningWhatToGet),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: widget.onDemo,
+                          icon: const Icon(Icons.play_circle_outline),
+                          label: Text(l10n.onboardingDemo),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }

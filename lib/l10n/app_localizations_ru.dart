@@ -1533,6 +1533,34 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ваш SLZB — это радиомодуль Zigbee. Zigbee2MQTT работает на другом устройстве: на каком?';
 
   @override
+  String get setupRunningAsk => 'Zigbee2MQTT уже работает?';
+
+  @override
+  String get setupRunningYes => 'Да, работает';
+
+  @override
+  String get setupRunningNotYet => 'Ещё нет';
+
+  @override
+  String get setupRunningNotSure => 'Не уверен';
+
+  @override
+  String get setupRunningYesNote =>
+      'Значит, этот телефон не видит его отсюда. Чаще всего телефон в гостевой сети или другой Wi-Fi, либо брокер принимает подключения только со своего компьютера (Mosquitto 2 так делает, пока в его конфигурации нет \"listener 1883\"). Введите его адрес ниже, чтобы проверить.';
+
+  @override
+  String get setupRunningNotYetNote =>
+      'ZigDash подключается к уже работающему Zigbee2MQTT. Посмотрите, что нужно для начала, а пока попробуйте демо.';
+
+  @override
+  String setupRunningNotSureNote(String button) {
+    return 'У Zigbee2MQTT есть своя веб-страница, где вы сопрягаете устройства Zigbee. Если вы её открывали, он работает: нажмите «$button» ниже. Если вы её никогда не видели, он ещё не настроен.';
+  }
+
+  @override
+  String get setupRunningWhatToGet => 'Что нужно';
+
+  @override
   String get setupAskNothing => 'Пока ничего?';
 
   @override

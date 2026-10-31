@@ -141,12 +141,21 @@ enum SetupStepKind {
   /// The welcome question's "SMLIGHT" › which device (3.2.7), with
   /// [SetupStep.choice] (a [SmlightDevice]).
   smlightWhich,
+
+  /// The answer to "Is Zigbee2MQTT already running?" on an empty result
+  /// with no hub found (3.2.8), with [SetupStep.choice] (a [Z2mRunning]).
+  z2mRunning,
 }
 
 /// The SMLIGHT device named on the welcome question (3.2.7): an SMHUB runs
 /// Zigbee2MQTT itself; an SLZB adapter is only the radio, with Zigbee2MQTT
 /// on another machine.
 enum SmlightDevice { smhub, slzb }
+
+/// Whether Zigbee2MQTT already runs, asked on an empty result (3.2.8): most
+/// empty scans had answered the welcome question, so what they had was
+/// known, but not whether it was set up yet.
+enum Z2mRunning { yes, notYet, notSure }
 
 /// What the user tapped on an empty result with no hub found (2.9.6): no
 /// hub yet (opens the Hubs page), Home Assistant (checks

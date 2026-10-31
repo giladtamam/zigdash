@@ -2826,6 +2826,54 @@ abstract class AppLocalizations {
   /// **'Your SLZB is the Zigbee radio. Zigbee2MQTT runs on another machine: which one?'**
   String get setupSlzbWhere;
 
+  /// Empty scan with no hub (3.2.8): asks whether Zigbee2MQTT is set up yet; three chips follow.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT already running?'**
+  String get setupRunningAsk;
+
+  /// No description provided for @setupRunningYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, it runs'**
+  String get setupRunningYes;
+
+  /// No description provided for @setupRunningNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get setupRunningNotYet;
+
+  /// No description provided for @setupRunningNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure'**
+  String get setupRunningNotSure;
+
+  /// No description provided for @setupRunningYesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Then this phone can\'t reach it from here. Most often the phone is on a guest network or another Wi-Fi, or the broker only accepts connections from its own machine (Mosquitto 2 does until its config has \"listener 1883\"). Enter its address below to check it.'**
+  String get setupRunningYesNote;
+
+  /// No description provided for @setupRunningNotYetNote.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash connects to a Zigbee2MQTT that is already running. See what you need to start, and try the demo meanwhile.'**
+  String get setupRunningNotYetNote;
+
+  /// {button} is the setupZ2mPageEntry button label, shown just below.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT has its own web page, where you pair your Zigbee devices. If you have opened it, it runs: tap \"{button}\" below. If you have never seen it, it isn\'t set up yet.'**
+  String setupRunningNotSureNote(String button);
+
+  /// No description provided for @setupRunningWhatToGet.
+  ///
+  /// In en, this message translates to:
+  /// **'What you need'**
+  String get setupRunningWhatToGet;
+
   /// No description provided for @setupAskNothing.
   ///
   /// In en, this message translates to:

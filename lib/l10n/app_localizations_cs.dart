@@ -1527,6 +1527,34 @@ class AppLocalizationsCs extends AppLocalizations {
       'Tvůj SLZB je rádio Zigbee. Zigbee2MQTT běží na jiném zařízení: na kterém?';
 
   @override
+  String get setupRunningAsk => 'Běží už Zigbee2MQTT?';
+
+  @override
+  String get setupRunningYes => 'Ano, běží';
+
+  @override
+  String get setupRunningNotYet => 'Ještě ne';
+
+  @override
+  String get setupRunningNotSure => 'Nevím jistě';
+
+  @override
+  String get setupRunningYesNote =>
+      'Pak ho tento telefon odsud nevidí. Nejčastěji je telefon v síti pro hosty nebo na jiné Wi-Fi, nebo broker přijímá spojení jen ze svého vlastního počítače (Mosquitto 2 to dělá, dokud jeho konfigurace nemá \"listener 1883\"). Zadejte jeho adresu níže a ověřte ji.';
+
+  @override
+  String get setupRunningNotYetNote =>
+      'ZigDash se připojuje k Zigbee2MQTT, které už běží. Podívejte se, co potřebujete pro začátek, a mezitím vyzkoušejte demo.';
+
+  @override
+  String setupRunningNotSureNote(String button) {
+    return 'Zigbee2MQTT má vlastní webovou stránku, kde párujete zařízení Zigbee. Pokud jste ji už otevřeli, běží: klepněte níže na \"$button\". Pokud jste ji nikdy neviděli, ještě není nastavené.';
+  }
+
+  @override
+  String get setupRunningWhatToGet => 'Co potřebujete';
+
+  @override
   String get setupAskNothing => 'Zatím nic?';
 
   @override

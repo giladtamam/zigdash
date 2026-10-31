@@ -1538,6 +1538,34 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre SLZB est la radio Zigbee. Zigbee2MQTT tourne sur une autre machine : laquelle ?';
 
   @override
+  String get setupRunningAsk => 'Zigbee2MQTT tourne-t-il déjà ?';
+
+  @override
+  String get setupRunningYes => 'Oui, il tourne';
+
+  @override
+  String get setupRunningNotYet => 'Pas encore';
+
+  @override
+  String get setupRunningNotSure => 'Je ne sais pas';
+
+  @override
+  String get setupRunningYesNote =>
+      'Alors ce téléphone ne le voit pas d\'ici. Le plus souvent, le téléphone est sur un réseau invité ou un autre Wi-Fi, ou le broker n\'accepte que les connexions de sa propre machine (Mosquitto 2 le fait tant que sa configuration n\'a pas \"listener 1883\"). Saisissez son adresse ci-dessous pour la vérifier.';
+
+  @override
+  String get setupRunningNotYetNote =>
+      'ZigDash se connecte à un Zigbee2MQTT qui tourne déjà. Voyez ce qu\'il vous faut pour commencer, et essayez la démo en attendant.';
+
+  @override
+  String setupRunningNotSureNote(String button) {
+    return 'Zigbee2MQTT a sa propre page web, où vous appairez vos appareils Zigbee. Si vous l\'avez déjà ouverte, il tourne : touchez « $button » ci-dessous. Si vous ne l\'avez jamais vue, il n\'est pas encore installé.';
+  }
+
+  @override
+  String get setupRunningWhatToGet => 'Ce qu\'il vous faut';
+
+  @override
   String get setupAskNothing => 'Rien pour l\'instant ?';
 
   @override
