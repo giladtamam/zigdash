@@ -16,6 +16,8 @@ import '../../data/repositories/section_repo.dart';
 import '../../l10n/app_localizations.dart';
 import '../devices/devices_providers.dart';
 import '../discovery/providers/discovery_provider.dart';
+import '../onboarding/setup/ha_connect.dart'
+    show HaConnectProblem, reachHomeAssistant;
 import 'ha_auth.dart';
 import 'ha_client.dart';
 import 'ha_import_apply.dart';
@@ -97,6 +99,12 @@ class _HaImportScreenState extends ConsumerState<HaImportScreen> {
         ),
       ),
       revoke: revokeHaSignIn,
+      // 3.2.9: the same reach as setup's sign-in, before the browser.
+      reach: (base) async => switch (await reachHomeAssistant(base)) {
+        null => null,
+        HaConnectProblem.certificate => HaImportProblem.certificate,
+        _ => HaImportProblem.unreachable,
+      },
       writer: (plan, {required makeDashboards, required skipRooms}) =>
           applier.apply(
             connectionId: widget.connectionId,
@@ -119,7 +127,9 @@ class _HaImportScreenState extends ConsumerState<HaImportScreen> {
     final event = switch (_controller?.value) {
       HaImportAsk(:final problem?)
           when problem != HaImportProblem.noAddress &&
-              problem != HaImportProblem.noToken =>
+              problem != HaImportProblem.noToken &&
+              // Already counted as the sign-in's own cancelled outcome.
+              problem != HaImportProblem.signInUnfinished =>
         HaImportEvent(HaImportStep.failed, error: problem),
       HaImportPreview(:final plan, skip: final s) when s.isEmpty =>
         HaImportEvent(
@@ -335,6 +345,7 @@ String _problemText(AppLocalizations l10n, HaImportProblem p) => switch (p) {
   HaImportProblem.failed => l10n.haImportFailed,
   HaImportProblem.noDevices => l10n.haImportNoDevices,
   HaImportProblem.signInRefused => l10n.haImportSignInRefused,
+  HaImportProblem.signInUnfinished => l10n.haImportSignInUnfinished,
 };
 
 class _Busy extends StatelessWidget {

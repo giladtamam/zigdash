@@ -3929,7 +3929,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Na té adrese nic neodpovědělo. Zkontroluj ji a jestli je telefon v domácí síti.';
+      'Na té adrese nic neodpovědělo. Zkontroluj ji a jestli je telefon v domácí síti. Je to adresa, kterou otevíráte Home Assistant v prohlížeči, a nemusí být stejná jako adresa brokeru.';
 
   @override
   String get haImportNotHa =>
@@ -4033,6 +4033,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant přihlášení nepřijal. To se stává, když Home Assistant nemá přístup k internetu. Použij místo toho dlouhodobý token níže.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Přihlášení nebylo dokončeno. Pokud se stránka neotevřela, zkontrolujte adresu: je to ta, kterou otevíráte Home Assistant v prohlížeči, a nemusí být stejná jako adresa brokeru. Nebo níže použijte dlouhodobý token.';
 
   @override
   String get setupIsolatedHint =>

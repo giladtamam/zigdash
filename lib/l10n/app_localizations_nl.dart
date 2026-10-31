@@ -3941,7 +3941,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Niets antwoordde op dat adres. Controleer het, en of je telefoon op het thuisnetwerk zit.';
+      'Niets antwoordde op dat adres. Controleer het, en of je telefoon op het thuisnetwerk zit. Het is het adres waarmee je Home Assistant in je browser opent, niet per se dat van je broker.';
 
   @override
   String get haImportNotHa =>
@@ -4044,6 +4044,10 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant accepteerde de login niet. Dat gebeurt als Home Assistant geen internettoegang heeft. Gebruik hieronder een langlevend toegangstoken.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Het inloggen is niet afgerond. Als de pagina niet openging, controleer dan het adres: het is het adres waarmee je Home Assistant in je browser opent, niet per se dat van je broker. Of gebruik hieronder een langlevend token.';
 
   @override
   String get setupIsolatedHint =>
