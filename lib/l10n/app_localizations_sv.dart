@@ -3927,7 +3927,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Inget svarade på den adressen. Kontrollera den, och att telefonen är på hemnätverket.';
+      'Inget svarade på den adressen. Kontrollera den, och att telefonen är på hemnätverket. Det är adressen du öppnar Home Assistant med i webbläsaren, inte nödvändigtvis mäklarens.';
 
   @override
   String get haImportNotHa =>
@@ -4029,6 +4029,10 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant godtog inte inloggningen. Det händer när Home Assistant saknar internetåtkomst. Använd en långlivad åtkomsttoken nedan i stället.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Inloggningen slutfördes inte. Om sidan inte öppnades, kontrollera adressen: det är den du öppnar Home Assistant med i webbläsaren, inte nödvändigtvis mäklarens. Eller använd en långlivad token nedan.';
 
   @override
   String get setupIsolatedHint =>

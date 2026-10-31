@@ -3949,7 +3949,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Unter dieser Adresse antwortet nichts. Prüfe sie und ob dein Handy im Heimnetz ist.';
+      'Unter dieser Adresse antwortet nichts. Prüfe sie und ob dein Handy im Heimnetz ist. Es ist die Adresse, mit der du Home Assistant im Browser öffnest, nicht unbedingt die deines Brokers.';
 
   @override
   String get haImportNotHa =>
@@ -4052,6 +4052,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant hat die Anmeldung nicht angenommen. Das passiert, wenn Home Assistant keinen Internetzugang hat. Nutze stattdessen unten ein langlebiges Zugriffstoken.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Die Anmeldung wurde nicht abgeschlossen. Wenn sich die Seite nicht geöffnet hat, prüfe die Adresse: Es ist die, mit der du Home Assistant im Browser öffnest, nicht unbedingt die deines Brokers. Oder nutze unten einen langlebigen Token.';
 
   @override
   String get setupIsolatedHint =>

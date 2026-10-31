@@ -3930,7 +3930,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'По этому адресу никто не ответил. Проверьте его и то, что телефон в домашней сети.';
+      'По этому адресу никто не ответил. Проверьте его и то, что телефон в домашней сети. Это адрес, по которому вы открываете Home Assistant в браузере, и он может отличаться от адреса брокера.';
 
   @override
   String get haImportNotHa =>
@@ -4027,6 +4027,10 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant не принял вход. Так бывает, когда у Home Assistant нет доступа в интернет. Используйте ниже долгосрочный токен доступа.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Вход не завершён. Если страница не открылась, проверьте адрес: это тот, по которому вы открываете Home Assistant в браузере, и он может отличаться от адреса брокера. Или используйте долгосрочный токен ниже.';
 
   @override
   String get setupIsolatedHint =>

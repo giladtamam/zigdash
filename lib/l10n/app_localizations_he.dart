@@ -3892,7 +3892,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'שום דבר לא ענה בכתובת הזו. בדקו אותה, ושהטלפון ברשת של הבית.';
+      'שום דבר לא ענה בכתובת הזו. בדקו אותה, ושהטלפון ברשת של הבית. זו הכתובת שבה אתם פותחים את Home Assistant בדפדפן, והיא לא בהכרח כתובת הברוקר.';
 
   @override
   String get haImportNotHa => 'משהו ענה בכתובת הזו, אבל זה לא Home Assistant.';
@@ -3991,6 +3991,10 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant לא קיבל את ההתחברות. זה קורה כשאין ל-Home Assistant גישה לאינטרנט. השתמשו במקום זה באסימון גישה ארוך טווח למטה.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'ההתחברות לא הושלמה. אם הדף לא נפתח, בדקו את הכתובת: זו הכתובת שבה אתם פותחים את Home Assistant בדפדפן, והיא לא בהכרח כתובת הברוקר. או השתמשו בטוקן לטווח ארוך למטה.';
 
   @override
   String get setupIsolatedHint =>

@@ -3944,7 +3944,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Nessuna risposta a quell\'indirizzo. Controllalo, e controlla che il telefono sia sulla rete di casa.';
+      'Nessuna risposta a quell\'indirizzo. Controllalo, e controlla che il telefono sia sulla rete di casa. È l\'indirizzo con cui apri Home Assistant nel browser, che può essere diverso da quello del broker.';
 
   @override
   String get haImportNotHa =>
@@ -4047,6 +4047,10 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant non ha accettato l\'accesso. Succede quando Home Assistant non ha accesso a internet. Usa invece un token a lunga durata qui sotto.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'L\'accesso non è stato completato. Se la pagina non si è aperta, controlla l\'indirizzo: è quello con cui apri Home Assistant nel browser, che può essere diverso da quello del broker. Oppure usa un token di lunga durata qui sotto.';
 
   @override
   String get setupIsolatedHint =>

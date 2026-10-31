@@ -6999,7 +6999,7 @@ abstract class AppLocalizations {
   /// No description provided for @haImportUnreachable.
   ///
   /// In en, this message translates to:
-  /// **'Nothing answered at that address. Check it, and that your phone is on your home network.'**
+  /// **'Nothing answered at that address. Check it, and that your phone is on your home network. It\'s the address you open Home Assistant with in your browser, which may not be your broker\'s.'**
   String get haImportUnreachable;
 
   /// No description provided for @haImportNotHa.
@@ -7157,6 +7157,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home Assistant didn\'t accept the sign-in. This happens when Home Assistant has no internet access. Use a long-lived token below instead.'**
   String get haImportSignInRefused;
+
+  /// Import from Home Assistant (3.2.9): the browser came back without signing in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in didn\'t finish. If the page didn\'t open, check the address: it\'s the one you open Home Assistant with in your browser, which may not be your broker\'s. Or use a long-lived token below.'**
+  String get haImportSignInUnfinished;
 
   /// No description provided for @setupIsolatedHint.
   ///

@@ -3944,7 +3944,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Nada respondió en esa dirección. Revísala y comprueba que el móvil esté en la red de casa.';
+      'Nada respondió en esa dirección. Revísala y comprueba que el móvil esté en la red de casa. Es la dirección con la que abres Home Assistant en el navegador, que puede no ser la de tu bróker.';
 
   @override
   String get haImportNotHa =>
@@ -4047,6 +4047,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant no aceptó el inicio de sesión. Pasa cuando Home Assistant no tiene acceso a internet. Usa un token de acceso de larga duración aquí debajo.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'El inicio de sesión no terminó. Si la página no se abrió, revisa la dirección: es la que usas para abrir Home Assistant en el navegador, que puede no ser la de tu bróker. O usa un token de larga duración abajo.';
 
   @override
   String get setupIsolatedHint =>
