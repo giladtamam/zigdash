@@ -149,14 +149,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'La IP del broker es la IP del hub. Encuéntrala en la interfaz web de SMLIGHT en Ajustes → Red, o en tu router. El puerto es 1883, sin usuario/contraseña por defecto.';
+      'La IP del broker es la IP del hub. Abre la página web del hub (smhub.local): en el Dashboard, el recuadro Network la muestra junto a IPv4. La app de tu router también muestra el hub como SMHUB. El puerto es 1883, sin usuario/contraseña por defecto.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
 
   @override
   String get connHelpZhaBody =>
-      'ZHA no tiene broker MQTT: se comunica directamente con Home Assistant, por lo que ZigDash no puede conectarse. Para usar ZigDash, cambia a Zigbee2MQTT (disponible como complemento de Home Assistant o contenedor Docker), que proporciona un broker MQTT.';
+      'ZHA no tiene broker MQTT: habla directamente con Home Assistant, así que ZigDash no puede conectarse. Para usar ZigDash, cambia a Zigbee2MQTT (disponible como aplicación de Home Assistant o como contenedor Docker), que incluye un broker MQTT.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1389,7 +1389,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get diagTcpHaNoBroker =>
-      'Este es tu Home Assistant, pero no tiene ningún broker MQTT en marcha. Instala e inicia el complemento Mosquitto broker (Ajustes › Complementos) y vuelve a intentarlo.';
+      'Este es tu Home Assistant, pero no tiene ningún broker MQTT en marcha. Instala e inicia la aplicación Mosquitto broker (Configuración › Aplicaciones) y vuelve a intentarlo.';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1503,13 +1503,61 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setupAskHa => 'Home Assistant';
 
   @override
-  String get setupAskHaSub => 'Con el complemento Zigbee2MQTT, o ZHA';
+  String get setupAskHaSub => 'Con la aplicación Zigbee2MQTT, o ZHA';
 
   @override
-  String get setupAskSmlight => 'Un hub SMLIGHT';
+  String get setupAskSmlight => 'SMLIGHT';
 
   @override
-  String get setupAskSmlightSub => 'SLZB o SMHUB con Zigbee2MQTT';
+  String get setupAskSmlightSub => 'Un SMHUB o un adaptador SLZB';
+
+  @override
+  String get setupAskSmlightWhich => '¿Qué dispositivo SMLIGHT tienes?';
+
+  @override
+  String get setupAskSmhub => 'SMHUB';
+
+  @override
+  String get setupAskSmhubSub => 'Zigbee2MQTT funciona en el propio hub';
+
+  @override
+  String get setupAskSlzb => 'Un adaptador SLZB';
+
+  @override
+  String get setupAskSlzbSub =>
+      'SLZB-06, SLZB-MR y otros: solo la radio Zigbee';
+
+  @override
+  String get setupSlzbWhere =>
+      'Tu SLZB es la radio Zigbee. Zigbee2MQTT funciona en otro equipo: ¿en cuál?';
+
+  @override
+  String get setupRunningAsk => '¿Zigbee2MQTT ya está funcionando?';
+
+  @override
+  String get setupRunningYes => 'Sí, funciona';
+
+  @override
+  String get setupRunningNotYet => 'Todavía no';
+
+  @override
+  String get setupRunningNotSure => 'No estoy seguro';
+
+  @override
+  String get setupRunningYesNote =>
+      'Entonces este teléfono no lo alcanza desde aquí. Lo más habitual es que el teléfono esté en una red de invitados u otra Wi-Fi, o que el bróker solo acepte conexiones de su propia máquina (Mosquitto 2 lo hace hasta que su configuración tenga \"listener 1883\"). Escribe su dirección abajo para comprobarla.';
+
+  @override
+  String get setupRunningNotYetNote =>
+      'ZigDash se conecta a un Zigbee2MQTT que ya funciona. Mira lo que necesitas para empezar y, mientras tanto, prueba la demo.';
+
+  @override
+  String setupRunningNotSureNote(String button) {
+    return 'Zigbee2MQTT tiene su propia página web, donde emparejas tus dispositivos Zigbee. Si la has abierto, funciona: toca \"$button\" abajo. Si nunca la has visto, aún no está configurado.';
+  }
+
+  @override
+  String get setupRunningWhatToGet => 'Lo que necesitas';
 
   @override
   String get setupAskNothing => '¿Aún nada?';
@@ -1518,7 +1566,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setupAskHaWhich => '¿Cómo maneja Zigbee tu Home Assistant?';
 
   @override
-  String get setupAskHaZ2m => 'El complemento Zigbee2MQTT';
+  String get setupAskHaZ2m => 'La aplicación Zigbee2MQTT';
 
   @override
   String get setupAskHaZ2mSub => 'Iniciar sesión con Home Assistant';
@@ -1594,7 +1642,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupGuideHa =>
-      'Home Assistant: asegúrate de que el complemento del broker MQTT (p. ej. Mosquitto) y el complemento de Zigbee2MQTT estén instalados y en ejecución.';
+      'Home Assistant: comprueba que las aplicaciones Mosquitto broker y Zigbee2MQTT están instaladas y en marcha (Configuración › Aplicaciones).';
 
   @override
   String get setupGuidePi =>
@@ -1725,7 +1773,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get haConnectNoMqtt =>
-      'Este Home Assistant no tiene la integración MQTT. Zigbee2MQTT también la necesita: en Home Assistant, añade el complemento Mosquitto broker y la integración MQTT, y vuelve a intentarlo.';
+      'Este Home Assistant no tiene integración MQTT. Zigbee2MQTT también la necesita: en Home Assistant, añade la aplicación Mosquitto broker (Configuración › Aplicaciones) y la integración MQTT, y vuelve a intentarlo.';
 
   @override
   String get haConnectSignInFailed =>
@@ -1781,7 +1829,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupAuthHintHa =>
-      'Home Assistant: usa un usuario de Home Assistant. La mayoría crea uno solo para MQTT en Ajustes › Personas › Usuarios, y el complemento Mosquitto lo acepta.';
+      'Home Assistant: usa un usuario de Home Assistant. La mayoría crea uno solo para MQTT en Configuración › Personas › Usuarios, y la aplicación Mosquitto broker lo acepta.';
 
   @override
   String get setupAuthHintPi =>
@@ -1789,7 +1837,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupAuthHintSmlight =>
-      'SMLIGHT: el acceso que aparece en la página web del hub en Settings › MQTT.';
+      'SMLIGHT: el acceso que aparece en la página web del hub en Settings › MQTT. O activa ahí Allow Anonymous y guarda: así no hace falta acceso.';
 
   @override
   String get setupVerifyingTitle => 'Comprobando la conexión…';
@@ -1931,7 +1979,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupErrHaNoZ2mBody =>
-      'Has iniciado sesión en Home Assistant, pero Zigbee2MQTT no envía nada por su MQTT. Si tus dispositivos Zigbee están en ZHA (el Zigbee integrado de Home Assistant), ZigDash no puede verlos: funciona con Zigbee2MQTT. Si usas el complemento Zigbee2MQTT, ábrelo en Home Assistant, comprueba que está iniciado y vuelve a intentarlo.';
+      'Has iniciado sesión en Home Assistant, pero Zigbee2MQTT no está enviando nada por su MQTT. Si tus dispositivos Zigbee están en ZHA (el Zigbee integrado de Home Assistant), ZigDash no puede verlos: funciona con Zigbee2MQTT. Si usas la aplicación Zigbee2MQTT, ábrela en Configuración › Aplicaciones, comprueba que está iniciada y vuelve a intentarlo.';
 
   @override
   String get setupErrHaNoZ2mAction => 'Reintentar';
@@ -1992,7 +2040,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Se encontró tu broker, pero no respondió al usuario y la contraseña a tiempo. El complemento Mosquitto de Home Assistant comprueba los inicios de sesión con Home Assistant, lo que puede tardar unos segundos en una Raspberry Pi. Inténtalo de nuevo y comprueba que ese usuario existe en Home Assistant.';
+      'Se encontró tu broker, pero no respondió a tiempo al usuario y la contraseña. La aplicación Mosquitto broker de Home Assistant comprueba los inicios de sesión con Home Assistant, lo que puede tardar unos segundos en una Raspberry Pi. Vuelve a intentarlo y comprueba que este usuario existe en Home Assistant. En un hub SMLIGHT, activa en su lugar Allow Anonymous en Settings › MQTT y no hará falta acceso.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Reintentar';
@@ -2033,7 +2081,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setupPlatformHa => 'Home Assistant';
 
   @override
-  String get setupPlatformSmlight => 'Hub SMLIGHT';
+  String get setupPlatformSmlight => 'SMHUB';
 
   @override
   String get setupPlatformPi => 'Raspberry Pi o Docker';
@@ -2057,7 +2105,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get setupScanHintHa => 'Buscando Home Assistant y su broker MQTT…';
 
   @override
-  String get setupScanHintSmlight => 'Buscando tu hub SMLIGHT…';
+  String get setupScanHintSmlight => 'Buscando tu SMHUB…';
 
   @override
   String get setupScanHintPi => 'Buscando un broker MQTT en tu red…';
@@ -2086,7 +2134,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String setupNoBrokerHaBody(String host) {
-    return 'Home Assistant está en $host, pero nada responde en el puerto MQTT 1883. En Home Assistant, abre Ajustes › Complementos, instala e inicia el complemento Mosquitto broker y vuelve a intentarlo.';
+    return 'Home Assistant está en $host, pero nada responde en el puerto MQTT 1883. En Home Assistant, abre Configuración › Aplicaciones, instala e inicia la aplicación Mosquitto broker y vuelve a intentarlo.';
   }
 
   @override
@@ -2094,8 +2142,12 @@ class AppLocalizationsEs extends AppLocalizations {
       '¿Usas el Zigbee propio de Home Assistant (ZHA) en lugar de Zigbee2MQTT? ZigDash solo funciona con Zigbee2MQTT, así que no ve los dispositivos de ZHA. La demo muestra lo que tendrías.';
 
   @override
+  String get setupNoBrokerHaDocker =>
+      '¿No hay Aplicaciones en la Configuración de tu Home Assistant? Entonces funciona en Docker (Home Assistant Container), que no tiene aplicaciones: Mosquitto funciona en su propio contenedor. Escribe abajo la dirección del equipo donde funciona.';
+
+  @override
   String get setupVpnHint =>
-      'Hay una VPN activa, y puede ocultar tu red de casa a la búsqueda. Si estás en casa, desactiva la VPN y pulsa Reintentar.';
+      'Hay una VPN activa, y puede ocultar tu red de casa a la búsqueda. Si estás en casa, desactiva la VPN y pulsa Reintentar. O déjala activa y permite el acceso a la red local (LAN) en los ajustes de la app de VPN.';
 
   @override
   String get setupNoBrokerZ2mTitle =>
@@ -2175,6 +2227,14 @@ class AppLocalizationsEs extends AppLocalizations {
       '¿Cuál es la dirección de tu hub SMLIGHT?';
 
   @override
+  String get setupAddressWhereSmlight =>
+      'Abre la página web de tu hub: smhub.local, o smhub.local:3000 en los primeros hubs. En el Dashboard, el recuadro Network muestra la dirección junto a IPv4. Escríbela aquí. Si la página no se abre, la app de tu router muestra el hub como SMHUB, con su IP.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'Un SLZB-06, MR o UltimaX es solo la radio Zigbee y no tiene broker. Escribe en su lugar la dirección del ordenador que ejecuta Zigbee2MQTT y Mosquitto.';
+
+  @override
   String get setupAddressQuestionPi =>
       '¿Cuál es la dirección de la máquina donde corre Mosquitto?';
 
@@ -2230,7 +2290,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setupChoiceHaNote =>
-      'ZigDash se conecta al broker MQTT de Home Assistant, el complemento Mosquitto broker en Ajustes › Complementos, y Zigbee2MQTT también tiene que usarlo. Si no se encuentra homeassistant.local, introduce abajo la dirección IP de Home Assistant. Está en Ajustes › Sistema › Red.';
+      'ZigDash se conecta al broker MQTT de Home Assistant, la aplicación Mosquitto broker en Configuración › Aplicaciones, y Zigbee2MQTT también tiene que usarlo. Si no se encuentra homeassistant.local, escribe abajo la dirección IP de Home Assistant. Está en Configuración › Sistema › Red.';
 
   @override
   String get setupChoiceOther => 'Mi hub está en otra red';
@@ -2863,7 +2923,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tipBrokerRunningBody =>
-      'Home Assistant: el complemento Mosquitto está iniciado. Raspberry Pi: Mosquitto está en marcha. SMLIGHT: Settings › MQTT está activado.';
+      'Home Assistant: la aplicación Mosquitto broker está iniciada. Raspberry Pi: Mosquitto está en marcha. SMLIGHT: Settings › MQTT está activado.';
 
   @override
   String get tipBrokerAcceptsTitle => 'El broker acepta tu teléfono';
@@ -2912,7 +2972,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tipStartBrokerBody =>
-      'Inicia Mosquitto o el complemento del broker y vuelve a intentarlo.';
+      'Inicia Mosquitto o la aplicación Mosquitto broker y vuelve a intentarlo.';
 
   @override
   String get tipMosquitto2Title => 'Mosquitto 2';
@@ -2926,7 +2986,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tipMqttLoginBody =>
-      'La contraseña de la interfaz web de tu hub no suele ser la de MQTT. Home Assistant: usa un usuario de Home Assistant o el acceso configurado en el complemento Mosquitto.';
+      'La contraseña de la página web de tu hub no suele ser la de MQTT. Home Assistant: usa un usuario de Home Assistant, o el inicio de sesión configurado en la aplicación Mosquitto broker.';
 
   @override
   String get tipSpacesTitle => 'Revisa los espacios';
@@ -4729,4 +4789,163 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get guidedNoZ2mBody =>
       'Aquí responde un broker MQTT, pero Zigbee2MQTT no envía nada por él. Comprueba que Zigbee2MQTT está iniciado y usa este broker, y que el topic base coincide con su configuración. Si tus dispositivos Zigbee están en ZHA de Home Assistant, ZigDash no puede verlos: funciona con Zigbee2MQTT.';
+
+  @override
+  String devicesOtherBaseBody(String found, String current) {
+    return 'Zigbee2MQTT está en este broker con el topic base «$found», pero esta casa busca «$current».';
+  }
+
+  @override
+  String devicesUseBase(String found) {
+    return 'Usar «$found»';
+  }
+
+  @override
+  String get devicesChangeConnection => 'Cambiar conexión';
+
+  @override
+  String get updateAvailableTitle => 'Hay una nueva versión de ZigDash';
+
+  @override
+  String get updateAvailableBody =>
+      'Se descarga mientras sigues usando ZigDash.';
+
+  @override
+  String get updateAvailableButton => 'Actualizar';
+
+  @override
+  String get updateDownloading => 'Descargando la actualización…';
+
+  @override
+  String get updateReadyTitle => 'Actualización descargada';
+
+  @override
+  String get updateReadyButton => 'Reiniciar para terminar';
+
+  @override
+  String get nfcWriteTag => 'Escribir en etiqueta NFC';
+
+  @override
+  String get nfcHoldTitle => 'Acerca una etiqueta al teléfono';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Acerca una pegatina NFC vacía a la parte trasera del teléfono. Al tocarla después se ejecutará $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Etiqueta lista';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Toca esta etiqueta con el teléfono para ejecutar $name. Funciona con ZigDash cerrado.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'No se pudo escribir la etiqueta';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Esta etiqueta está bloqueada y no se puede cambiar. Prueba con otra.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Esta etiqueta es demasiado pequeña. Usa una pegatina NTAG213 o mayor.';
+
+  @override
+  String get nfcFailedBody =>
+      'Mantén la etiqueta quieta contra la parte trasera del teléfono e inténtalo de nuevo.';
+
+  @override
+  String get nfcOffTitle => 'El NFC está desactivado';
+
+  @override
+  String get nfcOffBody =>
+      'Activa el NFC en los ajustes de Android y vuelve a intentarlo.';
+
+  @override
+  String get nfcNoneTitle => 'Este teléfono no tiene NFC';
+
+  @override
+  String get nfcNoneBody =>
+      'Este teléfono no puede leer ni escribir etiquetas NFC.';
+
+  @override
+  String get nfcWriteAnother => 'Escribir otra etiqueta';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Este teléfono no puede escribir este tipo de etiqueta (a menudo MIFARE Classic). Usa una pegatina NTAG213, 215 o 216.';
+
+  @override
+  String get nfcTagsTitle => 'Etiquetas NFC';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Etiquetas que ejecutan una escena o cambian un dispositivo';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Aún no hay etiquetas. Mantén pulsada una tarjeta de escena, luz, enchufe o persiana y elige Escribir en etiqueta NFC.';
+
+  @override
+  String get nfcTagRunsScene => 'Ejecuta la escena';
+
+  @override
+  String get nfcTagSwitches => 'Enciende y apaga';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'escrita $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'último toque $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'aún sin usar';
+
+  @override
+  String get nfcTagOffLabel => 'Desactivada';
+
+  @override
+  String get nfcTagRewrite => 'Reescribir';
+
+  @override
+  String get nfcTagForget => 'Quitar de la lista';
+
+  @override
+  String get nfcTagOffToast => 'Esta etiqueta está desactivada en ZigDash';
+
+  @override
+  String get nfcTagsNote =>
+      'Una etiqueta desactivada no hace nada en este teléfono. Las escritas antes de esta lista no aparecen: reescríbelas una vez.';
+
+  @override
+  String get nfcPopupHeader => 'Etiqueta ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'Ejecutando…';
+
+  @override
+  String get nfcPopupSwitching => 'Cambiando…';
+
+  @override
+  String get nfcPopupDone => 'Hecho';
+
+  @override
+  String get nfcPopupClosing => 'Se cierra en 2 segundos';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Este teléfono no llega a la casa ahora mismo. Revisa el Wi-Fi o activa el control remoto.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'No se cambió nada. Vuelve a activarla en los ajustes de la casa, en Etiquetas NFC.';
+
+  @override
+  String get nfcPopupOpenApp => 'Abrir ZigDash';
 }

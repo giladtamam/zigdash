@@ -51,6 +51,8 @@ class Routes {
   /// Share this home with another phone at home (3.1.7).
   static String homeShare(String connectionId) =>
       '/settings/home/$connectionId/share';
+  static String homeNfcTags(String connectionId) =>
+      '/settings/home/$connectionId/nfc-tags';
   static String homeAlerts(String connectionId) =>
       '/settings/home/$connectionId/alerts';
 

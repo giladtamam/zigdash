@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../nfc/nfc_tags.dart' show NfcState, nfcStateProvider;
 import '../../../data/database/tables/connections.dart';
 import '../../ha_import/ha_auth.dart';
 import '../../../mqtt/ha_token.dart';
@@ -96,6 +97,17 @@ class HomeSettingsScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(Routes.homeAlerts(home.id)),
               ),
+              // 3.3: the NFC tags this phone wrote for the Home.
+              if (ref.watch(nfcStateProvider).valueOrNull case final nfc?
+                  when nfc != NfcState.none)
+                ListTile(
+                  key: const Key('home-nfc-tags'),
+                  leading: const Icon(Icons.nfc),
+                  title: Text(l10n.nfcTagsTitle),
+                  subtitle: Text(l10n.nfcTagsSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(Routes.homeNfcTags(home.id)),
+                ),
               ListTile(
                 leading: const Icon(Icons.download_outlined),
                 title: Text(l10n.haImportTitle),

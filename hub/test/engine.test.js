@@ -352,6 +352,30 @@ test('history: records a reading and publishes its day record when the slot clos
   await z.engine.stop();
 });
 
+test('history: tallies a lamp\'s switch-ons and minutes on', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout', 'setInterval', 'Date'], now: Date.UTC(2026, 9, 22, 12, 0, 30) });
+  const z = fakeZ2m();
+  await z.engine.start();
+  z.mqttIn('zigdash/history/config', JSON.stringify({ v: 1, timeZone: 'UTC', readings: [],
+    tallies: [{ topic: 'zigbee2mqtt/Lamp', ieee: '0xlamp', attr: 'state', path: 'state', kind: 'on' }] }));
+  t.mock.timers.tick(46000);
+  z.z2mPublished('zigbee2mqtt/Lamp', { state: 'OFF' });
+  z.z2mPublished('zigbee2mqtt/Lamp', { state: 'ON' });
+  const minutes = (n) => { for (let i = 0; i < n; i++) t.mock.timers.tick(60000); };
+  minutes(10);
+  z.z2mPublished('zigbee2mqtt/Lamp', { state: 'ON', linkquality: 40 });
+  minutes(10);
+  const topic = 'zigdash/history/tally/0xlamp/state/2026-10-22';
+  const recs = z.published.filter((p) => p.topic === topic);
+  assert.ok(recs.length >= 1, 'a tally record was published');
+  const rec = JSON.parse(recs.at(-1).payload);
+  assert.equal(rec.last, true);
+  assert.deepEqual(rec.b.map((b) => b[1]), [1], 'one switch-on, the repeat not counted');
+  assert.ok(rec.b[0][2] >= 13 && rec.b[0][2] <= 15, `minutes on in the 12:00 slot: ${rec.b[0][2]}`);
+  assert.ok(!z.published.some((p) => p.topic.startsWith('zigdash/history/0xlamp/')), 'no reading record for a tally');
+  await z.engine.stop();
+});
+
 test('hub/zigdash-engine.js is built from the current sources', () => {
   const r = require('child_process').spawnSync(process.execPath, [path.join(__dirname, '..', 'build.mjs'), '--check']);
   assert.equal(r.status, 0, String(r.stderr));

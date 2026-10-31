@@ -408,11 +408,11 @@ void main() {
     await tester.pump();
     expect(find.text('Checked 400 of 1526 addresses'), findsOneWidget);
 
-    await tester.tap(find.text('SMLIGHT hub'));
+    await tester.tap(find.text('SMHUB'));
     await tester.pump();
     expect(coordinator.platform, SetupPlatform.smlight);
     expect(added, [HubKind.smlight]);
-    expect(find.text('Looking for your SMLIGHT hub…'), findsOneWidget);
+    expect(find.text('Looking for your SMHUB…'), findsOneWidget);
 
     controller.add(
       const HubSeen(
@@ -447,7 +447,15 @@ void main() {
       find.text('Found Home Assistant, but no MQTT broker'),
       findsOneWidget,
     );
-    expect(find.textContaining('Mosquitto broker add-on'), findsOneWidget);
+    // 3.2.6: Home Assistant 2026.2 calls add-ons Apps.
+    expect(
+      find.textContaining('Settings › Apps, install and start the Mosquitto'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('add-on'), findsNothing);
+    // Home Assistant Container has no Apps: its broker is typed by hand.
+    expect(find.textContaining('Home Assistant Container'), findsOneWidget);
+    expect(find.byKey(const Key('setup-ha-docker-manual')), findsOneWidget);
     // 2.6.6: ZHA users are told why, and the demo is a button.
     expect(find.textContaining('(ZHA)'), findsOneWidget);
     expect(find.widgetWithText(OutlinedButton, 'Try demo'), findsOneWidget);
@@ -508,6 +516,31 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Check this address'), findsOneWidget);
+    expect(find.byKey(const Key('setup-smhub-address-hint')), findsNothing);
+  });
+
+  testWidgets('an SMLIGHT empty result says where the hub shows its address', (
+    tester,
+  ) async {
+    final controller = StreamController<ScanEvent>();
+    await _pump(
+      tester,
+      run: (_, __) => ScanRun(events: controller.stream, addHub: (_) {}),
+    );
+    await tester.tap(find.text('Find my setup'));
+    await tester.pump();
+    await tester.tap(find.text('SMHUB'));
+    await tester.pump();
+    // Not awaited: its future waits on the listener, under the fake clock.
+    unawaited(controller.close());
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.text("What is your SMLIGHT hub's address?"), findsOneWidget);
+    expect(find.byKey(const Key('setup-smhub-address-hint')), findsOneWidget);
+    expect(find.textContaining('the Network box shows the address next to IPv4'),
+        findsOneWidget);
+    expect(find.textContaining('An SLZB-06, MR or UltimaX'), findsOneWidget);
   });
 
   testWidgets('a broker at the typed address goes on to the devices', (
@@ -714,6 +747,99 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Which of these fits you?'), findsNothing);
+    });
+  });
+
+  // 3.2.8: the welcome already says what runs their Zigbee; the empty
+  // result asks whether it is set up yet.
+  group('is Zigbee2MQTT running', () {
+    late List<(String, Map<String, String>)> sent;
+    late List<Override> analytics;
+    setUp(() {
+      sent = [];
+      analytics = [
+        analyticsProvider.overrideWithValue(
+          Analytics(_RecordingSink(sent), enabled: true),
+        ),
+      ];
+    });
+    List<Map<String, String>> answers() => [
+      for (final (name, props) in sent)
+        if (name == 'setup_step' && props['step'] == 'z2m_running') props,
+    ];
+    Future<void> emptyAfterPi(WidgetTester tester) async {
+      await _pump(tester, scan: (_) => const Stream.empty(), extra: analytics);
+      await tester.tap(find.byKey(const Key('ask-z2m')));
+      await tester.pump();
+      await tester.pump();
+    }
+
+    testWidgets('yes says why a running one goes unseen', (tester) async {
+      await emptyAfterPi(tester);
+      expect(find.text('Is Zigbee2MQTT already running?'), findsOneWidget);
+      expect(find.byKey(const Key('setup-running-note')), findsNothing);
+      await tester.tap(find.byKey(const Key('setup-running-yes')));
+      await tester.pump();
+      expect(find.textContaining('listener 1883'), findsOneWidget);
+      expect(answers(), [containsPair('choice', 'yes')]);
+      expect(answers().single['platform'], 'pi_or_docker');
+    });
+
+    testWidgets('not yet points to what to get and the demo', (tester) async {
+      await emptyAfterPi(tester);
+      await tester.tap(find.byKey(const Key('setup-running-notYet')));
+      await tester.pump();
+      final note = find.byKey(const Key('setup-running-note'));
+      expect(
+        find.descendant(of: note, matching: find.text('What you need')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: note, matching: find.text('Try demo')),
+        findsOneWidget,
+      );
+      expect(answers().single['choice'], 'not_yet');
+    });
+
+    testWidgets('not sure says how to tell, naming the page button', (
+      tester,
+    ) async {
+      await emptyAfterPi(tester);
+      await tester.tap(find.byKey(const Key('setup-running-notSure')));
+      await tester.pump();
+      expect(
+        find.textContaining('tap "Connect to my Zigbee2MQTT page" below'),
+        findsOneWidget,
+      );
+      // Unpicking it sends nothing; picking it again counts again.
+      await tester.tap(find.byKey(const Key('setup-running-notSure')));
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('setup-running-notSure')));
+      await tester.pump();
+      expect(answers().map((a) => a['choice']), ['not_sure', 'not_sure']);
+    });
+
+    testWidgets('a hub found: no question', (tester) async {
+      await _pump(
+        tester,
+        run: (_, _) => ScanRun(
+          events: Stream.fromIterable(const [
+            HubSeen(
+              HubFound(
+                kind: HubKind.zigbee2mqtt,
+                host: '192.168.1.20',
+                port: 8080,
+              ),
+            ),
+          ]),
+          addHub: (_) {},
+        ),
+      );
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('setup-running')), findsNothing);
     });
   });
 
@@ -979,7 +1105,7 @@ void main() {
     await tester.pump();
 
     expect(find.text("The broker didn't answer the login"), findsOneWidget);
-    expect(find.textContaining('Mosquitto add-on'), findsOneWidget);
+    expect(find.textContaining('Mosquitto broker app checks logins'), findsOneWidget);
     expect(find.text('Something went wrong'), findsNothing);
 
     // Try again re-checks the same login.
@@ -1323,6 +1449,78 @@ void main() {
       expect(find.text('dashboards of demo1'), findsOneWidget);
       expect(coordinator.state, isA<SetupIdle>());
       expect(steps(), ['welcome_demo']);
+    });
+
+    // 3.2.7: SMLIGHT was 0 of 20; most were SLZB adapters, which don't
+    // run Zigbee2MQTT. The welcome asks which device first.
+    testWidgets('SMLIGHT › SMHUB scans for the hub', (tester) async {
+      final coordinator = await _pump(
+        tester,
+        scan: (_) => const Stream.empty(),
+        extra: analytics,
+      );
+      await tester.tap(find.byKey(const Key('ask-smlight')));
+      await tester.pumpAndSettle();
+      expect(find.text('Which SMLIGHT device do you have?'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('smlight-smhub')));
+      await tester.pumpAndSettle();
+      expect(coordinator.platform, SetupPlatform.smlight);
+      expect(coordinator.state, isNot(isA<SetupIdle>()));
+      expect(
+        [
+          for (final (_, props) in sent)
+            if (props['step'] == 'smlight_which') props['choice'],
+        ],
+        ['smhub'],
+      );
+    });
+
+    testWidgets('SMLIGHT › SLZB asks where Zigbee2MQTT runs', (tester) async {
+      final coordinator = await _pump(
+        tester,
+        scan: (_) => const Stream.empty(),
+        extra: analytics,
+      );
+      await tester.tap(find.byKey(const Key('ask-smlight')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('smlight-slzb')));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(
+          'Your SLZB is the Zigbee radio. Zigbee2MQTT runs on another machine: which one?',
+        ),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('slzb-ha')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('slzb-z2m')));
+      await tester.pumpAndSettle();
+      expect(coordinator.platform, SetupPlatform.piOrDocker);
+      expect(coordinator.state, isNot(isA<SetupIdle>()));
+      expect(steps(), contains('smlight_which'));
+      expect(
+        [
+          for (final (_, props) in sent)
+            if (props['step'] == 'smlight_which') props['choice'],
+        ],
+        ['slzb'],
+      );
+    });
+
+    testWidgets('SMLIGHT › SLZB › Home Assistant asks how it runs Zigbee', (
+      tester,
+    ) async {
+      final coordinator = await _pump(tester, extra: analytics);
+      await tester.tap(find.byKey(const Key('ask-smlight')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('smlight-slzb')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('slzb-ha')));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('How does your Home Assistant run Zigbee?'),
+        findsOneWidget,
+      );
+      expect(coordinator.platform, isNot(SetupPlatform.smlight));
     });
 
     testWidgets('which hub to get opens the Hubs page', (tester) async {

@@ -381,7 +381,7 @@ abstract class AppLocalizations {
   /// No description provided for @connHelpSmhubBody.
   ///
   /// In en, this message translates to:
-  /// **'The broker IP is the hub\'s IP address. Find it in the SMLIGHT web interface under Settings → Network, or in your router. Port is 1883, with no username/password by default.'**
+  /// **'The broker IP is the hub\'s IP address. Open the hub\'s web page (smhub.local): on the Dashboard, the Network box shows it next to IPv4. Your router\'s app also lists the hub as SMHUB. Port is 1883, with no username/password by default.'**
   String get connHelpSmhubBody;
 
   /// No description provided for @connHelpZhaTitle.
@@ -393,7 +393,7 @@ abstract class AppLocalizations {
   /// No description provided for @connHelpZhaBody.
   ///
   /// In en, this message translates to:
-  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant add-on or a Docker container), which provides an MQTT broker.'**
+  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which provides an MQTT broker.'**
   String get connHelpZhaBody;
 
   /// No description provided for @connHelpSameNetwork.
@@ -2589,7 +2589,7 @@ abstract class AppLocalizations {
   /// No description provided for @diagTcpHaNoBroker.
   ///
   /// In en, this message translates to:
-  /// **'This is your Home Assistant, but no MQTT broker is running on it. Install and start the Mosquitto broker add-on (Settings › Add-ons), then try again.'**
+  /// **'This is your Home Assistant, but no MQTT broker is running on it. Install and start the Mosquitto broker app (Settings › Apps), then try again.'**
   String get diagTcpHaNoBroker;
 
   /// Broker test: port 1883 refused on an SMLIGHT hub (2.9.5). Settings › MQTT and Allow External are the hub's own English labels; keep them in English.
@@ -2775,20 +2775,104 @@ abstract class AppLocalizations {
   /// No description provided for @setupAskHaSub.
   ///
   /// In en, this message translates to:
-  /// **'With the Zigbee2MQTT add-on, or ZHA'**
+  /// **'With the Zigbee2MQTT app, or ZHA'**
   String get setupAskHaSub;
 
   /// No description provided for @setupAskSmlight.
   ///
   /// In en, this message translates to:
-  /// **'An SMLIGHT hub'**
+  /// **'SMLIGHT'**
   String get setupAskSmlight;
 
   /// No description provided for @setupAskSmlightSub.
   ///
   /// In en, this message translates to:
-  /// **'SLZB or SMHUB running Zigbee2MQTT'**
+  /// **'An SMHUB, or an SLZB adapter'**
   String get setupAskSmlightSub;
+
+  /// Sheet title after tapping SMLIGHT on the welcome question (3.2.7).
+  ///
+  /// In en, this message translates to:
+  /// **'Which SMLIGHT device do you have?'**
+  String get setupAskSmlightWhich;
+
+  /// SMLIGHT's SMHUB product name; keep as is.
+  ///
+  /// In en, this message translates to:
+  /// **'SMHUB'**
+  String get setupAskSmhub;
+
+  /// Under SMHUB: it runs Zigbee2MQTT itself.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT runs on the hub itself'**
+  String get setupAskSmhubSub;
+
+  /// SMLIGHT's SLZB coordinators (SLZB-06, SLZB-MR); keep SLZB.
+  ///
+  /// In en, this message translates to:
+  /// **'An SLZB adapter'**
+  String get setupAskSlzb;
+
+  /// Under the SLZB choice: a network Zigbee adapter, not a Zigbee2MQTT host.
+  ///
+  /// In en, this message translates to:
+  /// **'SLZB-06, SLZB-MR and others: the Zigbee radio only'**
+  String get setupAskSlzbSub;
+
+  /// Sheet title after picking SLZB: choose Home Assistant or Zigbee2MQTT on a Pi/server.
+  ///
+  /// In en, this message translates to:
+  /// **'Your SLZB is the Zigbee radio. Zigbee2MQTT runs on another machine: which one?'**
+  String get setupSlzbWhere;
+
+  /// Empty scan with no hub (3.2.8): asks whether Zigbee2MQTT is set up yet; three chips follow.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT already running?'**
+  String get setupRunningAsk;
+
+  /// No description provided for @setupRunningYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, it runs'**
+  String get setupRunningYes;
+
+  /// No description provided for @setupRunningNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get setupRunningNotYet;
+
+  /// No description provided for @setupRunningNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure'**
+  String get setupRunningNotSure;
+
+  /// No description provided for @setupRunningYesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Then this phone can\'t reach it from here. Most often the phone is on a guest network or another Wi-Fi, or the broker only accepts connections from its own machine (Mosquitto 2 does until its config has \"listener 1883\"). Enter its address below to check it.'**
+  String get setupRunningYesNote;
+
+  /// No description provided for @setupRunningNotYetNote.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash connects to a Zigbee2MQTT that is already running. See what you need to start, and try the demo meanwhile.'**
+  String get setupRunningNotYetNote;
+
+  /// {button} is the setupZ2mPageEntry button label, shown just below.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT has its own web page, where you pair your Zigbee devices. If you have opened it, it runs: tap \"{button}\" below. If you have never seen it, it isn\'t set up yet.'**
+  String setupRunningNotSureNote(String button);
+
+  /// No description provided for @setupRunningWhatToGet.
+  ///
+  /// In en, this message translates to:
+  /// **'What you need'**
+  String get setupRunningWhatToGet;
 
   /// No description provided for @setupAskNothing.
   ///
@@ -2805,7 +2889,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAskHaZ2m.
   ///
   /// In en, this message translates to:
-  /// **'The Zigbee2MQTT add-on'**
+  /// **'The Zigbee2MQTT app'**
   String get setupAskHaZ2m;
 
   /// No description provided for @setupAskHaZ2mSub.
@@ -2937,7 +3021,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuideHa.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant: make sure the MQTT broker add-on (e.g. Mosquitto) and the Zigbee2MQTT add-on are installed and running.'**
+  /// **'Home Assistant: make sure the Mosquitto broker app and the Zigbee2MQTT app are installed and running (Settings › Apps).'**
   String get setupGuideHa;
 
   /// No description provided for @setupGuidePi.
@@ -3159,7 +3243,7 @@ abstract class AppLocalizations {
   /// No description provided for @haConnectNoMqtt.
   ///
   /// In en, this message translates to:
-  /// **'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker add-on and the MQTT integration, then try again.'**
+  /// **'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker app (Settings › Apps) and the MQTT integration, then try again.'**
   String get haConnectNoMqtt;
 
   /// No description provided for @haConnectSignInFailed.
@@ -3249,7 +3333,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAuthHintHa.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant: use a Home Assistant user. Most people create one just for MQTT under Settings › People › Users, and the Mosquitto add-on accepts it.'**
+  /// **'Home Assistant: use a Home Assistant user. Most people create one just for MQTT under Settings › People › Users, and the Mosquitto broker app accepts it.'**
   String get setupAuthHintHa;
 
   /// No description provided for @setupAuthHintPi.
@@ -3261,7 +3345,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupAuthHintSmlight.
   ///
   /// In en, this message translates to:
-  /// **'SMLIGHT: the login shown on the hub\'s web page under Settings › MQTT.'**
+  /// **'SMLIGHT: the login shown on the hub\'s web page under Settings › MQTT. Or turn on Allow Anonymous there and save: then no login is needed.'**
   String get setupAuthHintSmlight;
 
   /// No description provided for @setupVerifyingTitle.
@@ -3495,7 +3579,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupErrHaNoZ2mBody.
   ///
   /// In en, this message translates to:
-  /// **'You\'re signed in to Home Assistant, but Zigbee2MQTT isn\'t sending anything on its MQTT. If your Zigbee devices are in ZHA (Home Assistant\'s built-in Zigbee), ZigDash can\'t see them: it works with Zigbee2MQTT. If you use the Zigbee2MQTT add-on, open it in Home Assistant, check that it\'s started, then try again.'**
+  /// **'You\'re signed in to Home Assistant, but Zigbee2MQTT isn\'t sending anything on its MQTT. If your Zigbee devices are in ZHA (Home Assistant\'s built-in Zigbee), ZigDash can\'t see them: it works with Zigbee2MQTT. If you use the Zigbee2MQTT app, open it under Settings › Apps, check that it\'s started, then try again.'**
   String get setupErrHaNoZ2mBody;
 
   /// No description provided for @setupErrHaNoZ2mAction.
@@ -3603,7 +3687,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupErrLoginNoAnswerBody.
   ///
   /// In en, this message translates to:
-  /// **'Your broker was found, but it didn\'t answer the username and password in time. Home Assistant\'s Mosquitto add-on checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant.'**
+  /// **'Your broker was found, but it didn\'t answer the username and password in time. Home Assistant\'s Mosquitto broker app checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant. On an SMLIGHT hub, turn on Allow Anonymous under Settings › MQTT instead, and no login is needed.'**
   String get setupErrLoginNoAnswerBody;
 
   /// No description provided for @setupErrLoginNoAnswerAction.
@@ -3675,7 +3759,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupPlatformSmlight.
   ///
   /// In en, this message translates to:
-  /// **'SMLIGHT hub'**
+  /// **'SMHUB'**
   String get setupPlatformSmlight;
 
   /// No description provided for @setupPlatformPi.
@@ -3717,7 +3801,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupScanHintSmlight.
   ///
   /// In en, this message translates to:
-  /// **'Looking for your SMLIGHT hub…'**
+  /// **'Looking for your SMHUB…'**
   String get setupScanHintSmlight;
 
   /// No description provided for @setupScanHintPi.
@@ -3759,7 +3843,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupNoBrokerHaBody.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant is at {host}, but nothing answers on MQTT port 1883. In Home Assistant, open Settings › Add-ons, install and start the Mosquitto broker add-on, then try again.'**
+  /// **'Home Assistant is at {host}, but nothing answers on MQTT port 1883. In Home Assistant, open Settings › Apps, install and start the Mosquitto broker app, then try again.'**
   String setupNoBrokerHaBody(String host);
 
   /// No description provided for @setupNoBrokerHaZha.
@@ -3768,10 +3852,16 @@ abstract class AppLocalizations {
   /// **'Using Home Assistant\'s own Zigbee (ZHA) instead of Zigbee2MQTT? ZigDash works only with Zigbee2MQTT, so it can\'t see ZHA devices. The demo shows what you\'d get.'**
   String get setupNoBrokerHaZha;
 
+  /// Setup, Home Assistant found without a broker (3.2.6): Home Assistant Container has no Apps, so Mosquitto runs in its own container. Use Home Assistant's own name for Settings › Apps in this language.
+  ///
+  /// In en, this message translates to:
+  /// **'No Apps in your Home Assistant\'s Settings? Then it runs in Docker (Home Assistant Container), which has no apps: Mosquitto runs in its own container. Enter the address of the machine that runs it below.'**
+  String get setupNoBrokerHaDocker;
+
   /// No description provided for @setupVpnHint.
   ///
   /// In en, this message translates to:
-  /// **'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again.'**
+  /// **'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again. Or keep it on and allow local network (LAN) access in the VPN app\'s settings.'**
   String get setupVpnHint;
 
   /// No description provided for @setupNoBrokerZ2mTitle.
@@ -3882,6 +3972,18 @@ abstract class AppLocalizations {
   /// **'What is your SMLIGHT hub\'s address?'**
   String get setupAddressQuestionSmlight;
 
+  /// Setup, SMLIGHT address step (3.2.6): where an SMHUB shows its IP. Dashboard, Network and IPv4 are the hub's own English labels; keep them in English.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your hub\'s web page: smhub.local, or smhub.local:3000 on early hubs. On the Dashboard, the Network box shows the address next to IPv4. Type it here. If the page doesn\'t open, your router\'s app lists the hub as SMHUB, with its IP.'**
+  String get setupAddressWhereSmlight;
+
+  /// Setup, SMLIGHT address step (3.2.6): SLZB models run no broker (SLZB-OS manual).
+  ///
+  /// In en, this message translates to:
+  /// **'An SLZB-06, MR or UltimaX is only the Zigbee radio and has no broker. Type the address of the computer that runs Zigbee2MQTT and Mosquitto instead.'**
+  String get setupAddressSlzbSmlight;
+
   /// No description provided for @setupAddressQuestionPi.
   ///
   /// In en, this message translates to:
@@ -3969,7 +4071,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupChoiceHaNote.
   ///
   /// In en, this message translates to:
-  /// **'ZigDash connects to Home Assistant\'s MQTT broker, the Mosquitto broker add-on under Settings › Add-ons, and Zigbee2MQTT has to use it too. If homeassistant.local isn\'t found, enter Home Assistant\'s IP address below. It\'s under Settings › System › Network.'**
+  /// **'ZigDash connects to Home Assistant\'s MQTT broker, the Mosquitto broker app under Settings › Apps, and Zigbee2MQTT has to use it too. If homeassistant.local isn\'t found, enter Home Assistant\'s IP address below. It\'s under Settings › System › Network.'**
   String get setupChoiceHaNote;
 
   /// No description provided for @setupChoiceOther.
@@ -5133,7 +5235,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipBrokerRunningBody.
   ///
   /// In en, this message translates to:
-  /// **'Home Assistant: the Mosquitto add-on is started. Raspberry Pi: Mosquitto is running. SMLIGHT: Settings › MQTT is on.'**
+  /// **'Home Assistant: the Mosquitto broker app is started. Raspberry Pi: Mosquitto is running. SMLIGHT: Settings › MQTT is on.'**
   String get tipBrokerRunningBody;
 
   /// No description provided for @tipBrokerAcceptsTitle.
@@ -5217,7 +5319,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipStartBrokerBody.
   ///
   /// In en, this message translates to:
-  /// **'Start Mosquitto or the broker add-on, then try again.'**
+  /// **'Start Mosquitto or the Mosquitto broker app, then try again.'**
   String get tipStartBrokerBody;
 
   /// No description provided for @tipMosquitto2Title.
@@ -5241,7 +5343,7 @@ abstract class AppLocalizations {
   /// No description provided for @tipMqttLoginBody.
   ///
   /// In en, this message translates to:
-  /// **'Your hub\'s web page password is usually not the MQTT one. Home Assistant: use a Home Assistant user, or the login set in the Mosquitto add-on.'**
+  /// **'Your hub\'s web page password is usually not the MQTT one. Home Assistant: use a Home Assistant user, or the login set in the Mosquitto broker app.'**
   String get tipMqttLoginBody;
 
   /// No description provided for @tipSpacesTitle.
@@ -8303,6 +8405,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An MQTT broker answers here, but Zigbee2MQTT isn\'t sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant\'s ZHA, ZigDash can\'t see them: it works with Zigbee2MQTT.'**
   String get guidedNoZ2mBody;
+
+  /// Devices tab: Zigbee2MQTT found under another base topic (3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT is on this broker with the base topic “{found}”, but this Home looks for “{current}”.'**
+  String devicesOtherBaseBody(String found, String current);
+
+  /// Devices tab: button that switches the Home to the base topic found (3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Use “{found}”'**
+  String devicesUseBase(String found);
+
+  /// Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'Change connection'**
+  String get devicesChangeConnection;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of ZigDash is ready'**
+  String get updateAvailableTitle;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'It downloads while you keep using ZigDash.'**
+  String get updateAvailableBody;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateAvailableButton;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading the update…'**
+  String get updateDownloading;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Update downloaded'**
+  String get updateReadyTitle;
+
+  /// Dashboard: Play in-app update banner (3.2.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Restart to finish'**
+  String get updateReadyButton;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Write to NFC tag'**
+  String get nfcWriteTag;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Hold a tag to your phone'**
+  String get nfcHoldTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Hold a blank NFC sticker to the back of your phone. Tapping it later runs {name}.'**
+  String nfcHoldBody(String name);
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Tag ready'**
+  String get nfcWrittenTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your phone on this tag to run {name}. It works with ZigDash closed.'**
+  String nfcWrittenBody(String name);
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t write the tag'**
+  String get nfcFailedTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This tag is locked and can\'t be changed. Try another one.'**
+  String get nfcReadonlyBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This tag is too small. Use an NTAG213 sticker or larger.'**
+  String get nfcTooSmallBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the tag still against the back of the phone and try again.'**
+  String get nfcFailedBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'NFC is off'**
+  String get nfcOffTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on NFC in Android\'s settings, then try again.'**
+  String get nfcOffBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'No NFC on this phone'**
+  String get nfcNoneTitle;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t read or write NFC tags.'**
+  String get nfcNoneBody;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Write another tag'**
+  String get nfcWriteAnother;
+
+  /// NFC tags (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This kind of tag can\'t be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.'**
+  String get nfcUnsupportedBody;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'NFC tags'**
+  String get nfcTagsTitle;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Tags that run a scene or switch a device'**
+  String get nfcTagsSubtitle;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'No tags yet. Long-press a scene, light, plug or shutter tile and choose Write to NFC tag.'**
+  String get nfcTagsEmpty;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Runs the scene'**
+  String get nfcTagRunsScene;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Switches on and off'**
+  String get nfcTagSwitches;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'written {when}'**
+  String nfcTagWritten(String when);
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'last tapped {when}'**
+  String nfcTagLastTap(String when);
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'not tapped yet'**
+  String get nfcTagNeverTapped;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get nfcTagOffLabel;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Rewrite'**
+  String get nfcTagRewrite;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from list'**
+  String get nfcTagForget;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'This tag is turned off in ZigDash'**
+  String get nfcTagOffToast;
+
+  /// NFC tags list (3.3).
+  ///
+  /// In en, this message translates to:
+  /// **'A tag you turn off does nothing on this phone. Tags written before this list aren\'t shown: rewrite them once.'**
+  String get nfcTagsNote;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash tag'**
+  String get nfcPopupHeader;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Running…'**
+  String get nfcPopupRunning;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching…'**
+  String get nfcPopupSwitching;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get nfcPopupDone;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Closes in 2 seconds'**
+  String get nfcPopupClosing;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t reach the home right now. Check the Wi-Fi, or turn on remote control.'**
+  String get nfcPopupUnreachable;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was switched. Turn it back on in the Home\'s settings, under NFC tags.'**
+  String get nfcPopupOffBody;
+
+  /// NFC tag popup (3.3), shown by Android outside the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ZigDash'**
+  String get nfcPopupOpenApp;
 }
 
 class _AppLocalizationsDelegate

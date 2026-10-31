@@ -99,11 +99,17 @@ Widget _app({
 }
 
 /// The Devices tab for a home with no devices; [missing] says whether
-/// Zigbee2MQTT's device list never arrived.
-Widget _emptyApp({required bool missing}) => ProviderScope(
+/// Zigbee2MQTT's device list never arrived, [presence] whether Zigbee2MQTT
+/// is on the broker at all.
+Widget _emptyApp({
+  required bool missing,
+  Z2mPresence presence = (here: true, otherBases: const <String>[]),
+}) =>
+    ProviderScope(
       overrides: [
         connectionsStreamProvider.overrideWith((ref) => Stream.value(const [])),
         bridgeDevicesMissingProvider.overrideWith((ref, _) async => missing),
+        z2mPresenceProvider.overrideWith((ref, _) async => presence),
         deviceHealthProvider
             .overrideWith((ref, _) => Stream.value(const <DeviceHealth>[])),
         availabilityConfigProvider
@@ -136,6 +142,28 @@ void main() {
     expect(find.textContaining("hasn't sent its device list"), findsOneWidget);
     expect(find.text('Restart Zigbee2MQTT'), findsOneWidget);
     expect(find.text('No devices found.'), findsNothing);
+  });
+
+  testWidgets('no Zigbee2MQTT on the broker: says so, no restart offered',
+      (tester) async {
+    await tester.pumpWidget(_emptyApp(
+        missing: true, presence: (here: false, otherBases: const <String>[])));
+    await tester.pumpAndSettle();
+    expect(find.text('No Zigbee2MQTT here'), findsOneWidget);
+    expect(find.byKey(const Key('devices-edit-connection')), findsOneWidget);
+    expect(find.text('Restart Zigbee2MQTT'), findsNothing);
+  });
+
+  testWidgets('Zigbee2MQTT under another base topic: offers to use it',
+      (tester) async {
+    await tester.pumpWidget(_emptyApp(
+        missing: true, presence: (here: false, otherBases: const ['z2m'])));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('base topic “z2m”'), findsOneWidget);
+    expect(find.textContaining('looks for “zigbee2mqtt”'), findsOneWidget);
+    expect(find.text('Use “z2m”'), findsOneWidget);
+    expect(find.text('No Zigbee2MQTT here'), findsNothing);
+    expect(find.text('Restart Zigbee2MQTT'), findsNothing);
   });
 
   testWidgets('attention first, with filter counts; unassigned marked',

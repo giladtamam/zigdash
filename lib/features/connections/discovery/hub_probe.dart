@@ -10,7 +10,8 @@ enum HubKind {
   /// The Zigbee2MQTT frontend (port 8080).
   zigbee2mqtt,
 
-  /// An SMLIGHT hub's web UI (port 80; probed only when the user said so).
+  /// An SMLIGHT hub's web UI (port 80, or 3000 on early SMHUBs; probed
+  /// only when the user said so).
   smlight,
 }
 
@@ -20,6 +21,18 @@ const hubPorts = {
   HubKind.zigbee2mqtt: 8080,
   HubKind.smlight: 80,
 };
+
+/// Other web ports a hub kind may answer on (3.2.7): early SMHUB firmware
+/// served its web UI on 3000.
+const hubExtraPorts = {
+  HubKind.smlight: [3000],
+};
+
+/// Every web port [kind] may answer on, the usual one first.
+List<int> hubPortsOf(HubKind kind) => [
+  hubPorts[kind]!,
+  ...?hubExtraPorts[kind],
+];
 
 /// The hub kind a web page belongs to, from its text, or null when it is
 /// none we know. Case-insensitive; the page can be any size.
@@ -70,7 +83,8 @@ abstract class HubProber {
 /// page is one we know.
 Future<HubKind?> identifyHost(HubProber prober, String host) async {
   final kinds = await Future.wait([
-    for (final port in hubPorts.values) prober.probe(host, port),
+    for (final kind in HubKind.values)
+      for (final port in hubPortsOf(kind)) prober.probe(host, port),
   ]);
   for (final kind in const [
     HubKind.homeAssistant,
@@ -78,6 +92,23 @@ Future<HubKind?> identifyHost(HubProber prober, String host) async {
     HubKind.zigbee2mqtt,
   ]) {
     if (kinds.contains(kind)) return kind;
+  }
+  return null;
+}
+
+/// The page on any of [ports] of [host], all probed at once, with the port
+/// it answered on: the first known page in [ports] order, or null.
+Future<({HubKind kind, int port})?> probeHubPorts(
+  HubProber prober,
+  String host,
+  List<int> ports,
+) async {
+  final kinds = await Future.wait([
+    for (final port in ports) prober.probe(host, port),
+  ]);
+  for (var i = 0; i < ports.length; i++) {
+    final kind = kinds[i];
+    if (kind != null) return (kind: kind, port: ports[i]);
   }
   return null;
 }

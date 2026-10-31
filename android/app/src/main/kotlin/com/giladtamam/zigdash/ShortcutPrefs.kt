@@ -211,6 +211,42 @@ object ShortcutPrefs {
         prefs(ctx).unregisterOnSharedPreferenceChangeListener(l)
 
     /** The app's word for [key], or the English fallback. */
+    /** Whether the NFC tag with this serial number is turned off (3.3). */
+    fun nfcTagOff(ctx: Context, serial: String): Boolean {
+        if (serial.isEmpty()) return false
+        val raw = prefs(ctx).getString("flutter.nfc.tags", null) ?: return false
+        return try {
+            val a = org.json.JSONArray(raw)
+            (0 until a.length()).any {
+                val o = a.getJSONObject(it)
+                o.optString("serial") == serial && o.optBoolean("off")
+            }
+        } catch (_: org.json.JSONException) {
+            false
+        }
+    }
+
+    /** A tag's name from the app's list of tags (3.3); empty when not listed. */
+    fun nfcTagLabel(ctx: Context, id: String): String {
+        if (id.isEmpty()) return ""
+        val raw = prefs(ctx).getString("flutter.nfc.tags", null) ?: return ""
+        return try {
+            val a = org.json.JSONArray(raw)
+            (0 until a.length()).map { a.getJSONObject(it) }
+                .firstOrNull { it.optString("serial") == id }?.optString("label").orEmpty()
+        } catch (_: org.json.JSONException) {
+            ""
+        }
+    }
+
+    /** When a tag was last tapped, for the app's list of tags (3.3). */
+    fun nfcTagTapped(ctx: Context, serial: String) {
+        if (serial.isEmpty()) return
+        prefs(ctx).edit()
+            .putString("flutter.nfc.tap.$serial", System.currentTimeMillis().toString())
+            .apply()
+    }
+
     fun word(ctx: Context, key: String, fallback: String): String =
         json(ctx, "shortcut.strings")?.optString(key)?.ifEmpty { null } ?: fallback
 }

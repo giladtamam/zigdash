@@ -1,0 +1,1 @@
+When setup finds nothing on your network, it now asks whether Zigbee2MQTT is already running. If it is, setup explains the usual reasons a phone can't see it (a guest Wi-Fi, or Mosquitto listening only on its own machine) and helps you check its address. If not yet, it shows what you need to get started and offers the demo. If you're not sure, it tells you how to check.

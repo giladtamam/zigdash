@@ -42,7 +42,7 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.1.7';
+const ENGINE_VERSION = '3.2.3';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
 const STATE_EVERY_MS = 30000;
@@ -452,15 +452,16 @@ const FLOWS = {
   },
   history: {
     heartbeat: "zigdash/history/bridge/state",
-    inputs: [{"topic":"zigdash/history/config","to":"ingest"},{"topic":"zigdash/history/+/+/+","to":"restore"},{"devices":true,"to":"record"}],
-    wires: {"ingest":[[]],"restore":[[]],"record":[[]],"tick":[["out"]],"heartbeat":[["out"]]},
+    inputs: [{"topic":"zigdash/history/config","to":"ingest"},{"topic":"zigdash/history/+/+/+","to":"restore"},{"topic":"zigdash/history/tally/+/+/+","to":"restoretally"},{"devices":true,"to":"record"},{"devices":true,"to":"tally"}],
+    wires: {"ingest":[[]],"restore":[[]],"record":[[]],"tally":[[]],"restoretally":[[]],"tick":[["out"]],"heartbeat":[["out"]]},
     httpTo: null,
     timers: [{"first":5000,"every":60000,"to":"tick"},{"first":1000,"every":30000,"to":"heartbeat"}],
     fns: {
     ingest: function (msg, flow, env, node, Buffer, crypto) {
       // Function node "ingest config". In: retained zigdash/history/config.
       // Keeps the config and an index from device state topic to the readings
-      // recorded from it. An empty payload stops recording; records already on
+      // recorded from it, and another to the tallies (3.3: on time and openings
+      // of lights, plugs, doors and motion sensors). An empty payload stops recording; records already on
       // the broker stay until they age out.
       const raw = msg.payload;
       const empty = raw === undefined || raw === null ||
@@ -469,6 +470,7 @@ const FLOWS = {
       if (empty) {
           flow.set('cfg', null);
           flow.set('index', {});
+          flow.set('tindex', {});
           return null;
       }
       const cfg = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString());
@@ -480,12 +482,24 @@ const FLOWS = {
           keys.add(key);
           (index[r.topic] = index[r.topic] || []).push({ key, path: r.path, unit: r.unit || '' });
       }
+      const tindex = {};
+      const tkeys = new Set();
+      for (const t of (cfg.tallies || []).slice(0, 50)) {
+          if (!t.topic || !t.ieee || !t.attr || !t.path || !['on', 'open', 'motion'].includes(t.kind)) continue;
+          const key = t.ieee + '/' + t.attr;
+          tkeys.add(key);
+          (tindex[t.topic] = tindex[t.topic] || []).push({ key, path: t.path, kind: t.kind });
+      }
       flow.set('cfg', cfg);
       flow.set('index', index);
+      flow.set('tindex', tindex);
       // Forget readings that are no longer recorded.
       const mem = flow.get('mem') || {};
       for (const k of Object.keys(mem)) if (!keys.has(k)) delete mem[k];
       flow.set('mem', mem);
+      const tmem = flow.get('tmem') || {};
+      for (const k of Object.keys(tmem)) if (!tkeys.has(k)) delete tmem[k];
+      flow.set('tmem', tmem);
       return null;
       
     },
@@ -564,10 +578,111 @@ const FLOWS = {
       return null;
       
     },
+    tally: function (msg, flow, env, node, Buffer, crypto) {
+      // Function node "tally" (3.3). In: <base>/# device state messages.
+      // For each configured light, plug, door or motion sensor, counts the times
+      // it turned on, opened or saw motion, per 15-minute slot of today, and
+      // credits on time to the slot when it turns off ("tick" credits devices
+      // still on every minute). Repeated reports of the same value count once.
+      // Publishing happens in "tick".
+      const tindex = flow.get('tindex') || {};
+      const tallies = tindex[msg.topic];
+      if (!tallies) return null;
+      let state = msg.payload;
+      if (Buffer.isBuffer(state)) state = state.toString();
+      if (typeof state === 'string') { try { state = JSON.parse(state); } catch (e) { return null; } }
+      if (!state || typeof state !== 'object') return null;
+      const cfg = flow.get('cfg') || {};
+      const tz = cfg.timeZone || 'UTC';
+      const now = new Date();
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+          .formatToParts(now).map(x => [x.type, x.value]));
+      const date = `${p.year}-${p.month}-${p.day}`;
+      const slot = Math.floor((Number(p.hour) * 60 + Number(p.minute)) / 15);
+      // Zigbee2MQTT: lights and plugs say "ON"/"OFF", contact true means closed,
+      // occupancy true means motion.
+      const active = (kind, v) => {
+          if (kind === 'on') return v === 'ON' || v === 'on' || v === true;
+          if (kind === 'open') return v === false;
+          return v === true;
+      };
+      const tmem = flow.get('tmem') || {};
+      for (const t of tallies) {
+          let v = state;
+          for (const seg of t.path.split('.')) v = v === null || v === undefined ? undefined : v[seg];
+          if (v === undefined || v === null) continue;
+          const on = active(t.kind, v);
+          let m = tmem[t.key];
+          if (!m || m.date !== date) {
+              // A new day before "tick" closed the old one: tick publishes it.
+              if (m && m.date !== date) {
+                  const done = flow.get('tdone') || [];
+                  done.push({ key: t.key, rec: m });
+                  flow.set('tdone', done);
+              }
+              m = { date, slots: {}, pub: -1, kind: t.kind, last: m ? m.last : null, since: m ? m.since : null };
+              tmem[t.key] = m;
+          }
+          m.kind = t.kind;
+          const s = m.slots[slot] || (m.slots[slot] = [0, 0]);
+          if (on && m.last !== true) {
+              // The first value after a start isn't a change unless it was off.
+              if (m.last === false) s[0] += 1;
+              m.since = now.getTime();
+          } else if (!on && m.last === true) {
+              if (m.since) s[1] += Math.max(0, now.getTime() - m.since) / 60000;
+              m.since = null;
+          }
+          m.last = on;
+      }
+      flow.set('tmem', tmem);
+      return null;
+      
+    },
+    restoretally: function (msg, flow, env, node, Buffer, crypto) {
+      // Function node "restore tallies" (3.3). In: retained
+      // zigdash/history/tally/+/+/+ (tally day records, read back on connect and
+      // echoed after each publish). Like "restore today": after a restart today's
+      // record is the only copy of today's counts, and of whether a device was
+      // still on. Slots already in memory win.
+      const parts = msg.topic.split('/'); // zigdash history tally <ieee> <attr> <date>
+      if (parts.length !== 6) return null;
+      const key = parts[3] + '/' + parts[4];
+      const date = parts[5];
+      const cfg = flow.get('cfg');
+      const tz = (cfg && cfg.timeZone) || 'UTC';
+      const now = new Date();
+      const today = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+      if (date !== today) return null;
+      const raw = msg.payload;
+      if (raw === undefined || raw === null || raw === '' || (Buffer.isBuffer(raw) && raw.length === 0)) return null;
+      let rec;
+      try { rec = (typeof raw === 'object' && !Buffer.isBuffer(raw)) ? raw : JSON.parse(raw.toString()); } catch (e) { return null; }
+      const tmem = flow.get('tmem') || {};
+      let m = tmem[key];
+      if (!m || m.date !== date) {
+          m = { date, slots: {}, pub: -1, kind: rec.kind, last: null, since: null };
+          tmem[key] = m;
+      }
+      for (const b of rec.b || []) {
+          const [slot, n, minutes] = b;
+          if (m.slots[slot]) continue;
+          m.slots[slot] = [n, minutes];
+      }
+      // Still on when the record was written: keep crediting from then.
+      if (m.last === null && typeof rec.last === 'boolean') {
+          m.last = rec.last;
+          m.since = rec.last && typeof rec.since === 'number' ? rec.since : null;
+      }
+      flow.set('tmem', tmem);
+      return null;
+      
+    },
     tick: function (msg, flow, env, node, Buffer, crypto) {
       // Function node "tick", every minute. Publishes each reading's day record
       // when a 15-minute slot closes, publishes yesterday's final record after
-      // midnight, and on a new day clears records older than keepDays.
+      // midnight, and on a new day clears records older than keepDays. The same
+      // for tallies (3.3), after crediting this minute to devices still on.
       const cfg = flow.get('cfg');
       if (!cfg) return null;
       const tz = cfg.timeZone || 'UTC';
@@ -603,6 +718,43 @@ const FLOWS = {
           }
       }
       flow.set('mem', mem);
+      // Tallies: [slot, times turned on or opened, minutes on].
+      const tally = (key, m, upTo) => {
+          const b = Object.keys(m.slots).map(Number).filter(s => s < upTo).sort((a, c) => a - c)
+              .map(s => [s, m.slots[s][0], Math.round(m.slots[s][1] * 10) / 10]);
+          return { topic: `zigdash/history/tally/${key}/${m.date}`, retain: true,
+              payload: JSON.stringify({ v: 1, kind: m.kind, b, last: m.last, since: m.since }) };
+      };
+      for (const d of flow.get('tdone') || []) out.push(tally(d.key, d.rec, 96));
+      flow.set('tdone', []);
+      const tmem = flow.get('tmem') || {};
+      const nowMs = now.getTime();
+      for (const key of Object.keys(tmem)) {
+          let m = tmem[key];
+          if (m.date !== date) {
+              if (m.last === true && m.since) {
+                  // Still on at midnight: the rest of the old day goes to its last slot.
+                  const s = m.slots[95] || (m.slots[95] = [0, 0]);
+                  s[1] += Math.max(0, Math.min(nowMs - m.since, 15 * 60000)) / 60000;
+                  m.since = nowMs;
+              }
+              out.push(tally(key, m, 96));
+              m = tmem[key] = { date, slots: {}, pub: -1, kind: m.kind, last: m.last, since: m.since };
+          }
+          if (m.last === true && m.since) {
+              // The minute just past belongs to the slot it started in.
+              const from = fmt(new Date(m.since));
+              const at = from.date === date ? from.slot : slot;
+              const s = m.slots[at] || (m.slots[at] = [0, 0]);
+              s[1] += Math.max(0, nowMs - m.since) / 60000;
+              m.since = nowMs;
+          }
+          if (m.pub !== slot && Object.keys(m.slots).some(s => Number(s) < slot)) {
+              out.push(tally(key, m, slot));
+              m.pub = slot;
+          }
+      }
+      flow.set('tmem', tmem);
       // A new day (or the first tick after a start): clear old records. A week
       // of dates beyond the window, so a recorder that was off for days still
       // cleans up.
@@ -614,6 +766,7 @@ const FLOWS = {
           for (let back = keep; back < keep + 7; back++) {
               const old = fmt(new Date(now.getTime() - back * 86400000)).date;
               for (const key of keys) out.push({ topic: `zigdash/history/${key}/${old}`, retain: true, payload: '' });
+              for (const key of Object.keys(tmem)) out.push({ topic: `zigdash/history/tally/${key}/${old}`, retain: true, payload: '' });
           }
       }
       return out.length ? [out] : null;

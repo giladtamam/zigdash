@@ -117,6 +117,17 @@ class SetupScreen extends ConsumerWidget {
           ),
         );
 
+    // 3.2.8: whether Zigbee2MQTT runs yet, counted when picked.
+    void running(Z2mRunning answer) => ref
+        .read(analyticsProvider)
+        .track(
+          SetupStep(
+            SetupStepKind.z2mRunning,
+            choice: answer,
+            platform: coordinator.platform,
+          ),
+        );
+
     Future<void> tryDemo({SetupStepKind kind = SetupStepKind.demo}) async {
       ref.read(analyticsProvider).track(SetupStep(kind));
       final id = await ref.read(firstRunProvider).startDemo();
@@ -203,6 +214,7 @@ class SetupScreen extends ConsumerWidget {
               onPlatform: choosePlatform,
               onCheckAddress: coordinator.checkAddress,
               onChoice: emptyChoice,
+              onRunning: running,
               onManual: manual,
               onManualTo: manualTo,
               onManualPort: manualPort,
@@ -427,6 +439,86 @@ class _WelcomeState extends ConsumerState<_Welcome> {
     );
   }
 
+  /// 3.2.7: SMLIGHT was 0 of 20 setups (Oct 19-30) and no scan saw an
+  /// SMLIGHT page: most were SLZB adapters, which only carry the radio, so
+  /// Zigbee2MQTT runs on another machine. Only an SMHUB runs it itself.
+  Future<void> _smlight() async {
+    final l10n = context.l10n;
+    final device = await showModalBottomSheet<SmlightDevice>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              child: Text(l10n.setupAskSmlightWhich, style: Theme.of(context).textTheme.titleMedium),
+            ),
+            ListTile(
+              key: const Key('smlight-smhub'),
+              leading: const Icon(Icons.router_outlined),
+              title: Text(l10n.setupAskSmhub),
+              subtitle: Text(l10n.setupAskSmhubSub),
+              onTap: () => Navigator.pop(context, SmlightDevice.smhub),
+            ),
+            ListTile(
+              key: const Key('smlight-slzb'),
+              leading: const Icon(Icons.settings_input_antenna),
+              title: Text(l10n.setupAskSlzb),
+              subtitle: Text(l10n.setupAskSlzbSub),
+              onTap: () => Navigator.pop(context, SmlightDevice.slzb),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+    if (device == null || !mounted) return;
+    ref.read(analyticsProvider).track(SetupStep(SetupStepKind.smlightWhich, choice: device));
+    if (device == SmlightDevice.smhub) {
+      widget.onPlatform(SetupPlatform.smlight);
+      widget.onFind();
+      return;
+    }
+    final where = await showModalBottomSheet<SetupPlatform>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              child: Text(l10n.setupSlzbWhere, style: Theme.of(context).textTheme.titleMedium),
+            ),
+            ListTile(
+              key: const Key('slzb-ha'),
+              leading: const Icon(Icons.home_outlined),
+              title: Text(l10n.setupAskHa),
+              subtitle: Text(l10n.setupAskHaSub),
+              onTap: () => Navigator.pop(context, SetupPlatform.homeAssistant),
+            ),
+            ListTile(
+              key: const Key('slzb-z2m'),
+              leading: const Icon(Icons.memory),
+              title: Text(l10n.setupAskZ2m),
+              subtitle: Text(l10n.setupAskZ2mSub),
+              onTap: () => Navigator.pop(context, SetupPlatform.piOrDocker),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+    if (where == null || !mounted) return;
+    if (where == SetupPlatform.homeAssistant) return _homeAssistant();
+    widget.onPlatform(where);
+    widget.onFind();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -467,7 +559,7 @@ class _WelcomeState extends ConsumerState<_Welcome> {
             key: const Key('ask-z2m')),
         answer(Icons.home_outlined, l10n.setupAskHa, l10n.setupAskHaSub, () => _then(_homeAssistant),
             key: const Key('ask-ha')),
-        answer(Icons.router_outlined, l10n.setupAskSmlight, l10n.setupAskSmlightSub, () => find(SetupPlatform.smlight),
+        answer(Icons.router_outlined, l10n.setupAskSmlight, l10n.setupAskSmlightSub, () => _then(_smlight),
             key: const Key('ask-smlight')),
         // Not sure: the plain scan, as before 3.2 (23 "not sure" answers
         // in 17 days).
@@ -732,6 +824,7 @@ class _ScanEmpty extends StatelessWidget {
     required this.onManual,
     required this.onCheckAddress,
     required this.onChoice,
+    required this.onRunning,
     required this.onManualTo,
     required this.onManualPort,
     required this.onDemo,
@@ -748,6 +841,9 @@ class _ScanEmpty extends StatelessWidget {
   final ValueChanged<SetupPlatform?> onPlatform;
   final ValueChanged<String> onCheckAddress;
   final ValueChanged<ScanEmptyChoice> onChoice;
+
+  /// 3.2.8: the answer to "Is Zigbee2MQTT already running?".
+  final ValueChanged<Z2mRunning> onRunning;
   final VoidCallback onManual;
   final ValueChanged<HubFound> onManualTo;
 
@@ -825,6 +921,19 @@ class _ScanEmpty extends StatelessWidget {
           const SizedBox(height: 12),
           _VpnHint(text: l10n.setupIsolatedHint),
         ],
+        // 3.2.8: 31 of 34 people with an empty scan (Oct 27-31) had said
+        // what runs their Zigbee, so that was known; whether it was set up
+        // yet was not. Home Assistant and ZHA have their own ways on.
+        if (hub == null &&
+            platform != SetupPlatform.homeAssistant &&
+            platform != SetupPlatform.zha) ...[
+          const SizedBox(height: 16),
+          _RunningQuestion(
+            key: const Key('setup-running'),
+            onAnswer: onRunning,
+            onDemo: onDemo,
+          ),
+        ],
         // 3.2: the page people pair devices on comes before any broker
         // wording; the three chips (18 "no hub" taps in 128 empty results)
         // and the platform question are gone: the welcome asks it first.
@@ -851,6 +960,19 @@ class _ScanEmpty extends StatelessWidget {
         if (haHub) ...[
           const SizedBox(height: 12),
           Text(l10n.setupNoBrokerHaZha, style: theme.textTheme.bodyMedium),
+          // 3.2.6: Home Assistant Container has no Apps, so "install the
+          // Mosquitto broker app" cannot be done; its broker is a container
+          // on whatever machine the user put it.
+          const SizedBox(height: 12),
+          Text(l10n.setupNoBrokerHaDocker, style: theme.textTheme.bodyMedium),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              key: const Key('setup-ha-docker-manual'),
+              onPressed: onManual,
+              child: Text(l10n.setupManualEntryAdvanced),
+            ),
+          ),
         ],
         if (state.z2m case final z?) ...[
           const SizedBox(height: 12),
@@ -947,6 +1069,108 @@ class _ScanEmpty extends StatelessWidget {
           TextButton(onPressed: onManual, child: Text(l10n.setupManualEntryAdvanced)),
           TextButton(onPressed: onDemo, child: Text(l10n.onboardingDemo)),
         ],
+      ],
+    );
+  }
+}
+
+/// "Is Zigbee2MQTT already running?" on an empty result with no hub found
+/// (3.2.8). Each answer opens a note: yes says why a running one goes
+/// unseen, not yet points to what to get and the demo, not sure says how
+/// to tell.
+class _RunningQuestion extends StatefulWidget {
+  const _RunningQuestion({
+    super.key,
+    required this.onAnswer,
+    required this.onDemo,
+  });
+  final ValueChanged<Z2mRunning> onAnswer;
+  final VoidCallback onDemo;
+
+  @override
+  State<_RunningQuestion> createState() => _RunningQuestionState();
+}
+
+class _RunningQuestionState extends State<_RunningQuestion> {
+  Z2mRunning? _answer;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final labels = {
+      Z2mRunning.yes: l10n.setupRunningYes,
+      Z2mRunning.notYet: l10n.setupRunningNotYet,
+      Z2mRunning.notSure: l10n.setupRunningNotSure,
+    };
+    final note = switch (_answer) {
+      null => null,
+      Z2mRunning.yes => l10n.setupRunningYesNote,
+      Z2mRunning.notYet => l10n.setupRunningNotYetNote,
+      Z2mRunning.notSure => l10n.setupRunningNotSureNote(
+        l10n.setupZ2mPageEntry,
+      ),
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.setupRunningAsk,
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: [
+            for (final a in Z2mRunning.values)
+              ChoiceChip(
+                key: Key('setup-running-${a.name}'),
+                label: Text(labels[a]!),
+                selected: _answer == a,
+                onSelected: (on) {
+                  if (on && _answer != a) widget.onAnswer(a);
+                  setState(() => _answer = on ? a : null);
+                },
+              ),
+          ],
+        ),
+        if (note != null)
+          Card.outlined(
+            key: const Key('setup-running-note'),
+            margin: const EdgeInsets.only(top: 12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(note),
+                  if (_answer == Z2mRunning.notYet) ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        FilledButton.tonalIcon(
+                          onPressed: () async {
+                            try {
+                              await openSetupLink(hubsPageUrl);
+                            } catch (_) {}
+                          },
+                          icon: const Icon(Icons.open_in_new),
+                          label: Text(l10n.setupRunningWhatToGet),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: widget.onDemo,
+                          icon: const Icon(Icons.play_circle_outline),
+                          label: Text(l10n.onboardingDemo),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -1327,6 +1551,13 @@ class _AddressFieldState extends State<_AddressField> {
       children: [
         Text(question, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
+        // 3.2.6: SMLIGHT users who reach this field leave without typing
+        // (a 2026-10-29 user scanned three times, then went to manual
+        // entry). Their hub's Dashboard shows the address; say where.
+        if (widget.platform == SetupPlatform.smlight) ...[
+          const _SmhubAddressHint(),
+          const SizedBox(height: 12),
+        ],
         TextField(
           controller: _controller,
           enabled: !checking,
@@ -1358,6 +1589,82 @@ class _AddressFieldState extends State<_AddressField> {
                   )
                 : const Icon(Icons.travel_explore),
             label: Text(l10n.setupAddressCheck),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Where an SMHUB shows its address (3.2.6): a sketch of the Network box on
+/// its Dashboard, then a line for SLZB owners, whose radio has no broker.
+/// The sketch keeps the hub's own English labels.
+class _SmhubAddressHint extends StatelessWidget {
+  const _SmhubAddressHint();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final mono = theme.textTheme.bodyMedium?.copyWith(
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    return Column(
+      key: const Key('setup-smhub-address-hint'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.setupAddressWhereSmlight, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 8),
+        ExcludeSemantics(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              border: Border.all(color: scheme.outlineVariant),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.lan_outlined, size: 18, color: scheme.primary),
+                    const SizedBox(width: 8),
+                    Text('Network', style: theme.textTheme.titleSmall),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    SizedBox(width: 48, child: Text('IPv4', style: mono)),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: scheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '192.168.1.20',
+                        style: mono?.copyWith(
+                          color: scheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l10n.setupAddressSlzbSmlight,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: scheme.onSurfaceVariant,
           ),
         ),
       ],

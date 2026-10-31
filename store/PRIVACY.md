@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.2 is published (replaces the policy published with ZigDash 3.1.12)
+**Effective date:** the day ZigDash 3.2.3 is published (replaces the policy published with ZigDash 3.2)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -220,6 +220,12 @@ value names and units) and your phone's time zone. ZigDash Engine records those
 values every 15 minutes as retained messages on your broker and deletes them
 after 30 days. Nothing of it leaves your network: no copy is sent to the
 developer or anyone else.
+
+From 3.2.3, the list also names the lights, plugs, doors and motion sensors on
+your dashboards, and ZigDash Engine counts, for each 15 minutes, how many times
+each one turned on, opened or saw motion, and for how many minutes it stayed
+on. It keeps those counts the same way: as retained messages on your own
+broker, deleted after 30 days, never sent anywhere else.
 
 From 2.9.1, if your hub can't record, you can let ZigDash record on one phone or
 tablet you choose (Record on this device). While ZigDash is open there, it
