@@ -5017,9 +5017,51 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Ein Backup direkt aus ZigDash wiederherzustellen kommt in einer späteren Version. Bis dahin gibt dir Kopie speichern das eigene Backup-Zip von Zigbee2MQTT: Seine Dateien gehören zurück in den Datenordner von Zigbee2MQTT.';
+      'Wiederherstellen spielt ein Backup zurück auf den Hub und startet Zigbee2MQTT neu. Kopie speichern gibt dir das eigene Backup-Zip von Zigbee2MQTT, um es woanders aufzubewahren.';
 
   @override
   String get hubBackupPrivate =>
       'Ein Backup enthält den Schlüssel deines Zigbee-Netzwerks. Bewahre gespeicherte Kopien privat auf.';
+
+  @override
+  String get hubBackupRestore => 'Wiederherstellen';
+
+  @override
+  String get hubBackupRestoreTitle => 'Dieses Backup wiederherstellen?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Einstellungen, Zigbee-Netzwerk und Geräteliste von Zigbee2MQTT gehen zurück auf den Stand vom $when. Zigbee2MQTT startet neu, das dauert etwa eine Minute. Geräte, die nach diesem Backup gekoppelt wurden, müssen neu gekoppelt werden.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'Um das Backup zu schreiben, fügt ZigDash Zigbee2MQTT eine kleine, einmalige Erweiterung hinzu. Sind Erweiterungen aus, schaltet es sie zuerst ein, was Zigbee2MQTT ein weiteres Mal neu startet.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Erweiterungen werden erlaubt und Zigbee2MQTT neu gestartet…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Backup wird an den Hub gesendet…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT startet mit dem Backup neu…';
+
+  @override
+  String get hubBackupRestored =>
+      'Wiederhergestellt. Zigbee2MQTT läuft mit dem Backup.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Die Wiederherstellung ist nicht durchgelaufen, am Hub wurde nichts geändert. Versuche es erneut.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT hat die Wiederherstellungs-Erweiterung von ZigDash nicht angenommen. Am Hub wurde nichts geändert.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Das Backup wurde geschrieben, aber Zigbee2MQTT ist nicht wieder gestartet. Starte es am Hub neu und prüfe es dann hier.';
 }

@@ -4986,9 +4986,50 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Obnovení zálohy přímo ze ZigDash přijde v pozdější verzi. Do té doby vám Uložit kopii dá vlastní záložní zip Zigbee2MQTT: jeho soubory patří zpět do datové složky Zigbee2MQTT.';
+      'Obnovit vrátí zálohu do hubu a restartuje Zigbee2MQTT. Uložit kopii vám dá vlastní záložní zip Zigbee2MQTT k uložení jinde.';
 
   @override
   String get hubBackupPrivate =>
       'Záloha obsahuje klíč vaší sítě Zigbee. Uložené kopie uchovávejte v soukromí.';
+
+  @override
+  String get hubBackupRestore => 'Obnovit';
+
+  @override
+  String get hubBackupRestoreTitle => 'Obnovit tuto zálohu?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Nastavení Zigbee2MQTT, síť Zigbee a seznam zařízení se vrátí ke stavu $when. Zigbee2MQTT se restartuje, což trvá asi minutu. Zařízení spárovaná po této záloze bude nutné spárovat znovu.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'K zapsání zálohy přidá ZigDash do Zigbee2MQTT malé jednorázové rozšíření. Pokud jsou rozšíření vypnutá, nejdřív je zapne, což Zigbee2MQTT restartuje ještě jednou.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Povoluji rozšíření a restartuji Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Posílám zálohu do hubu…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT se znovu spouští ze zálohy…';
+
+  @override
+  String get hubBackupRestored => 'Obnoveno. Zigbee2MQTT běží ze zálohy.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Obnovení neproběhlo a na hubu se nic nezměnilo. Zkuste to znovu.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT nepřijal obnovovací rozšíření ZigDash. Na hubu se nic nezměnilo.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Záloha je zapsaná, ale Zigbee2MQTT se znovu nespustil. Restartujte ho na hubu a pak to zkontrolujte zde.';
 }

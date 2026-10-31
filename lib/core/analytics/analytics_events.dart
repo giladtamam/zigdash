@@ -829,9 +829,17 @@ class ProEvent extends AnalyticsEvent {
 }
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or
-/// by hand), Zigbee2MQTT refused or never answered, or a copy was saved.
-/// Never a size, a file name or anything inside the backup.
-enum HubBackupStep { made, failed, unsupported, savedCopy }
+/// by hand), Zigbee2MQTT refused or never answered, a copy was saved, or a
+/// backup was restored (or the restore stopped). Never a size, a file name
+/// or anything inside the backup.
+enum HubBackupStep {
+  made,
+  failed,
+  unsupported,
+  savedCopy,
+  restored,
+  restoreFailed,
+}
 
 class HubBackupEvent extends AnalyticsEvent {
   const HubBackupEvent(this.step, {this.auto});

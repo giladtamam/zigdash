@@ -4988,9 +4988,51 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Восстановление из ZigDash появится в следующей версии. А пока «Сохранить копию» даёт вам zip-архив резервной копии самого Zigbee2MQTT: его файлы возвращаются в папку данных Zigbee2MQTT.';
+      '«Восстановить» возвращает копию на хаб и перезапускает Zigbee2MQTT. «Сохранить копию» даёт вам zip-архив резервной копии самого Zigbee2MQTT для хранения в другом месте.';
 
   @override
   String get hubBackupPrivate =>
       'Копия содержит ключ вашей сети Zigbee. Храните сохранённые копии в тайне.';
+
+  @override
+  String get hubBackupRestore => 'Восстановить';
+
+  @override
+  String get hubBackupRestoreTitle => 'Восстановить эту копию?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Настройки Zigbee2MQTT, сеть Zigbee и список устройств вернутся к состоянию на $when. Zigbee2MQTT перезапустится, это займёт около минуты. Устройства, сопряжённые после этой копии, придётся сопрячь заново.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'Чтобы записать копию, ZigDash добавляет в Zigbee2MQTT небольшое одноразовое расширение. Если расширения выключены, он сначала включит их, и Zigbee2MQTT перезапустится ещё раз.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Включаю расширения и перезапускаю Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Отправляю копию на хаб…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT снова запускается из копии…';
+
+  @override
+  String get hubBackupRestored =>
+      'Восстановлено. Zigbee2MQTT работает из копии.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Восстановление не прошло, на хабе ничего не изменилось. Попробуйте снова.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT не принял расширение восстановления ZigDash. На хабе ничего не изменилось.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Копия записана, но Zigbee2MQTT не запустился снова. Перезапустите его на хабе и проверьте здесь.';
 }

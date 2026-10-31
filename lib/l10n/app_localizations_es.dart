@@ -5009,9 +5009,51 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Restaurar una copia desde ZigDash llegará en una versión posterior. Mientras tanto, Guardar una copia te da el zip de copia de Zigbee2MQTT: sus archivos vuelven a la carpeta de datos de Zigbee2MQTT.';
+      'Restaurar devuelve una copia al hub y reinicia Zigbee2MQTT. Guardar una copia te da el zip de copia de Zigbee2MQTT para guardarlo en otro sitio.';
 
   @override
   String get hubBackupPrivate =>
       'Una copia contiene la clave de tu red Zigbee. Guarda las copias en privado.';
+
+  @override
+  String get hubBackupRestore => 'Restaurar';
+
+  @override
+  String get hubBackupRestoreTitle => '¿Restaurar esta copia?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Los ajustes de Zigbee2MQTT, la red Zigbee y la lista de dispositivos vuelven al $when. Zigbee2MQTT se reinicia, lo que tarda alrededor de un minuto. Los dispositivos emparejados después de esta copia tendrán que emparejarse de nuevo.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'Para escribir la copia, ZigDash añade a Zigbee2MQTT una pequeña extensión de un solo uso. Si las extensiones están desactivadas, primero las activa, lo que reinicia Zigbee2MQTT una vez más.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Permitiendo extensiones y reiniciando Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Enviando la copia al hub…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT está arrancando de nuevo con la copia…';
+
+  @override
+  String get hubBackupRestored =>
+      'Restaurado. Zigbee2MQTT funciona con la copia.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'La restauración no se completó y no se cambió nada en el hub. Vuelve a intentarlo.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT no aceptó la extensión de restauración de ZigDash. No se cambió nada en el hub.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'La copia se escribió, pero Zigbee2MQTT no ha vuelto a arrancar. Reinícialo en el hub y compruébalo aquí.';
 }

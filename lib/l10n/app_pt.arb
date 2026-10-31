@@ -1487,6 +1487,17 @@
   "hubBackupSaveCopy": "Guardar uma cópia",
   "hubBackupSaved": "Cópia guardada.",
   "hubBackupUnreadable": "Esta cópia não pode ser aberta neste telefone.",
-  "hubBackupRestoreNote": "Restaurar uma cópia a partir do ZigDash chega numa versão posterior. Até lá, Guardar uma cópia dá-lhe o zip de cópia do próprio Zigbee2MQTT: os seus ficheiros voltam para a pasta de dados do Zigbee2MQTT.",
-  "hubBackupPrivate": "Uma cópia contém a chave da sua rede Zigbee. Guarde as cópias em privado."
+  "hubBackupRestoreNote": "Restaurar devolve uma cópia ao hub e reinicia o Zigbee2MQTT. Guardar uma cópia dá-lhe o zip de cópia do próprio Zigbee2MQTT para guardar noutro lado.",
+  "hubBackupPrivate": "Uma cópia contém a chave da sua rede Zigbee. Guarde as cópias em privado.",
+  "hubBackupRestore": "Restaurar",
+  "hubBackupRestoreTitle": "Restaurar esta cópia?",
+  "hubBackupRestoreBody": "As definições do Zigbee2MQTT, a rede Zigbee e a lista de dispositivos voltam a {when}. O Zigbee2MQTT reinicia, o que demora cerca de um minuto. Os dispositivos emparelhados depois desta cópia terão de ser emparelhados de novo.",
+  "hubBackupRestoreExtensions": "Para escrever a cópia, o ZigDash adiciona ao Zigbee2MQTT uma pequena extensão de uso único. Se as extensões estiverem desligadas, liga-as primeiro, o que reinicia o Zigbee2MQTT mais uma vez.",
+  "hubBackupRestoreStageAllow": "A permitir extensões e a reiniciar o Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "A enviar a cópia para o hub…",
+  "hubBackupRestoreStageRestart": "O Zigbee2MQTT está a arrancar de novo com a cópia…",
+  "hubBackupRestored": "Restaurado. O Zigbee2MQTT está a funcionar com a cópia.",
+  "hubBackupRestoreNotWritten": "O restauro não foi concluído e nada foi alterado no hub. Tente de novo.",
+  "hubBackupRestoreRefused": "O Zigbee2MQTT não aceitou a extensão de restauro do ZigDash. Nada foi alterado no hub.",
+  "hubBackupRestoreNotBack": "A cópia foi escrita, mas o Zigbee2MQTT não voltou a arrancar. Reinicie-o no hub e depois verifique aqui."
 }

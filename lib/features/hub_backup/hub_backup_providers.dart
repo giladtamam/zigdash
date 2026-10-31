@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +19,7 @@ import '../../mqtt/mqtt_status.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
 import '../devices/devices_providers.dart' show homeBaseTopicProvider;
 import 'hub_backup.dart';
+import 'hub_restore.dart';
 
 const _keyName = 'hub_backup_key';
 
@@ -146,6 +148,58 @@ class HubBackupRunner {
 }
 
 final hubBackupRunnerProvider = Provider<HubBackupRunner>(HubBackupRunner.new);
+
+/// Why a restore could not start, before anything was sent.
+enum HubRestoreBlocked { offline, away, noBroker, unreadable }
+
+/// Restores one of a home's backups onto its hub (hub_restore.dart).
+class HubRestoreRunner {
+  HubRestoreRunner(this._ref);
+  final Ref _ref;
+
+  /// Null when it ran (see [outcome]), else why it could not start.
+  Future<(HubRestoreBlocked?, HubRestoreOutcome?)> run(
+    String connectionId,
+    HubBackupEntry entry, {
+    void Function(HubRestoreStage stage)? onStage,
+  }) async {
+    final home = await _ref.read(connectionRepoProvider).getById(connectionId);
+    if (transportOf(home?.transport) == ConnectionTransport.z2mPage) {
+      return (HubRestoreBlocked.noBroker, null);
+    }
+    final mgr = await _ref.read(mqttManagerProvider(connectionId).future);
+    if (mgr.status != MqttStatus.connected) {
+      return (HubRestoreBlocked.offline, null);
+    }
+    if (mgr.activeEndpoint == MqttEndpoint.relay) {
+      return (HubRestoreBlocked.away, null);
+    }
+    final store = await _ref.read(hubBackupStoreProvider.future);
+    final zip = await store.read(entry);
+    if (zip == null) return (HubRestoreBlocked.unreadable, null);
+    final base =
+        _ref.read(homeBaseTopicProvider(connectionId)) ?? 'zigbee2mqtt';
+    final source = await rootBundle.loadString(restoreAsset);
+    final outcome = await HubRestorer(
+      MqttHubLink(mgr),
+      base: base,
+    ).restore(zip, extensionSource: source, onStage: onStage);
+    _ref
+        .read(analyticsProvider)
+        .track(
+          HubBackupEvent(
+            outcome == HubRestoreOutcome.restored
+                ? HubBackupStep.restored
+                : HubBackupStep.restoreFailed,
+          ),
+        );
+    return (null, outcome);
+  }
+}
+
+final hubRestoreRunnerProvider = Provider<HubRestoreRunner>(
+  HubRestoreRunner.new,
+);
 
 /// Watched while a home is open (HomeShell): once it is connected on the
 /// home network and its newest backup is a day old, takes one quietly.

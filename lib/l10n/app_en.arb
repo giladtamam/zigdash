@@ -1767,6 +1767,18 @@
   "hubBackupSaveCopy": "Save a copy",
   "hubBackupSaved": "Copy saved.",
   "hubBackupUnreadable": "This backup can't be opened on this phone.",
-  "hubBackupRestoreNote": "Restoring a backup from ZigDash comes in a later version. Until then, Save a copy gives you Zigbee2MQTT's own backup zip: its files go back into Zigbee2MQTT's data folder.",
-  "hubBackupPrivate": "A backup holds your Zigbee network key. Keep saved copies private."
+  "hubBackupRestoreNote": "Restore puts a backup back on the hub and restarts Zigbee2MQTT. Save a copy gives you Zigbee2MQTT's own backup zip to keep somewhere else.",
+  "hubBackupPrivate": "A backup holds your Zigbee network key. Keep saved copies private.",
+  "hubBackupRestore": "Restore",
+  "hubBackupRestoreTitle": "Restore this backup?",
+  "hubBackupRestoreBody": "Zigbee2MQTT's settings, Zigbee network and device list go back to {when}. Zigbee2MQTT restarts, which takes about a minute. Devices paired after this backup will need pairing again.",
+  "@hubBackupRestoreBody": {"placeholders": {"when": {"type": "String"}}},
+  "hubBackupRestoreExtensions": "To write the backup, ZigDash adds a small one-time extension to Zigbee2MQTT. If extensions are off, it turns them on first, which restarts Zigbee2MQTT once more.",
+  "hubBackupRestoreStageAllow": "Allowing extensions and restarting Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Sending the backup to the hub…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT is starting again on the backup…",
+  "hubBackupRestored": "Restored. Zigbee2MQTT is running on the backup.",
+  "hubBackupRestoreNotWritten": "The restore didn't go through, and nothing was changed on the hub. Try again.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT didn't accept ZigDash's restore extension. Nothing was changed on the hub.",
+  "hubBackupRestoreNotBack": "The backup was written, but Zigbee2MQTT hasn't started again. Restart it on the hub, then check it here."
 }

@@ -1527,6 +1527,17 @@
   "hubBackupSaveCopy": "Spara en kopia",
   "hubBackupSaved": "Kopian sparad.",
   "hubBackupUnreadable": "Den här säkerhetskopian kan inte öppnas på den här telefonen.",
-  "hubBackupRestoreNote": "Att återställa en säkerhetskopia från ZigDash kommer i en senare version. Tills dess ger Spara en kopia dig Zigbee2MQTT:s egen backup-zip: filerna hör hemma i Zigbee2MQTT:s datamapp.",
-  "hubBackupPrivate": "En säkerhetskopia innehåller nyckeln till ditt Zigbee-nätverk. Håll sparade kopior privata."
+  "hubBackupRestoreNote": "Återställ lägger tillbaka en säkerhetskopia på hubben och startar om Zigbee2MQTT. Spara en kopia ger dig Zigbee2MQTT:s egen backup-zip att förvara någon annanstans.",
+  "hubBackupPrivate": "En säkerhetskopia innehåller nyckeln till ditt Zigbee-nätverk. Håll sparade kopior privata.",
+  "hubBackupRestore": "Återställ",
+  "hubBackupRestoreTitle": "Återställa den här säkerhetskopian?",
+  "hubBackupRestoreBody": "Zigbee2MQTT:s inställningar, Zigbee-nätverket och enhetslistan går tillbaka till {when}. Zigbee2MQTT startar om, vilket tar ungefär en minut. Enheter som parats efter den här säkerhetskopian måste paras igen.",
+  "hubBackupRestoreExtensions": "För att skriva säkerhetskopian lägger ZigDash till ett litet engångstillägg i Zigbee2MQTT. Om tillägg är avstängda slår den på dem först, vilket startar om Zigbee2MQTT en gång till.",
+  "hubBackupRestoreStageAllow": "Tillåter tillägg och startar om Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Skickar säkerhetskopian till hubben…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT startar igen från säkerhetskopian…",
+  "hubBackupRestored": "Återställt. Zigbee2MQTT körs från säkerhetskopian.",
+  "hubBackupRestoreNotWritten": "Återställningen gick inte igenom och inget ändrades på hubben. Försök igen.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT tog inte emot ZigDash återställningstillägg. Inget ändrades på hubben.",
+  "hubBackupRestoreNotBack": "Säkerhetskopian skrevs, men Zigbee2MQTT har inte startat igen. Starta om den på hubben och kontrollera här sedan."
 }

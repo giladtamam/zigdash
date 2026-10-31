@@ -1452,6 +1452,17 @@
   "hubBackupSaveCopy": "Enregistrer une copie",
   "hubBackupSaved": "Copie enregistrée.",
   "hubBackupUnreadable": "Cette sauvegarde ne peut pas être ouverte sur ce téléphone.",
-  "hubBackupRestoreNote": "La restauration depuis ZigDash arrive dans une prochaine version. En attendant, Enregistrer une copie vous donne le zip de sauvegarde de Zigbee2MQTT : ses fichiers retournent dans le dossier de données de Zigbee2MQTT.",
-  "hubBackupPrivate": "Une sauvegarde contient la clé de votre réseau Zigbee. Gardez les copies en privé."
+  "hubBackupRestoreNote": "Restaurer remet une sauvegarde sur le hub et redémarre Zigbee2MQTT. Enregistrer une copie vous donne le zip de sauvegarde de Zigbee2MQTT à garder ailleurs.",
+  "hubBackupPrivate": "Une sauvegarde contient la clé de votre réseau Zigbee. Gardez les copies en privé.",
+  "hubBackupRestore": "Restaurer",
+  "hubBackupRestoreTitle": "Restaurer cette sauvegarde ?",
+  "hubBackupRestoreBody": "Les réglages de Zigbee2MQTT, le réseau Zigbee et la liste des appareils reviennent au {when}. Zigbee2MQTT redémarre, ce qui prend environ une minute. Les appareils appairés après cette sauvegarde devront être appairés à nouveau.",
+  "hubBackupRestoreExtensions": "Pour écrire la sauvegarde, ZigDash ajoute à Zigbee2MQTT une petite extension à usage unique. Si les extensions sont désactivées, il les active d'abord, ce qui redémarre Zigbee2MQTT une fois de plus.",
+  "hubBackupRestoreStageAllow": "Autorisation des extensions et redémarrage de Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Envoi de la sauvegarde au hub…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT redémarre sur la sauvegarde…",
+  "hubBackupRestored": "Restauré. Zigbee2MQTT tourne sur la sauvegarde.",
+  "hubBackupRestoreNotWritten": "La restauration n'a pas abouti et rien n'a été modifié sur le hub. Réessayez.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT n'a pas accepté l'extension de restauration de ZigDash. Rien n'a été modifié sur le hub.",
+  "hubBackupRestoreNotBack": "La sauvegarde a été écrite, mais Zigbee2MQTT n'a pas redémarré. Redémarrez-le sur le hub, puis vérifiez ici."
 }

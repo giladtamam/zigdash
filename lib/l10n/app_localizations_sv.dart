@@ -4990,9 +4990,52 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Att återställa en säkerhetskopia från ZigDash kommer i en senare version. Tills dess ger Spara en kopia dig Zigbee2MQTT:s egen backup-zip: filerna hör hemma i Zigbee2MQTT:s datamapp.';
+      'Återställ lägger tillbaka en säkerhetskopia på hubben och startar om Zigbee2MQTT. Spara en kopia ger dig Zigbee2MQTT:s egen backup-zip att förvara någon annanstans.';
 
   @override
   String get hubBackupPrivate =>
       'En säkerhetskopia innehåller nyckeln till ditt Zigbee-nätverk. Håll sparade kopior privata.';
+
+  @override
+  String get hubBackupRestore => 'Återställ';
+
+  @override
+  String get hubBackupRestoreTitle => 'Återställa den här säkerhetskopian?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Zigbee2MQTT:s inställningar, Zigbee-nätverket och enhetslistan går tillbaka till $when. Zigbee2MQTT startar om, vilket tar ungefär en minut. Enheter som parats efter den här säkerhetskopian måste paras igen.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'För att skriva säkerhetskopian lägger ZigDash till ett litet engångstillägg i Zigbee2MQTT. Om tillägg är avstängda slår den på dem först, vilket startar om Zigbee2MQTT en gång till.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Tillåter tillägg och startar om Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend =>
+      'Skickar säkerhetskopian till hubben…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT startar igen från säkerhetskopian…';
+
+  @override
+  String get hubBackupRestored =>
+      'Återställt. Zigbee2MQTT körs från säkerhetskopian.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Återställningen gick inte igenom och inget ändrades på hubben. Försök igen.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT tog inte emot ZigDash återställningstillägg. Inget ändrades på hubben.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Säkerhetskopian skrevs, men Zigbee2MQTT har inte startat igen. Starta om den på hubben och kontrollera här sedan.';
 }

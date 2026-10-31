@@ -1522,6 +1522,17 @@
   "hubBackupSaveCopy": "Сохранить копию",
   "hubBackupSaved": "Копия сохранена.",
   "hubBackupUnreadable": "Эту копию нельзя открыть на этом телефоне.",
-  "hubBackupRestoreNote": "Восстановление из ZigDash появится в следующей версии. А пока «Сохранить копию» даёт вам zip-архив резервной копии самого Zigbee2MQTT: его файлы возвращаются в папку данных Zigbee2MQTT.",
-  "hubBackupPrivate": "Копия содержит ключ вашей сети Zigbee. Храните сохранённые копии в тайне."
+  "hubBackupRestoreNote": "«Восстановить» возвращает копию на хаб и перезапускает Zigbee2MQTT. «Сохранить копию» даёт вам zip-архив резервной копии самого Zigbee2MQTT для хранения в другом месте.",
+  "hubBackupPrivate": "Копия содержит ключ вашей сети Zigbee. Храните сохранённые копии в тайне.",
+  "hubBackupRestore": "Восстановить",
+  "hubBackupRestoreTitle": "Восстановить эту копию?",
+  "hubBackupRestoreBody": "Настройки Zigbee2MQTT, сеть Zigbee и список устройств вернутся к состоянию на {when}. Zigbee2MQTT перезапустится, это займёт около минуты. Устройства, сопряжённые после этой копии, придётся сопрячь заново.",
+  "hubBackupRestoreExtensions": "Чтобы записать копию, ZigDash добавляет в Zigbee2MQTT небольшое одноразовое расширение. Если расширения выключены, он сначала включит их, и Zigbee2MQTT перезапустится ещё раз.",
+  "hubBackupRestoreStageAllow": "Включаю расширения и перезапускаю Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Отправляю копию на хаб…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT снова запускается из копии…",
+  "hubBackupRestored": "Восстановлено. Zigbee2MQTT работает из копии.",
+  "hubBackupRestoreNotWritten": "Восстановление не прошло, на хабе ничего не изменилось. Попробуйте снова.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT не принял расширение восстановления ZigDash. На хабе ничего не изменилось.",
+  "hubBackupRestoreNotBack": "Копия записана, но Zigbee2MQTT не запустился снова. Перезапустите его на хабе и проверьте здесь."
 }

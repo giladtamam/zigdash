@@ -39,17 +39,43 @@ web page only (3.2 `z2mPage` homes) has no broker: both read as
   the same way as the JSON backup) on the Hub backup screen, Settings ›
   Home.
 
-## Restoring (second step, not in the first build)
+## Restoring
 
-Zigbee2MQTT has no restore request. A one-shot extension does it: the
-consent step (`enable_external_js` + restart, as for the Engine: a
-regenerated config has reset it), `extension/save` of a small restore
-script, the zip on a non-retained `zigdash/backup/restore`, the script
-writes the files and restarts Zigbee2MQTT, the app removes the script.
-To verify on the spare SMHUB before it ships: whether a graceful restart
-rewrites `database.db` over the restored one (if so, write and exit hard),
-and both cases: radio intact ("Adapter network matches config") and radio
-reset (restored from `coordinator_backup.json`).
+Zigbee2MQTT has no restore request, so restore is a one-shot extension,
+`hub/zigdash-restore.js`, installed only for it:
+
+1. Extensions allowed? If `advanced.enable_external_js` is false (fresh
+   2.11+ installs, and a regenerated config), the Engine's consent step
+   turns it on and restarts Zigbee2MQTT.
+2. `extension/save` of `zigdash-restore.js`.
+3. The zip on non-retained `zigdash/backup/restore` `{tx, zip}`. The
+   extension unzips it (stored and deflated entries), writes only names
+   inside the data folder (no `..`, no absolute paths, no `log/` or
+   `*.log`, never itself), keeps the files it replaces in
+   `zigdash-restore-previous/<stamp>/`, adds 100 000 to the coordinator
+   backup's network-key frame counter (a backup is up to a day old and
+   devices ignore a coordinator whose counter went backwards), answers
+   `{tx, status: 'writing'}` on `zigdash/backup/restore/result`, deletes
+   its own file and kills Zigbee2MQTT with SIGKILL 1.5 s later.
+4. A clean stop is avoided on purpose: Zigbee2MQTT's shutdown saves
+   `database.db`, `state.json` and `coordinator_backup.json` from memory and
+   the adapter, over the restored files. The service manager (OpenRC's
+   supervise-daemon on an SMHUB, Docker's restart policy, the add-on)
+   starts it again, as it does after `bridge/request/restart`.
+5. The app waits for `bridge/state` offline then online (3 minutes) and
+   says so; "written but not back" asks the user to restart it.
+
+On start, zigbee-herdsman compares the restored config with the adapter;
+when they differ (the hub formed a new network meanwhile) it leaves, finds
+the config matching the restored `coordinator_backup.json` (written by
+Zigbee2MQTT itself, so the byte order matches) and forms the network from
+the backup. Devices in the restored `database.db` are known again; devices
+paired after the backup are not and must pair again (an announce from a
+device missing from the database is ignored).
+
+Tested on the owner's only hub by restoring a backup taken minutes
+earlier (nothing changes if it works); the wiped-config case is not tested
+on hardware.
 
 ## Pro
 

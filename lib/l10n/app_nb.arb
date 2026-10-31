@@ -1527,6 +1527,17 @@
   "hubBackupSaveCopy": "Lagre en kopi",
   "hubBackupSaved": "Kopien er lagret.",
   "hubBackupUnreadable": "Denne sikkerhetskopien kan ikke åpnes på denne telefonen.",
-  "hubBackupRestoreNote": "Gjenoppretting fra ZigDash kommer i en senere versjon. Inntil da gir Lagre en kopi deg Zigbee2MQTTs egen backup-zip: filene hører hjemme i datamappen til Zigbee2MQTT.",
-  "hubBackupPrivate": "En sikkerhetskopi inneholder nøkkelen til Zigbee-nettverket ditt. Hold lagrede kopier private."
+  "hubBackupRestoreNote": "Gjenopprett legger en sikkerhetskopi tilbake på huben og starter Zigbee2MQTT på nytt. Lagre en kopi gir deg Zigbee2MQTTs egen backup-zip til å oppbevare et annet sted.",
+  "hubBackupPrivate": "En sikkerhetskopi inneholder nøkkelen til Zigbee-nettverket ditt. Hold lagrede kopier private.",
+  "hubBackupRestore": "Gjenopprett",
+  "hubBackupRestoreTitle": "Gjenopprette denne sikkerhetskopien?",
+  "hubBackupRestoreBody": "Innstillingene i Zigbee2MQTT, Zigbee-nettverket og enhetslisten går tilbake til {when}. Zigbee2MQTT starter på nytt, noe som tar omtrent et minutt. Enheter som ble paret etter denne sikkerhetskopien, må pares på nytt.",
+  "hubBackupRestoreExtensions": "For å skrive sikkerhetskopien legger ZigDash til en liten engangsutvidelse i Zigbee2MQTT. Er utvidelser slått av, slår den dem på først, noe som starter Zigbee2MQTT på nytt én gang til.",
+  "hubBackupRestoreStageAllow": "Tillater utvidelser og starter Zigbee2MQTT på nytt…",
+  "hubBackupRestoreStageSend": "Sender sikkerhetskopien til huben…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT starter igjen fra sikkerhetskopien…",
+  "hubBackupRestored": "Gjenopprettet. Zigbee2MQTT kjører fra sikkerhetskopien.",
+  "hubBackupRestoreNotWritten": "Gjenopprettingen gikk ikke gjennom, og ingenting ble endret på huben. Prøv igjen.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT godtok ikke gjenopprettingsutvidelsen fra ZigDash. Ingenting ble endret på huben.",
+  "hubBackupRestoreNotBack": "Sikkerhetskopien ble skrevet, men Zigbee2MQTT har ikke startet igjen. Start den på nytt på huben, og sjekk her etterpå."
 }

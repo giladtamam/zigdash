@@ -1522,6 +1522,17 @@
   "hubBackupSaveCopy": "Zapisz kopię",
   "hubBackupSaved": "Kopia zapisana.",
   "hubBackupUnreadable": "Tej kopii nie da się otworzyć w tym telefonie.",
-  "hubBackupRestoreNote": "Przywracanie kopii z ZigDash pojawi się w późniejszej wersji. Do tego czasu Zapisz kopię daje ci własny plik zip kopii Zigbee2MQTT: jego pliki wracają do folderu danych Zigbee2MQTT.",
-  "hubBackupPrivate": "Kopia zawiera klucz twojej sieci Zigbee. Trzymaj zapisane kopie w prywatności."
+  "hubBackupRestoreNote": "Przywróć wgrywa kopię z powrotem na hub i uruchamia ponownie Zigbee2MQTT. Zapisz kopię daje ci własny plik zip kopii Zigbee2MQTT do przechowania gdzie indziej.",
+  "hubBackupPrivate": "Kopia zawiera klucz twojej sieci Zigbee. Trzymaj zapisane kopie w prywatności.",
+  "hubBackupRestore": "Przywróć",
+  "hubBackupRestoreTitle": "Przywrócić tę kopię?",
+  "hubBackupRestoreBody": "Ustawienia Zigbee2MQTT, sieć Zigbee i lista urządzeń wrócą do stanu z {when}. Zigbee2MQTT uruchomi się ponownie, co trwa około minuty. Urządzenia sparowane po tej kopii trzeba będzie sparować ponownie.",
+  "hubBackupRestoreExtensions": "Aby zapisać kopię, ZigDash dodaje do Zigbee2MQTT małe jednorazowe rozszerzenie. Jeśli rozszerzenia są wyłączone, najpierw je włącza, co uruchamia Zigbee2MQTT ponownie jeszcze raz.",
+  "hubBackupRestoreStageAllow": "Włączam rozszerzenia i uruchamiam ponownie Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Wysyłam kopię do hubu…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT uruchamia się ponownie z kopii…",
+  "hubBackupRestored": "Przywrócono. Zigbee2MQTT działa z kopii.",
+  "hubBackupRestoreNotWritten": "Przywracanie się nie powiodło i na hubie nic się nie zmieniło. Spróbuj ponownie.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT nie przyjął rozszerzenia przywracania ZigDash. Na hubie nic się nie zmieniło.",
+  "hubBackupRestoreNotBack": "Kopia została zapisana, ale Zigbee2MQTT nie uruchomił się ponownie. Uruchom go ponownie na hubie i sprawdź tutaj."
 }

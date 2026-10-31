@@ -1442,6 +1442,17 @@
   "hubBackupSaveCopy": "Salva una copia",
   "hubBackupSaved": "Copia salvata.",
   "hubBackupUnreadable": "Questo backup non si può aprire su questo telefono.",
-  "hubBackupRestoreNote": "Il ripristino da ZigDash arriverà in una versione successiva. Fino ad allora, Salva una copia ti dà lo zip di backup di Zigbee2MQTT: i suoi file tornano nella cartella dati di Zigbee2MQTT.",
-  "hubBackupPrivate": "Un backup contiene la chiave della tua rete Zigbee. Tieni private le copie salvate."
+  "hubBackupRestoreNote": "Ripristina riporta un backup sull'hub e riavvia Zigbee2MQTT. Salva una copia ti dà lo zip di backup di Zigbee2MQTT da conservare altrove.",
+  "hubBackupPrivate": "Un backup contiene la chiave della tua rete Zigbee. Tieni private le copie salvate.",
+  "hubBackupRestore": "Ripristina",
+  "hubBackupRestoreTitle": "Ripristinare questo backup?",
+  "hubBackupRestoreBody": "Le impostazioni di Zigbee2MQTT, la rete Zigbee e l'elenco dei dispositivi tornano al {when}. Zigbee2MQTT si riavvia, il che richiede circa un minuto. I dispositivi associati dopo questo backup andranno associati di nuovo.",
+  "hubBackupRestoreExtensions": "Per scrivere il backup, ZigDash aggiunge a Zigbee2MQTT una piccola estensione da usare una volta sola. Se le estensioni sono disattivate, prima le attiva, e Zigbee2MQTT si riavvia ancora una volta.",
+  "hubBackupRestoreStageAllow": "Attivo le estensioni e riavvio Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Invio il backup all'hub…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT si sta riavviando dal backup…",
+  "hubBackupRestored": "Ripristinato. Zigbee2MQTT funziona dal backup.",
+  "hubBackupRestoreNotWritten": "Il ripristino non è andato a buon fine e sull'hub non è cambiato nulla. Riprova.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT non ha accettato l'estensione di ripristino di ZigDash. Sull'hub non è cambiato nulla.",
+  "hubBackupRestoreNotBack": "Il backup è stato scritto, ma Zigbee2MQTT non si è riavviato. Riavvialo sull'hub, poi controlla qui."
 }

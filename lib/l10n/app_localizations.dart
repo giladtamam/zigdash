@@ -8775,7 +8775,7 @@ abstract class AppLocalizations {
   /// No description provided for @hubBackupRestoreNote.
   ///
   /// In en, this message translates to:
-  /// **'Restoring a backup from ZigDash comes in a later version. Until then, Save a copy gives you Zigbee2MQTT\'s own backup zip: its files go back into Zigbee2MQTT\'s data folder.'**
+  /// **'Restore puts a backup back on the hub and restarts Zigbee2MQTT. Save a copy gives you Zigbee2MQTT\'s own backup zip to keep somewhere else.'**
   String get hubBackupRestoreNote;
 
   /// No description provided for @hubBackupPrivate.
@@ -8783,6 +8783,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A backup holds your Zigbee network key. Keep saved copies private.'**
   String get hubBackupPrivate;
+
+  /// No description provided for @hubBackupRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get hubBackupRestore;
+
+  /// No description provided for @hubBackupRestoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore this backup?'**
+  String get hubBackupRestoreTitle;
+
+  /// No description provided for @hubBackupRestoreBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT\'s settings, Zigbee network and device list go back to {when}. Zigbee2MQTT restarts, which takes about a minute. Devices paired after this backup will need pairing again.'**
+  String hubBackupRestoreBody(String when);
+
+  /// No description provided for @hubBackupRestoreExtensions.
+  ///
+  /// In en, this message translates to:
+  /// **'To write the backup, ZigDash adds a small one-time extension to Zigbee2MQTT. If extensions are off, it turns them on first, which restarts Zigbee2MQTT once more.'**
+  String get hubBackupRestoreExtensions;
+
+  /// No description provided for @hubBackupRestoreStageAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowing extensions and restarting Zigbee2MQTT…'**
+  String get hubBackupRestoreStageAllow;
+
+  /// No description provided for @hubBackupRestoreStageSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending the backup to the hub…'**
+  String get hubBackupRestoreStageSend;
+
+  /// No description provided for @hubBackupRestoreStageRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT is starting again on the backup…'**
+  String get hubBackupRestoreStageRestart;
+
+  /// No description provided for @hubBackupRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Restored. Zigbee2MQTT is running on the backup.'**
+  String get hubBackupRestored;
+
+  /// No description provided for @hubBackupRestoreNotWritten.
+  ///
+  /// In en, this message translates to:
+  /// **'The restore didn\'t go through, and nothing was changed on the hub. Try again.'**
+  String get hubBackupRestoreNotWritten;
+
+  /// No description provided for @hubBackupRestoreRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT didn\'t accept ZigDash\'s restore extension. Nothing was changed on the hub.'**
+  String get hubBackupRestoreRefused;
+
+  /// No description provided for @hubBackupRestoreNotBack.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.'**
+  String get hubBackupRestoreNotBack;
 }
 
 class _AppLocalizationsDelegate

@@ -1442,6 +1442,17 @@
   "hubBackupSaveCopy": "Uložit kopii",
   "hubBackupSaved": "Kopie uložena.",
   "hubBackupUnreadable": "Tuto zálohu nelze v tomto telefonu otevřít.",
-  "hubBackupRestoreNote": "Obnovení zálohy přímo ze ZigDash přijde v pozdější verzi. Do té doby vám Uložit kopii dá vlastní záložní zip Zigbee2MQTT: jeho soubory patří zpět do datové složky Zigbee2MQTT.",
-  "hubBackupPrivate": "Záloha obsahuje klíč vaší sítě Zigbee. Uložené kopie uchovávejte v soukromí."
+  "hubBackupRestoreNote": "Obnovit vrátí zálohu do hubu a restartuje Zigbee2MQTT. Uložit kopii vám dá vlastní záložní zip Zigbee2MQTT k uložení jinde.",
+  "hubBackupPrivate": "Záloha obsahuje klíč vaší sítě Zigbee. Uložené kopie uchovávejte v soukromí.",
+  "hubBackupRestore": "Obnovit",
+  "hubBackupRestoreTitle": "Obnovit tuto zálohu?",
+  "hubBackupRestoreBody": "Nastavení Zigbee2MQTT, síť Zigbee a seznam zařízení se vrátí ke stavu {when}. Zigbee2MQTT se restartuje, což trvá asi minutu. Zařízení spárovaná po této záloze bude nutné spárovat znovu.",
+  "hubBackupRestoreExtensions": "K zapsání zálohy přidá ZigDash do Zigbee2MQTT malé jednorázové rozšíření. Pokud jsou rozšíření vypnutá, nejdřív je zapne, což Zigbee2MQTT restartuje ještě jednou.",
+  "hubBackupRestoreStageAllow": "Povoluji rozšíření a restartuji Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Posílám zálohu do hubu…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT se znovu spouští ze zálohy…",
+  "hubBackupRestored": "Obnoveno. Zigbee2MQTT běží ze zálohy.",
+  "hubBackupRestoreNotWritten": "Obnovení neproběhlo a na hubu se nic nezměnilo. Zkuste to znovu.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT nepřijal obnovovací rozšíření ZigDash. Na hubu se nic nezměnilo.",
+  "hubBackupRestoreNotBack": "Záloha je zapsaná, ale Zigbee2MQTT se znovu nespustil. Restartujte ho na hubu a pak to zkontrolujte zde."
 }

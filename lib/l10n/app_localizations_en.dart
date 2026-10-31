@@ -4986,9 +4986,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Restoring a backup from ZigDash comes in a later version. Until then, Save a copy gives you Zigbee2MQTT\'s own backup zip: its files go back into Zigbee2MQTT\'s data folder.';
+      'Restore puts a backup back on the hub and restarts Zigbee2MQTT. Save a copy gives you Zigbee2MQTT\'s own backup zip to keep somewhere else.';
 
   @override
   String get hubBackupPrivate =>
       'A backup holds your Zigbee network key. Keep saved copies private.';
+
+  @override
+  String get hubBackupRestore => 'Restore';
+
+  @override
+  String get hubBackupRestoreTitle => 'Restore this backup?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Zigbee2MQTT\'s settings, Zigbee network and device list go back to $when. Zigbee2MQTT restarts, which takes about a minute. Devices paired after this backup will need pairing again.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'To write the backup, ZigDash adds a small one-time extension to Zigbee2MQTT. If extensions are off, it turns them on first, which restarts Zigbee2MQTT once more.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Allowing extensions and restarting Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Sending the backup to the hub…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT is starting again on the backup…';
+
+  @override
+  String get hubBackupRestored =>
+      'Restored. Zigbee2MQTT is running on the backup.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'The restore didn\'t go through, and nothing was changed on the hub. Try again.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT didn\'t accept ZigDash\'s restore extension. Nothing was changed on the hub.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.';
 }

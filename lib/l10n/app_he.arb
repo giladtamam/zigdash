@@ -1596,6 +1596,17 @@
   "hubBackupSaveCopy": "לשמור עותק",
   "hubBackupSaved": "העותק נשמר.",
   "hubBackupUnreadable": "אי אפשר לפתוח את הגיבוי הזה בטלפון הזה.",
-  "hubBackupRestoreNote": "שחזור גיבוי מתוך ZigDash יגיע בגרסה מאוחרת יותר. עד אז, לשמור עותק נותן לכם את קובץ ה-zip של הגיבוי של Zigbee2MQTT עצמו: הקבצים שבו חוזרים לתיקיית הנתונים של Zigbee2MQTT.",
-  "hubBackupPrivate": "גיבוי מכיל את המפתח של רשת ה-Zigbee שלכם. שמרו עותקים בפרטיות."
+  "hubBackupRestoreNote": "שחזור מחזיר גיבוי לרכזת ומפעיל מחדש את Zigbee2MQTT. לשמור עותק נותן לכם את קובץ ה-zip של הגיבוי של Zigbee2MQTT לשמירה במקום אחר.",
+  "hubBackupPrivate": "גיבוי מכיל את המפתח של רשת ה-Zigbee שלכם. שמרו עותקים בפרטיות.",
+  "hubBackupRestore": "שחזור",
+  "hubBackupRestoreTitle": "לשחזר את הגיבוי הזה?",
+  "hubBackupRestoreBody": "ההגדרות של Zigbee2MQTT, רשת ה-Zigbee ורשימת המכשירים יחזרו למצב של {when}. Zigbee2MQTT יופעל מחדש, וזה לוקח כדקה. מכשירים שהוצמדו אחרי הגיבוי הזה יצטרכו הצמדה מחדש.",
+  "hubBackupRestoreExtensions": "כדי לכתוב את הגיבוי, ZigDash מוסיף ל-Zigbee2MQTT הרחבה קטנה חד-פעמית. אם ההרחבות כבויות, הוא מפעיל אותן קודם, ו-Zigbee2MQTT יופעל מחדש פעם נוספת.",
+  "hubBackupRestoreStageAllow": "מאפשר הרחבות ומפעיל מחדש את Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "שולח את הגיבוי לרכזת…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT עולה מחדש מהגיבוי…",
+  "hubBackupRestored": "שוחזר. Zigbee2MQTT פועל מהגיבוי.",
+  "hubBackupRestoreNotWritten": "השחזור לא הושלם ושום דבר לא השתנה ברכזת. נסו שוב.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT לא קיבל את הרחבת השחזור של ZigDash. שום דבר לא השתנה ברכזת.",
+  "hubBackupRestoreNotBack": "הגיבוי נכתב, אבל Zigbee2MQTT לא עלה מחדש. הפעילו אותו מחדש ברכזת ובדקו כאן."
 }

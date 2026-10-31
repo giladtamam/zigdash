@@ -4933,9 +4933,49 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'שחזור גיבוי מתוך ZigDash יגיע בגרסה מאוחרת יותר. עד אז, לשמור עותק נותן לכם את קובץ ה-zip של הגיבוי של Zigbee2MQTT עצמו: הקבצים שבו חוזרים לתיקיית הנתונים של Zigbee2MQTT.';
+      'שחזור מחזיר גיבוי לרכזת ומפעיל מחדש את Zigbee2MQTT. לשמור עותק נותן לכם את קובץ ה-zip של הגיבוי של Zigbee2MQTT לשמירה במקום אחר.';
 
   @override
   String get hubBackupPrivate =>
       'גיבוי מכיל את המפתח של רשת ה-Zigbee שלכם. שמרו עותקים בפרטיות.';
+
+  @override
+  String get hubBackupRestore => 'שחזור';
+
+  @override
+  String get hubBackupRestoreTitle => 'לשחזר את הגיבוי הזה?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'ההגדרות של Zigbee2MQTT, רשת ה-Zigbee ורשימת המכשירים יחזרו למצב של $when. Zigbee2MQTT יופעל מחדש, וזה לוקח כדקה. מכשירים שהוצמדו אחרי הגיבוי הזה יצטרכו הצמדה מחדש.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'כדי לכתוב את הגיבוי, ZigDash מוסיף ל-Zigbee2MQTT הרחבה קטנה חד-פעמית. אם ההרחבות כבויות, הוא מפעיל אותן קודם, ו-Zigbee2MQTT יופעל מחדש פעם נוספת.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'מאפשר הרחבות ומפעיל מחדש את Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'שולח את הגיבוי לרכזת…';
+
+  @override
+  String get hubBackupRestoreStageRestart => 'Zigbee2MQTT עולה מחדש מהגיבוי…';
+
+  @override
+  String get hubBackupRestored => 'שוחזר. Zigbee2MQTT פועל מהגיבוי.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'השחזור לא הושלם ושום דבר לא השתנה ברכזת. נסו שוב.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT לא קיבל את הרחבת השחזור של ZigDash. שום דבר לא השתנה ברכזת.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'הגיבוי נכתב, אבל Zigbee2MQTT לא עלה מחדש. הפעילו אותו מחדש ברכזת ובדקו כאן.';
 }

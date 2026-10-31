@@ -5003,9 +5003,51 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Een back-up terugzetten vanuit ZigDash komt in een latere versie. Tot die tijd geeft Kopie opslaan je de eigen back-upzip van Zigbee2MQTT: de bestanden horen terug in de datamap van Zigbee2MQTT.';
+      'Terugzetten zet een back-up terug op de hub en start Zigbee2MQTT opnieuw. Kopie opslaan geeft je de eigen back-upzip van Zigbee2MQTT om ergens anders te bewaren.';
 
   @override
   String get hubBackupPrivate =>
       'Een back-up bevat de sleutel van je Zigbee-netwerk. Houd opgeslagen kopieën privé.';
+
+  @override
+  String get hubBackupRestore => 'Terugzetten';
+
+  @override
+  String get hubBackupRestoreTitle => 'Deze back-up terugzetten?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'De instellingen van Zigbee2MQTT, het Zigbee-netwerk en de apparatenlijst gaan terug naar $when. Zigbee2MQTT start opnieuw, wat ongeveer een minuut duurt. Apparaten die na deze back-up zijn gekoppeld, moet je opnieuw koppelen.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'Om de back-up te schrijven voegt ZigDash een kleine eenmalige extensie toe aan Zigbee2MQTT. Staan extensies uit, dan zet het ze eerst aan, waardoor Zigbee2MQTT nog een keer opnieuw start.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Extensies toestaan en Zigbee2MQTT opnieuw starten…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Back-up naar de hub sturen…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT start opnieuw op de back-up…';
+
+  @override
+  String get hubBackupRestored =>
+      'Teruggezet. Zigbee2MQTT draait op de back-up.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Het terugzetten is niet gelukt en er is niets veranderd op de hub. Probeer het opnieuw.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT nam de terugzet-extensie van ZigDash niet aan. Er is niets veranderd op de hub.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'De back-up is geschreven, maar Zigbee2MQTT is niet opnieuw gestart. Start het op de hub opnieuw en controleer het daarna hier.';
 }

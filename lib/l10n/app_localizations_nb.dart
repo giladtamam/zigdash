@@ -4988,9 +4988,51 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get hubBackupRestoreNote =>
-      'Gjenoppretting fra ZigDash kommer i en senere versjon. Inntil da gir Lagre en kopi deg Zigbee2MQTTs egen backup-zip: filene hører hjemme i datamappen til Zigbee2MQTT.';
+      'Gjenopprett legger en sikkerhetskopi tilbake på huben og starter Zigbee2MQTT på nytt. Lagre en kopi gir deg Zigbee2MQTTs egen backup-zip til å oppbevare et annet sted.';
 
   @override
   String get hubBackupPrivate =>
       'En sikkerhetskopi inneholder nøkkelen til Zigbee-nettverket ditt. Hold lagrede kopier private.';
+
+  @override
+  String get hubBackupRestore => 'Gjenopprett';
+
+  @override
+  String get hubBackupRestoreTitle => 'Gjenopprette denne sikkerhetskopien?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Innstillingene i Zigbee2MQTT, Zigbee-nettverket og enhetslisten går tilbake til $when. Zigbee2MQTT starter på nytt, noe som tar omtrent et minutt. Enheter som ble paret etter denne sikkerhetskopien, må pares på nytt.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'For å skrive sikkerhetskopien legger ZigDash til en liten engangsutvidelse i Zigbee2MQTT. Er utvidelser slått av, slår den dem på først, noe som starter Zigbee2MQTT på nytt én gang til.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Tillater utvidelser og starter Zigbee2MQTT på nytt…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Sender sikkerhetskopien til huben…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT starter igjen fra sikkerhetskopien…';
+
+  @override
+  String get hubBackupRestored =>
+      'Gjenopprettet. Zigbee2MQTT kjører fra sikkerhetskopien.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Gjenopprettingen gikk ikke gjennom, og ingenting ble endret på huben. Prøv igjen.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT godtok ikke gjenopprettingsutvidelsen fra ZigDash. Ingenting ble endret på huben.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Sikkerhetskopien ble skrevet, men Zigbee2MQTT har ikke startet igjen. Start den på nytt på huben, og sjekk her etterpå.';
 }

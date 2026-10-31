@@ -1527,6 +1527,17 @@
   "hubBackupSaveCopy": "Guardar una copia",
   "hubBackupSaved": "Copia guardada.",
   "hubBackupUnreadable": "Esta copia no se puede abrir en este teléfono.",
-  "hubBackupRestoreNote": "Restaurar una copia desde ZigDash llegará en una versión posterior. Mientras tanto, Guardar una copia te da el zip de copia de Zigbee2MQTT: sus archivos vuelven a la carpeta de datos de Zigbee2MQTT.",
-  "hubBackupPrivate": "Una copia contiene la clave de tu red Zigbee. Guarda las copias en privado."
+  "hubBackupRestoreNote": "Restaurar devuelve una copia al hub y reinicia Zigbee2MQTT. Guardar una copia te da el zip de copia de Zigbee2MQTT para guardarlo en otro sitio.",
+  "hubBackupPrivate": "Una copia contiene la clave de tu red Zigbee. Guarda las copias en privado.",
+  "hubBackupRestore": "Restaurar",
+  "hubBackupRestoreTitle": "¿Restaurar esta copia?",
+  "hubBackupRestoreBody": "Los ajustes de Zigbee2MQTT, la red Zigbee y la lista de dispositivos vuelven al {when}. Zigbee2MQTT se reinicia, lo que tarda alrededor de un minuto. Los dispositivos emparejados después de esta copia tendrán que emparejarse de nuevo.",
+  "hubBackupRestoreExtensions": "Para escribir la copia, ZigDash añade a Zigbee2MQTT una pequeña extensión de un solo uso. Si las extensiones están desactivadas, primero las activa, lo que reinicia Zigbee2MQTT una vez más.",
+  "hubBackupRestoreStageAllow": "Permitiendo extensiones y reiniciando Zigbee2MQTT…",
+  "hubBackupRestoreStageSend": "Enviando la copia al hub…",
+  "hubBackupRestoreStageRestart": "Zigbee2MQTT está arrancando de nuevo con la copia…",
+  "hubBackupRestored": "Restaurado. Zigbee2MQTT funciona con la copia.",
+  "hubBackupRestoreNotWritten": "La restauración no se completó y no se cambió nada en el hub. Vuelve a intentarlo.",
+  "hubBackupRestoreRefused": "Zigbee2MQTT no aceptó la extensión de restauración de ZigDash. No se cambió nada en el hub.",
+  "hubBackupRestoreNotBack": "La copia se escribió, pero Zigbee2MQTT no ha vuelto a arrancar. Reinícialo en el hub y compruébalo aquí."
 }
