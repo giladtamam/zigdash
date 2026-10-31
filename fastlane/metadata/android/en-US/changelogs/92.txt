@@ -1,0 +1,1 @@
+Import from Home Assistant now checks the address before opening the browser. If nothing answers there, it says so and reminds you that Home Assistant's address may not be your broker's. If the login page closes without signing in, it tells you instead of quietly going back.
