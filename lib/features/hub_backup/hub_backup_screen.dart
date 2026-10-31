@@ -88,6 +88,8 @@ class _HubBackupScreenState extends ConsumerState<HubBackupScreen> {
     stage.dispose();
     if (!mounted) return;
     setState(() {
+      // Only the latest result shows.
+      _last = null;
       _restoreOk = outcome == HubRestoreOutcome.restored;
       _restoreText = switch ((blocked, outcome)) {
         (HubRestoreBlocked.offline, _) => l10n.hubBackupOffline,
@@ -106,6 +108,7 @@ class _HubBackupScreenState extends ConsumerState<HubBackupScreen> {
     setState(() {
       _busy = true;
       _last = null;
+      _restoreText = null;
     });
     final outcome = await ref
         .read(hubBackupRunnerProvider)
