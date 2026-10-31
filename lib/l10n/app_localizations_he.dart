@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -3892,7 +3893,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'שום דבר לא ענה בכתובת הזו. בדקו אותה, ושהטלפון ברשת של הבית.';
+      'שום דבר לא ענה בכתובת הזו. בדקו אותה, ושהטלפון ברשת של הבית. זו הכתובת שבה אתם פותחים את Home Assistant בדפדפן, והיא לא בהכרח כתובת הברוקר.';
 
   @override
   String get haImportNotHa => 'משהו ענה בכתובת הזו, אבל זה לא Home Assistant.';
@@ -3991,6 +3992,10 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant לא קיבל את ההתחברות. זה קורה כשאין ל-Home Assistant גישה לאינטרנט. השתמשו במקום זה באסימון גישה ארוך טווח למטה.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'ההתחברות לא הושלמה. אם הדף לא נפתח, בדקו את הכתובת: זו הכתובת שבה אתם פותחים את Home Assistant בדפדפן, והיא לא בהכרח כתובת הברוקר. או השתמשו בטוקן לטווח ארוך למטה.';
 
   @override
   String get setupIsolatedHint =>
@@ -4875,4 +4880,107 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'פתיחת ZigDash';
+
+  @override
+  String get hubBackupTitle => 'גיבוי הרכזת';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'עותק יומי של הרשת ושמות המכשירים מ-Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash שומר עותק של ההגדרות של Zigbee2MQTT, רשת ה-Zigbee ושמות המכשירים מהרכזת שלכם, כדי שרכזת שאופסה או נמחקה תוכל לקבל את הרשת שלה בחזרה. עותק חדש נלקח בכל יום שבו אתם פותחים את ZigDash בבית, ו-7 האחרונים נשמרים בטלפון הזה.';
+
+  @override
+  String get hubBackupNone => 'עדיין אין גיבוי';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'גיבוי אחרון: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'לגבות עכשיו';
+
+  @override
+  String get hubBackupMade => 'גובה.';
+
+  @override
+  String get hubBackupRefused => 'Zigbee2MQTT ברכזת הזו לא יכול ליצור גיבויים.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT לא ענה. בדקו שהוא פועל ונסו שוב.';
+
+  @override
+  String get hubBackupOffline =>
+      'הבית הזה לא מחובר כרגע. התחברו אליו ונסו שוב.';
+
+  @override
+  String get hubBackupAway => 'גיבויים נלקחים בבית: הממסר לא מעביר אותם.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'הבית הזה מתחבר דרך דף האינטרנט של Zigbee2MQTT. גיבויים צריכים את ברוקר ה-MQTT שלו.';
+
+  @override
+  String get hubBackupKept => 'שמורים בטלפון הזה';
+
+  @override
+  String get hubBackupSaveCopy => 'לשמור עותק';
+
+  @override
+  String get hubBackupSaved => 'העותק נשמר.';
+
+  @override
+  String get hubBackupUnreadable => 'אי אפשר לפתוח את הגיבוי הזה בטלפון הזה.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'שחזור מחזיר גיבוי לרכזת ומפעיל מחדש את Zigbee2MQTT. לשמור עותק נותן לכם את קובץ ה-zip של הגיבוי של Zigbee2MQTT לשמירה במקום אחר.';
+
+  @override
+  String get hubBackupPrivate =>
+      'גיבוי מכיל את המפתח של רשת ה-Zigbee שלכם. שמרו עותקים בפרטיות.';
+
+  @override
+  String get hubBackupRestore => 'שחזור';
+
+  @override
+  String get hubBackupRestoreTitle => 'לשחזר את הגיבוי הזה?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'ההגדרות של Zigbee2MQTT, רשת ה-Zigbee ורשימת המכשירים יחזרו למצב של $when. Zigbee2MQTT יופעל מחדש, וזה לוקח כדקה. מכשירים שהוצמדו אחרי הגיבוי הזה יצטרכו הצמדה מחדש.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'כדי לכתוב את הגיבוי, ZigDash מוסיף ל-Zigbee2MQTT הרחבה קטנה חד-פעמית. אם ההרחבות כבויות, הוא מפעיל אותן קודם, ו-Zigbee2MQTT יופעל מחדש פעם נוספת.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'מאפשר הרחבות ומפעיל מחדש את Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'שולח את הגיבוי לרכזת…';
+
+  @override
+  String get hubBackupRestoreStageRestart => 'Zigbee2MQTT עולה מחדש מהגיבוי…';
+
+  @override
+  String get hubBackupRestored => 'שוחזר. Zigbee2MQTT פועל מהגיבוי.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'השחזור לא הושלם ושום דבר לא השתנה ברכזת. נסו שוב.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT לא קיבל את הרחבת השחזור של ZigDash. שום דבר לא השתנה ברכזת.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'הגיבוי נכתב, אבל Zigbee2MQTT לא עלה מחדש. הפעילו אותו מחדש ברכזת ובדקו כאן.';
 }

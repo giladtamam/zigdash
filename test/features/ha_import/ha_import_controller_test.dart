@@ -120,7 +120,13 @@ void main() {
 
   group('signing in at Home Assistant\'s login page', () {
     late List<HaImportEvent> events;
-    HaImportController signingIn(HaSignInResult result, List<String> revoked) {
+    late int signIns;
+    HaImportController signingIn(
+      HaSignInResult result,
+      List<String> revoked, {
+      HaImportProblem? unreached,
+    }) {
+      signIns = 0;
       reads = [];
       writes = [];
       events = [];
@@ -134,8 +140,12 @@ void main() {
         devices: () async => [_sensor],
         writer: (plan, {required makeDashboards, required skipRooms}) async =>
             const HaImportResult(renamed: 0, dashboardIds: [], tiles: 0),
-        signIn: (_) async => result,
+        signIn: (_) async {
+          signIns++;
+          return result;
+        },
         revoke: (_, refresh) async => revoked.add(refresh),
+        reach: (_) async => unreached,
       );
     }
 
@@ -175,15 +185,39 @@ void main() {
       }
     });
 
-    test('closing the login quietly returns to the first step', () async {
+    // 3.2.9: it went back in silence, and one user tapped Sign in six
+    // times in two minutes.
+    test('closing the login says the sign-in did not finish', () async {
       final c = signingIn((
         accessToken: null,
         refreshToken: null,
         error: HaSignInError.cancelled,
       ), []);
       await c.signInAndRead('192.168.68.52');
-      expect((c.value as HaImportAsk).problem, isNull);
+      expect(
+        (c.value as HaImportAsk).problem,
+        HaImportProblem.signInUnfinished,
+      );
       expect(reads, isEmpty);
+    });
+
+    // 3.2.9: the address is filled in from the broker; when nothing
+    // answers there, say so instead of opening an error page.
+    test('nothing at the address: said before the browser opens', () async {
+      for (final problem in [
+        HaImportProblem.unreachable,
+        HaImportProblem.certificate,
+      ]) {
+        final c = signingIn(
+          (accessToken: 'access', refreshToken: null, error: null),
+          [],
+          unreached: problem,
+        );
+        await c.signInAndRead('192.168.68.64:8123');
+        expect(signIns, 0);
+        expect((c.value as HaImportAsk).problem, problem);
+        expect(events, isEmpty);
+      }
     });
 
     test('a refused sign-in points to the token', () async {

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -3929,7 +3930,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Na té adrese nic neodpovědělo. Zkontroluj ji a jestli je telefon v domácí síti.';
+      'Na té adrese nic neodpovědělo. Zkontroluj ji a jestli je telefon v domácí síti. Je to adresa, kterou otevíráte Home Assistant v prohlížeči, a nemusí být stejná jako adresa brokeru.';
 
   @override
   String get haImportNotHa =>
@@ -4033,6 +4034,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant přihlášení nepřijal. To se stává, když Home Assistant nemá přístup k internetu. Použij místo toho dlouhodobý token níže.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Přihlášení nebylo dokončeno. Pokud se stránka neotevřela, zkontrolujte adresu: je to ta, kterou otevíráte Home Assistant v prohlížeči, a nemusí být stejná jako adresa brokeru. Nebo níže použijte dlouhodobý token.';
 
   @override
   String get setupIsolatedHint =>
@@ -4926,4 +4931,110 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Otevřít ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Záloha hubu';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Denní kopie sítě a názvů zařízení Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash uchovává kopii nastavení Zigbee2MQTT, sítě Zigbee a názvů zařízení z vašeho hubu, aby hub po resetu nebo smazání mohl síť obnovit. Nová kopie se pořídí každý den, kdy ZigDash otevřete doma, a posledních 7 zůstává v tomto telefonu.';
+
+  @override
+  String get hubBackupNone => 'Zatím žádná záloha';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Poslední záloha: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Zálohovat nyní';
+
+  @override
+  String get hubBackupMade => 'Zálohováno.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT na tomto hubu neumí vytvářet zálohy.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT neodpověděl. Zkontrolujte, že běží, a zkuste to znovu.';
+
+  @override
+  String get hubBackupOffline =>
+      'Tento domov teď není připojený. Připojte se a zkuste to znovu.';
+
+  @override
+  String get hubBackupAway => 'Zálohy se pořizují doma: relay je nepřenáší.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Tento domov se připojuje přes webovou stránku Zigbee2MQTT. Zálohy potřebují jeho MQTT broker.';
+
+  @override
+  String get hubBackupKept => 'Uloženo v tomto telefonu';
+
+  @override
+  String get hubBackupSaveCopy => 'Uložit kopii';
+
+  @override
+  String get hubBackupSaved => 'Kopie uložena.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Tuto zálohu nelze v tomto telefonu otevřít.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Obnovit vrátí zálohu do hubu a restartuje Zigbee2MQTT. Uložit kopii vám dá vlastní záložní zip Zigbee2MQTT k uložení jinde.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Záloha obsahuje klíč vaší sítě Zigbee. Uložené kopie uchovávejte v soukromí.';
+
+  @override
+  String get hubBackupRestore => 'Obnovit';
+
+  @override
+  String get hubBackupRestoreTitle => 'Obnovit tuto zálohu?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Nastavení Zigbee2MQTT, síť Zigbee a seznam zařízení se vrátí ke stavu $when. Zigbee2MQTT se restartuje, což trvá asi minutu. Zařízení spárovaná po této záloze bude nutné spárovat znovu.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'K zapsání zálohy přidá ZigDash do Zigbee2MQTT malé jednorázové rozšíření. Pokud jsou rozšíření vypnutá, nejdřív je zapne, což Zigbee2MQTT restartuje ještě jednou.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Povoluji rozšíření a restartuji Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Posílám zálohu do hubu…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT se znovu spouští ze zálohy…';
+
+  @override
+  String get hubBackupRestored => 'Obnoveno. Zigbee2MQTT běží ze zálohy.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Obnovení neproběhlo a na hubu se nic nezměnilo. Zkuste to znovu.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT nepřijal obnovovací rozšíření ZigDash. Na hubu se nic nezměnilo.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Záloha je zapsaná, ale Zigbee2MQTT se znovu nespustil. Restartujte ho na hubu a pak to zkontrolujte zde.';
 }

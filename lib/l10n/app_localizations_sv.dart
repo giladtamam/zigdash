@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -3927,7 +3928,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Inget svarade på den adressen. Kontrollera den, och att telefonen är på hemnätverket.';
+      'Inget svarade på den adressen. Kontrollera den, och att telefonen är på hemnätverket. Det är adressen du öppnar Home Assistant med i webbläsaren, inte nödvändigtvis mäklarens.';
 
   @override
   String get haImportNotHa =>
@@ -4029,6 +4030,10 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant godtog inte inloggningen. Det händer när Home Assistant saknar internetåtkomst. Använd en långlivad åtkomsttoken nedan i stället.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Inloggningen slutfördes inte. Om sidan inte öppnades, kontrollera adressen: det är den du öppnar Home Assistant med i webbläsaren, inte nödvändigtvis mäklarens. Eller använd en långlivad token nedan.';
 
   @override
   String get setupIsolatedHint =>
@@ -4929,4 +4934,113 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Öppna ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Hubbsäkerhetskopia';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'En daglig kopia av Zigbee2MQTT:s nätverk och enhetsnamn';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash sparar en kopia av Zigbee2MQTT:s inställningar, Zigbee-nätverket och enhetsnamnen från din hubb, så att en hubb som återställts eller rensats kan få tillbaka sitt nätverk. En ny kopia tas varje dag du öppnar ZigDash hemma, och de senaste 7 sparas på den här telefonen.';
+
+  @override
+  String get hubBackupNone => 'Ingen säkerhetskopia ännu';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Senaste säkerhetskopia: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Säkerhetskopiera nu';
+
+  @override
+  String get hubBackupMade => 'Säkerhetskopierat.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT på den här hubben kan inte göra säkerhetskopior.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT svarade inte. Kontrollera att det körs och försök igen.';
+
+  @override
+  String get hubBackupOffline =>
+      'Det här hemmet är inte anslutet just nu. Anslut och försök igen.';
+
+  @override
+  String get hubBackupAway =>
+      'Säkerhetskopior tas hemma: reläet för inte över dem.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Det här hemmet ansluter via Zigbee2MQTT:s webbsida. Säkerhetskopior behöver dess MQTT-mäklare.';
+
+  @override
+  String get hubBackupKept => 'Sparade på den här telefonen';
+
+  @override
+  String get hubBackupSaveCopy => 'Spara en kopia';
+
+  @override
+  String get hubBackupSaved => 'Kopian sparad.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Den här säkerhetskopian kan inte öppnas på den här telefonen.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Återställ lägger tillbaka en säkerhetskopia på hubben och startar om Zigbee2MQTT. Spara en kopia ger dig Zigbee2MQTT:s egen backup-zip att förvara någon annanstans.';
+
+  @override
+  String get hubBackupPrivate =>
+      'En säkerhetskopia innehåller nyckeln till ditt Zigbee-nätverk. Håll sparade kopior privata.';
+
+  @override
+  String get hubBackupRestore => 'Återställ';
+
+  @override
+  String get hubBackupRestoreTitle => 'Återställa den här säkerhetskopian?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Zigbee2MQTT:s inställningar, Zigbee-nätverket och enhetslistan går tillbaka till $when. Zigbee2MQTT startar om, vilket tar ungefär en minut. Enheter som parats efter den här säkerhetskopian måste paras igen.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'För att skriva säkerhetskopian lägger ZigDash till ett litet engångstillägg i Zigbee2MQTT. Om tillägg är avstängda slår den på dem först, vilket startar om Zigbee2MQTT en gång till.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Tillåter tillägg och startar om Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend =>
+      'Skickar säkerhetskopian till hubben…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT startar igen från säkerhetskopian…';
+
+  @override
+  String get hubBackupRestored =>
+      'Återställt. Zigbee2MQTT körs från säkerhetskopian.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Återställningen gick inte igenom och inget ändrades på hubben. Försök igen.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT tog inte emot ZigDash återställningstillägg. Inget ändrades på hubben.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Säkerhetskopian skrevs, men Zigbee2MQTT har inte startat igen. Starta om den på hubben och kontrollera här sedan.';
 }

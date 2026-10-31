@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -3924,7 +3925,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Nothing answered at that address. Check it, and that your phone is on your home network.';
+      'Nothing answered at that address. Check it, and that your phone is on your home network. It\'s the address you open Home Assistant with in your browser, which may not be your broker\'s.';
 
   @override
   String get haImportNotHa =>
@@ -4027,6 +4028,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant didn\'t accept the sign-in. This happens when Home Assistant has no internet access. Use a long-lived token below instead.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Sign-in didn\'t finish. If the page didn\'t open, check the address: it\'s the one you open Home Assistant with in your browser, which may not be your broker\'s. Or use a long-lived token below.';
 
   @override
   String get setupIsolatedHint =>
@@ -4926,4 +4931,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Open ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Hub backup';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'A daily copy of Zigbee2MQTT\'s network and device names';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash keeps a copy of Zigbee2MQTT\'s settings, Zigbee network and device names from your hub, so a hub that was reset or wiped can get its network back. A new copy is taken each day you open ZigDash at home, and the last 7 are kept on this phone.';
+
+  @override
+  String get hubBackupNone => 'No backup yet';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Last backup: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Back up now';
+
+  @override
+  String get hubBackupMade => 'Backed up.';
+
+  @override
+  String get hubBackupRefused => 'Zigbee2MQTT on this hub can\'t make backups.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT didn\'t answer. Check that it\'s running, then try again.';
+
+  @override
+  String get hubBackupOffline =>
+      'This home isn\'t connected right now. Connect to it, then try again.';
+
+  @override
+  String get hubBackupAway =>
+      'Backups are taken at home: the relay doesn\'t carry them.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'This home connects through Zigbee2MQTT\'s web page. Backups need its MQTT broker.';
+
+  @override
+  String get hubBackupKept => 'Kept on this phone';
+
+  @override
+  String get hubBackupSaveCopy => 'Save a copy';
+
+  @override
+  String get hubBackupSaved => 'Copy saved.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'This backup can\'t be opened on this phone.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Restore puts a backup back on the hub and restarts Zigbee2MQTT. Save a copy gives you Zigbee2MQTT\'s own backup zip to keep somewhere else.';
+
+  @override
+  String get hubBackupPrivate =>
+      'A backup holds your Zigbee network key. Keep saved copies private.';
+
+  @override
+  String get hubBackupRestore => 'Restore';
+
+  @override
+  String get hubBackupRestoreTitle => 'Restore this backup?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Zigbee2MQTT\'s settings, Zigbee network and device list go back to $when. Zigbee2MQTT restarts, which takes about a minute. Devices paired after this backup will need pairing again.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'To write the backup, ZigDash adds a small one-time extension to Zigbee2MQTT. If extensions are off, it turns them on first, which restarts Zigbee2MQTT once more.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Allowing extensions and restarting Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Sending the backup to the hub…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT is starting again on the backup…';
+
+  @override
+  String get hubBackupRestored =>
+      'Restored. Zigbee2MQTT is running on the backup.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'The restore didn\'t go through, and nothing was changed on the hub. Try again.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT didn\'t accept ZigDash\'s restore extension. Nothing was changed on the hub.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.';
 }

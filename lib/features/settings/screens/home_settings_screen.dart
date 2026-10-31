@@ -17,6 +17,7 @@ import '../../../data/repositories/connection_repo.dart';
 import '../../../data/repositories/dashboard_repo.dart';
 import '../home_rename.dart';
 import '../../devices/devices_providers.dart';
+import '../../hub_backup/hub_backup_providers.dart';
 
 /// One home's page in Settings (devices-tablet-1.13.md §6): its name, its
 /// connection, its Zigbee2MQTT base topic, switching to it, and deleting it.
@@ -108,6 +109,13 @@ class HomeSettingsScreen extends ConsumerWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.push(Routes.homeNfcTags(home.id)),
                 ),
+              ListTile(
+                leading: const Icon(Icons.backup_outlined),
+                title: Text(l10n.hubBackupTitle),
+                subtitle: Text(l10n.hubBackupSettingsSubtitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(Routes.homeHubBackup(home.id)),
+              ),
               ListTile(
                 leading: const Icon(Icons.download_outlined),
                 title: Text(l10n.haImportTitle),
@@ -251,6 +259,10 @@ class HomeSettingsScreen extends ConsumerWidget {
     await store.forget(home.id);
     // Its last-known values go with it.
     await ref.read(lastKnownStoreProvider).keepOnly(remaining.toSet());
+    // And its hub backups (3.3): they hold its network key.
+    try {
+      await (await ref.read(hubBackupStoreProvider.future)).deleteHome(home.id);
+    } catch (_) {}
     if (!context.mounted) return;
     // The current home's screens are gone: open the next home, or setup.
     if (current) {

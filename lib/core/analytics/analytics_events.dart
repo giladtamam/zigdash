@@ -828,6 +828,35 @@ class ProEvent extends AnalyticsEvent {
   Map<String, String> get props => {'step': _snake(step.name)};
 }
 
+/// Hub backup (3.3, hub-backup.md): a backup was made (automatically or
+/// by hand), Zigbee2MQTT refused or never answered, a copy was saved, or a
+/// backup was restored (or the restore stopped). Never a size, a file name
+/// or anything inside the backup.
+enum HubBackupStep {
+  made,
+  failed,
+  unsupported,
+  savedCopy,
+  restored,
+  restoreFailed,
+}
+
+class HubBackupEvent extends AnalyticsEvent {
+  const HubBackupEvent(this.step, {this.auto});
+
+  final HubBackupStep step;
+  final bool? auto;
+
+  @override
+  String get name => 'hub_backup';
+
+  @override
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    if (auto != null) 'auto': auto! ? 'yes' : 'no',
+  };
+}
+
 /// Remote control (3.1.11): the one-time offer on the dashboard was shown,
 /// opened or put away, and remote control was turned on or off. [pro] is
 /// whether this phone has Pro. Nothing about the home or the relay.
