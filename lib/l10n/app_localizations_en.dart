@@ -4926,4 +4926,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Open ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Hub backup';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'A daily copy of Zigbee2MQTT\'s network and device names';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash keeps a copy of Zigbee2MQTT\'s settings, Zigbee network and device names from your hub, so a hub that was reset or wiped can get its network back. A new copy is taken each day you open ZigDash at home, and the last 7 are kept on this phone.';
+
+  @override
+  String get hubBackupNone => 'No backup yet';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Last backup: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Back up now';
+
+  @override
+  String get hubBackupMade => 'Backed up.';
+
+  @override
+  String get hubBackupRefused => 'Zigbee2MQTT on this hub can\'t make backups.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT didn\'t answer. Check that it\'s running, then try again.';
+
+  @override
+  String get hubBackupOffline =>
+      'This home isn\'t connected right now. Connect to it, then try again.';
+
+  @override
+  String get hubBackupAway =>
+      'Backups are taken at home: the relay doesn\'t carry them.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'This home connects through Zigbee2MQTT\'s web page. Backups need its MQTT broker.';
+
+  @override
+  String get hubBackupKept => 'Kept on this phone';
+
+  @override
+  String get hubBackupSaveCopy => 'Save a copy';
+
+  @override
+  String get hubBackupSaved => 'Copy saved.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'This backup can\'t be opened on this phone.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Restoring a backup from ZigDash comes in a later version. Until then, Save a copy gives you Zigbee2MQTT\'s own backup zip: its files go back into Zigbee2MQTT\'s data folder.';
+
+  @override
+  String get hubBackupPrivate =>
+      'A backup holds your Zigbee network key. Keep saved copies private.';
 }

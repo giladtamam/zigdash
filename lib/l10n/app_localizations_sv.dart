@@ -4929,4 +4929,70 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Öppna ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Hubbsäkerhetskopia';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'En daglig kopia av Zigbee2MQTT:s nätverk och enhetsnamn';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash sparar en kopia av Zigbee2MQTT:s inställningar, Zigbee-nätverket och enhetsnamnen från din hubb, så att en hubb som återställts eller rensats kan få tillbaka sitt nätverk. En ny kopia tas varje dag du öppnar ZigDash hemma, och de senaste 7 sparas på den här telefonen.';
+
+  @override
+  String get hubBackupNone => 'Ingen säkerhetskopia ännu';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Senaste säkerhetskopia: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Säkerhetskopiera nu';
+
+  @override
+  String get hubBackupMade => 'Säkerhetskopierat.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT på den här hubben kan inte göra säkerhetskopior.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT svarade inte. Kontrollera att det körs och försök igen.';
+
+  @override
+  String get hubBackupOffline =>
+      'Det här hemmet är inte anslutet just nu. Anslut och försök igen.';
+
+  @override
+  String get hubBackupAway =>
+      'Säkerhetskopior tas hemma: reläet för inte över dem.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Det här hemmet ansluter via Zigbee2MQTT:s webbsida. Säkerhetskopior behöver dess MQTT-mäklare.';
+
+  @override
+  String get hubBackupKept => 'Sparade på den här telefonen';
+
+  @override
+  String get hubBackupSaveCopy => 'Spara en kopia';
+
+  @override
+  String get hubBackupSaved => 'Kopian sparad.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Den här säkerhetskopian kan inte öppnas på den här telefonen.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Att återställa en säkerhetskopia från ZigDash kommer i en senare version. Tills dess ger Spara en kopia dig Zigbee2MQTT:s egen backup-zip: filerna hör hemma i Zigbee2MQTT:s datamapp.';
+
+  @override
+  String get hubBackupPrivate =>
+      'En säkerhetskopia innehåller nyckeln till ditt Zigbee-nätverk. Håll sparade kopior privata.';
 }

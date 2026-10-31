@@ -4875,4 +4875,67 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'פתיחת ZigDash';
+
+  @override
+  String get hubBackupTitle => 'גיבוי הרכזת';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'עותק יומי של הרשת ושמות המכשירים מ-Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash שומר עותק של ההגדרות של Zigbee2MQTT, רשת ה-Zigbee ושמות המכשירים מהרכזת שלכם, כדי שרכזת שאופסה או נמחקה תוכל לקבל את הרשת שלה בחזרה. עותק חדש נלקח בכל יום שבו אתם פותחים את ZigDash בבית, ו-7 האחרונים נשמרים בטלפון הזה.';
+
+  @override
+  String get hubBackupNone => 'עדיין אין גיבוי';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'גיבוי אחרון: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'לגבות עכשיו';
+
+  @override
+  String get hubBackupMade => 'גובה.';
+
+  @override
+  String get hubBackupRefused => 'Zigbee2MQTT ברכזת הזו לא יכול ליצור גיבויים.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT לא ענה. בדקו שהוא פועל ונסו שוב.';
+
+  @override
+  String get hubBackupOffline =>
+      'הבית הזה לא מחובר כרגע. התחברו אליו ונסו שוב.';
+
+  @override
+  String get hubBackupAway => 'גיבויים נלקחים בבית: הממסר לא מעביר אותם.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'הבית הזה מתחבר דרך דף האינטרנט של Zigbee2MQTT. גיבויים צריכים את ברוקר ה-MQTT שלו.';
+
+  @override
+  String get hubBackupKept => 'שמורים בטלפון הזה';
+
+  @override
+  String get hubBackupSaveCopy => 'לשמור עותק';
+
+  @override
+  String get hubBackupSaved => 'העותק נשמר.';
+
+  @override
+  String get hubBackupUnreadable => 'אי אפשר לפתוח את הגיבוי הזה בטלפון הזה.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'שחזור גיבוי מתוך ZigDash יגיע בגרסה מאוחרת יותר. עד אז, לשמור עותק נותן לכם את קובץ ה-zip של הגיבוי של Zigbee2MQTT עצמו: הקבצים שבו חוזרים לתיקיית הנתונים של Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'גיבוי מכיל את המפתח של רשת ה-Zigbee שלכם. שמרו עותקים בפרטיות.';
 }

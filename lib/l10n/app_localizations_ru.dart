@@ -4928,4 +4928,69 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Открыть ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Резервная копия хаба';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Ежедневная копия сети и имён устройств Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash хранит копию настроек Zigbee2MQTT, сети Zigbee и имён устройств с вашего хаба, чтобы сброшенный или очищенный хаб мог вернуть свою сеть. Новая копия делается каждый день, когда вы открываете ZigDash дома, и последние 7 хранятся на этом телефоне.';
+
+  @override
+  String get hubBackupNone => 'Резервных копий пока нет';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Последняя копия: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Создать копию сейчас';
+
+  @override
+  String get hubBackupMade => 'Копия создана.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT на этом хабе не умеет создавать резервные копии.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT не ответил. Проверьте, что он работает, и попробуйте снова.';
+
+  @override
+  String get hubBackupOffline =>
+      'Этот дом сейчас не подключён. Подключитесь и попробуйте снова.';
+
+  @override
+  String get hubBackupAway => 'Копии делаются дома: релей их не передаёт.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Этот дом подключается через веб-страницу Zigbee2MQTT. Для копий нужен его MQTT-брокер.';
+
+  @override
+  String get hubBackupKept => 'Хранятся на этом телефоне';
+
+  @override
+  String get hubBackupSaveCopy => 'Сохранить копию';
+
+  @override
+  String get hubBackupSaved => 'Копия сохранена.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Эту копию нельзя открыть на этом телефоне.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Восстановление из ZigDash появится в следующей версии. А пока «Сохранить копию» даёт вам zip-архив резервной копии самого Zigbee2MQTT: его файлы возвращаются в папку данных Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Копия содержит ключ вашей сети Zigbee. Храните сохранённые копии в тайне.';
 }

@@ -56,6 +56,10 @@ class Routes {
   static String homeAlerts(String connectionId) =>
       '/settings/home/$connectionId/alerts';
 
+  /// Copies of Zigbee2MQTT's data folder (docs/design/hub-backup.md).
+  static String homeHubBackup(String connectionId) =>
+      '/settings/home/$connectionId/hub-backup';
+
   /// Importing names and rooms from Home Assistant (docs/design/ha-import.md).
   static String homeHaImport(String connectionId) =>
       '/settings/home/$connectionId/ha-import';

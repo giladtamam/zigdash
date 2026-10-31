@@ -4926,4 +4926,69 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Otevřít ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Záloha hubu';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Denní kopie sítě a názvů zařízení Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash uchovává kopii nastavení Zigbee2MQTT, sítě Zigbee a názvů zařízení z vašeho hubu, aby hub po resetu nebo smazání mohl síť obnovit. Nová kopie se pořídí každý den, kdy ZigDash otevřete doma, a posledních 7 zůstává v tomto telefonu.';
+
+  @override
+  String get hubBackupNone => 'Zatím žádná záloha';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Poslední záloha: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Zálohovat nyní';
+
+  @override
+  String get hubBackupMade => 'Zálohováno.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT na tomto hubu neumí vytvářet zálohy.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT neodpověděl. Zkontrolujte, že běží, a zkuste to znovu.';
+
+  @override
+  String get hubBackupOffline =>
+      'Tento domov teď není připojený. Připojte se a zkuste to znovu.';
+
+  @override
+  String get hubBackupAway => 'Zálohy se pořizují doma: relay je nepřenáší.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Tento domov se připojuje přes webovou stránku Zigbee2MQTT. Zálohy potřebují jeho MQTT broker.';
+
+  @override
+  String get hubBackupKept => 'Uloženo v tomto telefonu';
+
+  @override
+  String get hubBackupSaveCopy => 'Uložit kopii';
+
+  @override
+  String get hubBackupSaved => 'Kopie uložena.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Tuto zálohu nelze v tomto telefonu otevřít.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Obnovení zálohy přímo ze ZigDash přijde v pozdější verzi. Do té doby vám Uložit kopii dá vlastní záložní zip Zigbee2MQTT: jeho soubory patří zpět do datové složky Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Záloha obsahuje klíč vaší sítě Zigbee. Uložené kopie uchovávejte v soukromí.';
 }

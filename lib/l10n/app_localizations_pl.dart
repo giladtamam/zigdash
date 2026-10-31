@@ -4935,4 +4935,70 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Otwórz ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Kopia hubu';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Codzienna kopia sieci i nazw urządzeń z Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash przechowuje kopię ustawień Zigbee2MQTT, sieci Zigbee i nazw urządzeń z twojego hubu, aby zresetowany lub wyczyszczony hub mógł odzyskać sieć. Nowa kopia powstaje każdego dnia, gdy otwierasz ZigDash w domu, a 7 ostatnich zostaje w tym telefonie.';
+
+  @override
+  String get hubBackupNone => 'Brak kopii';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Ostatnia kopia: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Utwórz kopię teraz';
+
+  @override
+  String get hubBackupMade => 'Kopia utworzona.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT na tym hubie nie potrafi tworzyć kopii.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT nie odpowiedział. Sprawdź, czy działa, i spróbuj ponownie.';
+
+  @override
+  String get hubBackupOffline =>
+      'Ten dom nie jest teraz połączony. Połącz się i spróbuj ponownie.';
+
+  @override
+  String get hubBackupAway =>
+      'Kopie powstają w domu: przekaźnik ich nie przenosi.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Ten dom łączy się przez stronę internetową Zigbee2MQTT. Kopie wymagają jego brokera MQTT.';
+
+  @override
+  String get hubBackupKept => 'Zapisane w tym telefonie';
+
+  @override
+  String get hubBackupSaveCopy => 'Zapisz kopię';
+
+  @override
+  String get hubBackupSaved => 'Kopia zapisana.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Tej kopii nie da się otworzyć w tym telefonie.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Przywracanie kopii z ZigDash pojawi się w późniejszej wersji. Do tego czasu Zapisz kopię daje ci własny plik zip kopii Zigbee2MQTT: jego pliki wracają do folderu danych Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Kopia zawiera klucz twojej sieci Zigbee. Trzymaj zapisane kopie w prywatności.';
 }

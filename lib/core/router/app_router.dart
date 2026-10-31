@@ -12,6 +12,7 @@ import '../../features/share_home/share_home_screen.dart';
 import '../../remote/pair_phone_screen.dart';
 import '../../remote/remote_screen.dart';
 import '../../features/ha_import/ha_import_screen.dart';
+import '../../features/hub_backup/hub_backup_screen.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
 import '../../features/onboarding/setup/ha_connect_screen.dart';
@@ -329,6 +330,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (_, state) =>
                 HomeSettingsScreen(connectionId: state.pathParameters['id']!),
             routes: [
+              GoRoute(
+                path: 'hub-backup',
+                builder: (_, state) =>
+                    HubBackupScreen(connectionId: state.pathParameters['id']!),
+              ),
               GoRoute(
                 path: 'ha-import',
                 builder: (_, state) =>

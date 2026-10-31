@@ -8675,6 +8675,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open ZigDash'**
   String get nfcPopupOpenApp;
+
+  /// Settings › Home (3.3): copies of Zigbee2MQTT's data folder kept on the phone (hub-backup.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Hub backup'**
+  String get hubBackupTitle;
+
+  /// No description provided for @hubBackupSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A daily copy of Zigbee2MQTT\'s network and device names'**
+  String get hubBackupSettingsSubtitle;
+
+  /// No description provided for @hubBackupIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash keeps a copy of Zigbee2MQTT\'s settings, Zigbee network and device names from your hub, so a hub that was reset or wiped can get its network back. A new copy is taken each day you open ZigDash at home, and the last 7 are kept on this phone.'**
+  String get hubBackupIntro;
+
+  /// No description provided for @hubBackupNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup yet'**
+  String get hubBackupNone;
+
+  /// No description provided for @hubBackupLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {when}'**
+  String hubBackupLast(String when);
+
+  /// No description provided for @hubBackupNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get hubBackupNow;
+
+  /// No description provided for @hubBackupMade.
+  ///
+  /// In en, this message translates to:
+  /// **'Backed up.'**
+  String get hubBackupMade;
+
+  /// No description provided for @hubBackupRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT on this hub can\'t make backups.'**
+  String get hubBackupRefused;
+
+  /// No description provided for @hubBackupNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT didn\'t answer. Check that it\'s running, then try again.'**
+  String get hubBackupNoAnswer;
+
+  /// No description provided for @hubBackupOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'This home isn\'t connected right now. Connect to it, then try again.'**
+  String get hubBackupOffline;
+
+  /// No description provided for @hubBackupAway.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups are taken at home: the relay doesn\'t carry them.'**
+  String get hubBackupAway;
+
+  /// No description provided for @hubBackupNoBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'This home connects through Zigbee2MQTT\'s web page. Backups need its MQTT broker.'**
+  String get hubBackupNoBroker;
+
+  /// No description provided for @hubBackupKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept on this phone'**
+  String get hubBackupKept;
+
+  /// No description provided for @hubBackupSaveCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Save a copy'**
+  String get hubBackupSaveCopy;
+
+  /// No description provided for @hubBackupSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy saved.'**
+  String get hubBackupSaved;
+
+  /// No description provided for @hubBackupUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup can\'t be opened on this phone.'**
+  String get hubBackupUnreadable;
+
+  /// No description provided for @hubBackupRestoreNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring a backup from ZigDash comes in a later version. Until then, Save a copy gives you Zigbee2MQTT\'s own backup zip: its files go back into Zigbee2MQTT\'s data folder.'**
+  String get hubBackupRestoreNote;
+
+  /// No description provided for @hubBackupPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'A backup holds your Zigbee network key. Keep saved copies private.'**
+  String get hubBackupPrivate;
 }
 
 class _AppLocalizationsDelegate

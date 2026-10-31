@@ -4942,4 +4942,70 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'ZigDash openen';
+
+  @override
+  String get hubBackupTitle => 'Hubback-up';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Een dagelijkse kopie van het netwerk en de apparaatnamen van Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash bewaart een kopie van de instellingen van Zigbee2MQTT, het Zigbee-netwerk en de apparaatnamen van je hub, zodat een gereset of gewiste hub zijn netwerk terugkrijgt. Elke dag dat je ZigDash thuis opent wordt een nieuwe kopie gemaakt, en de laatste 7 blijven op deze telefoon.';
+
+  @override
+  String get hubBackupNone => 'Nog geen back-up';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Laatste back-up: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Nu back-up maken';
+
+  @override
+  String get hubBackupMade => 'Back-up gemaakt.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT op deze hub kan geen back-ups maken.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT antwoordde niet. Controleer of het draait en probeer het opnieuw.';
+
+  @override
+  String get hubBackupOffline =>
+      'Dit huis is nu niet verbonden. Maak verbinding en probeer het opnieuw.';
+
+  @override
+  String get hubBackupAway =>
+      'Back-ups worden thuis gemaakt: de relay draagt ze niet over.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Dit huis verbindt via de webpagina van Zigbee2MQTT. Back-ups hebben de MQTT-broker nodig.';
+
+  @override
+  String get hubBackupKept => 'Bewaard op deze telefoon';
+
+  @override
+  String get hubBackupSaveCopy => 'Kopie opslaan';
+
+  @override
+  String get hubBackupSaved => 'Kopie opgeslagen.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Deze back-up kan op deze telefoon niet worden geopend.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Een back-up terugzetten vanuit ZigDash komt in een latere versie. Tot die tijd geeft Kopie opslaan je de eigen back-upzip van Zigbee2MQTT: de bestanden horen terug in de datamap van Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Een back-up bevat de sleutel van je Zigbee-netwerk. Houd opgeslagen kopieën privé.';
 }

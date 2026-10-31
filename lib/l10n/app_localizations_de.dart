@@ -4956,4 +4956,70 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'ZigDash öffnen';
+
+  @override
+  String get hubBackupTitle => 'Hub-Backup';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Eine tägliche Kopie von Netzwerk und Gerätenamen aus Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash bewahrt eine Kopie der Einstellungen, des Zigbee-Netzwerks und der Gerätenamen von Zigbee2MQTT auf deinem Hub auf, damit ein zurückgesetzter oder gelöschter Hub sein Netzwerk zurückbekommt. Jeden Tag, an dem du ZigDash zu Hause öffnest, entsteht eine neue Kopie; die letzten 7 bleiben auf diesem Handy.';
+
+  @override
+  String get hubBackupNone => 'Noch kein Backup';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Letztes Backup: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Jetzt sichern';
+
+  @override
+  String get hubBackupMade => 'Gesichert.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT auf diesem Hub kann keine Backups erstellen.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT hat nicht geantwortet. Prüfe, ob es läuft, und versuche es erneut.';
+
+  @override
+  String get hubBackupOffline =>
+      'Dieses Zuhause ist gerade nicht verbunden. Verbinde dich und versuche es erneut.';
+
+  @override
+  String get hubBackupAway =>
+      'Backups entstehen zu Hause: Das Relay überträgt sie nicht.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Dieses Zuhause verbindet sich über die Webseite von Zigbee2MQTT. Backups brauchen seinen MQTT-Broker.';
+
+  @override
+  String get hubBackupKept => 'Auf diesem Handy gespeichert';
+
+  @override
+  String get hubBackupSaveCopy => 'Kopie speichern';
+
+  @override
+  String get hubBackupSaved => 'Kopie gespeichert.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Dieses Backup lässt sich auf diesem Handy nicht öffnen.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Ein Backup direkt aus ZigDash wiederherzustellen kommt in einer späteren Version. Bis dahin gibt dir Kopie speichern das eigene Backup-Zip von Zigbee2MQTT: Seine Dateien gehören zurück in den Datenordner von Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Ein Backup enthält den Schlüssel deines Zigbee-Netzwerks. Bewahre gespeicherte Kopien privat auf.';
 }

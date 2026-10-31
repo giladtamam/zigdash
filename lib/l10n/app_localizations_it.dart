@@ -4949,4 +4949,70 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get nfcPopupOpenApp => 'Apri ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Backup dell\'hub';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Una copia giornaliera della rete e dei nomi di Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash conserva una copia delle impostazioni di Zigbee2MQTT, della rete Zigbee e dei nomi dei dispositivi del tuo hub, così un hub ripristinato o cancellato può riavere la sua rete. Ogni giorno in cui apri ZigDash a casa viene fatta una nuova copia, e le ultime 7 restano su questo telefono.';
+
+  @override
+  String get hubBackupNone => 'Ancora nessun backup';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Ultimo backup: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Esegui backup ora';
+
+  @override
+  String get hubBackupMade => 'Backup eseguito.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT su questo hub non può fare backup.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT non ha risposto. Controlla che sia in funzione e riprova.';
+
+  @override
+  String get hubBackupOffline =>
+      'Questa casa non è connessa ora. Collegati e riprova.';
+
+  @override
+  String get hubBackupAway =>
+      'I backup si fanno a casa: il relay non li trasporta.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Questa casa si collega tramite la pagina web di Zigbee2MQTT. I backup richiedono il suo broker MQTT.';
+
+  @override
+  String get hubBackupKept => 'Conservati su questo telefono';
+
+  @override
+  String get hubBackupSaveCopy => 'Salva una copia';
+
+  @override
+  String get hubBackupSaved => 'Copia salvata.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Questo backup non si può aprire su questo telefono.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Il ripristino da ZigDash arriverà in una versione successiva. Fino ad allora, Salva una copia ti dà lo zip di backup di Zigbee2MQTT: i suoi file tornano nella cartella dati di Zigbee2MQTT.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Un backup contiene la chiave della tua rete Zigbee. Tieni private le copie salvate.';
 }
