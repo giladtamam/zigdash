@@ -1,7 +1,7 @@
 name: zigdash
 description: "Material 3 MQTT dashboard for Zigbee2MQTT control."
 publish_to: 'none'
-version: 3.2.9+92
+version: 3.3.0+93
 
 environment:
   sdk: ^3.8.0
