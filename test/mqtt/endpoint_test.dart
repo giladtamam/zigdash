@@ -3,12 +3,13 @@ import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/endpoint.dart';
 
-BrokerConfig _cfg({String? remoteHost}) => BrokerConfig(
+BrokerConfig _cfg({String? remoteHost, String? username}) => BrokerConfig(
       id: 'x',
       host: '192.168.7.210',
       port: 1883,
       protocol: MqttProtocol.tcp,
       remoteHost: remoteHost,
+      username: username,
     );
 
 void main() {
@@ -33,5 +34,16 @@ void main() {
     final c = endpointCandidates(_cfg(remoteHost: '   '));
     expect(c.length, 1);
     expect(c[0].kind, MqttEndpoint.local);
+  });
+
+  test('a login gets the longer budget; the short LAN probe stays short', () {
+    expect(endpointCandidates(_cfg(username: 'mqtt')).single.timeoutMs,
+        loginConnectTimeoutMs);
+    final c = endpointCandidates(
+        _cfg(username: 'mqtt', remoteHost: 'smhub.tailnet.ts.net'));
+    expect(c[0].timeoutMs, localProbeTimeoutMs);
+    expect(c[1].timeoutMs, loginConnectTimeoutMs);
+    expect(endpointCandidates(_cfg(username: '')).single.timeoutMs,
+        standardConnectTimeoutMs);
   });
 }

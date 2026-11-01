@@ -26,6 +26,8 @@ mc.MqttClient buildPlatformClient(
     '$scheme://${host ?? config.host}',
     clientId,
     config.port,
+    // One CONNECT per try, as on Android (client_factory_io.dart).
+    maxConnectionAttempts: 1,
   );
   client.websocketProtocols = ['mqtt'];
   return client;
