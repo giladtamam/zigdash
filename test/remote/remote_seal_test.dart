@@ -52,6 +52,8 @@ void main() {
     final withRelay = endpointCandidates(BrokerConfig(id: 'c', host: '192.168.1.5', port: 1883, protocol: MqttProtocol.tcp, relay: relay));
     expect(withRelay.map((c) => c.kind), [MqttEndpoint.local, MqttEndpoint.relay]);
     expect(withRelay.first.timeoutMs, standardConnectTimeoutMs, reason: 'at home the broker keeps its full budget');
+    final loginRelay = endpointCandidates(BrokerConfig(id: 'c', host: '192.168.1.5', port: 1883, protocol: MqttProtocol.tcp, username: 'mqtt', relay: relay));
+    expect(loginRelay.first.timeoutMs, standardConnectTimeoutMs, reason: 'away, a login does not hold up the relay');
     expect(withRelay.last.host, relayCandidateHost);
     final both = endpointCandidates(BrokerConfig(id: 'c', host: 'a', port: 1883, protocol: MqttProtocol.tcp, remoteHost: 'b', relay: relay));
     expect(both.map((c) => c.kind), [MqttEndpoint.local, MqttEndpoint.remote, MqttEndpoint.relay]);

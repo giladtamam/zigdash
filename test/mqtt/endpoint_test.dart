@@ -36,13 +36,14 @@ void main() {
     expect(c[0].kind, MqttEndpoint.local);
   });
 
-  test('a login gets the longer budget; the short LAN probe stays short', () {
+  test('a login gets the longer budget only when the broker is the only way in', () {
     expect(endpointCandidates(_cfg(username: 'mqtt')).single.timeoutMs,
         loginConnectTimeoutMs);
+    // With a remote address, away from home doesn't wait on the LAN.
     final c = endpointCandidates(
         _cfg(username: 'mqtt', remoteHost: 'smhub.tailnet.ts.net'));
     expect(c[0].timeoutMs, localProbeTimeoutMs);
-    expect(c[1].timeoutMs, loginConnectTimeoutMs);
+    expect(c[1].timeoutMs, standardConnectTimeoutMs);
     expect(endpointCandidates(_cfg(username: '')).single.timeoutMs,
         standardConnectTimeoutMs);
   });

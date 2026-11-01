@@ -43,12 +43,24 @@ List<MqttCandidate> endpointCandidates(BrokerConfig config) {
   final remote = config.remoteHost?.trim();
   final standard = config.viaHomeAssistant
       ? homeAssistantConnectTimeoutMs
-      : (config.username?.isNotEmpty ?? false)
-      ? loginConnectTimeoutMs
       : standardConnectTimeoutMs;
   final relay = config.relay != null && !config.notBroker
       ? [(kind: MqttEndpoint.relay, host: relayCandidateHost, timeoutMs: relayConnectTimeoutMs)]
       : const <MqttCandidate>[];
+  if ((remote == null || remote.isEmpty) && relay.isEmpty) {
+    // The broker is the only way in: a login may take its time. With a
+    // remote address or the relay, away from home must not wait 12 s on
+    // the LAN address before trying them.
+    final login = !config.viaHomeAssistant &&
+        (config.username?.isNotEmpty ?? false);
+    return [
+      (
+        kind: MqttEndpoint.local,
+        host: config.host,
+        timeoutMs: login ? loginConnectTimeoutMs : standard,
+      ),
+    ];
+  }
   if (remote == null || remote.isEmpty) {
     return [
       (
