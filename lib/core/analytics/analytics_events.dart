@@ -129,8 +129,9 @@ enum SetupStepKind {
   reviewBack,
 
   /// Looking for Home Assistant on the network (3.1.8), with its
-  /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name or
-  /// none when the look ends; used when a sign-in goes to a found address.
+  /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name,
+  /// by_sweep (3.3.1, found on port 8123 of the phone's `/24`) or none when
+  /// the look ends; used when a sign-in goes to a found address.
   haDiscovery,
 
   /// The review was left without creating a dashboard (2.10.2): back, or

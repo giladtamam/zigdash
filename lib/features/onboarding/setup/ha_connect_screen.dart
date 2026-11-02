@@ -229,10 +229,30 @@ class _AskState extends State<_Ask> {
   var _tokenOpen = false;
 
   @override
+  void initState() {
+    super.initState();
+    widget.address.addListener(_typed);
+  }
+
+  @override
+  void dispose() {
+    widget.address.removeListener(_typed);
+    super.dispose();
+  }
+
+  void _typed() => setState(() {});
+
+  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final problem = widget.state.problem;
+    // 3.3.1: with the field empty and no look under way, signing in can
+    // only end in "type the address": 503 of 553 taps in the last week of
+    // October, one user 38 times. So the button waits for an address, and
+    // where to find it shows at once. While the look runs, a tap still
+    // waits for what it finds.
+    final noAddress = widget.address.text.trim().isEmpty && !widget.looking;
     // The token opens by itself when it is the way forward.
     final tokenOpen =
         _tokenOpen ||
@@ -310,6 +330,7 @@ class _AskState extends State<_Ask> {
         ],
         // 3.1.4: an empty address was every try on 3.1.3's first night.
         if (problem == HaConnectProblem.noAddress ||
+            noAddress ||
             (widget.looked && widget.found.isEmpty)) ...[
           const SizedBox(height: 12),
           Text(l10n.haConnectWhereAddress, style: theme.textTheme.bodyMedium),
@@ -333,7 +354,8 @@ class _AskState extends State<_Ask> {
         if (widget.canSignIn) ...[
           const SizedBox(height: 24),
           FilledButton.icon(
-            onPressed: widget.onSignIn,
+            key: const Key('ha-sign-in'),
+            onPressed: noAddress ? null : widget.onSignIn,
             icon: const Icon(Icons.login),
             label: Text(l10n.haImportSignIn),
           ),

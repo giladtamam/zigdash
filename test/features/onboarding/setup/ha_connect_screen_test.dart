@@ -112,6 +112,7 @@ void main() {
       find.widgetWithText(TextField, 'Home Assistant address'),
       'https://abc.ui.nabu.casa',
     );
+    await tester.pump();
     await tester.enterText(
       find.widgetWithText(TextField, 'Long-lived access token'),
       'eyJ.tok',
@@ -135,6 +136,7 @@ void main() {
       find.widgetWithText(TextField, 'Home Assistant address'),
       '192.168.68.52',
     );
+    await tester.pump();
     await tester.tap(find.text('Sign in with Home Assistant'));
     await tester.pump();
     await tester.pump();
@@ -148,6 +150,7 @@ void main() {
       find.widgetWithText(TextField, 'Home Assistant address'),
       '192.168.68.52',
     );
+    await tester.pump();
     await tester.enterText(
       find.widgetWithText(TextField, 'Long-lived access token'),
       'eyJ.tok',
@@ -176,6 +179,7 @@ void main() {
       find.widgetWithText(TextField, 'Long-lived access token'),
       'eyJ.new',
     );
+    await tester.pump();
     await tester.tap(find.text('Connect with token'));
     await tester.pump();
     await tester.pump();
@@ -194,6 +198,7 @@ void main() {
       find.widgetWithText(TextField, 'Home Assistant address'),
       '192.168.1.20',
     );
+    await tester.pump();
     await tester.enterText(
       find.widgetWithText(TextField, 'Long-lived access token'),
       'eyJ.tok',
@@ -214,19 +219,20 @@ void main() {
     expect(find.text('setup'), findsNothing, reason: 'still on this screen');
   });
 
-  testWidgets('3.1.4: an empty address says where to find it', (tester) async {
+  testWidgets('3.3.1: an empty address says where to find it, and the '
+      'sign-in waits for one', (tester) async {
     await pump(
       tester,
       signIn: (accessToken: 'a', refreshToken: 'r', error: null),
     );
-    expect(find.textContaining('Companion app'), findsNothing);
-    await tester.tap(find.text('Sign in with Home Assistant'));
-    await tester.pump();
-    expect(
-      find.text('Type the address you open Home Assistant with.'),
-      findsOneWidget,
-    );
+    FilledButton button() =>
+        tester.widget<FilledButton>(find.byKey(const Key('ha-sign-in')));
     expect(find.textContaining('Companion app'), findsOneWidget);
+    expect(button().onPressed, isNull);
+    await tester.enterText(find.byType(TextField).first, '192.168.1.20');
+    await tester.pump();
+    expect(button().onPressed, isNotNull);
+    expect(find.textContaining('Companion app'), findsNothing);
   });
 
   group('3.1.8: Home Assistant found on the network', () {
@@ -301,9 +307,32 @@ void main() {
       );
       expect(find.textContaining('ui.nabu.casa'), findsWidgets);
       expect(find.textContaining('Companion app'), findsOneWidget);
-      await tester.tap(find.text('Sign in with Home Assistant'));
+      expect(
+        tester
+            .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
+            .onPressed,
+        isNull,
+      );
+    });
+
+    testWidgets('while looking, a sign-in can wait for what it finds', (
+      tester,
+    ) async {
+      final found = Completer<List<HaFound>>();
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () => found.future,
+        settle: false,
+      );
+      expect(
+        tester
+            .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
+            .onPressed,
+        isNotNull,
+      );
+      found.complete(const []);
       await tester.pumpAndSettle();
-      expect(find.textContaining('Companion app'), findsOneWidget);
     });
   });
 
@@ -333,6 +362,7 @@ void main() {
 
     Future<void> tryAddress(WidgetTester tester, String address) async {
       await tester.enterText(find.byType(TextField).first, address);
+      await tester.pump();
       await tester.tap(find.text('Sign in with Home Assistant'));
       await tester.pumpAndSettle();
     }
