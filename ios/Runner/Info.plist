@@ -64,6 +64,8 @@
 	<array>
 		<string>_home-assistant._tcp</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>ZigDash does not use the camera. It never asks for it; a file picker it uses for hub backups contains camera code.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

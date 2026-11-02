@@ -622,6 +622,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -645,6 +652,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -824,6 +838,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -917,6 +938,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1054,6 +1082,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1276,6 +1311,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1634,6 +1676,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1658,6 +1707,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1681,6 +1737,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1763,6 +1826,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1812,6 +1882,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -2022,6 +2099,13 @@
 					"@executable_path/Frameworks",
 				);
 				DEVELOPMENT_TEAM = UC3NAL66SP;
+				STRIP_STYLE = "non-global";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl,-exported_symbol,_zd_gcm_seal",
+					"-Wl,-exported_symbol,_zd_gcm_open",
+					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";

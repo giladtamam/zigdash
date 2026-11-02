@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:pointycastle/export.dart';
-
+import '../core/crypto/aead.dart';
 import 'remote_home.dart';
 
 /// Moving a Home's remote login between phones (3.1, zigdash-3.0.md §5):
@@ -39,17 +38,18 @@ abstract final class RemotePairing {
   static Uint8List _bytes(int n) => Uint8List.fromList(List<int>.generate(n, (_) => _random.nextInt(256)));
 
   static Uint8List _derive(String passphrase, Uint8List salt, int iterations) {
-    final kdf = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64))..init(Pbkdf2Parameters(salt, iterations, 32));
-    return kdf.process(Uint8List.fromList(utf8.encode(passphrase)));
+    return pbkdf2Sha256(Uint8List.fromList(utf8.encode(passphrase)), salt, iterations, 32);
   }
 
   /// The backup file's text: the login sealed with a key derived from
   /// [passphrase] (PBKDF2-SHA256, AES-256-GCM). Useless without it.
   static String backup(RemoteHome home, String passphrase) {
     final salt = _bytes(16), iv = _bytes(12);
-    final cipher = GCMBlockCipher(AESEngine())
-      ..init(true, AEADParameters(KeyParameter(_derive(passphrase, salt, _iterations)), 128, iv, Uint8List(0)));
-    final data = cipher.process(Uint8List.fromList(utf8.encode(jsonEncode(home.toJson()))));
+    final data = gcmSeal(
+      _derive(passphrase, salt, _iterations),
+      iv,
+      Uint8List.fromList(utf8.encode(jsonEncode(home.toJson()))),
+    );
     return const JsonEncoder.withIndent('  ').convert({
       'zigdash': 'remote-key-backup',
       'v': 1,
@@ -67,9 +67,8 @@ abstract final class RemotePairing {
       final j = jsonDecode(text) as Map;
       if (j['zigdash'] != 'remote-key-backup' || j['v'] != 1) return null;
       final key = _derive(passphrase, base64.decode('${j['salt']}'), (j['iterations'] as num).toInt());
-      final cipher = GCMBlockCipher(AESEngine())
-        ..init(false, AEADParameters(KeyParameter(key), 128, base64.decode('${j['iv']}'), Uint8List(0)));
-      final plain = cipher.process(base64.decode('${j['data']}'));
+      final plain = gcmOpen(key, base64.decode('${j['iv']}'), base64.decode('${j['data']}'));
+      if (plain == null) return null;
       return RemoteHome.fromJson(jsonDecode(utf8.decode(plain)));
     } catch (_) {
       return null;

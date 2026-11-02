@@ -3,7 +3,8 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart' as hash;
-import 'package:pointycastle/export.dart';
+
+import '../core/crypto/aead.dart';
 
 /// Sealing for the ZigDash relay (zigdash-3.0.md §5), byte-compatible with
 /// hub/src/engine.js: AES-256-GCM with a 12-byte IV, laid out as
@@ -14,19 +15,16 @@ abstract final class RemoteSeal {
 
   static Uint8List seal(Uint8List key, Map<String, Object?> message) {
     final iv = Uint8List.fromList(List<int>.generate(12, (_) => _random.nextInt(256)));
-    final cipher = GCMBlockCipher(AESEngine())
-      ..init(true, AEADParameters(KeyParameter(key), 128, iv, Uint8List(0)));
-    final sealed = cipher.process(Uint8List.fromList(utf8.encode(jsonEncode(message))));
-    return Uint8List.fromList([...iv, ...sealed]); // pointycastle appends the tag
+    final sealed = gcmSeal(key, iv, Uint8List.fromList(utf8.encode(jsonEncode(message))));
+    return Uint8List.fromList([...iv, ...sealed]);
   }
 
   /// The message inside [bytes], or null when it wasn't sealed with [key].
   static Map<String, Object?>? unseal(Uint8List key, Uint8List bytes) {
     if (bytes.length < 29) return null;
     try {
-      final cipher = GCMBlockCipher(AESEngine())
-        ..init(false, AEADParameters(KeyParameter(key), 128, bytes.sublist(0, 12), Uint8List(0)));
-      final plain = cipher.process(bytes.sublist(12));
+      final plain = gcmOpen(key, bytes.sublist(0, 12), bytes.sublist(12));
+      if (plain == null) return null;
       final decoded = jsonDecode(utf8.decode(plain));
       return decoded is Map<String, Object?> ? decoded : null;
     } catch (_) {

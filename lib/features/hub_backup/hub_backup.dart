@@ -4,8 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:pointycastle/export.dart';
-
+import '../../core/crypto/aead.dart';
 import '../../engine/engine_installer.dart' show HubLink;
 
 /// Hub backup (docs/design/hub-backup.md): Zigbee2MQTT's own data folder,
@@ -86,29 +85,13 @@ abstract final class BackupSeal {
     final iv = Uint8List.fromList(
       List<int>.generate(12, (_) => _random.nextInt(256)),
     );
-    final cipher = GCMBlockCipher(AESEngine())
-      ..init(true, AEADParameters(KeyParameter(key), 128, iv, Uint8List(0)));
-    return Uint8List.fromList([...iv, ...cipher.process(plain)]);
+    return Uint8List.fromList([...iv, ...gcmSeal(key, iv, plain)]);
   }
 
   /// The bytes inside [sealed], or null when they were not sealed with [key].
   static Uint8List? unseal(Uint8List key, Uint8List sealed) {
     if (sealed.length < 29) return null;
-    try {
-      final cipher = GCMBlockCipher(AESEngine())
-        ..init(
-          false,
-          AEADParameters(
-            KeyParameter(key),
-            128,
-            sealed.sublist(0, 12),
-            Uint8List(0),
-          ),
-        );
-      return cipher.process(sealed.sublist(12));
-    } catch (_) {
-      return null;
-    }
+    return gcmOpen(key, sealed.sublist(0, 12), sealed.sublist(12));
   }
 
   static Uint8List newKey() =>
