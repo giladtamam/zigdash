@@ -20,6 +20,11 @@ typedef HaSignIn = Future<HaSignInResult> Function(Uri base);
 /// Ends a sign-in; see [revokeHaSignIn].
 typedef HaRevoke = Future<void> Function(Uri base, String refreshToken);
 
+/// Whether anything answers at [base] before the browser opens (3.2.9):
+/// null when it does, else [HaImportProblem.unreachable] or
+/// [HaImportProblem.certificate].
+typedef HaImportReach = Future<HaImportProblem?> Function(Uri base);
+
 /// Writes a plan into the home.
 typedef HaImportWriter =
     Future<HaImportResult> Function(
@@ -44,6 +49,11 @@ enum HaImportProblem {
   /// Home Assistant did not accept the sign-in (often: no internet to read
   /// ZigDash's page). The token is the way then.
   signInRefused,
+
+  /// The browser came back without signing in (3.2.9): closed, or a page
+  /// that never became Home Assistant's login. Until then this went back
+  /// in silence, and people tapped Sign in again and again.
+  signInUnfinished,
 }
 
 sealed class HaImportState {
@@ -99,8 +109,10 @@ class HaImportController extends ValueNotifier<HaImportState> {
     required HaImportWriter writer,
     HaSignIn? signIn,
     HaRevoke? revoke,
+    HaImportReach? reach,
     this.onEvent,
   }) : _reader = reader,
+       _reach = reach,
        _devices = devices,
        _writer = writer,
        _signIn = signIn,
@@ -113,6 +125,7 @@ class HaImportController extends ValueNotifier<HaImportState> {
   final HaImportWriter _writer;
   final HaSignIn? _signIn;
   final HaRevoke? _revoke;
+  final HaImportReach? _reach;
   String _address;
 
   /// Usage events only the controller can see (2.9.7): how the sign-in
@@ -137,6 +150,11 @@ class HaImportController extends ValueNotifier<HaImportState> {
     if (signIn == null) return;
     final z2m = await _devices();
     if (z2m == null) return _ask(HaImportProblem.noDevices);
+    // 3.2.9: the address is filled in from the broker, which on an SMHUB
+    // or a separate Mosquitto box is not Home Assistant; the browser then
+    // showed an error page, closed as a cancel, six times in a row.
+    final unreached = await _reach?.call(base);
+    if (unreached != null) return _ask(unreached);
     final signed = await signIn(base);
     final access = signed.accessToken;
     _signedIn(HaSignInMethod.page, switch (signed.error) {
@@ -147,7 +165,8 @@ class HaImportController extends ValueNotifier<HaImportState> {
     });
     if (access == null) {
       return switch (signed.error) {
-        HaSignInError.cancelled || null => back(),
+        HaSignInError.cancelled ||
+        null => _ask(HaImportProblem.signInUnfinished),
         HaSignInError.refused => _ask(HaImportProblem.signInRefused),
         HaSignInError.failed => _ask(HaImportProblem.failed),
       };

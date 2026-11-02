@@ -1,0 +1,1 @@
+NFC tags: hold a sticker to your phone to make it run a scene or switch a light, plug or shutter. Long-press the tile and choose Write to NFC tag; tapping the tag later does it without opening the app. Your tags are listed in the Home's settings, where you can turn one off.

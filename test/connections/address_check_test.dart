@@ -103,11 +103,12 @@ void main() {
           port: 8123,
         ),
       );
-      // All three hub ports, since no port was typed.
+      // Every hub port, since no port was typed; 3000 for early SMHUBs.
       expect(hubs.probed, [
         '192.168.1.20:8123',
         '192.168.1.20:8080',
         '192.168.1.20:80',
+        '192.168.1.20:3000',
       ]);
     });
 

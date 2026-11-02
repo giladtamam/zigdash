@@ -22,13 +22,15 @@ const FLOWS = {
   },
   history: {
     heartbeat: 'zigdash/history/bridge/state',
-    names: ['ingest', 'restore', 'record', 'tick', 'heartbeat'],
+    names: ['ingest', 'restore', 'record', 'tally', 'restoretally', 'tick', 'heartbeat'],
     inputs: [
       { topic: 'zigdash/history/config', to: 'ingest' },
       { topic: 'zigdash/history/+/+/+', to: 'restore' },
+      { topic: 'zigdash/history/tally/+/+/+', to: 'restoretally' },
       { devices: true, to: 'record' },
+      { devices: true, to: 'tally' },
     ],
-    wires: { ingest: [[]], restore: [[]], record: [[]], tick: [['out']], heartbeat: [['out']] },
+    wires: { ingest: [[]], restore: [[]], record: [[]], tally: [[]], restoretally: [[]], tick: [['out']], heartbeat: [['out']] },
     httpTo: null,
     timers: [{ first: 5000, every: 60000, to: 'tick' }, { first: 1000, every: 30000, to: 'heartbeat' }],
   },

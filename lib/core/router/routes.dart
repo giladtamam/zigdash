@@ -51,8 +51,14 @@ class Routes {
   /// Share this home with another phone at home (3.1.7).
   static String homeShare(String connectionId) =>
       '/settings/home/$connectionId/share';
+  static String homeNfcTags(String connectionId) =>
+      '/settings/home/$connectionId/nfc-tags';
   static String homeAlerts(String connectionId) =>
       '/settings/home/$connectionId/alerts';
+
+  /// Copies of Zigbee2MQTT's data folder (docs/design/hub-backup.md).
+  static String homeHubBackup(String connectionId) =>
+      '/settings/home/$connectionId/hub-backup';
 
   /// Importing names and rooms from Home Assistant (docs/design/ha-import.md).
   static String homeHaImport(String connectionId) =>

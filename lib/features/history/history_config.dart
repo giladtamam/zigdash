@@ -100,12 +100,103 @@ List<HistoryReading> historyReadingsOf(Iterable<Panel> tiles) {
   return out.take(historyMaxReadings).toList();
 }
 
+/// At most this many devices are tallied per Home (3.3).
+const historyMaxTallies = 50;
+
+/// What a tally counts: a light or plug turning on ([on]), a door or window
+/// opening ([open]), a motion sensor seeing motion ([motion]).
+enum HistoryTallyKind { on, open, motion }
+
+/// One tallied device (3.3, the weekly card): the Engine counts the times
+/// the value at [path] turns on and the minutes it stays on.
+class HistoryTally {
+  const HistoryTally({
+    required this.ieee,
+    required this.path,
+    required this.topic,
+    required this.kind,
+  });
+
+  final String ieee;
+  final String path;
+  final String topic;
+  final HistoryTallyKind kind;
+
+  String get attr => historyAttr(path);
+
+  Map<String, Object?> toJson() => {
+    'ieee': ieee,
+    'attr': attr,
+    'topic': topic,
+    'path': path,
+    'kind': kind.name,
+  };
+
+  @override
+  bool operator ==(Object other) =>
+      other is HistoryTally &&
+      other.ieee == ieee &&
+      other.path == path &&
+      other.topic == topic &&
+      other.kind == kind;
+
+  @override
+  int get hashCode => Object.hash(ieee, path, topic, kind);
+}
+
+/// What a Home tallies: every light, plug, door and motion sensor with a
+/// device tile on its dashboards, once each, at most [historyMaxTallies].
+List<HistoryTally> historyTalliesOf(Iterable<Panel> tiles) {
+  final out = <HistoryTally>[];
+  final seen = <String>{};
+  for (final tile in tiles) {
+    if (out.length >= historyMaxTallies) break;
+    final ieee = tile.deviceIeee;
+    final topic = tile.topicPrefixOverride;
+    if (tile.type != PanelType.device ||
+        ieee == null ||
+        topic == null ||
+        topic.isEmpty) {
+      continue;
+    }
+    final c = PanelConfig.decode(PanelType.device, tile.config);
+    if (c is! DeviceTileConfig) continue;
+    final profile = c.profile;
+    final (String? path, HistoryTallyKind kind) = switch (profile.deviceClass) {
+      DeviceClass.light || DeviceClass.colorLight || DeviceClass.switchPlug => (
+        profile.switches.firstOrNull?.property,
+        HistoryTallyKind.on,
+      ),
+      DeviceClass.contact => (
+        _featureNamed(profile, 'contact'),
+        HistoryTallyKind.open,
+      ),
+      DeviceClass.motion => (
+        _featureNamed(profile, 'occupancy'),
+        HistoryTallyKind.motion,
+      ),
+      _ => (null, HistoryTallyKind.on),
+    };
+    if (path == null || !seen.add('$ieee/${historyAttr(path)}')) continue;
+    out.add(HistoryTally(ieee: ieee, path: path, topic: topic, kind: kind));
+  }
+  return out;
+}
+
+String? _featureNamed(DeviceProfile profile, String property) {
+  for (final f in profile.features) {
+    if (f.property == property) return f.property;
+  }
+  return null;
+}
+
 /// The config payload for the recorder.
 String encodeHistoryConfig({
   required String home,
   required String base,
   required String timeZone,
   required List<HistoryReading> readings,
+  List<HistoryTally> tallies = const [],
 }) => jsonEncode({
   'v': 1,
   'home': home,
@@ -113,7 +204,49 @@ String encodeHistoryConfig({
   'timeZone': timeZone,
   'keepDays': historyKeepDays,
   'readings': [for (final r in readings) r.toJson()],
+  if (tallies.isNotEmpty) 'tallies': [for (final t in tallies) t.toJson()],
 });
+
+/// The tallies in a retained config payload; empty for none or a broken one.
+List<HistoryTally> decodeHistoryTallies(String payload) {
+  if (payload.trim().isEmpty) return const [];
+  try {
+    final j = jsonDecode(payload);
+    if (j is! Map || j['tallies'] is! List) return const [];
+    return [
+      for (final t in j['tallies'] as List)
+        if (t is Map &&
+            t['ieee'] is String &&
+            t['path'] is String &&
+            t['topic'] is String &&
+            HistoryTallyKind.values.any((k) => k.name == t['kind']))
+          HistoryTally(
+            ieee: t['ieee'] as String,
+            path: t['path'] as String,
+            topic: t['topic'] as String,
+            kind: HistoryTallyKind.values.byName(t['kind'] as String),
+          ),
+    ];
+  } on FormatException {
+    return const [];
+  }
+}
+
+/// [mine] merged into [retained] as for readings: another phone's tallies
+/// stay, mine replace theirs for the same device.
+List<HistoryTally> mergeHistoryTallies(
+  List<HistoryTally> retained,
+  List<HistoryTally> mine,
+) {
+  String key(HistoryTally t) => '${t.ieee}/${t.attr}';
+  final byKey = {for (final t in mine) key(t): t};
+  final out = <HistoryTally>[for (final t in retained) byKey[key(t)] ?? t];
+  final seen = {for (final t in out) key(t)};
+  for (final t in mine) {
+    if (seen.add(key(t))) out.add(t);
+  }
+  return out.take(historyMaxTallies).toList();
+}
 
 /// The readings in a retained config payload; empty for none or a broken one.
 List<HistoryReading> decodeHistoryReadings(String payload) {

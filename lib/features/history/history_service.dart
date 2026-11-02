@@ -96,11 +96,15 @@ class HistoryService {
         decodeHistoryReadings(retained),
         historyReadingsOf([for (final (tile, _) in tiles) tile]),
       ),
+      tallies: mergeHistoryTallies(
+        decodeHistoryTallies(retained),
+        historyTalliesOf([for (final (tile, _) in tiles) tile]),
+      ),
     );
   }
 
-  /// Publishes the config retained when its readings differ from those in
-  /// [current] (the retained copy on the broker). Only readings count: two
+  /// Publishes the config retained when its readings or tallies differ from
+  /// those in [current] (the retained copy on the broker). Only those count: two
   /// phones in different time zones must not flip the config back and forth.
   /// False when not connected.
   Future<bool> publishConfig(String connectionId, {String? current}) async {
@@ -202,6 +206,11 @@ bool _sameReadings(String a, String b) {
   if (x.length != y.length) return false;
   for (var i = 0; i < x.length; i++) {
     if (x[i] != y[i]) return false;
+  }
+  final tx = decodeHistoryTallies(a), ty = decodeHistoryTallies(b);
+  if (tx.length != ty.length) return false;
+  for (var i = 0; i < tx.length; i++) {
+    if (tx[i] != ty[i]) return false;
   }
   return true;
 }

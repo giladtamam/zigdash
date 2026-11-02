@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/analytics/analytics.dart';
 
 import '../core/l10n/l10n_ext.dart';
+import '../features/nfc/nfc_tags.dart';
 import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import 'shortcut_service.dart';
@@ -55,6 +56,21 @@ class AddShortcutButton extends ConsumerWidget {
                         name: name);
                   },
                 ),
+                if (canTile &&
+                    ref.read(nfcStateProvider).valueOrNull != NfcState.none)
+                  ListTile(
+                    key: const Key('device-write-nfc'),
+                    leading: const Icon(Icons.nfc),
+                    title: Text(context.l10n.nfcWriteTag),
+                    onTap: () {
+                      Navigator.pop(sheetCtx);
+                      showWriteNfcTag(context,
+                          connectionId: connectionId,
+                          action: NfcTagAction.toggle,
+                          target: ieee,
+                          label: name);
+                    },
+                  ),
                 if (canTile)
                   ListTile(
                     leading: const Icon(Icons.dashboard_customize_outlined),

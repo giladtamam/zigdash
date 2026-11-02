@@ -413,7 +413,7 @@ void main() {
       });
     });
 
-    test('refused by a Home Assistant: install the Mosquitto add-on', () {
+    test('refused by a Home Assistant: install the Mosquitto broker app', () {
       fakeAsync((async) {
         final asked = <String>[];
         final d = diagnostics(

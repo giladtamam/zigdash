@@ -8,6 +8,11 @@
     <!-- Android 17 (targetSdk 37) needs this to reach the hub on the LAN;
          asked for at start on phones that enforce it (alerts-2.3.md §3). -->
     <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK"/>
+    <!-- NFC tags (3.3): tap one to run a scene or toggle a device. -->
+    <uses-permission android:name="android.permission.NFC"/>
+    <!-- A short buzz when a ZigDash NFC tag is read. -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="false"/>
     <application
         android:label="ZigDash"
         android:name="${applicationName}"
@@ -61,6 +66,20 @@
             android:taskAffinity="com.giladtamam.zigdash.cover"
             android:launchMode="singleTask"
             android:theme="@style/CoverPopup" />
+        <!-- NFC tags (3.3): a ZigDash tag runs its action without opening the app. -->
+        <activity
+            android:name=".NfcTagActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="com.giladtamam.zigdash.nfc"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="zigdash" android:host="tag"/>
+            </intent-filter>
+        </activity>
         <!-- The setup reminder (2.9.7): flutter_local_notifications shows it
              when its alarm fires, and sets it again after a restart. -->
         <receiver

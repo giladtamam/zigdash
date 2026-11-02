@@ -149,14 +149,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connHelpSmhubBody =>
-      'IP adresa brokeru je IP adresa hubu. Najdeš ji ve webovém rozhraní SMLIGHT v Settings → Network, nebo v routeru. Port je 1883, ve výchozím stavu bez uživatelského jména a hesla.';
+      'IP adresa brokeru je IP adresa hubu. Otevři webovou stránku hubu (smhub.local): na Dashboard ji najdeš v rámečku Network u IPv4. Hub uvidíš i v aplikaci routeru jako SMHUB. Port je 1883, ve výchozím stavu bez uživatelského jména a hesla.';
 
   @override
   String get connHelpZhaTitle => 'Home Assistant ZHA';
 
   @override
   String get connHelpZhaBody =>
-      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nemůže připojit. Pokud chceš ZigDash používat, přejdi na Zigbee2MQTT (dostupné jako doplněk Home Assistantu nebo jako kontejner Dockeru), který MQTT broker poskytuje.';
+      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nepřipojí. Chceš-li používat ZigDash, přejdi na Zigbee2MQTT (k dispozici jako aplikace Home Assistantu nebo kontejner Docker), který MQTT broker poskytuje.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1383,12 +1383,12 @@ class AppLocalizationsCs extends AppLocalizations {
       'Telefon tento název nenašel. Android často neumí vyhledat názvy končící na .local, takže místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
 
   @override
-  String get diagResolveLocalNameIos =>
-      'Telefon tento název nenašel. Zkontroluj, jestli je správně napsaný, nebo místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
+  String get diagTcpHaNoBroker =>
+      'Tohle je tvůj Home Assistant, ale neběží na něm žádný MQTT broker. Nainstaluj a spusť aplikaci Mosquitto broker (Nastavení › Aplikace) a zkus to znovu.';
 
   @override
-  String get diagTcpHaNoBroker =>
-      'Tohle je tvůj Home Assistant, ale neběží na něm žádný MQTT broker. Nainstaluj a spusť doplněk Mosquitto broker (Nastavení › Doplňky) a zkus to znovu.';
+  String get diagResolveLocalNameIos =>
+      'Telefon tento název nenašel. Zkontroluj, jestli je správně napsaný, nebo místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1503,13 +1503,60 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupAskHa => 'Home Assistant';
 
   @override
-  String get setupAskHaSub => 'S doplňkem Zigbee2MQTT, nebo ZHA';
+  String get setupAskHaSub => 'S aplikací Zigbee2MQTT, nebo ZHA';
 
   @override
-  String get setupAskSmlight => 'Hub SMLIGHT';
+  String get setupAskSmlight => 'SMLIGHT';
 
   @override
-  String get setupAskSmlightSub => 'SLZB nebo SMHUB se Zigbee2MQTT';
+  String get setupAskSmlightSub => 'SMHUB nebo adaptér SLZB';
+
+  @override
+  String get setupAskSmlightWhich => 'Jaké zařízení SMLIGHT máš?';
+
+  @override
+  String get setupAskSmhub => 'SMHUB';
+
+  @override
+  String get setupAskSmhubSub => 'Zigbee2MQTT běží přímo na hubu';
+
+  @override
+  String get setupAskSlzb => 'Adaptér SLZB';
+
+  @override
+  String get setupAskSlzbSub => 'SLZB-06, SLZB-MR a další: jen rádio Zigbee';
+
+  @override
+  String get setupSlzbWhere =>
+      'Tvůj SLZB je rádio Zigbee. Zigbee2MQTT běží na jiném zařízení: na kterém?';
+
+  @override
+  String get setupRunningAsk => 'Běží už Zigbee2MQTT?';
+
+  @override
+  String get setupRunningYes => 'Ano, běží';
+
+  @override
+  String get setupRunningNotYet => 'Ještě ne';
+
+  @override
+  String get setupRunningNotSure => 'Nevím jistě';
+
+  @override
+  String get setupRunningYesNote =>
+      'Pak ho tento telefon odsud nevidí. Nejčastěji je telefon v síti pro hosty nebo na jiné Wi-Fi, nebo broker přijímá spojení jen ze svého vlastního počítače (Mosquitto 2 to dělá, dokud jeho konfigurace nemá \"listener 1883\"). Zadejte jeho adresu níže a ověřte ji.';
+
+  @override
+  String get setupRunningNotYetNote =>
+      'ZigDash se připojuje k Zigbee2MQTT, které už běží. Podívejte se, co potřebujete pro začátek, a mezitím vyzkoušejte demo.';
+
+  @override
+  String setupRunningNotSureNote(String button) {
+    return 'Zigbee2MQTT má vlastní webovou stránku, kde párujete zařízení Zigbee. Pokud jste ji už otevřeli, běží: klepněte níže na \"$button\". Pokud jste ji nikdy neviděli, ještě není nastavené.';
+  }
+
+  @override
+  String get setupRunningWhatToGet => 'Co potřebujete';
 
   @override
   String get setupAskNothing => 'Zatím nic?';
@@ -1518,7 +1565,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupAskHaWhich => 'Jak váš Home Assistant provozuje Zigbee?';
 
   @override
-  String get setupAskHaZ2m => 'Doplněk Zigbee2MQTT';
+  String get setupAskHaZ2m => 'Aplikace Zigbee2MQTT';
 
   @override
   String get setupAskHaZ2mSub => 'Přihlásit se přes Home Assistant';
@@ -1593,7 +1640,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupGuideHa =>
-      'Home Assistant: zkontroluj, že doplněk MQTT brokeru (např. Mosquitto) a doplněk Zigbee2MQTT jsou nainstalované a běží.';
+      'Home Assistant: zkontroluj, že aplikace Mosquitto broker a Zigbee2MQTT jsou nainstalované a běží (Nastavení › Aplikace).';
 
   @override
   String get setupGuidePi =>
@@ -1727,7 +1774,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haConnectNoMqtt =>
-      'Tento Home Assistant nemá integraci MQTT. Zigbee2MQTT ji potřebuje taky: v Home Assistantu přidej doplněk Mosquitto broker a integraci MQTT a zkus to znovu.';
+      'Tento Home Assistant nemá integraci MQTT. Zigbee2MQTT ji potřebuje také: v Home Assistantu přidej aplikaci Mosquitto broker (Nastavení › Aplikace) a integraci MQTT, pak to zkus znovu.';
 
   @override
   String get haConnectSignInFailed =>
@@ -1783,7 +1830,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupAuthHintHa =>
-      'Home Assistant: použij uživatele Home Assistantu. Většina lidí si vytvoří samostatného jen pro MQTT v Nastavení › Osoby › Uživatelé a doplněk Mosquitto ho přijme.';
+      'Home Assistant: použij uživatele Home Assistantu. Většina lidí si vytvoří jednoho jen pro MQTT v Nastavení › Lidé › Uživatelé a aplikace Mosquitto broker ho přijme.';
 
   @override
   String get setupAuthHintPi =>
@@ -1791,7 +1838,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupAuthHintSmlight =>
-      'SMLIGHT: přihlášení zobrazené na webové stránce hubu v Settings › MQTT.';
+      'SMLIGHT: přihlášení zobrazené na webové stránce hubu v Settings › MQTT. Nebo tam zapni Allow Anonymous a ulož: pak přihlášení není potřeba.';
 
   @override
   String get setupVerifyingTitle => 'Kontroluji připojení…';
@@ -1932,7 +1979,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrHaNoZ2mBody =>
-      'Jste přihlášeni do Home Assistantu, ale Zigbee2MQTT přes jeho MQTT nic neposílá. Pokud máte zařízení Zigbee v ZHA (vestavěném Zigbee Home Assistantu), ZigDash je nevidí: pracuje se Zigbee2MQTT. Pokud používáte doplněk Zigbee2MQTT, otevřete ho v Home Assistantu, zkontrolujte, že běží, a zkuste to znovu.';
+      'Jsi přihlášen do Home Assistantu, ale Zigbee2MQTT na svém MQTT nic neposílá. Pokud máš zařízení Zigbee v ZHA (vestavěném Zigbee Home Assistantu), ZigDash je nevidí: funguje se Zigbee2MQTT. Pokud používáš aplikaci Zigbee2MQTT, otevři ji v Nastavení › Aplikace, zkontroluj, že běží, a zkus to znovu.';
 
   @override
   String get setupErrHaNoZ2mAction => 'Zkusit znovu';
@@ -1992,7 +2039,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerBody =>
-      'Tvůj broker byl nalezen, ale na uživatelské jméno a heslo neodpověděl včas. Doplněk Mosquitto v Home Assistantu ověřuje přihlášení přes Home Assistant, což na Raspberry Pi může trvat pár sekund. Zkus to znovu a zkontroluj, že tento uživatel v Home Assistantu existuje.';
+      'Broker byl nalezen, ale na uživatelské jméno a heslo neodpověděl včas. Aplikace Mosquitto broker v Home Assistantu ověřuje přihlášení u Home Assistantu, což může na Raspberry Pi trvat pár sekund. Zkus to znovu a zkontroluj, že tento uživatel v Home Assistantu existuje. Na hubu SMLIGHT místo toho zapni Allow Anonymous v Settings › MQTT a přihlášení nebude potřeba.';
 
   @override
   String get setupErrLoginNoAnswerAction => 'Zkusit znovu';
@@ -2032,7 +2079,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupPlatformHa => 'Home Assistant';
 
   @override
-  String get setupPlatformSmlight => 'Hub SMLIGHT';
+  String get setupPlatformSmlight => 'SMHUB';
 
   @override
   String get setupPlatformPi => 'Raspberry Pi nebo Docker';
@@ -2056,7 +2103,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupScanHintHa => 'Hledám Home Assistant a jeho MQTT broker…';
 
   @override
-  String get setupScanHintSmlight => 'Hledám tvůj hub SMLIGHT…';
+  String get setupScanHintSmlight => 'Hledáme tvůj SMHUB…';
 
   @override
   String get setupScanHintPi => 'Hledám MQTT broker ve tvé síti…';
@@ -2085,7 +2132,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String setupNoBrokerHaBody(String host) {
-    return 'Home Assistant je na $host, ale na MQTT portu 1883 nic neodpovídá. V Home Assistantu otevři Nastavení › Doplňky, nainstaluj a spusť doplněk Mosquitto broker a zkus to znovu.';
+    return 'Home Assistant je na adrese $host, ale na MQTT portu 1883 nic neodpovídá. V Home Assistantu otevři Nastavení › Aplikace, nainstaluj a spusť aplikaci Mosquitto broker a zkus to znovu.';
   }
 
   @override
@@ -2093,8 +2140,12 @@ class AppLocalizationsCs extends AppLocalizations {
       'Používáš vlastní Zigbee Home Assistantu (ZHA) místo Zigbee2MQTT? ZigDash funguje jen se Zigbee2MQTT, takže zařízení ZHA nevidí. Demo ukazuje, co bys dostal.';
 
   @override
+  String get setupNoBrokerHaDocker =>
+      'V Nastavení tvého Home Assistantu nejsou Aplikace? Pak běží v Dockeru (Home Assistant Container), který aplikace nemá: Mosquitto běží ve vlastním kontejneru. Zadej níže adresu počítače, na kterém běží.';
+
+  @override
   String get setupVpnHint =>
-      'Máš zapnutou VPN a ta může domácí síť před hledáním skrýt. Pokud jsi doma, vypni VPN a klepni na Zkusit znovu.';
+      'Máš zapnutou VPN a ta může domácí síť před hledáním skrýt. Pokud jsi doma, vypni VPN a klepni na Zkusit znovu. Nebo ji nech zapnutou a v nastavení aplikace VPN povol přístup k místní síti (LAN).';
 
   @override
   String get setupLocalNetworkIos =>
@@ -2176,6 +2227,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupAddressQuestionSmlight => 'Jakou adresu má tvůj hub SMLIGHT?';
 
   @override
+  String get setupAddressWhereSmlight =>
+      'Otevři webovou stránku hubu: smhub.local, u prvních hubů smhub.local:3000. Na Dashboard ukazuje rámeček Network adresu u IPv4. Napiš ji sem. Pokud se stránka neotevře, aplikace routeru ukazuje hub jako SMHUB i s jeho IP.';
+
+  @override
+  String get setupAddressSlzbSmlight =>
+      'SLZB-06, MR nebo UltimaX je jen Zigbee rádio a nemá broker. Napiš místo toho adresu počítače, na kterém běží Zigbee2MQTT a Mosquitto.';
+
+  @override
   String get setupAddressQuestionPi =>
       'Jakou adresu má počítač, na kterém běží Mosquitto?';
 
@@ -2241,7 +2300,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupChoiceHaNote =>
-      'ZigDash se připojuje k MQTT brokeru Home Assistantu, doplňku Mosquitto broker v Nastavení › Doplňky, a Zigbee2MQTT ho musí používat také. Pokud se homeassistant.local nenajde, zadej níže IP adresu Home Assistantu. Najdeš ji v Nastavení › Systém › Síť.';
+      'ZigDash se připojuje k MQTT brokeru Home Assistantu, aplikaci Mosquitto broker v Nastavení › Aplikace, a Zigbee2MQTT ho musí používat také. Pokud se homeassistant.local nenajde, zadej níže IP adresu Home Assistantu. Najdeš ji v Nastavení › Systém › Síť.';
 
   @override
   String get setupChoiceOther => 'Můj hub je v jiné síti';
@@ -2874,7 +2933,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tipBrokerRunningBody =>
-      'Home Assistant: doplněk Mosquitto je spuštěný. Raspberry Pi: Mosquitto běží. SMLIGHT: Settings › MQTT je zapnuté.';
+      'Home Assistant: aplikace Mosquitto broker je spuštěná. Raspberry Pi: Mosquitto běží. SMLIGHT: Settings › MQTT je zapnuté.';
 
   @override
   String get tipBrokerAcceptsTitle => 'Broker přijímá tvůj telefon';
@@ -2923,7 +2982,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tipStartBrokerBody =>
-      'Spusť Mosquitto nebo doplněk brokeru a zkus to znovu.';
+      'Spusť Mosquitto nebo aplikaci Mosquitto broker a zkus to znovu.';
 
   @override
   String get tipMosquitto2Title => 'Mosquitto 2';
@@ -2937,7 +2996,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get tipMqttLoginBody =>
-      'Heslo k webové stránce hubu obvykle není heslo k MQTT. Home Assistant: použij uživatele Home Assistantu nebo přihlášení nastavené v doplňku Mosquitto.';
+      'Heslo k webové stránce hubu obvykle není heslo k MQTT. Home Assistant: použij uživatele Home Assistantu, nebo přihlášení nastavené v aplikaci Mosquitto broker.';
 
   @override
   String get tipSpacesTitle => 'Zkontroluj mezery';
@@ -3927,7 +3986,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haImportUnreachable =>
-      'Na té adrese nic neodpovědělo. Zkontroluj ji a jestli je telefon v domácí síti.';
+      'Na té adrese nic neodpovědělo. Zkontroluj ji a jestli je telefon v domácí síti. Je to adresa, kterou otevíráte Home Assistant v prohlížeči, a nemusí být stejná jako adresa brokeru.';
 
   @override
   String get haImportNotHa =>
@@ -4031,6 +4090,10 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haImportSignInRefused =>
       'Home Assistant přihlášení nepřijal. To se stává, když Home Assistant nemá přístup k internetu. Použij místo toho dlouhodobý token níže.';
+
+  @override
+  String get haImportSignInUnfinished =>
+      'Přihlášení nebylo dokončeno. Pokud se stránka neotevřela, zkontrolujte adresu: je to ta, kterou otevíráte Home Assistant v prohlížeči, a nemusí být stejná jako adresa brokeru. Nebo níže použijte dlouhodobý token.';
 
   @override
   String get setupIsolatedHint =>
@@ -4768,4 +4831,266 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get guidedNoZ2mBody =>
       'Odpovídá tu MQTT broker, ale Zigbee2MQTT přes něj nic neposílá. Zkontrolujte, že Zigbee2MQTT běží a používá tento broker a že základní topic odpovídá jeho nastavení. Pokud máte zařízení Zigbee v ZHA v Home Assistantu, ZigDash je nevidí: pracuje se Zigbee2MQTT.';
+
+  @override
+  String devicesOtherBaseBody(String found, String current) {
+    return 'Zigbee2MQTT je na tomto brokeru se základním topicem „$found“, ale tento domov hledá „$current“.';
+  }
+
+  @override
+  String devicesUseBase(String found) {
+    return 'Použít „$found“';
+  }
+
+  @override
+  String get devicesChangeConnection => 'Změnit připojení';
+
+  @override
+  String get updateAvailableTitle => 'Je tu nová verze ZigDash';
+
+  @override
+  String get updateAvailableBody => 'Stáhne se, zatímco ZigDash dál používáš.';
+
+  @override
+  String get updateAvailableButton => 'Aktualizovat';
+
+  @override
+  String get updateDownloading => 'Stahuji aktualizaci…';
+
+  @override
+  String get updateReadyTitle => 'Aktualizace stažena';
+
+  @override
+  String get updateReadyButton => 'Dokončit restartem';
+
+  @override
+  String get nfcWriteTag => 'Zapsat na NFC tag';
+
+  @override
+  String get nfcHoldTitle => 'Přilož tag k telefonu';
+
+  @override
+  String nfcHoldBody(String name) {
+    return 'Přilož prázdnou NFC nálepku k zadní straně telefonu. Klepnutím na ni pak spustíš $name.';
+  }
+
+  @override
+  String get nfcWrittenTitle => 'Tag je hotový';
+
+  @override
+  String nfcWrittenBody(String name) {
+    return 'Klepni telefonem na tento tag a spustíš $name. Funguje to i se zavřenou aplikací.';
+  }
+
+  @override
+  String get nfcFailedTitle => 'Tag se nepodařilo zapsat';
+
+  @override
+  String get nfcReadonlyBody =>
+      'Tento tag je zamčený a nejde změnit. Zkus jiný.';
+
+  @override
+  String get nfcTooSmallBody =>
+      'Tento tag je moc malý. Použij nálepku NTAG213 nebo větší.';
+
+  @override
+  String get nfcFailedBody =>
+      'Drž tag v klidu u zadní strany telefonu a zkus to znovu.';
+
+  @override
+  String get nfcOffTitle => 'NFC je vypnuté';
+
+  @override
+  String get nfcOffBody => 'Zapni NFC v nastavení Androidu a zkus to znovu.';
+
+  @override
+  String get nfcNoneTitle => 'Tento telefon nemá NFC';
+
+  @override
+  String get nfcNoneBody => 'Tento telefon neumí číst ani zapisovat NFC tagy.';
+
+  @override
+  String get nfcWriteAnother => 'Zapsat další tag';
+
+  @override
+  String get nfcUnsupportedBody =>
+      'Tento telefon tento typ tagu neumí zapsat (často MIFARE Classic). Použij nálepku NTAG213, 215 nebo 216.';
+
+  @override
+  String get nfcTagsTitle => 'NFC tagy';
+
+  @override
+  String get nfcTagsSubtitle =>
+      'Tagy, které spustí scénu nebo přepnou zařízení';
+
+  @override
+  String get nfcTagsEmpty =>
+      'Zatím žádné tagy. Podrž dlaždici scény, světla, zásuvky nebo rolety a zvol Zapsat na NFC tag.';
+
+  @override
+  String get nfcTagRunsScene => 'Spustí scénu';
+
+  @override
+  String get nfcTagSwitches => 'Zapíná a vypíná';
+
+  @override
+  String nfcTagWritten(String when) {
+    return 'zapsáno $when';
+  }
+
+  @override
+  String nfcTagLastTap(String when) {
+    return 'naposledy použito $when';
+  }
+
+  @override
+  String get nfcTagNeverTapped => 'zatím nepoužito';
+
+  @override
+  String get nfcTagOffLabel => 'Vypnuto';
+
+  @override
+  String get nfcTagRewrite => 'Přepsat';
+
+  @override
+  String get nfcTagForget => 'Odebrat ze seznamu';
+
+  @override
+  String get nfcTagOffToast => 'Tento tag je v ZigDash vypnutý';
+
+  @override
+  String get nfcTagsNote =>
+      'Vypnutý tag na tomto telefonu nic neudělá. Tagy zapsané před tímto seznamem tu nejsou: jednou je přepiš.';
+
+  @override
+  String get nfcPopupHeader => 'Tag ZigDash';
+
+  @override
+  String get nfcPopupRunning => 'Probíhá…';
+
+  @override
+  String get nfcPopupSwitching => 'Přepínám…';
+
+  @override
+  String get nfcPopupDone => 'Hotovo';
+
+  @override
+  String get nfcPopupClosing => 'Zavře se za 2 sekundy';
+
+  @override
+  String get nfcPopupUnreachable =>
+      'Tento telefon teď na domov nedosáhne. Zkontroluj Wi-Fi nebo zapni vzdálené ovládání.';
+
+  @override
+  String get nfcPopupOffBody =>
+      'Nic se nepřeplo. Znovu ho zapneš v nastavení domova, v části NFC tagy.';
+
+  @override
+  String get nfcPopupOpenApp => 'Otevřít ZigDash';
+
+  @override
+  String get hubBackupTitle => 'Záloha hubu';
+
+  @override
+  String get hubBackupSettingsSubtitle =>
+      'Denní kopie sítě a názvů zařízení Zigbee2MQTT';
+
+  @override
+  String get hubBackupIntro =>
+      'ZigDash uchovává kopii nastavení Zigbee2MQTT, sítě Zigbee a názvů zařízení z vašeho hubu, aby hub po resetu nebo smazání mohl síť obnovit. Nová kopie se pořídí každý den, kdy ZigDash otevřete doma, a posledních 7 zůstává v tomto telefonu.';
+
+  @override
+  String get hubBackupNone => 'Zatím žádná záloha';
+
+  @override
+  String hubBackupLast(String when) {
+    return 'Poslední záloha: $when';
+  }
+
+  @override
+  String get hubBackupNow => 'Zálohovat nyní';
+
+  @override
+  String get hubBackupMade => 'Zálohováno.';
+
+  @override
+  String get hubBackupRefused =>
+      'Zigbee2MQTT na tomto hubu neumí vytvářet zálohy.';
+
+  @override
+  String get hubBackupNoAnswer =>
+      'Zigbee2MQTT neodpověděl. Zkontrolujte, že běží, a zkuste to znovu.';
+
+  @override
+  String get hubBackupOffline =>
+      'Tento domov teď není připojený. Připojte se a zkuste to znovu.';
+
+  @override
+  String get hubBackupAway => 'Zálohy se pořizují doma: relay je nepřenáší.';
+
+  @override
+  String get hubBackupNoBroker =>
+      'Tento domov se připojuje přes webovou stránku Zigbee2MQTT. Zálohy potřebují jeho MQTT broker.';
+
+  @override
+  String get hubBackupKept => 'Uloženo v tomto telefonu';
+
+  @override
+  String get hubBackupSaveCopy => 'Uložit kopii';
+
+  @override
+  String get hubBackupSaved => 'Kopie uložena.';
+
+  @override
+  String get hubBackupUnreadable =>
+      'Tuto zálohu nelze v tomto telefonu otevřít.';
+
+  @override
+  String get hubBackupRestoreNote =>
+      'Obnovit vrátí zálohu do hubu a restartuje Zigbee2MQTT. Uložit kopii vám dá vlastní záložní zip Zigbee2MQTT k uložení jinde.';
+
+  @override
+  String get hubBackupPrivate =>
+      'Záloha obsahuje klíč vaší sítě Zigbee. Uložené kopie uchovávejte v soukromí.';
+
+  @override
+  String get hubBackupRestore => 'Obnovit';
+
+  @override
+  String get hubBackupRestoreTitle => 'Obnovit tuto zálohu?';
+
+  @override
+  String hubBackupRestoreBody(String when) {
+    return 'Nastavení Zigbee2MQTT, síť Zigbee a seznam zařízení se vrátí ke stavu $when. Zigbee2MQTT se restartuje, což trvá asi minutu. Zařízení spárovaná po této záloze bude nutné spárovat znovu.';
+  }
+
+  @override
+  String get hubBackupRestoreExtensions =>
+      'K zapsání zálohy přidá ZigDash do Zigbee2MQTT malé jednorázové rozšíření. Pokud jsou rozšíření vypnutá, nejdřív je zapne, což Zigbee2MQTT restartuje ještě jednou.';
+
+  @override
+  String get hubBackupRestoreStageAllow =>
+      'Povoluji rozšíření a restartuji Zigbee2MQTT…';
+
+  @override
+  String get hubBackupRestoreStageSend => 'Posílám zálohu do hubu…';
+
+  @override
+  String get hubBackupRestoreStageRestart =>
+      'Zigbee2MQTT se znovu spouští ze zálohy…';
+
+  @override
+  String get hubBackupRestored => 'Obnoveno. Zigbee2MQTT běží ze zálohy.';
+
+  @override
+  String get hubBackupRestoreNotWritten =>
+      'Obnovení neproběhlo a na hubu se nic nezměnilo. Zkuste to znovu.';
+
+  @override
+  String get hubBackupRestoreRefused =>
+      'Zigbee2MQTT nepřijal obnovovací rozšíření ZigDash. Na hubu se nic nezměnilo.';
+
+  @override
+  String get hubBackupRestoreNotBack =>
+      'Záloha je zapsaná, ale Zigbee2MQTT se znovu nespustil. Restartujte ho na hubu a pak to zkontrolujte zde.';
 }

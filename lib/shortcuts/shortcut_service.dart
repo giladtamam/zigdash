@@ -401,6 +401,16 @@ class ShortcutService {
         'groupLimit': l10n.shortcutGroupLimit,
         'save': l10n.save,
         'scenes': l10n.scenesTitle,
+        'nfcTagOff': l10n.nfcTagOffToast,
+        'nfcTagHeader': l10n.nfcPopupHeader,
+        'nfcTagRunning': l10n.nfcPopupRunning,
+        'nfcTagSwitching': l10n.nfcPopupSwitching,
+        'nfcTagDone': l10n.nfcPopupDone,
+        'nfcTagClosing': l10n.nfcPopupClosing,
+        'nfcTagUnreachableBody': l10n.nfcPopupUnreachable,
+        'nfcTagOffBody': l10n.nfcPopupOffBody,
+        'nfcTagOpenApp': l10n.nfcPopupOpenApp,
+        'retry': l10n.retry,
       }));
 }
 

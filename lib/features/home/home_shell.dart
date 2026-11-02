@@ -17,6 +17,7 @@ import '../devices/device_registry.dart';
 import '../dashboards/wall_display.dart';
 import '../kiosk/kiosk.dart';
 import '../devices/devices_providers.dart';
+import '../hub_backup/hub_backup_providers.dart';
 import '../panels/widgets/edit_grid.dart' show askSectionName;
 
 /// The navigation shell of one home (docs/design/dashboard-1.12.md §6):
@@ -70,6 +71,8 @@ class HomeShell extends ConsumerWidget {
     if (base != null) {
       ref.watch(batteryWatchProvider((connectionId: connectionId, base: base)));
     }
+    // 3.3: a daily copy of Zigbee2MQTT's data folder while the home is open.
+    ref.watch(hubBackupAutoProvider(connectionId));
     final lowBatteries =
         ref.watch(batteryAlertsProvider(connectionId)).valueOrNull?.length ?? 0;
     final dot = newDevices > 0 || lowBatteries > 0;

@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 const dir = new URL('../', import.meta.url).pathname;
 const load = name => new Function('msg', 'flow', 'env', 'node', 'Buffer', fs.readFileSync(dir + name + '.js', 'utf8'));
-const fns = Object.fromEntries(['ingest', 'restore', 'record', 'tick', 'heartbeat'].map(n => [n, load(n)]));
+const fns = Object.fromEntries(['ingest', 'restore', 'record', 'tally', 'restoretally', 'tick', 'heartbeat'].map(n => [n, load(n)]));
 
 let store = {};
 const flow = { get: k => store[k], set: (k, v) => { store[k] = v; } };
@@ -132,4 +132,113 @@ run('ingest', { topic: 'zigdash/history/config', payload: '' });
 run('record', { topic: 'zigbee2mqtt/Plug', payload: JSON.stringify({ power: 50 }) });
 check('an empty config stops recording', () => assert.equal(store.cfg, null));
 check('heartbeat is retained online', () => assert.deepEqual(run('heartbeat'), [{ topic: 'zigdash/history/bridge/state', payload: 'online', retain: true }]));
+
+// ---------- tallies (3.3): times on or opened, minutes on ----------
+const tcfg = { v: 1, home: 'My Home', base: 'zigbee2mqtt', timeZone: TZ, keepDays: 30, readings: [], tallies: [
+    { ieee: '0xc1', attr: 'state', topic: 'zigbee2mqtt/Lamp', path: 'state', kind: 'on' },
+    { ieee: '0xd1', attr: 'contact', topic: 'zigbee2mqtt/Door', path: 'contact', kind: 'open' },
+    { ieee: '0xe1', attr: 'occupancy', topic: 'zigbee2mqtt/Hall', path: 'occupancy', kind: 'motion' },
+    { ieee: '0xf1', attr: 'state', topic: 'zigbee2mqtt/Bad', path: 'state', kind: 'blink' },
+] };
+const D = 3;
+const tallyRec = (outs, ieee, attr, day = D) => {
+    const m = outs.findLast(x => x.topic === `zigdash/history/tally/${ieee}/${attr}/${dateOf(at(day, 12))}`);
+    return m && JSON.parse(m.payload);
+};
+const minutes = rec => Math.round(rec.b.reduce((a, b) => a + b[2], 0) * 10) / 10;
+const ticks = (day, fromH, fromM, toH, toM) => {
+    const outs = [];
+    for (let t = fromH * 60 + fromM; t <= toH * 60 + toM; t++) { clock(at(day, Math.floor(t / 60), t % 60)); outs.push(...run('tick')); }
+    return outs;
+};
+clock(at(D, 8, 40));
+run('ingest', { topic: 'zigdash/history/config', payload: JSON.stringify(tcfg) });
+check('tallies indexed by device topic; an unknown kind is skipped', () =>
+    assert.deepEqual(Object.keys(store.tindex).sort(), ['zigbee2mqtt/Door', 'zigbee2mqtt/Hall', 'zigbee2mqtt/Lamp']));
+
+// The lamp: off at 08:50, on at 09:00, a repeated ON report at 09:05, off at 10:30.
+clock(at(D, 8, 50));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'OFF', linkquality: 90 }) });
+clock(at(D, 9, 0));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'ON' }) });
+let tout = ticks(D, 9, 1, 9, 4);
+clock(at(D, 9, 5));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'ON', linkquality: 60 }) });
+tout = tout.concat(ticks(D, 9, 5, 10, 29));
+clock(at(D, 10, 30));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'OFF' }) });
+check('a repeated ON report is not a second switch-on', () =>
+    assert.equal(Object.values(store.tmem['0xc1/state'].slots).reduce((a, s) => a + s[0], 0), 1));
+check('the 09:00 slot is published when it closes, with its 15 minutes', () => {
+    const rec = tallyRec(tout, '0xc1', 'state');
+    assert.ok(rec, 'no tally record published');
+    assert.deepEqual(rec.b.find(b => b[0] === 36), [36, 1, 15]);
+    assert.equal(rec.kind, 'on');
+});
+tout = ticks(D, 10, 31, 10, 45);
+check('on from 09:00 to 10:30 is 90 minutes in all, and it is off now', () => {
+    const rec = tallyRec(tout, '0xc1', 'state');
+    assert.equal(minutes(rec), 90);
+    assert.equal(rec.last, false);
+});
+
+// The door: closed (contact true), opened twice, each with repeats.
+clock(at(D, 11, 0));
+for (const c of [true, false, false, true, true, false, true]) run('tally', { topic: 'zigbee2mqtt/Door', payload: JSON.stringify({ contact: c, battery: 90 }) });
+// Motion: the first value after a start is not counted unless it was off.
+run('tally', { topic: 'zigbee2mqtt/Hall', payload: JSON.stringify({ occupancy: true }) });
+run('tally', { topic: 'zigbee2mqtt/Hall', payload: JSON.stringify({ occupancy: false }) });
+run('tally', { topic: 'zigbee2mqtt/Hall', payload: JSON.stringify({ occupancy: true }) });
+run('tally', { topic: 'zigbee2mqtt/Hall', payload: JSON.stringify({ battery: 80 }) });
+clock(at(D, 11, 15));
+tout = run('tick');
+check('the door opened twice; the open flag is contact false', () => assert.equal(tallyRec(tout, '0xd1', 'contact').b.find(b => b[0] === 44)[1], 2));
+check('motion counts changes from off, a message without the value is ignored', () => assert.equal(tallyRec(tout, '0xe1', 'occupancy').b.find(b => b[0] === 44)[1], 1));
+
+// Restart while the lamp is on: memory is gone, the retained record brings back the count and the open interval.
+clock(at(D, 12, 0));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'ON' }) });
+tout = ticks(D, 12, 1, 12, 15);
+const kept = tout.filter(m => m.topic.startsWith('zigdash/history/tally/0xc1/')).at(-1);
+store.tmem = {}; store.tdone = [];
+clock(at(D, 12, 20));
+run('restoretally', { topic: kept.topic, payload: kept.payload });
+check('a restart keeps today\'s count and that the lamp is on', () => {
+    assert.equal(store.tmem['0xc1/state'].last, true);
+    assert.equal(Object.values(store.tmem['0xc1/state'].slots).reduce((a, s) => a + s[0], 0), 2);
+});
+tout = ticks(D, 12, 21, 12, 30);
+clock(at(D, 12, 30));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'OFF' }) });
+tout = ticks(D, 12, 31, 12, 45);
+check('the minutes across the restart are credited (90 + 30)', () => assert.equal(minutes(tallyRec(tout, '0xc1', 'state')), 120));
+check('a record from another day is not restored', () => {
+    store.tmem = {};
+    run('restoretally', { topic: `zigdash/history/tally/0xc1/state/${dateOf(at(D - 1, 12))}`, payload: kept.payload });
+    assert.equal(store.tmem['0xc1/state'], undefined);
+});
+
+// Midnight with the lamp on: the old day ends with its last slot, the new day starts on.
+clock(at(D, 23, 50));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'OFF' }) });
+clock(at(D, 23, 51));
+run('tally', { topic: 'zigbee2mqtt/Lamp', payload: JSON.stringify({ state: 'ON' }) });
+tout = ticks(D, 23, 52, 23, 59);
+tout = tout.concat(ticks(D + 1, 0, 0, 0, 16));
+check('on over midnight: 9 minutes to the old day, the new day starts on', () => {
+    const old = tallyRec(tout, '0xc1', 'state', D);
+    assert.equal(old.b.find(b => b[0] === 95)[2], 9);
+    const now = tallyRec(tout, '0xc1', 'state', D + 1);
+    assert.equal(now.b.find(b => b[0] === 0)[2], 15);
+    assert.equal(now.last, true);
+});
+check('old tally records are cleared on a new day', () => {
+    const old = dateOf(new RealDate(at(D + 1, 12).getTime() - 30 * 86400000));
+    assert.ok(tout.some(m => m.topic === `zigdash/history/tally/0xc1/state/${old}` && m.payload === ''));
+});
+check('tally topics are not taken for readings', () => {
+    const before = JSON.stringify(store.mem || {});
+    run('restore', { topic: `zigdash/history/tally/0xc1/state/${dateOf(at(D + 1, 12))}`, payload: '{"v":1,"b":[[0,1,2,3]]}' });
+    assert.equal(JSON.stringify(store.mem || {}), before);
+});
 globalThis.Date = RealDate;

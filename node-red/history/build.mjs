@@ -25,9 +25,14 @@ const flow = [
       datatype: 'utf8', broker: BROKER, nl: false, rap: true, rh: 0, x: 120, y: 120, wires: [['zdh_fn_restore']] },
     fn('zdh_fn_restore', 'restore today', 'restore', 330, 120, [[]]),
 
+    { id: 'zdh_in_tallies', type: 'mqtt in', z: TAB, name: 'tally records', topic: 'zigdash/history/tally/+/+/+', qos: '1',
+      datatype: 'utf8', broker: BROKER, nl: false, rap: true, rh: 0, x: 120, y: 160, wires: [['zdh_fn_restoretally']] },
+    fn('zdh_fn_restoretally', 'restore tallies', 'restoretally', 330, 160, [[]]),
+
     { id: 'zdh_in_devices', type: 'mqtt in', z: TAB, name: 'devices', topic: 'zigbee2mqtt/#', qos: '0',
-      datatype: 'utf8', broker: BROKER, nl: false, rap: true, rh: 0, x: 120, y: 200, wires: [['zdh_fn_record']] },
+      datatype: 'utf8', broker: BROKER, nl: false, rap: true, rh: 0, x: 120, y: 220, wires: [['zdh_fn_record', 'zdh_fn_tally']] },
     fn('zdh_fn_record', 'record', 'record', 330, 200, [[]]),
+    fn('zdh_fn_tally', 'tally', 'tally', 330, 240, [[]]),
 
     { id: 'zdh_tick', type: 'inject', z: TAB, name: 'every minute', props: [{ p: 'payload' }], repeat: '60', crontab: '',
       once: true, onceDelay: '5', topic: '', payload: '', payloadType: 'date', x: 120, y: 280, wires: [['zdh_fn_tick']] },

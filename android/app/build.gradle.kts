@@ -103,6 +103,8 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
     // ZigDash Pro, Play build only. Play requires Billing Library 8+.
     "playImplementation"("com.android.billingclient:billing-ktx:8.0.0")
+    // In-app updates (3.2.3), Play build only: Play offers a newer version inside ZigDash.
+    "playImplementation"("com.google.android.play:app-update:2.1.0")
 }
 
 kotlin {

@@ -294,8 +294,12 @@ class _Engine {
           _controller.add(BrokerFound(broker));
         }
       case _HubTask():
-        final kind = await service.hubProber.probe(task.host, task.port);
-        _hubSeen(kind, task.host, task.port);
+        final page = await probeHubPorts(
+          service.hubProber,
+          task.host,
+          hubPortsOf(task.kind),
+        );
+        _hubSeen(page?.kind, task.host, page?.port ?? task.port);
       case _LateTask():
         final (:broker, :alive) = await service.patientProber!.probeHost(
           task.host,
@@ -311,8 +315,12 @@ class _Engine {
         final hubProber = service.patientHubProber;
         if (hubProber == null) return;
         for (final kind in hubs) {
-          final port = hubPorts[kind]!;
-          _hubSeen(await hubProber.probe(task.host, port), task.host, port);
+          final page = await probeHubPorts(
+            hubProber,
+            task.host,
+            hubPortsOf(kind),
+          );
+          if (page != null) _hubSeen(page.kind, task.host, page.port);
         }
     }
   }
