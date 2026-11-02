@@ -23,6 +23,12 @@ const int standardConnectTimeoutMs = 5000;
 /// probe subscription, often over the internet: more than an MQTT CONNECT.
 const int homeAssistantConnectTimeoutMs = 12000;
 
+/// A broker that checks a login may answer slowly: the Home Assistant
+/// Mosquitto add-on asks Home Assistant about every login, and a scanned
+/// broker isn't known to be Home Assistant's. 5 s gave up before a Russian
+/// broker answered three logins in a row (3.3.1, login_no_answer).
+const int loginConnectTimeoutMs = 12000;
+
 /// Local-first ordered candidates for [config]. With a remote host set, the LAN
 /// host is tried first with a short timeout, then the remote host. Without one,
 /// a single local candidate with the standard timeout (unchanged behavior).
@@ -41,6 +47,20 @@ List<MqttCandidate> endpointCandidates(BrokerConfig config) {
   final relay = config.relay != null && !config.notBroker
       ? [(kind: MqttEndpoint.relay, host: relayCandidateHost, timeoutMs: relayConnectTimeoutMs)]
       : const <MqttCandidate>[];
+  if ((remote == null || remote.isEmpty) && relay.isEmpty) {
+    // The broker is the only way in: a login may take its time. With a
+    // remote address or the relay, away from home must not wait 12 s on
+    // the LAN address before trying them.
+    final login = !config.viaHomeAssistant &&
+        (config.username?.isNotEmpty ?? false);
+    return [
+      (
+        kind: MqttEndpoint.local,
+        host: config.host,
+        timeoutMs: login ? loginConnectTimeoutMs : standard,
+      ),
+    ];
+  }
   if (remote == null || remote.isEmpty) {
     return [
       (
