@@ -1499,5 +1499,14 @@
   "shortcutNudge": "Controlla {name} senza aprire ZigDash",
   "shortcutNudgeLater": "Non ora",
   "shortcutNudgeTile": "Impostazioni rapide",
-  "shortcutNudgeWidget": "Schermata Home"
+  "shortcutNudgeWidget": "Schermata Home",
+  "haWhereAsk": "Dove apri Home Assistant?",
+  "haWhereHome": "A casa",
+  "haWhereNabuCasa": "Nabu Casa",
+  "haWhereDuckDns": "DuckDNS",
+  "haWhereOwnDomain": "Dominio proprio / Cloudflare",
+  "haWhereHomeHelp": "A casa il suo indirizzo è tipo 192.168.1.20:8123. Lo trovi in Home Assistant in Impostazioni › Sistema › Rete, o nell'app Home Assistant in Impostazioni › App complementare › il tuo server. Questo telefono deve essere sulla stessa Wi-Fi.",
+  "haWhereNabuCasaHelp": "In Home Assistant, apri Impostazioni › Home Assistant Cloud e copia l'indirizzo sotto Accesso remoto: https://….ui.nabu.casa. Funziona ovunque.",
+  "haWhereDuckDnsHelp": "Il nome scelto su duckdns.org, con la porta di Home Assistant: myhome.duckdns.org:8123. Funziona ovunque.",
+  "haWhereOwnDomainHelp": "L'indirizzo con cui apri Home Assistant fuori casa, come ha.example.com. Con un tunnel Cloudflare, è il nome host impostato per Home Assistant in Cloudflare. Funziona ovunque."
 }

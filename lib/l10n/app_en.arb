@@ -1828,5 +1828,14 @@
   "@shortcutNudge": {"description": "Banner after a device was switched from the app in a few sessions; offers a home-screen widget or a Quick Settings tile.", "placeholders": {"name": {}}},
   "shortcutNudgeLater": "Not now",
   "shortcutNudgeTile": "Quick Settings",
-  "shortcutNudgeWidget": "Home screen"
+  "shortcutNudgeWidget": "Home screen",
+  "haWhereAsk": "Where do you open Home Assistant?",
+  "haWhereHome": "At home",
+  "haWhereNabuCasa": "Nabu Casa",
+  "haWhereDuckDns": "DuckDNS",
+  "haWhereOwnDomain": "Own domain / Cloudflare",
+  "haWhereHomeHelp": "At home its address looks like 192.168.1.20:8123. Find it in Home Assistant under Settings › System › Network, or in the Home Assistant app under Settings › Companion app › your server. This phone must be on the same Wi-Fi.",
+  "haWhereNabuCasaHelp": "In Home Assistant, open Settings › Home Assistant Cloud and copy the address under Remote access: https://….ui.nabu.casa. It works from anywhere.",
+  "haWhereDuckDnsHelp": "The name you chose on duckdns.org, with Home Assistant's port: myhome.duckdns.org:8123. It works from anywhere.",
+  "haWhereOwnDomainHelp": "The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it's the hostname you set for Home Assistant in Cloudflare. It works from anywhere."
 }

@@ -5193,4 +5193,35 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Hemskärm';
+
+  @override
+  String get haWhereAsk => 'Var öppnar du Home Assistant?';
+
+  @override
+  String get haWhereHome => 'Hemma';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Egen domän / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'Hemma ser adressen ut som 192.168.1.20:8123. Du hittar den i Home Assistant under Inställningar › System › Nätverk, eller i Home Assistant-appen under Inställningar › Companion-app › din server. Telefonen måste vara på samma wifi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'Öppna Inställningar › Home Assistant Cloud i Home Assistant och kopiera adressen under Fjärråtkomst: https://….ui.nabu.casa. Den fungerar överallt.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Namnet du valde på duckdns.org, med Home Assistants port: myhome.duckdns.org:8123. Det fungerar överallt.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'Adressen du öppnar Home Assistant med hemifrån, till exempel ha.example.com. Med en Cloudflare-tunnel är det värdnamnet du angav för Home Assistant i Cloudflare. Den fungerar överallt.';
 }

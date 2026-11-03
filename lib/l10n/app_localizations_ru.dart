@@ -5190,4 +5190,35 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Главный экран';
+
+  @override
+  String get haWhereAsk => 'Где вы открываете Home Assistant?';
+
+  @override
+  String get haWhereHome => 'Дома';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Свой домен / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'Дома адрес выглядит как 192.168.1.20:8123. Его можно найти в Home Assistant: Настройки › Система › Сеть, или в приложении Home Assistant: Настройки › Приложение-компаньон › ваш сервер. Телефон должен быть в той же Wi-Fi-сети.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'В Home Assistant откройте Настройки › Home Assistant Cloud и скопируйте адрес в разделе «Удалённый доступ»: https://….ui.nabu.casa. Он работает откуда угодно.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Имя, выбранное на duckdns.org, с портом Home Assistant: myhome.duckdns.org:8123. Работает откуда угодно.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'Адрес, по которому вы открываете Home Assistant вне дома, например ha.example.com. С туннелем Cloudflare это имя хоста, заданное для Home Assistant в Cloudflare. Работает откуда угодно.';
 }

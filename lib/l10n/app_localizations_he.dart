@@ -5131,4 +5131,35 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'מסך הבית';
+
+  @override
+  String get haWhereAsk => 'איפה פותחים אצלך את Home Assistant?';
+
+  @override
+  String get haWhereHome => 'בבית';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'דומיין משלך / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'בבית הכתובת נראית כמו 192.168.1.20:8123. אפשר למצוא אותה ב-Home Assistant תחת הגדרות › מערכת › רשת, או באפליקציית Home Assistant תחת הגדרות › אפליקציה נלווית › השרת שלך. הטלפון צריך להיות באותה רשת Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'ב-Home Assistant, פותחים הגדרות › Home Assistant Cloud ומעתיקים את הכתובת תחת גישה מרחוק: https://….ui.nabu.casa. היא עובדת מכל מקום.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'השם שבחרת ב-duckdns.org, עם הפורט של Home Assistant: myhome.duckdns.org:8123. הוא עובד מכל מקום.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'הכתובת שבה פותחים את Home Assistant מחוץ לבית, כמו ha.example.com. עם מנהרת Cloudflare, זה שם המארח שהגדרת ל-Home Assistant ב-Cloudflare. היא עובדת מכל מקום.';
 }

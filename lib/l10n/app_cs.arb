@@ -1499,5 +1499,14 @@
   "shortcutNudge": "Ovládejte {name} bez otevírání ZigDash",
   "shortcutNudgeLater": "Teď ne",
   "shortcutNudgeTile": "Rychlé nastavení",
-  "shortcutNudgeWidget": "Plocha"
+  "shortcutNudgeWidget": "Plocha",
+  "haWhereAsk": "Kde otevíráte Home Assistant?",
+  "haWhereHome": "Doma",
+  "haWhereNabuCasa": "Nabu Casa",
+  "haWhereDuckDns": "DuckDNS",
+  "haWhereOwnDomain": "Vlastní doména / Cloudflare",
+  "haWhereHomeHelp": "Doma vypadá adresa jako 192.168.1.20:8123. Najdete ji v Home Assistantu v Nastavení › Systém › Síť nebo v aplikaci Home Assistant v Nastavení › Doprovodná aplikace › váš server. Tento telefon musí být na stejné Wi-Fi.",
+  "haWhereNabuCasaHelp": "V Home Assistantu otevřete Nastavení › Home Assistant Cloud a zkopírujte adresu v části Vzdálený přístup: https://….ui.nabu.casa. Funguje odkudkoli.",
+  "haWhereDuckDnsHelp": "Jméno, které jste zvolili na duckdns.org, s portem Home Assistantu: myhome.duckdns.org:8123. Funguje odkudkoli.",
+  "haWhereOwnDomainHelp": "Adresa, kterou Home Assistant otevíráte mimo domov, např. ha.example.com. S tunelem Cloudflare je to název hostitele nastavený pro Home Assistant v Cloudflare. Funguje odkudkoli."
 }

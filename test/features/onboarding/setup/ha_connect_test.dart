@@ -337,6 +337,55 @@ void main() {
       });
     });
 
+    test('3.3.4: a remote name without https goes where it answers', () async {
+      final reached = <Uri>[];
+      final c = make(
+        signIn: ok,
+        reach: (base) async {
+          reached.add(base);
+          return base.toString() == 'https://myhome.duckdns.org:8123'
+              ? null
+              : HaConnectProblem.unreachable;
+        },
+      );
+      await c.signInAndConnect('ha.example.com');
+      expect(reached, [
+        Uri.parse('https://ha.example.com'),
+        Uri.parse('https://ha.example.com:8123'),
+        Uri.parse('http://ha.example.com:8123'),
+      ]);
+      expect((c.value as HaConnectAsk).problem, HaConnectProblem.unreachable);
+      expect((c.value as HaConnectAsk).address, 'ha.example.com');
+      expect(browsers, 0);
+
+      await c.signInAndConnect('myhome.duckdns.org');
+      expect(browsers, 1);
+      expect(adopted.single.$1, Uri.parse('https://myhome.duckdns.org:8123'));
+      expect(events.last['port'], '8123');
+      expect(events.last['shape'], 'remote_name');
+    });
+
+    test('3.3.4: a certificate problem beats nothing answering', () async {
+      final c = make(
+        signIn: ok,
+        reach: (base) async => base.port == 443
+            ? HaConnectProblem.certificate
+            : HaConnectProblem.unreachable,
+      );
+      await c.signInAndConnect('ha.example.com');
+      expect((c.value as HaConnectAsk).problem, HaConnectProblem.certificate);
+    });
+
+    test('3.3.4: a pasted token also goes where it answers', () async {
+      final c = make(
+        reach: (base) async =>
+            base.port == 443 ? null : HaConnectProblem.unreachable,
+      );
+      await c.connectWithToken('ha.example.com', 'tok');
+      expect(probed.single.$1, Uri.parse('https://ha.example.com'));
+      expect(adopted.single.$1, Uri.parse('https://ha.example.com'));
+    });
+
     test('a remote address that works is counted with its kind', () async {
       final c = make(signIn: ok);
       await c.signInAndConnect('https://abcd.ui.nabu.casa');

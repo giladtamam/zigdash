@@ -114,6 +114,10 @@ enum SetupStepKind {
   /// [SetupStep.choice] saying from where (a [HaSignInFrom]).
   haOpened,
 
+  /// On the Home Assistant sign-in, where the user said they open Home
+  /// Assistant (3.3.4), with [SetupStep.choice] (a [HaWhere]).
+  haWhere,
+
   /// An answer to "where does Zigbee2MQTT run?" was picked (3.1.3), with
   /// [SetupStep.platform]; counted when given, not only with later steps.
   platformChosen,
@@ -206,6 +210,10 @@ enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 /// the first button when Home Assistant was found without a broker, the
 /// broker's login prompt, or the link on the broker form; from 3.1.9 also
 /// the no-Wi-Fi screen ([noWifi]), where a remote address is the way in.
+/// Where the user opens Home Assistant (3.3.4): the chips under the
+/// sign-in's address when Home Assistant wasn't found. Never the address.
+enum HaWhere { home, nabuCasa, duckDns, ownDomain }
+
 enum HaSignInFrom {
   scanning,
   emptyCard,
@@ -301,7 +309,8 @@ class SetupStep extends AnalyticsEvent {
 
   /// The choice tapped on the empty result (a [ScanEmptyChoice]), when
   /// [step] is emptyChoice; where the sign-in was opened from (a
-  /// [HaSignInFrom]), when [step] is haOpened.
+  /// [HaSignInFrom]), when [step] is haOpened; a [HaWhere] when [step] is
+  /// haWhere.
   final Enum? choice;
 
   /// The setup error kind's name, when [step] is failed.

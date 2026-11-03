@@ -102,6 +102,34 @@ void main() {
       expect(haBaseUri('mqtt://broker'), isNull);
     });
 
+    test('3.3.4: a remote name without a scheme is https first', () {
+      List<String> c(String s) =>
+          haBaseCandidates(s).map((u) => u.toString()).toList();
+      expect(c('abc.ui.nabu.casa'), ['https://abc.ui.nabu.casa']);
+      expect(c('myhome.duckdns.org'), [
+        'https://myhome.duckdns.org:8123',
+        'https://myhome.duckdns.org',
+        'http://myhome.duckdns.org:8123',
+      ]);
+      expect(c('ha.example.com'), [
+        'https://ha.example.com',
+        'https://ha.example.com:8123',
+        'http://ha.example.com:8123',
+      ]);
+      expect(c('myhome.duckdns.org:8123'), [
+        'https://myhome.duckdns.org:8123',
+        'http://myhome.duckdns.org:8123',
+      ]);
+      // Home addresses and anything with a scheme: as before.
+      expect(c('homeassistant.local'), ['http://homeassistant.local:8123']);
+      expect(c('ha.lan'), ['http://ha.lan:8123']);
+      expect(c('homeassistant'), ['http://homeassistant:8123']);
+      expect(c('192.168.1.20'), ['http://192.168.1.20:8123']);
+      expect(c('8.8.8.8'), ['http://8.8.8.8:8123']);
+      expect(c('http://ha.example.com:8123'), ['http://ha.example.com:8123']);
+      expect(haBaseUri('ha.example.com').toString(), 'https://ha.example.com');
+    });
+
     test('the WebSocket address follows the scheme', () {
       expect(
         haWebSocketUri(haBaseUri('192.168.68.52')!).toString(),

@@ -5186,4 +5186,35 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Plocha';
+
+  @override
+  String get haWhereAsk => 'Kde otevíráte Home Assistant?';
+
+  @override
+  String get haWhereHome => 'Doma';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Vlastní doména / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'Doma vypadá adresa jako 192.168.1.20:8123. Najdete ji v Home Assistantu v Nastavení › Systém › Síť nebo v aplikaci Home Assistant v Nastavení › Doprovodná aplikace › váš server. Tento telefon musí být na stejné Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'V Home Assistantu otevřete Nastavení › Home Assistant Cloud a zkopírujte adresu v části Vzdálený přístup: https://….ui.nabu.casa. Funguje odkudkoli.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Jméno, které jste zvolili na duckdns.org, s portem Home Assistantu: myhome.duckdns.org:8123. Funguje odkudkoli.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'Adresa, kterou Home Assistant otevíráte mimo domov, např. ha.example.com. S tunelem Cloudflare je to název hostitele nastavený pro Home Assistant v Cloudflare. Funguje odkudkoli.';
 }

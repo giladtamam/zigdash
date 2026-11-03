@@ -5210,4 +5210,35 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Pantalla de inicio';
+
+  @override
+  String get haWhereAsk => '¿Dónde abres Home Assistant?';
+
+  @override
+  String get haWhereHome => 'En casa';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Dominio propio / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'En casa, su dirección es como 192.168.1.20:8123. Búscala en Home Assistant en Ajustes › Sistema › Red, o en la app de Home Assistant en Ajustes › App complementaria › tu servidor. Este teléfono debe estar en la misma Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'En Home Assistant, abre Ajustes › Home Assistant Cloud y copia la dirección de Acceso remoto: https://….ui.nabu.casa. Funciona desde cualquier lugar.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'El nombre que elegiste en duckdns.org, con el puerto de Home Assistant: myhome.duckdns.org:8123. Funciona desde cualquier lugar.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'La dirección con la que abres Home Assistant fuera de casa, como ha.example.com. Con un túnel de Cloudflare, es el nombre de host que configuraste para Home Assistant en Cloudflare. Funciona desde cualquier lugar.';
 }

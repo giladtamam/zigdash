@@ -9119,6 +9119,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home screen'**
   String get shortcutNudgeWidget;
+
+  /// No description provided for @haWhereAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you open Home Assistant?'**
+  String get haWhereAsk;
+
+  /// No description provided for @haWhereHome.
+  ///
+  /// In en, this message translates to:
+  /// **'At home'**
+  String get haWhereHome;
+
+  /// No description provided for @haWhereNabuCasa.
+  ///
+  /// In en, this message translates to:
+  /// **'Nabu Casa'**
+  String get haWhereNabuCasa;
+
+  /// No description provided for @haWhereDuckDns.
+  ///
+  /// In en, this message translates to:
+  /// **'DuckDNS'**
+  String get haWhereDuckDns;
+
+  /// No description provided for @haWhereOwnDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Own domain / Cloudflare'**
+  String get haWhereOwnDomain;
+
+  /// No description provided for @haWhereHomeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At home its address looks like 192.168.1.20:8123. Find it in Home Assistant under Settings › System › Network, or in the Home Assistant app under Settings › Companion app › your server. This phone must be on the same Wi-Fi.'**
+  String get haWhereHomeHelp;
+
+  /// No description provided for @haWhereNabuCasaHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'In Home Assistant, open Settings › Home Assistant Cloud and copy the address under Remote access: https://….ui.nabu.casa. It works from anywhere.'**
+  String get haWhereNabuCasaHelp;
+
+  /// No description provided for @haWhereDuckDnsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The name you chose on duckdns.org, with Home Assistant\'s port: myhome.duckdns.org:8123. It works from anywhere.'**
+  String get haWhereDuckDnsHelp;
+
+  /// No description provided for @haWhereOwnDomainHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it\'s the hostname you set for Home Assistant in Cloudflare. It works from anywhere.'**
+  String get haWhereOwnDomainHelp;
 }
 
 class _AppLocalizationsDelegate

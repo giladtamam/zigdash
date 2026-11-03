@@ -319,8 +319,17 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     final advice = swapped ? null : shape;
     // A Home Assistant that can't be reached would open the browser on an
     // error page, and closing it read as nothing happening (3.1.4).
-    final unreached = await _reach?.call(base);
+    final (reached, unreached) = await _reachFirst(
+      swapped ? [base] : haBaseCandidates(address),
+    );
     if (t != _try) return;
+    if (unreached == null && reached != base) {
+      // The typed remote name answered another way (3.3.4): the field and
+      // the home take the address that worked.
+      base = reached;
+      address = haAddressText(reached);
+      _tryAddress = address;
+    }
     if (unreached != null) {
       _count(
         unreached == HaConnectProblem.certificate
@@ -359,6 +368,20 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     );
   }
 
+  /// The first of [candidates] that answers, with null; when none does,
+  /// the first with a certificate problem, else the first, with why. All
+  /// are tried at once, so a remote name costs one wait, not three.
+  Future<(Uri, HaConnectProblem?)> _reachFirst(List<Uri> candidates) async {
+    final reach = _reach;
+    if (reach == null) return (candidates.first, null);
+    final results = await Future.wait(candidates.map(reach));
+    for (final wanted in [null, HaConnectProblem.certificate]) {
+      final i = results.indexOf(wanted);
+      if (i >= 0) return (candidates[i], wanted);
+    }
+    return (candidates.first, results.first);
+  }
+
   /// A pasted long-lived token.
   Future<void> connectWithToken(String address, String token) async {
     final base = haBaseUri(address);
@@ -373,7 +396,20 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     _checking(address);
     final shape = await _shapeOf(address);
     if (t != _try) return;
-    await _check(t, base, address, token.trim(), shape);
+    var at = base;
+    final candidates = haBaseCandidates(address);
+    if (candidates.length > 1) {
+      final (reached, unreached) = await _reachFirst(candidates);
+      if (t != _try) return;
+      if (unreached == null) at = reached;
+    }
+    await _check(
+      t,
+      at,
+      at == base ? address : haAddressText(at),
+      token.trim(),
+      shape,
+    );
   }
 
   Future<void> _check(

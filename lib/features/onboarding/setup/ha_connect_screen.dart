@@ -167,6 +167,9 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
             found: _controller.found,
             phoneIp: _controller.phoneIp,
             onPick: (address) => setState(() => _address.text = address),
+            onWhere: (where) => ref
+                .read(analyticsProvider)
+                .track(SetupStep(SetupStepKind.haWhere, choice: where)),
             onSignIn: () => _controller.signInAndConnect(_address.text),
             onToken: () =>
                 _controller.connectWithToken(_address.text, _token.text),
@@ -204,6 +207,7 @@ class _Ask extends StatefulWidget {
     this.found = const [],
     this.phoneIp,
     this.onPick,
+    this.onWhere,
   });
   final HaConnectAsk state;
 
@@ -215,6 +219,9 @@ class _Ask extends StatefulWidget {
   final bool looked;
   final List<HaFound> found;
   final ValueChanged<String>? onPick;
+
+  /// A chip under "where do you open Home Assistant?" was tapped (3.3.4).
+  final ValueChanged<HaWhere>? onWhere;
   final TextEditingController address;
   final TextEditingController token;
   final bool canSignIn;
@@ -227,6 +234,7 @@ class _Ask extends StatefulWidget {
 
 class _AskState extends State<_Ask> {
   var _tokenOpen = false;
+  HaWhere? _where;
 
   @override
   void initState() {
@@ -272,6 +280,7 @@ class _AskState extends State<_Ask> {
           autocorrect: false,
           decoration: InputDecoration(
             labelText: l10n.haImportAddress,
+            hintText: _where == null ? null : _whereExample[_where],
             helperText: l10n.haConnectAddressHelp,
             helperMaxLines: 5,
             errorText: problem == HaConnectProblem.noAddress
@@ -332,8 +341,34 @@ class _AskState extends State<_Ask> {
         if (problem == HaConnectProblem.noAddress ||
             noAddress ||
             (widget.looked && widget.found.isEmpty)) ...[
+          // 3.3.4: where they open Home Assistant decides what its
+          // address looks like and where to find it.
+          const SizedBox(height: 16),
+          Text(l10n.haWhereAsk, style: theme.textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final where in HaWhere.values)
+                ChoiceChip(
+                  key: Key('ha-where-${where.name}'),
+                  label: Text(_whereLabel(l10n, where)),
+                  selected: _where == where,
+                  onSelected: (_) {
+                    setState(() => _where = where);
+                    widget.onWhere?.call(where);
+                  },
+                ),
+            ],
+          ),
           const SizedBox(height: 12),
-          Text(l10n.haConnectWhereAddress, style: theme.textTheme.bodyMedium),
+          Text(
+            _where == null
+                ? l10n.haConnectWhereAddress
+                : _whereHelp(l10n, _where!),
+            style: theme.textTheme.bodyMedium,
+          ),
         ],
         if (problem != null &&
             problem != HaConnectProblem.noAddress &&
@@ -417,6 +452,28 @@ class _AskState extends State<_Ask> {
     );
   }
 }
+
+/// What each [HaWhere]'s address looks like, as the field's hint.
+const _whereExample = {
+  HaWhere.home: '192.168.1.20:8123',
+  HaWhere.nabuCasa: 'https://abcd1234.ui.nabu.casa',
+  HaWhere.duckDns: 'myhome.duckdns.org:8123',
+  HaWhere.ownDomain: 'ha.example.com',
+};
+
+String _whereLabel(AppLocalizations l10n, HaWhere where) => switch (where) {
+  HaWhere.home => l10n.haWhereHome,
+  HaWhere.nabuCasa => l10n.haWhereNabuCasa,
+  HaWhere.duckDns => l10n.haWhereDuckDns,
+  HaWhere.ownDomain => l10n.haWhereOwnDomain,
+};
+
+String _whereHelp(AppLocalizations l10n, HaWhere where) => switch (where) {
+  HaWhere.home => l10n.haWhereHomeHelp,
+  HaWhere.nabuCasa => l10n.haWhereNabuCasaHelp,
+  HaWhere.duckDns => l10n.haWhereDuckDnsHelp,
+  HaWhere.ownDomain => l10n.haWhereOwnDomainHelp,
+};
 
 /// Where a found Home Assistant is, as people read it: host and port.
 String _hostOf(HaFound found) {
