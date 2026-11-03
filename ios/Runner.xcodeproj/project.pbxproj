@@ -944,6 +944,7 @@
 					"-Wl,-exported_symbol,_zd_gcm_seal",
 					"-Wl,-exported_symbol,_zd_gcm_open",
 					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+					"-Wl,-exported_symbol,___debug_main_executable_dylib_entry_point",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1088,6 +1089,7 @@
 					"-Wl,-exported_symbol,_zd_gcm_seal",
 					"-Wl,-exported_symbol,_zd_gcm_open",
 					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+					"-Wl,-exported_symbol,___debug_main_executable_dylib_entry_point",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1682,6 +1684,7 @@
 					"-Wl,-exported_symbol,_zd_gcm_seal",
 					"-Wl,-exported_symbol,_zd_gcm_open",
 					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+					"-Wl,-exported_symbol,___debug_main_executable_dylib_entry_point",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1743,6 +1746,7 @@
 					"-Wl,-exported_symbol,_zd_gcm_seal",
 					"-Wl,-exported_symbol,_zd_gcm_open",
 					"-Wl,-exported_symbol,_zd_pbkdf2_sha256",
+					"-Wl,-exported_symbol,___debug_main_executable_dylib_entry_point",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.giladtamam.zigdash;
 				PRODUCT_NAME = "$(TARGET_NAME)";
