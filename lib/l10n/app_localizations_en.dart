@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5038,4 +5037,85 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.';
+
+  @override
+  String get guideIntro => 'Let\'s find it together, one step at a time.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get guideNotHelped => 'That didn\'t help';
+
+  @override
+  String get guideBack => 'Back';
+
+  @override
+  String get guideSkipToHelp => 'Skip to help';
+
+  @override
+  String get guideVpnTitle => 'Turn off the VPN';
+
+  @override
+  String get guideIsolatedTitle => 'Join your main Wi-Fi';
+
+  @override
+  String get guideHubTitle => 'Your hub is here';
+
+  @override
+  String get guideWhichTitle => 'What do you open to add a Zigbee device?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'Zigbee2MQTT\'s own page';
+
+  @override
+  String get guideWhichSmlight => 'My SMLIGHT hub\'s page';
+
+  @override
+  String get guideWhichNothing => 'Nothing yet';
+
+  @override
+  String get guideHaTitle => 'Sign in to Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash can connect through Home Assistant with the login you already use there. No broker password needed.';
+
+  @override
+  String get guideZhaTitle => 'Using ZHA?';
+
+  @override
+  String get guideRunningTitle => 'Is Zigbee2MQTT running?';
+
+  @override
+  String get guideNotYetTitle => 'Set up Zigbee2MQTT first';
+
+  @override
+  String get guideZ2mPageTitle => 'Open Zigbee2MQTT\'s page';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash asks Zigbee2MQTT where its broker is. Type the page\'s address as your browser shows it, for example 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Look on the whole network';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash looked at the addresses next to your phone. Mesh Wi-Fi and bigger routers use more of them. Looking at all of them takes about a minute.';
+
+  @override
+  String get guideAddressTitle => 'Enter the address yourself';
+
+  @override
+  String get guideHelpTitle => 'Let\'s get you help';
+
+  @override
+  String get guideHelpBody =>
+      'Still nothing? Don\'t stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer.';
 }

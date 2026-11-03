@@ -8855,6 +8855,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.'**
   String get hubBackupRestoreNotBack;
+
+  /// No description provided for @guideIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s find it together, one step at a time.'**
+  String get guideIntro;
+
+  /// No description provided for @guideStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String guideStep(int step, int total);
+
+  /// No description provided for @guideNotHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t help'**
+  String get guideNotHelped;
+
+  /// No description provided for @guideBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get guideBack;
+
+  /// No description provided for @guideSkipToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to help'**
+  String get guideSkipToHelp;
+
+  /// No description provided for @guideVpnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off the VPN'**
+  String get guideVpnTitle;
+
+  /// No description provided for @guideIsolatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join your main Wi-Fi'**
+  String get guideIsolatedTitle;
+
+  /// No description provided for @guideHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub is here'**
+  String get guideHubTitle;
+
+  /// No description provided for @guideWhichTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you open to add a Zigbee device?'**
+  String get guideWhichTitle;
+
+  /// No description provided for @guideWhichHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get guideWhichHa;
+
+  /// No description provided for @guideWhichZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT\'s own page'**
+  String get guideWhichZ2m;
+
+  /// No description provided for @guideWhichSmlight.
+  ///
+  /// In en, this message translates to:
+  /// **'My SMLIGHT hub\'s page'**
+  String get guideWhichSmlight;
+
+  /// No description provided for @guideWhichNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get guideWhichNothing;
+
+  /// No description provided for @guideHaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to Home Assistant'**
+  String get guideHaTitle;
+
+  /// No description provided for @guideHaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can connect through Home Assistant with the login you already use there. No broker password needed.'**
+  String get guideHaBody;
+
+  /// No description provided for @guideZhaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Using ZHA?'**
+  String get guideZhaTitle;
+
+  /// No description provided for @guideRunningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT running?'**
+  String get guideRunningTitle;
+
+  /// No description provided for @guideNotYetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Zigbee2MQTT first'**
+  String get guideNotYetTitle;
+
+  /// No description provided for @guideZ2mPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Zigbee2MQTT\'s page'**
+  String get guideZ2mPageTitle;
+
+  /// No description provided for @guideZ2mPageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash asks Zigbee2MQTT where its broker is. Type the page\'s address as your browser shows it, for example 192.168.1.20:8080.'**
+  String get guideZ2mPageBody;
+
+  /// No description provided for @guideWiderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Look on the whole network'**
+  String get guideWiderTitle;
+
+  /// No description provided for @guideWiderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash looked at the addresses next to your phone. Mesh Wi-Fi and bigger routers use more of them. Looking at all of them takes about a minute.'**
+  String get guideWiderBody;
+
+  /// No description provided for @guideAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the address yourself'**
+  String get guideAddressTitle;
+
+  /// No description provided for @guideHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get you help'**
+  String get guideHelpTitle;
+
+  /// No description provided for @guideHelpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Still nothing? Don\'t stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer.'**
+  String get guideHelpBody;
 }
 
 class _AppLocalizationsDelegate

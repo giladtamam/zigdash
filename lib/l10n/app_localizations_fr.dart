@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5077,4 +5076,86 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'La sauvegarde a été écrite, mais Zigbee2MQTT n\'a pas redémarré. Redémarrez-le sur le hub, puis vérifiez ici.';
+
+  @override
+  String get guideIntro => 'Trouvons-le ensemble, étape par étape.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Étape $step sur $total';
+  }
+
+  @override
+  String get guideNotHelped => 'Ça n\'a pas aidé';
+
+  @override
+  String get guideBack => 'Retour';
+
+  @override
+  String get guideSkipToHelp => 'Aller à l\'aide';
+
+  @override
+  String get guideVpnTitle => 'Désactivez le VPN';
+
+  @override
+  String get guideIsolatedTitle => 'Rejoignez votre Wi-Fi principal';
+
+  @override
+  String get guideHubTitle => 'Votre hub est là';
+
+  @override
+  String get guideWhichTitle =>
+      'Qu\'ouvrez-vous pour ajouter un appareil Zigbee ?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'La page de Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'La page de mon hub SMLIGHT';
+
+  @override
+  String get guideWhichNothing => 'Rien pour l\'instant';
+
+  @override
+  String get guideHaTitle => 'Connectez-vous à Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash peut se connecter via Home Assistant avec l\'identifiant que vous y utilisez déjà. Pas besoin du mot de passe du broker.';
+
+  @override
+  String get guideZhaTitle => 'Vous utilisez ZHA ?';
+
+  @override
+  String get guideRunningTitle => 'Zigbee2MQTT fonctionne-t-il ?';
+
+  @override
+  String get guideNotYetTitle => 'Installez d\'abord Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageTitle => 'Ouvrez la page de Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash demande à Zigbee2MQTT où se trouve son broker. Tapez l\'adresse de la page telle que votre navigateur l\'affiche, par exemple 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Chercher sur tout le réseau';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash a cherché parmi les adresses proches de votre téléphone. Le Wi-Fi maillé et les routeurs plus grands en utilisent davantage. Les parcourir toutes prend environ une minute.';
+
+  @override
+  String get guideAddressTitle => 'Saisissez l\'adresse vous-même';
+
+  @override
+  String get guideHelpTitle => 'On vous aide';
+
+  @override
+  String get guideHelpBody =>
+      'Toujours rien ? N\'abandonnez pas ici. Demandez à votre assistant IA avec le résumé que ZigDash prépare, ou demandez-nous : chaque message reçoit une réponse.';
 }

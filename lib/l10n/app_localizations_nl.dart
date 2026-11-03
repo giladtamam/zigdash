@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5055,4 +5054,86 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'De back-up is geschreven, maar Zigbee2MQTT is niet opnieuw gestart. Start het op de hub opnieuw en controleer het daarna hier.';
+
+  @override
+  String get guideIntro => 'Laten we het samen vinden, stap voor stap.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Stap $step van $total';
+  }
+
+  @override
+  String get guideNotHelped => 'Dat hielp niet';
+
+  @override
+  String get guideBack => 'Terug';
+
+  @override
+  String get guideSkipToHelp => 'Naar hulp';
+
+  @override
+  String get guideVpnTitle => 'Zet de VPN uit';
+
+  @override
+  String get guideIsolatedTitle => 'Verbind met je hoofd-wifi';
+
+  @override
+  String get guideHubTitle => 'Je hub is hier';
+
+  @override
+  String get guideWhichTitle =>
+      'Wat open je om een Zigbee-apparaat toe te voegen?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'De pagina van Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'De pagina van mijn SMLIGHT-hub';
+
+  @override
+  String get guideWhichNothing => 'Nog niets';
+
+  @override
+  String get guideHaTitle => 'Log in bij Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash kan verbinden via Home Assistant met de login die je daar al gebruikt. Geen brokerwachtwoord nodig.';
+
+  @override
+  String get guideZhaTitle => 'Gebruik je ZHA?';
+
+  @override
+  String get guideRunningTitle => 'Draait Zigbee2MQTT?';
+
+  @override
+  String get guideNotYetTitle => 'Zet eerst Zigbee2MQTT op';
+
+  @override
+  String get guideZ2mPageTitle => 'Open de pagina van Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash vraagt Zigbee2MQTT waar de broker is. Typ het adres van de pagina zoals je browser het toont, bijvoorbeeld 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Zoek in het hele netwerk';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash heeft gezocht tussen de adressen rond je telefoon. Mesh-wifi en grotere routers gebruiken er meer. Ze allemaal doorzoeken duurt ongeveer een minuut.';
+
+  @override
+  String get guideAddressTitle => 'Vul het adres zelf in';
+
+  @override
+  String get guideHelpTitle => 'We helpen je verder';
+
+  @override
+  String get guideHelpBody =>
+      'Nog steeds niets? Stop hier niet. Vraag je AI-assistent met de samenvatting die ZigDash maakt, of vraag het ons: elk bericht krijgt antwoord.';
 }

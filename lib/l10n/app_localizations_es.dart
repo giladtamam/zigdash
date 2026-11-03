@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5061,4 +5060,85 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'La copia se escribió, pero Zigbee2MQTT no ha vuelto a arrancar. Reinícialo en el hub y compruébalo aquí.';
+
+  @override
+  String get guideIntro => 'Vamos a encontrarlo juntos, paso a paso.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Paso $step de $total';
+  }
+
+  @override
+  String get guideNotHelped => 'No ha servido';
+
+  @override
+  String get guideBack => 'Atrás';
+
+  @override
+  String get guideSkipToHelp => 'Ir a la ayuda';
+
+  @override
+  String get guideVpnTitle => 'Desactiva la VPN';
+
+  @override
+  String get guideIsolatedTitle => 'Conéctate a tu Wi-Fi principal';
+
+  @override
+  String get guideHubTitle => 'Tu hub está aquí';
+
+  @override
+  String get guideWhichTitle => '¿Qué abres para añadir un dispositivo Zigbee?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'La página de Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'La página de mi hub SMLIGHT';
+
+  @override
+  String get guideWhichNothing => 'Nada todavía';
+
+  @override
+  String get guideHaTitle => 'Inicia sesión en Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash puede conectarse a través de Home Assistant con el usuario que ya usas allí. No hace falta la contraseña del broker.';
+
+  @override
+  String get guideZhaTitle => '¿Usas ZHA?';
+
+  @override
+  String get guideRunningTitle => '¿Está funcionando Zigbee2MQTT?';
+
+  @override
+  String get guideNotYetTitle => 'Primero configura Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageTitle => 'Abre la página de Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash pregunta a Zigbee2MQTT dónde está su broker. Escribe la dirección de la página tal como la muestra el navegador, por ejemplo 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Buscar en toda la red';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash ha buscado en las direcciones cercanas a tu móvil. El Wi-Fi mesh y los routers grandes usan más. Buscar en todas tarda alrededor de un minuto.';
+
+  @override
+  String get guideAddressTitle => 'Escribe la dirección tú mismo';
+
+  @override
+  String get guideHelpTitle => 'Te ayudamos';
+
+  @override
+  String get guideHelpBody =>
+      '¿Sigue sin aparecer? No te rindas aquí. Pregunta a tu asistente de IA con el resumen que prepara ZigDash, o pregúntanos: respondemos a todos los mensajes.';
 }

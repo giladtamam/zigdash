@@ -12,6 +12,7 @@ import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_error_guidance.dart';
 import 'package:zigdash/features/onboarding/setup/setup_providers.dart';
+import 'package:zigdash/core/analytics/analytics_events.dart';
 import 'package:zigdash/features/onboarding/setup/setup_screen.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 
@@ -96,6 +97,13 @@ final _outcomes = <String, SetupState>{
     hubs: [_z2mHub],
     z2m: (status: Z2mAnswerStatus.localOnly, server: 'mqtt://localhost:1883'),
   ),
+  // 3.3.2: the empty result as a guide, by answer.
+  'guide_pi': const SetupScanEmpty(
+    platform: SetupPlatform.piOrDocker,
+    tried: (widened: false, hostsTried: 254, aliveHosts: 24, lateHosts: 0),
+  ),
+  'guide_ha': const SetupScanEmpty(platform: SetupPlatform.homeAssistant),
+  'guide_help': const SetupScanEmpty(platform: SetupPlatform.homeAssistant),
   'needs_login': const SetupNeedsAuth(_hub),
   // 2.7.1: after a rejected login, where a working login surely is.
   'login_rejected': const SetupNeedsAuth(
@@ -133,8 +141,17 @@ class _NoStore implements SetupStore {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
-List<Override> Function() _overridesFor(SetupState state) =>
+/// The guide's progress for outcomes that show a later step (3.3.2).
+final _guide = <String, GuideProgress>{
+  'guide_help': const GuideProgress(
+    passed: {GuideRung.homeAssistant, GuideRung.address},
+  ),
+};
+
+List<Override> Function() _overridesFor(String name, SetupState state) =>
     () => [
+      if (_guide[name] case final g?)
+        setupGuideProvider.overrideWith((ref) => g),
       setupStateProvider.overrideWith((ref) => Stream.value(state)),
       setupCoordinatorProvider.overrideWith(
         (ref) => SetupCoordinator(
@@ -159,7 +176,7 @@ void main() {
         pumpBeforeTest: pumpNTimes(6, const Duration(milliseconds: 50)),
         builder: () => goldenMatrix(
           variants: _matrix,
-          overrides: _overridesFor(entry.value),
+          overrides: _overridesFor(entry.key, entry.value),
           screen: () => const SetupScreen(),
         ),
       );

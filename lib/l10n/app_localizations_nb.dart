@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5040,4 +5039,85 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'Sikkerhetskopien ble skrevet, men Zigbee2MQTT har ikke startet igjen. Start den på nytt på huben, og sjekk her etterpå.';
+
+  @override
+  String get guideIntro => 'Vi finner det sammen, ett steg om gangen.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Steg $step av $total';
+  }
+
+  @override
+  String get guideNotHelped => 'Det hjalp ikke';
+
+  @override
+  String get guideBack => 'Tilbake';
+
+  @override
+  String get guideSkipToHelp => 'Gå til hjelp';
+
+  @override
+  String get guideVpnTitle => 'Slå av VPN';
+
+  @override
+  String get guideIsolatedTitle => 'Koble til hoved-Wi-Fi-en';
+
+  @override
+  String get guideHubTitle => 'Huben din er her';
+
+  @override
+  String get guideWhichTitle => 'Hva åpner du for å legge til en Zigbee-enhet?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'Zigbee2MQTT sin egen side';
+
+  @override
+  String get guideWhichSmlight => 'Siden til SMLIGHT-huben min';
+
+  @override
+  String get guideWhichNothing => 'Ingenting ennå';
+
+  @override
+  String get guideHaTitle => 'Logg inn i Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash kan koble til gjennom Home Assistant med innloggingen du allerede bruker der. Du trenger ikke brokerpassord.';
+
+  @override
+  String get guideZhaTitle => 'Bruker du ZHA?';
+
+  @override
+  String get guideRunningTitle => 'Kjører Zigbee2MQTT?';
+
+  @override
+  String get guideNotYetTitle => 'Sett opp Zigbee2MQTT først';
+
+  @override
+  String get guideZ2mPageTitle => 'Åpne siden til Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash spør Zigbee2MQTT hvor brokeren er. Skriv adressen til siden slik nettleseren viser den, for eksempel 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Søk i hele nettverket';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash søkte blant adressene nær telefonen din. Mesh-Wi-Fi og større rutere bruker flere. Å søke i alle tar omtrent ett minutt.';
+
+  @override
+  String get guideAddressTitle => 'Skriv inn adressen selv';
+
+  @override
+  String get guideHelpTitle => 'Vi hjelper deg';
+
+  @override
+  String get guideHelpBody =>
+      'Fortsatt ingenting? Ikke stopp her. Spør AI-assistenten din med oppsummeringen ZigDash lager, eller spør oss: alle meldinger får svar.';
 }

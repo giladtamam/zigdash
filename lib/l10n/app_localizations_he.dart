@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4983,4 +4982,85 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'הגיבוי נכתב, אבל Zigbee2MQTT לא עלה מחדש. הפעילו אותו מחדש ברכזת ובדקו כאן.';
+
+  @override
+  String get guideIntro => 'בואו נמצא את זה יחד, צעד אחר צעד.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'שלב $step מתוך $total';
+  }
+
+  @override
+  String get guideNotHelped => 'זה לא עזר';
+
+  @override
+  String get guideBack => 'חזרה';
+
+  @override
+  String get guideSkipToHelp => 'דלגו לעזרה';
+
+  @override
+  String get guideVpnTitle => 'כבו את ה-VPN';
+
+  @override
+  String get guideIsolatedTitle => 'התחברו לרשת ה-Wi-Fi הראשית';
+
+  @override
+  String get guideHubTitle => 'הרכזת שלכם כאן';
+
+  @override
+  String get guideWhichTitle => 'מה אתם פותחים כדי להוסיף מכשיר Zigbee?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'הדף של Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'הדף של רכזת SMLIGHT שלי';
+
+  @override
+  String get guideWhichNothing => 'עדיין כלום';
+
+  @override
+  String get guideHaTitle => 'התחברו ל-Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash יכולה להתחבר דרך Home Assistant עם הכניסה שאתם כבר משתמשים בה שם. לא צריך סיסמת ברוקר.';
+
+  @override
+  String get guideZhaTitle => 'משתמשים ב-ZHA?';
+
+  @override
+  String get guideRunningTitle => 'האם Zigbee2MQTT פועל?';
+
+  @override
+  String get guideNotYetTitle => 'קודם הגדירו את Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageTitle => 'פתחו את הדף של Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash שואלת את Zigbee2MQTT איפה הברוקר שלו. הקלידו את כתובת הדף כפי שהדפדפן מציג אותה, למשל 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'חיפוש בכל הרשת';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash חיפשה בכתובות הקרובות לטלפון שלכם. רשתות Mesh ונתבים גדולים משתמשים ביותר כתובות. חיפוש בכולן לוקח בערך דקה.';
+
+  @override
+  String get guideAddressTitle => 'הקלידו את הכתובת בעצמכם';
+
+  @override
+  String get guideHelpTitle => 'בואו נשיג לכם עזרה';
+
+  @override
+  String get guideHelpBody =>
+      'עדיין כלום? אל תעצרו כאן. שאלו את עוזר ה-AI שלכם עם הסיכום ש-ZigDash מכינה, או שאלו אותנו: כל הודעה מקבלת תשובה.';
 }
