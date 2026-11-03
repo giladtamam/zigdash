@@ -1634,5 +1634,20 @@
   "guideWiderBody": "ZigDash חיפשה בכתובות הקרובות לטלפון שלכם. רשתות Mesh ונתבים גדולים משתמשים ביותר כתובות. חיפוש בכולן לוקח בערך דקה.",
   "guideAddressTitle": "הקלידו את הכתובת בעצמכם",
   "guideHelpTitle": "בואו נשיג לכם עזרה",
-  "guideHelpBody": "עדיין כלום? אל תעצרו כאן. שאלו את עוזר ה-AI שלכם עם הסיכום ש-ZigDash מכינה, או שאלו אותנו: כל הודעה מקבלת תשובה."
+  "guideHelpBody": "עדיין כלום? אל תעצרו כאן. שאלו את עוזר ה-AI שלכם עם הסיכום ש-ZigDash מכינה, או שאלו אותנו: כל הודעה מקבלת תשובה.",
+  "loginGuideTitle": "אין לכם משתמש MQTT? צרו אחד",
+  "loginGuidePick": "איפה הברוקר שלכם רץ?",
+  "loginGuideHa1": "ב-Home Assistant, פתחו את הפרופיל שלכם (השם שלכם בתחתית הסרגל הצדדי) והפעילו את המצב המתקדם.",
+  "loginGuideHa2": "עברו להגדרות › אנשים, פתחו את הלשונית משתמשים והקישו על הוספת משתמש.",
+  "loginGuideHa3": "תנו לו שם, למשל zigdash, קבעו סיסמה וצרו אותו. הוא לא צריך להיות מנהל.",
+  "loginGuideHa4": "הקלידו כאן את שם המשתמש שלו (זה שמתחת לשם משתמש, באותיות קטנות, לא שם התצוגה) ואת הסיסמה. השמות homeassistant ו-addons לא עובדים.",
+  "loginGuidePi1": "Zigbee2MQTT כבר מתחבר: בקובץ configuration.yaml שלו יש משתמש וסיסמה תחת mqtt. אפשר להשתמש בהם.",
+  "loginGuidePi2": "או צרו משתמש חדש במחשב שמריץ את Mosquitto. הוא יבקש את הסיסמה פעמיים:",
+  "loginGuidePi3": "ואז הפעילו מחדש את Mosquitto:",
+  "loginGuidePi4": "ב-Docker, הריצו את שניהם בתוך הקונטיינר, עם הקובץ ש-mosquitto.conf מציין תחת password_file:",
+  "loginGuideSmlight1": "פתחו את דף האינטרנט של הרכזת ועברו ל-Settings › MQTT.",
+  "loginGuideSmlight2": "העתיקו את שם המשתמש והסיסמה שמופיעים שם, או הפעילו את Allow Anonymous ושמרו.",
+  "loginGuideSmlight3": "כש-Allow Anonymous פועל, לא צריך משתמש:",
+  "loginTryAnonymous": "נסו בלי משתמש",
+  "loginCopied": "הועתק"
 }

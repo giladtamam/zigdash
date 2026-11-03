@@ -502,6 +502,8 @@ class _EmptyGuide extends ConsumerWidget {
             _SetupGuides(only: state.platform),
         ],
       ),
+      // The login step's own guide, never on the empty result.
+      GuideRung.login => const SizedBox.shrink(),
       GuideRung.help => _GuideBody(
         title: l10n.guideHelpTitle,
         icon: Icons.support_agent,

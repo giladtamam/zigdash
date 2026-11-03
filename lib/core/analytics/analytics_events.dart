@@ -169,6 +169,10 @@ enum GuideRung {
   wider,
   address,
   help,
+
+  /// "No MQTT login? Make one" on the login step: opened (reached), or
+  /// "Try without a login" (done).
+  login,
 }
 
 /// What happened on a guide step (3.3.2): its action was taken, "That

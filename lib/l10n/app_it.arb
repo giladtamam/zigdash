@@ -1480,5 +1480,20 @@
   "guideWiderBody": "ZigDash ha cercato tra gli indirizzi vicini al tuo telefono. Il Wi-Fi mesh e i router più grandi ne usano di più. Cercarli tutti richiede circa un minuto.",
   "guideAddressTitle": "Inserisci tu l'indirizzo",
   "guideHelpTitle": "Ti aiutiamo noi",
-  "guideHelpBody": "Ancora niente? Non fermarti qui. Chiedi al tuo assistente IA con il riepilogo che prepara ZigDash, o chiedi a noi: ogni messaggio riceve una risposta."
+  "guideHelpBody": "Ancora niente? Non fermarti qui. Chiedi al tuo assistente IA con il riepilogo che prepara ZigDash, o chiedi a noi: ogni messaggio riceve una risposta.",
+  "loginGuideTitle": "Nessun accesso MQTT? Creane uno",
+  "loginGuidePick": "Dove gira il tuo broker?",
+  "loginGuideHa1": "In Home Assistant apri il tuo profilo (il tuo nome in fondo alla barra laterale) e attiva la Modalità avanzata.",
+  "loginGuideHa2": "Vai in Impostazioni › Persone, apri la scheda Utenti e tocca Aggiungi utente.",
+  "loginGuideHa3": "Dagli un nome, per esempio zigdash, imposta una password e crealo. Non serve che sia amministratore.",
+  "loginGuideHa4": "Scrivi qui il suo nome utente (quello sotto Nome utente, in minuscolo, non il nome visualizzato) e la password. I nomi homeassistant e addons non funzionano.",
+  "loginGuidePi1": "Zigbee2MQTT accede già: il suo configuration.yaml ha utente e password sotto mqtt. Puoi usare quelli.",
+  "loginGuidePi2": "Oppure crea un nuovo utente sulla macchina dove gira Mosquitto. Chiede la password due volte:",
+  "loginGuidePi3": "Poi riavvia Mosquitto:",
+  "loginGuidePi4": "In Docker, esegui entrambi nel container, con il file che mosquitto.conf indica in password_file:",
+  "loginGuideSmlight1": "Apri la pagina web dell'hub e vai in Settings › MQTT.",
+  "loginGuideSmlight2": "Copia il nome utente e la password mostrati, oppure attiva Allow Anonymous e salva.",
+  "loginGuideSmlight3": "Con Allow Anonymous attivo non serve alcun accesso:",
+  "loginTryAnonymous": "Prova senza accesso",
+  "loginCopied": "Copiato"
 }

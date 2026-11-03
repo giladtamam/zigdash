@@ -1565,5 +1565,20 @@
   "guideWiderBody": "ZigDash ha buscado en las direcciones cercanas a tu móvil. El Wi-Fi mesh y los routers grandes usan más. Buscar en todas tarda alrededor de un minuto.",
   "guideAddressTitle": "Escribe la dirección tú mismo",
   "guideHelpTitle": "Te ayudamos",
-  "guideHelpBody": "¿Sigue sin aparecer? No te rindas aquí. Pregunta a tu asistente de IA con el resumen que prepara ZigDash, o pregúntanos: respondemos a todos los mensajes."
+  "guideHelpBody": "¿Sigue sin aparecer? No te rindas aquí. Pregunta a tu asistente de IA con el resumen que prepara ZigDash, o pregúntanos: respondemos a todos los mensajes.",
+  "loginGuideTitle": "¿Sin usuario MQTT? Crea uno",
+  "loginGuidePick": "¿Dónde funciona tu broker?",
+  "loginGuideHa1": "En Home Assistant, abre tu perfil (tu nombre abajo en la barra lateral) y activa el Modo avanzado.",
+  "loginGuideHa2": "Ve a Ajustes › Personas, abre la pestaña Usuarios y toca Añadir usuario.",
+  "loginGuideHa3": "Ponle un nombre, por ejemplo zigdash, una contraseña y créalo. No hace falta que sea administrador.",
+  "loginGuideHa4": "Escribe aquí su nombre de usuario (el de Nombre de usuario, en minúsculas, no el nombre visible) y su contraseña. Los nombres homeassistant y addons no funcionan.",
+  "loginGuidePi1": "Zigbee2MQTT ya inicia sesión: su configuration.yaml tiene el usuario y la contraseña en mqtt. Puedes usar esos.",
+  "loginGuidePi2": "O crea un usuario nuevo en el equipo donde funciona Mosquitto. Pide la contraseña dos veces:",
+  "loginGuidePi3": "Después reinicia Mosquitto:",
+  "loginGuidePi4": "En Docker, ejecuta ambos dentro del contenedor, con el archivo que mosquitto.conf indica en password_file:",
+  "loginGuideSmlight1": "Abre la página web del hub y ve a Settings › MQTT.",
+  "loginGuideSmlight2": "Copia el usuario y la contraseña que aparecen, o activa Allow Anonymous y guarda.",
+  "loginGuideSmlight3": "Con Allow Anonymous activado no hace falta usuario:",
+  "loginTryAnonymous": "Probar sin usuario",
+  "loginCopied": "Copiado"
 }

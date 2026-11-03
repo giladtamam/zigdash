@@ -5150,4 +5150,58 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Immer noch nichts? Gib hier nicht auf. Frag deinen KI-Assistenten mit der Zusammenfassung, die ZigDash vorbereitet, oder frag uns: Jede Nachricht bekommt eine Antwort.';
+
+  @override
+  String get loginGuideTitle => 'Kein MQTT-Login? Leg einen an';
+
+  @override
+  String get loginGuidePick => 'Wo läuft dein Broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'Öffne in Home Assistant dein Profil (dein Name unten in der Seitenleiste) und schalte den Erweiterten Modus ein.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Geh zu Einstellungen › Personen, öffne den Tab Benutzer und tippe auf Benutzer hinzufügen.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Gib ihm einen Namen, zum Beispiel zigdash, setze ein Passwort und leg ihn an. Er muss kein Administrator sein.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Gib hier seinen Benutzernamen ein (den unter Benutzername, in Kleinbuchstaben, nicht den Anzeigenamen) und sein Passwort. Die Namen homeassistant und addons funktionieren nicht.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT meldet sich schon an: In seiner configuration.yaml stehen Benutzer und Passwort unter mqtt. Die kannst du nehmen.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Oder leg einen neuen Benutzer auf dem Rechner an, auf dem Mosquitto läuft. Das Passwort wird zweimal abgefragt:';
+
+  @override
+  String get loginGuidePi3 => 'Dann starte Mosquitto neu:';
+
+  @override
+  String get loginGuidePi4 =>
+      'Unter Docker führst du beides im Container aus, mit der Datei, die mosquitto.conf unter password_file nennt:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Öffne die Webseite des Hubs und geh zu Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Kopiere den dort angezeigten Benutzernamen und das Passwort, oder schalte Allow Anonymous ein und speichere.';
+
+  @override
+  String get loginGuideSmlight3 => 'Mit Allow Anonymous ist kein Login nötig:';
+
+  @override
+  String get loginTryAnonymous => 'Ohne Login versuchen';
+
+  @override
+  String get loginCopied => 'Kopiert';
 }

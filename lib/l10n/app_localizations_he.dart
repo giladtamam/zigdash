@@ -5063,4 +5063,58 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'עדיין כלום? אל תעצרו כאן. שאלו את עוזר ה-AI שלכם עם הסיכום ש-ZigDash מכינה, או שאלו אותנו: כל הודעה מקבלת תשובה.';
+
+  @override
+  String get loginGuideTitle => 'אין לכם משתמש MQTT? צרו אחד';
+
+  @override
+  String get loginGuidePick => 'איפה הברוקר שלכם רץ?';
+
+  @override
+  String get loginGuideHa1 =>
+      'ב-Home Assistant, פתחו את הפרופיל שלכם (השם שלכם בתחתית הסרגל הצדדי) והפעילו את המצב המתקדם.';
+
+  @override
+  String get loginGuideHa2 =>
+      'עברו להגדרות › אנשים, פתחו את הלשונית משתמשים והקישו על הוספת משתמש.';
+
+  @override
+  String get loginGuideHa3 =>
+      'תנו לו שם, למשל zigdash, קבעו סיסמה וצרו אותו. הוא לא צריך להיות מנהל.';
+
+  @override
+  String get loginGuideHa4 =>
+      'הקלידו כאן את שם המשתמש שלו (זה שמתחת לשם משתמש, באותיות קטנות, לא שם התצוגה) ואת הסיסמה. השמות homeassistant ו-addons לא עובדים.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT כבר מתחבר: בקובץ configuration.yaml שלו יש משתמש וסיסמה תחת mqtt. אפשר להשתמש בהם.';
+
+  @override
+  String get loginGuidePi2 =>
+      'או צרו משתמש חדש במחשב שמריץ את Mosquitto. הוא יבקש את הסיסמה פעמיים:';
+
+  @override
+  String get loginGuidePi3 => 'ואז הפעילו מחדש את Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'ב-Docker, הריצו את שניהם בתוך הקונטיינר, עם הקובץ ש-mosquitto.conf מציין תחת password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'פתחו את דף האינטרנט של הרכזת ועברו ל-Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'העתיקו את שם המשתמש והסיסמה שמופיעים שם, או הפעילו את Allow Anonymous ושמרו.';
+
+  @override
+  String get loginGuideSmlight3 => 'כש-Allow Anonymous פועל, לא צריך משתמש:';
+
+  @override
+  String get loginTryAnonymous => 'נסו בלי משתמש';
+
+  @override
+  String get loginCopied => 'הועתק';
 }

@@ -5120,4 +5120,59 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Fortsatt ingenting? Ikke stopp her. Spør AI-assistenten din med oppsummeringen ZigDash lager, eller spør oss: alle meldinger får svar.';
+
+  @override
+  String get loginGuideTitle => 'Ingen MQTT-innlogging? Lag en';
+
+  @override
+  String get loginGuidePick => 'Hvor kjører brokeren din?';
+
+  @override
+  String get loginGuideHa1 =>
+      'Åpne profilen din i Home Assistant (navnet ditt nederst i sidepanelet) og slå på Avansert modus.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Gå til Innstillinger › Personer, åpne fanen Brukere og trykk Legg til bruker.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Gi den et navn, for eksempel zigdash, sett et passord og opprett den. Den trenger ikke være administrator.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Skriv inn brukernavnet her (det under Brukernavn, med små bokstaver, ikke visningsnavnet) og passordet. Navnene homeassistant og addons fungerer ikke.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT logger allerede inn: configuration.yaml har bruker og passord under mqtt. Du kan bruke dem.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Eller lag en ny bruker på maskinen som kjører Mosquitto. Den spør om passordet to ganger:';
+
+  @override
+  String get loginGuidePi3 => 'Start så Mosquitto på nytt:';
+
+  @override
+  String get loginGuidePi4 =>
+      'I Docker kjører du begge inne i containeren, med filen som mosquitto.conf nevner under password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Åpne nettsiden til huben og gå til Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Kopier brukernavnet og passordet som vises der, eller slå på Allow Anonymous og lagre.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Med Allow Anonymous på trengs ingen innlogging:';
+
+  @override
+  String get loginTryAnonymous => 'Prøv uten innlogging';
+
+  @override
+  String get loginCopied => 'Kopiert';
 }

@@ -5124,4 +5124,59 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Fortfarande inget? Sluta inte här. Fråga din AI-assistent med sammanfattningen som ZigDash gör, eller fråga oss: alla meddelanden får svar.';
+
+  @override
+  String get loginGuideTitle => 'Ingen MQTT-inloggning? Skapa en';
+
+  @override
+  String get loginGuidePick => 'Var körs din broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'Öppna din profil i Home Assistant (ditt namn längst ned i sidofältet) och slå på Avancerat läge.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Gå till Inställningar › Personer, öppna fliken Användare och tryck på Lägg till användare.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Ge den ett namn, till exempel zigdash, välj ett lösenord och skapa den. Den behöver inte vara administratör.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Skriv in dess användarnamn här (det under Användarnamn, med små bokstäver, inte visningsnamnet) och lösenordet. Namnen homeassistant och addons fungerar inte.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT loggar redan in: dess configuration.yaml har användare och lösenord under mqtt. Du kan använda dem.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Eller skapa en ny användare på datorn som kör Mosquitto. Den frågar efter lösenordet två gånger:';
+
+  @override
+  String get loginGuidePi3 => 'Starta sedan om Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'I Docker kör du båda i containern, med filen som mosquitto.conf anger under password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Öppna hubbens webbsida och gå till Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Kopiera användarnamnet och lösenordet som visas där, eller slå på Allow Anonymous och spara.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Med Allow Anonymous på behövs ingen inloggning:';
+
+  @override
+  String get loginTryAnonymous => 'Försök utan inloggning';
+
+  @override
+  String get loginCopied => 'Kopierat';
 }

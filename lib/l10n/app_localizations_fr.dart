@@ -5158,4 +5158,59 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Toujours rien ? N\'abandonnez pas ici. Demandez à votre assistant IA avec le résumé que ZigDash prépare, ou demandez-nous : chaque message reçoit une réponse.';
+
+  @override
+  String get loginGuideTitle => 'Pas d\'identifiant MQTT ? Créez-en un';
+
+  @override
+  String get loginGuidePick => 'Où fonctionne votre broker ?';
+
+  @override
+  String get loginGuideHa1 =>
+      'Dans Home Assistant, ouvrez votre profil (votre nom en bas de la barre latérale) et activez le Mode avancé.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Allez dans Paramètres › Personnes, ouvrez l\'onglet Utilisateurs et touchez Ajouter un utilisateur.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Donnez-lui un nom, par exemple zigdash, un mot de passe, et créez-le. Il n\'a pas besoin d\'être administrateur.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Tapez ici son nom d\'utilisateur (celui sous Nom d\'utilisateur, en minuscules, pas le nom affiché) et son mot de passe. Les noms homeassistant et addons ne marchent pas.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT se connecte déjà : son configuration.yaml contient l\'utilisateur et le mot de passe sous mqtt. Vous pouvez les utiliser.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Ou créez un nouvel utilisateur sur la machine où tourne Mosquitto. Le mot de passe est demandé deux fois :';
+
+  @override
+  String get loginGuidePi3 => 'Puis redémarrez Mosquitto :';
+
+  @override
+  String get loginGuidePi4 =>
+      'Sous Docker, lancez les deux dans le conteneur, avec le fichier que mosquitto.conf indique sous password_file :';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Ouvrez la page web du hub et allez dans Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Copiez l\'utilisateur et le mot de passe affichés, ou activez Allow Anonymous et enregistrez.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Avec Allow Anonymous activé, aucun identifiant n\'est nécessaire :';
+
+  @override
+  String get loginTryAnonymous => 'Essayer sans identifiant';
+
+  @override
+  String get loginCopied => 'Copié';
 }

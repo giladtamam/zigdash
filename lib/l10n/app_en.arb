@@ -1808,5 +1808,20 @@
   "guideWiderBody": "ZigDash looked at the addresses next to your phone. Mesh Wi-Fi and bigger routers use more of them. Looking at all of them takes about a minute.",
   "guideAddressTitle": "Enter the address yourself",
   "guideHelpTitle": "Let's get you help",
-  "guideHelpBody": "Still nothing? Don't stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer."
+  "guideHelpBody": "Still nothing? Don't stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer.",
+  "loginGuideTitle": "No MQTT login? Make one",
+  "loginGuidePick": "Where does your broker run?",
+  "loginGuideHa1": "In Home Assistant, open your profile (your name at the bottom of the sidebar) and turn on Advanced mode.",
+  "loginGuideHa2": "Go to Settings › People, open the Users tab and tap Add user.",
+  "loginGuideHa3": "Name it, for example zigdash, set a password and create it. It doesn't need to be an administrator.",
+  "loginGuideHa4": "Type its username here (the one under Username, in small letters, not the display name) and its password. The names homeassistant and addons don't work.",
+  "loginGuidePi1": "Zigbee2MQTT already logs in: its configuration.yaml has the user and password under mqtt. You can use those.",
+  "loginGuidePi2": "Or make a new user on the machine that runs Mosquitto. It asks for the password twice:",
+  "loginGuidePi3": "Then restart Mosquitto:",
+  "loginGuidePi4": "In Docker, run both inside the container, with the file that mosquitto.conf names under password_file:",
+  "loginGuideSmlight1": "Open the hub's web page and go to Settings › MQTT.",
+  "loginGuideSmlight2": "Copy the username and password shown there, or turn on Allow Anonymous and save.",
+  "loginGuideSmlight3": "With Allow Anonymous on, no login is needed:",
+  "loginTryAnonymous": "Try without a login",
+  "loginCopied": "Copied"
 }

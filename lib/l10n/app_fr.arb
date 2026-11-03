@@ -1490,5 +1490,20 @@
   "guideWiderBody": "ZigDash a cherché parmi les adresses proches de votre téléphone. Le Wi-Fi maillé et les routeurs plus grands en utilisent davantage. Les parcourir toutes prend environ une minute.",
   "guideAddressTitle": "Saisissez l'adresse vous-même",
   "guideHelpTitle": "On vous aide",
-  "guideHelpBody": "Toujours rien ? N'abandonnez pas ici. Demandez à votre assistant IA avec le résumé que ZigDash prépare, ou demandez-nous : chaque message reçoit une réponse."
+  "guideHelpBody": "Toujours rien ? N'abandonnez pas ici. Demandez à votre assistant IA avec le résumé que ZigDash prépare, ou demandez-nous : chaque message reçoit une réponse.",
+  "loginGuideTitle": "Pas d'identifiant MQTT ? Créez-en un",
+  "loginGuidePick": "Où fonctionne votre broker ?",
+  "loginGuideHa1": "Dans Home Assistant, ouvrez votre profil (votre nom en bas de la barre latérale) et activez le Mode avancé.",
+  "loginGuideHa2": "Allez dans Paramètres › Personnes, ouvrez l'onglet Utilisateurs et touchez Ajouter un utilisateur.",
+  "loginGuideHa3": "Donnez-lui un nom, par exemple zigdash, un mot de passe, et créez-le. Il n'a pas besoin d'être administrateur.",
+  "loginGuideHa4": "Tapez ici son nom d'utilisateur (celui sous Nom d'utilisateur, en minuscules, pas le nom affiché) et son mot de passe. Les noms homeassistant et addons ne marchent pas.",
+  "loginGuidePi1": "Zigbee2MQTT se connecte déjà : son configuration.yaml contient l'utilisateur et le mot de passe sous mqtt. Vous pouvez les utiliser.",
+  "loginGuidePi2": "Ou créez un nouvel utilisateur sur la machine où tourne Mosquitto. Le mot de passe est demandé deux fois :",
+  "loginGuidePi3": "Puis redémarrez Mosquitto :",
+  "loginGuidePi4": "Sous Docker, lancez les deux dans le conteneur, avec le fichier que mosquitto.conf indique sous password_file :",
+  "loginGuideSmlight1": "Ouvrez la page web du hub et allez dans Settings › MQTT.",
+  "loginGuideSmlight2": "Copiez l'utilisateur et le mot de passe affichés, ou activez Allow Anonymous et enregistrez.",
+  "loginGuideSmlight3": "Avec Allow Anonymous activé, aucun identifiant n'est nécessaire :",
+  "loginTryAnonymous": "Essayer sans identifiant",
+  "loginCopied": "Copié"
 }

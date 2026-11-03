@@ -989,6 +989,95 @@ void main() {
     expect(find.text('Enter broker details (advanced)'), findsOneWidget);
   });
 
+  // 3.3.2: no login at hand: how to make one, for where the broker runs.
+  group('the login guide', () {
+    late List<(String, Map<String, String>)> sent;
+    late int scans;
+    setUp(() {
+      sent = [];
+      scans = 0;
+    });
+    Future<SetupCoordinator> atLogin(
+      WidgetTester tester, {
+      SetupPlatform? platform,
+    }) async {
+      final coordinator = await _pump(
+        tester,
+        scan: (_) {
+          scans++;
+          return Stream.value(
+            const ProbeResult(
+              host: '192.168.1.10',
+              port: 1883,
+              needsAuth: true,
+            ),
+          );
+        },
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      );
+      if (platform != null) coordinator.setPlatform(platform);
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+      return coordinator;
+    }
+
+    Future<void> open(WidgetTester tester) async {
+      final title = find.text('No MQTT login? Make one');
+      await tester.ensureVisible(title);
+      await tester.tap(title);
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('Home Assistant: make a user, its username not its name', (
+      tester,
+    ) async {
+      await atLogin(tester, platform: SetupPlatform.homeAssistant);
+      expect(find.byKey(const Key('setup-login-guide')), findsOneWidget);
+      // Closed until asked for.
+      expect(find.textContaining('turn on Advanced mode'), findsNothing);
+      await open(tester);
+      expect(find.textContaining('turn on Advanced mode'), findsOneWidget);
+      expect(find.textContaining('not the display name'), findsOneWidget);
+      expect(find.byType(SegmentedButton<SetupPlatform>), findsNothing);
+      expect(
+        sent.where((e) => e.$2['step'] == 'guide').map((e) => e.$2['choice']),
+        ['login'],
+      );
+    });
+
+    testWidgets('no answer: pick where the broker runs', (tester) async {
+      await atLogin(tester);
+      await open(tester);
+      await tester.tap(find.text('Raspberry Pi or Docker').last);
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('mosquitto_passwd /etc/mosquitto/passwd'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('docker exec -it mosquitto'), findsOneWidget);
+    });
+
+    testWidgets('SMLIGHT: Allow Anonymous, then try without a login', (
+      tester,
+    ) async {
+      await atLogin(tester, platform: SetupPlatform.smlight);
+      await open(tester);
+      expect(scans, 1);
+      final retry = find.byKey(const Key('setup-login-anonymous'));
+      await tester.ensureVisible(retry);
+      await tester.tap(retry);
+      await tester.pump();
+      await tester.pump();
+      expect(scans, 2, reason: 'looked again, with no login');
+    });
+  });
+
   testWidgets('anonymous rejection prompts for credentials, preserving host', (
     tester,
   ) async {

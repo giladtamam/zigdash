@@ -30,6 +30,7 @@ import 'setup_waiting.dart';
 import 'setup_reminder.dart';
 
 part 'setup_guide.dart';
+part 'setup_login_guide.dart';
 
 /// zigdash.app's Hubs page: the small hubs that run Zigbee2MQTT, for the
 /// empty result's "I don't have a hub yet" (2.9.6).
@@ -224,6 +225,7 @@ class SetupScreen extends ConsumerWidget {
               onSubmit: coordinator.submitCredentials,
               onDemo: tryDemo,
               onConnectViaHa: viaHa,
+              onRetry: coordinator.retry,
             ),
             SetupFailed(kind: SetupErrorKind.notZigbee2Mqtt) => _NoZigbee2Mqtt(
               base: coordinator.base,
@@ -1234,9 +1236,14 @@ class _AuthPrompt extends StatefulWidget {
     required this.onSubmit,
     required this.onDemo,
     required this.onConnectViaHa,
+    required this.onRetry,
   });
   final SetupNeedsAuth state;
   final void Function(String username, String password) onSubmit;
+
+  /// Look again with no login (3.3.2), after the broker was set to need
+  /// none.
+  final VoidCallback onRetry;
   final VoidCallback onDemo;
   final void Function(String? host, HaSignInFrom from) onConnectViaHa;
 
@@ -1307,6 +1314,12 @@ class _AuthPromptState extends State<_AuthPrompt> {
         ],
         const SizedBox(height: 12),
         _LoginHint(platform: widget.state.platform),
+        const SizedBox(height: 12),
+        _LoginGuide(
+          platform: widget.state.platform,
+          rejected: widget.state.rejected,
+          onTryAnonymous: widget.onRetry,
+        ),
         // 2.8.1: people stopped here without typing. Say where the login
         // goes before asking for it.
         const SizedBox(height: 12),

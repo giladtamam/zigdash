@@ -5117,4 +5117,59 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Pořád nic? Nevzdávejte to. Zeptejte se svého AI asistenta s popisem, který ZigDash připraví, nebo se zeptejte nás: odpovíme na každou zprávu.';
+
+  @override
+  String get loginGuideTitle => 'Nemáte přihlášení MQTT? Vytvořte si ho';
+
+  @override
+  String get loginGuidePick => 'Kde běží váš broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'V Home Assistantu otevřete svůj profil (vaše jméno dole v postranním panelu) a zapněte Pokročilý režim.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Přejděte do Nastavení › Lidé, otevřete kartu Uživatelé a klepněte na Přidat uživatele.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Pojmenujte ho, například zigdash, nastavte heslo a vytvořte ho. Nemusí být správce.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Sem zadejte jeho uživatelské jméno (to pod Uživatelské jméno, malými písmeny, ne zobrazované jméno) a heslo. Jména homeassistant a addons nefungují.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT se už přihlašuje: jeho configuration.yaml má uživatele a heslo pod mqtt. Můžete je použít.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Nebo vytvořte nového uživatele na počítači, kde běží Mosquitto. Heslo se zadává dvakrát:';
+
+  @override
+  String get loginGuidePi3 => 'Potom Mosquitto restartujte:';
+
+  @override
+  String get loginGuidePi4 =>
+      'V Dockeru spusťte obojí uvnitř kontejneru, se souborem, který mosquitto.conf uvádí pod password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Otevřete webovou stránku hubu a přejděte do Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Zkopírujte zobrazené uživatelské jméno a heslo, nebo zapněte Allow Anonymous a uložte.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Se zapnutým Allow Anonymous není přihlášení potřeba:';
+
+  @override
+  String get loginTryAnonymous => 'Zkusit bez přihlášení';
+
+  @override
+  String get loginCopied => 'Zkopírováno';
 }

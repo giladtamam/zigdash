@@ -5118,4 +5118,59 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Still nothing? Don\'t stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer.';
+
+  @override
+  String get loginGuideTitle => 'No MQTT login? Make one';
+
+  @override
+  String get loginGuidePick => 'Where does your broker run?';
+
+  @override
+  String get loginGuideHa1 =>
+      'In Home Assistant, open your profile (your name at the bottom of the sidebar) and turn on Advanced mode.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Go to Settings › People, open the Users tab and tap Add user.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Name it, for example zigdash, set a password and create it. It doesn\'t need to be an administrator.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Type its username here (the one under Username, in small letters, not the display name) and its password. The names homeassistant and addons don\'t work.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT already logs in: its configuration.yaml has the user and password under mqtt. You can use those.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Or make a new user on the machine that runs Mosquitto. It asks for the password twice:';
+
+  @override
+  String get loginGuidePi3 => 'Then restart Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'In Docker, run both inside the container, with the file that mosquitto.conf names under password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Open the hub\'s web page and go to Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Copy the username and password shown there, or turn on Allow Anonymous and save.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'With Allow Anonymous on, no login is needed:';
+
+  @override
+  String get loginTryAnonymous => 'Try without a login';
+
+  @override
+  String get loginCopied => 'Copied';
 }

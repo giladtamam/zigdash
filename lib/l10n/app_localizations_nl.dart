@@ -5136,4 +5136,59 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Nog steeds niets? Stop hier niet. Vraag je AI-assistent met de samenvatting die ZigDash maakt, of vraag het ons: elk bericht krijgt antwoord.';
+
+  @override
+  String get loginGuideTitle => 'Geen MQTT-login? Maak er een';
+
+  @override
+  String get loginGuidePick => 'Waar draait je broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'Open in Home Assistant je profiel (je naam onderaan de zijbalk) en zet de Geavanceerde modus aan.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Ga naar Instellingen › Personen, open het tabblad Gebruikers en tik op Gebruiker toevoegen.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Geef hem een naam, bijvoorbeeld zigdash, stel een wachtwoord in en maak hem aan. Hij hoeft geen beheerder te zijn.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Typ hier zijn gebruikersnaam (die onder Gebruikersnaam, in kleine letters, niet de weergavenaam) en zijn wachtwoord. De namen homeassistant en addons werken niet.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT logt al in: zijn configuration.yaml heeft de gebruiker en het wachtwoord onder mqtt. Die kun je gebruiken.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Of maak een nieuwe gebruiker op de machine waar Mosquitto draait. Het vraagt het wachtwoord twee keer:';
+
+  @override
+  String get loginGuidePi3 => 'Herstart daarna Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'In Docker voer je beide in de container uit, met het bestand dat mosquitto.conf onder password_file noemt:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Open de webpagina van de hub en ga naar Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Kopieer de gebruikersnaam en het wachtwoord die daar staan, of zet Allow Anonymous aan en sla op.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Met Allow Anonymous aan is geen login nodig:';
+
+  @override
+  String get loginTryAnonymous => 'Probeer zonder login';
+
+  @override
+  String get loginCopied => 'Gekopieerd';
 }

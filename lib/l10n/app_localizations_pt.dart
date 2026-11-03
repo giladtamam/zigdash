@@ -5135,4 +5135,59 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get guideHelpBody =>
       'Ainda nada? Não pare aqui. Pergunte ao seu assistente de IA com o resumo que o ZigDash prepara, ou pergunte para nós: toda mensagem recebe resposta.';
+
+  @override
+  String get loginGuideTitle => 'Sem login MQTT? Crie um';
+
+  @override
+  String get loginGuidePick => 'Onde o seu broker roda?';
+
+  @override
+  String get loginGuideHa1 =>
+      'No Home Assistant, abra o seu perfil (seu nome no fim da barra lateral) e ative o Modo avançado.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Vá em Configurações › Pessoas, abra a aba Usuários e toque em Adicionar usuário.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Dê um nome, por exemplo zigdash, defina uma senha e crie. Não precisa ser administrador.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Digite aqui o nome de usuário dele (o que aparece em Nome de usuário, em minúsculas, não o nome de exibição) e a senha. Os nomes homeassistant e addons não funcionam.';
+
+  @override
+  String get loginGuidePi1 =>
+      'O Zigbee2MQTT já faz login: o configuration.yaml dele tem o usuário e a senha em mqtt. Você pode usar esses.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Ou crie um usuário novo na máquina que roda o Mosquitto. Ele pede a senha duas vezes:';
+
+  @override
+  String get loginGuidePi3 => 'Depois reinicie o Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'No Docker, rode os dois dentro do contêiner, com o arquivo que o mosquitto.conf indica em password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Abra a página web do hub e vá em Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Copie o usuário e a senha mostrados ali, ou ative Allow Anonymous e salve.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Com Allow Anonymous ativado, não precisa de login:';
+
+  @override
+  String get loginTryAnonymous => 'Tentar sem login';
+
+  @override
+  String get loginCopied => 'Copiado';
 }
