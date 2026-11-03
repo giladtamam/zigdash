@@ -237,7 +237,7 @@ void main() {
       expect(looks(), ['one']);
     });
 
-    test('several, by name, none', () async {
+    test('several, by name, by sweep, none', () async {
       expect(await make(find: () async => [home, home]).look(), hasLength(2));
       expect(looks(), ['several']);
       await make(
@@ -246,6 +246,13 @@ void main() {
         ],
       ).look();
       expect(looks(), ['by_name']);
+      await make(
+        find: () async => [
+          const HaFound(address: 'http://192.168.1.7:8123', bySweep: true),
+          const HaFound(address: 'http://192.168.1.40:8123', bySweep: true),
+        ],
+      ).look();
+      expect(looks(), ['by_sweep']);
       await make(find: () async => throw StateError('no nsd')).look();
       expect(looks(), ['none']);
     });

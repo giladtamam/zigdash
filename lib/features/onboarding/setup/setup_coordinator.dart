@@ -939,6 +939,12 @@ class SetupCoordinator {
     final s = _state;
     if (s is SetupScanEmpty) {
       await startScan(widen: _widen);
+    } else if (s is SetupNeedsAuth) {
+      // 3.3.2: from the login, after the broker was set to need none (an
+      // SMLIGHT hub's Allow Anonymous): look again, with no login.
+      _username = null;
+      _password = null;
+      await startScan(widen: _widen);
     } else if (s is SetupFailed) {
       if (s.failedAtCreation) {
         await createDashboard();

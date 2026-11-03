@@ -49,6 +49,11 @@ mc.MqttClient buildPlatformClient(
     ws ? webSocketServer(config.protocol, target) : target,
     clientId,
     config.port,
+    // One CONNECT per try: callers retry themselves. mqtt_client's own
+    // retries reset the answer, so a slow broker's "wrong login" arrived,
+    // was wiped by the next attempt, and read as no answer at all
+    // (3.3.1, login_no_answer).
+    maxConnectionAttempts: 1,
   );
   client.secure = isSecureProtocol(config.protocol);
   if (ws) {

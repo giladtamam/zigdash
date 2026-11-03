@@ -258,6 +258,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
           SetupStepKind.haDiscovery,
           result: switch (found.length) {
             0 => HaDiscoveryOutcome.none,
+            _ when found.first.bySweep => HaDiscoveryOutcome.bySweep,
             1 when found.single.byName => HaDiscoveryOutcome.byName,
             1 => HaDiscoveryOutcome.one,
             _ => HaDiscoveryOutcome.several,

@@ -1,0 +1,1 @@
+Setup now tells you when a broker rejects your username or password, even if it is slow to answer. Before, a slow broker's "wrong login" showed as "the broker didn't answer, try again". A broker that takes longer to check a login, such as Home Assistant's Mosquitto, now gets 12 seconds instead of 5.

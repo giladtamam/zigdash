@@ -342,7 +342,11 @@ void main() {
           username: 'zigdash',
         );
         d.run(config: withLogin, password: 'pw').then((r) => report = r);
+        // A login gets longer than a plain connect (3.3.1): still waiting
+        // where the old 5 s gave up.
         async.elapse(const Duration(milliseconds: 5001));
+        expect(report, isNull);
+        async.elapse(const Duration(milliseconds: 7000));
 
         expect(report!.steps[2].step, DiagnosticStep.connack);
         expect(report!.steps[2].status, StepStatus.fail);

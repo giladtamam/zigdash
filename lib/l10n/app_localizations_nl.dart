@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5055,4 +5054,141 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'De back-up is geschreven, maar Zigbee2MQTT is niet opnieuw gestart. Start het op de hub opnieuw en controleer het daarna hier.';
+
+  @override
+  String get guideIntro => 'Laten we het samen vinden, stap voor stap.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Stap $step van $total';
+  }
+
+  @override
+  String get guideNotHelped => 'Dat hielp niet';
+
+  @override
+  String get guideBack => 'Terug';
+
+  @override
+  String get guideSkipToHelp => 'Naar hulp';
+
+  @override
+  String get guideVpnTitle => 'Zet de VPN uit';
+
+  @override
+  String get guideIsolatedTitle => 'Verbind met je hoofd-wifi';
+
+  @override
+  String get guideHubTitle => 'Je hub is hier';
+
+  @override
+  String get guideWhichTitle =>
+      'Wat open je om een Zigbee-apparaat toe te voegen?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'De pagina van Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'De pagina van mijn SMLIGHT-hub';
+
+  @override
+  String get guideWhichNothing => 'Nog niets';
+
+  @override
+  String get guideHaTitle => 'Log in bij Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash kan verbinden via Home Assistant met de login die je daar al gebruikt. Geen brokerwachtwoord nodig.';
+
+  @override
+  String get guideZhaTitle => 'Gebruik je ZHA?';
+
+  @override
+  String get guideRunningTitle => 'Draait Zigbee2MQTT?';
+
+  @override
+  String get guideNotYetTitle => 'Zet eerst Zigbee2MQTT op';
+
+  @override
+  String get guideZ2mPageTitle => 'Open de pagina van Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash vraagt Zigbee2MQTT waar de broker is. Typ het adres van de pagina zoals je browser het toont, bijvoorbeeld 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Zoek in het hele netwerk';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash heeft gezocht tussen de adressen rond je telefoon. Mesh-wifi en grotere routers gebruiken er meer. Ze allemaal doorzoeken duurt ongeveer een minuut.';
+
+  @override
+  String get guideAddressTitle => 'Vul het adres zelf in';
+
+  @override
+  String get guideHelpTitle => 'We helpen je verder';
+
+  @override
+  String get guideHelpBody =>
+      'Nog steeds niets? Stop hier niet. Vraag je AI-assistent met de samenvatting die ZigDash maakt, of vraag het ons: elk bericht krijgt antwoord.';
+
+  @override
+  String get loginGuideTitle => 'Geen MQTT-login? Maak er een';
+
+  @override
+  String get loginGuidePick => 'Waar draait je broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'Open in Home Assistant je profiel (je naam onderaan de zijbalk) en zet de Geavanceerde modus aan.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Ga naar Instellingen › Personen, open het tabblad Gebruikers en tik op Gebruiker toevoegen.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Geef hem een naam, bijvoorbeeld zigdash, stel een wachtwoord in en maak hem aan. Hij hoeft geen beheerder te zijn.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Typ hier zijn gebruikersnaam (die onder Gebruikersnaam, in kleine letters, niet de weergavenaam) en zijn wachtwoord. De namen homeassistant en addons werken niet.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT logt al in: zijn configuration.yaml heeft de gebruiker en het wachtwoord onder mqtt. Die kun je gebruiken.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Of maak een nieuwe gebruiker op de machine waar Mosquitto draait. Het vraagt het wachtwoord twee keer:';
+
+  @override
+  String get loginGuidePi3 => 'Herstart daarna Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'In Docker voer je beide in de container uit, met het bestand dat mosquitto.conf onder password_file noemt:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Open de webpagina van de hub en ga naar Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Kopieer de gebruikersnaam en het wachtwoord die daar staan, of zet Allow Anonymous aan en sla op.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Met Allow Anonymous aan is geen login nodig:';
+
+  @override
+  String get loginTryAnonymous => 'Probeer zonder login';
+
+  @override
+  String get loginCopied => 'Gekopieerd';
 }

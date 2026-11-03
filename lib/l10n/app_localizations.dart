@@ -8855,6 +8855,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.'**
   String get hubBackupRestoreNotBack;
+
+  /// No description provided for @guideIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s find it together, one step at a time.'**
+  String get guideIntro;
+
+  /// No description provided for @guideStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String guideStep(int step, int total);
+
+  /// No description provided for @guideNotHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t help'**
+  String get guideNotHelped;
+
+  /// No description provided for @guideBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get guideBack;
+
+  /// No description provided for @guideSkipToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to help'**
+  String get guideSkipToHelp;
+
+  /// No description provided for @guideVpnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off the VPN'**
+  String get guideVpnTitle;
+
+  /// No description provided for @guideIsolatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join your main Wi-Fi'**
+  String get guideIsolatedTitle;
+
+  /// No description provided for @guideHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub is here'**
+  String get guideHubTitle;
+
+  /// No description provided for @guideWhichTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you open to add a Zigbee device?'**
+  String get guideWhichTitle;
+
+  /// No description provided for @guideWhichHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get guideWhichHa;
+
+  /// No description provided for @guideWhichZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT\'s own page'**
+  String get guideWhichZ2m;
+
+  /// No description provided for @guideWhichSmlight.
+  ///
+  /// In en, this message translates to:
+  /// **'My SMLIGHT hub\'s page'**
+  String get guideWhichSmlight;
+
+  /// No description provided for @guideWhichNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get guideWhichNothing;
+
+  /// No description provided for @guideHaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to Home Assistant'**
+  String get guideHaTitle;
+
+  /// No description provided for @guideHaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can connect through Home Assistant with the login you already use there. No broker password needed.'**
+  String get guideHaBody;
+
+  /// No description provided for @guideZhaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Using ZHA?'**
+  String get guideZhaTitle;
+
+  /// No description provided for @guideRunningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT running?'**
+  String get guideRunningTitle;
+
+  /// No description provided for @guideNotYetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Zigbee2MQTT first'**
+  String get guideNotYetTitle;
+
+  /// No description provided for @guideZ2mPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Zigbee2MQTT\'s page'**
+  String get guideZ2mPageTitle;
+
+  /// No description provided for @guideZ2mPageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash asks Zigbee2MQTT where its broker is. Type the page\'s address as your browser shows it, for example 192.168.1.20:8080.'**
+  String get guideZ2mPageBody;
+
+  /// No description provided for @guideWiderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Look on the whole network'**
+  String get guideWiderTitle;
+
+  /// No description provided for @guideWiderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash looked at the addresses next to your phone. Mesh Wi-Fi and bigger routers use more of them. Looking at all of them takes about a minute.'**
+  String get guideWiderBody;
+
+  /// No description provided for @guideAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the address yourself'**
+  String get guideAddressTitle;
+
+  /// No description provided for @guideHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get you help'**
+  String get guideHelpTitle;
+
+  /// No description provided for @guideHelpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Still nothing? Don\'t stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer.'**
+  String get guideHelpBody;
+
+  /// No description provided for @loginGuideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No MQTT login? Make one'**
+  String get loginGuideTitle;
+
+  /// No description provided for @loginGuidePick.
+  ///
+  /// In en, this message translates to:
+  /// **'Where does your broker run?'**
+  String get loginGuidePick;
+
+  /// No description provided for @loginGuideHa1.
+  ///
+  /// In en, this message translates to:
+  /// **'In Home Assistant, open your profile (your name at the bottom of the sidebar) and turn on Advanced mode.'**
+  String get loginGuideHa1;
+
+  /// No description provided for @loginGuideHa2.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings › People, open the Users tab and tap Add user.'**
+  String get loginGuideHa2;
+
+  /// No description provided for @loginGuideHa3.
+  ///
+  /// In en, this message translates to:
+  /// **'Name it, for example zigdash, set a password and create it. It doesn\'t need to be an administrator.'**
+  String get loginGuideHa3;
+
+  /// No description provided for @loginGuideHa4.
+  ///
+  /// In en, this message translates to:
+  /// **'Type its username here (the one under Username, in small letters, not the display name) and its password. The names homeassistant and addons don\'t work.'**
+  String get loginGuideHa4;
+
+  /// No description provided for @loginGuidePi1.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT already logs in: its configuration.yaml has the user and password under mqtt. You can use those.'**
+  String get loginGuidePi1;
+
+  /// No description provided for @loginGuidePi2.
+  ///
+  /// In en, this message translates to:
+  /// **'Or make a new user on the machine that runs Mosquitto. It asks for the password twice:'**
+  String get loginGuidePi2;
+
+  /// No description provided for @loginGuidePi3.
+  ///
+  /// In en, this message translates to:
+  /// **'Then restart Mosquitto:'**
+  String get loginGuidePi3;
+
+  /// No description provided for @loginGuidePi4.
+  ///
+  /// In en, this message translates to:
+  /// **'In Docker, run both inside the container, with the file that mosquitto.conf names under password_file:'**
+  String get loginGuidePi4;
+
+  /// No description provided for @loginGuideSmlight1.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the hub\'s web page and go to Settings › MQTT.'**
+  String get loginGuideSmlight1;
+
+  /// No description provided for @loginGuideSmlight2.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the username and password shown there, or turn on Allow Anonymous and save.'**
+  String get loginGuideSmlight2;
+
+  /// No description provided for @loginGuideSmlight3.
+  ///
+  /// In en, this message translates to:
+  /// **'With Allow Anonymous on, no login is needed:'**
+  String get loginGuideSmlight3;
+
+  /// No description provided for @loginTryAnonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'Try without a login'**
+  String get loginTryAnonymous;
+
+  /// No description provided for @loginCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get loginCopied;
 }
 
 class _AppLocalizationsDelegate

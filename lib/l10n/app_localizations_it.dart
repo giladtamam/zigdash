@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5062,4 +5061,141 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'Il backup è stato scritto, ma Zigbee2MQTT non si è riavviato. Riavvialo sull\'hub, poi controlla qui.';
+
+  @override
+  String get guideIntro => 'Troviamolo insieme, un passo alla volta.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Passo $step di $total';
+  }
+
+  @override
+  String get guideNotHelped => 'Non è servito';
+
+  @override
+  String get guideBack => 'Indietro';
+
+  @override
+  String get guideSkipToHelp => 'Vai all\'aiuto';
+
+  @override
+  String get guideVpnTitle => 'Disattiva la VPN';
+
+  @override
+  String get guideIsolatedTitle => 'Connettiti al Wi-Fi principale';
+
+  @override
+  String get guideHubTitle => 'Il tuo hub è qui';
+
+  @override
+  String get guideWhichTitle =>
+      'Cosa apri per aggiungere un dispositivo Zigbee?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'La pagina di Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'La pagina del mio hub SMLIGHT';
+
+  @override
+  String get guideWhichNothing => 'Ancora niente';
+
+  @override
+  String get guideHaTitle => 'Accedi a Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash può connettersi tramite Home Assistant con l\'accesso che usi già lì. Non serve la password del broker.';
+
+  @override
+  String get guideZhaTitle => 'Usi ZHA?';
+
+  @override
+  String get guideRunningTitle => 'Zigbee2MQTT è in funzione?';
+
+  @override
+  String get guideNotYetTitle => 'Prima configura Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageTitle => 'Apri la pagina di Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash chiede a Zigbee2MQTT dove si trova il suo broker. Scrivi l\'indirizzo della pagina come lo mostra il browser, per esempio 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Cerca in tutta la rete';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash ha cercato tra gli indirizzi vicini al tuo telefono. Il Wi-Fi mesh e i router più grandi ne usano di più. Cercarli tutti richiede circa un minuto.';
+
+  @override
+  String get guideAddressTitle => 'Inserisci tu l\'indirizzo';
+
+  @override
+  String get guideHelpTitle => 'Ti aiutiamo noi';
+
+  @override
+  String get guideHelpBody =>
+      'Ancora niente? Non fermarti qui. Chiedi al tuo assistente IA con il riepilogo che prepara ZigDash, o chiedi a noi: ogni messaggio riceve una risposta.';
+
+  @override
+  String get loginGuideTitle => 'Nessun accesso MQTT? Creane uno';
+
+  @override
+  String get loginGuidePick => 'Dove gira il tuo broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'In Home Assistant apri il tuo profilo (il tuo nome in fondo alla barra laterale) e attiva la Modalità avanzata.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Vai in Impostazioni › Persone, apri la scheda Utenti e tocca Aggiungi utente.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Dagli un nome, per esempio zigdash, imposta una password e crealo. Non serve che sia amministratore.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Scrivi qui il suo nome utente (quello sotto Nome utente, in minuscolo, non il nome visualizzato) e la password. I nomi homeassistant e addons non funzionano.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT accede già: il suo configuration.yaml ha utente e password sotto mqtt. Puoi usare quelli.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Oppure crea un nuovo utente sulla macchina dove gira Mosquitto. Chiede la password due volte:';
+
+  @override
+  String get loginGuidePi3 => 'Poi riavvia Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'In Docker, esegui entrambi nel container, con il file che mosquitto.conf indica in password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Apri la pagina web dell\'hub e vai in Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Copia il nome utente e la password mostrati, oppure attiva Allow Anonymous e salva.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Con Allow Anonymous attivo non serve alcun accesso:';
+
+  @override
+  String get loginTryAnonymous => 'Prova senza accesso';
+
+  @override
+  String get loginCopied => 'Copiato';
 }

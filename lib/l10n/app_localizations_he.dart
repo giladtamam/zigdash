@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4983,4 +4982,139 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'הגיבוי נכתב, אבל Zigbee2MQTT לא עלה מחדש. הפעילו אותו מחדש ברכזת ובדקו כאן.';
+
+  @override
+  String get guideIntro => 'בואו נמצא את זה יחד, צעד אחר צעד.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'שלב $step מתוך $total';
+  }
+
+  @override
+  String get guideNotHelped => 'זה לא עזר';
+
+  @override
+  String get guideBack => 'חזרה';
+
+  @override
+  String get guideSkipToHelp => 'דלגו לעזרה';
+
+  @override
+  String get guideVpnTitle => 'כבו את ה-VPN';
+
+  @override
+  String get guideIsolatedTitle => 'התחברו לרשת ה-Wi-Fi הראשית';
+
+  @override
+  String get guideHubTitle => 'הרכזת שלכם כאן';
+
+  @override
+  String get guideWhichTitle => 'מה אתם פותחים כדי להוסיף מכשיר Zigbee?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'הדף של Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'הדף של רכזת SMLIGHT שלי';
+
+  @override
+  String get guideWhichNothing => 'עדיין כלום';
+
+  @override
+  String get guideHaTitle => 'התחברו ל-Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash יכולה להתחבר דרך Home Assistant עם הכניסה שאתם כבר משתמשים בה שם. לא צריך סיסמת ברוקר.';
+
+  @override
+  String get guideZhaTitle => 'משתמשים ב-ZHA?';
+
+  @override
+  String get guideRunningTitle => 'האם Zigbee2MQTT פועל?';
+
+  @override
+  String get guideNotYetTitle => 'קודם הגדירו את Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageTitle => 'פתחו את הדף של Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash שואלת את Zigbee2MQTT איפה הברוקר שלו. הקלידו את כתובת הדף כפי שהדפדפן מציג אותה, למשל 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'חיפוש בכל הרשת';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash חיפשה בכתובות הקרובות לטלפון שלכם. רשתות Mesh ונתבים גדולים משתמשים ביותר כתובות. חיפוש בכולן לוקח בערך דקה.';
+
+  @override
+  String get guideAddressTitle => 'הקלידו את הכתובת בעצמכם';
+
+  @override
+  String get guideHelpTitle => 'בואו נשיג לכם עזרה';
+
+  @override
+  String get guideHelpBody =>
+      'עדיין כלום? אל תעצרו כאן. שאלו את עוזר ה-AI שלכם עם הסיכום ש-ZigDash מכינה, או שאלו אותנו: כל הודעה מקבלת תשובה.';
+
+  @override
+  String get loginGuideTitle => 'אין לכם משתמש MQTT? צרו אחד';
+
+  @override
+  String get loginGuidePick => 'איפה הברוקר שלכם רץ?';
+
+  @override
+  String get loginGuideHa1 =>
+      'ב-Home Assistant, פתחו את הפרופיל שלכם (השם שלכם בתחתית הסרגל הצדדי) והפעילו את המצב המתקדם.';
+
+  @override
+  String get loginGuideHa2 =>
+      'עברו להגדרות › אנשים, פתחו את הלשונית משתמשים והקישו על הוספת משתמש.';
+
+  @override
+  String get loginGuideHa3 =>
+      'תנו לו שם, למשל zigdash, קבעו סיסמה וצרו אותו. הוא לא צריך להיות מנהל.';
+
+  @override
+  String get loginGuideHa4 =>
+      'הקלידו כאן את שם המשתמש שלו (זה שמתחת לשם משתמש, באותיות קטנות, לא שם התצוגה) ואת הסיסמה. השמות homeassistant ו-addons לא עובדים.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT כבר מתחבר: בקובץ configuration.yaml שלו יש משתמש וסיסמה תחת mqtt. אפשר להשתמש בהם.';
+
+  @override
+  String get loginGuidePi2 =>
+      'או צרו משתמש חדש במחשב שמריץ את Mosquitto. הוא יבקש את הסיסמה פעמיים:';
+
+  @override
+  String get loginGuidePi3 => 'ואז הפעילו מחדש את Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'ב-Docker, הריצו את שניהם בתוך הקונטיינר, עם הקובץ ש-mosquitto.conf מציין תחת password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'פתחו את דף האינטרנט של הרכזת ועברו ל-Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'העתיקו את שם המשתמש והסיסמה שמופיעים שם, או הפעילו את Allow Anonymous ושמרו.';
+
+  @override
+  String get loginGuideSmlight3 => 'כש-Allow Anonymous פועל, לא צריך משתמש:';
+
+  @override
+  String get loginTryAnonymous => 'נסו בלי משתמש';
+
+  @override
+  String get loginCopied => 'הועתק';
 }

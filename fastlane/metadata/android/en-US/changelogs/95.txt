@@ -1,0 +1,1 @@
+When setup finds nothing, ZigDash now guides you one step at a time: a VPN or guest Wi-Fi first, then the way that fits your setup, and always help at the end: Ask your AI, the Telegram group, or a message to us. The login step shows how to make an MQTT login for Home Assistant, Mosquitto or an SMLIGHT hub. ZigDash also finds Home Assistant on your network more often.

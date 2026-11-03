@@ -29,4 +29,10 @@ void main() {
         as MqttServerClient;
     expect(c.server, '192.168.1.20');
   });
+
+  test('one CONNECT per try, so a slow refusal is not wiped by a retry', () {
+    final c = buildPlatformClient(cfg(MqttProtocol.tcp, '192.168.1.20'), 'id')
+        as MqttServerClient;
+    expect(c.maxConnectionAttempts, 1);
+  });
 }

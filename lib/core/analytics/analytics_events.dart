@@ -129,8 +129,9 @@ enum SetupStepKind {
   reviewBack,
 
   /// Looking for Home Assistant on the network (3.1.8), with its
-  /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name or
-  /// none when the look ends; used when a sign-in goes to a found address.
+  /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name,
+  /// by_sweep (3.3.1, found on port 8123 of the phone's `/24`) or none when
+  /// the look ends; used when a sign-in goes to a found address.
   haDiscovery,
 
   /// The review was left without creating a dashboard (2.10.2): back, or
@@ -145,7 +146,38 @@ enum SetupStepKind {
   /// The answer to "Is Zigbee2MQTT already running?" on an empty result
   /// with no hub found (3.2.8), with [SetupStep.choice] (a [Z2mRunning]).
   z2mRunning,
+
+  /// A step of the guide on an empty result (3.3.2), with
+  /// [SetupStep.choice] (a [GuideRung]) and [SetupStep.result] (a
+  /// [GuideAction]): its action was taken, it didn't help, or (for the
+  /// last step, help) it was reached.
+  guide,
 }
+
+/// The steps of the guide on an empty result (3.3.2), in the order they
+/// can appear; `setup_guide.dart` picks the ones that apply.
+enum GuideRung {
+  vpn,
+  isolated,
+  hub,
+  which,
+  homeAssistant,
+  zha,
+  running,
+  notYet,
+  z2mPage,
+  wider,
+  address,
+  help,
+
+  /// "No MQTT login? Make one" on the login step: opened (reached), or
+  /// "Try without a login" (done).
+  login,
+}
+
+/// What happened on a guide step (3.3.2): its action was taken, "That
+/// didn't help" moved on, or the step was reached (counted for help only).
+enum GuideAction { done, next, reached }
 
 /// The SMLIGHT device named on the welcome question (3.2.7): an SMHUB runs
 /// Zigbee2MQTT itself; an SLZB adapter is only the radio, with Zigbee2MQTT
@@ -873,9 +905,9 @@ class RemoteEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {
-        'step': _snake(step.name),
-        if (pro != null) 'pro': pro! ? 'yes' : 'no',
-      };
+    'step': _snake(step.name),
+    if (pro != null) 'pro': pro! ? 'yes' : 'no',
+  };
 }
 
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from
@@ -930,10 +962,10 @@ class EngineEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {
-        'step': _snake(step.name),
-        'from': from.name,
-        if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
-      };
+    'step': _snake(step.name),
+    'from': from.name,
+    if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
+  };
 }
 
 /// "2.14.1" → "2.14"; null when unreadable.
@@ -971,13 +1003,18 @@ class AutomationSaved extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {
-        'trigger': trigger,
-        'conditions': bucket(conditions, const [0, 1], top: '2+'),
-        'action': action,
-        'off_after': offAfter ? 'yes' : 'no',
-        'new': isNew ? 'yes' : 'no',
-        'count': bucket(homeCount, const [1, 2, 3], ranges: const [(4, 10)], top: '11+'),
-      };
+    'trigger': trigger,
+    'conditions': bucket(conditions, const [0, 1], top: '2+'),
+    'action': action,
+    'off_after': offAfter ? 'yes' : 'no',
+    'new': isNew ? 'yes' : 'no',
+    'count': bucket(
+      homeCount,
+      const [1, 2, 3],
+      ranges: const [(4, 10)],
+      top: '11+',
+    ),
+  };
 }
 
 /// "Share this home" (3.1.7): a phone showed its code, another joined, and
@@ -995,4 +1032,3 @@ class HomeShareEvent extends AnalyticsEvent {
   @override
   Map<String, String> get props => {'step': _snake(step.name)};
 }
-
