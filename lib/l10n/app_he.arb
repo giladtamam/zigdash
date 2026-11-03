@@ -1649,5 +1649,9 @@
   "loginGuideSmlight2": "העתיקו את שם המשתמש והסיסמה שמופיעים שם, או הפעילו את Allow Anonymous ושמרו.",
   "loginGuideSmlight3": "כש-Allow Anonymous פועל, לא צריך משתמש:",
   "loginTryAnonymous": "נסו בלי משתמש",
-  "loginCopied": "הועתק"
+  "loginCopied": "הועתק",
+  "shortcutNudge": "שליטה ב{name} בלי לפתוח את ZigDash",
+  "shortcutNudgeLater": "לא עכשיו",
+  "shortcutNudgeTile": "הגדרות מהירות",
+  "shortcutNudgeWidget": "מסך הבית"
 }

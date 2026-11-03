@@ -71,7 +71,8 @@ class ShortcutTilePicker extends ConsumerWidget {
                             connectionId: c.connectionId, ieee: c.ieee, name: c.name);
                         ref
                             .read(analyticsProvider)
-                            .track(const ShortcutAdded(ShortcutEventKind.tile));
+                            .track(const ShortcutAdded(ShortcutEventKind.tile,
+                                from: ShortcutFrom.outside));
                         await refreshShortcutTiles();
                         messenger.showSnackBar(SnackBar(
                             content: Text(l10n.shortcutTileReady(c.name, slot))));

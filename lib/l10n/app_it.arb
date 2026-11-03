@@ -1495,5 +1495,9 @@
   "loginGuideSmlight2": "Copia il nome utente e la password mostrati, oppure attiva Allow Anonymous e salva.",
   "loginGuideSmlight3": "Con Allow Anonymous attivo non serve alcun accesso:",
   "loginTryAnonymous": "Prova senza accesso",
-  "loginCopied": "Copiato"
+  "loginCopied": "Copiato",
+  "shortcutNudge": "Controlla {name} senza aprire ZigDash",
+  "shortcutNudgeLater": "Non ora",
+  "shortcutNudgeTile": "Impostazioni rapide",
+  "shortcutNudgeWidget": "Schermata Home"
 }

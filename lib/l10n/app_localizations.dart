@@ -9095,6 +9095,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied'**
   String get loginCopied;
+
+  /// Banner after a device was switched from the app in a few sessions; offers a home-screen widget or a Quick Settings tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch {name} without opening ZigDash'**
+  String shortcutNudge(Object name);
+
+  /// No description provided for @shortcutNudgeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get shortcutNudgeLater;
+
+  /// No description provided for @shortcutNudgeTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Settings'**
+  String get shortcutNudgeTile;
+
+  /// No description provided for @shortcutNudgeWidget.
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen'**
+  String get shortcutNudgeWidget;
 }
 
 class _AppLocalizationsDelegate

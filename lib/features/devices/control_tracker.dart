@@ -10,6 +10,7 @@ import '../discovery/models/z2m_device.dart';
 import '../discovery/providers/discovery_provider.dart';
 import 'device_profile.dart';
 import 'devices_providers.dart';
+import '../../shortcuts/shortcut_nudge.dart';
 
 /// The friendly name a Zigbee2MQTT command topic is for:
 /// `<base>/<name>/set` or `<base>/<name>/set/<attribute>`; null for anything
@@ -26,7 +27,8 @@ String? commandTarget(String topic, String base) {
 /// Whether ZigDash is used to control things (2.9.2): the first command to a
 /// device in a session sends `feature_used` with feature `control` and only
 /// the kind of device (light, switch, cover…), never which one. Commands
-/// from the app's screens only; nothing is stored.
+/// from the app's screens only. Also counts, on the phone, the sessions each
+/// device is switched in, for the shortcut offer ([maybeOfferShortcut]).
 class ControlTracker extends ConsumerStatefulWidget {
   const ControlTracker({super.key, required this.connectionId});
 
@@ -58,7 +60,7 @@ class _ControlTrackerState extends ConsumerState<ControlTracker> {
   }
 
   void _onCommand(String topic) {
-    if (_sent || !mounted) return;
+    if (!mounted) return;
     final base = ref.read(homeBaseTopicProvider(widget.connectionId));
     if (base == null) return;
     final name = commandTarget(topic, base);
@@ -74,6 +76,14 @@ class _ControlTrackerState extends ConsumerState<ControlTracker> {
             .valueOrNull ??
         const <Z2mDevice>[];
     final device = devices.where((d) => d.friendlyName == name).firstOrNull;
+    // 3.3.3: a device switched in a few sessions is offered as a widget or
+    // a Quick Settings tile.
+    final ieee = device?.ieeeAddress;
+    if (ieee != null) {
+      maybeOfferShortcut(context, ref,
+          connectionId: widget.connectionId, ieee: ieee);
+    }
+    if (_sent) return;
     final kind = device == null
         ? DeviceClass.generic
         : classifyExposes(device.rawExposes).deviceClass;

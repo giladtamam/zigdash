@@ -5117,4 +5117,18 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get loginCopied => 'הועתק';
+
+  @override
+  String shortcutNudge(Object name) {
+    return 'שליטה ב$name בלי לפתוח את ZigDash';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'לא עכשיו';
+
+  @override
+  String get shortcutNudgeTile => 'הגדרות מהירות';
+
+  @override
+  String get shortcutNudgeWidget => 'מסך הבית';
 }

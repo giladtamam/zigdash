@@ -1823,5 +1823,10 @@
   "loginGuideSmlight2": "Copy the username and password shown there, or turn on Allow Anonymous and save.",
   "loginGuideSmlight3": "With Allow Anonymous on, no login is needed:",
   "loginTryAnonymous": "Try without a login",
-  "loginCopied": "Copied"
+  "loginCopied": "Copied",
+  "shortcutNudge": "Switch {name} without opening ZigDash",
+  "@shortcutNudge": {"description": "Banner after a device was switched from the app in a few sessions; offers a home-screen widget or a Quick Settings tile.", "placeholders": {"name": {}}},
+  "shortcutNudgeLater": "Not now",
+  "shortcutNudgeTile": "Quick Settings",
+  "shortcutNudgeWidget": "Home screen"
 }

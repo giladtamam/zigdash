@@ -5204,4 +5204,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get loginCopied => 'Kopiert';
+
+  @override
+  String shortcutNudge(Object name) {
+    return '$name schalten, ohne ZigDash zu öffnen';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'Nicht jetzt';
+
+  @override
+  String get shortcutNudgeTile => 'Schnelleinstellungen';
+
+  @override
+  String get shortcutNudgeWidget => 'Startbildschirm';
 }

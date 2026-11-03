@@ -610,18 +610,48 @@ enum ShortcutEventKind {
   final String wire;
 }
 
+/// Where a shortcut was added from (3.3.3): the nudge after a device was
+/// switched in a few sessions, a dashboard tile's long-press menu, a
+/// device's page, a section's header, or outside the app (the launcher's
+/// widget picker, the Quick Settings editor).
+enum ShortcutFrom { nudge, tileMenu, devicePage, section, outside }
+
 /// A Quick Settings tile or a home-screen widget was given a device, or
 /// Device Controls were first set up.
 class ShortcutAdded extends AnalyticsEvent {
-  const ShortcutAdded(this.kind);
+  const ShortcutAdded(this.kind, {this.from});
 
   final ShortcutEventKind kind;
+
+  /// Where it was added from; null for Device Controls.
+  final ShortcutFrom? from;
 
   @override
   String get name => 'shortcut_added';
 
   @override
-  Map<String, String> get props => {'kind': kind.wire};
+  Map<String, String> get props => {
+    'kind': kind.wire,
+    if (from != null) 'from': _snake(from!.name),
+  };
+}
+
+/// What the user did with the shortcut nudge (3.3.3): it was [shown], or
+/// answered with a home-screen widget, a Quick Settings tile, or Not now.
+enum ShortcutNudgeStep { shown, widget, tile, later }
+
+/// The "switch it without opening ZigDash" nudge, shown once per device
+/// after it was switched from the app in a few sessions. Never which device.
+class ShortcutNudge extends AnalyticsEvent {
+  const ShortcutNudge(this.step);
+
+  final ShortcutNudgeStep step;
+
+  @override
+  String get name => 'shortcut_nudge';
+
+  @override
+  Map<String, String> get props => {'step': step.name};
 }
 
 /// A shortcut was used, sent at most once per app session for each kind.

@@ -17,7 +17,9 @@ import '../core/l10n/app_l10n.dart';
 import '../features/scenes/all_shutters.dart';
 import '../l10n/app_localizations.dart';
 import '../features/devices/device_profile.dart';
+import '../core/analytics/analytics.dart' show ShortcutFrom;
 import 'shortcut_store.dart';
+import 'shortcut_usage.dart' show notePinFrom;
 import 'dart:convert';
 
 /// ZigDash's fixed Quick Settings tile slots (ShortcutTile1–4 in the
@@ -343,7 +345,8 @@ class ShortcutService {
       {required String kind,
       required String connectionId,
       required String target,
-      required String name}) async {
+      required String name,
+      ShortcutFrom? from}) async {
     try {
       final r = await appChannel.invokeMethod<String>('requestPinWidget', {
         'kind': kind,
@@ -351,9 +354,9 @@ class ShortcutService {
         'target': target,
         'name': name,
       });
-      return r == 'requested'
-          ? PinWidgetResult.requested
-          : PinWidgetResult.unsupported;
+      if (r != 'requested') return PinWidgetResult.unsupported;
+      if (from != null) await notePinFrom(_prefs, from, now: _now());
+      return PinWidgetResult.requested;
     } on MissingPluginException {
       return PinWidgetResult.unsupported;
     } on PlatformException {

@@ -13,6 +13,7 @@ import '../../devices/device_registry.dart';
 import 'tile_actions_sheet.dart';
 import '../../../shortcuts/add_tile_button.dart';
 import '../../../shortcuts/shortcut_service.dart';
+import '../../../core/analytics/analytics.dart' show ShortcutFrom;
 
 // Edit mode on the dashboard grid (docs/design/dashboard-1.12.md §7).
 // Drag rules from the spike: one LongPressDraggable per tile with the
@@ -283,7 +284,8 @@ class _EditableSectionHeaderState extends ConsumerState<EditableSectionHeader>
                   kind: 'group',
                   connectionId: widget.connectionId,
                   target: s.id,
-                  name: s.name),
+                  name: s.name,
+                  from: ShortcutFrom.section),
             ),
           IconButton(
             tooltip: l10n.editRenameSection,
