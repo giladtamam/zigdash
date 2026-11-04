@@ -1653,5 +1653,14 @@
   "shortcutNudge": "שליטה ב{name} בלי לפתוח את ZigDash",
   "shortcutNudgeLater": "לא עכשיו",
   "shortcutNudgeTile": "הגדרות מהירות",
-  "shortcutNudgeWidget": "מסך הבית"
+  "shortcutNudgeWidget": "מסך הבית",
+  "haWhereAsk": "איפה פותחים אצלך את Home Assistant?",
+  "haWhereHome": "בבית",
+  "haWhereNabuCasa": "Nabu Casa",
+  "haWhereDuckDns": "DuckDNS",
+  "haWhereOwnDomain": "דומיין משלך / Cloudflare",
+  "haWhereHomeHelp": "בבית הכתובת נראית כמו 192.168.1.20:8123. אפשר למצוא אותה ב-Home Assistant תחת הגדרות › מערכת › רשת, או באפליקציית Home Assistant תחת הגדרות › אפליקציה נלווית › השרת שלך. הטלפון צריך להיות באותה רשת Wi-Fi.",
+  "haWhereNabuCasaHelp": "ב-Home Assistant, פותחים הגדרות › Home Assistant Cloud ומעתיקים את הכתובת תחת גישה מרחוק: https://….ui.nabu.casa. היא עובדת מכל מקום.",
+  "haWhereDuckDnsHelp": "השם שבחרת ב-duckdns.org, עם הפורט של Home Assistant: myhome.duckdns.org:8123. הוא עובד מכל מקום.",
+  "haWhereOwnDomainHelp": "הכתובת שבה פותחים את Home Assistant מחוץ לבית, כמו ha.example.com. עם מנהרת Cloudflare, זה שם המארח שהגדרת ל-Home Assistant ב-Cloudflare. היא עובדת מכל מקום."
 }

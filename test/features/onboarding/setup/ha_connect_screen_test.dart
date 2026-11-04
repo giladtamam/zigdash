@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/core/router/routes.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect.dart';
@@ -26,6 +27,7 @@ void main() {
     bool offWifi = false,
     HaReach? reach,
     String? phoneIp,
+    List<Override> overrides = const [],
   }) async {
     final controller = HaConnectController(
       address: initialHost ?? '',
@@ -57,6 +59,7 @@ void main() {
     );
     await tester.pumpWidget(
       ProviderScope(
+        overrides: overrides,
         child: MaterialApp.router(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -315,6 +318,44 @@ void main() {
       );
     });
 
+    testWidgets('3.3.4: where they open it says what to type and where '
+        'to find it', (tester) async {
+      final sent = <String>[];
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () async => [],
+        overrides: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_Sink(sent), enabled: true),
+          ),
+        ],
+      );
+      expect(find.text('Where do you open Home Assistant?'), findsOneWidget);
+      expect(find.textContaining('Remote access'), findsNothing);
+      await tester.tap(find.byKey(const Key('ha-where-nabuCasa')));
+      await tester.pump();
+      expect(find.textContaining('Remote access'), findsOneWidget);
+      expect(field(tester).decoration?.hintText, contains('ui.nabu.casa'));
+      expect(sent, ['setup_step {step: ha_where, choice: nabu_casa}']);
+
+      await tester.tap(find.byKey(const Key('ha-where-duckDns')));
+      await tester.pump();
+      expect(find.textContaining('duckdns.org:8123'), findsWidgets);
+      expect(sent.last, 'setup_step {step: ha_where, choice: duck_dns}');
+
+      // The chip's help stays while the address is typed.
+      await tester.enterText(find.byType(TextField).first, 'x.duckdns.org');
+      await tester.pump();
+      expect(find.textContaining('duckdns.org:8123'), findsWidgets);
+      expect(
+        tester
+            .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
+            .onPressed,
+        isNotNull,
+      );
+    });
+
     testWidgets('while looking, a sign-in can wait for what it finds', (
       tester,
     ) async {
@@ -405,4 +446,15 @@ void main() {
       expect(find.textContaining("this phone's browser"), findsOneWidget);
     });
   });
+}
+
+class _Sink implements AnalyticsSink {
+  _Sink(this.sent);
+  final List<String> sent;
+  @override
+  Future<void> start() async {}
+  @override
+  Future<void> stop() async {}
+  @override
+  void send(String name, Map<String, String> props) => sent.add('$name $props');
 }

@@ -1584,5 +1584,14 @@
   "shortcutNudge": "Bedien {name} zonder ZigDash te openen",
   "shortcutNudgeLater": "Niet nu",
   "shortcutNudgeTile": "Snelle instellingen",
-  "shortcutNudgeWidget": "Startscherm"
+  "shortcutNudgeWidget": "Startscherm",
+  "haWhereAsk": "Waar open je Home Assistant?",
+  "haWhereHome": "Thuis",
+  "haWhereNabuCasa": "Nabu Casa",
+  "haWhereDuckDns": "DuckDNS",
+  "haWhereOwnDomain": "Eigen domein / Cloudflare",
+  "haWhereHomeHelp": "Thuis ziet het adres eruit als 192.168.1.20:8123. Je vindt het in Home Assistant onder Instellingen › Systeem › Netwerk, of in de Home Assistant-app onder Instellingen › Companion-app › je server. Deze telefoon moet op dezelfde wifi zitten.",
+  "haWhereNabuCasaHelp": "Open in Home Assistant Instellingen › Home Assistant Cloud en kopieer het adres onder Externe toegang: https://….ui.nabu.casa. Het werkt overal.",
+  "haWhereDuckDnsHelp": "De naam die je op duckdns.org koos, met de poort van Home Assistant: myhome.duckdns.org:8123. Het werkt overal.",
+  "haWhereOwnDomainHelp": "Het adres waarmee je Home Assistant buiten de deur opent, zoals ha.example.com. Met een Cloudflare-tunnel is het de hostnaam die je in Cloudflare voor Home Assistant hebt ingesteld. Het werkt overal."
 }
