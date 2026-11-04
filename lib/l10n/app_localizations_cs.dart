@@ -3254,25 +3254,34 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Vyber tu věc, kterou bys používal nejvíc. Tvoje odpověď se odešle s anonymními daty o používání.';
-
-  @override
-  String get pollNotifications => 'Oznámení';
-
-  @override
-  String get pollHistory => 'Grafy historie';
-
-  @override
-  String get pollKiosk => 'Kiosk režim pro tablet na zdi';
-
-  @override
-  String get pollGroups => 'Skupiny Zigbee';
+      'Vyberte vše, co byste používali. Odpovědi se odešlou s vašimi anonymními údaji o používání.';
 
   @override
   String get pollNotNow => 'Teď ne';
 
   @override
   String get pollThanks => 'Díky! Pomůže to rozhodnout, co přijde dál.';
+
+  @override
+  String get pollPair => 'Párování nových zařízení ze ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'Nastavení zařízení a aktualizace firmwaru';
+
+  @override
+  String get pollZha => 'Fungovat se ZHA, bez Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Ovládat domácnost z mého AI asistenta';
+
+  @override
+  String get pollOther => 'Něco jiného';
+
+  @override
+  String get pollSend => 'Odeslat';
+
+  @override
+  String get settingsPollSubtitle => 'Hlasujte, co přijde dál';
 
   @override
   String get whyTitle => 'Proč jsi vyzkoušel ZigDash?';

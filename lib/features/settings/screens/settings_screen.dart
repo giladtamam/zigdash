@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../dashboards/widgets/poll_card.dart' show showPollSheet;
 import '../../support/community.dart';
 import '../../support/support_facts.dart' show supportDetailsProvider;
 import '../../../core/analytics/analytics.dart';
@@ -212,6 +213,13 @@ class SettingsScreen extends ConsumerWidget {
                 title: Text(l10n.settingsFeatureRequest),
                 subtitle: Text(l10n.settingsFeatureRequestSubtitle),
                 onTap: () => sendFeedback(context, ref, problem: false),
+              ),
+              ListTile(
+                key: const Key('settings-poll'),
+                leading: const Icon(Icons.how_to_vote_outlined),
+                title: Text(l10n.pollTitle),
+                subtitle: Text(l10n.settingsPollSubtitle),
+                onTap: () => showPollSheet(context),
               ),
               const Divider(),
               _SectionHeader(l10n.settingsAbout),

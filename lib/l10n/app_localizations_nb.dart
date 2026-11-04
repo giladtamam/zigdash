@@ -3254,25 +3254,35 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Velg det du ville brukt mest. Svaret sendes med de anonyme bruksdataene dine.';
-
-  @override
-  String get pollNotifications => 'Varsler';
-
-  @override
-  String get pollHistory => 'Historikkgrafer';
-
-  @override
-  String get pollKiosk => 'Kioskmodus for et nettbrett på veggen';
-
-  @override
-  String get pollGroups => 'Zigbee-grupper';
+      'Velg alt du ville brukt. Svarene sendes med de anonyme bruksdataene dine.';
 
   @override
   String get pollNotNow => 'Ikke nå';
 
   @override
   String get pollThanks => 'Takk! Det hjelper oss å velge hva som kommer.';
+
+  @override
+  String get pollPair => 'Pare nye enheter fra ZigDash';
+
+  @override
+  String get pollDeviceSettings =>
+      'Enhetsinnstillinger og fastvareoppdateringer';
+
+  @override
+  String get pollZha => 'Fungere med ZHA, uten Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Styre hjemmet fra AI-assistenten min';
+
+  @override
+  String get pollOther => 'Noe annet';
+
+  @override
+  String get pollSend => 'Send';
+
+  @override
+  String get settingsPollSubtitle => 'Stem på hva som kommer neste';
 
   @override
   String get whyTitle => 'Hvorfor prøvde du ZigDash?';

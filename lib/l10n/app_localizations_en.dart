@@ -3251,25 +3251,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.';
-
-  @override
-  String get pollNotifications => 'Notifications';
-
-  @override
-  String get pollHistory => 'History graphs';
-
-  @override
-  String get pollKiosk => 'Kiosk mode for a wall tablet';
-
-  @override
-  String get pollGroups => 'Zigbee groups';
+      'Pick any you\'d use. Your answers are sent with your anonymous usage data.';
 
   @override
   String get pollNotNow => 'Not now';
 
   @override
   String get pollThanks => 'Thanks! That helps decide what comes next.';
+
+  @override
+  String get pollPair => 'Pair new devices from ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'Device settings and firmware updates';
+
+  @override
+  String get pollZha => 'Work with ZHA, without Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Control my home from my AI assistant';
+
+  @override
+  String get pollOther => 'Something else';
+
+  @override
+  String get pollSend => 'Send';
+
+  @override
+  String get settingsPollSubtitle => 'Vote for what comes next';
 
   @override
   String get whyTitle => 'What made you try ZigDash?';

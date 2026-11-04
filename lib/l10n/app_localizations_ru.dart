@@ -3256,25 +3256,34 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Выберите то, чем пользовались бы чаще всего. Ответ отправится вместе с анонимными данными об использовании.';
-
-  @override
-  String get pollNotifications => 'Уведомления';
-
-  @override
-  String get pollHistory => 'Графики истории';
-
-  @override
-  String get pollKiosk => 'Режим киоска для настенного планшета';
-
-  @override
-  String get pollGroups => 'Группы Zigbee';
+      'Выберите всё, чем вы бы пользовались. Ответы отправляются вместе с анонимными данными об использовании.';
 
   @override
   String get pollNotNow => 'Не сейчас';
 
   @override
   String get pollThanks => 'Спасибо! Это помогает решить, что делать дальше.';
+
+  @override
+  String get pollPair => 'Подключение новых устройств из ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'Настройки устройств и обновления прошивки';
+
+  @override
+  String get pollZha => 'Работа с ZHA, без Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Управление домом из моего ИИ-ассистента';
+
+  @override
+  String get pollOther => 'Что-то другое';
+
+  @override
+  String get pollSend => 'Отправить';
+
+  @override
+  String get settingsPollSubtitle => 'Проголосуйте за то, что будет дальше';
 
   @override
   String get whyTitle => 'Почему вы попробовали ZigDash?';

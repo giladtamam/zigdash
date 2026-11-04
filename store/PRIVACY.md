@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.3.4 is published (replaces the policy published with ZigDash 3.3.3)
+**Effective date:** the day ZigDash 3.3.5 is published (replaces the policy published with ZigDash 3.3.4)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -163,7 +163,7 @@ never from anything you typed or anything your broker sent.
 | `shortcut_added` | A Quick Settings tile was given a device, a home-screen widget was added, or ZigDash's Device Controls were first shown | tile, control, widget, scene widget or group widget; from 3.3.3, where it was added from (the offer below, a tile's menu, a device's page, a section, or outside the app) |
 | `shortcut_nudge` | From 3.3.3: ZigDash offered to put a device you switch often on your home screen or in Quick Settings, and what you chose (shown, home screen, Quick Settings, or not now). Never which device; how often each device was switched is counted only on your phone | the step |
 | `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |
-| `poll_answer` | Until 3.1.13: the one-time "What should ZigDash do next?" card was answered (the card is gone from 3.2) | notifications, history graphs, kiosk mode or Zigbee groups |
+| `poll_answer` | "What should ZigDash do next?" was answered: until 3.1.13 on a one-time card; from 3.3.5 on a one-time card or in Settings, one event for each choice picked (Not now sends nothing; what you write after "Something else" goes only where you send it, by email or on GitHub) | until 3.1.13: notifications, history graphs, kiosk mode or Zigbee groups; from 3.3.5: pairing new devices, device settings and firmware updates, working with ZHA, control from an AI assistant, or something else; and from 3.3.5, where it was answered (the card or Settings) |
 | `why_zigdash` | From 3.1.10 until 3.1.13: the one-time "What made you try ZigDash?" card after the first setup was answered (Not now sends nothing; the card is gone from 3.2) | quicker than another app, easy for the family, a wall tablet, works without Home Assistant, or something else |
 | `remote` | From 3.1.11: the one-time "Control your home from anywhere" card was shown, opened or put away, and remote control was turned on or off | the step, and whether this phone has Pro |
 | `alerts_setup` | A step of setting alerts up | the step (flow installed, flow installed by hand, no Node-RED, phone registered, no Google services, test sent, test failed); the channel (push, ntfy, Pushover) |

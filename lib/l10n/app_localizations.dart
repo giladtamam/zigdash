@@ -5814,35 +5814,11 @@ abstract class AppLocalizations {
   /// **'What should ZigDash do next?'**
   String get pollTitle;
 
-  /// Under the poll title, for people who share usage data.
+  /// Under the poll title, for people who share usage data. Several choices can be picked.
   ///
   /// In en, this message translates to:
-  /// **'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.'**
+  /// **'Pick any you\'d use. Your answers are sent with your anonymous usage data.'**
   String get pollBody;
-
-  /// Poll choice: alerts on the phone (door opened, leak…).
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications'**
-  String get pollNotifications;
-
-  /// Poll choice: graphs of past readings.
-  ///
-  /// In en, this message translates to:
-  /// **'History graphs'**
-  String get pollHistory;
-
-  /// Poll choice: a full-screen mode for a wall tablet.
-  ///
-  /// In en, this message translates to:
-  /// **'Kiosk mode for a wall tablet'**
-  String get pollKiosk;
-
-  /// Poll choice: control Zigbee2MQTT groups.
-  ///
-  /// In en, this message translates to:
-  /// **'Zigbee groups'**
-  String get pollGroups;
 
   /// Hides the poll for good.
   ///
@@ -5855,6 +5831,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thanks! That helps decide what comes next.'**
   String get pollThanks;
+
+  /// Poll choice: put new Zigbee devices in pairing mode and add them from the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair new devices from ZigDash'**
+  String get pollPair;
+
+  /// Poll choice: change a device's settings (calibration, reporting) and update its firmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Device settings and firmware updates'**
+  String get pollDeviceSettings;
+
+  /// Poll choice: work with Home Assistant's own Zigbee (ZHA) instead of Zigbee2MQTT.
+  ///
+  /// In en, this message translates to:
+  /// **'Work with ZHA, without Zigbee2MQTT'**
+  String get pollZha;
+
+  /// Poll choice: control the home by asking an AI assistant such as Claude or ChatGPT.
+  ///
+  /// In en, this message translates to:
+  /// **'Control my home from my AI assistant'**
+  String get pollAiAssistant;
+
+  /// Poll choice; also opens Request a feature to say what.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get pollOther;
+
+  /// Button that sends the picked poll choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get pollSend;
+
+  /// Settings row under 'What should ZigDash do next?', which opens the poll.
+  ///
+  /// In en, this message translates to:
+  /// **'Vote for what comes next'**
+  String get settingsPollSubtitle;
 
   /// One-time dashboard card after the first setup, asking why the user tried the app.
   ///

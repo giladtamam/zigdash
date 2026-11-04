@@ -3254,25 +3254,35 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Välj det du skulle använda mest. Svaret skickas med dina anonyma användningsdata.';
-
-  @override
-  String get pollNotifications => 'Aviseringar';
-
-  @override
-  String get pollHistory => 'Historikgrafer';
-
-  @override
-  String get pollKiosk => 'Kioskläge för en surfplatta på väggen';
-
-  @override
-  String get pollGroups => 'Zigbee-grupper';
+      'Välj allt du skulle använda. Svaren skickas med dina anonyma användningsdata.';
 
   @override
   String get pollNotNow => 'Inte nu';
 
   @override
   String get pollThanks => 'Tack! Det hjälper oss att välja vad som kommer.';
+
+  @override
+  String get pollPair => 'Para nya enheter från ZigDash';
+
+  @override
+  String get pollDeviceSettings =>
+      'Enhetsinställningar och firmwareuppdateringar';
+
+  @override
+  String get pollZha => 'Fungera med ZHA, utan Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Styra hemmet från min AI-assistent';
+
+  @override
+  String get pollOther => 'Något annat';
+
+  @override
+  String get pollSend => 'Skicka';
+
+  @override
+  String get settingsPollSubtitle => 'Rösta på vad som kommer härnäst';
 
   @override
   String get whyTitle => 'Varför testade du ZigDash?';

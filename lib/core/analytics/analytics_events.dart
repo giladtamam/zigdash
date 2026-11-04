@@ -719,29 +719,36 @@ class AlertAdded extends AnalyticsEvent {
   Map<String, String> get props => {'kind': kind};
 }
 
-/// The "What should ZigDash do next?" poll's choices
-/// (docs/design/roadmap-post-2.0.md, 2.2 §6).
+/// The "What should ZigDash do next?" poll's choices (3.3.5; until 3.1.13
+/// notifications, history graphs, kiosk mode and Zigbee groups, all built
+/// since). [other] also opens Request a feature for the words.
 enum PollChoice {
-  notifications('notifications'),
-  history('history'),
-  kiosk('kiosk'),
-  groups('zigbee_groups');
+  pair('pair'),
+  deviceSettings('device_settings'),
+  zha('zha'),
+  aiAssistant('ai_assistant'),
+  other('other');
 
   const PollChoice(this.wire);
   final String wire;
 }
 
-/// The one-time poll was answered.
+/// Where the poll was answered: the one-time dashboard card, or its row in
+/// Settings.
+enum PollFrom { card, settings }
+
+/// The poll was answered: one event for each choice picked.
 class PollAnswer extends AnalyticsEvent {
-  const PollAnswer(this.choice);
+  const PollAnswer(this.choice, this.from);
 
   final PollChoice choice;
+  final PollFrom from;
 
   @override
   String get name => 'poll_answer';
 
   @override
-  Map<String, String> get props => {'choice': choice.wire};
+  Map<String, String> get props => {'choice': choice.wire, 'from': from.name};
 }
 
 /// What made someone try ZigDash (3.1.10), from the one-time card after
