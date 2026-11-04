@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../mqtt/connection_failure.dart';
 import '../connections/diagnostics/connect_diagnostics.dart';
 import '../onboarding/setup/setup_error_guidance.dart';
@@ -84,6 +86,10 @@ FailureKind failureKindFromLadder(DiagnosticsReport report) {
 String? networkOfInterface(String? name) {
   if (name == null) return null;
   if (name.startsWith('wlan')) return 'Wi-Fi';
+  // On iPhones and iPads `en0` is Wi-Fi (build 97: they all said Ethernet).
+  if (name.startsWith('en') && defaultTargetPlatform == TargetPlatform.iOS) {
+    return 'Wi-Fi';
+  }
   if (name.startsWith('eth') || name.startsWith('en')) return 'Ethernet';
   return 'other';
 }

@@ -53,6 +53,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -63,17 +65,16 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_home-assistant._tcp</string>
+		<string>_zigdash._tcp</string>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>ZigDash does not use the camera. It never asks for it; a file picker it uses for hub backups contains camera code.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>ZigDash does not read your photos. It never asks for them; a file picker it uses for hub backups contains photo-picking code.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>ZigDash does not use your location. It never asks for it; a library it uses contains location code.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>ZigDash looks for your Zigbee2MQTT hub and MQTT broker on your home network, and connects to them there.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ZigDash does not use your location. It never asks for it; a library it uses contains location code.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ZigDash does not read your photos. It never asks for them; a file picker it uses for hub backups contains photo-picking code.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

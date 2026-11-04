@@ -1,5 +1,6 @@
 import AudioToolbox
 import Flutter
+import Network
 import UIKit
 import WidgetKit
 
@@ -50,6 +51,13 @@ final class AppChannel {
                   timeoutMs: (args?["timeoutMs"] as? Int) ?? 3000) { services in
         _ = finder
         result(services)
+      }
+    case "localNetworkAccess":
+      // Kept alive by its own callback until it is answered.
+      let access = LocalNetworkCheck()
+      access.check(timeoutMs: (args?["timeoutMs"] as? Int) ?? 60000) { answer in
+        _ = access
+        result(answer)
       }
     case "openWifiSettings":
       // iOS only opens the app's own page in Settings.
@@ -109,5 +117,60 @@ private enum Brightness {
       screen.brightness = restore
       saved = nil
     }
+  }
+}
+
+/// Asks for Local Network access and says how it ended (build 97): the
+/// first scan used to run while Apple's prompt was still open, and found
+/// nothing. Advertises `_zigdash._tcp` and browses for it (listed under
+/// NSBonjourServices): seeing its own service means granted, a DNS policy
+/// error means denied. While the prompt is open, neither happens.
+final class LocalNetworkCheck {
+  private var listener: NWListener?
+  private var browser: NWBrowser?
+  private var done: ((String) -> Void)?
+
+  func check(timeoutMs: Int, done: @escaping (String) -> Void) {
+    self.done = done
+    let params = NWParameters.tcp
+    params.includePeerToPeer = false
+    do {
+      let listener = try NWListener(using: params)
+      listener.service = NWListener.Service(name: UUID().uuidString, type: "_zigdash._tcp")
+      listener.newConnectionHandler = { $0.cancel() }
+      listener.stateUpdateHandler = { [weak self] state in
+        if case .failed = state { self?.finish("unknown") }
+      }
+      self.listener = listener
+      listener.start(queue: .main)
+    } catch {
+      finish("unknown")
+      return
+    }
+    let browser = NWBrowser(for: .bonjour(type: "_zigdash._tcp", domain: nil), using: params)
+    browser.stateUpdateHandler = { [weak self] state in
+      if case .waiting(let error) = state, case .dns(let code) = error,
+         code == DNSServiceErrorType(kDNSServiceErr_PolicyDenied) {
+        self?.finish("denied")
+      }
+    }
+    browser.browseResultsChangedHandler = { [weak self] results, _ in
+      if !results.isEmpty { self?.finish("granted") }
+    }
+    self.browser = browser
+    browser.start(queue: .main)
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(timeoutMs)) { [weak self] in
+      self?.finish("unknown")
+    }
+  }
+
+  private func finish(_ answer: String) {
+    guard let done else { return }
+    self.done = nil
+    browser?.cancel()
+    listener?.cancel()
+    browser = nil
+    listener = nil
+    done(answer)
   }
 }

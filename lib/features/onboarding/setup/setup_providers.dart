@@ -53,6 +53,8 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
       ),
     ),
     deviceIp: () async {
+      // iOS: the scan waits for the Local Network answer (build 97).
+      await localNetworkAccess();
       final home = await homeIpv4();
       network = networkOfInterface(home?.name);
       return home?.ip;
