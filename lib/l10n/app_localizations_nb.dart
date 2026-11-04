@@ -1551,7 +1551,67 @@ class AppLocalizationsNb extends AppLocalizations {
   String get setupRunningWhatToGet => 'Hva du trenger';
 
   @override
-  String get setupAskNothing => 'Ingenting ennå?';
+  String get setupAskNothing => 'Ingenting ennå';
+
+  @override
+  String get setupAskNothingSub =>
+      'Ingen hub eller Zigbee2MQTT ennå, eller du velger fortsatt';
+
+  @override
+  String get noHubTitle => 'Ingenting ennå';
+
+  @override
+  String get noHubHeadline => 'Skaff en hub som kjører Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash trenger én liten boks hjemme som kjører Zigbee2MQTT, den frie programvaren som snakker med Zigbee-enheter. Velg en av de tre veiene nedenfor, par enhetene på siden dens, så bygger ZigDash dashbordet. Ingen sky, ingen konto.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: den enkle starten';
+
+  @override
+  String get noHubSmhubBody =>
+      'En liten boks med Zigbee2MQTT og broker innebygd. Koble den til ruteren og par på nettsiden dens. Ingenting å installere.';
+
+  @override
+  String get noHubPi => 'En Raspberry Pi eller en annen Linux-maskin';
+
+  @override
+  String get noHubPiBody =>
+      'Installer Zigbee2MQTT og Mosquitto-brokeren selv. Omtrent en time, med Zigbee2MQTTs egen veiledning.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Legg til tilleggene Mosquitto broker og Zigbee2MQTT, og logg deretter inn fra ZigDash med Home Assistant-påloggingen din.';
+
+  @override
+  String get noHubRadio =>
+      'En Pi eller Home Assistant trenger også en Zigbee-adapter, som en SLZB-06 eller en Sonoff-dongle. SMHUB har en innebygd.';
+
+  @override
+  String get noHubDemoNote =>
+      'Se i mellomtiden hvordan ZigDash fungerer, med et eksempelhjem.';
+
+  @override
+  String get noHubRemind => 'Minn meg på om en uke';
+
+  @override
+  String get noHubRemindSet =>
+      'Vi minner deg på det om en uke, på denne telefonen.';
+
+  @override
+  String get noHubHaveOne => 'Jeg har en nå';
+
+  @override
+  String get reminderHubTitle => 'Har huben kommet?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash setter den opp på omtrent ett minutt. Åpne appen hjemme, på Wi-Fi-et ditt.';
 
   @override
   String get setupAskHaWhich => 'Hvordan kjører Home Assistant-en din Zigbee?';

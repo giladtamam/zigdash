@@ -16,6 +16,12 @@ class Routes {
 
   /// Connecting through Home Assistant (docs/design/ha-route.md), with
   /// the address filled in when the scan saw Home Assistant.
+  /// "Nothing yet": what to get when no hub runs Zigbee2MQTT (3.4), with
+  /// where it was opened from (a `NoHubFrom` name).
+  static const setupNoHub = '/setup/no-hub';
+  static String setupNoHubFrom(String from) =>
+      Uri(path: setupNoHub, queryParameters: {'from': from}).toString();
+
   static const haConnect = '/setup/home-assistant';
   static String haConnectAt(String? host) => host == null
       ? haConnect

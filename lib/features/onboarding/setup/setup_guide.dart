@@ -433,12 +433,12 @@ class _EmptyGuide extends ConsumerWidget {
         icon: Icons.add_circle_outline,
         children: [
           Text(l10n.setupRunningNotYetNote, style: body),
-          primary(l10n.setupRunningWhatToGet, Icons.open_in_new, () {
-            done(rung, () async {
-              try {
-                await openSetupLink(hubsPageUrl);
-              } catch (_) {}
-            });
+          // 3.4: what to get is a screen in the app, not the web page.
+          primary(l10n.setupRunningWhatToGet, Icons.chevron_right, () {
+            done(
+              rung,
+              () => context.push(Routes.setupNoHubFrom(NoHubFrom.guide.name)),
+            );
           }),
           _SetupGuides(only: state.platform),
           Align(
