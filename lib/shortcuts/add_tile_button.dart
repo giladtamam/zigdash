@@ -31,7 +31,11 @@ class AddShortcutButton extends ConsumerWidget {
   final String name;
   final bool canTile;
 
-  static bool get available => !kIsWeb && Platform.isAndroid;
+  /// Whether shortcuts can be added: Android only. [debugAvailable] stands
+  /// in for the platform in tests.
+  static bool get available => debugAvailable ?? (!kIsWeb && Platform.isAndroid);
+  @visibleForTesting
+  static bool? debugAvailable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => IconButton(
@@ -53,7 +57,8 @@ class AddShortcutButton extends ConsumerWidget {
                         kind: 'device',
                         connectionId: connectionId,
                         target: ieee,
-                        name: name);
+                        name: name,
+                        from: ShortcutFrom.devicePage);
                   },
                 ),
                 if (canTile &&
@@ -77,8 +82,11 @@ class AddShortcutButton extends ConsumerWidget {
                     title: Text(context.l10n.shortcutAddTile),
                     onTap: () {
                       Navigator.pop(sheetCtx);
-                      AddTileButton.add(context, ref,
-                          connectionId: connectionId, ieee: ieee, name: name);
+                      AddTileButton.add(context, ref.read,
+                          connectionId: connectionId,
+                          ieee: ieee,
+                          name: name,
+                          from: ShortcutFrom.devicePage);
                     },
                   ),
               ],
@@ -94,10 +102,15 @@ Future<void> addHomeScreenWidget(BuildContext context, ShortcutService service,
     {required String kind,
     required String connectionId,
     required String target,
-    required String name}) async {
+    required String name,
+    required ShortcutFrom from}) async {
   final l10n = context.l10n;
   final r = await service.requestPinWidget(
-      kind: kind, connectionId: connectionId, target: target, name: name);
+      kind: kind,
+      connectionId: connectionId,
+      target: target,
+      name: name,
+      from: from);
   if (r == PinWidgetResult.requested || !context.mounted) return;
   await showDialog<void>(
     context: context,
@@ -113,16 +126,21 @@ Future<void> addHomeScreenWidget(BuildContext context, ShortcutService service,
   );
 }
 
+/// Reads a provider: a [WidgetRef]'s or a [ProviderContainer]'s `read`, for
+/// callers whose widget may be gone by the time the action runs.
+typedef ProviderReader = T Function<T>(ProviderListenable<T> provider);
+
 /// "Add to Quick Settings" for one device (2.1 §5): assigns a free tile slot
 /// (or one the user chooses to replace), then asks Android to add the tile,
 /// or explains how on Android 12 and older.
 abstract final class AddTileButton {
-  static Future<void> add(BuildContext context, WidgetRef ref,
+  static Future<void> add(BuildContext context, ProviderReader read,
       {required String connectionId,
       required String ieee,
-      required String name}) async {
+      required String name,
+      required ShortcutFrom from}) async {
     final l10n = context.l10n;
-    final service = ref.read(shortcutServiceProvider);
+    final service = read(shortcutServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
     final existing = await service.tileSlotOf(connectionId, ieee);
     if (existing != null) {
@@ -133,12 +151,12 @@ abstract final class AddTileButton {
     var slot = await service.freeTileSlot();
     if (slot == null) {
       if (!context.mounted) return;
-      slot = await _chooseSlotToReplace(context, ref);
+      slot = await _chooseSlotToReplace(context, read);
       if (slot == null) return;
     }
     await service.assignTile(slot,
         connectionId: connectionId, ieee: ieee, name: name);
-    ref.read(analyticsProvider).track(const ShortcutAdded(ShortcutEventKind.tile));
+    read(analyticsProvider).track(ShortcutAdded(ShortcutEventKind.tile, from: from));
     await refreshShortcutTiles();
     final r = await service.requestAddTile(slot, name);
     if (r == AddTileResult.added || r == AddTileResult.already) {
@@ -160,9 +178,10 @@ abstract final class AddTileButton {
     }
   }
 
-  static Future<int?> _chooseSlotToReplace(BuildContext context, WidgetRef ref) {
+  static Future<int?> _chooseSlotToReplace(
+      BuildContext context, ProviderReader read) {
     final l10n = context.l10n;
-    final prefs = ref.read(sharedPreferencesProvider);
+    final prefs = read(sharedPreferencesProvider);
     String nameIn(int slot) {
       final raw = prefs.getString(shortcutTileKey(slot));
       if (raw == null) return l10n.shortcutSlotEmpty;

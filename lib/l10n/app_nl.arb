@@ -1580,5 +1580,9 @@
   "loginGuideSmlight2": "Kopieer de gebruikersnaam en het wachtwoord die daar staan, of zet Allow Anonymous aan en sla op.",
   "loginGuideSmlight3": "Met Allow Anonymous aan is geen login nodig:",
   "loginTryAnonymous": "Probeer zonder login",
-  "loginCopied": "Gekopieerd"
+  "loginCopied": "Gekopieerd",
+  "shortcutNudge": "Bedien {name} zonder ZigDash te openen",
+  "shortcutNudgeLater": "Niet nu",
+  "shortcutNudgeTile": "Snelle instellingen",
+  "shortcutNudgeWidget": "Startscherm"
 }

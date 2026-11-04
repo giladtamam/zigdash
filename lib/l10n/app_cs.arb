@@ -1495,5 +1495,9 @@
   "loginGuideSmlight2": "Zkopírujte zobrazené uživatelské jméno a heslo, nebo zapněte Allow Anonymous a uložte.",
   "loginGuideSmlight3": "Se zapnutým Allow Anonymous není přihlášení potřeba:",
   "loginTryAnonymous": "Zkusit bez přihlášení",
-  "loginCopied": "Zkopírováno"
+  "loginCopied": "Zkopírováno",
+  "shortcutNudge": "Ovládejte {name} bez otevírání ZigDash",
+  "shortcutNudgeLater": "Teď ne",
+  "shortcutNudgeTile": "Rychlé nastavení",
+  "shortcutNudgeWidget": "Plocha"
 }

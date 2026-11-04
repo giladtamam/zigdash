@@ -5176,4 +5176,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get loginCopied => 'Скопировано';
+
+  @override
+  String shortcutNudge(Object name) {
+    return 'Управляйте «$name», не открывая ZigDash';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'Не сейчас';
+
+  @override
+  String get shortcutNudgeTile => 'Быстрые настройки';
+
+  @override
+  String get shortcutNudgeWidget => 'Главный экран';
 }

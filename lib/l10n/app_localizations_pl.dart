@@ -5182,4 +5182,18 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get loginCopied => 'Skopiowano';
+
+  @override
+  String shortcutNudge(Object name) {
+    return 'Steruj $name bez otwierania ZigDash';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'Nie teraz';
+
+  @override
+  String get shortcutNudgeTile => 'Szybkie ustawienia';
+
+  @override
+  String get shortcutNudgeWidget => 'Ekran główny';
 }

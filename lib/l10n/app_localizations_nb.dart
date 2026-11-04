@@ -5175,4 +5175,18 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get loginCopied => 'Kopiert';
+
+  @override
+  String shortcutNudge(Object name) {
+    return 'Styr $name uten å åpne ZigDash';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'Ikke nå';
+
+  @override
+  String get shortcutNudgeTile => 'Hurtiginnstillinger';
+
+  @override
+  String get shortcutNudgeWidget => 'Startskjerm';
 }

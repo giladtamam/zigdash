@@ -1575,5 +1575,9 @@
   "loginGuideSmlight2": "Скопируйте указанные там имя пользователя и пароль или включите Allow Anonymous и сохраните.",
   "loginGuideSmlight3": "С включённым Allow Anonymous логин не нужен:",
   "loginTryAnonymous": "Попробовать без логина",
-  "loginCopied": "Скопировано"
+  "loginCopied": "Скопировано",
+  "shortcutNudge": "Управляйте «{name}», не открывая ZigDash",
+  "shortcutNudgeLater": "Не сейчас",
+  "shortcutNudgeTile": "Быстрые настройки",
+  "shortcutNudgeWidget": "Главный экран"
 }

@@ -1580,5 +1580,9 @@
   "loginGuideSmlight2": "Kopier brukernavnet og passordet som vises der, eller slå på Allow Anonymous og lagre.",
   "loginGuideSmlight3": "Med Allow Anonymous på trengs ingen innlogging:",
   "loginTryAnonymous": "Prøv uten innlogging",
-  "loginCopied": "Kopiert"
+  "loginCopied": "Kopiert",
+  "shortcutNudge": "Styr {name} uten å åpne ZigDash",
+  "shortcutNudgeLater": "Ikke nå",
+  "shortcutNudgeTile": "Hurtiginnstillinger",
+  "shortcutNudgeWidget": "Startskjerm"
 }

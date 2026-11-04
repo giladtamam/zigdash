@@ -5172,4 +5172,18 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get loginCopied => 'Zkopírováno';
+
+  @override
+  String shortcutNudge(Object name) {
+    return 'Ovládejte $name bez otevírání ZigDash';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'Teď ne';
+
+  @override
+  String get shortcutNudgeTile => 'Rychlé nastavení';
+
+  @override
+  String get shortcutNudgeWidget => 'Plocha';
 }

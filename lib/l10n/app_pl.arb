@@ -1575,5 +1575,9 @@
   "loginGuideSmlight2": "Skopiuj pokazaną tam nazwę użytkownika i hasło albo włącz Allow Anonymous i zapisz.",
   "loginGuideSmlight3": "Z włączonym Allow Anonymous login nie jest potrzebny:",
   "loginTryAnonymous": "Spróbuj bez loginu",
-  "loginCopied": "Skopiowano"
+  "loginCopied": "Skopiowano",
+  "shortcutNudge": "Steruj {name} bez otwierania ZigDash",
+  "shortcutNudgeLater": "Nie teraz",
+  "shortcutNudgeTile": "Szybkie ustawienia",
+  "shortcutNudgeWidget": "Ekran główny"
 }

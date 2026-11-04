@@ -1540,5 +1540,9 @@
   "loginGuideSmlight2": "Copie o usuário e a senha mostrados ali, ou ative Allow Anonymous e salve.",
   "loginGuideSmlight3": "Com Allow Anonymous ativado, não precisa de login:",
   "loginTryAnonymous": "Tentar sem login",
-  "loginCopied": "Copiado"
+  "loginCopied": "Copiado",
+  "shortcutNudge": "Controle {name} sem abrir o ZigDash",
+  "shortcutNudgeLater": "Agora não",
+  "shortcutNudgeTile": "Configurações rápidas",
+  "shortcutNudgeWidget": "Tela inicial"
 }
