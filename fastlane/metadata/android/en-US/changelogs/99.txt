@@ -1,0 +1,1 @@
+No hub yet? The first screen now has a fourth answer, "Nothing yet": the three ways to a hub that runs Zigbee2MQTT, the demo home, and a reminder a week later for when it arrives. The same screen opens from the setup guide.

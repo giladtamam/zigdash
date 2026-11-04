@@ -1561,7 +1561,66 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupRunningWhatToGet => 'Что нужно';
 
   @override
-  String get setupAskNothing => 'Пока ничего?';
+  String get setupAskNothing => 'Пока ничего';
+
+  @override
+  String get setupAskNothingSub =>
+      'Нет хаба или Zigbee2MQTT, или ещё выбираете';
+
+  @override
+  String get noHubTitle => 'Пока ничего';
+
+  @override
+  String get noHubHeadline => 'Заведите хаб, на котором работает Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash нужна дома одна небольшая коробочка с Zigbee2MQTT, свободной программой, которая общается с устройствами Zigbee. Выберите один из трёх путей ниже, подключите устройства на его странице, и ZigDash соберёт панель. Без облака, без аккаунта.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: простой старт';
+
+  @override
+  String get noHubSmhubBody =>
+      'Маленькая коробочка со встроенными Zigbee2MQTT и брокером. Подключите к роутеру и добавляйте устройства на её веб-странице. Ничего устанавливать не нужно.';
+
+  @override
+  String get noHubPi => 'Raspberry Pi или любой компьютер с Linux';
+
+  @override
+  String get noHubPiBody =>
+      'Установите Zigbee2MQTT и брокер Mosquitto сами. Около часа, по руководству Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Добавьте дополнения Mosquitto broker и Zigbee2MQTT, затем войдите из ZigDash со своим логином Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'Pi или Home Assistant также нужен Zigbee-адаптер, например SLZB-06 или донгл Sonoff. В SMHUB он встроен.';
+
+  @override
+  String get noHubDemoNote =>
+      'А пока посмотрите, как работает ZigDash, на примере дома.';
+
+  @override
+  String get noHubRemind => 'Напомнить через неделю';
+
+  @override
+  String get noHubRemindSet => 'Напомним через неделю, на этом телефоне.';
+
+  @override
+  String get noHubHaveOne => 'Теперь у меня есть';
+
+  @override
+  String get reminderHubTitle => 'Хаб приехал?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash настроит его примерно за минуту. Откройте приложение дома, в своей сети Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'Как ваш Home Assistant работает с Zigbee?';

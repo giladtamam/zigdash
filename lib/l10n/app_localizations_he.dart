@@ -1538,7 +1538,66 @@ class AppLocalizationsHe extends AppLocalizations {
   String get setupRunningWhatToGet => 'מה צריך';
 
   @override
-  String get setupAskNothing => 'עוד אין כלום?';
+  String get setupAskNothing => 'עוד אין כלום';
+
+  @override
+  String get setupAskNothingSub =>
+      'עדיין אין רכזת או Zigbee2MQTT, או שעוד בוחרים';
+
+  @override
+  String get noHubTitle => 'עוד אין כלום';
+
+  @override
+  String get noHubHeadline => 'השיגו רכזת שמריצה Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash צריך קופסה קטנה אחת בבית שמריצה Zigbee2MQTT, התוכנה החופשית שמדברת עם מכשירי Zigbee. בחרו אחת משלוש הדרכים למטה, צמדו את המכשירים בדף שלה, ו-ZigDash יבנה את לוח הבקרה. בלי ענן, בלי חשבון.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: ההתחלה הקלה';
+
+  @override
+  String get noHubSmhubBody =>
+      'קופסה קטנה עם Zigbee2MQTT והברוקר מובנים. מחברים לראוטר ומצמידים בדף האינטרנט שלה. אין מה להתקין.';
+
+  @override
+  String get noHubPi => 'Raspberry Pi או כל מחשב לינוקס';
+
+  @override
+  String get noHubPiBody =>
+      'מתקינים לבד Zigbee2MQTT ואת ברוקר Mosquitto. בערך שעה, עם המדריך של Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'מוסיפים את התוספים Mosquitto broker ו-Zigbee2MQTT, ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'ל-Pi או ל-Home Assistant צריך גם מתאם Zigbee, כמו SLZB-06 או דונגל של Sonoff. ב-SMHUB הוא מובנה.';
+
+  @override
+  String get noHubDemoNote =>
+      'בינתיים אפשר לראות איך ZigDash עובד, עם בית לדוגמה.';
+
+  @override
+  String get noHubRemind => 'תזכירו לי בעוד שבוע';
+
+  @override
+  String get noHubRemindSet => 'נזכיר לכם בעוד שבוע, בטלפון הזה.';
+
+  @override
+  String get noHubHaveOne => 'עכשיו יש לי';
+
+  @override
+  String get reminderHubTitle => 'הרכזת הגיעה?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash מגדיר אותה בערך בדקה. פתחו את האפליקציה בבית, ברשת ה-Wi-Fi שלכם.';
 
   @override
   String get setupAskHaWhich => 'איך ה-Home Assistant שלכם מריץ Zigbee?';

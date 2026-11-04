@@ -2874,11 +2874,113 @@ abstract class AppLocalizations {
   /// **'What you need'**
   String get setupRunningWhatToGet;
 
-  /// No description provided for @setupAskNothing.
+  /// The fourth answer on the first screen (3.4): no hub, no Zigbee2MQTT yet.
   ///
   /// In en, this message translates to:
-  /// **'Nothing yet?'**
+  /// **'Nothing yet'**
   String get setupAskNothing;
+
+  /// No description provided for @setupAskNothingSub.
+  ///
+  /// In en, this message translates to:
+  /// **'No hub or Zigbee2MQTT yet, or still choosing'**
+  String get setupAskNothingSub;
+
+  /// App bar of the screen for people without a hub (3.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get noHubTitle;
+
+  /// No description provided for @noHubHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a hub that runs Zigbee2MQTT'**
+  String get noHubHeadline;
+
+  /// No description provided for @noHubIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash needs one small box at home running Zigbee2MQTT, the free software that talks to Zigbee devices. Pick one of the three ways below, pair your devices on its page, and ZigDash builds the dashboard. No cloud, no account.'**
+  String get noHubIntro;
+
+  /// First way to a hub: SMLIGHT's SMHUB, ready-made. Keep the product names.
+  ///
+  /// In en, this message translates to:
+  /// **'SMLIGHT SMHUB: the easy start'**
+  String get noHubSmhub;
+
+  /// No description provided for @noHubSmhubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A small box with Zigbee2MQTT and the broker built in. Plug it into your router and pair on its web page. Nothing to install.'**
+  String get noHubSmhubBody;
+
+  /// No description provided for @noHubPi.
+  ///
+  /// In en, this message translates to:
+  /// **'A Raspberry Pi or any Linux box'**
+  String get noHubPi;
+
+  /// No description provided for @noHubPiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Zigbee2MQTT and the Mosquitto broker yourself. About an hour, with Zigbee2MQTT\'s own guide.'**
+  String get noHubPiBody;
+
+  /// No description provided for @noHubHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get noHubHa;
+
+  /// No description provided for @noHubHaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.'**
+  String get noHubHaBody;
+
+  /// Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names.
+  ///
+  /// In en, this message translates to:
+  /// **'A Pi or Home Assistant also needs a Zigbee adapter, such as an SLZB-06 or a Sonoff dongle. The SMHUB has one built in.'**
+  String get noHubRadio;
+
+  /// No description provided for @noHubDemoNote.
+  ///
+  /// In en, this message translates to:
+  /// **'See how ZigDash works meanwhile, with a pretend home.'**
+  String get noHubDemoNote;
+
+  /// Button on the no-hub screen: one notification a week later.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me in a week'**
+  String get noHubRemind;
+
+  /// No description provided for @noHubRemindSet.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll remind you in a week, on this phone.'**
+  String get noHubRemindSet;
+
+  /// Back to the first screen to set the hub up.
+  ///
+  /// In en, this message translates to:
+  /// **'I have one now'**
+  String get noHubHaveOne;
+
+  /// Notification title a week after Remind me in a week (3.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Got your hub?'**
+  String get reminderHubTitle;
+
+  /// No description provided for @reminderHubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash sets it up in about a minute. Open it at home, on your Wi-Fi.'**
+  String get reminderHubBody;
 
   /// No description provided for @setupAskHaWhich.
   ///

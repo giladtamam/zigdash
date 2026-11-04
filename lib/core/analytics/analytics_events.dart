@@ -156,7 +156,25 @@ enum SetupStepKind {
   /// [GuideAction]): its action was taken, it didn't help, or (for the
   /// last step, help) it was reached.
   guide,
+
+  /// The "Nothing yet" screen (3.4): what to get when no hub runs
+  /// Zigbee2MQTT yet. [SetupStep.choice] says where it was opened from (a
+  /// [NoHubFrom]) and [SetupStep.result] what was done there (a
+  /// [NoHubAction]). The first screen's hubs link ([welcomeHubs]) and demo
+  /// link ([welcomeDemo]) are gone with it; the ZHA note's demo counts as
+  /// [demo].
+  noHub,
 }
+
+/// Where the "Nothing yet" screen was opened from (3.4): the first
+/// question's fourth answer, or the guide's "Zigbee2MQTT not set up yet".
+enum NoHubFrom { welcome, guide }
+
+/// What was done on the "Nothing yet" screen (3.4): it opened, one of the
+/// three ways to a hub was read (an SMHUB, a Raspberry Pi, Home Assistant),
+/// the hubs page was opened, the demo was started, a reminder for a week
+/// later was set, or "I have one now" went back.
+enum NoHubAction { opened, smhub, pi, homeAssistant, hubsPage, demo, remind, haveOne }
 
 /// The steps of the guide on an empty result (3.3.2), in the order they
 /// can appear; `setup_guide.dart` picks the ones that apply.

@@ -1558,7 +1558,67 @@ class AppLocalizationsIt extends AppLocalizations {
   String get setupRunningWhatToGet => 'Cosa ti serve';
 
   @override
-  String get setupAskNothing => 'Ancora niente?';
+  String get setupAskNothing => 'Ancora niente';
+
+  @override
+  String get setupAskNothingSub =>
+      'Nessun hub o Zigbee2MQTT per ora, o stai ancora scegliendo';
+
+  @override
+  String get noHubTitle => 'Ancora niente';
+
+  @override
+  String get noHubHeadline => 'Procurati un hub che esegua Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash ha bisogno di una piccola scatola in casa che esegua Zigbee2MQTT, il software libero che parla con i dispositivi Zigbee. Scegli una delle tre strade qui sotto, associa i dispositivi dalla sua pagina e ZigDash costruisce la dashboard. Niente cloud, nessun account.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: la partenza facile';
+
+  @override
+  String get noHubSmhubBody =>
+      'Una piccola scatola con Zigbee2MQTT e il broker integrati. Collegala al router e associa i dispositivi dalla sua pagina web. Niente da installare.';
+
+  @override
+  String get noHubPi => 'Un Raspberry Pi o qualsiasi macchina Linux';
+
+  @override
+  String get noHubPiBody =>
+      'Installa da solo Zigbee2MQTT e il broker Mosquitto. Circa un\'ora, con la guida di Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Aggiungi i componenti aggiuntivi Mosquitto broker e Zigbee2MQTT, poi accedi da ZigDash con il tuo utente Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'Un Pi o Home Assistant ha bisogno anche di un adattatore Zigbee, come un SLZB-06 o una chiavetta Sonoff. L\'SMHUB ne ha uno integrato.';
+
+  @override
+  String get noHubDemoNote =>
+      'Nel frattempo guarda come funziona ZigDash, con una casa di prova.';
+
+  @override
+  String get noHubRemind => 'Ricordamelo tra una settimana';
+
+  @override
+  String get noHubRemindSet =>
+      'Te lo ricorderemo tra una settimana, su questo telefono.';
+
+  @override
+  String get noHubHaveOne => 'Ora ne ho uno';
+
+  @override
+  String get reminderHubTitle => 'È arrivato il tuo hub?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash lo configura in circa un minuto. Apri l\'app a casa, sul tuo Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'Come gestisce Zigbee il tuo Home Assistant?';
