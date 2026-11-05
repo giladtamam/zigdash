@@ -25,7 +25,7 @@ Aptabase, 2026-10-05 to 11-04, Google's review device removed: ~710 setup starts
 
 The December work (roadmap-2026-11.md §4, item 0) needs "share of homes with an automation", and every existing event counts taps, not homes. From 3.4.1 `app_started` carries three more ranges, for real homes only (the demo is left out):
 
-- `automations`: 0 / 1-3 / 4+. Automations live on the hub, and `app_started` is sent before any broker answers, so the number is the rule count the Home's Engine last reported to this phone (`engine.rules.<home>`, written by `rememberEngine`). It is a floor: a phone that never saw the Engine on a hub sends 0, and the count is as old as the last launch that heard the Engine.
+- `automations`: 0 / 1-3 / 4+. Automations live on the hub, and `app_started` is sent before any broker answers, so the number is the rule count the Home's Engine last reported to this phone (`engine.rules.<home>`, written by `rememberEngine`). It is a floor: a phone that never saw the Engine on a hub sends 0, and the count is as old as the last launch that heard the Engine. It counts every valid rule on the hub, switched on or off.
 - `scenes`: 0 / 1+, saved scenes; the built-in shutter scenes are not rows.
 - `shortcuts`: 0 / 1+, widgets and Quick Settings tiles; Device Controls keep no record.
 
