@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../data/database/database.dart';
+import '../../engine/engine_providers.dart' show engineKnownRules;
 import '../../features/onboarding/demo_service.dart';
 import '../../features/settings/providers/settings_controller.dart';
 import '../router/app_router.dart';
@@ -51,20 +52,31 @@ class _AnalyticsTrackerState extends ConsumerState<AnalyticsTracker> {
     final db = ref.read(appDatabaseProvider);
     final homes = await db.select(db.connections).get();
     final tiles = await db.select(db.panels).get();
+    final scenes = await db.select(db.scenes).get();
+    final shortcuts = await db.select(db.shortcuts).get();
     final installed = await _installTime();
     if (!mounted) return;
     final settings = ref.read(settingsControllerProvider);
+    final prefs = ref.read(sharedPreferencesProvider);
+    // What is set up counts real homes only: the demo's is not the user's.
+    final real = {
+      for (final c in homes)
+        if (!isDemoConnection(c.host)) c.id,
+    };
     final shortest = MediaQuery.sizeOf(context).shortestSide;
     analytics.track(AppStarted(
       form: shortest >= 600 ? FormFactor.tablet : FormFactor.phone,
       theme: ThemeChoice.values.byName(settings.themeMode.name),
       materialYou: settings.dynamicColor,
-      homes: homes.where((c) => !isDemoConnection(c.host)).length,
+      homes: real.length,
       tiles: tiles.length,
       demo: ref.read(demoServiceProvider),
       daysInstalled: installed == null
           ? null
           : DateTime.now().difference(installed).inDays.clamp(0, 100000),
+      automations: real.fold(0, (n, id) => n + engineKnownRules(prefs, id)),
+      scenes: scenes.where((s) => real.contains(s.connectionId)).length,
+      shortcuts: shortcuts.where((s) => real.contains(s.connectionId)).length,
     ));
   }
 

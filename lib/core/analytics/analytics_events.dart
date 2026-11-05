@@ -22,6 +22,9 @@ class AppStarted extends AnalyticsEvent {
     required this.tiles,
     required this.demo,
     this.daysInstalled,
+    this.automations = 0,
+    this.scenes = 0,
+    this.shortcuts = 0,
   });
 
   final FormFactor form;
@@ -36,6 +39,17 @@ class AppStarted extends AnalyticsEvent {
   /// is sent: it shows whether people come back, which a daily-changing
   /// anonymous id can't.
   final int? daysInstalled;
+
+  /// What the real homes on this phone have set up (3.4.1), as ranges: the
+  /// only way to read "share of homes with an automation", since every other
+  /// event counts taps, not homes. [automations] is the rule count the
+  /// Home's Engine last reported to this phone (0 where this phone never
+  /// saw an Engine); [scenes] the saved scenes, without the built-in
+  /// shutter ones; [shortcuts] the widgets and Quick Settings tiles
+  /// (Device Controls keep no record). The demo home is left out.
+  final int automations;
+  final int scenes;
+  final int shortcuts;
 
   @override
   String get name => 'app_started';
@@ -62,6 +76,9 @@ class AppStarted extends AnalyticsEvent {
         top: '31+',
       ),
     },
+    'automations': bucket(automations, const [0], ranges: const [(1, 3)], top: '4+'),
+    'scenes': bucket(scenes, const [0], top: '1+'),
+    'shortcuts': bucket(shortcuts, const [0], top: '1+'),
   };
 }
 

@@ -20,3 +20,13 @@ Aptabase, 2026-10-05 to 11-04, Google's review device removed: ~710 setup starts
 - no_hub opened, by from, against scan_empty with hub none: the share of no-hub people who now land on the screen instead of an empty scan.
 - no_hub remind and reminder_opened: whether anyone comes back.
 - complete ÷ (scan_found + z2m_running yes + manual_test connected): the November metric; it should not fall, since the no-hub cohort now leaves the denominator earlier.
+
+## 3.4.1: what a home has set up, on `app_started`
+
+The December work (roadmap-2026-11.md §4, item 0) needs "share of homes with an automation", and every existing event counts taps, not homes. From 3.4.1 `app_started` carries three more ranges, for real homes only (the demo is left out):
+
+- `automations`: 0 / 1-3 / 4+. Automations live on the hub, and `app_started` is sent before any broker answers, so the number is the rule count the Home's Engine last reported to this phone (`engine.rules.<home>`, written by `rememberEngine`). It is a floor: a phone that never saw the Engine on a hub sends 0, and the count is as old as the last launch that heard the Engine.
+- `scenes`: 0 / 1+, saved scenes; the built-in shutter scenes are not rows.
+- `shortcuts`: 0 / 1+, widgets and Quick Settings tiles; Device Controls keep no record.
+
+Read from ~2026-11-20, by `installed` range: the share of launches at 8-30 days with each of the three above 0 is December's baseline.

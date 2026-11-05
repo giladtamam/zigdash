@@ -1,0 +1,3 @@
+No hub yet? The first screen has a fourth answer, "Nothing yet": the three ways to a hub that runs Zigbee2MQTT, the demo home, and a reminder a week later. The same screen opens from the setup guide.
+
+Usage data, for those who share it, now says whether a home has automations, scenes or shortcuts (as ranges, never names), so the next versions can help where people stop. The privacy policy lists it.
