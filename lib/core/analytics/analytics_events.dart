@@ -384,6 +384,7 @@ class SetupStep extends AnalyticsEvent {
   final Enum? platform;
 
   /// The hub kind an empty scan found; null on an empty scan means none.
+  /// At the login (3.4.1), what answers on the broker's machine.
   final Enum? hub;
 
   /// Whether the broker form cleaned up what was typed (a pasted browser
@@ -423,7 +424,9 @@ class SetupStep extends AnalyticsEvent {
     if (platform != null) 'platform': _snake(platform!.name),
     if (via != null) 'via': _snake(via!.name),
     if (aiHelped != null) 'ai': aiHelped! ? 'yes' : 'no',
-    if (step == SetupStepKind.scanEmpty)
+    if (step == SetupStepKind.scanEmpty ||
+        step == SetupStepKind.needsLogin ||
+        step == SetupStepKind.loginRejected)
       'hub': hub == null ? 'none' : _snake(hub!.name),
     if (hostsTried != null)
       'hosts': bucket(

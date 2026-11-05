@@ -20,6 +20,7 @@ import 'package:zigdash/features/connections/discovery/no_network.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/onboarding/setup/recommendation_policy.dart';
 import 'package:zigdash/features/connections/discovery/z2m_frontend.dart';
+import 'package:zigdash/features/onboarding/setup/setup_candidate.dart';
 import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_providers.dart';
@@ -1173,6 +1174,48 @@ void main() {
     await tester.pump();
     expect(find.byKey(const Key('setup-ha-shortcut')), findsOneWidget);
     expect(find.text('Connect through Home Assistant'), findsOneWidget);
+  });
+
+  // 3.4.1: no answer given, so the help follows what the broker's machine
+  // is; an answer the user gave still wins.
+  test('the login help follows the broker machine when nobody said', () {
+    const hub = SetupCandidate(
+      host: '192.168.1.10',
+      port: 1883,
+      protocol: MqttProtocol.tcp,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(hub, brokerHost: HubKind.homeAssistant),
+      ),
+      SetupPlatform.homeAssistant,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(
+          hub,
+          platform: SetupPlatform.notSure,
+          brokerHost: HubKind.smlight,
+        ),
+      ),
+      SetupPlatform.smlight,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(
+          hub,
+          platform: SetupPlatform.piOrDocker,
+          brokerHost: HubKind.homeAssistant,
+        ),
+      ),
+      SetupPlatform.piOrDocker,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(hub, brokerHost: HubKind.zigbee2mqtt),
+      ),
+      isNull,
+    );
   });
 
   testWidgets(

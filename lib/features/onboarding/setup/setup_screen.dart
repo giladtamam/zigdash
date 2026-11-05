@@ -1260,6 +1260,7 @@ class _AuthPromptState extends State<_AuthPrompt> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final platform = loginPlatform(widget.state);
     final body = widget.state.rejected
         ? l10n.setupAuthRejectedBody
         : l10n.setupAuthBody(widget.state.candidate.host);
@@ -1288,7 +1289,7 @@ class _AuthPromptState extends State<_AuthPrompt> {
         ],
         // 3.1.2: no MQTT user at hand? Home Assistant's own sign-in needs
         // none (48 asked for a login and 20 were refused in 30 days).
-        if (widget.state.platform == SetupPlatform.homeAssistant) ...[
+        if (platform == SetupPlatform.homeAssistant) ...[
           const SizedBox(height: 12),
           _HaShortcut(
             onPressed: () => widget.onConnectViaHa(
@@ -1298,10 +1299,10 @@ class _AuthPromptState extends State<_AuthPrompt> {
           ),
         ],
         const SizedBox(height: 12),
-        _LoginHint(platform: widget.state.platform),
+        _LoginHint(platform: platform),
         const SizedBox(height: 12),
         _LoginGuide(
-          platform: widget.state.platform,
+          platform: platform,
           rejected: widget.state.rejected,
           onTryAnonymous: widget.onRetry,
         ),
@@ -1337,7 +1338,7 @@ class _AuthPromptState extends State<_AuthPrompt> {
         AiHelpCard(
           facts: AiHelpFacts(
             from: AiHelpFrom.login,
-            platform: widget.state.platform,
+            platform: platform,
             loginRejected: widget.state.rejected,
           ),
         ),
@@ -1358,6 +1359,22 @@ class _AuthPromptState extends State<_AuthPrompt> {
     );
   }
 }
+
+/// The platform the login help speaks to: the user's answer, or, without
+/// one, what answers on the broker's machine (3.4.1). Home Assistant's
+/// Mosquitto takes the Home Assistant sign-in instead; an SMHUB keeps the
+/// login on its own page. Two of the four lost at the login on 5 Nov 2026
+/// had tried Home Assistant first, with no answer given.
+SetupPlatform? loginPlatform(SetupNeedsAuth state) => switch (state.platform) {
+  SetupPlatform.homeAssistant ||
+  SetupPlatform.piOrDocker ||
+  SetupPlatform.smlight => state.platform,
+  _ => switch (state.brokerHost) {
+    HubKind.homeAssistant => SetupPlatform.homeAssistant,
+    HubKind.smlight => SetupPlatform.smlight,
+    _ => state.platform,
+  },
+};
 
 /// Why typing the MQTT login here is safe, with the policy and the demo
 /// for anyone who wants to look first (2.8.1).
