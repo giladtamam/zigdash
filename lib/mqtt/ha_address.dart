@@ -22,10 +22,18 @@ List<Uri> haBaseCandidates(String input) {
   if (uri.scheme != 'http' && uri.scheme != 'https') return const [];
   Uri at(String scheme, int? port) =>
       Uri(scheme: scheme, host: uri.host, port: port);
-  if (hasScheme) return [at(uri.scheme, uri.hasPort ? uri.port : null)];
   // The port as typed: `Uri` forgets a typed `:80`, its scheme's default,
   // and `192.168.1.20:80` then went to 8123.
   final typedPort = int.tryParse(_typedPort.firstMatch(text)?.group(1) ?? '');
+  if (hasScheme) {
+    // A remote name given as plain http with no port: https first. The
+    // Home Assistant app's "Share server" link carries http for a server
+    // that sits behind an https tunnel.
+    if (uri.scheme == 'http' && typedPort == null && isRemoteHaName(uri.host)) {
+      return [at('https', null), at('http', null)];
+    }
+    return [at(uri.scheme, uri.hasPort ? uri.port : null)];
+  }
   if (!isRemoteHaName(uri.host)) {
     if (typedPort != null) return [at('http', typedPort)];
     // Home Assistant OS installed since 2026.8 serves on port 80, not
@@ -42,6 +50,100 @@ List<Uri> haBaseCandidates(String input) {
     return [at('https', 8123), at('https', null), at('http', 8123)];
   }
   return [at('https', null), at('https', 8123), at('http', 8123)];
+}
+
+/// The Home Assistant address in text that was handed over rather than
+/// typed: pasted from the clipboard, or shared from another app. Null when
+/// it holds none.
+///
+/// The Home Assistant app's "Share server" (Settings › Companion app › the
+/// server; from its 2025.7 invite flow) shares
+/// `https://my.home-assistant.io/invite/#url=<the server's address>`, and
+/// "Copy link" on that sheet copies the same. A browser shares the page's
+/// link, sometimes after its title. Otherwise one word that reads as a
+/// host, with or without a port, is taken as typed.
+///
+/// Returns the address as the field shows it: scheme, host and port, no
+/// path. What it means is still [haBaseCandidates]' call.
+String? haAddressIn(String text) {
+  final links = _link.allMatches(text).map((m) => m.group(0)!).toList();
+  for (final link in links) {
+    final inner = _invitedAddress(link);
+    if (inner != null) return inner;
+  }
+  for (final link in links) {
+    final uri = Uri.tryParse(link);
+    if (uri == null || uri.host.isEmpty) continue;
+    // My Home Assistant's own pages are not anyone's Home Assistant.
+    if (uri.host.toLowerCase() == _myHost) continue;
+    return haAddressText(
+      Uri(
+        scheme: uri.scheme.toLowerCase(),
+        host: uri.host,
+        port: uri.hasPort ? uri.port : null,
+      ),
+    );
+  }
+  final word = text.trim();
+  if (word.isEmpty || word.contains(RegExp(r'\s')) || word.contains('@')) {
+    return null;
+  }
+  if (!_hostWord.hasMatch(word)) return null;
+  final host = word.split(RegExp('[:/]')).first;
+  // A name as people write one: an IP address, a home name, or a domain in
+  // small letters. A copied token or password has dots too, and is not one.
+  final known =
+      _ipv4.hasMatch(host) ||
+      host == 'homeassistant' ||
+      host == 'localhost' ||
+      _homeSuffixes.any(host.toLowerCase().endsWith) ||
+      _domainWord.hasMatch(host);
+  return known && haBaseUri(word) != null ? word : null;
+}
+
+const _myHost = 'my.home-assistant.io';
+
+/// A link in running text, up to the first space or bracket.
+final _link = RegExp(r'https?://[^\s<>"]+', caseSensitive: false);
+
+/// One word that may be a host: letters, digits, dots and dashes, then
+/// perhaps a port and a path.
+final _hostWord = RegExp(r'^[A-Za-z0-9.-]+(:\d{1,5})?(/\S*)?$');
+
+/// A domain name in small letters: short labels, letters at the end.
+final _domainWord = RegExp(
+  r'^(?:[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?\.)+[a-z]{2,24}$',
+);
+
+/// The server address inside a My Home Assistant invite link, or null when
+/// [link] is not one.
+String? _invitedAddress(String link) {
+  final uri = Uri.tryParse(link);
+  if (uri == null || uri.host.toLowerCase() != _myHost) return null;
+  if (!uri.path.startsWith('/invite')) return null;
+  for (final part in [uri.fragment, uri.query]) {
+    if (part.isEmpty) continue;
+    final String? inner;
+    try {
+      inner = Uri.splitQueryString(part)['url'];
+    } catch (_) {
+      continue;
+    }
+    if (inner == null || inner.trim().isEmpty) continue;
+    final base = haBaseUri(inner.trim());
+    if (base == null) continue;
+    final at = Uri.tryParse(inner.trim());
+    // As the server gave it: its own scheme and port, no path.
+    return haAddressText(
+      Uri(
+        scheme: (at != null && at.hasScheme ? at.scheme : base.scheme)
+            .toLowerCase(),
+        host: base.host,
+        port: at != null && at.hasPort ? at.port : null,
+      ),
+    );
+  }
+  return null;
 }
 
 /// Whether [candidate] is the port-80 guess for a home address typed

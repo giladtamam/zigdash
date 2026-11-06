@@ -1811,6 +1811,28 @@ class AppLocalizationsRu extends AppLocalizations {
       'Этот телефон не видит Home Assistant в этой сети Wi-Fi. Используйте адрес, который открывает ваше приложение Home Assistant: часто удалённый, например https://abcd1234.ui.nabu.casa или https://myhome.duckdns.org.';
 
   @override
+  String get haPaste => 'Вставить';
+
+  @override
+  String get haPasteNothing => 'В скопированном нет адреса.';
+
+  @override
+  String get haSharedNote =>
+      'Это адрес, которым вы поделились. Войдите, чтобы подключиться.';
+
+  @override
+  String get haShareNothing =>
+      'Там не было адреса. В приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху.';
+
+  @override
+  String get haHandoverShare =>
+      'Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и выберите ZigDash. Из браузера поделитесь страницей с ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и «Копировать ссылку». Вернитесь и нажмите «Вставить».';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'Этот адрес в другой сети, чем телефон, который находится в $network. Используйте адрес, который открывает ваше приложение Home Assistant, часто удалённый, или подключите телефон к сети, где работает Home Assistant.';
   }

@@ -228,6 +228,14 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   /// Usage events: how each try ended. Never the address or a token.
   final void Function(AnalyticsEvent event)? onEvent;
 
+  /// How the address now in the field got there (ha-share-paste.md): the
+  /// screen says so when it fills the field, and takes it back to typed
+  /// when the user edits it. Counted with each try.
+  HaAddressFrom addressFrom = HaAddressFrom.typed;
+
+  /// Set for a try whose address was swapped for the one the look found.
+  HaAddressFrom? _tryFrom;
+
   bool get canSignIn => _signIn != null;
 
   String get _address => switch (value) {
@@ -256,6 +264,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
           result: outcome,
           shape: shape,
           portClass: base == null ? null : haPortClassOf(base),
+          addressFrom: _tryFrom ?? addressFrom,
         ),
       );
 
@@ -297,6 +306,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     var base = haBaseUri(address);
     final typed = address;
     final t = ++_try;
+    _tryFrom = null;
     if (base == null && _looking != null) {
       // Signed in before the look ended, with nothing typed: wait for it.
       _checking(address);
@@ -305,6 +315,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       if (found.isNotEmpty) {
         address = found.first.address;
         base = haBaseUri(address);
+        _tryFrom = HaAddressFrom.found;
       }
     } else if (base != null &&
         base.host.toLowerCase().endsWith('.local') &&
@@ -313,6 +324,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       // found, by its address.
       address = _found.single.address;
       base = haBaseUri(address);
+      _tryFrom = HaAddressFrom.found;
     }
     if (base == null) {
       final shape = await _shapeOf(address);
@@ -416,6 +428,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   Future<void> connectWithToken(String address, String token) async {
     final base = haBaseUri(address);
     final t = ++_try;
+    _tryFrom = null;
     if (base == null) {
       final shape = await _shapeOf(address);
       if (t != _try) return;

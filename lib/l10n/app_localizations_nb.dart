@@ -1804,6 +1804,28 @@ class AppLocalizationsNb extends AppLocalizations {
       'Denne telefonen ser ikke Home Assistant på dette wifi-nettet. Bruk adressen Home Assistant-appen din åpner: ofte en ekstern, som https://abcd1234.ui.nabu.casa eller https://mitthjem.duckdns.org.';
 
   @override
+  String get haPaste => 'Lim inn';
+
+  @override
+  String get haPasteNothing => 'Ingen adresse i det du kopierte.';
+
+  @override
+  String get haSharedNote =>
+      'Dette er adressen du delte. Logg inn for å koble til.';
+
+  @override
+  String get haShareNothing =>
+      'Det inneholdt ingen adresse. I Home Assistant-appen åpner du Innstillinger › Companion-app, trykker på serveren din og deretter på delingsikonet øverst.';
+
+  @override
+  String get haHandoverShare =>
+      'Raskest: I Home Assistant-appen åpner du Innstillinger › Companion-app, trykker på serveren din, deretter på delingsikonet øverst, og velger ZigDash. Fra en nettleser deler du siden med ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Raskest: I Home Assistant-appen åpner du Innstillinger › Companion-app, trykker på serveren din, deretter på delingsikonet øverst og på Kopiér linken. Gå tilbake og trykk på Lim inn.';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'Den adressen er på et annet nettverk enn denne telefonen, som er på $network. Bruk adressen Home Assistant-appen din åpner, ofte en ekstern, eller koble telefonen til nettverket Home Assistant er på.';
   }

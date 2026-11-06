@@ -135,6 +135,16 @@ enum SetupStepKind {
   /// Assistant (3.3.4), with [SetupStep.choice] (a [HaWhere]).
   haWhere,
 
+  /// The Paste button on the Home Assistant sign-in (ha-share-paste.md),
+  /// with [SetupStep.result] (a [HaHandover]): whether what was copied
+  /// held an address. Never what was copied.
+  haPaste,
+
+  /// Text shared to ZigDash from another app (ha-share-paste.md), with
+  /// [SetupStep.result] (a [HaHandover]): whether it held an address.
+  /// Never the text.
+  haShare,
+
   /// An answer to "where does Zigbee2MQTT run?" was picked (3.1.3), with
   /// [SetupStep.platform]; counted when given, not only with later steps.
   platformChosen,
@@ -249,6 +259,15 @@ enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 /// sign-in's address when Home Assistant wasn't found. Never the address.
 enum HaWhere { home, nabuCasa, duckDns, ownDomain }
 
+/// How the address on the Home Assistant sign-in got into its field
+/// (ha-share-paste.md): typed by hand, filled in by the look or the scan,
+/// pasted with the Paste button, or shared from another app. Never the
+/// address.
+enum HaAddressFrom { typed, found, pasted, shared }
+
+/// Whether pasted or shared text held a Home Assistant address.
+enum HaHandover { address, noAddress }
+
 enum HaSignInFrom {
   scanning,
   emptyCard,
@@ -326,6 +345,7 @@ class SetupStep extends AnalyticsEvent {
     this.via,
     this.aiHelped,
     this.shape,
+    this.addressFrom,
   });
 
   final SetupStepKind step;
@@ -334,6 +354,12 @@ class SetupStep extends AnalyticsEvent {
   /// [HaAddressShape]), on [SetupStepKind.haConnect] (3.1.12). Never the
   /// address.
   final Enum? shape;
+
+  /// How the address of a Home Assistant try got into the field (an
+  /// [HaAddressFrom]), on [SetupStepKind.haConnect] (ha-share-paste.md).
+  /// Sent as `from`, and with the result as `path` (`pasted/ok`), since
+  /// the analytics service cannot cross two properties.
+  final Enum? addressFrom;
 
   /// Whether "Ask your AI" was shared or copied earlier in this setup, on
   /// [SetupStepKind.complete] (3.1.5).
@@ -459,6 +485,9 @@ class SetupStep extends AnalyticsEvent {
     if (noNetwork != null) 'why': _snake(noNetwork!.name),
     if (choice != null) 'choice': _snake(choice!.name),
     if (shape != null) 'shape': _snake(shape!.name),
+    if (addressFrom != null) 'from': _snake(addressFrom!.name),
+    if (addressFrom != null && result != null)
+      'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
   };
 
   /// The interface kind as a fixed label: wifi, ethernet or other.

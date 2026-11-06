@@ -1805,6 +1805,28 @@ class AppLocalizationsCs extends AppLocalizations {
       'Tento telefon v této Wi-Fi Home Assistant nevidí. Použijte adresu, kterou otevírá vaše aplikace Home Assistant: často vzdálenou, například https://abcd1234.ui.nabu.casa nebo https://mujdum.duckdns.org.';
 
   @override
+  String get haPaste => 'Vložit';
+
+  @override
+  String get haPasteNothing => 'V tom, co jste zkopírovali, není adresa.';
+
+  @override
+  String get haSharedNote =>
+      'Toto je adresa, kterou jste sdíleli. Přihlaste se a připojte se.';
+
+  @override
+  String get haShareNothing =>
+      'V tom nebyla adresa. V aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server a pak nahoře na ikonu sdílení.';
+
+  @override
+  String get haHandoverShare =>
+      'Nejrychleji: v aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server, pak nahoře na ikonu sdílení a vyberte ZigDash. Z prohlížeče sdílejte stránku do ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Nejrychleji: v aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server, pak nahoře na ikonu sdílení a na Kopírovat odkaz. Vraťte se a klepněte na Vložit.';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'Tato adresa je v jiné síti než tento telefon, který je v $network. Použijte adresu, kterou otevírá vaše aplikace Home Assistant, často vzdálenou, nebo připojte telefon k síti, ve které je Home Assistant.';
   }

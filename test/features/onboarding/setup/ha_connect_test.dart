@@ -412,6 +412,9 @@ void main() {
         'result': 'unreachable',
         'shape': 'other_network',
         'port': '8123',
+        // How the address got into the field (ha-share-paste.md).
+        'from': 'typed',
+        'path': 'typed/unreachable',
       });
       expect(events.join(), isNot(contains('192.168')));
     });
@@ -423,6 +426,8 @@ void main() {
         'step': 'ha_connect',
         'result': 'no_address',
         'shape': 'empty',
+        'from': 'typed',
+        'path': 'typed/no_address',
       });
     });
 

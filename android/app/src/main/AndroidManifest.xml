@@ -66,6 +66,24 @@
             android:taskAffinity="com.giladtamam.zigdash.cover"
             android:launchMode="singleTask"
             android:theme="@style/CoverPopup" />
+        <!-- A Home Assistant address shared from another app
+             (ha-share-paste.md): the Home Assistant app's "Share server"
+             link, or a page from a browser. Offered only until a home
+             exists (MainActivity "setShareTarget"). -->
+        <activity
+            android:name=".ShareHaAddressActivity"
+            android:exported="true"
+            android:label="@string/share_ha_label"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity="com.giladtamam.zigdash.share"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
         <!-- NFC tags (3.3): a ZigDash tag runs its action without opening the app. -->
         <activity
             android:name=".NfcTagActivity"

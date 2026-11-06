@@ -1800,6 +1800,28 @@ class AppLocalizationsEn extends AppLocalizations {
       'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.';
 
   @override
+  String get haPaste => 'Paste';
+
+  @override
+  String get haPasteNothing => 'No address in what you copied.';
+
+  @override
+  String get haSharedNote =>
+      'This is the address you shared. Sign in to connect.';
+
+  @override
+  String get haShareNothing =>
+      'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.';
+
+  @override
+  String get haHandoverShare =>
+      'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. From a browser, share the page to ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'That address is on a different network from this phone, which is on $network. Use the address your Home Assistant app opens, often a remote one, or connect the phone to the network Home Assistant is on.';
   }

@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">Выкл.</string>
     <string name="widget_group_sample_3">Шторы</string>
     <string name="widget_group_sample_scene">Ночь</string>
+    <string name="share_ha_label">Подключить Home Assistant</string>
 </resources>

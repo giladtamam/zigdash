@@ -129,6 +129,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (_, state) => _slideUp(
               HaConnectScreen(
                 initialHost: state.uri.queryParameters['host'],
+                shared: state.uri.queryParameters['from'] == 'shared',
                 again: state.uri.queryParameters['again'],
                 offWifi: state.uri.queryParameters['wifi'] == 'off',
               ),

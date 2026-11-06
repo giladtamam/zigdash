@@ -1817,6 +1817,29 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dieses Handy sieht Home Assistant in diesem WLAN nicht. Nimm die Adresse, die deine Home-Assistant-App öffnet: oft eine Fernzugriffsadresse wie https://abcd1234.ui.nabu.casa oder https://meinzuhause.duckdns.org.';
 
   @override
+  String get haPaste => 'Einfügen';
+
+  @override
+  String get haPasteNothing =>
+      'In dem, was du kopiert hast, ist keine Adresse.';
+
+  @override
+  String get haSharedNote =>
+      'Das ist die Adresse, die du geteilt hast. Melde dich an, um zu verbinden.';
+
+  @override
+  String get haShareNothing =>
+      'Darin war keine Adresse. Öffne in der Home-Assistant-App Einstellungen › Companion App, tippe auf deinen Server und dann oben auf das Teilen-Symbol.';
+
+  @override
+  String get haHandoverShare =>
+      'Am schnellsten: Öffne in der Home-Assistant-App Einstellungen › Companion App, tippe auf deinen Server, dann oben auf das Teilen-Symbol und wähle ZigDash. Im Browser teilst du die Seite mit ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Am schnellsten: Öffne in der Home-Assistant-App Einstellungen › Companion App, tippe auf deinen Server, dann oben auf das Teilen-Symbol und auf Link kopieren. Komm zurück und tippe auf Einfügen.';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'Diese Adresse liegt in einem anderen Netzwerk als dieses Handy, das in $network ist. Nimm die Adresse, die deine Home-Assistant-App öffnet, oft eine Fernzugriffsadresse, oder verbinde das Handy mit dem Netzwerk von Home Assistant.';
   }

@@ -29,6 +29,22 @@ class MainActivity : FlutterActivity() {
         ch.setMethodCallHandler { call, result ->
             when (call.method) {
                 "takeAction" -> result.success(takeAction(intent))
+                // ZigDash in other apps' share sheets (ha-share-paste.md):
+                // only until a home exists, so it is switched here.
+                "setShareTarget" -> {
+                    val on = call.argument<Boolean>("enabled") ?: true
+                    try {
+                        packageManager.setComponentEnabledSetting(
+                            android.content.ComponentName(this, ShareHaAddressActivity::class.java),
+                            if (on) android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                            else android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                            android.content.pm.PackageManager.DONT_KILL_APP,
+                        )
+                        result.success(null)
+                    } catch (e: Exception) {
+                        result.error("share_target", e.message, null)
+                    }
+                }
                 "requestAddTile" -> requestAddTile(call.argument<Int>("slot") ?: 1,
                     call.argument<String>("label") ?: "ZigDash", result)
                 "requestPinWidget" -> result.success(PinWidgetReceiver.request(this,
@@ -173,6 +189,11 @@ class MainActivity : FlutterActivity() {
             put("slot", slot)
             intent.getStringExtra(EXTRA_HOME)?.let { put("connectionId", it) }
             intent.getStringExtra(EXTRA_IEEE)?.let { put("ieee", it) }
+            // Text another app shared (ShareHaAddressActivity), taken once.
+            intent.getStringExtra(EXTRA_TEXT)?.let {
+                put("text", it)
+                intent.removeExtra(EXTRA_TEXT)
+            }
         }
     }
 
@@ -233,5 +254,6 @@ class MainActivity : FlutterActivity() {
         const val EXTRA_SLOT = "zigdash.slot"
         const val EXTRA_HOME = "zigdash.home"
         const val EXTRA_IEEE = "zigdash.ieee"
+        const val EXTRA_TEXT = "zigdash.text"
     }
 }

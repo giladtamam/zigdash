@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">Desligado</string>
     <string name="widget_group_sample_3">Persianas</string>
     <string name="widget_group_sample_scene">Noite</string>
+    <string name="share_ha_label">Conectar Home Assistant</string>
 </resources>

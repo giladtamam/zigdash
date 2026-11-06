@@ -3312,6 +3312,42 @@ abstract class AppLocalizations {
   /// **'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.'**
   String get haFindNone;
 
+  /// Button beside the Home Assistant address field: pastes the address that was copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get haPaste;
+
+  /// No description provided for @haPasteNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No address in what you copied.'**
+  String get haPasteNothing;
+
+  /// No description provided for @haSharedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address you shared. Sign in to connect.'**
+  String get haSharedNote;
+
+  /// No description provided for @haShareNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.'**
+  String get haShareNothing;
+
+  /// The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. From a browser, share the page to ZigDash.'**
+  String get haHandoverShare;
+
+  /// As haHandoverShare; 'Copy link' is Android's own button on the share sheet, in the phone's language.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.'**
+  String get haHandoverCopy;
+
   /// No description provided for @haConnectOtherNetwork.
   ///
   /// In en, this message translates to:

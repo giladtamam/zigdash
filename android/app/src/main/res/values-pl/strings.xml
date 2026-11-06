@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">Wył.</string>
     <string name="widget_group_sample_3">Rolety</string>
     <string name="widget_group_sample_scene">Noc</string>
+    <string name="share_ha_label">Połącz Home Assistant</string>
 </resources>

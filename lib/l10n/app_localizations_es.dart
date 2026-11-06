@@ -1812,6 +1812,29 @@ class AppLocalizationsEs extends AppLocalizations {
       'Este teléfono no ve Home Assistant en esta Wi-Fi. Usa la dirección que abre tu app de Home Assistant: a menudo una remota, como https://abcd1234.ui.nabu.casa o https://micasa.duckdns.org.';
 
   @override
+  String get haPaste => 'Pegar';
+
+  @override
+  String get haPasteNothing =>
+      'No hay ninguna dirección en lo que has copiado.';
+
+  @override
+  String get haSharedNote =>
+      'Esta es la dirección que has compartido. Inicia sesión para conectar.';
+
+  @override
+  String get haShareNothing =>
+      'Eso no contenía ninguna dirección. En la app de Home Assistant, abre Ajustes › Companion app, toca tu servidor y luego el icono de compartir de arriba.';
+
+  @override
+  String get haHandoverShare =>
+      'Lo más rápido: en la app de Home Assistant, abre Ajustes › Companion app, toca tu servidor, luego el icono de compartir de arriba, y elige ZigDash. Desde un navegador, comparte la página con ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Lo más rápido: en la app de Home Assistant, abre Ajustes › Companion app, toca tu servidor, luego el icono de compartir de arriba y Copiar enlace. Vuelve y toca Pegar.';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'Esa dirección está en una red distinta a la de este teléfono, que está en $network. Usa la dirección que abre tu app de Home Assistant, a menudo una remota, o conecta el teléfono a la red de Home Assistant.';
   }

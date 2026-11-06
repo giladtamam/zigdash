@@ -1787,6 +1787,27 @@ class AppLocalizationsHe extends AppLocalizations {
       'הטלפון הזה לא רואה את Home Assistant ברשת ה-Wi-Fi הזו. השתמשו בכתובת שאפליקציית Home Assistant שלכם פותחת: לרוב כתובת מרוחקת, כמו https://abcd1234.ui.nabu.casa או https://myhome.duckdns.org.';
 
   @override
+  String get haPaste => 'הדבקה';
+
+  @override
+  String get haPasteNothing => 'אין כתובת במה שהעתקתם.';
+
+  @override
+  String get haSharedNote => 'זו הכתובת ששיתפתם. התחברו כדי להשלים את החיבור.';
+
+  @override
+  String get haShareNothing =>
+      'לא הייתה שם כתובת. באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם ואז על אייקון השיתוף למעלה.';
+
+  @override
+  String get haHandoverShare =>
+      'הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה, ובחרו ב-ZigDash. מדפדפן, שתפו את הדף עם ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה ועל העתקת קישור. חזרו לכאן והקישו על הדבקה.';
+
+  @override
   String haConnectOtherNetwork(String network) {
     return 'הכתובת הזו נמצאת ברשת אחרת מזו של הטלפון, שנמצא ב-$network. השתמשו בכתובת שאפליקציית Home Assistant שלכם פותחת, לרוב כתובת מרוחקת, או חברו את הטלפון לרשת שבה נמצא Home Assistant.';
   }
