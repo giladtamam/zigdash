@@ -102,7 +102,7 @@ Branch from `release/3.4.2`. Ships as 3.4.3 on its own, or in 3.5.0 with the hub
 
 - Unit and widget tests: the address in every shape seen (invite link, encoded or not, with other parts; a browser's link with a path or after a title; a bare host; nothing usable; a token), Paste, a share on arrival, the share-target switch.
 - Emulator: a share on a cold start and into the running app (one instance, one task), a browser-style "title, link", and text with no address.
-- Phone: the Home Assistant app's share sheet and link shape were read on a real phone. **Not yet done there:** the last step, picking ZigDash in that sheet and landing on the sign-in. The test build is installed for it.
+- Phone (2026-11-06, Home Assistant app 2026.10.1): the Home Assistant app's share sheet and link shape were read, and the whole path was done by the user: Settings › Companion app › the server › the share icon › ZigDash landed on the sign-in with the server's address filled in and "This is the address you shared." The address answers on https and on http; https is tried first. Not looked at: how the ZigDash row reads in the share sheet.
 
 ## Out of scope
 
