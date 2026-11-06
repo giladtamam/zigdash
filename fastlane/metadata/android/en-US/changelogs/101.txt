@@ -1,0 +1,3 @@
+Home Assistant on a new install? Home Assistant OS now opens on port 80 instead of 8123, and ZigDash finds it there: when it looks for Home Assistant by itself, when you type its address without a port, and in the setup scan.
+
+A port you type, such as :80, is now used as typed.
