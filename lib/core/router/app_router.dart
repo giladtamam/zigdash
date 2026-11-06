@@ -16,6 +16,7 @@ import '../../features/hub_backup/hub_backup_screen.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
 import '../../features/onboarding/setup/ha_connect_screen.dart';
+import '../../features/onboarding/setup/no_hub_screen.dart';
 import '../../features/onboarding/setup/setup_screen.dart';
 import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
@@ -32,7 +33,7 @@ import '../../features/help/screens/help_screen.dart';
 import '../../features/onboarding/setup/setup_error_guidance.dart';
 import '../../features/support/get_help_screen.dart';
 import '../../shortcuts/shortcut_tile_picker.dart';
-import '../analytics/analytics_events.dart' show HelpFrom;
+import '../analytics/analytics_events.dart' show HelpFrom, NoHubFrom;
 import '../../features/settings/screens/home_settings_screen.dart';
 import '../../features/settings/screens/language_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
@@ -113,10 +114,22 @@ final routerProvider = Provider<GoRouter>((ref) {
             ),
           ),
           GoRoute(
+            path: 'no-hub',
+            pageBuilder: (_, state) => _slideUp(
+              NoHubScreen(
+                from: NoHubFrom.values.asNameMap()[state
+                        .uri
+                        .queryParameters['from']] ??
+                    NoHubFrom.welcome,
+              ),
+            ),
+          ),
+          GoRoute(
             path: 'home-assistant',
             pageBuilder: (_, state) => _slideUp(
               HaConnectScreen(
                 initialHost: state.uri.queryParameters['host'],
+                shared: state.uri.queryParameters['from'] == 'shared',
                 again: state.uri.queryParameters['again'],
                 offWifi: state.uri.queryParameters['wifi'] == 'off',
               ),

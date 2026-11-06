@@ -1552,7 +1552,67 @@ class AppLocalizationsSv extends AppLocalizations {
   String get setupRunningWhatToGet => 'Vad du behöver';
 
   @override
-  String get setupAskNothing => 'Inget ännu?';
+  String get setupAskNothing => 'Inget ännu';
+
+  @override
+  String get setupAskNothingSub =>
+      'Ingen hubb eller Zigbee2MQTT ännu, eller väljer fortfarande';
+
+  @override
+  String get noHubTitle => 'Inget ännu';
+
+  @override
+  String get noHubHeadline => 'Skaffa en hubb som kör Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash behöver en liten låda hemma som kör Zigbee2MQTT, den fria programvaran som pratar med Zigbee-enheter. Välj en av de tre vägarna nedan, para dina enheter på dess sida, så bygger ZigDash instrumentpanelen. Inget moln, inget konto.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: den enkla starten';
+
+  @override
+  String get noHubSmhubBody =>
+      'En liten låda med Zigbee2MQTT och broker inbyggt. Koppla in den i routern och para på dess webbsida. Inget att installera.';
+
+  @override
+  String get noHubPi => 'En Raspberry Pi eller valfri Linux-dator';
+
+  @override
+  String get noHubPiBody =>
+      'Installera Zigbee2MQTT och Mosquitto-brokern själv. Ungefär en timme, med Zigbee2MQTT:s egen guide.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Lägg till tilläggen Mosquitto broker och Zigbee2MQTT och logga sedan in från ZigDash med din Home Assistant-inloggning.';
+
+  @override
+  String get noHubRadio =>
+      'En Pi eller Home Assistant behöver också en Zigbee-adapter, som en SLZB-06 eller en Sonoff-dongel. SMHUB har en inbyggd.';
+
+  @override
+  String get noHubDemoNote =>
+      'Se under tiden hur ZigDash fungerar, med ett exempelhem.';
+
+  @override
+  String get noHubRemind => 'Påminn mig om en vecka';
+
+  @override
+  String get noHubRemindSet =>
+      'Vi påminner dig om en vecka, på den här telefonen.';
+
+  @override
+  String get noHubHaveOne => 'Jag har en nu';
+
+  @override
+  String get reminderHubTitle => 'Har hubben kommit?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash ställer in den på ungefär en minut. Öppna appen hemma, på ditt Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'Hur kör din Home Assistant Zigbee?';
@@ -1741,6 +1801,28 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get haFindNone =>
       'Den här telefonen ser inte Home Assistant på det här wifi-nätverket. Använd adressen som din Home Assistant-app öppnar: ofta en fjärradress, som https://abcd1234.ui.nabu.casa eller https://mitthem.duckdns.org.';
+
+  @override
+  String get haPaste => 'Klistra in';
+
+  @override
+  String get haPasteNothing => 'Ingen adress i det du kopierade.';
+
+  @override
+  String get haSharedNote =>
+      'Det här är adressen du delade. Logga in för att ansluta.';
+
+  @override
+  String get haShareNothing =>
+      'Det innehöll ingen adress. I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server och sedan på delningsikonen högst upp.';
+
+  @override
+  String get haHandoverShare =>
+      'Snabbast: I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server, sedan på delningsikonen högst upp, och väljer ZigDash. Från en webbläsare delar du sidan med ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Snabbast: I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server, sedan på delningsikonen högst upp och på Kopiera länk. Gå tillbaka och tryck på Klistra in.';
 
   @override
   String haConnectOtherNetwork(String network) {
@@ -3254,25 +3336,35 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Välj det du skulle använda mest. Svaret skickas med dina anonyma användningsdata.';
-
-  @override
-  String get pollNotifications => 'Aviseringar';
-
-  @override
-  String get pollHistory => 'Historikgrafer';
-
-  @override
-  String get pollKiosk => 'Kioskläge för en surfplatta på väggen';
-
-  @override
-  String get pollGroups => 'Zigbee-grupper';
+      'Välj allt du skulle använda. Svaren skickas med dina anonyma användningsdata.';
 
   @override
   String get pollNotNow => 'Inte nu';
 
   @override
   String get pollThanks => 'Tack! Det hjälper oss att välja vad som kommer.';
+
+  @override
+  String get pollPair => 'Para nya enheter från ZigDash';
+
+  @override
+  String get pollDeviceSettings =>
+      'Enhetsinställningar och firmwareuppdateringar';
+
+  @override
+  String get pollZha => 'Fungera med ZHA, utan Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Styra hemmet från min AI-assistent';
+
+  @override
+  String get pollOther => 'Något annat';
+
+  @override
+  String get pollSend => 'Skicka';
+
+  @override
+  String get settingsPollSubtitle => 'Rösta på vad som kommer härnäst';
 
   @override
   String get whyTitle => 'Varför testade du ZigDash?';
@@ -5193,4 +5285,35 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Hemskärm';
+
+  @override
+  String get haWhereAsk => 'Var öppnar du Home Assistant?';
+
+  @override
+  String get haWhereHome => 'Hemma';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Egen domän / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'Hemma ser adressen ut som 192.168.1.20:8123. Du hittar den i Home Assistant under Inställningar › System › Nätverk, eller i Home Assistant-appen under Inställningar › Companion-app › din server. Telefonen måste vara på samma wifi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'Öppna Inställningar › Home Assistant Cloud i Home Assistant och kopiera adressen under Fjärråtkomst: https://….ui.nabu.casa. Den fungerar överallt.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Namnet du valde på duckdns.org, med Home Assistants port: myhome.duckdns.org:8123. Det fungerar överallt.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'Adressen du öppnar Home Assistant med hemifrån, till exempel ha.example.com. Med en Cloudflare-tunnel är det värdnamnet du angav för Home Assistant i Cloudflare. Den fungerar överallt.';
 }

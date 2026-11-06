@@ -1555,7 +1555,67 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupRunningWhatToGet => 'Co potřebujete';
 
   @override
-  String get setupAskNothing => 'Zatím nic?';
+  String get setupAskNothing => 'Zatím nic';
+
+  @override
+  String get setupAskNothingSub =>
+      'Zatím žádný hub ani Zigbee2MQTT, nebo ještě vybíráte';
+
+  @override
+  String get noHubTitle => 'Zatím nic';
+
+  @override
+  String get noHubHeadline => 'Pořiďte si hub, na kterém běží Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash potřebuje doma jednu malou krabičku, na které běží Zigbee2MQTT, svobodný software, který mluví se zařízeními Zigbee. Vyberte jednu ze tří cest níže, spárujte zařízení na její stránce a ZigDash sestaví panel. Žádný cloud, žádný účet.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: snadný start';
+
+  @override
+  String get noHubSmhubBody =>
+      'Malá krabička s vestavěným Zigbee2MQTT a brokerem. Zapojte ji do routeru a párujte na její webové stránce. Nic se neinstaluje.';
+
+  @override
+  String get noHubPi => 'Raspberry Pi nebo jakýkoli počítač s Linuxem';
+
+  @override
+  String get noHubPiBody =>
+      'Nainstalujte si Zigbee2MQTT a broker Mosquitto sami. Asi hodina, podle návodu Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Přidejte doplňky Mosquitto broker a Zigbee2MQTT a pak se ze ZigDash přihlaste svým účtem Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'Pi nebo Home Assistant potřebuje také Zigbee adaptér, třeba SLZB-06 nebo dongle Sonoff. SMHUB ho má vestavěný.';
+
+  @override
+  String get noHubDemoNote =>
+      'Zatím se podívejte, jak ZigDash funguje, na ukázkovém domě.';
+
+  @override
+  String get noHubRemind => 'Připomenout za týden';
+
+  @override
+  String get noHubRemindSet =>
+      'Připomeneme vám to za týden, na tomto telefonu.';
+
+  @override
+  String get noHubHaveOne => 'Už ho mám';
+
+  @override
+  String get reminderHubTitle => 'Hub už dorazil?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash ho nastaví asi za minutu. Otevřete aplikaci doma, na své Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'Jak váš Home Assistant provozuje Zigbee?';
@@ -1743,6 +1803,28 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haFindNone =>
       'Tento telefon v této Wi-Fi Home Assistant nevidí. Použijte adresu, kterou otevírá vaše aplikace Home Assistant: často vzdálenou, například https://abcd1234.ui.nabu.casa nebo https://mujdum.duckdns.org.';
+
+  @override
+  String get haPaste => 'Vložit';
+
+  @override
+  String get haPasteNothing => 'V tom, co jste zkopírovali, není adresa.';
+
+  @override
+  String get haSharedNote =>
+      'Toto je adresa, kterou jste sdíleli. Přihlaste se a připojte se.';
+
+  @override
+  String get haShareNothing =>
+      'V tom nebyla adresa. V aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server a pak nahoře na ikonu sdílení.';
+
+  @override
+  String get haHandoverShare =>
+      'Nejrychleji: v aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server, pak nahoře na ikonu sdílení a vyberte ZigDash. Z prohlížeče sdílejte stránku do ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Nejrychleji: v aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server, pak nahoře na ikonu sdílení a na Kopírovat odkaz. Vraťte se a klepněte na Vložit.';
 
   @override
   String haConnectOtherNetwork(String network) {
@@ -3254,25 +3336,34 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Vyber tu věc, kterou bys používal nejvíc. Tvoje odpověď se odešle s anonymními daty o používání.';
-
-  @override
-  String get pollNotifications => 'Oznámení';
-
-  @override
-  String get pollHistory => 'Grafy historie';
-
-  @override
-  String get pollKiosk => 'Kiosk režim pro tablet na zdi';
-
-  @override
-  String get pollGroups => 'Skupiny Zigbee';
+      'Vyberte vše, co byste používali. Odpovědi se odešlou s vašimi anonymními údaji o používání.';
 
   @override
   String get pollNotNow => 'Teď ne';
 
   @override
   String get pollThanks => 'Díky! Pomůže to rozhodnout, co přijde dál.';
+
+  @override
+  String get pollPair => 'Párování nových zařízení ze ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'Nastavení zařízení a aktualizace firmwaru';
+
+  @override
+  String get pollZha => 'Fungovat se ZHA, bez Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Ovládat domácnost z mého AI asistenta';
+
+  @override
+  String get pollOther => 'Něco jiného';
+
+  @override
+  String get pollSend => 'Odeslat';
+
+  @override
+  String get settingsPollSubtitle => 'Hlasujte, co přijde dál';
 
   @override
   String get whyTitle => 'Proč jsi vyzkoušel ZigDash?';
@@ -5186,4 +5277,35 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Plocha';
+
+  @override
+  String get haWhereAsk => 'Kde otevíráte Home Assistant?';
+
+  @override
+  String get haWhereHome => 'Doma';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Vlastní doména / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'Doma vypadá adresa jako 192.168.1.20:8123. Najdete ji v Home Assistantu v Nastavení › Systém › Síť nebo v aplikaci Home Assistant v Nastavení › Doprovodná aplikace › váš server. Tento telefon musí být na stejné Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'V Home Assistantu otevřete Nastavení › Home Assistant Cloud a zkopírujte adresu v části Vzdálený přístup: https://….ui.nabu.casa. Funguje odkudkoli.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Jméno, které jste zvolili na duckdns.org, s portem Home Assistantu: myhome.duckdns.org:8123. Funguje odkudkoli.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'Adresa, kterou Home Assistant otevíráte mimo domov, např. ha.example.com. S tunelem Cloudflare je to název hostitele nastavený pro Home Assistant v Cloudflare. Funguje odkudkoli.';
 }

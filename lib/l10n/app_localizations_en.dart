@@ -1550,7 +1550,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupRunningWhatToGet => 'What you need';
 
   @override
-  String get setupAskNothing => 'Nothing yet?';
+  String get setupAskNothing => 'Nothing yet';
+
+  @override
+  String get setupAskNothingSub =>
+      'No hub or Zigbee2MQTT yet, or still choosing';
+
+  @override
+  String get noHubTitle => 'Nothing yet';
+
+  @override
+  String get noHubHeadline => 'Get a hub that runs Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash needs one small box at home running Zigbee2MQTT, the free software that talks to Zigbee devices. Pick one of the three ways below, pair your devices on its page, and ZigDash builds the dashboard. No cloud, no account.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: the easy start';
+
+  @override
+  String get noHubSmhubBody =>
+      'A small box with Zigbee2MQTT and the broker built in. Plug it into your router and pair on its web page. Nothing to install.';
+
+  @override
+  String get noHubPi => 'A Raspberry Pi or any Linux box';
+
+  @override
+  String get noHubPiBody =>
+      'Install Zigbee2MQTT and the Mosquitto broker yourself. About an hour, with Zigbee2MQTT\'s own guide.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.';
+
+  @override
+  String get noHubRadio =>
+      'A Pi or Home Assistant also needs a Zigbee adapter, such as an SLZB-06 or a Sonoff dongle. The SMHUB has one built in.';
+
+  @override
+  String get noHubDemoNote =>
+      'See how ZigDash works meanwhile, with a pretend home.';
+
+  @override
+  String get noHubRemind => 'Remind me in a week';
+
+  @override
+  String get noHubRemindSet => 'We\'ll remind you in a week, on this phone.';
+
+  @override
+  String get noHubHaveOne => 'I have one now';
+
+  @override
+  String get reminderHubTitle => 'Got your hub?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash sets it up in about a minute. Open it at home, on your Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'How does your Home Assistant run Zigbee?';
@@ -1739,6 +1798,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get haFindNone =>
       'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.';
+
+  @override
+  String get haPaste => 'Paste';
+
+  @override
+  String get haPasteNothing => 'No address in what you copied.';
+
+  @override
+  String get haSharedNote =>
+      'This is the address you shared. Sign in to connect.';
+
+  @override
+  String get haShareNothing =>
+      'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.';
+
+  @override
+  String get haHandoverShare =>
+      'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. From a browser, share the page to ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.';
 
   @override
   String haConnectOtherNetwork(String network) {
@@ -3251,25 +3332,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.';
-
-  @override
-  String get pollNotifications => 'Notifications';
-
-  @override
-  String get pollHistory => 'History graphs';
-
-  @override
-  String get pollKiosk => 'Kiosk mode for a wall tablet';
-
-  @override
-  String get pollGroups => 'Zigbee groups';
+      'Pick any you\'d use. Your answers are sent with your anonymous usage data.';
 
   @override
   String get pollNotNow => 'Not now';
 
   @override
   String get pollThanks => 'Thanks! That helps decide what comes next.';
+
+  @override
+  String get pollPair => 'Pair new devices from ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'Device settings and firmware updates';
+
+  @override
+  String get pollZha => 'Work with ZHA, without Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Control my home from my AI assistant';
+
+  @override
+  String get pollOther => 'Something else';
+
+  @override
+  String get pollSend => 'Send';
+
+  @override
+  String get settingsPollSubtitle => 'Vote for what comes next';
 
   @override
   String get whyTitle => 'What made you try ZigDash?';
@@ -5187,4 +5277,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Home screen';
+
+  @override
+  String get haWhereAsk => 'Where do you open Home Assistant?';
+
+  @override
+  String get haWhereHome => 'At home';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Own domain / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'At home its address looks like 192.168.1.20:8123. Find it in Home Assistant under Settings › System › Network, or in the Home Assistant app under Settings › Companion app › your server. This phone must be on the same Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'In Home Assistant, open Settings › Home Assistant Cloud and copy the address under Remote access: https://….ui.nabu.casa. It works from anywhere.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'The name you chose on duckdns.org, with Home Assistant\'s port: myhome.duckdns.org:8123. It works from anywhere.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it\'s the hostname you set for Home Assistant in Cloudflare. It works from anywhere.';
 }

@@ -36,8 +36,8 @@ part 'setup_login_guide.dart';
 /// empty result's "I don't have a hub yet" (2.9.6).
 final hubsPageUrl = Uri.parse('https://zigdash.app/hubs/');
 
-/// Opens a link outside the app; replaced in tests.
-@visibleForTesting
+/// Opens a link outside the app; replaced in tests. Shared with the
+/// "Nothing yet" screen (3.4), so not marked for tests only.
 Future<bool> Function(Uri url) openSetupLink = (url) =>
     launchUrl(url, mode: LaunchMode.externalApplication);
 
@@ -150,14 +150,10 @@ class SetupScreen extends ConsumerWidget {
       context.push(Routes.haConnectAt(host));
     }
 
-    Future<void> welcomeHubs() async {
-      ref
-          .read(analyticsProvider)
-          .track(const SetupStep(SetupStepKind.welcomeHubs));
-      try {
-        await openSetupLink(hubsPageUrl);
-      } catch (_) {}
-    }
+    // 3.4: "Nothing yet" stays in the app: what to get, the demo, a
+    // reminder for when the hub arrives.
+    void nothingYet() =>
+        context.push(Routes.setupNoHubFrom(NoHubFrom.welcome.name));
 
     // 3.1.4: on first run setup is the only page, so back closed the app
     // from the middle of setup. It now starts setup over instead.
@@ -190,8 +186,10 @@ class SetupScreen extends ConsumerWidget {
               onHa: () => viaHa(null, HaSignInFrom.welcome),
               onZ2mPage: () => _askZ2mPage(context, coordinator),
               onManual: manual,
-              onDemo: () => tryDemo(kind: SetupStepKind.welcomeDemo),
-              onHubs: welcomeHubs,
+              // 3.4: the ZHA note's demo counts as any demo; welcome_demo
+              // is retired with the first screen's demo link.
+              onDemo: tryDemo,
+              onNothing: nothingYet,
             ),
             SetupScanning() => _Scanning(
               state: state,
@@ -328,7 +326,7 @@ class _Welcome extends ConsumerStatefulWidget {
     this.onZ2mPage,
     required this.onManual,
     required this.onDemo,
-    required this.onHubs,
+    required this.onNothing,
   });
   final VoidCallback onFind;
   final VoidCallback onManual;
@@ -342,10 +340,11 @@ class _Welcome extends ConsumerStatefulWidget {
   /// 3.2: Home Assistant with the Zigbee2MQTT add-on: its sign-in.
   final VoidCallback onHa;
 
-  /// "No Zigbee2MQTT yet?": nothing to scan for, so the demo home or which
-  /// hub to get (2.9.7).
+  /// The demo home, from the ZHA note (nothing to scan for there).
   final VoidCallback onDemo;
-  final VoidCallback onHubs;
+
+  /// 3.4: "Nothing yet", the fourth answer: what to get, in the app.
+  final VoidCallback onNothing;
 
   @override
   ConsumerState<_Welcome> createState() => _WelcomeState();
@@ -524,8 +523,7 @@ class _WelcomeState extends ConsumerState<_Welcome> {
       widget.onFind();
     });
     void onManual() => _then(widget.onManual);
-    void onDemo() => _then(widget.onDemo);
-    void onHubs() => _then(widget.onHubs);
+    void onNothing() => _then(widget.onNothing);
     Widget answer(IconData icon, String title, String subtitle, VoidCallback onTap, {Key? key}) => Card.outlined(
       key: key,
       margin: const EdgeInsets.only(bottom: 10),
@@ -565,23 +563,10 @@ class _WelcomeState extends ConsumerState<_Welcome> {
           label: Text(l10n.setupFindMySetup),
         ),
         const SizedBox(height: 8),
-        Text(l10n.setupAskNothing, textAlign: TextAlign.center, style: theme.textTheme.titleSmall),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 8,
-          children: [
-            TextButton.icon(
-              onPressed: onDemo,
-              icon: const Icon(Icons.play_circle_outline),
-              label: Text(l10n.setupWelcomeDemo),
-            ),
-            TextButton.icon(
-              onPressed: onHubs,
-              icon: const Icon(Icons.shopping_bag_outlined),
-              label: Text(l10n.setupWelcomeHubs),
-            ),
-          ],
-        ),
+        // 3.4: the fourth answer. Most empty scans in October came from
+        // phones with no hub to find; a link to a web page lost them.
+        answer(Icons.add_circle_outline, l10n.setupAskNothing, l10n.setupAskNothingSub, onNothing,
+            key: const Key('ask-nothing')),
         const Divider(height: 32),
         if (widget.onZ2mPage != null)
           TextButton.icon(
@@ -1275,6 +1260,7 @@ class _AuthPromptState extends State<_AuthPrompt> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final platform = loginPlatform(widget.state);
     final body = widget.state.rejected
         ? l10n.setupAuthRejectedBody
         : l10n.setupAuthBody(widget.state.candidate.host);
@@ -1303,7 +1289,7 @@ class _AuthPromptState extends State<_AuthPrompt> {
         ],
         // 3.1.2: no MQTT user at hand? Home Assistant's own sign-in needs
         // none (48 asked for a login and 20 were refused in 30 days).
-        if (widget.state.platform == SetupPlatform.homeAssistant) ...[
+        if (platform == SetupPlatform.homeAssistant) ...[
           const SizedBox(height: 12),
           _HaShortcut(
             onPressed: () => widget.onConnectViaHa(
@@ -1313,10 +1299,10 @@ class _AuthPromptState extends State<_AuthPrompt> {
           ),
         ],
         const SizedBox(height: 12),
-        _LoginHint(platform: widget.state.platform),
+        _LoginHint(platform: platform),
         const SizedBox(height: 12),
         _LoginGuide(
-          platform: widget.state.platform,
+          platform: platform,
           rejected: widget.state.rejected,
           onTryAnonymous: widget.onRetry,
         ),
@@ -1352,7 +1338,7 @@ class _AuthPromptState extends State<_AuthPrompt> {
         AiHelpCard(
           facts: AiHelpFacts(
             from: AiHelpFrom.login,
-            platform: widget.state.platform,
+            platform: platform,
             loginRejected: widget.state.rejected,
           ),
         ),
@@ -1373,6 +1359,22 @@ class _AuthPromptState extends State<_AuthPrompt> {
     );
   }
 }
+
+/// The platform the login help speaks to: the user's answer, or, without
+/// one, what answers on the broker's machine (3.4.1). Home Assistant's
+/// Mosquitto takes the Home Assistant sign-in instead; an SMHUB keeps the
+/// login on its own page. Two of the four lost at the login on 5 Nov 2026
+/// had tried Home Assistant first, with no answer given.
+SetupPlatform? loginPlatform(SetupNeedsAuth state) => switch (state.platform) {
+  SetupPlatform.homeAssistant ||
+  SetupPlatform.piOrDocker ||
+  SetupPlatform.smlight => state.platform,
+  _ => switch (state.brokerHost) {
+    HubKind.homeAssistant => SetupPlatform.homeAssistant,
+    HubKind.smlight => SetupPlatform.smlight,
+    _ => state.platform,
+  },
+};
 
 /// Why typing the MQTT login here is safe, with the policy and the demo
 /// for anyone who wants to look first (2.8.1).

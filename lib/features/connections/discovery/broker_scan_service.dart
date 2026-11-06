@@ -185,6 +185,17 @@ class _Engine {
       for (final p in service.ports) _BrokerTask(h, p),
   ];
 
+  /// The ports to try for [kind] on one host: its own, less any that is
+  /// another looked-for kind's usual port. Home Assistant is also looked
+  /// for on port 80, which the SMLIGHT pass already asks when it runs; a
+  /// page is told by what it says, whichever pass fetched it.
+  List<int> _portsFor(HubKind kind) => [
+    for (final port in hubPortsOf(kind))
+      if (port == hubPorts[kind] ||
+          !hubs.any((other) => other != kind && hubPorts[other] == port))
+        port,
+  ];
+
   List<_HubTask> _hubTasks(HubKind kind) => [
     for (final h in _localHosts) _HubTask(h, hubPorts[kind]!, kind),
   ];
@@ -297,7 +308,7 @@ class _Engine {
         final page = await probeHubPorts(
           service.hubProber,
           task.host,
-          hubPortsOf(task.kind),
+          _portsFor(task.kind),
         );
         _hubSeen(page?.kind, task.host, page?.port ?? task.port);
       case _LateTask():
@@ -318,7 +329,7 @@ class _Engine {
           final page = await probeHubPorts(
             hubProber,
             task.host,
-            hubPortsOf(kind),
+            _portsFor(kind),
           );
           if (page != null) _hubSeen(page.kind, task.host, page.port);
         }
@@ -327,6 +338,10 @@ class _Engine {
 
   void _hubSeen(HubKind? kind, String host, int port) {
     if (kind == null || _cancelled || _closed) return;
+    // Home Assistant is also looked for on port 80, where an SMLIGHT hub's
+    // page answers too: a kind nobody asked for is not reported, as before
+    // port 80 was tried.
+    if (!hubs.contains(kind)) return;
     final hub = HubFound(kind: kind, host: host, port: port);
     if (_hubsSeen.add(hub.key)) _controller.add(HubSeen(hub));
   }

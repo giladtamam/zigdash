@@ -1538,7 +1538,66 @@ class AppLocalizationsHe extends AppLocalizations {
   String get setupRunningWhatToGet => 'מה צריך';
 
   @override
-  String get setupAskNothing => 'עוד אין כלום?';
+  String get setupAskNothing => 'עוד אין כלום';
+
+  @override
+  String get setupAskNothingSub =>
+      'עדיין אין רכזת או Zigbee2MQTT, או שעוד בוחרים';
+
+  @override
+  String get noHubTitle => 'עוד אין כלום';
+
+  @override
+  String get noHubHeadline => 'השיגו רכזת שמריצה Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash צריך קופסה קטנה אחת בבית שמריצה Zigbee2MQTT, התוכנה החופשית שמדברת עם מכשירי Zigbee. בחרו אחת משלוש הדרכים למטה, צמדו את המכשירים בדף שלה, ו-ZigDash יבנה את לוח הבקרה. בלי ענן, בלי חשבון.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: ההתחלה הקלה';
+
+  @override
+  String get noHubSmhubBody =>
+      'קופסה קטנה עם Zigbee2MQTT והברוקר מובנים. מחברים לראוטר ומצמידים בדף האינטרנט שלה. אין מה להתקין.';
+
+  @override
+  String get noHubPi => 'Raspberry Pi או כל מחשב לינוקס';
+
+  @override
+  String get noHubPiBody =>
+      'מתקינים לבד Zigbee2MQTT ואת ברוקר Mosquitto. בערך שעה, עם המדריך של Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'מוסיפים את התוספים Mosquitto broker ו-Zigbee2MQTT, ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'ל-Pi או ל-Home Assistant צריך גם מתאם Zigbee, כמו SLZB-06 או דונגל של Sonoff. ב-SMHUB הוא מובנה.';
+
+  @override
+  String get noHubDemoNote =>
+      'בינתיים אפשר לראות איך ZigDash עובד, עם בית לדוגמה.';
+
+  @override
+  String get noHubRemind => 'תזכירו לי בעוד שבוע';
+
+  @override
+  String get noHubRemindSet => 'נזכיר לכם בעוד שבוע, בטלפון הזה.';
+
+  @override
+  String get noHubHaveOne => 'עכשיו יש לי';
+
+  @override
+  String get reminderHubTitle => 'הרכזת הגיעה?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash מגדיר אותה בערך בדקה. פתחו את האפליקציה בבית, ברשת ה-Wi-Fi שלכם.';
 
   @override
   String get setupAskHaWhich => 'איך ה-Home Assistant שלכם מריץ Zigbee?';
@@ -1726,6 +1785,27 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get haFindNone =>
       'הטלפון הזה לא רואה את Home Assistant ברשת ה-Wi-Fi הזו. השתמשו בכתובת שאפליקציית Home Assistant שלכם פותחת: לרוב כתובת מרוחקת, כמו https://abcd1234.ui.nabu.casa או https://myhome.duckdns.org.';
+
+  @override
+  String get haPaste => 'הדבקה';
+
+  @override
+  String get haPasteNothing => 'אין כתובת במה שהעתקתם.';
+
+  @override
+  String get haSharedNote => 'זו הכתובת ששיתפתם. התחברו כדי להשלים את החיבור.';
+
+  @override
+  String get haShareNothing =>
+      'לא הייתה שם כתובת. באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם ואז על אייקון השיתוף למעלה.';
+
+  @override
+  String get haHandoverShare =>
+      'הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה, ובחרו ב-ZigDash. מדפדפן, שתפו את הדף עם ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה ועל העתקת קישור. חזרו לכאן והקישו על הדבקה.';
 
   @override
   String haConnectOtherNetwork(String network) {
@@ -3225,25 +3305,34 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'בחרו את מה שהייתם משתמשים בו הכי הרבה. התשובה נשלחת עם נתוני השימוש האנונימיים שלכם.';
-
-  @override
-  String get pollNotifications => 'התראות';
-
-  @override
-  String get pollHistory => 'גרפים של היסטוריה';
-
-  @override
-  String get pollKiosk => 'מצב קיוסק לטאבלט על הקיר';
-
-  @override
-  String get pollGroups => 'קבוצות Zigbee';
+      'בחרו כל מה שהייתם משתמשים בו. התשובות נשלחות עם נתוני השימוש האנונימיים שלכם.';
 
   @override
   String get pollNotNow => 'לא עכשיו';
 
   @override
   String get pollThanks => 'תודה! זה עוזר להחליט מה יגיע בהמשך.';
+
+  @override
+  String get pollPair => 'צימוד מכשירים חדשים מ-ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'הגדרות מכשירים ועדכוני קושחה';
+
+  @override
+  String get pollZha => 'עבודה עם ZHA, בלי Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'שליטה בבית מעוזר ה-AI שלי';
+
+  @override
+  String get pollOther => 'משהו אחר';
+
+  @override
+  String get pollSend => 'שליחה';
+
+  @override
+  String get settingsPollSubtitle => 'הצביעו מה יגיע בהמשך';
 
   @override
   String get whyTitle => 'למה ניסיתם את ZigDash?';
@@ -5131,4 +5220,35 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'מסך הבית';
+
+  @override
+  String get haWhereAsk => 'איפה פותחים אצלך את Home Assistant?';
+
+  @override
+  String get haWhereHome => 'בבית';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'דומיין משלך / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'בבית הכתובת נראית כמו 192.168.1.20:8123. אפשר למצוא אותה ב-Home Assistant תחת הגדרות › מערכת › רשת, או באפליקציית Home Assistant תחת הגדרות › אפליקציה נלווית › השרת שלך. הטלפון צריך להיות באותה רשת Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'ב-Home Assistant, פותחים הגדרות › Home Assistant Cloud ומעתיקים את הכתובת תחת גישה מרחוק: https://….ui.nabu.casa. היא עובדת מכל מקום.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'השם שבחרת ב-duckdns.org, עם הפורט של Home Assistant: myhome.duckdns.org:8123. הוא עובד מכל מקום.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'הכתובת שבה פותחים את Home Assistant מחוץ לבית, כמו ha.example.com. עם מנהרת Cloudflare, זה שם המארח שהגדרת ל-Home Assistant ב-Cloudflare. היא עובדת מכל מקום.';
 }

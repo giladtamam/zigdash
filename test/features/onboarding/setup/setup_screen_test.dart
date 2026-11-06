@@ -20,6 +20,7 @@ import 'package:zigdash/features/connections/discovery/no_network.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/onboarding/setup/recommendation_policy.dart';
 import 'package:zigdash/features/connections/discovery/z2m_frontend.dart';
+import 'package:zigdash/features/onboarding/setup/setup_candidate.dart';
 import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_providers.dart';
@@ -211,6 +212,11 @@ Future<SetupCoordinator> _pump(
                     ? 'home assistant ${state.uri.query}'
                     : 'home assistant',
               ),
+            ),
+            // 3.4: "Nothing yet", what to get.
+            GoRoute(
+              path: '/setup/no-hub',
+              builder: (_, state) => Text('no hub ${state.uri.query}'),
             ),
             GoRoute(
               path: '/connections/:id/dashboards',
@@ -732,6 +738,23 @@ void main() {
     expect(find.byKey(const ValueKey('setup-guide-notYet')), findsOneWidget);
     expect(find.text('What you need'), findsOneWidget);
     expect(find.textContaining('SMLIGHT / SMHUB: open'), findsOneWidget);
+    // 3.4: what to get is a screen in the app, opened from the guide.
+    await tester.tap(find.text('What you need'));
+    await tester.pumpAndSettle();
+    expect(find.text('no hub from=guide'), findsOneWidget);
+  });
+
+  // 3.4: the fourth answer on the first screen keeps people without a hub
+  // in the app.
+  testWidgets('nothing yet on the first screen opens what to get', (
+    tester,
+  ) async {
+    await _pump(tester, scan: (_) => const Stream.empty());
+    expect(find.text('Try the demo home'), findsNothing);
+    expect(find.text('Which hub to get'), findsNothing);
+    await tester.tap(find.byKey(const Key('ask-nothing')));
+    await tester.pumpAndSettle();
+    expect(find.text('no hub from=welcome'), findsOneWidget);
   });
 
   // 2.6.7: a VPN hides the home network from the scan; say so on the
@@ -1151,6 +1174,48 @@ void main() {
     await tester.pump();
     expect(find.byKey(const Key('setup-ha-shortcut')), findsOneWidget);
     expect(find.text('Connect through Home Assistant'), findsOneWidget);
+  });
+
+  // 3.4.1: no answer given, so the help follows what the broker's machine
+  // is; an answer the user gave still wins.
+  test('the login help follows the broker machine when nobody said', () {
+    const hub = SetupCandidate(
+      host: '192.168.1.10',
+      port: 1883,
+      protocol: MqttProtocol.tcp,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(hub, brokerHost: HubKind.homeAssistant),
+      ),
+      SetupPlatform.homeAssistant,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(
+          hub,
+          platform: SetupPlatform.notSure,
+          brokerHost: HubKind.smlight,
+        ),
+      ),
+      SetupPlatform.smlight,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(
+          hub,
+          platform: SetupPlatform.piOrDocker,
+          brokerHost: HubKind.homeAssistant,
+        ),
+      ),
+      SetupPlatform.piOrDocker,
+    );
+    expect(
+      loginPlatform(
+        const SetupNeedsAuth(hub, brokerHost: HubKind.zigbee2mqtt),
+      ),
+      isNull,
+    );
   });
 
   testWidgets(
@@ -1593,8 +1658,10 @@ void main() {
       for (final k in ['ask-z2m', 'ask-ha', 'ask-smlight']) {
         expect(find.byKey(Key(k)), findsOneWidget);
       }
-      expect(find.text('Nothing yet?'), findsOneWidget);
-      expect(find.text('Try the demo home'), findsOneWidget);
+      // 3.4: "Nothing yet" is the fourth answer, a screen in the app.
+      expect(find.byKey(const Key('ask-nothing')), findsOneWidget);
+      expect(find.text('Nothing yet'), findsOneWidget);
+      expect(find.text('Try the demo home'), findsNothing);
       expect(
         find.text('Find my setup'),
         findsOneWidget,
@@ -1602,19 +1669,26 @@ void main() {
       );
     });
 
-    testWidgets('the demo home opens without a scan', (tester) async {
+    // 3.4: the ZHA note still offers the demo, without a scan.
+    testWidgets('the demo home opens from the ZHA note without a scan', (
+      tester,
+    ) async {
       final firstRun = _FakeFirstRun();
       final coordinator = await _pump(
         tester,
         firstRun: firstRun,
         extra: analytics,
       );
+      await tester.tap(find.byKey(const Key('ask-ha')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ZHA, Home Assistant\'s own Zigbee'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Try the demo home'));
       await tester.pumpAndSettle();
       expect(firstRun.demoStarted, 1);
       expect(find.text('dashboards of demo1'), findsOneWidget);
       expect(coordinator.state, isA<SetupIdle>());
-      expect(steps(), ['welcome_demo']);
+      expect(steps(), ['platform_chosen', 'demo']);
     });
 
     // 3.2.7: SMLIGHT was 0 of 20; most were SLZB adapters, which don't
@@ -1689,7 +1763,11 @@ void main() {
       expect(coordinator.platform, isNot(SetupPlatform.smlight));
     });
 
-    testWidgets('which hub to get opens the Hubs page', (tester) async {
+    // 3.4: the hubs page moved onto the "Nothing yet" screen; the first
+    // screen sends nothing to the browser any more.
+    testWidgets('nothing yet opens the screen, not the Hubs page', (
+      tester,
+    ) async {
       Uri? opened;
       final original = openSetupLink;
       addTearDown(() => openSetupLink = original);
@@ -1698,10 +1776,11 @@ void main() {
         return true;
       };
       await _pump(tester, extra: analytics);
-      await tester.tap(find.text('Which hub to get'));
-      await tester.pump();
-      expect(opened, hubsPageUrl);
-      expect(steps(), ['welcome_hubs']);
+      await tester.tap(find.byKey(const Key('ask-nothing')));
+      await tester.pumpAndSettle();
+      expect(opened, isNull);
+      expect(find.text('no hub from=welcome'), findsOneWidget);
+      expect(steps(), isEmpty);
     });
   });
 
@@ -1833,7 +1912,7 @@ class _FakeReminder implements SetupReminder {
   int cancelled = 0;
 
   @override
-  Future<bool> schedule(Locale locale) async {
+  Future<bool> schedule(Locale locale, {ReminderKind kind = ReminderKind.setup}) async {
     scheduled++;
     return allowed;
   }

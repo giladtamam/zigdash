@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,7 @@ import 'ai_help.dart';
 import 'ha_address_shape.dart';
 import 'ha_connect.dart';
 import 'ha_discovery.dart';
+import 'ha_handover.dart';
 import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
 import 'setup_waiting.dart';
@@ -29,10 +31,16 @@ class HaConnectScreen extends ConsumerStatefulWidget {
   const HaConnectScreen({
     super.key,
     this.initialHost,
+    this.shared = false,
     this.controller,
     this.again,
     this.offWifi = false,
   });
+
+  /// Opened by text shared to ZigDash from another app
+  /// (ha-share-paste.md): [initialHost] is the address it held, or null
+  /// when it held none.
+  final bool shared;
 
   /// The Home Assistant the scan saw, if any.
   final String? initialHost;
@@ -57,13 +65,63 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
   final _address = TextEditingController();
   final _token = TextEditingController();
 
+  /// The address as it was last put into the field for the user (found,
+  /// pasted or shared); once the field says anything else, it was typed.
+  var _filled = '';
+
+  /// The Paste button found no address in what was copied.
+  var _pasteNothing = false;
+
+  /// Puts [address] in the field and remembers how it got there.
+  void _fill(String address, HaAddressFrom from) {
+    _filled = address;
+    _controller.addressFrom = from;
+    _address.text = address;
+  }
+
+  void _edited() {
+    if (_address.text == _filled) return;
+    _filled = '';
+    _controller.addressFrom = HaAddressFrom.typed;
+    if (_pasteNothing) setState(() => _pasteNothing = false);
+  }
+
+  /// The Paste button (ha-share-paste.md): the clipboard is read here, on
+  /// the tap, and nowhere else. Only the address in it is kept.
+  Future<void> _paste() async {
+    String? text;
+    try {
+      text = (await Clipboard.getData(Clipboard.kTextPlain))?.text;
+    } catch (_) {}
+    if (!mounted) return;
+    final address = haAddressIn(text ?? '');
+    ref.read(analyticsProvider).track(
+      SetupStep(
+        SetupStepKind.haPaste,
+        result: address == null ? HaHandover.noAddress : HaHandover.address,
+      ),
+    );
+    setState(() {
+      if (address != null) _fill(address, HaAddressFrom.pasted);
+      _pasteNothing = address == null;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _address.text = switch (_controller.value) {
+    final initial = switch (_controller.value) {
       HaConnectAsk(:final address) when address.isNotEmpty => address,
       _ => widget.initialHost ?? '',
     };
+    if (initial.isNotEmpty) {
+      // Shared from another app, or seen by the scan.
+      _fill(
+        initial,
+        widget.shared ? HaAddressFrom.shared : HaAddressFrom.found,
+      );
+    }
+    _address.addListener(_edited);
     _controller.addListener(_onState);
     // 3.1.8: nothing to go on, so look for Home Assistant on the network.
     if (_address.text.trim().isEmpty &&
@@ -82,6 +140,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
               .adoptHomeAssistant(address: address, signIn: signIn)
         : _replaceSignIn(widget.again!, address, signIn),
     reach: reachHomeAssistant,
+    confirm: confirmHomeAssistant,
     find: findHomeAssistant,
     phoneIp: () async => (await homeIpv4())?.ip,
     signIn: (base) => signInToHa(
@@ -132,9 +191,9 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
       final state = _controller.value;
       final found = _controller.found;
       if (state is HaConnectAsk && state.address.isNotEmpty) {
-        _address.text = state.address;
+        _fill(state.address, HaAddressFrom.found);
       } else if (found.length == 1) {
-        _address.text = found.single.address;
+        _fill(found.single.address, HaAddressFrom.found);
       }
     }
     setState(() {});
@@ -144,6 +203,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
   void dispose() {
     _controller.removeListener(_onState);
     if (widget.controller == null) _controller.dispose();
+    _address.removeListener(_edited);
     _address.dispose();
     _token.dispose();
     super.dispose();
@@ -166,7 +226,25 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
             looked: _controller.looked,
             found: _controller.found,
             phoneIp: _controller.phoneIp,
-            onPick: (address) => setState(() => _address.text = address),
+            onPick: (address) =>
+                setState(() => _fill(address, HaAddressFrom.found)),
+            onPaste: _paste,
+            pasteNothing: _pasteNothing,
+            // What a share brought: its address, still in the field, or
+            // nothing usable.
+            shared: !widget.shared
+                ? null
+                : widget.initialHost == null
+                // Said only while the field is still empty: the look may
+                // find Home Assistant by itself.
+                ? (_address.text.trim().isEmpty ? HaHandover.noAddress : null)
+                : _address.text == _filled && _filled.isNotEmpty
+                ? HaHandover.address
+                : null,
+            shareTarget: ref.watch(haShareTargetProvider).value ?? false,
+            onWhere: (where) => ref
+                .read(analyticsProvider)
+                .track(SetupStep(SetupStepKind.haWhere, choice: where)),
             onSignIn: () => _controller.signInAndConnect(_address.text),
             onToken: () =>
                 _controller.connectWithToken(_address.text, _token.text),
@@ -204,8 +282,26 @@ class _Ask extends StatefulWidget {
     this.found = const [],
     this.phoneIp,
     this.onPick,
+    this.onWhere,
+    this.onPaste,
+    this.pasteNothing = false,
+    this.shared,
+    this.shareTarget = false,
   });
   final HaConnectAsk state;
+
+  /// The Paste button (ha-share-paste.md), and whether its last tap found
+  /// no address in what was copied.
+  final VoidCallback? onPaste;
+  final bool pasteNothing;
+
+  /// What a share from another app brought, while it is still what the
+  /// field says; null when the screen was opened another way.
+  final HaHandover? shared;
+
+  /// Whether ZigDash is in other apps' share sheets now: the help then
+  /// says to share, otherwise to copy and paste.
+  final bool shareTarget;
 
   /// The phone's own address, for "that address is on another network".
   final String? phoneIp;
@@ -215,6 +311,9 @@ class _Ask extends StatefulWidget {
   final bool looked;
   final List<HaFound> found;
   final ValueChanged<String>? onPick;
+
+  /// A chip under "where do you open Home Assistant?" was tapped (3.3.4).
+  final ValueChanged<HaWhere>? onWhere;
   final TextEditingController address;
   final TextEditingController token;
   final bool canSignIn;
@@ -227,6 +326,7 @@ class _Ask extends StatefulWidget {
 
 class _AskState extends State<_Ask> {
   var _tokenOpen = false;
+  HaWhere? _where;
 
   @override
   void initState() {
@@ -272,6 +372,7 @@ class _AskState extends State<_Ask> {
           autocorrect: false,
           decoration: InputDecoration(
             labelText: l10n.haImportAddress,
+            hintText: _where == null ? null : _whereExample[_where],
             helperText: l10n.haConnectAddressHelp,
             helperMaxLines: 5,
             errorText: problem == HaConnectProblem.noAddress
@@ -279,6 +380,38 @@ class _AskState extends State<_Ask> {
                 : null,
           ),
         ),
+        if (widget.onPaste != null)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              key: const Key('ha-paste'),
+              onPressed: widget.onPaste,
+              icon: const Icon(Icons.content_paste, size: 18),
+              label: Text(l10n.haPaste),
+            ),
+          ),
+        if (widget.pasteNothing)
+          Semantics(
+            liveRegion: true,
+            child: Text(
+              l10n.haPasteNothing,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
+          ),
+        if (widget.shared == HaHandover.address) ...[
+          const SizedBox(height: 4),
+          Text(l10n.haSharedNote, style: theme.textTheme.bodyMedium),
+        ] else if (widget.shared == HaHandover.noAddress) ...[
+          const SizedBox(height: 4),
+          Text(
+            l10n.haShareNothing,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.error,
+            ),
+          ),
+        ],
         if (widget.looking) ...[
           const SizedBox(height: 12),
           Row(
@@ -332,8 +465,49 @@ class _AskState extends State<_Ask> {
         if (problem == HaConnectProblem.noAddress ||
             noAddress ||
             (widget.looked && widget.found.isEmpty)) ...[
-          const SizedBox(height: 12),
-          Text(l10n.haConnectWhereAddress, style: theme.textTheme.bodyMedium),
+          // The address can be handed over instead of typed
+          // (ha-share-paste.md): the Home Assistant app shares or copies
+          // its server's link, and a browser shares its page.
+          if (widget.onPaste != null) ...[
+            const SizedBox(height: 16),
+            Text(
+              widget.shareTarget ? l10n.haHandoverShare : l10n.haHandoverCopy,
+              key: const Key('ha-handover-help'),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+          // 3.3.4: where they open Home Assistant decides what its
+          // address looks like and where to find it.
+          const SizedBox(height: 16),
+          Text(l10n.haWhereAsk, style: theme.textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final where in HaWhere.values)
+                ChoiceChip(
+                  key: Key('ha-where-${where.name}'),
+                  label: Text(_whereLabel(l10n, where)),
+                  selected: _where == where,
+                  onSelected: (_) {
+                    setState(() => _where = where);
+                    widget.onWhere?.call(where);
+                  },
+                ),
+            ],
+          ),
+          // Until a chip is picked, the hand-over help above says where
+          // the address is; the older line said the same at more length.
+          if (_where != null || widget.onPaste == null) ...[
+            const SizedBox(height: 12),
+            Text(
+              _where == null
+                  ? l10n.haConnectWhereAddress
+                  : _whereHelp(l10n, _where!),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
         ],
         if (problem != null &&
             problem != HaConnectProblem.noAddress &&
@@ -417,6 +591,28 @@ class _AskState extends State<_Ask> {
     );
   }
 }
+
+/// What each [HaWhere]'s address looks like, as the field's hint.
+const _whereExample = {
+  HaWhere.home: '192.168.1.20:8123',
+  HaWhere.nabuCasa: 'https://abcd1234.ui.nabu.casa',
+  HaWhere.duckDns: 'myhome.duckdns.org:8123',
+  HaWhere.ownDomain: 'ha.example.com',
+};
+
+String _whereLabel(AppLocalizations l10n, HaWhere where) => switch (where) {
+  HaWhere.home => l10n.haWhereHome,
+  HaWhere.nabuCasa => l10n.haWhereNabuCasa,
+  HaWhere.duckDns => l10n.haWhereDuckDns,
+  HaWhere.ownDomain => l10n.haWhereOwnDomain,
+};
+
+String _whereHelp(AppLocalizations l10n, HaWhere where) => switch (where) {
+  HaWhere.home => l10n.haWhereHomeHelp,
+  HaWhere.nabuCasa => l10n.haWhereNabuCasaHelp,
+  HaWhere.duckDns => l10n.haWhereDuckDnsHelp,
+  HaWhere.ownDomain => l10n.haWhereOwnDomainHelp,
+};
 
 /// Where a found Home Assistant is, as people read it: host and port.
 String _hostOf(HaFound found) {

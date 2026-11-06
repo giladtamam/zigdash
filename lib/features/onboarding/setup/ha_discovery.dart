@@ -9,6 +9,10 @@
 // the usual names are tried, and the phone's own `/24` on port 8123
 // (3.3.1): 136 of 151 looks found nothing in the last week of October,
 // and an empty address then was nearly every sign-in tap.
+//
+// Home Assistant OS installed since 2026.8 serves on port 80, not 8123
+// (Container and older installs keep 8123), so the names and the `/24`
+// are tried on both ([haWebPorts]). DNS-SD carries the port itself.
 
 import 'package:flutter/services.dart';
 
@@ -41,7 +45,7 @@ class HaFound {
   /// Found at one of [haUsualNames], not by DNS-SD.
   final bool byName;
 
-  /// Found by trying port 8123 on every address of the phone's `/24`.
+  /// Found by trying [haWebPorts] on every address of the phone's `/24`.
   final bool bySweep;
 
   @override
@@ -105,35 +109,55 @@ List<HaFound> haFoundIn(List<Object?> services) {
 /// nothing (a phone without it, or multicast blocked).
 const haUsualNames = ['homeassistant.local', 'homeassistant'];
 
-/// Every Home Assistant on [phoneIp]'s `/24`, by its web page on 8123,
-/// [concurrency] hosts at a time. Never throws; empty when none answered.
+/// The ports Home Assistant's page answers on at home, the likelier first:
+/// 8123, and 80 on Home Assistant OS installed since 2026.8.
+const haWebPorts = [8123, 80];
+
+/// The port of [haWebPorts] Home Assistant's page answers on at [host],
+/// both tried at once; null when neither is Home Assistant.
+Future<int?> haPortAt(HubProber prober, String host) async {
+  final kinds = await Future.wait([
+    for (final port in haWebPorts)
+      prober.probe(host, port).catchError((_) => null),
+  ]);
+  for (var i = 0; i < haWebPorts.length; i++) {
+    if (kinds[i] == HubKind.homeAssistant) return haWebPorts[i];
+  }
+  return null;
+}
+
+/// Home Assistant's address at [host] on [port], as the address field
+/// takes it: port 80 is left unsaid.
+String _haAddressAt(String host, int port) =>
+    haAddressText(Uri(scheme: 'http', host: host, port: port));
+
+/// Every Home Assistant on [phoneIp]'s `/24`, by its web page on
+/// [haWebPorts], [concurrency] hosts at a time. Never throws; empty when
+/// none answered.
 Future<List<HaFound>> sweepForHomeAssistant(
   String phoneIp,
   HubProber prober, {
   int concurrency = 48,
 }) async {
   final hosts = candidateHosts(phoneIp);
-  final hits = <String>[];
+  final hits = <String, int>{};
   var next = 0;
   Future<void> worker() async {
     while (next < hosts.length) {
       final host = hosts[next++];
       try {
-        if (await prober.probe(host, 8123) == HubKind.homeAssistant) {
-          hits.add(host);
-        }
+        final port = await haPortAt(prober, host);
+        if (port != null) hits[host] = port;
       } catch (_) {}
     }
   }
 
   await Future.wait([for (var i = 0; i < concurrency; i++) worker()]);
-  hits.sort((a, b) => hosts.indexOf(a).compareTo(hosts.indexOf(b)));
+  final found = hits.keys.toList()
+    ..sort((a, b) => hosts.indexOf(a).compareTo(hosts.indexOf(b)));
   return [
-    for (final h in hits)
-      HaFound(
-        address: haAddressText(Uri.parse('http://$h:8123')),
-        bySweep: true,
-      ),
+    for (final h in found)
+      HaFound(address: _haAddressAt(h, hits[h]!), bySweep: true),
   ];
 }
 
@@ -156,19 +180,14 @@ Future<List<HaFound>> findHomeAssistant({
   } catch (_) {}
   final prober = createPatientHubProber();
   final ip = phoneIp().catchError((_) => null);
-  final named = await Future.wait(
-    haUsualNames.map((name) async {
-      final kind = await prober.probe(name, 8123);
-      return kind == HubKind.homeAssistant ? name : null;
-    }),
+  final ports = await Future.wait(
+    haUsualNames.map((name) => haPortAt(prober, name)),
   );
-  final name = named.whereType<String>().firstOrNull;
-  if (name != null) {
+  for (var i = 0; i < haUsualNames.length; i++) {
+    final port = ports[i];
+    if (port == null) continue;
     return [
-      HaFound(
-        address: haAddressText(Uri.parse('http://$name:8123')),
-        byName: true,
-      ),
+      HaFound(address: _haAddressAt(haUsualNames[i], port), byName: true),
     ];
   }
   final own = await ip;

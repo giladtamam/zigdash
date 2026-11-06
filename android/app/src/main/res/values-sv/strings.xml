@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">Av</string>
     <string name="widget_group_sample_3">Rullgardiner</string>
     <string name="widget_group_sample_scene">Natt</string>
+    <string name="share_ha_label">Anslut Home Assistant</string>
 </resources>

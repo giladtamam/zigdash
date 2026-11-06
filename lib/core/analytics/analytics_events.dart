@@ -22,6 +22,9 @@ class AppStarted extends AnalyticsEvent {
     required this.tiles,
     required this.demo,
     this.daysInstalled,
+    this.automations = 0,
+    this.scenes = 0,
+    this.shortcuts = 0,
   });
 
   final FormFactor form;
@@ -36,6 +39,17 @@ class AppStarted extends AnalyticsEvent {
   /// is sent: it shows whether people come back, which a daily-changing
   /// anonymous id can't.
   final int? daysInstalled;
+
+  /// What the real homes on this phone have set up (3.4.1), as ranges: the
+  /// only way to read "share of homes with an automation", since every other
+  /// event counts taps, not homes. [automations] is the rule count the
+  /// Home's Engine last reported to this phone (0 where this phone never
+  /// saw an Engine); [scenes] the saved scenes, without the built-in
+  /// shutter ones; [shortcuts] the widgets and Quick Settings tiles
+  /// (Device Controls keep no record). The demo home is left out.
+  final int automations;
+  final int scenes;
+  final int shortcuts;
 
   @override
   String get name => 'app_started';
@@ -62,6 +76,9 @@ class AppStarted extends AnalyticsEvent {
         top: '31+',
       ),
     },
+    'automations': bucket(automations, const [0], ranges: const [(1, 3)], top: '4+'),
+    'scenes': bucket(scenes, const [0], top: '1+'),
+    'shortcuts': bucket(shortcuts, const [0], top: '1+'),
   };
 }
 
@@ -114,6 +131,20 @@ enum SetupStepKind {
   /// [SetupStep.choice] saying from where (a [HaSignInFrom]).
   haOpened,
 
+  /// On the Home Assistant sign-in, where the user said they open Home
+  /// Assistant (3.3.4), with [SetupStep.choice] (a [HaWhere]).
+  haWhere,
+
+  /// The Paste button on the Home Assistant sign-in (ha-share-paste.md),
+  /// with [SetupStep.result] (a [HaHandover]): whether what was copied
+  /// held an address. Never what was copied.
+  haPaste,
+
+  /// Text shared to ZigDash from another app (ha-share-paste.md), with
+  /// [SetupStep.result] (a [HaHandover]): whether it held an address.
+  /// Never the text.
+  haShare,
+
   /// An answer to "where does Zigbee2MQTT run?" was picked (3.1.3), with
   /// [SetupStep.platform]; counted when given, not only with later steps.
   platformChosen,
@@ -130,7 +161,7 @@ enum SetupStepKind {
 
   /// Looking for Home Assistant on the network (3.1.8), with its
   /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name,
-  /// by_sweep (3.3.1, found on port 8123 of the phone's `/24`) or none when
+  /// by_sweep (3.3.1, found on port 8123 or 80 of the phone's `/24`) or none when
   /// the look ends; used when a sign-in goes to a found address.
   haDiscovery,
 
@@ -152,7 +183,25 @@ enum SetupStepKind {
   /// [GuideAction]): its action was taken, it didn't help, or (for the
   /// last step, help) it was reached.
   guide,
+
+  /// The "Nothing yet" screen (3.4): what to get when no hub runs
+  /// Zigbee2MQTT yet. [SetupStep.choice] says where it was opened from (a
+  /// [NoHubFrom]) and [SetupStep.result] what was done there (a
+  /// [NoHubAction]). The first screen's hubs link ([welcomeHubs]) and demo
+  /// link ([welcomeDemo]) are gone with it; the ZHA note's demo counts as
+  /// [demo].
+  noHub,
 }
+
+/// Where the "Nothing yet" screen was opened from (3.4): the first
+/// question's fourth answer, or the guide's "Zigbee2MQTT not set up yet".
+enum NoHubFrom { welcome, guide }
+
+/// What was done on the "Nothing yet" screen (3.4): it opened, one of the
+/// three ways to a hub was read (an SMHUB, a Raspberry Pi, Home Assistant),
+/// the hubs page was opened, the demo was started, a reminder for a week
+/// later was set, or "I have one now" went back.
+enum NoHubAction { opened, smhub, pi, homeAssistant, hubsPage, demo, remind, haveOne }
 
 /// The steps of the guide on an empty result (3.3.2), in the order they
 /// can appear; `setup_guide.dart` picks the ones that apply.
@@ -206,6 +255,19 @@ enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 /// the first button when Home Assistant was found without a broker, the
 /// broker's login prompt, or the link on the broker form; from 3.1.9 also
 /// the no-Wi-Fi screen ([noWifi]), where a remote address is the way in.
+/// Where the user opens Home Assistant (3.3.4): the chips under the
+/// sign-in's address when Home Assistant wasn't found. Never the address.
+enum HaWhere { home, nabuCasa, duckDns, ownDomain }
+
+/// How the address on the Home Assistant sign-in got into its field
+/// (ha-share-paste.md): typed by hand, filled in by the look or the scan,
+/// pasted with the Paste button, or shared from another app. Never the
+/// address.
+enum HaAddressFrom { typed, found, pasted, shared }
+
+/// Whether pasted or shared text held a Home Assistant address.
+enum HaHandover { address, noAddress }
+
 enum HaSignInFrom {
   scanning,
   emptyCard,
@@ -283,6 +345,7 @@ class SetupStep extends AnalyticsEvent {
     this.via,
     this.aiHelped,
     this.shape,
+    this.addressFrom,
   });
 
   final SetupStepKind step;
@@ -291,6 +354,12 @@ class SetupStep extends AnalyticsEvent {
   /// [HaAddressShape]), on [SetupStepKind.haConnect] (3.1.12). Never the
   /// address.
   final Enum? shape;
+
+  /// How the address of a Home Assistant try got into the field (an
+  /// [HaAddressFrom]), on [SetupStepKind.haConnect] (ha-share-paste.md).
+  /// Sent as `from`, and with the result as `path` (`pasted/ok`), since
+  /// the analytics service cannot cross two properties.
+  final Enum? addressFrom;
 
   /// Whether "Ask your AI" was shared or copied earlier in this setup, on
   /// [SetupStepKind.complete] (3.1.5).
@@ -301,7 +370,8 @@ class SetupStep extends AnalyticsEvent {
 
   /// The choice tapped on the empty result (a [ScanEmptyChoice]), when
   /// [step] is emptyChoice; where the sign-in was opened from (a
-  /// [HaSignInFrom]), when [step] is haOpened.
+  /// [HaSignInFrom]), when [step] is haOpened; a [HaWhere] when [step] is
+  /// haWhere.
   final Enum? choice;
 
   /// The setup error kind's name, when [step] is failed.
@@ -340,6 +410,7 @@ class SetupStep extends AnalyticsEvent {
   final Enum? platform;
 
   /// The hub kind an empty scan found; null on an empty scan means none.
+  /// At the login (3.4.1), what answers on the broker's machine.
   final Enum? hub;
 
   /// Whether the broker form cleaned up what was typed (a pasted browser
@@ -379,7 +450,9 @@ class SetupStep extends AnalyticsEvent {
     if (platform != null) 'platform': _snake(platform!.name),
     if (via != null) 'via': _snake(via!.name),
     if (aiHelped != null) 'ai': aiHelped! ? 'yes' : 'no',
-    if (step == SetupStepKind.scanEmpty)
+    if (step == SetupStepKind.scanEmpty ||
+        step == SetupStepKind.needsLogin ||
+        step == SetupStepKind.loginRejected)
       'hub': hub == null ? 'none' : _snake(hub!.name),
     if (hostsTried != null)
       'hosts': bucket(
@@ -412,6 +485,9 @@ class SetupStep extends AnalyticsEvent {
     if (noNetwork != null) 'why': _snake(noNetwork!.name),
     if (choice != null) 'choice': _snake(choice!.name),
     if (shape != null) 'shape': _snake(shape!.name),
+    if (addressFrom != null) 'from': _snake(addressFrom!.name),
+    if (addressFrom != null && result != null)
+      'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
   };
 
   /// The interface kind as a fixed label: wifi, ethernet or other.
@@ -710,29 +786,36 @@ class AlertAdded extends AnalyticsEvent {
   Map<String, String> get props => {'kind': kind};
 }
 
-/// The "What should ZigDash do next?" poll's choices
-/// (docs/design/roadmap-post-2.0.md, 2.2 §6).
+/// The "What should ZigDash do next?" poll's choices (3.3.5; until 3.1.13
+/// notifications, history graphs, kiosk mode and Zigbee groups, all built
+/// since). [other] also opens Request a feature for the words.
 enum PollChoice {
-  notifications('notifications'),
-  history('history'),
-  kiosk('kiosk'),
-  groups('zigbee_groups');
+  pair('pair'),
+  deviceSettings('device_settings'),
+  zha('zha'),
+  aiAssistant('ai_assistant'),
+  other('other');
 
   const PollChoice(this.wire);
   final String wire;
 }
 
-/// The one-time poll was answered.
+/// Where the poll was answered: the one-time dashboard card, or its row in
+/// Settings.
+enum PollFrom { card, settings }
+
+/// The poll was answered: one event for each choice picked.
 class PollAnswer extends AnalyticsEvent {
-  const PollAnswer(this.choice);
+  const PollAnswer(this.choice, this.from);
 
   final PollChoice choice;
+  final PollFrom from;
 
   @override
   String get name => 'poll_answer';
 
   @override
-  Map<String, String> get props => {'choice': choice.wire};
+  Map<String, String> get props => {'choice': choice.wire, 'from': from.name};
 }
 
 /// What made someone try ZigDash (3.1.10), from the one-time card after

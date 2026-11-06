@@ -2874,11 +2874,113 @@ abstract class AppLocalizations {
   /// **'What you need'**
   String get setupRunningWhatToGet;
 
-  /// No description provided for @setupAskNothing.
+  /// The fourth answer on the first screen (3.4): no hub, no Zigbee2MQTT yet.
   ///
   /// In en, this message translates to:
-  /// **'Nothing yet?'**
+  /// **'Nothing yet'**
   String get setupAskNothing;
+
+  /// No description provided for @setupAskNothingSub.
+  ///
+  /// In en, this message translates to:
+  /// **'No hub or Zigbee2MQTT yet, or still choosing'**
+  String get setupAskNothingSub;
+
+  /// App bar of the screen for people without a hub (3.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get noHubTitle;
+
+  /// No description provided for @noHubHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a hub that runs Zigbee2MQTT'**
+  String get noHubHeadline;
+
+  /// No description provided for @noHubIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash needs one small box at home running Zigbee2MQTT, the free software that talks to Zigbee devices. Pick one of the three ways below, pair your devices on its page, and ZigDash builds the dashboard. No cloud, no account.'**
+  String get noHubIntro;
+
+  /// First way to a hub: SMLIGHT's SMHUB, ready-made. Keep the product names.
+  ///
+  /// In en, this message translates to:
+  /// **'SMLIGHT SMHUB: the easy start'**
+  String get noHubSmhub;
+
+  /// No description provided for @noHubSmhubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A small box with Zigbee2MQTT and the broker built in. Plug it into your router and pair on its web page. Nothing to install.'**
+  String get noHubSmhubBody;
+
+  /// No description provided for @noHubPi.
+  ///
+  /// In en, this message translates to:
+  /// **'A Raspberry Pi or any Linux box'**
+  String get noHubPi;
+
+  /// No description provided for @noHubPiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Zigbee2MQTT and the Mosquitto broker yourself. About an hour, with Zigbee2MQTT\'s own guide.'**
+  String get noHubPiBody;
+
+  /// No description provided for @noHubHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get noHubHa;
+
+  /// No description provided for @noHubHaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.'**
+  String get noHubHaBody;
+
+  /// Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names.
+  ///
+  /// In en, this message translates to:
+  /// **'A Pi or Home Assistant also needs a Zigbee adapter, such as an SLZB-06 or a Sonoff dongle. The SMHUB has one built in.'**
+  String get noHubRadio;
+
+  /// No description provided for @noHubDemoNote.
+  ///
+  /// In en, this message translates to:
+  /// **'See how ZigDash works meanwhile, with a pretend home.'**
+  String get noHubDemoNote;
+
+  /// Button on the no-hub screen: one notification a week later.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me in a week'**
+  String get noHubRemind;
+
+  /// No description provided for @noHubRemindSet.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll remind you in a week, on this phone.'**
+  String get noHubRemindSet;
+
+  /// Back to the first screen to set the hub up.
+  ///
+  /// In en, this message translates to:
+  /// **'I have one now'**
+  String get noHubHaveOne;
+
+  /// Notification title a week after Remind me in a week (3.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Got your hub?'**
+  String get reminderHubTitle;
+
+  /// No description provided for @reminderHubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash sets it up in about a minute. Open it at home, on your Wi-Fi.'**
+  String get reminderHubBody;
 
   /// No description provided for @setupAskHaWhich.
   ///
@@ -3209,6 +3311,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.'**
   String get haFindNone;
+
+  /// Button beside the Home Assistant address field: pastes the address that was copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get haPaste;
+
+  /// No description provided for @haPasteNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No address in what you copied.'**
+  String get haPasteNothing;
+
+  /// No description provided for @haSharedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address you shared. Sign in to connect.'**
+  String get haSharedNote;
+
+  /// No description provided for @haShareNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.'**
+  String get haShareNothing;
+
+  /// The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. From a browser, share the page to ZigDash.'**
+  String get haHandoverShare;
+
+  /// As haHandoverShare; 'Copy link' is Android's own button on the share sheet, in the phone's language.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.'**
+  String get haHandoverCopy;
 
   /// No description provided for @haConnectOtherNetwork.
   ///
@@ -5814,35 +5952,11 @@ abstract class AppLocalizations {
   /// **'What should ZigDash do next?'**
   String get pollTitle;
 
-  /// Under the poll title, for people who share usage data.
+  /// Under the poll title, for people who share usage data. Several choices can be picked.
   ///
   /// In en, this message translates to:
-  /// **'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.'**
+  /// **'Pick any you\'d use. Your answers are sent with your anonymous usage data.'**
   String get pollBody;
-
-  /// Poll choice: alerts on the phone (door opened, leak…).
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications'**
-  String get pollNotifications;
-
-  /// Poll choice: graphs of past readings.
-  ///
-  /// In en, this message translates to:
-  /// **'History graphs'**
-  String get pollHistory;
-
-  /// Poll choice: a full-screen mode for a wall tablet.
-  ///
-  /// In en, this message translates to:
-  /// **'Kiosk mode for a wall tablet'**
-  String get pollKiosk;
-
-  /// Poll choice: control Zigbee2MQTT groups.
-  ///
-  /// In en, this message translates to:
-  /// **'Zigbee groups'**
-  String get pollGroups;
 
   /// Hides the poll for good.
   ///
@@ -5855,6 +5969,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thanks! That helps decide what comes next.'**
   String get pollThanks;
+
+  /// Poll choice: put new Zigbee devices in pairing mode and add them from the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair new devices from ZigDash'**
+  String get pollPair;
+
+  /// Poll choice: change a device's settings (calibration, reporting) and update its firmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Device settings and firmware updates'**
+  String get pollDeviceSettings;
+
+  /// Poll choice: work with Home Assistant's own Zigbee (ZHA) instead of Zigbee2MQTT.
+  ///
+  /// In en, this message translates to:
+  /// **'Work with ZHA, without Zigbee2MQTT'**
+  String get pollZha;
+
+  /// Poll choice: control the home by asking an AI assistant such as Claude or ChatGPT.
+  ///
+  /// In en, this message translates to:
+  /// **'Control my home from my AI assistant'**
+  String get pollAiAssistant;
+
+  /// Poll choice; also opens Request a feature to say what.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get pollOther;
+
+  /// Button that sends the picked poll choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get pollSend;
+
+  /// Settings row under 'What should ZigDash do next?', which opens the poll.
+  ///
+  /// In en, this message translates to:
+  /// **'Vote for what comes next'**
+  String get settingsPollSubtitle;
 
   /// One-time dashboard card after the first setup, asking why the user tried the app.
   ///
@@ -9119,6 +9275,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home screen'**
   String get shortcutNudgeWidget;
+
+  /// No description provided for @haWhereAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you open Home Assistant?'**
+  String get haWhereAsk;
+
+  /// No description provided for @haWhereHome.
+  ///
+  /// In en, this message translates to:
+  /// **'At home'**
+  String get haWhereHome;
+
+  /// No description provided for @haWhereNabuCasa.
+  ///
+  /// In en, this message translates to:
+  /// **'Nabu Casa'**
+  String get haWhereNabuCasa;
+
+  /// No description provided for @haWhereDuckDns.
+  ///
+  /// In en, this message translates to:
+  /// **'DuckDNS'**
+  String get haWhereDuckDns;
+
+  /// No description provided for @haWhereOwnDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Own domain / Cloudflare'**
+  String get haWhereOwnDomain;
+
+  /// No description provided for @haWhereHomeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At home its address looks like 192.168.1.20:8123. Find it in Home Assistant under Settings › System › Network, or in the Home Assistant app under Settings › Companion app › your server. This phone must be on the same Wi-Fi.'**
+  String get haWhereHomeHelp;
+
+  /// No description provided for @haWhereNabuCasaHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'In Home Assistant, open Settings › Home Assistant Cloud and copy the address under Remote access: https://….ui.nabu.casa. It works from anywhere.'**
+  String get haWhereNabuCasaHelp;
+
+  /// No description provided for @haWhereDuckDnsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The name you chose on duckdns.org, with Home Assistant\'s port: myhome.duckdns.org:8123. It works from anywhere.'**
+  String get haWhereDuckDnsHelp;
+
+  /// No description provided for @haWhereOwnDomainHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it\'s the hostname you set for Home Assistant in Cloudflare. It works from anywhere.'**
+  String get haWhereOwnDomainHelp;
 }
 
 class _AppLocalizationsDelegate

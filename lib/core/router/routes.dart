@@ -16,10 +16,24 @@ class Routes {
 
   /// Connecting through Home Assistant (docs/design/ha-route.md), with
   /// the address filled in when the scan saw Home Assistant.
+  /// "Nothing yet": what to get when no hub runs Zigbee2MQTT (3.4), with
+  /// where it was opened from (a `NoHubFrom` name).
+  static const setupNoHub = '/setup/no-hub';
+  static String setupNoHubFrom(String from) =>
+      Uri(path: setupNoHub, queryParameters: {'from': from}).toString();
+
   static const haConnect = '/setup/home-assistant';
   static String haConnectAt(String? host) => host == null
       ? haConnect
       : Uri(path: haConnect, queryParameters: {'host': host}).toString();
+
+  /// The Home Assistant sign-in opened by text shared to ZigDash from
+  /// another app (ha-share-paste.md), with the address it held, or with
+  /// none when it held no address.
+  static String haConnectShared(String? host) => Uri(
+    path: haConnect,
+    queryParameters: {'host': ?host, 'from': 'shared'},
+  ).toString();
 
   /// Connecting through Home Assistant from the no-Wi-Fi screen (3.1.9):
   /// no network to look on, so the address (a remote one) is typed.

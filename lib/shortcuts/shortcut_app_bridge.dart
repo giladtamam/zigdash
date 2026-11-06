@@ -15,6 +15,7 @@ import '../core/router/app_router.dart';
 import '../core/router/routes.dart';
 import '../data/database/daos/shortcut_dao.dart';
 import '../data/database/database.dart';
+import '../features/onboarding/setup/ha_handover.dart';
 import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
@@ -66,6 +67,12 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       if (call.method == 'action') _handle(call.arguments);
       return null;
     });
+    // ZigDash is in other apps' share sheets only until a home exists
+    // (ha-share-paste.md); Android's list of share targets follows.
+    ref.listenManual(haShareTargetProvider, (_, next) {
+      final on = next.value;
+      if (on != null) syncShareTarget(on);
+    }, fireImmediately: true);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final service = ref.read(shortcutServiceProvider);
       unawaited(service
@@ -142,6 +149,14 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
     if (args['action'] == 'assignTile') {
       final slot = args['slot'] as int? ?? 1;
       ref.read(routerProvider).push(Routes.shortcutTile(slot));
+    } else if (args['action'] == 'shareText') {
+      // Another app shared text to ZigDash (ha-share-paste.md): a Home
+      // Assistant address, handed over instead of typed.
+      openSharedHaText(
+        ref.read(routerProvider),
+        ref.read(analyticsProvider),
+        args['text'] as String? ?? '',
+      );
     } else if (args['action'] == 'openDevice') {
       // A long-press on a Device Controls card.
       final home = args['connectionId'] as String?;

@@ -1561,7 +1561,66 @@ class AppLocalizationsRu extends AppLocalizations {
   String get setupRunningWhatToGet => 'Что нужно';
 
   @override
-  String get setupAskNothing => 'Пока ничего?';
+  String get setupAskNothing => 'Пока ничего';
+
+  @override
+  String get setupAskNothingSub =>
+      'Нет хаба или Zigbee2MQTT, или ещё выбираете';
+
+  @override
+  String get noHubTitle => 'Пока ничего';
+
+  @override
+  String get noHubHeadline => 'Заведите хаб, на котором работает Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash нужна дома одна небольшая коробочка с Zigbee2MQTT, свободной программой, которая общается с устройствами Zigbee. Выберите один из трёх путей ниже, подключите устройства на его странице, и ZigDash соберёт панель. Без облака, без аккаунта.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: простой старт';
+
+  @override
+  String get noHubSmhubBody =>
+      'Маленькая коробочка со встроенными Zigbee2MQTT и брокером. Подключите к роутеру и добавляйте устройства на её веб-странице. Ничего устанавливать не нужно.';
+
+  @override
+  String get noHubPi => 'Raspberry Pi или любой компьютер с Linux';
+
+  @override
+  String get noHubPiBody =>
+      'Установите Zigbee2MQTT и брокер Mosquitto сами. Около часа, по руководству Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Добавьте дополнения Mosquitto broker и Zigbee2MQTT, затем войдите из ZigDash со своим логином Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'Pi или Home Assistant также нужен Zigbee-адаптер, например SLZB-06 или донгл Sonoff. В SMHUB он встроен.';
+
+  @override
+  String get noHubDemoNote =>
+      'А пока посмотрите, как работает ZigDash, на примере дома.';
+
+  @override
+  String get noHubRemind => 'Напомнить через неделю';
+
+  @override
+  String get noHubRemindSet => 'Напомним через неделю, на этом телефоне.';
+
+  @override
+  String get noHubHaveOne => 'Теперь у меня есть';
+
+  @override
+  String get reminderHubTitle => 'Хаб приехал?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash настроит его примерно за минуту. Откройте приложение дома, в своей сети Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'Как ваш Home Assistant работает с Zigbee?';
@@ -1750,6 +1809,28 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get haFindNone =>
       'Этот телефон не видит Home Assistant в этой сети Wi-Fi. Используйте адрес, который открывает ваше приложение Home Assistant: часто удалённый, например https://abcd1234.ui.nabu.casa или https://myhome.duckdns.org.';
+
+  @override
+  String get haPaste => 'Вставить';
+
+  @override
+  String get haPasteNothing => 'В скопированном нет адреса.';
+
+  @override
+  String get haSharedNote =>
+      'Это адрес, которым вы поделились. Войдите, чтобы подключиться.';
+
+  @override
+  String get haShareNothing =>
+      'Там не было адреса. В приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху.';
+
+  @override
+  String get haHandoverShare =>
+      'Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и выберите ZigDash. Из браузера поделитесь страницей с ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и «Копировать ссылку». Вернитесь и нажмите «Вставить».';
 
   @override
   String haConnectOtherNetwork(String network) {
@@ -3256,25 +3337,34 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Выберите то, чем пользовались бы чаще всего. Ответ отправится вместе с анонимными данными об использовании.';
-
-  @override
-  String get pollNotifications => 'Уведомления';
-
-  @override
-  String get pollHistory => 'Графики истории';
-
-  @override
-  String get pollKiosk => 'Режим киоска для настенного планшета';
-
-  @override
-  String get pollGroups => 'Группы Zigbee';
+      'Выберите всё, чем вы бы пользовались. Ответы отправляются вместе с анонимными данными об использовании.';
 
   @override
   String get pollNotNow => 'Не сейчас';
 
   @override
   String get pollThanks => 'Спасибо! Это помогает решить, что делать дальше.';
+
+  @override
+  String get pollPair => 'Подключение новых устройств из ZigDash';
+
+  @override
+  String get pollDeviceSettings => 'Настройки устройств и обновления прошивки';
+
+  @override
+  String get pollZha => 'Работа с ZHA, без Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Управление домом из моего ИИ-ассистента';
+
+  @override
+  String get pollOther => 'Что-то другое';
+
+  @override
+  String get pollSend => 'Отправить';
+
+  @override
+  String get settingsPollSubtitle => 'Проголосуйте за то, что будет дальше';
 
   @override
   String get whyTitle => 'Почему вы попробовали ZigDash?';
@@ -5190,4 +5280,35 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shortcutNudgeWidget => 'Главный экран';
+
+  @override
+  String get haWhereAsk => 'Где вы открываете Home Assistant?';
+
+  @override
+  String get haWhereHome => 'Дома';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Свой домен / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'Дома адрес выглядит как 192.168.1.20:8123. Его можно найти в Home Assistant: Настройки › Система › Сеть, или в приложении Home Assistant: Настройки › Приложение-компаньон › ваш сервер. Телефон должен быть в той же Wi-Fi-сети.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'В Home Assistant откройте Настройки › Home Assistant Cloud и скопируйте адрес в разделе «Удалённый доступ»: https://….ui.nabu.casa. Он работает откуда угодно.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Имя, выбранное на duckdns.org, с портом Home Assistant: myhome.duckdns.org:8123. Работает откуда угодно.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'Адрес, по которому вы открываете Home Assistant вне дома, например ha.example.com. С туннелем Cloudflare это имя хоста, заданное для Home Assistant в Cloudflare. Работает откуда угодно.';
 }

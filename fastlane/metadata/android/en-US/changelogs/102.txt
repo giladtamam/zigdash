@@ -1,0 +1,3 @@
+Connecting through Home Assistant? You no longer have to type its address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. Or copy the link there and tap the new Paste button in ZigDash.
+
+Usage data, for those who share it, now says how the address was given (typed, found, pasted or shared), never the address itself. The privacy policy lists it.
