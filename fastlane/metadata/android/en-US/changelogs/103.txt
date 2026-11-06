@@ -1,0 +1,5 @@
+New: a globe button at the top of your dashboard opens Remote control. The page shows how your phone reaches home, the free and the Pro way to reach it from away, and what remote control needs, before any price.
+
+Fixed: homes connected through Home Assistant were offered remote control, which can't work for them.
+
+Usage data, for those who share it, now says how that page was reached and what it showed, never anything about your home. The privacy policy lists it.
