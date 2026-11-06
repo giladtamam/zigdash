@@ -4712,17 +4712,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get remoteIntroTitle => 'Bedien je huis overal';
 
   @override
-  String get remoteOfferBody =>
-      'Bereik je apparaten als je weg bent, via de versleutelde relay van ZigDash. Onderdeel van Pro: één betaling, geen maandelijkse kosten. Stel het in terwijl je thuis bent.';
-
-  @override
-  String get remoteOfferBodyPro =>
-      'Je hebt Pro: zet bediening op afstand aan terwijl je thuis bent, en bereik je apparaten daarna overal.';
-
-  @override
-  String get remoteOfferShow => 'Laat zien';
-
-  @override
   String get remoteIntroBody =>
       'Je hub houdt één verbinding met de relay van ZigDash. Onderweg bereikt deze telefoon je apparaten daarlangs. Alles wordt versleuteld op je hub en je telefoon, dus de relay kan je apparaten en wat ze doen niet lezen.';
 
@@ -5327,4 +5316,99 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get haWhereOwnDomainHelp =>
       'Het adres waarmee je Home Assistant buiten de deur opent, zoals ha.example.com. Met een Cloudflare-tunnel is het de hostnaam die je in Cloudflare voor Home Assistant hebt ingesteld. Het werkt overal.';
+
+  @override
+  String get remoteNowTitle => 'Hoe deze telefoon thuis bereikt';
+
+  @override
+  String remoteNowHome(String address) {
+    return 'Thuis, rechtstreeks met je broker op $address';
+  }
+
+  @override
+  String remoteNowOwn(String address) {
+    return 'Onderweg, via je eigen adres $address';
+  }
+
+  @override
+  String get remoteNowRelay => 'Onderweg, via de relay van ZigDash';
+
+  @override
+  String get remoteNowOffline => 'Nu niet verbonden met je huis';
+
+  @override
+  String get remoteWaysTitle =>
+      'Twee manieren om thuis te bereiken van onderweg';
+
+  @override
+  String get remoteWayOwnTitle => 'Je eigen adres';
+
+  @override
+  String remoteWayOwnSet(String address) {
+    return 'Gratis. Ingesteld op $address.';
+  }
+
+  @override
+  String get remoteWayOwnUnset =>
+      'Gratis. Tailscale, een VPN of een doorgestuurde poort: voeg het adres toe aan de verbinding van dit huis.';
+
+  @override
+  String get remoteWayRelayBody =>
+      'Via de versleutelde relay van ZigDash. Geen VPN, niets openzetten op je router. Onderdeel van Pro.';
+
+  @override
+  String get remoteStepsTitle => 'Wat ervoor nodig is';
+
+  @override
+  String get remoteStepEngine => 'ZigDash Engine op je hub (gratis)';
+
+  @override
+  String get remoteStepEngineInstall =>
+      'Nog niet geïnstalleerd. Installeer het onder Automatiseringen.';
+
+  @override
+  String get remoteStepEngineTooOld =>
+      'De Zigbee2MQTT van deze hub is hiervoor te oud. Werk eerst Zigbee2MQTT bij.';
+
+  @override
+  String get remoteStepEngineLater => 'Wordt gecontroleerd als je thuis bent';
+
+  @override
+  String get remoteStepEngineSeen =>
+      'Geïnstalleerd toen deze telefoon je hub voor het laatst zag';
+
+  @override
+  String get remoteStepDone => 'Klaar';
+
+  @override
+  String get remoteStepProNeeded => 'Eén betaling, geen maandelijkse kosten';
+
+  @override
+  String get remoteStepOnLater => 'Zet het aan als je thuis bent';
+
+  @override
+  String remoteSeePro(String price) {
+    return 'Pro bekijken · $price';
+  }
+
+  @override
+  String get remoteUnfitHa =>
+      'Dit huis wordt bereikt via Home Assistant. Onderweg werkt het wanneer je Home Assistant-adres werkt.';
+
+  @override
+  String get remoteUnfitZ2m =>
+      'Dit huis wordt bereikt via de eigen pagina van Zigbee2MQTT. Bediening op afstand heeft een huis nodig dat met zijn broker is verbonden.';
+
+  @override
+  String proSale(int percent, String date) {
+    return 'Actie: $percent% korting tot en met $date';
+  }
+
+  @override
+  String proSaleNoEnd(int percent) {
+    return 'Actie: $percent% korting';
+  }
+
+  @override
+  String get proSaleEnded => 'De actie is afgelopen. Dit is nu de prijs.';
 }

@@ -239,7 +239,7 @@ class SettingsScreen extends ConsumerWidget {
                       ref.watch(proStatusProvider) == ProStatus.unlocked
                           ? l10n.proUnlocked
                           : l10n.proAbout),
-                  onTap: () => openPro(context),
+                  onTap: () => openPro(context, from: ProFrom.settings),
                 ),
               if (ref.watch(analyticsAvailableProvider))
                 SwitchListTile(

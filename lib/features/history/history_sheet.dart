@@ -512,7 +512,9 @@ class _UnlockButton extends ConsumerWidget {
     if (ref.watch(kioskProvider).on) return const SizedBox.shrink();
     final buy = ref.watch(proPurchaseProvider);
     return FilledButton(
-      onPressed: buy == null ? null : () => openPro(context),
+      onPressed: buy == null
+          ? null
+          : () => openPro(context, from: ProFrom.history),
       child: Text(context.l10n.historyUnlock),
     );
   }

@@ -20,7 +20,13 @@ class PairPhoneScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final login = RemotePairing.fromCode(code);
-    final homes = ref.watch(connectionsStreamProvider).valueOrNull;
+    // Only homes the relay can serve (3.4.4): a remote login given to a
+    // home carried by Home Assistant would never be used.
+    final homes = ref
+        .watch(connectionsStreamProvider)
+        .valueOrNull
+        ?.where(remoteFits)
+        .toList();
     return Scaffold(
       appBar: AppBar(
         // Opened from the camera app, so there may be nothing to go back to.

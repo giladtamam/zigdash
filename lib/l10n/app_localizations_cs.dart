@@ -4700,17 +4700,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get remoteIntroTitle => 'Ovládejte domácnost odkudkoli';
 
   @override
-  String get remoteOfferBody =>
-      'Ovládejte zařízení i mimo domov, přes šifrovaný relay ZigDash. Součást Pro: jedna platba, žádný měsíční poplatek. Nastavte to, když jste doma.';
-
-  @override
-  String get remoteOfferBodyPro =>
-      'Máte Pro: zapněte ovládání na dálku, když jste doma, a pak ovládejte zařízení odkudkoli.';
-
-  @override
-  String get remoteOfferShow => 'Ukázat';
-
-  @override
   String get remoteIntroBody =>
       'Hub drží jedno spojení s relé ZigDash. Mimo domov se tento telefon dostane k zařízením přes něj. Vše se šifruje na hubu a v telefonu, takže relé nemůže číst vaše zařízení ani co dělají.';
 
@@ -5308,4 +5297,98 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haWhereOwnDomainHelp =>
       'Adresa, kterou Home Assistant otevíráte mimo domov, např. ha.example.com. S tunelem Cloudflare je to název hostitele nastavený pro Home Assistant v Cloudflare. Funguje odkudkoli.';
+
+  @override
+  String get remoteNowTitle => 'Jak se tento telefon dostane domů';
+
+  @override
+  String remoteNowHome(String address) {
+    return 'Doma, přímo k brokeru na $address';
+  }
+
+  @override
+  String remoteNowOwn(String address) {
+    return 'Mimo domov, přes vlastní adresu $address';
+  }
+
+  @override
+  String get remoteNowRelay => 'Mimo domov, přes relé ZigDash';
+
+  @override
+  String get remoteNowOffline => 'Právě teď bez připojení k domovu';
+
+  @override
+  String get remoteWaysTitle => 'Dva způsoby, jak se domů dostat zvenku';
+
+  @override
+  String get remoteWayOwnTitle => 'Vlastní adresa';
+
+  @override
+  String remoteWayOwnSet(String address) {
+    return 'Zdarma. Nastaveno: $address.';
+  }
+
+  @override
+  String get remoteWayOwnUnset =>
+      'Zdarma. Tailscale, VPN nebo přesměrovaný port: přidejte adresu do připojení tohoto domova.';
+
+  @override
+  String get remoteWayRelayBody =>
+      'Přes šifrované relé ZigDash. Bez VPN, na routeru není třeba nic otevírat. Součást Pro.';
+
+  @override
+  String get remoteStepsTitle => 'Co je potřeba';
+
+  @override
+  String get remoteStepEngine => 'ZigDash Engine na vašem hubu (zdarma)';
+
+  @override
+  String get remoteStepEngineInstall =>
+      'Zatím není nainstalován. Nainstalujte ho v Automatizacích.';
+
+  @override
+  String get remoteStepEngineTooOld =>
+      'Zigbee2MQTT na tomto hubu je na to příliš starý. Nejdřív aktualizujte Zigbee2MQTT.';
+
+  @override
+  String get remoteStepEngineLater => 'Zkontroluje se, až budete doma';
+
+  @override
+  String get remoteStepEngineSeen =>
+      'Nainstalován, když tento telefon naposledy viděl váš hub';
+
+  @override
+  String get remoteStepDone => 'Hotovo';
+
+  @override
+  String get remoteStepProNeeded => 'Jedna platba, žádný měsíční poplatek';
+
+  @override
+  String get remoteStepOnLater => 'Zapněte, až budete doma';
+
+  @override
+  String remoteSeePro(String price) {
+    return 'Zobrazit Pro · $price';
+  }
+
+  @override
+  String get remoteUnfitHa =>
+      'Tento domov je dostupný přes Home Assistant. Mimo domov funguje, když funguje vaše adresa Home Assistantu.';
+
+  @override
+  String get remoteUnfitZ2m =>
+      'Tento domov je dostupný přes vlastní stránku Zigbee2MQTT. Dálkové ovládání potřebuje domov připojený ke svému brokeru.';
+
+  @override
+  String proSale(int percent, String date) {
+    return 'Akce: sleva $percent % do $date';
+  }
+
+  @override
+  String proSaleNoEnd(int percent) {
+    return 'Akce: sleva $percent %';
+  }
+
+  @override
+  String get proSaleEnded => 'Akce skončila. Tohle je teď cena.';
 }

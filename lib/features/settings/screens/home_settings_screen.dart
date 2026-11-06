@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../remote/remote_setup.dart';
+
 import '../../nfc/nfc_tags.dart' show NfcState, nfcStateProvider;
 import '../../../data/database/tables/connections.dart';
 import '../../ha_import/ha_auth.dart';
@@ -79,13 +81,18 @@ class HomeSettingsScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(Routes.homeShare(home.id)),
               ),
-              ListTile(
-                leading: const Icon(Icons.public),
-                title: Text(l10n.remoteTitle),
-                subtitle: Text(l10n.remoteSettingsSubtitle),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.push(Routes.homeRemote(home.id)),
-              ),
+              // 3.4.4: not for a home the relay can't serve, unless a
+              // remote login is stored here: then it is the way to remove it.
+              if (remoteFits(home) ||
+                  ref.watch(remoteHomeProvider(home.id)).valueOrNull != null)
+                ListTile(
+                  key: const Key('home-remote'),
+                  leading: const Icon(Icons.public),
+                  title: Text(l10n.remoteTitle),
+                  subtitle: Text(l10n.remoteSettingsSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(Routes.homeRemote(home.id)),
+                ),
               ListTile(
                 leading: const Icon(Icons.bolt_outlined),
                 title: Text(l10n.automationsTitle),
