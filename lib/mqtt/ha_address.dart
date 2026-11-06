@@ -1,8 +1,8 @@
 /// Where Home Assistant is, from what the user typed or the scan saw:
 /// `192.168.1.20`, `homeassistant.local:8123`, `http://…/lovelace/0`,
 /// `https://xyz.ui.nabu.casa`. Without a scheme, a home address is http on
-/// 8123 and a remote name https ([haBaseCandidates]). Null when nothing
-/// usable was typed.
+/// 8123 (then on port 80) and a remote name https ([haBaseCandidates]).
+/// Null when nothing usable was typed.
 Uri? haBaseUri(String input) => haBaseCandidates(input).firstOrNull;
 
 /// The addresses [input] may mean, the likeliest first; empty when nothing
@@ -23,10 +23,19 @@ List<Uri> haBaseCandidates(String input) {
   Uri at(String scheme, int? port) =>
       Uri(scheme: scheme, host: uri.host, port: port);
   if (hasScheme) return [at(uri.scheme, uri.hasPort ? uri.port : null)];
+  // The port as typed: `Uri` forgets a typed `:80`, its scheme's default,
+  // and `192.168.1.20:80` then went to 8123.
+  final typedPort = int.tryParse(_typedPort.firstMatch(text)?.group(1) ?? '');
   if (!isRemoteHaName(uri.host)) {
-    return [at('http', uri.hasPort ? uri.port : 8123)];
+    if (typedPort != null) return [at('http', typedPort)];
+    // Home Assistant OS installed since 2026.8 serves on port 80, not
+    // 8123 (Home Assistant's http integration); Container and every older
+    // install keep 8123. A home address typed without a port means either.
+    return [at('http', 8123), at('http', null)];
   }
-  if (uri.hasPort) return [at('https', uri.port), at('http', uri.port)];
+  if (typedPort != null) {
+    return [at('https', typedPort), at('http', typedPort)];
+  }
   final host = uri.host.toLowerCase();
   if (host.endsWith('.ui.nabu.casa')) return [at('https', null)];
   if (host.endsWith('.duckdns.org')) {
@@ -34,6 +43,22 @@ List<Uri> haBaseCandidates(String input) {
   }
   return [at('https', null), at('https', 8123), at('http', 8123)];
 }
+
+/// Whether [candidate] is the port-80 guess for a home address typed
+/// without a port ([haBaseCandidates]). A router, a printer or an SMHUB
+/// answers there too, so it counts only once it is seen to be Home
+/// Assistant.
+bool isImpliedHaPort80(List<Uri> candidates, Uri candidate) =>
+    candidates.length > 1 &&
+    candidates.first != candidate &&
+    candidate.scheme == 'http' &&
+    candidate.port == 80 &&
+    !isRemoteHaName(candidate.host);
+
+/// The `:port` after the host of an address with its scheme in front.
+final _typedPort = RegExp(
+  r'^[a-z]+://(?:\[[^\]]*\]|[^/:?#]*):(\d+)(?:[/?#]|$)',
+);
 
 final _ipv4 = RegExp(r'^\d{1,3}(\.\d{1,3}){3}$');
 

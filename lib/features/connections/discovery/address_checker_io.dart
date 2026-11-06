@@ -50,7 +50,7 @@ AddressChecker createAddressChecker({
     }
     final webPorts = webPort != null && !brokerPorts.contains(webPort)
         ? [webPort]
-        : [for (final kind in HubKind.values) ...hubPortsOf(kind)];
+        : allHubWebPorts;
     final brokerProbes = [for (final p in brokerPorts) broker.probe(ip, p)];
     final hubProbes = [
       for (final p in webPorts)

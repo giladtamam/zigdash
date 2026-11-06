@@ -120,12 +120,35 @@ void main() {
         'https://myhome.duckdns.org:8123',
         'http://myhome.duckdns.org:8123',
       ]);
-      // Home addresses and anything with a scheme: as before.
-      expect(c('homeassistant.local'), ['http://homeassistant.local:8123']);
-      expect(c('ha.lan'), ['http://ha.lan:8123']);
-      expect(c('homeassistant'), ['http://homeassistant:8123']);
-      expect(c('192.168.1.20'), ['http://192.168.1.20:8123']);
-      expect(c('8.8.8.8'), ['http://8.8.8.8:8123']);
+      // Home addresses without a port: 8123, then port 80, where Home
+      // Assistant OS installed since 2026.8 answers.
+      expect(c('homeassistant.local'), [
+        'http://homeassistant.local:8123',
+        'http://homeassistant.local',
+      ]);
+      expect(c('ha.lan'), ['http://ha.lan:8123', 'http://ha.lan']);
+      expect(c('homeassistant'), [
+        'http://homeassistant:8123',
+        'http://homeassistant',
+      ]);
+      expect(c('192.168.1.20'), [
+        'http://192.168.1.20:8123',
+        'http://192.168.1.20',
+      ]);
+      expect(c('8.8.8.8'), ['http://8.8.8.8:8123', 'http://8.8.8.8']);
+      // A port that was typed is the only one tried.
+      expect(c('192.168.1.20:8123'), ['http://192.168.1.20:8123']);
+      expect(c('192.168.1.20:80'), ['http://192.168.1.20']);
+      expect(c('homeassistant.local:8124'), ['http://homeassistant.local:8124']);
+      expect(c('192.168.1.20:80/lovelace/0'), ['http://192.168.1.20']);
+      // The same for a remote name: a typed 443 is https there, not 8123.
+      expect(c('ha.example.com:443'), [
+        'https://ha.example.com',
+        'http://ha.example.com:443',
+      ]);
+      // An IPv6 address is not a host and a port.
+      expect(c('[fe80::1]'), ['http://[fe80::1]:8123', 'http://[fe80::1]']);
+      expect(c('[fe80::1]:8123'), ['http://[fe80::1]:8123']);
       expect(c('http://ha.example.com:8123'), ['http://ha.example.com:8123']);
       expect(haBaseUri('ha.example.com').toString(), 'https://ha.example.com');
     });

@@ -4,7 +4,8 @@ import 'broker_probe.dart';
 /// web page while the broker scan came up empty (2.5): the empty result can
 /// then say what was found and what is missing instead of "nothing".
 enum HubKind {
-  /// Home Assistant's web UI (port 8123).
+  /// Home Assistant's web UI (port 8123, or 80 on Home Assistant OS
+  /// installed since 2026.8).
   homeAssistant,
 
   /// The Zigbee2MQTT frontend (port 8080).
@@ -22,9 +23,11 @@ const hubPorts = {
   HubKind.smlight: 80,
 };
 
-/// Other web ports a hub kind may answer on (3.2.7): early SMHUB firmware
-/// served its web UI on 3000.
+/// Other web ports a hub kind may answer on: early SMHUB firmware served
+/// its web UI on 3000 (3.2.7), and Home Assistant OS installed since
+/// 2026.8 serves on 80 where Container and older installs keep 8123.
 const hubExtraPorts = {
+  HubKind.homeAssistant: [80],
   HubKind.smlight: [3000],
 };
 
@@ -33,6 +36,14 @@ List<int> hubPortsOf(HubKind kind) => [
   hubPorts[kind]!,
   ...?hubExtraPorts[kind],
 ];
+
+/// Every web port any hub kind may answer on, each once: the usual ports
+/// first, then the others. Port 80 is an SMLIGHT hub's and, since
+/// 2026.8, Home Assistant's.
+final List<int> allHubWebPorts = {
+  ...hubPorts.values,
+  for (final extra in hubExtraPorts.values) ...extra,
+}.toList();
 
 /// The hub kind a web page belongs to, from its text, or null when it is
 /// none we know. Case-insensitive; the page can be any size.
@@ -83,8 +94,7 @@ abstract class HubProber {
 /// page is one we know.
 Future<HubKind?> identifyHost(HubProber prober, String host) async {
   final kinds = await Future.wait([
-    for (final kind in HubKind.values)
-      for (final port in hubPortsOf(kind)) prober.probe(host, port),
+    for (final port in allHubWebPorts) prober.probe(host, port),
   ]);
   for (final kind in const [
     HubKind.homeAssistant,

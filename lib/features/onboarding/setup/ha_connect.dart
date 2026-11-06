@@ -17,6 +17,8 @@ import '../../../mqtt/endpoint.dart';
 import '../../../mqtt/ha_address.dart';
 import '../../../mqtt/ha_mqtt_client.dart';
 import '../../../mqtt/ha_token.dart';
+import '../../connections/discovery/hub_probe.dart';
+import '../../connections/discovery/hub_prober.dart';
 import '../../ha_import/ha_auth.dart';
 import '../../ha_import/ha_import_controller.dart' show HaSignIn;
 import 'ha_address_shape.dart';
@@ -92,6 +94,21 @@ typedef HaAdopt = Future<void> Function(Uri address, String signIn);
 /// when it does.
 typedef HaReach = Future<HaConnectProblem?> Function(Uri base);
 
+/// Whether the page at [base] is Home Assistant's, asked only for the
+/// port-80 guess of an address typed without a port ([isImpliedHaPort80]).
+typedef HaConfirm = Future<bool> Function(Uri base);
+
+/// The real confirm: Home Assistant's own page answers at [base], by the
+/// same look the scan gives a hub page.
+Future<bool> confirmHomeAssistant(Uri base) async {
+  try {
+    return await createPatientHubProber().probe(base.host, base.port) ==
+        HubKind.homeAssistant;
+  } catch (_) {
+    return false;
+  }
+}
+
 /// The real reach (3.1.4): one request to Home Assistant's sign-in
 /// providers. Only silence or a bad certificate stops the sign-in: a page
 /// that answers in any way goes on to the browser, which shows it.
@@ -151,10 +168,12 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     HaProbe probe = probeHomeAssistant,
     HaSignIn? signIn,
     HaReach? reach,
+    HaConfirm? confirm,
     HaFind? find,
     HaPhoneIp? phoneIp,
     this.onEvent,
   }) : _adopt = adopt,
+       _confirm = confirm,
        _phoneIpOf = phoneIp,
        _probe = probe,
        _signIn = signIn,
@@ -166,6 +185,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   final HaProbe _probe;
   final HaSignIn? _signIn;
   final HaReach? _reach;
+  final HaConfirm? _confirm;
   final HaFind? _find;
   final HaPhoneIp? _phoneIpOf;
 
@@ -376,8 +396,18 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     if (reach == null) return (candidates.first, null);
     final results = await Future.wait(candidates.map(reach));
     for (final wanted in [null, HaConnectProblem.certificate]) {
-      final i = results.indexOf(wanted);
-      if (i >= 0) return (candidates[i], wanted);
+      for (var i = 0; i < results.length; i++) {
+        if (results[i] != wanted) continue;
+        // Port 80 that nobody typed: a router or an SMHUB answers there
+        // too, and the browser would open on its error page. It counts
+        // only when the page is Home Assistant's.
+        if (wanted == null &&
+            isImpliedHaPort80(candidates, candidates[i]) &&
+            !(await _confirm?.call(candidates[i]) ?? true)) {
+          continue;
+        }
+        return (candidates[i], wanted);
+      }
     }
     return (candidates.first, results.first);
   }

@@ -82,6 +82,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen> {
               .adoptHomeAssistant(address: address, signIn: signIn)
         : _replaceSignIn(widget.again!, address, signIn),
     reach: reachHomeAssistant,
+    confirm: confirmHomeAssistant,
     find: findHomeAssistant,
     phoneIp: () async => (await homeIpv4())?.ip,
     signIn: (base) => signInToHa(

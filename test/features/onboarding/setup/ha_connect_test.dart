@@ -19,6 +19,7 @@ void main() {
     HaConnectProblem? problem,
     String address = '',
     HaReach? reach,
+    HaConfirm? confirm,
     Future<HaConnectProblem?> Function()? slowProbe,
     HaFind? find,
     String? phoneIp,
@@ -41,6 +42,7 @@ void main() {
               return signIn;
             },
       reach: reach,
+      confirm: confirm,
       find: find,
       phoneIp: phoneIp == null ? null : () async => phoneIp,
       onEvent: (e) => events.add(e.props),
@@ -165,7 +167,11 @@ void main() {
         },
       );
       await c.signInAndConnect('homeassistant.local');
-      expect(reached.single, Uri.parse('http://homeassistant.local:8123'));
+      // Both ports a home address may mean, asked at once.
+      expect(reached, [
+        Uri.parse('http://homeassistant.local:8123'),
+        Uri.parse('http://homeassistant.local'),
+      ]);
       expect(browsers, 0);
       expect(c.value, isA<HaConnectAsk>());
       expect((c.value as HaConnectAsk).problem, HaConnectProblem.unreachable);
@@ -188,6 +194,89 @@ void main() {
       await c.signInAndConnect('192.168.1.20');
       expect(browsers, 1);
       expect(c.value, isA<HaConnectDone>());
+    });
+
+    // Home Assistant OS installed since 2026.8 serves on port 80, not
+    // 8123. A home address typed without a port is tried on both; port 80
+    // counts only when the page there is Home Assistant's, since a router
+    // or an SMHUB answers on it too.
+    group('port 80', () {
+      Future<HaConnectProblem?> only80(Uri base) async =>
+          base.port == 80 ? null : HaConnectProblem.unreachable;
+
+      test('8123 is silent, port 80 is Home Assistant: signs in there and '
+          'keeps that address', () async {
+        final asked = <Uri>[];
+        final c = make(
+          signIn: ok,
+          reach: only80,
+          confirm: (base) async {
+            asked.add(base);
+            return true;
+          },
+        );
+        await c.signInAndConnect('192.168.1.20');
+        expect(asked, [Uri.parse('http://192.168.1.20')]);
+        expect(browsers, 1);
+        expect(c.value, isA<HaConnectDone>());
+        expect(adopted.single.$1, Uri.parse('http://192.168.1.20'));
+        expect(outcomes(), ['ok']);
+      });
+
+      test('port 80 answers but is not Home Assistant: nothing answers, '
+          'the browser never opens', () async {
+        final c = make(
+          signIn: ok,
+          reach: only80,
+          confirm: (_) async => false,
+        );
+        await c.signInAndConnect('192.168.1.1');
+        expect(browsers, 0);
+        expect((c.value as HaConnectAsk).problem, HaConnectProblem.unreachable);
+        expect((c.value as HaConnectAsk).address, '192.168.1.1');
+        expect(adopted, isEmpty);
+        expect(outcomes(), ['unreachable']);
+      });
+
+      test('both answer: 8123 is taken and port 80 is not looked at', () async {
+        var confirms = 0;
+        final c = make(
+          signIn: ok,
+          reach: (_) async => null,
+          confirm: (_) async {
+            confirms++;
+            return false;
+          },
+        );
+        await c.signInAndConnect('homeassistant.local');
+        expect(confirms, 0);
+        expect(adopted.single.$1, Uri.parse('http://homeassistant.local:8123'));
+      });
+
+      test('a port 80 that was typed is taken as said', () async {
+        var confirms = 0;
+        for (final typed in ['192.168.1.20:80', 'http://192.168.1.20']) {
+          final c = make(
+            signIn: ok,
+            reach: only80,
+            confirm: (_) async {
+              confirms++;
+              return false;
+            },
+          );
+          await c.signInAndConnect(typed);
+          expect(browsers, 1, reason: typed);
+          expect(adopted.single.$1, Uri.parse('http://192.168.1.20'));
+        }
+        expect(confirms, 0);
+      });
+
+      test('a pasted token goes to port 80 the same way', () async {
+        final c = make(reach: only80, confirm: (_) async => true);
+        await c.connectWithToken('192.168.1.20', 'tok');
+        expect(probed.single.$1, Uri.parse('http://192.168.1.20'));
+        expect(c.value, isA<HaConnectDone>());
+      });
     });
 
     test(

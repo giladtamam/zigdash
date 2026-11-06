@@ -266,7 +266,8 @@ void main() {
       expect(events.whereType<HubSeen>().map((e) => e.hub.key), [
         '192.168.7.30:8123',
       ]);
-      expect(hubs.probed, ['192.168.7.30:8123']);
+      // Both ports Home Assistant may answer on.
+      expect(hubs.probed, ['192.168.7.30:8123', '192.168.7.30:80']);
     });
 
     test('no second look once a broker is found', () async {
@@ -331,6 +332,18 @@ void main() {
       expect(await identifyHost(hubs, '192.168.1.31'), HubKind.smlight);
     });
 
+    // Home Assistant OS installed since 2026.8 serves on port 80.
+    test('Home Assistant on port 80; each port asked once', () async {
+      final hubs = _FakeHubs({'192.168.1.50:80': HubKind.homeAssistant});
+      expect(await identifyHost(hubs, '192.168.1.50'), HubKind.homeAssistant);
+      expect(hubs.probed, [
+        '192.168.1.50:8123',
+        '192.168.1.50:8080',
+        '192.168.1.50:80',
+        '192.168.1.50:3000',
+      ]);
+    });
+
     test('a bare Zigbee2MQTT page, or nothing', () async {
       final hubs = _FakeHubs({'192.168.1.40:8080': HubKind.zigbee2mqtt});
       expect(await identifyHost(hubs, '192.168.1.40'), HubKind.zigbee2mqtt);
@@ -358,11 +371,13 @@ void main() {
           port: 8123,
         ),
       ]);
-      // Home Assistant and the Zigbee2MQTT frontend on every /24 host; no
-      // SMLIGHT pass unless asked; never the /22.
+      // Home Assistant (8123, and 80 since Home Assistant OS 2026.8) and
+      // the Zigbee2MQTT frontend on every /24 host; no SMLIGHT pass unless
+      // asked (its own port, 3000, is never tried); never the /22.
       expect(hubs.probed.where((p) => p.endsWith(':8123')), hasLength(253));
       expect(hubs.probed.where((p) => p.endsWith(':8080')), hasLength(253));
-      expect(hubs.probed.any((p) => p.endsWith(':80')), isFalse);
+      expect(hubs.probed.where((p) => p.endsWith(':80')), hasLength(253));
+      expect(hubs.probed.any((p) => p.endsWith(':3000')), isFalse);
       expect(hubs.probed.every((p) => p.startsWith('192.168.7.')), isTrue);
       expect(
         prober.probed.any((h) => h.startsWith('192.168.4.')),
@@ -407,8 +422,45 @@ void main() {
         hubProber: again,
         ports: const [1883],
       );
-      await noAsk.run('192.168.7.42').events.toList();
-      expect(again.probed.any((p) => p.endsWith(':80')), isFalse);
+      final unasked = await noAsk.run('192.168.7.42').events.toList();
+      // Port 80 is tried for Home Assistant, and the SMHUB's page answers
+      // there: a kind nobody asked for is still not reported.
+      expect(unasked.whereType<HubSeen>(), isEmpty);
+      expect(again.probed.any((p) => p.endsWith(':3000')), isFalse);
+    });
+
+    // Home Assistant OS installed since 2026.8 serves on port 80.
+    test('Home Assistant on port 80 is seen, with its port', () async {
+      final hubs = _FakeHubs({'192.168.7.20:80': HubKind.homeAssistant});
+      final events = await BrokerScanService(
+        prober: _FakeProber({}),
+        hubProber: hubs,
+        ports: const [1883],
+      ).run('192.168.7.42').events.toList();
+      expect(events.whereType<HubSeen>().map((e) => e.hub), [
+        const HubFound(
+          kind: HubKind.homeAssistant,
+          host: '192.168.7.20',
+          port: 80,
+        ),
+      ]);
+    });
+
+    test('with the SMLIGHT pass on, port 80 is asked once a host', () async {
+      final hubs = _FakeHubs({'192.168.7.20:80': HubKind.homeAssistant});
+      final events = await BrokerScanService(
+        prober: _FakeProber({}),
+        hubProber: hubs,
+        ports: const [1883],
+      ).run(
+        '192.168.7.42',
+        hubs: {HubKind.homeAssistant, HubKind.zigbee2mqtt, HubKind.smlight},
+      ).events.toList();
+      expect(hubs.probed.where((p) => p.endsWith(':80')), hasLength(253));
+      // The SMLIGHT pass fetched it; the page says Home Assistant.
+      expect(events.whereType<HubSeen>().map((e) => e.hub.kind), [
+        HubKind.homeAssistant,
+      ]);
     });
 
     test('the SMLIGHT pass also sees a page on 3000', () async {
