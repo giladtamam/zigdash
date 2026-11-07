@@ -33,7 +33,8 @@ import '../../features/help/screens/help_screen.dart';
 import '../../features/onboarding/setup/setup_error_guidance.dart';
 import '../../features/support/get_help_screen.dart';
 import '../../shortcuts/shortcut_tile_picker.dart';
-import '../analytics/analytics_events.dart' show HelpFrom, NoHubFrom;
+import '../analytics/analytics_events.dart'
+    show HelpFrom, NoHubFrom, RemoteFrom;
 import '../../features/settings/screens/home_settings_screen.dart';
 import '../../features/settings/screens/language_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
@@ -360,8 +361,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
               GoRoute(
                 path: 'remote',
-                builder: (_, state) =>
-                    RemoteScreen(connectionId: state.pathParameters['id']!),
+                builder: (_, state) => RemoteScreen(
+                  connectionId: state.pathParameters['id']!,
+                  from: state.uri.queryParameters['from'] == 'door'
+                      ? RemoteFrom.door
+                      : RemoteFrom.settings,
+                ),
               ),
               GoRoute(
                 path: 'share',

@@ -5,9 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 
-import '../features/pro/pro.dart' show proPurchaseToken;
+import '../data/database/database.dart' show Connection;
+import '../data/database/tables/connections.dart';
+import '../data/repositories/connection_repo.dart';
+import '../features/onboarding/demo_service.dart' show isDemoConnection;
+import '../features/pro/pro.dart';
 import '../mqtt/endpoint.dart';
 import '../mqtt/mqtt_manager.dart';
+import '../mqtt/mqtt_status.dart';
 import '../mqtt/providers/mqtt_manager_provider.dart';
 import 'remote_home.dart';
 import 'remote_seal.dart';
@@ -168,3 +173,43 @@ final remoteSetupProvider = Provider<RemoteSetup>((ref) => RemoteSetup(
 /// This phone's relay login for a Home, or null.
 final remoteHomeProvider = FutureProvider.autoDispose.family<RemoteHome?, String>(
     (ref, connectionId) => ref.watch(remoteHomeStoreProvider).read(connectionId));
+
+/// Whether this build sells Pro, and so remote control: the Play build
+/// where Play offers Pro. Before Play answers, its last answer stands, so
+/// the door to remote control doesn't pop in a moment after every start.
+final remoteSoldProvider = Provider.autoDispose<bool>(
+  (ref) =>
+      proFlavor == 'play' &&
+      (ref.watch(proStatusProvider) != ProStatus.unavailable ||
+          ref.watch(proOfferedProvider)),
+);
+
+/// Whether remote control can work for [home] at all (3.4.4): a real home
+/// connected to its own broker. A home carried by Home Assistant or by
+/// Zigbee2MQTT's page never uses the relay (`endpointCandidates`), so
+/// offering it remote control would sell something that can't work.
+bool remoteFits(Connection home) =>
+    !isDemoConnection(home.host) &&
+    transportOf(home.transport) == ConnectionTransport.mqtt;
+
+/// [remoteFits] for a stored home; false while it loads or when it's gone.
+final remoteFitsProvider = Provider.autoDispose.family<bool, String>((
+  ref,
+  connectionId,
+) {
+  final home = ref.watch(connectionByIdProvider(connectionId)).valueOrNull;
+  return home != null && remoteFits(home);
+});
+
+/// Whether this phone is at [connectionId]'s home right now: connected
+/// straight to the broker on the home network, where remote control can be
+/// turned on (not through the relay, nor the home's own remote address).
+final atHomeProvider = Provider.autoDispose.family<bool, String>((
+  ref,
+  connectionId,
+) {
+  final status = ref.watch(connectionStatusProvider(connectionId)).valueOrNull;
+  final mgr = ref.watch(mqttManagerProvider(connectionId)).valueOrNull;
+  return status == MqttStatus.connected &&
+      mgr?.activeEndpoint == MqttEndpoint.local;
+});

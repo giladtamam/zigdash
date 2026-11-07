@@ -7,8 +7,6 @@ import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/dashboards/widgets/poll_card.dart';
-import 'package:zigdash/features/dashboards/widgets/remote_offer_card.dart'
-    show remoteOfferProvider;
 import 'package:zigdash/features/onboarding/demo_service.dart' show demoHost;
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
@@ -43,7 +41,6 @@ Future<(SharedPreferences, _Sink)> _pump(
   Widget home, {
   Map<String, Object> prefs = const {},
   String host = '192.168.1.2',
-  bool remoteOffer = false,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   final p = await SharedPreferences.getInstance();
@@ -55,7 +52,6 @@ Future<(SharedPreferences, _Sink)> _pump(
         analyticsAvailableProvider.overrideWithValue(true),
         analyticsSinkProvider.overrideWithValue(sink),
         connectionByIdProvider.overrideWith((ref, _) async => _home(host)),
-        remoteOfferProvider.overrideWith((ref, _) => remoteOffer),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -72,13 +68,11 @@ Future<(SharedPreferences, _Sink)> _card(
   WidgetTester tester, {
   Map<String, Object> prefs = const {},
   String host = '192.168.1.2',
-  bool remoteOffer = false,
 }) => _pump(
   tester,
   const PollCard(connectionId: 'c1'),
   prefs: prefs,
   host: host,
-  remoteOffer: remoteOffer,
 );
 
 // 3.3.5: "What should ZigDash do next?" asks again, with what isn't built
@@ -167,11 +161,6 @@ void main() {
 
   testWidgets('waits while the usage-data question is open', (tester) async {
     await _card(tester, prefs: {'review_sessions': 5});
-    expect(find.text(_title), findsNothing);
-  });
-
-  testWidgets('waits while the remote control offer shows', (tester) async {
-    await _card(tester, prefs: sharing, remoteOffer: true);
     expect(find.text(_title), findsNothing);
   });
 

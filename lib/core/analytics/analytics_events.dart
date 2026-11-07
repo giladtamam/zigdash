@@ -961,16 +961,32 @@ class HaImportEvent extends AnalyticsEvent {
 /// unlocked afterwards. Nothing about the payment.
 enum ProStep { lockedShown, screenShown, unlockTapped, unlocked }
 
+/// Where the Pro screen was opened from (3.4.4).
+enum ProFrom { remoteDoor, remoteSettings, settings, history, automations, wall }
+
 class ProEvent extends AnalyticsEvent {
-  const ProEvent(this.step);
+  const ProEvent(this.step, {this.from, this.sale});
 
   final ProStep step;
+
+  /// The view that led to the Pro screen; null for a locked view.
+  final ProFrom? from;
+
+  /// Whether a sale price was on the button when it was tapped.
+  final bool? sale;
 
   @override
   String get name => 'pro';
 
+  /// `path` is `from/step`: the service lists one property at a time, so
+  /// "bought after coming from the remote door" has to be one value.
   @override
-  Map<String, String> get props => {'step': _snake(step.name)};
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    if (from != null) 'from': _snake(from!.name),
+    if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
+    if (sale != null) 'sale': sale! ? 'yes' : 'no',
+  };
 }
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or
@@ -1002,24 +1018,61 @@ class HubBackupEvent extends AnalyticsEvent {
   };
 }
 
-/// Remote control (3.1.11): the one-time offer on the dashboard was shown,
-/// opened or put away, and remote control was turned on or off. [pro] is
-/// whether this phone has Pro. Nothing about the home or the relay.
-enum RemoteStep { offerShown, offerOpened, offerNotNow, turnedOn, turnedOff }
+/// Remote control: it was turned on or off (3.1.11), its page was opened
+/// (3.4.4, once per app start and home), or "See Pro" was tapped there
+/// (once per app start). [pro] is whether this phone has Pro. Nothing about
+/// the home or the relay. The offer steps were sent until 3.4.3, by the
+/// one-time card the door replaced.
+enum RemoteStep {
+  offerShown,
+  offerOpened,
+  offerNotNow,
+  turnedOn,
+  turnedOff,
+  opened,
+  seePro,
+}
+
+/// How the Remote control page was reached.
+enum RemoteFrom { door, settings }
+
+/// What the Remote control page had to show when it opened.
+enum RemoteState {
+  noPro,
+  noProOffline,
+  noEngine,
+  away,
+  ready,
+  on,
+  proOffline,
+  unfit,
+  notSold,
+}
 
 class RemoteEvent extends AnalyticsEvent {
-  const RemoteEvent(this.step, {this.pro});
+  const RemoteEvent(this.step, {this.pro, this.from, this.state});
 
   final RemoteStep step;
   final bool? pro;
 
+  /// With [RemoteStep.opened] and [RemoteStep.seePro].
+  final RemoteFrom? from;
+
+  /// With [RemoteStep.opened].
+  final RemoteState? state;
+
   @override
   String get name => 'remote';
 
+  /// `open` is `from/state` and `went` is where "See Pro" was tapped from:
+  /// each number the read needs is one value of one property.
   @override
   Map<String, String> get props => {
     'step': _snake(step.name),
     if (pro != null) 'pro': pro! ? 'yes' : 'no',
+    if (step == RemoteStep.opened && from != null && state != null)
+      'open': '${from!.name}/${_snake(state!.name)}',
+    if (step == RemoteStep.seePro && from != null) 'went': from!.name,
   };
 }
 

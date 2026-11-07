@@ -8280,24 +8280,6 @@ abstract class AppLocalizations {
   /// **'Control your home from anywhere'**
   String get remoteIntroTitle;
 
-  /// No description provided for @remoteOfferBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Reach your devices when you\'re away, through ZigDash\'s encrypted relay. Part of Pro: one payment, no monthly fee. Set it up while you\'re at home.'**
-  String get remoteOfferBody;
-
-  /// No description provided for @remoteOfferBodyPro.
-  ///
-  /// In en, this message translates to:
-  /// **'You have Pro: turn on remote control while you\'re at home, then reach your devices from anywhere.'**
-  String get remoteOfferBodyPro;
-
-  /// No description provided for @remoteOfferShow.
-  ///
-  /// In en, this message translates to:
-  /// **'Show me'**
-  String get remoteOfferShow;
-
   /// No description provided for @remoteIntroBody.
   ///
   /// In en, this message translates to:
@@ -9329,6 +9311,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it\'s the hostname you set for Home Assistant in Cloudflare. It works from anywhere.'**
   String get haWhereOwnDomainHelp;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'How this phone reaches home'**
+  String get remoteNowTitle;
+
+  /// No description provided for @remoteNowHome.
+  ///
+  /// In en, this message translates to:
+  /// **'At home, straight to your broker at {address}'**
+  String remoteNowHome(String address);
+
+  /// No description provided for @remoteNowOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Away, through your own address {address}'**
+  String remoteNowOwn(String address);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Away, through ZigDash\'s relay'**
+  String get remoteNowRelay;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to your home right now'**
+  String get remoteNowOffline;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Two ways to reach home from away'**
+  String get remoteWaysTitle;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Your own address'**
+  String get remoteWayOwnTitle;
+
+  /// No description provided for @remoteWayOwnSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Free. Set to {address}.'**
+  String remoteWayOwnSet(String address);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Free. Tailscale, a VPN or a forwarded port: add its address to this home\'s connection.'**
+  String get remoteWayOwnUnset;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Through ZigDash\'s encrypted relay. No VPN, nothing to open on your router. Part of Pro.'**
+  String get remoteWayRelayBody;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'What it takes'**
+  String get remoteStepsTitle;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine on your hub (free)'**
+  String get remoteStepEngine;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed yet. Install it under Automations.'**
+  String get remoteStepEngineInstall;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'This hub\'s Zigbee2MQTT is too old for it. Update Zigbee2MQTT first.'**
+  String get remoteStepEngineTooOld;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Checked when you\'re home'**
+  String get remoteStepEngineLater;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Installed when this phone last saw your hub'**
+  String get remoteStepEngineSeen;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get remoteStepDone;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'One payment, no monthly fee'**
+  String get remoteStepProNeeded;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn it on when you\'re home'**
+  String get remoteStepOnLater;
+
+  /// No description provided for @remoteSeePro.
+  ///
+  /// In en, this message translates to:
+  /// **'See Pro · {price}'**
+  String remoteSeePro(String price);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'This home is reached through Home Assistant. Away from home it works when your Home Assistant address does.'**
+  String get remoteUnfitHa;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'This home is reached through Zigbee2MQTT\'s own page. Remote control needs a home connected to its broker.'**
+  String get remoteUnfitZ2m;
+
+  /// No description provided for @proSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale: {percent}% off until {date}'**
+  String proSale(int percent, String date);
+
+  /// No description provided for @proSaleNoEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale: {percent}% off'**
+  String proSaleNoEnd(int percent);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'The sale has ended. This is the price now.'**
+  String get proSaleEnded;
 }
 
 class _AppLocalizationsDelegate

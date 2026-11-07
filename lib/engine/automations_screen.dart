@@ -162,7 +162,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
         showDragHandle: true,
         builder: (ctx) => _ProCeilingSheet(onPro: () {
           Navigator.of(ctx).pop();
-          openPro(context);
+          openPro(context, from: ProFrom.automations);
         }),
       );
       return;

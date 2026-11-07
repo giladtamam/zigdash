@@ -54,8 +54,9 @@ class Routes {
   static const settingsLanguage = '/settings/language';
   static String settingsHome(String connectionId) =>
       '/settings/home/$connectionId';
-  static String homeRemote(String connectionId) =>
-      '/settings/home/$connectionId/remote';
+  /// Remote control; [fromDoor] when the dashboard's door opened it (3.4.4).
+  static String homeRemote(String connectionId, {bool fromDoor = false}) =>
+      '/settings/home/$connectionId/remote${fromDoor ? '?from=door' : ''}';
   /// The Automations tab (3.1.1): the fourth destination of a home.
   static String homeAutomations(String connectionId) =>
       '/connections/$connectionId/automations';

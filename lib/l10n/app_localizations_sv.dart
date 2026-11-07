@@ -4698,17 +4698,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get remoteIntroTitle => 'Styr ditt hem var du än är';
 
   @override
-  String get remoteOfferBody =>
-      'Nå dina enheter när du är borta, via ZigDashs krypterade relä. Ingår i Pro: en betalning, ingen månadsavgift. Ställ in det medan du är hemma.';
-
-  @override
-  String get remoteOfferBodyPro =>
-      'Du har Pro: slå på fjärrstyrning medan du är hemma, så når du dina enheter var du än är.';
-
-  @override
-  String get remoteOfferShow => 'Visa';
-
-  @override
   String get remoteIntroBody =>
       'Hubben håller en anslutning till ZigDashs relä. Borta når den här telefonen dina enheter genom det. Allt krypteras på hubben och telefonen, så reläet kan inte läsa dina enheter eller vad de gör.';
 
@@ -5316,4 +5305,98 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get haWhereOwnDomainHelp =>
       'Adressen du öppnar Home Assistant med hemifrån, till exempel ha.example.com. Med en Cloudflare-tunnel är det värdnamnet du angav för Home Assistant i Cloudflare. Den fungerar överallt.';
+
+  @override
+  String get remoteNowTitle => 'Så når den här telefonen hemmet';
+
+  @override
+  String remoteNowHome(String address) {
+    return 'Hemma, direkt till din broker på $address';
+  }
+
+  @override
+  String remoteNowOwn(String address) {
+    return 'Borta, via din egen adress $address';
+  }
+
+  @override
+  String get remoteNowRelay => 'Borta, via ZigDash relä';
+
+  @override
+  String get remoteNowOffline => 'Inte ansluten till ditt hem just nu';
+
+  @override
+  String get remoteWaysTitle => 'Två sätt att nå hemmet när du är borta';
+
+  @override
+  String get remoteWayOwnTitle => 'Din egen adress';
+
+  @override
+  String remoteWayOwnSet(String address) {
+    return 'Gratis. Inställd på $address.';
+  }
+
+  @override
+  String get remoteWayOwnUnset =>
+      'Gratis. Tailscale, ett VPN eller en vidarebefordrad port: lägg till adressen i det här hemmets anslutning.';
+
+  @override
+  String get remoteWayRelayBody =>
+      'Via ZigDash krypterade relä. Inget VPN, inget att öppna i routern. Ingår i Pro.';
+
+  @override
+  String get remoteStepsTitle => 'Vad som krävs';
+
+  @override
+  String get remoteStepEngine => 'ZigDash Engine på din hubb (gratis)';
+
+  @override
+  String get remoteStepEngineInstall =>
+      'Inte installerat än. Installera det under Automationer.';
+
+  @override
+  String get remoteStepEngineTooOld =>
+      'Hubbens Zigbee2MQTT är för gammal för det. Uppdatera Zigbee2MQTT först.';
+
+  @override
+  String get remoteStepEngineLater => 'Kontrolleras när du är hemma';
+
+  @override
+  String get remoteStepEngineSeen =>
+      'Installerat när den här telefonen senast såg din hubb';
+
+  @override
+  String get remoteStepDone => 'Klart';
+
+  @override
+  String get remoteStepProNeeded => 'En betalning, ingen månadsavgift';
+
+  @override
+  String get remoteStepOnLater => 'Slå på det när du är hemma';
+
+  @override
+  String remoteSeePro(String price) {
+    return 'Se Pro · $price';
+  }
+
+  @override
+  String get remoteUnfitHa =>
+      'Det här hemmet nås via Home Assistant. Borta fungerar det när din Home Assistant-adress gör det.';
+
+  @override
+  String get remoteUnfitZ2m =>
+      'Det här hemmet nås via Zigbee2MQTT:s egen sida. Fjärrstyrning kräver ett hem som är anslutet till sin broker.';
+
+  @override
+  String proSale(int percent, String date) {
+    return 'Rea: $percent % rabatt till $date';
+  }
+
+  @override
+  String proSaleNoEnd(int percent) {
+    return 'Rea: $percent % rabatt';
+  }
+
+  @override
+  String get proSaleEnded => 'Rean är slut. Det här är priset nu.';
 }

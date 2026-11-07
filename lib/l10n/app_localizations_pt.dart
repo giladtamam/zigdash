@@ -4710,17 +4710,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get remoteIntroTitle => 'Controle sua casa de qualquer lugar';
 
   @override
-  String get remoteOfferBody =>
-      'Acesse seus dispositivos quando estiver fora, pelo relay criptografado do ZigDash. Parte do Pro: um só pagamento, sem mensalidade. Configure enquanto estiver em casa.';
-
-  @override
-  String get remoteOfferBodyPro =>
-      'Você tem Pro: ative o controlo remoto enquanto estiver em casa e acesse seus dispositivos de qualquer lugar.';
-
-  @override
-  String get remoteOfferShow => 'Mostrar';
-
-  @override
   String get remoteIntroBody =>
       'Seu hub mantém uma conexão com o relay do ZigDash. Fora de casa, este celular chega aos seus dispositivos por ele. Tudo é criptografado no hub e no celular, então o relay não consegue ler seus dispositivos nem o que eles fazem.';
 
@@ -5328,4 +5317,98 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get haWhereOwnDomainHelp =>
       'O endereço com que abre o Home Assistant fora de casa, como ha.example.com. Com um túnel Cloudflare, é o nome de anfitrião definido para o Home Assistant na Cloudflare. Funciona em qualquer lugar.';
+
+  @override
+  String get remoteNowTitle => 'Como este celular chega a casa';
+
+  @override
+  String remoteNowHome(String address) {
+    return 'Em casa, direto no seu broker em $address';
+  }
+
+  @override
+  String remoteNowOwn(String address) {
+    return 'Fora de casa, pelo seu próprio endereço $address';
+  }
+
+  @override
+  String get remoteNowRelay => 'Fora de casa, pelo relay do ZigDash';
+
+  @override
+  String get remoteNowOffline => 'Sem conexão com a sua casa agora';
+
+  @override
+  String get remoteWaysTitle => 'Duas formas de chegar a casa de fora';
+
+  @override
+  String get remoteWayOwnTitle => 'O seu próprio endereço';
+
+  @override
+  String remoteWayOwnSet(String address) {
+    return 'Grátis. Definido: $address.';
+  }
+
+  @override
+  String get remoteWayOwnUnset =>
+      'Grátis. Tailscale, uma VPN ou uma porta redirecionada: adicione o endereço à conexão desta casa.';
+
+  @override
+  String get remoteWayRelayBody =>
+      'Pelo relay criptografado do ZigDash. Sem VPN, nada para abrir no roteador. Parte do Pro.';
+
+  @override
+  String get remoteStepsTitle => 'O que é preciso';
+
+  @override
+  String get remoteStepEngine => 'ZigDash Engine no seu hub (grátis)';
+
+  @override
+  String get remoteStepEngineInstall =>
+      'Ainda não instalado. Instale-o em Automações.';
+
+  @override
+  String get remoteStepEngineTooOld =>
+      'O Zigbee2MQTT deste hub é antigo demais. Atualize antes o Zigbee2MQTT.';
+
+  @override
+  String get remoteStepEngineLater => 'Verificado quando você estiver em casa';
+
+  @override
+  String get remoteStepEngineSeen =>
+      'Instalado na última vez que este celular viu o seu hub';
+
+  @override
+  String get remoteStepDone => 'Feito';
+
+  @override
+  String get remoteStepProNeeded => 'Um só pagamento, sem mensalidade';
+
+  @override
+  String get remoteStepOnLater => 'Ative quando estiver em casa';
+
+  @override
+  String remoteSeePro(String price) {
+    return 'Ver Pro · $price';
+  }
+
+  @override
+  String get remoteUnfitHa =>
+      'Esta casa é acessada pelo Home Assistant. Fora de casa funciona quando o seu endereço do Home Assistant funciona.';
+
+  @override
+  String get remoteUnfitZ2m =>
+      'Esta casa é acessada pela página do Zigbee2MQTT. O controle remoto precisa de uma casa conectada ao seu broker.';
+
+  @override
+  String proSale(int percent, String date) {
+    return 'Promoção: $percent% de desconto até $date';
+  }
+
+  @override
+  String proSaleNoEnd(int percent) {
+    return 'Promoção: $percent% de desconto';
+  }
+
+  @override
+  String get proSaleEnded => 'A promoção terminou. Este é o preço agora.';
 }
