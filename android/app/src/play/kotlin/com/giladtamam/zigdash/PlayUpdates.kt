@@ -30,8 +30,12 @@ class PlayUpdates(private val activity: Activity, messenger: BinaryMessenger) {
     private val channel = MethodChannel(messenger, CHANNEL)
 
     private val listener = InstallStateUpdatedListener { state ->
-        if (state.installStatus() == InstallStatus.DOWNLOADED) {
-            main.post { channel.invokeMethod("downloaded", null) }
+        when (state.installStatus()) {
+            InstallStatus.DOWNLOADED -> main.post { channel.invokeMethod("downloaded", null) }
+            // A download that stops short: the banner goes back to offering it.
+            InstallStatus.FAILED, InstallStatus.CANCELED ->
+                main.post { channel.invokeMethod("failed", null) }
+            else -> {}
         }
     }
 
@@ -68,25 +72,26 @@ class PlayUpdates(private val activity: Activity, messenger: BinaryMessenger) {
             .addOnFailureListener { main.post { result.success(null) } }
     }
 
+    /// True only once the user accepted Play's dialog, so the download is
+    /// really under way; "No thanks" and a failure to open it answer false.
     private fun start(result: MethodChannel.Result) {
         manager.appUpdateInfo
             .addOnSuccessListener { info ->
-                val started = info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
-                    info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) &&
-                    manager.startUpdateFlowForResult(
-                        info,
-                        activity,
-                        AppUpdateOptions.defaultOptions(AppUpdateType.FLEXIBLE),
-                        REQUEST,
-                    )
-                main.post { result.success(started) }
+                val offerable = info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                    info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
+                if (!offerable) {
+                    main.post { result.success(false) }
+                    return@addOnSuccessListener
+                }
+                manager.startUpdateFlow(info, activity, AppUpdateOptions.defaultOptions(AppUpdateType.FLEXIBLE))
+                    .addOnSuccessListener { code -> main.post { result.success(code == Activity.RESULT_OK) } }
+                    .addOnFailureListener { main.post { result.success(false) } }
             }
             .addOnFailureListener { main.post { result.success(false) } }
     }
 
     companion object {
         const val CHANNEL = "zigdash/update"
-        private const val REQUEST = 7301
 
         fun register(activity: Activity, messenger: BinaryMessenger) {
             PlayUpdates(activity, messenger)
