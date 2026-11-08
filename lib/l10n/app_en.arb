@@ -1923,5 +1923,8 @@
   "proSaleNoEnd": "Sale: {percent}% off",
   "@proSaleNoEnd": {"placeholders": {"percent": {"type": "int"}}},
   "proSaleEnded": "The sale has ended. This is the price now.",
-  "@proSaleEnded": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."}
+  "@proSaleEnded": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "saleCardRemote": "ZigDash Pro: control your home from anywhere, and more.",
+  "saleCardHomeAssistant": "ZigDash Pro: longer history, more automations, and more.",
+  "@saleCardRemote": {"description": "Sale card on the Devices tab (3.4.6, docs/design/devices-sale-card.md)."}
 }

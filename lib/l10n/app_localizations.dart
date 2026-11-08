@@ -9461,6 +9461,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The sale has ended. This is the price now.'**
   String get proSaleEnded;
+
+  /// Sale card on the Devices tab (3.4.6, docs/design/devices-sale-card.md).
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Pro: control your home from anywhere, and more.'**
+  String get saleCardRemote;
+
+  /// No description provided for @saleCardHomeAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Pro: longer history, more automations, and more.'**
+  String get saleCardHomeAssistant;
 }
 
 class _AppLocalizationsDelegate

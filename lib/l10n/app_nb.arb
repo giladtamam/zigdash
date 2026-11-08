@@ -1641,5 +1641,7 @@
   "remoteUnfitZ2m": "Dette hjemmet nås via Zigbee2MQTT sin egen side. Fjernstyring krever et hjem som er koblet til brokeren sin.",
   "proSale": "Tilbud: {percent} % rabatt til {date}",
   "proSaleNoEnd": "Tilbud: {percent} % rabatt",
-  "proSaleEnded": "Tilbudet er over. Dette er prisen nå."
+  "proSaleEnded": "Tilbudet er over. Dette er prisen nå.",
+  "saleCardRemote": "ZigDash Pro: styr hjemmet ditt hvor som helst fra, og mer.",
+  "saleCardHomeAssistant": "ZigDash Pro: lengre historikk, flere automatiseringer og mer."
 }

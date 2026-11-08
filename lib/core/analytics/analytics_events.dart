@@ -76,7 +76,12 @@ class AppStarted extends AnalyticsEvent {
         top: '31+',
       ),
     },
-    'automations': bucket(automations, const [0], ranges: const [(1, 3)], top: '4+'),
+    'automations': bucket(
+      automations,
+      const [0],
+      ranges: const [(1, 3)],
+      top: '4+',
+    ),
     'scenes': bucket(scenes, const [0], top: '1+'),
     'shortcuts': bucket(shortcuts, const [0], top: '1+'),
   };
@@ -201,7 +206,16 @@ enum NoHubFrom { welcome, guide }
 /// three ways to a hub was read (an SMHUB, a Raspberry Pi, Home Assistant),
 /// the hubs page was opened, the demo was started, a reminder for a week
 /// later was set, or "I have one now" went back.
-enum NoHubAction { opened, smhub, pi, homeAssistant, hubsPage, demo, remind, haveOne }
+enum NoHubAction {
+  opened,
+  smhub,
+  pi,
+  homeAssistant,
+  hubsPage,
+  demo,
+  remind,
+  haveOne,
+}
 
 /// The steps of the guide on an empty result (3.3.2), in the order they
 /// can appear; `setup_guide.dart` picks the ones that apply.
@@ -962,7 +976,15 @@ class HaImportEvent extends AnalyticsEvent {
 enum ProStep { lockedShown, screenShown, unlockTapped, unlocked }
 
 /// Where the Pro screen was opened from (3.4.4).
-enum ProFrom { remoteDoor, remoteSettings, settings, history, automations, wall }
+enum ProFrom {
+  remoteDoor,
+  remoteSettings,
+  settings,
+  history,
+  automations,
+  wall,
+  saleCard,
+}
 
 class ProEvent extends AnalyticsEvent {
   const ProEvent(this.step, {this.from, this.sale});
@@ -987,6 +1009,22 @@ class ProEvent extends AnalyticsEvent {
     if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
     if (sale != null) 'sale': sale! ? 'yes' : 'no',
   };
+}
+
+/// The sale card on the Devices tab (3.4.6, devices-sale-card.md): counted
+/// once when shown for a sale, then opened or put away. Nothing else.
+enum SaleCardStep { shown, opened, closed }
+
+class SaleCardEvent extends AnalyticsEvent {
+  const SaleCardEvent(this.step);
+
+  final SaleCardStep step;
+
+  @override
+  String get name => 'sale_card';
+
+  @override
+  Map<String, String> get props => {'step': step.name};
 }
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or

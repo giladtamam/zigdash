@@ -1641,5 +1641,7 @@
   "remoteUnfitZ2m": "Dit huis wordt bereikt via de eigen pagina van Zigbee2MQTT. Bediening op afstand heeft een huis nodig dat met zijn broker is verbonden.",
   "proSale": "Actie: {percent}% korting tot en met {date}",
   "proSaleNoEnd": "Actie: {percent}% korting",
-  "proSaleEnded": "De actie is afgelopen. Dit is nu de prijs."
+  "proSaleEnded": "De actie is afgelopen. Dit is nu de prijs.",
+  "saleCardRemote": "ZigDash Pro: bedien je huis overal vandaan, en meer.",
+  "saleCardHomeAssistant": "ZigDash Pro: langere geschiedenis, meer automatiseringen en meer."
 }

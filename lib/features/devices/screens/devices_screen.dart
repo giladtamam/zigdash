@@ -15,6 +15,7 @@ import '../../discovery/providers/discovery_provider.dart';
 import '../../home/home_shell.dart';
 import '../../support/get_help_screen.dart' show GetHelpLink;
 import '../../panels/screens/add_tile_screen.dart' show showAddDeviceSheet;
+import '../../pro/sale_card.dart';
 import '../../panels/widgets/device_tile_panel.dart'
     show deviceClassIcon, deviceStateLine, ltr;
 import '../../panels/widgets/panel_reliability_frame.dart'
@@ -222,6 +223,7 @@ class _DevicesScreenState extends ConsumerState<DevicesScreen> {
           return ListView(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 96),
             children: [
+              if (_query == null) SaleCard(connectionId: widget.connectionId),
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 4, 4, 10),
                 child: Wrap(

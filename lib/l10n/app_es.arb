@@ -1641,5 +1641,7 @@
   "remoteUnfitZ2m": "A esta casa se llega por la página de Zigbee2MQTT. El control remoto necesita una casa conectada a su broker.",
   "proSale": "Oferta: {percent} % de descuento hasta el {date}",
   "proSaleNoEnd": "Oferta: {percent} % de descuento",
-  "proSaleEnded": "La oferta ha terminado. Este es el precio ahora."
+  "proSaleEnded": "La oferta ha terminado. Este es el precio ahora.",
+  "saleCardRemote": "ZigDash Pro: controla tu casa desde cualquier lugar y más.",
+  "saleCardHomeAssistant": "ZigDash Pro: historial más largo, más automatizaciones y más."
 }

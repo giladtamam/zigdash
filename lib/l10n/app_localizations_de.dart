@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5427,4 +5428,12 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get proSaleEnded =>
       'Das Angebot ist beendet. Das ist jetzt der Preis.';
+
+  @override
+  String get saleCardRemote =>
+      'ZigDash Pro: Steuere dein Zuhause von überall und mehr.';
+
+  @override
+  String get saleCardHomeAssistant =>
+      'ZigDash Pro: längerer Verlauf, mehr Automationen und mehr.';
 }

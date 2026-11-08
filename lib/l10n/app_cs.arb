@@ -1556,5 +1556,7 @@
   "remoteUnfitZ2m": "Tento domov je dostupný přes vlastní stránku Zigbee2MQTT. Dálkové ovládání potřebuje domov připojený ke svému brokeru.",
   "proSale": "Akce: sleva {percent} % do {date}",
   "proSaleNoEnd": "Akce: sleva {percent} %",
-  "proSaleEnded": "Akce skončila. Tohle je teď cena."
+  "proSaleEnded": "Akce skončila. Tohle je teď cena.",
+  "saleCardRemote": "ZigDash Pro: ovládejte domov odkudkoli a ještě víc.",
+  "saleCardHomeAssistant": "ZigDash Pro: delší historie, více automatizací a ještě víc."
 }

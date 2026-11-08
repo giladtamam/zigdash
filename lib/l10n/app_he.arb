@@ -1710,5 +1710,7 @@
   "remoteUnfitZ2m": "הבית הזה מחובר דרך הדף של Zigbee2MQTT. שליטה מרחוק דורשת בית שמחובר לברוקר שלו.",
   "proSale": "מבצע: {percent}% הנחה עד {date}",
   "proSaleNoEnd": "מבצע: {percent}% הנחה",
-  "proSaleEnded": "המבצע הסתיים. זה המחיר עכשיו."
+  "proSaleEnded": "המבצע הסתיים. זה המחיר עכשיו.",
+  "saleCardRemote": "ZigDash Pro: שליטה בבית מכל מקום, ועוד.",
+  "saleCardHomeAssistant": "ZigDash Pro: היסטוריה ארוכה יותר, יותר אוטומציות, ועוד."
 }
