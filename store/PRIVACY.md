@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.4.4 is published (replaces the policy published with ZigDash 3.4.3)
+**Effective date:** the day ZigDash 3.4.6 is published (replaces the policy published with ZigDash 3.4.5)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
