@@ -12,7 +12,7 @@ const H = Engine.helpers;
 
 // ---------- a fake Zigbee2MQTT ----------
 
-function fakeZ2m() {
+function fakeZ2m({ cache } = {}) {
   const listeners = { mqtt: [], entity: [], published: [] };
   const published = [];
   const subscribed = [];
@@ -39,7 +39,8 @@ function fakeZ2m() {
   const zigbee = { resolveEntity: (k) => devices[k] };
   const settings = { get: () => ({ mqtt: { base_topic: 'zigbee2mqtt' } }) };
   const logger = { info() {}, warning() {}, error() {}, debug() {} };
-  const engine = new Engine(zigbee, mqtt, {}, null, eventBus, null, null, null, settings, logger);
+  const state = cache ? { get: (entity) => cache[entity.ieeeAddr] } : {};
+  const engine = new Engine(zigbee, mqtt, state, null, eventBus, null, null, null, settings, logger);
   return {
     engine, published, injected, devices, subscribed,
     rule: (id, rule) => listeners.mqtt.forEach((cb) => cb({ topic: `zigdash/automations/rules/${id}`, message: rule ? JSON.stringify({ v: 1, enabled: true, conditions: [], ...rule }) : '' })),
@@ -111,6 +112,27 @@ test('motion turns the hallway light on, once per change', async () => {
   z.device('0xmotion', { occupancy: true });
   assert.deepEqual(z.injected.map((i) => i.topic), ['zigbee2mqtt/Hallway light/set', 'zigbee2mqtt/Hallway light/set']);
   assert.equal(z.last('recent').length, 2);
+  await z.engine.stop();
+});
+
+test('after a restart, a trigger value that already held does not fire again', async () => {
+  // Zigbee2MQTT's state cache says the door is already open and the light is on.
+  const z = fakeZ2m({ cache: { '0xdoor': { contact: false, battery: 80 }, '0xlight': { state: 'ON' } } });
+  await z.engine.start();
+  z.rule('r1', { trigger: { type: 'device', ieee: '0xdoor', property: 'contact', equals: false }, action: lightOn });
+  z.device('0xdoor', { contact: false, battery: 80 }); // routine report, nothing changed
+  assert.deepEqual(z.injected, []);
+  z.device('0xdoor', { contact: true });
+  z.device('0xdoor', { contact: false }); // a real open
+  assert.equal(z.injected.length, 1);
+  // A condition on a device that has not reported since the restart reads the cache too.
+  z.rule('r2', { trigger: { type: 'device', ieee: '0xmotion', property: 'occupancy', equals: true }, conditions: [{ type: 'device', ieee: '0xlight', property: 'state', equals: 'ON' }], action: lightOn });
+  z.device('0xmotion', { occupancy: true });
+  assert.equal(z.injected.length, 2);
+  // A property the cache does not hold keeps the old behaviour: the first matching report fires.
+  z.rule('r3', { trigger: { type: 'device', ieee: '0xtemp', property: 'temperature', above: 25 }, action: lightOn });
+  z.device('0xtemp', { temperature: 27 });
+  assert.equal(z.injected.length, 3);
   await z.engine.stop();
 });
 
