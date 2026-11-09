@@ -15,6 +15,12 @@ export 'analytics_events.dart';
 /// started and no consent is asked (ADR 0006).
 const analyticsKey = String.fromEnvironment('ZIGDASH_ANALYTICS_KEY');
 
+/// Where the events go, from `--dart-define=ZIGDASH_ANALYTICS_HOST`: the
+/// origin of a self-hosted Aptabase (no trailing slash; the SDK appends
+/// `/api/v0/events`). Required with a self-hosted key (`A-SH-…`), which the
+/// SDK otherwise refuses; ignored with a cloud key.
+const analyticsHost = String.fromEnvironment('ZIGDASH_ANALYTICS_HOST');
+
 /// Whether this build can send usage data at all.
 final analyticsAvailableProvider = Provider<bool>(
   (ref) =>
@@ -81,9 +87,10 @@ abstract interface class AnalyticsSink {
 /// Aptabase, with a queue ZigDash owns: the SDK has no off switch once
 /// started, so opting out empties the queue and refuses new events.
 class AptabaseSink implements AnalyticsSink {
-  AptabaseSink(this._key);
+  AptabaseSink(this._key, {String host = ''}) : _host = host;
 
   final String _key;
+  final String _host;
   final _queue = _ConsentQueue();
   bool _initialized = false;
 
@@ -92,7 +99,11 @@ class AptabaseSink implements AnalyticsSink {
     _queue.enabled = true;
     if (_initialized) return;
     _initialized = true;
-    await Aptabase.init(_key, const InitOptions(), _queue);
+    await Aptabase.init(
+      _key,
+      InitOptions(host: _host.isEmpty ? null : _host),
+      _queue,
+    );
   }
 
   @override
@@ -152,7 +163,9 @@ class _ConsentQueue extends StorageManager {
 }
 
 final analyticsSinkProvider =
-    Provider<AnalyticsSink>((ref) => AptabaseSink(analyticsKey));
+    Provider<AnalyticsSink>(
+  (ref) => AptabaseSink(analyticsKey, host: analyticsHost),
+);
 
 /// Records [AnalyticsEvent]s when the build can send and the user opted in;
 /// does nothing otherwise. Feature events are sent once per session.
