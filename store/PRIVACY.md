@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.4.6 is published (replaces the policy published with ZigDash 3.4.5)
+**Effective date:** the day ZigDash 3.4.7 is published (replaces the policy published with ZigDash 3.4.6)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -12,14 +12,16 @@ ZigDash does **not** collect or share personal data. Your broker settings,
 passwords, devices, topics and their values stay on your device. There is no
 advertising and no user account.
 
-The developer runs one server, the ZigDash relay. It is used only if you turn
-on **Remote control** (part of ZigDash Pro), and it carries your home's data
-encrypted, so the developer cannot read it. See
-[Remote control](#remote-control-from-31).
+The developer runs two servers: the ZigDash relay, used only if you turn
+on **Remote control** (part of ZigDash Pro), which carries your home's data
+encrypted so the developer cannot read it (see
+[Remote control](#remote-control-from-31)), and from 3.4.7 the usage-data
+server described next.
 
 Unless you **opt out**, ZigDash sends a short list of **anonymous usage
-events** (which setup steps fail, which features get used) to Aptabase, an
-analytics service hosted in the EU. New installs see the choice on the first
+events** (which setup steps fail, which features get used) to a server the
+developer runs (the open-source Aptabase software; versions before 3.4.7 sent
+them to Aptabase's own EU service). New installs see the choice on the first
 setup screen before anything is sent, and you can turn it off at any time. See
 [Anonymous usage data](#anonymous-usage-data).
 
@@ -136,16 +138,23 @@ deletes any events not yet sent and stops sending immediately. Builds without
 an analytics key (for example F-Droid builds, or one you build yourself) send
 nothing at all.
 
-**Where it goes.** [Aptabase](https://aptabase.com/legal/privacy), EU region.
-Data stays in the EU and is kept for up to 5 years.
+**Where it goes.** From 3.4.7, to `aptabase.giladha.com`, an instance of the
+open-source [Aptabase](https://github.com/aptabase/aptabase) software that the
+developer runs on his own machine in Israel, reached through Cloudflare. No
+third party receives the events. Versions before 3.4.7 send them to
+[Aptabase's EU service](https://aptabase.com/legal/privacy) instead, where
+data is kept for up to 5 years; the developer's copy is kept as long as the
+app is maintained.
 
 **What is sent with every event:** the operating system name and version, your
 phone's language setting, the ZigDash version and build number, whether it is a
 debug build, and a random session ID that changes after an hour of inactivity.
-No device ID, advertising ID, account, or install ID is sent. Aptabase's
-server sees your IP address in order to receive the event; according to
-Aptabase it does not store it, and only uses it with a salt that changes daily,
-so visits cannot be linked across days.
+No device ID, advertising ID, account, or install ID is sent. The server
+sees your IP address in order to receive the event; the Aptabase software does
+not store it, and only uses it with a salt that changes daily, so visits cannot
+be linked across days. Cloudflare, which carries the connection, keeps its
+own short-lived connection logs under
+[its privacy policy](https://www.cloudflare.com/privacypolicy/).
 
 **The events.** Every value is chosen from a fixed list in the app's code,
 never from anything you typed or anything your broker sent.
