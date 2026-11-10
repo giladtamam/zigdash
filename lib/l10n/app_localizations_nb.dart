@@ -1442,12 +1442,6 @@ class AppLocalizationsNb extends AppLocalizations {
       'To forsøk uten tilkobling. Fortell oss hvilken hub du har og hva du skrev, så hjelper vi deg å finne den.';
 
   @override
-  String get guidedStuckTelegram => 'Spør i Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Tips og e-post';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Prøvde $count adresser';
   }
@@ -2969,14 +2963,152 @@ class AppLocalizationsNb extends AppLocalizations {
       'Får du det ikke til? Tips først, så kontakt';
 
   @override
-  String get settingsCommunity => 'Bli med i ZigDash-fellesskapet';
+  String get getHelpWarm => 'Fant ingenting? Ikke bekymre deg, jeg hjelper deg';
 
   @override
-  String get settingsCommunitySubtitle =>
-      'Telegram-gruppe: spørsmål, ideer og hva som kommer';
+  String get getHelpAskRunning =>
+      'Kjører Zigbee2MQTT et sted hjemme hos deg akkurat nå?';
 
   @override
-  String get getHelpCommunity => 'Spør i Telegram-gruppen';
+  String get getHelpEmailHint => 'E-posten din, hvis du vil ha svar';
+
+  @override
+  String get getHelpSend => 'Send';
+
+  @override
+  String get getHelpSending => 'Sender…';
+
+  @override
+  String get getHelpSent =>
+      'Sendt. Jeg svarer vanligvis innen 3 dager hvis du la igjen en e-post.';
+
+  @override
+  String get getHelpSendFailed => 'Kunne ikke sende. Del i stedet';
+
+  @override
+  String get getHelpSendFailedNote =>
+      'Prøv igjen om en time, eller del detaljene på en annen måte.';
+
+  @override
+  String get getHelpRetry => 'Prøv å sende igjen';
+
+  @override
+  String get getHelpShare => 'Del detaljer';
+
+  @override
+  String get haConnectLooking => 'Leter etter Home Assistant…';
+
+  @override
+  String get assistantTitle => 'ZigDash-assistent';
+
+  @override
+  String get assistantNotice =>
+      'Dette svaret kommer fra en KI-tjeneste som ser støttedetaljene dine. Den trenger aldri passordene eller adressene dine.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Skanningen over $network prøvde $hosts adresser og fant $brokers brokere.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Du sa at Zigbee2MQTT kjører. La oss finne det.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Du var ikke sikker på om Zigbee2MQTT kjører. La oss finne ut av det.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Fortell hva du prøvde å gjøre, så hjelper jeg deg å koble til.';
+
+  @override
+  String get assistantThinking => 'Tenker…';
+
+  @override
+  String get assistantResting =>
+      'Assistenten hviler akkurat nå. En person kan fortsatt nås nedenfor.';
+
+  @override
+  String get assistantRefused =>
+      'Det kan ikke assistenten svare på. Det kan en person, nedenfor.';
+
+  @override
+  String get assistantFailed =>
+      'Fikk ikke kontakt med assistenten. Sjekk tilkoblingen, eller spør en person nedenfor.';
+
+  @override
+  String get assistantRetry => 'Prøv igjen';
+
+  @override
+  String get assistantReplyHint => 'Spør eller svar her…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'Her slutter samtalen. En person kan ta over.';
+
+  @override
+  String get assistantHelped => 'Hjalp dette?';
+
+  @override
+  String get assistantHelpedYes => 'Ja';
+
+  @override
+  String get assistantHelpedNo => 'Nei';
+
+  @override
+  String get assistantTalkToPerson => 'Snakk med en person';
+
+  @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter rapporterer',
+      one: '1 enhet rapporterer',
+      zero: 'ingen enheter rapporterer',
+    );
+    return '$home er tilkoblet og $_temp0. Hva trenger du?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash når ikke $home akkurat nå. Hva trenger du?';
+  }
+
+  @override
+  String get assistantChipDevice => 'En enhet sluttet å svare';
+
+  @override
+  String get assistantChipTile => 'Legg til en flis';
+
+  @override
+  String get assistantChipAutomations => 'Automatiseringer';
+
+  @override
+  String get assistantChipUnreachable => 'Hjemmet kan ikke nås';
+
+  @override
+  String get helpBubbleLabel => 'Trenger du hjelp?';
+
+  @override
+  String get helpBubbleHide => 'Skjul';
+
+  @override
+  String get helpBubbleHideSheet => 'Skjul denne boblen';
+
+  @override
+  String get helpBubbleHidden =>
+      'Skjult. Hent den tilbake i Innstillinger › Få hjelp.';
+
+  @override
+  String get settingsHelpBubble => 'Hjelpeboble på startskjermen';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'Spør assistenten fra et dashbord';
+
+  @override
+  String get getHelpReportPrompt => 'Hva var galt med assistentens svar?';
 
   @override
   String get demoBannerHelp => 'Få hjelp';
@@ -5395,4 +5527,12 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get proSaleEnded => 'Tilbudet er over. Dette er prisen nå.';
+
+  @override
+  String get saleCardRemote =>
+      'ZigDash Pro: styr hjemmet ditt hvor som helst fra, og mer.';
+
+  @override
+  String get saleCardHomeAssistant =>
+      'ZigDash Pro: lengre historikk, flere automatiseringer og mer.';
 }

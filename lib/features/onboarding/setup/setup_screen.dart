@@ -16,8 +16,12 @@ import '../../connections/discovery/hub_probe.dart';
 import '../../connections/discovery/no_network.dart';
 import '../../panels/widgets/device_tile_panel.dart' show ltr;
 import '../../settings/screens/settings_screen.dart' show privacyPolicyUrl;
-import '../../support/community.dart' show CommunityLink;
-import '../../support/get_help_screen.dart' show GetHelpLink;
+import '../../settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
+import '../../support/assistant_panel.dart' show assistantHelpedRecently;
+import '../../support/get_help_screen.dart'
+    show GetHelpLink, GetHelpWarmButton;
+import 'setup_completed_at.dart';
 import '../first_run.dart';
 import 'recommendation_policy.dart';
 import 'setup_candidate.dart';
@@ -81,6 +85,9 @@ class SetupScreen extends ConsumerWidget {
         s,
         platform: coordinator.platform,
         aiHelped: ref.read(aiHelpUsedProvider),
+        helpSeen: s is SetupComplete
+            ? assistantHelpedRecently(ref.read(sharedPreferencesProvider))
+            : null,
       );
       if (step != null) ref.read(analyticsProvider).track(step);
       // 3.3.2: the guide on an empty result starts over with setup.
@@ -88,6 +95,8 @@ class SetupScreen extends ConsumerWidget {
         ref.read(setupGuideProvider.notifier).state = const GuideProgress();
       }
       if (s is SetupComplete) {
+        // 3.4.8: the review prompt keeps quiet for a while after this.
+        markSetupCompleted(() => ref.read(sharedPreferencesProvider));
         // 3.1.5: the next setup starts without "Ask your AI" behind it.
         ref.read(aiHelpUsedProvider.notifier).state = false;
         ref.read(setupReminderProvider).cancel();
@@ -1192,10 +1201,6 @@ class _NoZigbee2MqttState extends State<_NoZigbee2Mqtt> {
             ),
           ),
         ),
-        const Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: CommunityLink(from: HelpFrom.setupError),
-        ),
         const SizedBox(height: 16),
         Text(l10n.setupGuidesTitle, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
@@ -1354,7 +1359,6 @@ class _AuthPromptState extends State<_AuthPrompt> {
             ),
           ),
         ),
-        const CommunityLink(from: HelpFrom.setupError),
       ],
     );
   }
@@ -1553,7 +1557,6 @@ class _Failure extends StatelessWidget {
             ),
           ),
         ),
-        const CommunityLink(from: HelpFrom.setupError),
         const SizedBox(height: 8),
         TextButton(onPressed: onManual, child: Text(l10n.setupManualEntry)),
       ],
@@ -1659,7 +1662,6 @@ class _NoNetwork extends StatelessWidget {
             ),
           ),
         ),
-        const CommunityLink(from: HelpFrom.setupError),
       ],
     );
   }

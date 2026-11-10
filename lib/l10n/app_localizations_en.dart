@@ -1440,12 +1440,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Two tries without a connection. Tell us which hub you have and what you typed, and we\'ll help you find it.';
 
   @override
-  String get guidedStuckTelegram => 'Ask in Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Tips and email';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Tried $count addresses';
   }
@@ -2965,14 +2959,153 @@ class AppLocalizationsEn extends AppLocalizations {
       'Can\'t get it working? Tips first, then contact';
 
   @override
-  String get settingsCommunity => 'Join the ZigDash community';
+  String get getHelpWarm => 'Nothing found? Don\'t worry, I\'ll help you';
 
   @override
-  String get settingsCommunitySubtitle =>
-      'Telegram group: questions, ideas and what\'s coming';
+  String get getHelpAskRunning =>
+      'Is Zigbee2MQTT running somewhere in your home right now?';
 
   @override
-  String get getHelpCommunity => 'Ask in the Telegram group';
+  String get getHelpEmailHint => 'Your email, if you want an answer';
+
+  @override
+  String get getHelpSend => 'Send';
+
+  @override
+  String get getHelpSending => 'Sending…';
+
+  @override
+  String get getHelpSent =>
+      'Sent. I usually answer within 3 days if you left an email.';
+
+  @override
+  String get getHelpSendFailed => 'Couldn\'t send. Share instead';
+
+  @override
+  String get getHelpSendFailedNote =>
+      'Try again in an hour, or share the details another way.';
+
+  @override
+  String get getHelpRetry => 'Try sending again';
+
+  @override
+  String get getHelpShare => 'Share details';
+
+  @override
+  String get haConnectLooking => 'Looking for Home Assistant…';
+
+  @override
+  String get assistantTitle => 'ZigDash assistant';
+
+  @override
+  String get assistantNotice =>
+      'This answer comes from an AI service that sees your Support details. It never needs your passwords or addresses.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Your scan on $network tried $hosts addresses and found $brokers brokers.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'You said Zigbee2MQTT is running. Let\'s find it.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'You weren\'t sure whether Zigbee2MQTT runs. Let\'s find out.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Tell me what you were trying to do, and I\'ll help you get connected.';
+
+  @override
+  String get assistantThinking => 'Thinking…';
+
+  @override
+  String get assistantResting =>
+      'The assistant is resting right now. A person is still reachable below.';
+
+  @override
+  String get assistantRefused =>
+      'The assistant can\'t answer that one. A person can, below.';
+
+  @override
+  String get assistantFailed =>
+      'The assistant couldn\'t be reached. Check your connection, or ask a person below.';
+
+  @override
+  String get assistantRetry => 'Try again';
+
+  @override
+  String get assistantReplyHint => 'Ask or answer here…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'That\'s the end of this conversation. A person can take it from here.';
+
+  @override
+  String get assistantHelped => 'Did this help?';
+
+  @override
+  String get assistantHelpedYes => 'Yes';
+
+  @override
+  String get assistantHelpedNo => 'No';
+
+  @override
+  String get assistantTalkToPerson => 'Talk to a person';
+
+  @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices report',
+      one: '1 device reports',
+      zero: 'no devices report',
+    );
+    return '$home is connected and $_temp0. What do you need?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash can\'t reach $home right now. What do you need?';
+  }
+
+  @override
+  String get assistantChipDevice => 'A device stopped responding';
+
+  @override
+  String get assistantChipTile => 'Add a tile';
+
+  @override
+  String get assistantChipAutomations => 'Automations';
+
+  @override
+  String get assistantChipUnreachable => 'Home can\'t be reached';
+
+  @override
+  String get helpBubbleLabel => 'Need help?';
+
+  @override
+  String get helpBubbleHide => 'Hide';
+
+  @override
+  String get helpBubbleHideSheet => 'Hide this bubble';
+
+  @override
+  String get helpBubbleHidden =>
+      'Hidden. Bring it back in Settings › Get help.';
+
+  @override
+  String get settingsHelpBubble => 'Help bubble on the home screen';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'Ask the assistant from a dashboard';
+
+  @override
+  String get getHelpReportPrompt =>
+      'What was wrong with the assistant\'s answer?';
 
   @override
   String get demoBannerHelp => 'Get help';
@@ -5391,4 +5524,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get proSaleEnded => 'The sale has ended. This is the price now.';
+
+  @override
+  String get saleCardRemote =>
+      'ZigDash Pro: control your home from anywhere, and more.';
+
+  @override
+  String get saleCardHomeAssistant =>
+      'ZigDash Pro: longer history, more automations, and more.';
 }

@@ -76,7 +76,12 @@ class AppStarted extends AnalyticsEvent {
         top: '31+',
       ),
     },
-    'automations': bucket(automations, const [0], ranges: const [(1, 3)], top: '4+'),
+    'automations': bucket(
+      automations,
+      const [0],
+      ranges: const [(1, 3)],
+      top: '4+',
+    ),
     'scenes': bucket(scenes, const [0], top: '1+'),
     'shortcuts': bucket(shortcuts, const [0], top: '1+'),
   };
@@ -201,7 +206,16 @@ enum NoHubFrom { welcome, guide }
 /// three ways to a hub was read (an SMHUB, a Raspberry Pi, Home Assistant),
 /// the hubs page was opened, the demo was started, a reminder for a week
 /// later was set, or "I have one now" went back.
-enum NoHubAction { opened, smhub, pi, homeAssistant, hubsPage, demo, remind, haveOne }
+enum NoHubAction {
+  opened,
+  smhub,
+  pi,
+  homeAssistant,
+  hubsPage,
+  demo,
+  remind,
+  haveOne,
+}
 
 /// The steps of the guide on an empty result (3.3.2), in the order they
 /// can appear; `setup_guide.dart` picks the ones that apply.
@@ -344,6 +358,7 @@ class SetupStep extends AnalyticsEvent {
     this.portClass,
     this.via,
     this.aiHelped,
+    this.helpSeen,
     this.shape,
     this.addressFrom,
   });
@@ -364,6 +379,12 @@ class SetupStep extends AnalyticsEvent {
   /// Whether "Ask your AI" was shared or copied earlier in this setup, on
   /// [SetupStepKind.complete] (3.1.5).
   final bool? aiHelped;
+
+  /// Whether the assistant answered on Get help within the last 24 hours,
+  /// on [SetupStepKind.complete] (3.5.0): the only way to read whether a
+  /// setup that finished had the assistant's help first, since no
+  /// identifier leaves the phone.
+  final bool? helpSeen;
 
   /// How setup succeeded, on [SetupStepKind.complete] (3.1.3).
   final SetupVia? via;
@@ -450,6 +471,7 @@ class SetupStep extends AnalyticsEvent {
     if (platform != null) 'platform': _snake(platform!.name),
     if (via != null) 'via': _snake(via!.name),
     if (aiHelped != null) 'ai': aiHelped! ? 'yes' : 'no',
+    if (helpSeen != null) 'help_seen': helpSeen! ? 'yes' : 'no',
     if (step == SetupStepKind.scanEmpty ||
         step == SetupStepKind.needsLogin ||
         step == SetupStepKind.loginRejected)
@@ -614,9 +636,90 @@ enum HelpFrom {
 
   /// The one-time community card on a dashboard (community_opened only).
   card,
+
+  /// The warm button on the empty scan's guide (help-and-review-2026-11.md).
+  scanEmpty,
+
+  /// The help bubble on a connected home's dashboard (3.5.0,
+  /// assistant-in-app-2026-11.md revision 5).
+  bubble,
 }
 
-enum ContactVia { email, copy }
+/// How Support details left the phone: a mail app, the clipboard (platforms
+/// without a share sheet), or Android's share sheet (3.4.8, replaces copy).
+enum ContactVia { email, copy, share }
+
+/// What an in-app Send ended in (help-and-review-2026-11.md §2): delivered
+/// to the support receiver, failed, or failed and then shared instead.
+enum SupportSendResult { sent, failed, sharedAfterFailure }
+
+/// The user tapped Send on Get help (3.4.8). Only where from and how it
+/// ended; never the message.
+class SupportSent extends AnalyticsEvent {
+  const SupportSent(this.from, this.result);
+  final HelpFrom from;
+  final SupportSendResult result;
+  @override
+  String get name => 'support_sent';
+  @override
+  Map<String, String> get props => {
+    'from': _snake(from.name),
+    'result': _snake(result.name),
+  };
+}
+
+/// What happened with the assistant on Get help (3.5.0,
+/// assistant-in-app-2026-11.md): shown, answered, resting (over a limit),
+/// refused, failed, a reply sent (with which turn, bucketed), "Did this
+/// help?" yes or no, or Talk to a person tapped. Kinds and counts only;
+/// never the text.
+enum AssistantStep {
+  shown,
+  answered,
+  resting,
+  refused,
+  failed,
+  asked,
+  helpedYes,
+  helpedNo,
+  escalated,
+
+  /// Long-press › Hide on the home bubble (3.5.0).
+  hidden,
+}
+
+class AssistantEvent extends AnalyticsEvent {
+  const AssistantEvent(this.step, this.from, {this.nth, this.chip, this.state});
+  final AssistantStep step;
+  final HelpFrom from;
+
+  /// Which of the user's replies this was, on [AssistantStep.asked].
+  final int? nth;
+
+  /// On the home bubble's [AssistantStep.asked]: which chip opened the
+  /// conversation (device, tile, automations, unreachable) or `typed`.
+  final String? chip;
+
+  /// On the home bubble's [AssistantStep.shown]: which state was tapped,
+  /// `pill` or `dot`.
+  final String? state;
+  @override
+  String get name => 'assistant';
+  @override
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    'from': _snake(from.name),
+    if (nth != null)
+      'nth': bucket(
+        nth!,
+        const [1],
+        ranges: const [(2, 3), (4, 9)],
+        top: '10+',
+      ),
+    if (chip != null) 'chip': chip!,
+    if (state != null) 'state': state!,
+  };
+}
 
 /// Get help was opened.
 class HelpOpened extends AnalyticsEvent {
@@ -852,16 +955,30 @@ enum ReviewPromptResult { requested, unavailable }
 /// The local review prompt policy was satisfied (review_prompt_policy.dart).
 /// Google gives no signal whether the dialog was then shown or answered, so
 /// this is the only way to know the prompt fires at all.
+/// What made the request (3.4.8): a command the user sent and saw
+/// confirmed, or a passive device report (sensor-only homes).
+enum ReviewTrigger { command, report }
+
 class ReviewPrompted extends AnalyticsEvent {
-  const ReviewPrompted(this.result);
+  const ReviewPrompted(this.result, {this.trigger, this.nth});
 
   final ReviewPromptResult result;
+  final ReviewTrigger? trigger;
+
+  /// Which confirmed command of the session made the request (3.4.8);
+  /// sent bucketed as 3, 4-9, 10+.
+  final int? nth;
 
   @override
   String get name => 'review_prompt';
 
   @override
-  Map<String, String> get props => {'result': result.name};
+  Map<String, String> get props => {
+    'result': result.name,
+    if (trigger != null) 'trigger': trigger!.name,
+    if (nth != null)
+      'nth': bucket(nth!, const [3], ranges: const [(4, 9)], top: '10+'),
+  };
 }
 
 /// What setting up the history recorder ended in (2.7).
@@ -962,7 +1079,15 @@ class HaImportEvent extends AnalyticsEvent {
 enum ProStep { lockedShown, screenShown, unlockTapped, unlocked }
 
 /// Where the Pro screen was opened from (3.4.4).
-enum ProFrom { remoteDoor, remoteSettings, settings, history, automations, wall }
+enum ProFrom {
+  remoteDoor,
+  remoteSettings,
+  settings,
+  history,
+  automations,
+  wall,
+  saleCard,
+}
 
 class ProEvent extends AnalyticsEvent {
   const ProEvent(this.step, {this.from, this.sale});
@@ -987,6 +1112,22 @@ class ProEvent extends AnalyticsEvent {
     if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
     if (sale != null) 'sale': sale! ? 'yes' : 'no',
   };
+}
+
+/// The sale card on the Devices tab (3.4.6, devices-sale-card.md): counted
+/// once when shown for a sale, then opened or put away. Nothing else.
+enum SaleCardStep { shown, opened, closed }
+
+class SaleCardEvent extends AnalyticsEvent {
+  const SaleCardEvent(this.step);
+
+  final SaleCardStep step;
+
+  @override
+  String get name => 'sale_card';
+
+  @override
+  Map<String, String> get props => {'step': step.name};
 }
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or

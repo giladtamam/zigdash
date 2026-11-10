@@ -1449,12 +1449,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Due tentativi senza connessione. Dicci che hub hai e cosa hai scritto, e ti aiutiamo a trovarlo.';
 
   @override
-  String get guidedStuckTelegram => 'Chiedi su Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Consigli ed email';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Provati $count indirizzi';
   }
@@ -2980,14 +2974,154 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non riesci a farlo funzionare? Prima i consigli, poi il contatto';
 
   @override
-  String get settingsCommunity => 'Unisciti alla community di ZigDash';
+  String get getHelpWarm => 'Non trovato nulla? Tranquillo, ti aiuto io';
 
   @override
-  String get settingsCommunitySubtitle =>
-      'Gruppo Telegram: domande, idee e novità in arrivo';
+  String get getHelpAskRunning =>
+      'Zigbee2MQTT è in funzione adesso da qualche parte in casa tua?';
 
   @override
-  String get getHelpCommunity => 'Chiedi nel gruppo Telegram';
+  String get getHelpEmailHint => 'La tua email, se vuoi una risposta';
+
+  @override
+  String get getHelpSend => 'Invia';
+
+  @override
+  String get getHelpSending => 'Invio…';
+
+  @override
+  String get getHelpSent =>
+      'Inviato. Di solito rispondo entro 3 giorni se hai lasciato un\'email.';
+
+  @override
+  String get getHelpSendFailed => 'Invio non riuscito. Condividi invece';
+
+  @override
+  String get getHelpSendFailedNote =>
+      'Riprova tra un\'ora, oppure condividi i dettagli in altro modo.';
+
+  @override
+  String get getHelpRetry => 'Riprova a inviare';
+
+  @override
+  String get getHelpShare => 'Condividi dettagli';
+
+  @override
+  String get haConnectLooking => 'Ricerca di Home Assistant…';
+
+  @override
+  String get assistantTitle => 'Assistente ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Questa risposta arriva da un servizio IA che vede i tuoi dettagli di supporto. Non ha mai bisogno di password o indirizzi.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'La ricerca su $network ha provato $hosts indirizzi e trovato $brokers broker.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Hai detto che Zigbee2MQTT è in funzione. Troviamolo.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Non eri sicuro che Zigbee2MQTT fosse in funzione. Scopriamolo.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Dimmi cosa stavi cercando di fare e ti aiuto a connetterti.';
+
+  @override
+  String get assistantThinking => 'Sto pensando…';
+
+  @override
+  String get assistantResting =>
+      'L\'assistente è in pausa. Una persona resta raggiungibile qui sotto.';
+
+  @override
+  String get assistantRefused =>
+      'L\'assistente non può rispondere a questo. Una persona sì, qui sotto.';
+
+  @override
+  String get assistantFailed =>
+      'Impossibile raggiungere l\'assistente. Controlla la connessione o chiedi a una persona qui sotto.';
+
+  @override
+  String get assistantRetry => 'Riprova';
+
+  @override
+  String get assistantReplyHint => 'Chiedi o rispondi qui…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'La conversazione finisce qui. Una persona può proseguire.';
+
+  @override
+  String get assistantHelped => 'È stato utile?';
+
+  @override
+  String get assistantHelpedYes => 'Sì';
+
+  @override
+  String get assistantHelpedNo => 'No';
+
+  @override
+  String get assistantTalkToPerson => 'Parla con una persona';
+
+  @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivi rispondono',
+      one: '1 dispositivo risponde',
+      zero: 'nessun dispositivo risponde',
+    );
+    return '$home è connessa e $_temp0. Di cosa hai bisogno?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash non raggiunge $home in questo momento. Di cosa hai bisogno?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Un dispositivo non risponde più';
+
+  @override
+  String get assistantChipTile => 'Aggiungere un riquadro';
+
+  @override
+  String get assistantChipAutomations => 'Automazioni';
+
+  @override
+  String get assistantChipUnreachable => 'Casa non raggiungibile';
+
+  @override
+  String get helpBubbleLabel => 'Serve aiuto?';
+
+  @override
+  String get helpBubbleHide => 'Nascondi';
+
+  @override
+  String get helpBubbleHideSheet => 'Nascondi questa bolla';
+
+  @override
+  String get helpBubbleHidden =>
+      'Nascosta. La ritrovi in Impostazioni › Ottieni aiuto.';
+
+  @override
+  String get settingsHelpBubble => 'Bolla di aiuto nella schermata iniziale';
+
+  @override
+  String get settingsHelpBubbleSubtitle =>
+      'Chiedi all\'assistente da una dashboard';
+
+  @override
+  String get getHelpReportPrompt =>
+      'Cosa c\'era di sbagliato nella risposta dell\'assistente?';
 
   @override
   String get demoBannerHelp => 'Ottieni aiuto';
@@ -5418,4 +5552,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get proSaleEnded => 'L\'offerta è terminata. Questo è il prezzo ora.';
+
+  @override
+  String get saleCardRemote =>
+      'ZigDash Pro: controlla la tua casa da ovunque, e altro ancora.';
+
+  @override
+  String get saleCardHomeAssistant =>
+      'ZigDash Pro: cronologia più lunga, più automazioni e altro ancora.';
 }

@@ -1446,12 +1446,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Dva pokusy bez připojení. Napiš nám, jaký máš hub a co jsi zadal, a pomůžeme ti ho najít.';
 
   @override
-  String get guidedStuckTelegram => 'Zeptat se na Telegramu';
-
-  @override
-  String get guidedStuckHelp => 'Tipy a e-mail';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Vyzkoušené adresy: $count';
   }
@@ -2969,14 +2963,151 @@ class AppLocalizationsCs extends AppLocalizations {
       'Nedaří se to zprovoznit? Nejdřív tipy, pak kontakt';
 
   @override
-  String get settingsCommunity => 'Přidej se ke komunitě ZigDash';
+  String get getHelpWarm => 'Nic nenalezeno? Nebojte, pomůžu vám';
 
   @override
-  String get settingsCommunitySubtitle =>
-      'Skupina na Telegramu: otázky, nápady a co se chystá';
+  String get getHelpAskRunning => 'Běží teď Zigbee2MQTT někde u vás doma?';
 
   @override
-  String get getHelpCommunity => 'Zeptat se ve skupině na Telegramu';
+  String get getHelpEmailHint => 'Váš e-mail, pokud chcete odpověď';
+
+  @override
+  String get getHelpSend => 'Odeslat';
+
+  @override
+  String get getHelpSending => 'Odesílám…';
+
+  @override
+  String get getHelpSent =>
+      'Odesláno. Obvykle odpovím do 3 dnů, pokud jste nechali e-mail.';
+
+  @override
+  String get getHelpSendFailed => 'Odeslání se nezdařilo. Raději sdílet';
+
+  @override
+  String get getHelpSendFailedNote =>
+      'Zkuste to za hodinu znovu, nebo podrobnosti sdílejte jinak.';
+
+  @override
+  String get getHelpRetry => 'Zkusit odeslat znovu';
+
+  @override
+  String get getHelpShare => 'Sdílet podrobnosti';
+
+  @override
+  String get haConnectLooking => 'Hledám Home Assistant…';
+
+  @override
+  String get assistantTitle => 'Asistent ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Tato odpověď pochází ze služby AI, která vidí vaše podrobnosti pro podporu. Nikdy nepotřebuje vaše hesla ani adresy.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Hledání přes $network vyzkoušelo $hosts adres a našlo $brokers brokerů.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Řekli jste, že Zigbee2MQTT běží. Pojďme ho najít.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Nebyli jste si jisti, zda Zigbee2MQTT běží. Pojďme to zjistit.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Řekněte mi, co jste zkoušeli, a pomůžu vám s připojením.';
+
+  @override
+  String get assistantThinking => 'Přemýšlím…';
+
+  @override
+  String get assistantResting =>
+      'Asistent teď odpočívá. Člověk je dole stále k dispozici.';
+
+  @override
+  String get assistantRefused =>
+      'Na tohle asistent odpovědět nemůže. Člověk dole ano.';
+
+  @override
+  String get assistantFailed =>
+      'Asistenta se nepodařilo kontaktovat. Zkontrolujte připojení nebo se dole zeptejte člověka.';
+
+  @override
+  String get assistantRetry => 'Zkusit znovu';
+
+  @override
+  String get assistantReplyHint => 'Zeptejte se nebo odpovězte zde…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'Tady rozhovor končí. Člověk může pokračovat.';
+
+  @override
+  String get assistantHelped => 'Pomohlo to?';
+
+  @override
+  String get assistantHelpedYes => 'Ano';
+
+  @override
+  String get assistantHelpedNo => 'Ne';
+
+  @override
+  String get assistantTalkToPerson => 'Mluvit s člověkem';
+
+  @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zařízení hlásí',
+      few: '$count zařízení hlásí',
+      one: '1 zařízení hlásí',
+      zero: 'žádné zařízení nehlásí',
+    );
+    return '$home je připojen a $_temp0. S čím pomoci?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash se teď k $home nedostane. S čím pomoci?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Zařízení přestalo reagovat';
+
+  @override
+  String get assistantChipTile => 'Přidat dlaždici';
+
+  @override
+  String get assistantChipAutomations => 'Automatizace';
+
+  @override
+  String get assistantChipUnreachable => 'Domov je nedostupný';
+
+  @override
+  String get helpBubbleLabel => 'Potřebujete pomoc?';
+
+  @override
+  String get helpBubbleHide => 'Skrýt';
+
+  @override
+  String get helpBubbleHideSheet => 'Skrýt tuto bublinu';
+
+  @override
+  String get helpBubbleHidden => 'Skryto. Vrátíte v Nastavení › Získat pomoc.';
+
+  @override
+  String get settingsHelpBubble => 'Bublina nápovědy na domovské obrazovce';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'Zeptejte se asistenta z nástěnky';
+
+  @override
+  String get getHelpReportPrompt => 'Co bylo na odpovědi asistenta špatně?';
 
   @override
   String get demoBannerHelp => 'Získat pomoc';
@@ -5391,4 +5522,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get proSaleEnded => 'Akce skončila. Tohle je teď cena.';
+
+  @override
+  String get saleCardRemote =>
+      'ZigDash Pro: ovládejte domov odkudkoli a ještě víc.';
+
+  @override
+  String get saleCardHomeAssistant =>
+      'ZigDash Pro: delší historie, více automatizací a ještě víc.';
 }

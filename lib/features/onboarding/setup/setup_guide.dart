@@ -189,6 +189,13 @@ class _EmptyGuide extends ConsumerWidget {
               ),
           ],
         ),
+        // 3.4.8 (help-and-review-2026-11.md §1): a warm way to a person on
+        // every step before the last, which has its own help links. Get
+        // help then asks whether Zigbee2MQTT runs at all before the form.
+        if (current != GuideRung.help) ...[
+          const SizedBox(height: 12),
+          GetHelpWarmButton(platform: state.platform?.wireName),
+        ],
         const SizedBox(height: 24),
         const Divider(),
         // The ways that were always on the empty result stay, out of the
@@ -523,7 +530,6 @@ class _EmptyGuide extends ConsumerWidget {
             onPressed: () =>
                 context.push(Routes.getHelpFrom(HelpFrom.noConnection.name)),
           ),
-          const CommunityLink(from: HelpFrom.noConnection),
           OutlinedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),

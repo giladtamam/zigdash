@@ -31,6 +31,7 @@ import '../../features/home/list_detail.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/onboarding/setup/setup_error_guidance.dart';
+import '../../features/support/assistant_panel.dart' show AssistantHandoff;
 import '../../features/support/get_help_screen.dart';
 import '../../shortcuts/shortcut_tile_picker.dart';
 import '../analytics/analytics_events.dart'
@@ -92,11 +93,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Share this home (3.1.7): another phone's QR code, opened by the camera app.
       GoRoute(
         path: Routes.joinHome,
-        builder: (_, state) => JoinHomeScreen(code: state.uri.queryParameters['c']),
+        builder: (_, state) =>
+            JoinHomeScreen(code: state.uri.queryParameters['c']),
       ),
       GoRoute(
         path: '/pair-phone',
-        builder: (_, state) => PairPhoneScreen(code: state.uri.queryParameters['c']),
+        builder: (_, state) =>
+            PairPhoneScreen(code: state.uri.queryParameters['c']),
       ),
       // First run and adding a home: outside the navigation shell.
       GoRoute(
@@ -118,9 +121,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'no-hub',
             pageBuilder: (_, state) => _slideUp(
               NoHubScreen(
-                from: NoHubFrom.values.asNameMap()[state
-                        .uri
-                        .queryParameters['from']] ??
+                from:
+                    NoHubFrom.values
+                        .asNameMap()[state.uri.queryParameters['from']] ??
                     NoHubFrom.welcome,
               ),
             ),
@@ -159,6 +162,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               from: HelpFrom.values.asNameMap()[q['from']] ?? HelpFrom.settings,
               connectionId: q['home'],
               error: SetupErrorKind.values.asNameMap()[q['error']],
+              platform: q['platform'],
+              initialHandoff: state.extra is AssistantHandoff
+                  ? state.extra as AssistantHandoff
+                  : null,
             ),
           );
         },

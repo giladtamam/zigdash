@@ -2676,18 +2676,6 @@ abstract class AppLocalizations {
   /// **'Two tries without a connection. Tell us which hub you have and what you typed, and we\'ll help you find it.'**
   String get guidedStuckBody;
 
-  /// No description provided for @guidedStuckTelegram.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask in Telegram'**
-  String get guidedStuckTelegram;
-
-  /// No description provided for @guidedStuckHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Tips and email'**
-  String get guidedStuckHelp;
-
   /// No description provided for @ladderTriedHint.
   ///
   /// In en, this message translates to:
@@ -5328,23 +5316,251 @@ abstract class AppLocalizations {
   /// **'Can\'t get it working? Tips first, then contact'**
   String get settingsGetHelpSubtitle;
 
-  /// No description provided for @settingsCommunity.
+  /// No description provided for @getHelpWarm.
   ///
   /// In en, this message translates to:
-  /// **'Join the ZigDash community'**
-  String get settingsCommunity;
+  /// **'Nothing found? Don\'t worry, I\'ll help you'**
+  String get getHelpWarm;
 
-  /// No description provided for @settingsCommunitySubtitle.
+  /// No description provided for @getHelpAskRunning.
   ///
   /// In en, this message translates to:
-  /// **'Telegram group: questions, ideas and what\'s coming'**
-  String get settingsCommunitySubtitle;
+  /// **'Is Zigbee2MQTT running somewhere in your home right now?'**
+  String get getHelpAskRunning;
 
-  /// No description provided for @getHelpCommunity.
+  /// No description provided for @getHelpEmailHint.
   ///
   /// In en, this message translates to:
-  /// **'Ask in the Telegram group'**
-  String get getHelpCommunity;
+  /// **'Your email, if you want an answer'**
+  String get getHelpEmailHint;
+
+  /// No description provided for @getHelpSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get getHelpSend;
+
+  /// No description provided for @getHelpSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get getHelpSending;
+
+  /// No description provided for @getHelpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent. I usually answer within 3 days if you left an email.'**
+  String get getHelpSent;
+
+  /// No description provided for @getHelpSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send. Share instead'**
+  String get getHelpSendFailed;
+
+  /// No description provided for @getHelpSendFailedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again in an hour, or share the details another way.'**
+  String get getHelpSendFailedNote;
+
+  /// No description provided for @getHelpRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try sending again'**
+  String get getHelpRetry;
+
+  /// No description provided for @getHelpShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share details'**
+  String get getHelpShare;
+
+  /// No description provided for @haConnectLooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for Home Assistant…'**
+  String get haConnectLooking;
+
+  /// No description provided for @assistantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash assistant'**
+  String get assistantTitle;
+
+  /// No description provided for @assistantNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This answer comes from an AI service that sees your Support details. It never needs your passwords or addresses.'**
+  String get assistantNotice;
+
+  /// No description provided for @assistantOpeningScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Your scan on {network} tried {hosts} addresses and found {brokers} brokers.'**
+  String assistantOpeningScan(Object network, Object hosts, Object brokers);
+
+  /// No description provided for @assistantOpeningRunningYes.
+  ///
+  /// In en, this message translates to:
+  /// **'You said Zigbee2MQTT is running. Let\'s find it.'**
+  String get assistantOpeningRunningYes;
+
+  /// No description provided for @assistantOpeningRunningNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'You weren\'t sure whether Zigbee2MQTT runs. Let\'s find out.'**
+  String get assistantOpeningRunningNotSure;
+
+  /// No description provided for @assistantOpeningGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what you were trying to do, and I\'ll help you get connected.'**
+  String get assistantOpeningGeneric;
+
+  /// No description provided for @assistantThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking…'**
+  String get assistantThinking;
+
+  /// No description provided for @assistantResting.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant is resting right now. A person is still reachable below.'**
+  String get assistantResting;
+
+  /// No description provided for @assistantRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant can\'t answer that one. A person can, below.'**
+  String get assistantRefused;
+
+  /// No description provided for @assistantFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant couldn\'t be reached. Check your connection, or ask a person below.'**
+  String get assistantFailed;
+
+  /// No description provided for @assistantRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get assistantRetry;
+
+  /// No description provided for @assistantReplyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask or answer here…'**
+  String get assistantReplyHint;
+
+  /// No description provided for @assistantTurnsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the end of this conversation. A person can take it from here.'**
+  String get assistantTurnsUsed;
+
+  /// No description provided for @assistantHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'Did this help?'**
+  String get assistantHelped;
+
+  /// No description provided for @assistantHelpedYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get assistantHelpedYes;
+
+  /// No description provided for @assistantHelpedNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get assistantHelpedNo;
+
+  /// No description provided for @assistantTalkToPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a person'**
+  String get assistantTalkToPerson;
+
+  /// No description provided for @assistantHomeOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'{home} is connected and {count, plural, =0{no devices report} =1{1 device reports} other{{count} devices report}}. What do you need?'**
+  String assistantHomeOpening(String home, int count);
+
+  /// No description provided for @assistantHomeOpeningOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can\'t reach {home} right now. What do you need?'**
+  String assistantHomeOpeningOffline(String home);
+
+  /// No description provided for @assistantChipDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'A device stopped responding'**
+  String get assistantChipDevice;
+
+  /// No description provided for @assistantChipTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a tile'**
+  String get assistantChipTile;
+
+  /// No description provided for @assistantChipAutomations.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations'**
+  String get assistantChipAutomations;
+
+  /// No description provided for @assistantChipUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Home can\'t be reached'**
+  String get assistantChipUnreachable;
+
+  /// No description provided for @helpBubbleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help?'**
+  String get helpBubbleLabel;
+
+  /// No description provided for @helpBubbleHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get helpBubbleHide;
+
+  /// No description provided for @helpBubbleHideSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this bubble'**
+  String get helpBubbleHideSheet;
+
+  /// No description provided for @helpBubbleHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden. Bring it back in Settings › Get help.'**
+  String get helpBubbleHidden;
+
+  /// No description provided for @settingsHelpBubble.
+  ///
+  /// In en, this message translates to:
+  /// **'Help bubble on the home screen'**
+  String get settingsHelpBubble;
+
+  /// No description provided for @settingsHelpBubbleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the assistant from a dashboard'**
+  String get settingsHelpBubbleSubtitle;
+
+  /// No description provided for @getHelpReportPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What was wrong with the assistant\'s answer?'**
+  String get getHelpReportPrompt;
 
   /// No description provided for @demoBannerHelp.
   ///
@@ -9461,6 +9677,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The sale has ended. This is the price now.'**
   String get proSaleEnded;
+
+  /// Sale card on the Devices tab (3.4.6, docs/design/devices-sale-card.md).
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Pro: control your home from anywhere, and more.'**
+  String get saleCardRemote;
+
+  /// No description provided for @saleCardHomeAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Pro: longer history, more automations, and more.'**
+  String get saleCardHomeAssistant;
 }
 
 class _AppLocalizationsDelegate

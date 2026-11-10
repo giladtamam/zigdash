@@ -1,0 +1,1 @@
+Changed: the anonymous usage data (if you share it) now goes to a server the developer runs instead of the Aptabase cloud service. Same events, same opt-out; see the privacy policy.

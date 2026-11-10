@@ -13,6 +13,7 @@ SetupStep? setupStepFor(
   SetupState next, {
   SetupPlatform? platform,
   bool aiHelped = false,
+  bool? helpSeen,
 }) => switch (next) {
   SetupScanning() when previous is! SetupScanning => const SetupStep(
     SetupStepKind.started,
@@ -104,6 +105,7 @@ SetupStep? setupStepFor(
     platform: platform,
     via: via,
     aiHelped: aiHelped,
+    helpSeen: helpSeen,
   ),
   _ => null,
 };

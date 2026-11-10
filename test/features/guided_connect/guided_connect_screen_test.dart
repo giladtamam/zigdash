@@ -4,6 +4,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
 import 'package:zigdash/core/router/routes.dart';
@@ -25,6 +26,7 @@ import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/mqtt_manager.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
+import 'package:zigdash/features/settings/providers/settings_controller.dart';
 
 class _MemSecure implements SecureStore {
   final _m = <String, String>{};
@@ -181,12 +183,16 @@ GoRouter _router() => GoRouter(
   ],
 );
 
+late SharedPreferences _prefs;
+
 Widget _wrap({
   required AppDatabase db,
   required ConnectDiagnostics diagnostics,
   Map<dynamic, dynamic> extraOverrides = const {},
 }) {
   final overrides = <Override>[
+    // The success screen stamps setup_completed_at (3.4.8) on the way out.
+    sharedPreferencesProvider.overrideWithValue(_prefs),
     appDatabaseProvider.overrideWithValue(db),
     secureStorageProvider.overrideWithValue(_MemSecure()),
     connectionRepoProvider.overrideWith(
@@ -216,7 +222,11 @@ Widget _wrap({
 }
 
 void main() {
-  setUp(() => _firstRun = _RecordingFirstRun());
+  setUp(() async {
+    _firstRun = _RecordingFirstRun();
+    SharedPreferences.setMockInitialValues({});
+    _prefs = await SharedPreferences.getInstance();
+  });
 
   // 2.5: an empty host, with where to find it, instead of "localhost".
   testWidgets('starts empty, with hints on where the address is', (
@@ -358,8 +368,9 @@ void main() {
     await tester.tap(find.text('Retry'));
     await tester.pumpAndSettle();
     expect(find.text('Stuck? Ask a person'), findsOneWidget);
-    expect(find.text('Ask in Telegram'), findsOneWidget);
-    expect(find.text('Tips and email'), findsOneWidget);
+    // 3.4.8: help lives inside the app; no Telegram button.
+    expect(find.text('Ask in Telegram'), findsNothing);
+    expect(find.text('Get help'), findsOneWidget);
   });
 
   testWidgets('retry re-runs the ladder and can reach success', (tester) async {

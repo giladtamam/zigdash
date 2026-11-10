@@ -55,6 +55,7 @@ wayfinder/
 
 # Aptabase app key for release builds (ADR 0006); never committed.
 /tool/.analytics_key
+/tool/.analytics_key_selfhost
 
 # Golden diff output from failed runs (alchemist)
 test/goldens/failures/

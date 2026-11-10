@@ -350,9 +350,12 @@ class _AskState extends State<_Ask> {
     // 3.3.1: with the field empty and no look under way, signing in can
     // only end in "type the address": 503 of 553 taps in the last week of
     // October, one user 38 times. So the button waits for an address, and
-    // where to find it shows at once. While the look runs, a tap still
-    // waits for what it finds.
-    final noAddress = widget.address.text.trim().isEmpty && !widget.looking;
+    // where to find it shows at once. 3.4.8: during the look too. A tap
+    // then used to wait for what the look found, but 136 of 151 looks
+    // (Nov 6-8) found nothing, so the tap was wasted: 79 of 118 sign-in
+    // taps ended as "no address". The button now says it is looking.
+    final noAddress = widget.address.text.trim().isEmpty;
+    final looking = noAddress && widget.looking;
     // The token opens by itself when it is the way forward.
     final tokenOpen =
         _tokenOpen ||
@@ -530,8 +533,13 @@ class _AskState extends State<_Ask> {
           FilledButton.icon(
             key: const Key('ha-sign-in'),
             onPressed: noAddress ? null : widget.onSignIn,
-            icon: const Icon(Icons.login),
-            label: Text(l10n.haImportSignIn),
+            icon: looking
+                ? const SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.login),
+            label: Text(looking ? l10n.haConnectLooking : l10n.haImportSignIn),
           ),
           const SizedBox(height: 8),
           Text(l10n.haConnectSignInHelp, style: theme.textTheme.bodySmall),

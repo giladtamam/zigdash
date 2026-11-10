@@ -73,4 +73,4 @@ Requires a running Zigbee2MQTT and an MQTT broker on your network. No Zigbee2MQT
    • Tailscale (optional) for remote access from outside your home.
    • Node-RED (optional) for hub-side automation.
 
-   Built by a Zigbee2MQTT user, for the Zigbee2MQTT community. Questions and ideas: t.me/zigdash_app
+   Built by a Zigbee2MQTT user, for the Zigbee2MQTT community. Questions and ideas: Get help, inside the app.

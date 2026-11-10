@@ -370,9 +370,12 @@ void main() {
       );
     });
 
-    testWidgets('while looking, a sign-in can wait for what it finds', (
+    testWidgets('3.4.8: while looking, the button says so and waits', (
       tester,
     ) async {
+      // Until 3.4.7 a tap during the look waited for what it found; most
+      // looks find nothing, so the tap was wasted. Now the button is off
+      // and says it is looking, and comes back once the look ends.
       final found = Completer<List<HaFound>>();
       await pump(
         tester,
@@ -380,14 +383,15 @@ void main() {
         findHa: () => found.future,
         settle: false,
       );
-      expect(
-        tester
-            .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
-            .onPressed,
-        isNotNull,
-      );
+      final button = find.byKey(const Key('ha-sign-in'));
+      expect(tester.widget<FilledButton>(button).onPressed, isNull);
+      expect(find.text('Looking for Home Assistant…'), findsOneWidget);
       found.complete(const []);
       await tester.pumpAndSettle();
+      expect(find.text('Looking for Home Assistant…'), findsNothing);
+      expect(find.text('Sign in with Home Assistant'), findsOneWidget);
+      // Still no address: still off, and where to find it shows.
+      expect(tester.widget<FilledButton>(button).onPressed, isNull);
     });
   });
 

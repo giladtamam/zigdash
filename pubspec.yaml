@@ -1,7 +1,7 @@
 name: zigdash
 description: "Material 3 MQTT dashboard for Zigbee2MQTT control."
 publish_to: 'none'
-version: 3.4.5+104
+version: 3.5.1+109
 
 environment:
   sdk: ^3.8.0
@@ -141,24 +141,25 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#F6F3EC"
+  adaptive_icon_background: "#0E1422"
   adaptive_icon_foreground: "assets/icon/foreground.png"
   adaptive_icon_monochrome: "assets/icon/monochrome.png"
   remove_alpha_ios: true
   web:
     generate: true
     image_path: "assets/icon/icon.png"
-    background_color: "#F6F3EC"
-    theme_color: "#F6F3EC"
+    background_color: "#0E1422"
+    theme_color: "#0E1422"
 
 # Native splash: `dart run flutter_native_splash:create`.
-# Signal ground (ivory; near-black in dark) with the tile-grid logo centered.
+# Navy ground (the logo is drawn for a dark background) with the house-and-Z
+# mark centered, in light and dark alike.
 flutter_native_splash:
-  color: "#F6F3EC"
-  color_dark: "#15130F"
+  color: "#0E1422"
+  color_dark: "#0E1422"
   image: assets/icon/foreground.png
   android_12:
-    color: "#F6F3EC"
-    color_dark: "#15130F"
+    color: "#0E1422"
+    color_dark: "#0E1422"
     image: assets/icon/foreground.png
   web: false
