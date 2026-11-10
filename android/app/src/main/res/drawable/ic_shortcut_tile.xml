@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Quick Settings tile icon: the launcher's monochrome house-and-Z mark,
+     tinted by the system like any tile icon. -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/ic_launcher_monochrome"
+    android:gravity="center" />
