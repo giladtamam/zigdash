@@ -200,10 +200,11 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
     final scan = d.lastScan;
     final parts = <String>[];
     if (scan != null) {
+      // Positional as the string names them: network, hosts, brokers.
       parts.add(l10n.assistantOpeningScan(
+        scan.network ?? 'Wi-Fi',
         scan.hostsTried,
         scan.brokersFound,
-        scan.network ?? '',
       ));
     }
     if (widget.triage.running == 'yes') {
