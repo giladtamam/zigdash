@@ -16,7 +16,7 @@
     <application
         android:label="ZigDash"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher_monochrome"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:usesCleartextTraffic="true">
@@ -180,7 +180,7 @@
         <service
             android:name=".ShortcutTile1"
             android:exported="true"
-            android:icon="@drawable/ic_shortcut_tile"
+            android:icon="@drawable/ic_launcher_monochrome"
             android:label="ZigDash 1"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
@@ -191,7 +191,7 @@
         <service
             android:name=".ShortcutTile2"
             android:exported="true"
-            android:icon="@drawable/ic_shortcut_tile"
+            android:icon="@drawable/ic_launcher_monochrome"
             android:label="ZigDash 2"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
@@ -202,7 +202,7 @@
         <service
             android:name=".ShortcutTile3"
             android:exported="true"
-            android:icon="@drawable/ic_shortcut_tile"
+            android:icon="@drawable/ic_launcher_monochrome"
             android:label="ZigDash 3"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
@@ -213,7 +213,7 @@
         <service
             android:name=".ShortcutTile4"
             android:exported="true"
-            android:icon="@drawable/ic_shortcut_tile"
+            android:icon="@drawable/ic_launcher_monochrome"
             android:label="ZigDash 4"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
