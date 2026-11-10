@@ -1,6 +1,6 @@
 # Help that arrives, a review asked at the right moment (plan, 2026-11-10)
 
-Status: plan for ZigDash 3.4.8, branch `feat/help-review` from `release/3.4.7`. Not built. Revision 3, after two independent reviews (5, then 8; see "Changed" at the end).
+Status: built on `feat/help-review` from `release/3.4.7`; ships as part of ZigDash 3.5.0+107 together with the in-app assistant (assistant-in-app-2026-11.md), by the user's decision of 2026-11-10. Revision 3, after two independent reviews (5, then 8; see "Changed" at the end).
 
 ## Why
 

@@ -1,5 +1,5 @@
-New: Get help now has a Send button that reaches the developer directly, and Share details instead of Copy. On an empty scan, a "Don't worry, I'll help you" button is one tap away.
+New: an assistant inside Get help. When a scan finds nothing, it reads what the app already knows and suggests what to check, in your language; you can ask it back, and reach a person in one tap. Sending to a person now works from inside the app, and Share details replaces Copy.
 
-Changed: the review request waits for a moment when you have just used the dashboard, and the Home Assistant sign-in button says when it is still looking for Home Assistant.
+Changed: the review request waits for a moment when you have just used the dashboard, and the Home Assistant sign-in button says when it is still looking.
 
 Removed: the Telegram group links. Help is inside the app now.

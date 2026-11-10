@@ -1,6 +1,6 @@
 # An assistant inside the app (plan, 2026-11-10)
 
-Status: plan for ZigDash 3.5.0, to branch from `release/3.4.8` after that release's three-week Send read, so the two do not blur each other. Not built. Decided by the user on 2026-11-10 ("chatbot inside the app"; "any help should be inside the app"). Revision 3, after independent reviews scoring 6, 8 and finally 9 and one measurement that changes the premise; see "What the data says" and the "Changed" sections at the end.
+Status: being built on `feat/help-review` together with the 3.4.8 work, as one release, ZigDash 3.5.0+107 (the user's decision, 2026-11-10: "build the 3.5 chat bot and only then create the release"). Revision 4 notes what that changes; the rest of the text stands. Decided by the user on 2026-11-10 ("chatbot inside the app"; "any help should be inside the app"). Revision 3, after independent reviews scoring 6, 8 and finally 9 and one measurement that changes the premise; see "What the data says" and the "Changed" sections at the end.
 
 ## What the data says about the premise
 
@@ -87,6 +87,10 @@ A: about 5 days. B: about 3 more. The eval cases come from the last 30 days: an 
 1. A first, or straight to B. The recommendation is A.
 2. Model: Opus 5.5 as proposed, or Haiku 5.5 from the start to keep the bill near zero.
 3. An Anthropic API key for the Worker, set as a secret in the Cloudflare dashboard by the user, as the bot token was, plus a spend alert on that key.
+
+## Changed in revision 4
+
+The user chose to ship A and B together with the 3.4.8 changes as 3.5.0, so there is no 3.4.8 point release and no `help_seen` baseline window. The baseline for the lift read is pre-3.5 cloud data: setup-origin `help_opened` sessions that reached `complete` in the same session (weaker than `help_seen`); `help_seen` still ships so the next read is clean. Body cap on the assistant Worker is 24 KB (12 turns of 1,000 characters plus details exceed 8 KB), oldest turns trimmed on the phone; the card call waits up to 20 seconds, not 8, with the tips visible underneath. `max_tokens` is 2,048, since thinking tokens bill as output on Opus 5.5 at low effort and a truncated answer is worse than a higher ceiling.
 
 ## Changed in revision 3
 
