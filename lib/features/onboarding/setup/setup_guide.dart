@@ -189,6 +189,11 @@ class _EmptyGuide extends ConsumerWidget {
               ),
           ],
         ),
+        // 3.4.8 (help-and-review-2026-11.md §1): a warm way to a person on
+        // every step, not a quiet link on the last one. Get help then asks
+        // whether Zigbee2MQTT runs at all before showing the form.
+        const SizedBox(height: 12),
+        const GetHelpWarmButton(),
         const SizedBox(height: 24),
         const Divider(),
         // The ways that were always on the empty result stay, out of the

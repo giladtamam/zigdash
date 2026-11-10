@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2995,6 +2994,42 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get getHelpCommunity => 'In der Telegram-Gruppe fragen';
+
+  @override
+  String get getHelpWarm => 'Nichts gefunden? Keine Sorge, ich helfe dir';
+
+  @override
+  String get getHelpAskRunning =>
+      'Läuft Zigbee2MQTT gerade irgendwo bei dir zu Hause?';
+
+  @override
+  String get getHelpEmailHint => 'Deine E-Mail, wenn du eine Antwort möchtest';
+
+  @override
+  String get getHelpSend => 'Senden';
+
+  @override
+  String get getHelpSending => 'Wird gesendet…';
+
+  @override
+  String get getHelpSent =>
+      'Gesendet. Ich antworte meist innerhalb von 3 Tagen, wenn du eine E-Mail angegeben hast.';
+
+  @override
+  String get getHelpSendFailed => 'Senden fehlgeschlagen. Stattdessen teilen';
+
+  @override
+  String get getHelpSendFailedNote =>
+      'Versuch es in einer Stunde noch einmal oder teile die Details auf anderem Weg.';
+
+  @override
+  String get getHelpRetry => 'Noch einmal senden';
+
+  @override
+  String get getHelpShare => 'Details teilen';
+
+  @override
+  String get haConnectLooking => 'Suche Home Assistant…';
 
   @override
   String get demoBannerHelp => 'Hilfe holen';

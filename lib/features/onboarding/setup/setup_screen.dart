@@ -17,7 +17,11 @@ import '../../connections/discovery/no_network.dart';
 import '../../panels/widgets/device_tile_panel.dart' show ltr;
 import '../../settings/screens/settings_screen.dart' show privacyPolicyUrl;
 import '../../support/community.dart' show CommunityLink;
-import '../../support/get_help_screen.dart' show GetHelpLink;
+import '../../settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
+import '../../support/get_help_screen.dart'
+    show GetHelpLink, GetHelpWarmButton;
+import 'setup_completed_at.dart';
 import '../first_run.dart';
 import 'recommendation_policy.dart';
 import 'setup_candidate.dart';
@@ -88,6 +92,8 @@ class SetupScreen extends ConsumerWidget {
         ref.read(setupGuideProvider.notifier).state = const GuideProgress();
       }
       if (s is SetupComplete) {
+        // 3.4.8: the review prompt keeps quiet for a while after this.
+        markSetupCompleted(ref.read(sharedPreferencesProvider));
         // 3.1.5: the next setup starts without "Ask your AI" behind it.
         ref.read(aiHelpUsedProvider.notifier).state = false;
         ref.read(setupReminderProvider).cancel();

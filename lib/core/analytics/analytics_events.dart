@@ -628,9 +628,33 @@ enum HelpFrom {
 
   /// The one-time community card on a dashboard (community_opened only).
   card,
+
+  /// The warm button on the empty scan's guide (help-and-review-2026-11.md).
+  scanEmpty,
 }
 
-enum ContactVia { email, copy }
+/// How Support details left the phone: a mail app, the clipboard (platforms
+/// without a share sheet), or Android's share sheet (3.4.8, replaces copy).
+enum ContactVia { email, copy, share }
+
+/// What an in-app Send ended in (help-and-review-2026-11.md §2): delivered
+/// to the support receiver, failed, or failed and then shared instead.
+enum SupportSendResult { sent, failed, sharedAfterFailure }
+
+/// The user tapped Send on Get help (3.4.8). Only where from and how it
+/// ended; never the message.
+class SupportSent extends AnalyticsEvent {
+  const SupportSent(this.from, this.result);
+  final HelpFrom from;
+  final SupportSendResult result;
+  @override
+  String get name => 'support_sent';
+  @override
+  Map<String, String> get props => {
+    'from': _snake(from.name),
+    'result': _snake(result.name),
+  };
+}
 
 /// Get help was opened.
 class HelpOpened extends AnalyticsEvent {
@@ -866,16 +890,30 @@ enum ReviewPromptResult { requested, unavailable }
 /// The local review prompt policy was satisfied (review_prompt_policy.dart).
 /// Google gives no signal whether the dialog was then shown or answered, so
 /// this is the only way to know the prompt fires at all.
+/// What made the request (3.4.8): a command the user sent and saw
+/// confirmed, or a passive device report (sensor-only homes).
+enum ReviewTrigger { command, report }
+
 class ReviewPrompted extends AnalyticsEvent {
-  const ReviewPrompted(this.result);
+  const ReviewPrompted(this.result, {this.trigger, this.nth});
 
   final ReviewPromptResult result;
+  final ReviewTrigger? trigger;
+
+  /// Which confirmed command of the session made the request (3.4.8);
+  /// sent bucketed as 3, 4-9, 10+.
+  final int? nth;
 
   @override
   String get name => 'review_prompt';
 
   @override
-  Map<String, String> get props => {'result': result.name};
+  Map<String, String> get props => {
+    'result': result.name,
+    if (trigger != null) 'trigger': trigger!.name,
+    if (nth != null)
+      'nth': bucket(nth!, const [3], ranges: const [(4, 9)], top: '10+'),
+  };
 }
 
 /// What setting up the history recorder ended in (2.7).

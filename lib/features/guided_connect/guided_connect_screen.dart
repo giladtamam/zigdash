@@ -6,6 +6,9 @@ import 'package:go_router/go_router.dart';
 
 import '../onboarding/setup/ai_help.dart' show aiHelpUsedProvider;
 import '../support/support_details.dart';
+import '../onboarding/setup/setup_completed_at.dart';
+import '../settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
 import '../support/get_help_screen.dart' show GetHelpLink;
 import '../support/community.dart';
 import '../support/support_log.dart';
@@ -639,6 +642,8 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                         ),
                       );
                   ref.read(aiHelpUsedProvider.notifier).state = false;
+                  // 3.4.8: the review prompt keeps quiet for a while after this.
+                  await markSetupCompleted(ref.read(sharedPreferencesProvider));
                   try {
                     await ref.read(firstRunProvider).finish(id);
                   } catch (_) {

@@ -22,7 +22,7 @@ List<HelpTip> tipsFor(
     t(l.tipByAddressTitle, l.tipByAddressBody),
   ];
   return switch (from) {
-    HelpFrom.noConnection => noConnection,
+    HelpFrom.noConnection || HelpFrom.scanEmpty => noConnection,
     HelpFrom.setupError => switch (error) {
       SetupErrorKind.hostUnreachable => [
         t(l.tipSameNetworkTitle, l.tipSameNetworkBody),
@@ -98,4 +98,5 @@ String openedFromLabel(HelpFrom from, SetupErrorKind? error) => switch (from) {
   HelpFrom.settings => 'Settings',
   HelpFrom.demo => 'Demo',
   HelpFrom.card => 'Dashboard › community card',
+  HelpFrom.scanEmpty => 'Setup › Nothing found › help button',
 };

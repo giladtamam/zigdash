@@ -5346,6 +5346,72 @@ abstract class AppLocalizations {
   /// **'Ask in the Telegram group'**
   String get getHelpCommunity;
 
+  /// No description provided for @getHelpWarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found? Don\'t worry, I\'ll help you'**
+  String get getHelpWarm;
+
+  /// No description provided for @getHelpAskRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT running somewhere in your home right now?'**
+  String get getHelpAskRunning;
+
+  /// No description provided for @getHelpEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email, if you want an answer'**
+  String get getHelpEmailHint;
+
+  /// No description provided for @getHelpSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get getHelpSend;
+
+  /// No description provided for @getHelpSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get getHelpSending;
+
+  /// No description provided for @getHelpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent. I usually answer within 3 days if you left an email.'**
+  String get getHelpSent;
+
+  /// No description provided for @getHelpSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send. Share instead'**
+  String get getHelpSendFailed;
+
+  /// No description provided for @getHelpSendFailedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again in an hour, or share the details another way.'**
+  String get getHelpSendFailedNote;
+
+  /// No description provided for @getHelpRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try sending again'**
+  String get getHelpRetry;
+
+  /// No description provided for @getHelpShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share details'**
+  String get getHelpShare;
+
+  /// No description provided for @haConnectLooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for Home Assistant…'**
+  String get haConnectLooking;
+
   /// No description provided for @demoBannerHelp.
   ///
   /// In en, this message translates to:
