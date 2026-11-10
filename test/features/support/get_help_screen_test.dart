@@ -367,6 +367,17 @@ void main() {
     });
   });
 
+  test('the assistant\'s light markdown: bold only, the rest verbatim', () {
+    final span = lightMarkdown('1. **Same Wi-Fi:** join it. 2. Port 1883.', null);
+    final texts = <String>[];
+    span.visitChildren((s) {
+      if (s is TextSpan && s.text != null) texts.add(s.text!);
+      return true;
+    });
+    expect(texts, ['1. ', 'Same Wi-Fi:', ' join it. 2. Port 1883.']);
+    expect(lightMarkdown('plain', null).text, 'plain');
+  });
+
   test('the support email carries subject, prompt and details', () {
     final url = supportMailUrl(
       subject: 'ZigDash: help getting it working',

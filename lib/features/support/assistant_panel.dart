@@ -142,15 +142,19 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
       _busy = false;
       _last = reply.outcome;
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scroll.hasClients) {
-        _scroll.animateTo(
-          _scroll.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+    // The first answer is read from its top; later ones follow the user's
+    // own reply, so the list moves to the end.
+    if (_turns.length > 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scroll.hasClients) {
+          _scroll.animateTo(
+            _scroll.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
   }
 
   Future<void> _send() async {
@@ -386,10 +390,12 @@ class _Bubble extends StatelessWidget {
               color: mine ? scheme.primaryContainer : scheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: SelectableText(
-              turn.text,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: mine ? scheme.onPrimaryContainer : scheme.onSurface,
+            child: SelectableText.rich(
+              lightMarkdown(
+                turn.text,
+                theme.textTheme.bodyMedium?.copyWith(
+                  color: mine ? scheme.onPrimaryContainer : scheme.onSurface,
+                ),
               ),
             ),
           ),
@@ -439,4 +445,21 @@ class _TypingText extends StatelessWidget {
         context.l10n.assistantThinking,
         style: Theme.of(context).textTheme.bodySmall,
       );
+}
+
+/// The light markdown the assistant is allowed: `**bold**` becomes bold,
+/// everything else stays as written (numbered lines read fine as text).
+TextSpan lightMarkdown(String text, TextStyle? style) {
+  final parts = text.split('**');
+  if (parts.length < 3) return TextSpan(text: text, style: style);
+  final bold = style?.copyWith(fontWeight: FontWeight.w600) ??
+      const TextStyle(fontWeight: FontWeight.w600);
+  return TextSpan(
+    style: style,
+    children: [
+      for (var i = 0; i < parts.length; i++)
+        if (parts[i].isNotEmpty)
+          TextSpan(text: parts[i], style: i.isOdd ? bold : null),
+    ],
+  );
 }
