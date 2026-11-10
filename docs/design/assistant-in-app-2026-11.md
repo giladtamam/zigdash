@@ -123,12 +123,12 @@ struggle with, and the same Worker, prompt and panel answer there.
   long-press offers Hide; hidden is remembered in SharedPreferences. Settings
   › Get help gets a switch "Help bubble on the home screen" to bring it back.
   The Get help screen is unchanged and always there.
-- **Open.** A modal bottom sheet (DraggableScrollableSheet, 60% to 95%)
+- **Open.** A modal bottom sheet (DraggableScrollableSheet, 66% at first, 40% to 95%)
   with the assistant panel in home mode: title, the AI notice, an opening
   line from the home's facts ("Office is connected and 12 devices report.
-  What do you need?" / "ZigDash can't reach Office right now."), four chips
-  (A device stopped responding · Add a tile · Automations · Home can't be
-  reached), the reply field enabled from the start, "Did this help?" under
+  What do you need?" / "ZigDash can't reach Office right now."), chips that
+  fit the state (connected: A device stopped responding · Add a tile ·
+  Automations; unreachable: Home can't be reached), the reply field enabled from the start, "Did this help?" under
   each answer, Talk to a person. Nothing is sent until a chip is tapped or
   a message is sent; a chip is sent as the user's first message.
 - Hidden while Edit mode is on, while the wall display hides its chrome,
@@ -240,3 +240,9 @@ opening line falls back to the generic line when Zigbee2MQTT facts are
 missing; in home mode the conversation is a plain column that scrolls with
 the sheet (a drag anywhere moves the sheet, new answers scroll it to the
 end); a test that the details carry attention counts and never names.
+
+### Scored 9 (2026-11-10, third pass)
+a 8, b 9, c 9, d 9, e 8: "ship it". Its three notes were taken the same
+hour: the prompt's Tailscale rule now says which mode it binds, a test
+covers the generic opening line when Zigbee2MQTT facts are missing, and
+this section's sheet sizes and chip list match the code.

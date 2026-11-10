@@ -56,6 +56,7 @@ Widget _app({
   MqttStatus status = MqttStatus.connected,
   String answer = 'Open **Devices** and look for it.',
   List<DeviceHealth>? health,
+  Z2mFacts? z2m = const Z2mFacts(version: '2.6.0', online: true, devices: 12),
 }) => ProviderScope(
   overrides: [
     sharedPreferencesProvider.overrideWithValue(_prefs),
@@ -87,7 +88,7 @@ Widget _app({
         android: '15',
         phone: 'Pixel',
         openedFrom: q.openedFrom,
-        z2m: const Z2mFacts(version: '2.6.0', online: true, devices: 12),
+        z2m: z2m,
       ),
     ),
     assistantCallerProvider.overrideWithValue((request, timeout) async {
@@ -215,6 +216,18 @@ void main() {
     expect(details, contains('Devices needing attention: 2 (1 not responding)'));
     expect(details, isNot(contains('Back door')));
     expect(details, isNot(contains('Hall bulb')));
+  });
+
+  testWidgets('no Zigbee2MQTT facts: the generic opening, never 0 devices', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(z2m: null));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('help-bubble')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('0 devices'), findsNothing);
+    expect(find.textContaining('no devices report'), findsNothing);
+    expect(find.textContaining("I'll help you get connected"), findsOneWidget);
   });
 
   testWidgets('after the first open only the dot remains', (tester) async {
