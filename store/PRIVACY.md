@@ -211,6 +211,39 @@ chose to include are used only to help you, are never shared, and are
 deleted within 6 months after the issue is closed; a Telegram message is
 deleted from the chat once answered.
 
+## The assistant on Get help (from 3.5.0)
+
+When Get help is opened from setup (an empty scan, a setup error, the
+broker form), an assistant answers first. To answer, the app sends the
+Support details, your answers to its questions (whether Zigbee2MQTT runs,
+which kind of hub) and the app's language to a small service the developer
+runs on Cloudflare, which adds its instructions and forwards the request to
+Anthropic's Claude API; when you reply to the assistant, what you type goes
+the same way. Nothing is sent before the panel opens on such a screen, and
+nothing from Settings or the demo. Anthropic keeps API inputs for up to 30
+days for abuse monitoring under [its own terms](https://www.anthropic.com/legal/commercial-terms)
+and does not train on them. The developer's service keeps nothing and does
+not log the messages; the conversation lives only in the app's memory until
+you leave the screen. No account, device or install identifier is sent;
+limits are applied by network address, at the service. The assistant never
+needs, and is instructed never to ask for, your passwords, tokens or
+addresses; it is also instructed never to suggest turning off a broker's
+login, opening a port to the internet, or editing Zigbee2MQTT's
+configuration by hand.
+
+"Did this help? No" opens the Send form with that answer attached, which is
+also how you report a bad answer; it reaches the developer like any other
+support message (see Support messages above).
+
+| Event | What it records | Values |
+|---|---|---|
+| `assistant` | From 3.5.0: what happened with the assistant on Get help | where Get help was opened from (as above); that it was shown, answered, was resting (over a limit), declined, failed, got a reply from you (which one: 1st, 2nd-3rd, 4th-9th, 10th or later), got a yes or a no to "Did this help?", or that Talk to a person was tapped. Never the text |
+
+The `setup_step` event's `complete` step gains `help_seen`: whether the
+assistant had answered on this phone within the last 24 hours before the
+setup finished, read from a timestamp kept in the app's preferences. Yes
+or no, nothing else.
+
 ## Automations and ZigDash Engine (from 3.0)
 
 If you set up automations, alerts or history, ZigDash installs ZigDash Engine
