@@ -276,8 +276,8 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                     maxLength: 2000,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      labelText: l10n.getHelpEmailPrompt,
-                      alignLabelWithHint: true,
+                      hintText: l10n.getHelpEmailPrompt,
+                      hintMaxLines: 2,
                       border: const OutlineInputBorder(),
                       counterText: '',
                     ),
