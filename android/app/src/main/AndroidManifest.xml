@@ -16,7 +16,7 @@
     <application
         android:label="ZigDash"
         android:name="${applicationName}"
-        android:icon="@drawable/ic_shortcut_tile"
+        android:icon="@mipmap/ic_launcher"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:usesCleartextTraffic="true">
