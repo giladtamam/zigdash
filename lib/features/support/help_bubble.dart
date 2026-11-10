@@ -352,6 +352,7 @@ class _AssistantSheet extends ConsumerWidget {
               framed: false,
               from: HelpFrom.bubble,
               shownState: state,
+              sheetScroll: scroll,
               details: d.withAttention(attention),
               triage: const AssistantTriage(),
               // "connected and N devices report" only when Zigbee2MQTT

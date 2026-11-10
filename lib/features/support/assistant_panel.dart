@@ -72,6 +72,7 @@ class AssistantPanel extends ConsumerStatefulWidget {
     this.chips = const [],
     this.framed = true,
     this.shownState,
+    this.sheetScroll,
   });
 
   final HelpFrom from;
@@ -98,6 +99,11 @@ class AssistantPanel extends ConsumerStatefulWidget {
 
   /// The bubble state that was tapped (`pill` or `dot`), on the shown event.
   final String? shownState;
+
+  /// The sheet's own scroll controller (home mode): the conversation is a
+  /// plain column that scrolls with the sheet, so a drag anywhere moves the
+  /// sheet, and new answers scroll the sheet to its end.
+  final ScrollController? sheetScroll;
 
   /// Talk to a person: opens the Send form with the handoff attached.
   final ValueChanged<AssistantHandoff> onTalkToPerson;
@@ -202,9 +208,10 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
     // own reply, so the list moves to the end.
     if (_turns.length > 1) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scroll.hasClients) {
-          _scroll.animateTo(
-            _scroll.position.maxScrollExtent,
+        final scroll = widget.sheetScroll ?? _scroll;
+        if (scroll.hasClients) {
+          scroll.animateTo(
+            scroll.position.maxScrollExtent,
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeOut,
           );
@@ -305,6 +312,46 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
     return parts.join(' ');
   }
 
+  List<Widget> _conversation(
+    AppLocalizations l10n,
+    ThemeData theme,
+    ColorScheme scheme,
+  ) => [
+    for (var i = 0; i < _turns.length; i++)
+      _Bubble(
+        turn: _turns[i],
+        helped: _helped[i],
+        onHelped: _turns[i].fromUser ? null : (yes) => _helpedTap(i, yes),
+      ),
+    if (_busy)
+      const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            SizedBox.square(
+              dimension: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            SizedBox(width: 10),
+            _TypingText(),
+          ],
+        ),
+      ),
+    if (!_busy && _last != null && _last != AssistantOutcome.answered)
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text(
+          switch (_last!) {
+            AssistantOutcome.resting => l10n.assistantResting,
+            AssistantOutcome.refused => l10n.assistantRefused,
+            _ => l10n.assistantFailed,
+          },
+          key: const Key('assistant-status'),
+          style: theme.textTheme.bodyMedium?.copyWith(color: scheme.error),
+        ),
+      ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -354,52 +401,22 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
           ),
         ],
         const SizedBox(height: 12),
-        ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: _home ? 420 : 360),
-          child: ListView(
-            controller: _scroll,
-            shrinkWrap: true,
-            children: [
-              for (var i = 0; i < _turns.length; i++)
-                _Bubble(
-                  turn: _turns[i],
-                  helped: _helped[i],
-                  onHelped: _turns[i].fromUser
-                      ? null
-                      : (yes) => _helpedTap(i, yes),
-                ),
-              if (_busy)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      SizedBox.square(
-                        dimension: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      SizedBox(width: 10),
-                      _TypingText(),
-                    ],
-                  ),
-                ),
-              if (!_busy && _last != null && _last != AssistantOutcome.answered)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    switch (_last!) {
-                      AssistantOutcome.resting => l10n.assistantResting,
-                      AssistantOutcome.refused => l10n.assistantRefused,
-                      _ => l10n.assistantFailed,
-                    },
-                    key: const Key('assistant-status'),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: scheme.error,
-                    ),
-                  ),
-                ),
-            ],
+        // Home mode: a plain column, the sheet scrolls. Get help: a list of
+        // its own, so the card stays a card inside the screen's list.
+        if (_home)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: _conversation(l10n, theme, scheme),
+          )
+        else
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 360),
+            child: ListView(
+              controller: _scroll,
+              shrinkWrap: true,
+              children: _conversation(l10n, theme, scheme),
+            ),
           ),
-        ),
         if (!_busy && _last == AssistantOutcome.failed && answers == 0)
           Align(
             alignment: AlignmentDirectional.centerStart,

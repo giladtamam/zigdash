@@ -5,7 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/features/devices/device_health.dart';
 import 'package:zigdash/features/devices/devices_providers.dart';
+import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/features/support/assistant_client.dart';
 import 'package:zigdash/features/support/help_bubble.dart';
@@ -33,10 +35,27 @@ Connection _home({String host = '192.168.1.20'}) => Connection(
 late SharedPreferences _prefs;
 final _calls = <AssistantRequest>[];
 
+const _door = Z2mDevice(
+  friendlyName: 'Back door',
+  type: 'EndDevice',
+  ieeeAddress: '0x01',
+);
+const _bulb = Z2mDevice(
+  friendlyName: 'Hall bulb',
+  type: 'Router',
+  ieeeAddress: '0x02',
+);
+const _plug = Z2mDevice(
+  friendlyName: 'Plug',
+  type: 'Router',
+  ieeeAddress: '0x03',
+);
+
 Widget _app({
   Connection? home,
   MqttStatus status = MqttStatus.connected,
   String answer = 'Open **Devices** and look for it.',
+  List<DeviceHealth>? health,
 }) => ProviderScope(
   overrides: [
     sharedPreferencesProvider.overrideWithValue(_prefs),
@@ -44,7 +63,11 @@ Widget _app({
       (ref, id) async => home ?? _home(),
     ),
     connectionStatusProvider.overrideWith((ref, id) => Stream.value(status)),
-    homeBaseTopicProvider.overrideWith((ref, _) => null),
+    homeBaseTopicProvider.overrideWith(
+      (ref, _) => health == null ? null : 'zigbee2mqtt',
+    ),
+    if (health != null)
+      deviceHealthProvider.overrideWith((ref, _) => Stream.value(health)),
     platformFactsProvider.overrideWith(
       (ref) async => (
         appVersion: '3.5.0',
@@ -167,6 +190,31 @@ void main() {
     // No help_seen stamp from the bubble.
     expect(_prefs.getInt('assistant_answered_at_ms'), isNull);
     expect(_prefs.getBool(kHelpBubbleOpened), isTrue);
+  });
+
+  testWidgets('the details carry attention counts, never names', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        health: [
+          // Offline: counted as attention, not as not-responding.
+          const DeviceHealth(device: _door, online: false),
+          // Never heard from and the request timed out.
+          const DeviceHealth(device: _bulb, notResponding: true),
+          DeviceHealth(device: _plug, state: const {'state': 'ON'}),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('help-bubble')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('assistant-chip-device')));
+    await tester.pumpAndSettle();
+    final details = _calls.single.details;
+    expect(details, contains('Devices needing attention: 2 (1 not responding)'));
+    expect(details, isNot(contains('Back door')));
+    expect(details, isNot(contains('Hall bulb')));
   });
 
   testWidgets('after the first open only the dot remains', (tester) async {

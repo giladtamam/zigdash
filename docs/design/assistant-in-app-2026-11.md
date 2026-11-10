@@ -235,7 +235,8 @@ An independent review scored the section above 6/10. What changed:
 
 ### Re-scored 8 (2026-11-10, after the build)
 The same reviewer, on the plan plus the code: 8/10 (a 7, b 8, c 8, d 8,
-e 7). Taken the same day: hourly caps keyed by door; the opening line
-falls back to the generic line when Zigbee2MQTT facts are missing. Left for
-3.5.1: the panel's own scroll inside the sheet (drags over the conversation
-scroll the list, not the sheet), and a test for the attention-count line.
+e 7). Taken the same day, before the upload: hourly caps keyed by door; the
+opening line falls back to the generic line when Zigbee2MQTT facts are
+missing; in home mode the conversation is a plain column that scrolls with
+the sheet (a drag anywhere moves the sheet, new answers scroll it to the
+end); a test that the details carry attention counts and never names.
