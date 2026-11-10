@@ -3007,6 +3007,70 @@ class AppLocalizationsPl extends AppLocalizations {
   String get haConnectLooking => 'Szukam Home Assistant…';
 
   @override
+  String get assistantTitle => 'Asystent ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Ta odpowiedź pochodzi z usługi AI, która widzi twoje szczegóły pomocy. Nigdy nie potrzebuje twoich haseł ani adresów.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Skanowanie przez $network sprawdziło $hosts adresów i znalazło $brokers brokerów.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Powiedziałeś, że Zigbee2MQTT działa. Znajdźmy go.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Nie byłeś pewien, czy Zigbee2MQTT działa. Sprawdźmy to.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Powiedz, co próbowałeś zrobić, a pomogę ci się połączyć.';
+
+  @override
+  String get assistantThinking => 'Myślę…';
+
+  @override
+  String get assistantResting =>
+      'Asystent teraz odpoczywa. Człowiek nadal jest dostępny poniżej.';
+
+  @override
+  String get assistantRefused =>
+      'Na to asystent nie odpowie. Człowiek poniżej może.';
+
+  @override
+  String get assistantFailed =>
+      'Nie udało się połączyć z asystentem. Sprawdź połączenie albo zapytaj człowieka poniżej.';
+
+  @override
+  String get assistantRetry => 'Spróbuj ponownie';
+
+  @override
+  String get assistantReplyHint => 'Zapytaj lub odpowiedz tutaj…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'Tu kończy się ta rozmowa. Człowiek może ją przejąć.';
+
+  @override
+  String get assistantHelped => 'Czy to pomogło?';
+
+  @override
+  String get assistantHelpedYes => 'Tak';
+
+  @override
+  String get assistantHelpedNo => 'Nie';
+
+  @override
+  String get assistantTalkToPerson => 'Porozmawiaj z człowiekiem';
+
+  @override
+  String get getHelpReportPrompt => 'Co było nie tak w odpowiedzi asystenta?';
+
+  @override
   String get demoBannerHelp => 'Uzyskaj pomoc';
 
   @override

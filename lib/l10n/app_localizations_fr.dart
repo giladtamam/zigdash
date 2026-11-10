@@ -3022,6 +3022,71 @@ class AppLocalizationsFr extends AppLocalizations {
   String get haConnectLooking => 'Recherche de Home Assistant…';
 
   @override
+  String get assistantTitle => 'Assistant ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Cette réponse vient d\'un service d\'IA qui voit vos détails d\'assistance. Il n\'a jamais besoin de vos mots de passe ni de vos adresses.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Votre recherche en $network a essayé $hosts adresses et trouvé $brokers brokers.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Vous avez dit que Zigbee2MQTT tourne. Trouvons-le.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Vous n\'étiez pas sûr que Zigbee2MQTT tourne. Vérifions.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Dites-moi ce que vous essayiez de faire et je vous aide à vous connecter.';
+
+  @override
+  String get assistantThinking => 'Réflexion…';
+
+  @override
+  String get assistantResting =>
+      'L\'assistant se repose pour l\'instant. Une personne reste joignable ci-dessous.';
+
+  @override
+  String get assistantRefused =>
+      'L\'assistant ne peut pas répondre à cela. Une personne le peut, ci-dessous.';
+
+  @override
+  String get assistantFailed =>
+      'Impossible de joindre l\'assistant. Vérifiez votre connexion ou demandez à une personne ci-dessous.';
+
+  @override
+  String get assistantRetry => 'Réessayer';
+
+  @override
+  String get assistantReplyHint => 'Posez ou répondez ici…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'Cette conversation s\'arrête ici. Une personne peut prendre le relais.';
+
+  @override
+  String get assistantHelped => 'Cela a aidé ?';
+
+  @override
+  String get assistantHelpedYes => 'Oui';
+
+  @override
+  String get assistantHelpedNo => 'Non';
+
+  @override
+  String get assistantTalkToPerson => 'Parler à une personne';
+
+  @override
+  String get getHelpReportPrompt =>
+      'Qu\'est-ce qui n\'allait pas dans la réponse de l\'assistant ?';
+
+  @override
   String get demoBannerHelp => 'Obtenir de l\'aide';
 
   @override

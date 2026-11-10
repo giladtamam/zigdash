@@ -5382,6 +5382,114 @@ abstract class AppLocalizations {
   /// **'Looking for Home Assistant…'**
   String get haConnectLooking;
 
+  /// No description provided for @assistantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash assistant'**
+  String get assistantTitle;
+
+  /// No description provided for @assistantNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This answer comes from an AI service that sees your Support details. It never needs your passwords or addresses.'**
+  String get assistantNotice;
+
+  /// No description provided for @assistantOpeningScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Your scan on {network} tried {hosts} addresses and found {brokers} brokers.'**
+  String assistantOpeningScan(Object network, Object hosts, Object brokers);
+
+  /// No description provided for @assistantOpeningRunningYes.
+  ///
+  /// In en, this message translates to:
+  /// **'You said Zigbee2MQTT is running. Let\'s find it.'**
+  String get assistantOpeningRunningYes;
+
+  /// No description provided for @assistantOpeningRunningNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'You weren\'t sure whether Zigbee2MQTT runs. Let\'s find out.'**
+  String get assistantOpeningRunningNotSure;
+
+  /// No description provided for @assistantOpeningGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what you were trying to do, and I\'ll help you get connected.'**
+  String get assistantOpeningGeneric;
+
+  /// No description provided for @assistantThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking…'**
+  String get assistantThinking;
+
+  /// No description provided for @assistantResting.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant is resting right now. A person is still reachable below.'**
+  String get assistantResting;
+
+  /// No description provided for @assistantRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant can\'t answer that one. A person can, below.'**
+  String get assistantRefused;
+
+  /// No description provided for @assistantFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant couldn\'t be reached. Check your connection, or ask a person below.'**
+  String get assistantFailed;
+
+  /// No description provided for @assistantRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get assistantRetry;
+
+  /// No description provided for @assistantReplyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask or answer here…'**
+  String get assistantReplyHint;
+
+  /// No description provided for @assistantTurnsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the end of this conversation. A person can take it from here.'**
+  String get assistantTurnsUsed;
+
+  /// No description provided for @assistantHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'Did this help?'**
+  String get assistantHelped;
+
+  /// No description provided for @assistantHelpedYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get assistantHelpedYes;
+
+  /// No description provided for @assistantHelpedNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get assistantHelpedNo;
+
+  /// No description provided for @assistantTalkToPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a person'**
+  String get assistantTalkToPerson;
+
+  /// No description provided for @getHelpReportPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What was wrong with the assistant\'s answer?'**
+  String get getHelpReportPrompt;
+
   /// No description provided for @demoBannerHelp.
   ///
   /// In en, this message translates to:

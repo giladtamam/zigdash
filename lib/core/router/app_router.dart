@@ -159,6 +159,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               from: HelpFrom.values.asNameMap()[q['from']] ?? HelpFrom.settings,
               connectionId: q['home'],
               error: SetupErrorKind.values.asNameMap()[q['error']],
+              platform: q['platform'],
             ),
           );
         },

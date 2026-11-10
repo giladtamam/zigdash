@@ -46,7 +46,7 @@ export default {
     if (!counters.allowed) return text(503, 'over limit');
 
     const lines = [
-      `ZigDash support, ${String(body.app ?? '?')}+${String(body.build ?? '?')}, ${String(body.locale ?? '?')}`,
+      `ZigDash ${body.kind === 'ai_report' ? 'AI report' : 'support'}, ${String(body.app ?? '?')}+${String(body.build ?? '?')}, ${String(body.locale ?? '?')}`,
       body.email ? `From: ${String(body.email).trim()}` : 'From: (no email)',
       '',
       message,

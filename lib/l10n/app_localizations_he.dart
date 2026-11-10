@@ -2970,6 +2970,67 @@ class AppLocalizationsHe extends AppLocalizations {
   String get haConnectLooking => 'מחפש את Home Assistant…';
 
   @override
+  String get assistantTitle => 'העוזר של ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'התשובה מגיעה משירות AI שרואה את פרטי התמיכה שלך. הוא לעולם לא צריך סיסמאות או כתובות.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'הסריקה דרך $network בדקה $hosts כתובות ומצאה $brokers ברוקרים.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'אמרת ש-Zigbee2MQTT פועל. בוא נמצא אותו.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'לא היית בטוח אם Zigbee2MQTT פועל. בוא נברר.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'ספר לי מה ניסית לעשות ואעזור לך להתחבר.';
+
+  @override
+  String get assistantThinking => 'חושב…';
+
+  @override
+  String get assistantResting => 'העוזר נח כרגע. עדיין אפשר להגיע לאדם למטה.';
+
+  @override
+  String get assistantRefused => 'העוזר לא יכול לענות על זה. אדם יכול, למטה.';
+
+  @override
+  String get assistantFailed =>
+      'לא הצלחנו להגיע לעוזר. בדוק את החיבור או שאל אדם למטה.';
+
+  @override
+  String get assistantRetry => 'נסה שוב';
+
+  @override
+  String get assistantReplyHint => 'שאל או ענה כאן…';
+
+  @override
+  String get assistantTurnsUsed => 'כאן השיחה מסתיימת. אדם יכול להמשיך מכאן.';
+
+  @override
+  String get assistantHelped => 'זה עזר?';
+
+  @override
+  String get assistantHelpedYes => 'כן';
+
+  @override
+  String get assistantHelpedNo => 'לא';
+
+  @override
+  String get assistantTalkToPerson => 'לדבר עם אדם';
+
+  @override
+  String get getHelpReportPrompt => 'מה היה לא נכון בתשובת העוזר?';
+
+  @override
   String get demoBannerHelp => 'קבלת עזרה';
 
   @override

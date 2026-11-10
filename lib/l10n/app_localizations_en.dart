@@ -2995,6 +2995,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get haConnectLooking => 'Looking for Home Assistant…';
 
   @override
+  String get assistantTitle => 'ZigDash assistant';
+
+  @override
+  String get assistantNotice =>
+      'This answer comes from an AI service that sees your Support details. It never needs your passwords or addresses.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Your scan on $network tried $hosts addresses and found $brokers brokers.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'You said Zigbee2MQTT is running. Let\'s find it.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'You weren\'t sure whether Zigbee2MQTT runs. Let\'s find out.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Tell me what you were trying to do, and I\'ll help you get connected.';
+
+  @override
+  String get assistantThinking => 'Thinking…';
+
+  @override
+  String get assistantResting =>
+      'The assistant is resting right now. A person is still reachable below.';
+
+  @override
+  String get assistantRefused =>
+      'The assistant can\'t answer that one. A person can, below.';
+
+  @override
+  String get assistantFailed =>
+      'The assistant couldn\'t be reached. Check your connection, or ask a person below.';
+
+  @override
+  String get assistantRetry => 'Try again';
+
+  @override
+  String get assistantReplyHint => 'Ask or answer here…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'That\'s the end of this conversation. A person can take it from here.';
+
+  @override
+  String get assistantHelped => 'Did this help?';
+
+  @override
+  String get assistantHelpedYes => 'Yes';
+
+  @override
+  String get assistantHelpedNo => 'No';
+
+  @override
+  String get assistantTalkToPerson => 'Talk to a person';
+
+  @override
+  String get getHelpReportPrompt =>
+      'What was wrong with the assistant\'s answer?';
+
+  @override
   String get demoBannerHelp => 'Get help';
 
   @override

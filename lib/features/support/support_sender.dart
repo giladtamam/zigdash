@@ -23,6 +23,7 @@ class SupportMessage {
     required this.build,
     required this.locale,
     this.email,
+    this.kind = 'support',
   });
 
   final String text;
@@ -32,6 +33,11 @@ class SupportMessage {
   final String locale;
   final String? email;
 
+  /// 'support' for a request, 'ai_report' when "Did this help? No" sent an
+  /// assistant answer back (3.5.0); the developer's read of Send volume
+  /// excludes reports.
+  final String kind;
+
   Map<String, Object?> toJson() => {
     'text': text,
     if (email != null && email!.isNotEmpty) 'email': email,
@@ -39,6 +45,7 @@ class SupportMessage {
     'app': appVersion,
     'build': build,
     'locale': locale,
+    'kind': kind,
   };
 
   /// The same message as one text, for the share sheet when Send fails.

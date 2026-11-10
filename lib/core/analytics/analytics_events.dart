@@ -358,6 +358,7 @@ class SetupStep extends AnalyticsEvent {
     this.portClass,
     this.via,
     this.aiHelped,
+    this.helpSeen,
     this.shape,
     this.addressFrom,
   });
@@ -378,6 +379,12 @@ class SetupStep extends AnalyticsEvent {
   /// Whether "Ask your AI" was shared or copied earlier in this setup, on
   /// [SetupStepKind.complete] (3.1.5).
   final bool? aiHelped;
+
+  /// Whether the assistant answered on Get help within the last 24 hours,
+  /// on [SetupStepKind.complete] (3.5.0): the only way to read whether a
+  /// setup that finished had the assistant's help first, since no
+  /// identifier leaves the phone.
+  final bool? helpSeen;
 
   /// How setup succeeded, on [SetupStepKind.complete] (3.1.3).
   final SetupVia? via;
@@ -464,6 +471,7 @@ class SetupStep extends AnalyticsEvent {
     if (platform != null) 'platform': _snake(platform!.name),
     if (via != null) 'via': _snake(via!.name),
     if (aiHelped != null) 'ai': aiHelped! ? 'yes' : 'no',
+    if (helpSeen != null) 'help_seen': helpSeen! ? 'yes' : 'no',
     if (step == SetupStepKind.scanEmpty ||
         step == SetupStepKind.needsLogin ||
         step == SetupStepKind.loginRejected)
@@ -653,6 +661,41 @@ class SupportSent extends AnalyticsEvent {
   Map<String, String> get props => {
     'from': _snake(from.name),
     'result': _snake(result.name),
+  };
+}
+
+/// What happened with the assistant on Get help (3.5.0,
+/// assistant-in-app-2026-11.md): shown, answered, resting (over a limit),
+/// refused, failed, a reply sent (with which turn, bucketed), "Did this
+/// help?" yes or no, or Talk to a person tapped. Kinds and counts only;
+/// never the text.
+enum AssistantStep {
+  shown,
+  answered,
+  resting,
+  refused,
+  failed,
+  asked,
+  helpedYes,
+  helpedNo,
+  escalated,
+}
+
+class AssistantEvent extends AnalyticsEvent {
+  const AssistantEvent(this.step, this.from, {this.nth});
+  final AssistantStep step;
+  final HelpFrom from;
+
+  /// Which of the user's replies this was, on [AssistantStep.asked].
+  final int? nth;
+  @override
+  String get name => 'assistant';
+  @override
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    'from': _snake(from.name),
+    if (nth != null)
+      'nth': bucket(nth!, const [1], ranges: const [(2, 3), (4, 9)], top: '10+'),
   };
 }
 

@@ -18,6 +18,7 @@ import '../../panels/widgets/device_tile_panel.dart' show ltr;
 import '../../settings/screens/settings_screen.dart' show privacyPolicyUrl;
 import '../../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
+import '../../support/assistant_panel.dart' show assistantHelpedRecently;
 import '../../support/get_help_screen.dart'
     show GetHelpLink, GetHelpWarmButton;
 import 'setup_completed_at.dart';
@@ -84,6 +85,9 @@ class SetupScreen extends ConsumerWidget {
         s,
         platform: coordinator.platform,
         aiHelped: ref.read(aiHelpUsedProvider),
+        helpSeen: s is SetupComplete
+            ? assistantHelpedRecently(ref.read(sharedPreferencesProvider))
+            : null,
       );
       if (step != null) ref.read(analyticsProvider).track(step);
       // 3.3.2: the guide on an empty result starts over with setup.

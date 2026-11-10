@@ -3010,6 +3010,71 @@ class AppLocalizationsIt extends AppLocalizations {
   String get haConnectLooking => 'Ricerca di Home Assistant…';
 
   @override
+  String get assistantTitle => 'Assistente ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Questa risposta arriva da un servizio IA che vede i tuoi dettagli di supporto. Non ha mai bisogno di password o indirizzi.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'La ricerca su $network ha provato $hosts indirizzi e trovato $brokers broker.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Hai detto che Zigbee2MQTT è in funzione. Troviamolo.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Non eri sicuro che Zigbee2MQTT fosse in funzione. Scopriamolo.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Dimmi cosa stavi cercando di fare e ti aiuto a connetterti.';
+
+  @override
+  String get assistantThinking => 'Sto pensando…';
+
+  @override
+  String get assistantResting =>
+      'L\'assistente è in pausa. Una persona resta raggiungibile qui sotto.';
+
+  @override
+  String get assistantRefused =>
+      'L\'assistente non può rispondere a questo. Una persona sì, qui sotto.';
+
+  @override
+  String get assistantFailed =>
+      'Impossibile raggiungere l\'assistente. Controlla la connessione o chiedi a una persona qui sotto.';
+
+  @override
+  String get assistantRetry => 'Riprova';
+
+  @override
+  String get assistantReplyHint => 'Chiedi o rispondi qui…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'La conversazione finisce qui. Una persona può proseguire.';
+
+  @override
+  String get assistantHelped => 'È stato utile?';
+
+  @override
+  String get assistantHelpedYes => 'Sì';
+
+  @override
+  String get assistantHelpedNo => 'No';
+
+  @override
+  String get assistantTalkToPerson => 'Parla con una persona';
+
+  @override
+  String get getHelpReportPrompt =>
+      'Cosa c\'era di sbagliato nella risposta dell\'assistente?';
+
+  @override
   String get demoBannerHelp => 'Ottieni aiuto';
 
   @override

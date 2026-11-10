@@ -9,6 +9,7 @@ import '../support/support_details.dart';
 import '../onboarding/setup/setup_completed_at.dart';
 import '../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
+import '../support/assistant_panel.dart' show assistantHelpedRecently;
 import '../support/get_help_screen.dart' show GetHelpLink;
 import '../support/support_log.dart';
 import '../../core/analytics/analytics.dart';
@@ -637,6 +638,8 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                           devices: count,
                           via: SetupVia.brokerForm,
                           aiHelped: ref.read(aiHelpUsedProvider),
+                          helpSeen: assistantHelpedRecently(
+                              ref.read(sharedPreferencesProvider)),
                         ),
                       );
                   ref.read(aiHelpUsedProvider.notifier).state = false;

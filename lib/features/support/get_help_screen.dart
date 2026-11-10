@@ -9,6 +9,8 @@ import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../shortcuts/shortcut_service.dart';
 import '../onboarding/setup/setup_error_guidance.dart';
+import 'assistant_client.dart';
+import 'assistant_panel.dart';
 import 'help_tips.dart';
 import 'support_details.dart';
 import 'support_facts.dart';
@@ -66,9 +68,26 @@ class GetHelpScreen extends ConsumerStatefulWidget {
     required this.from,
     this.connectionId,
     this.error,
+    this.platform,
   });
 
   final HelpFrom from;
+
+  /// The setup platform answer (a [SetupPlatform] name), when setup passed
+  /// it along; the assistant's triage reads it (3.5.0).
+  final String? platform;
+
+  /// Where the assistant shows (assistant-in-app-2026-11.md): setup
+  /// origins only. Settings and the demo ask things a prompt scoped to
+  /// connecting Zigbee2MQTT would refuse.
+  bool get setupOrigin => switch (from) {
+    HelpFrom.scanEmpty ||
+    HelpFrom.noConnection ||
+    HelpFrom.setupError ||
+    HelpFrom.manualConnect ||
+    HelpFrom.manualForm => true,
+    _ => false,
+  };
 
   /// The home it was opened for, if any; adds its connection and
   /// Zigbee2MQTT facts to Support details.
@@ -90,6 +109,12 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   /// The triage answer on the empty-scan path: null until answered.
   Z2mRunning? _running;
 
+  /// What the assistant hands to Send: the last answers, and the flagged
+  /// one when "Did this help? No" brought the user here.
+  AssistantHandoff? _handoff;
+  final _formKey = GlobalKey();
+  final _messageFocus = FocusNode();
+
   SupportQuery get _query => (
         openedFrom: openedFromLabel(widget.from, widget.error),
         connectionId: widget.connectionId,
@@ -108,7 +133,44 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   void dispose() {
     _message.dispose();
     _email.dispose();
+    _messageFocus.dispose();
     super.dispose();
+  }
+
+  /// Talk to a person, or a report: the Send form takes over, with the
+  /// assistant's answers attached after the details.
+  void _toForm(AssistantHandoff handoff) {
+    setState(() {
+      _handoff = handoff;
+      _send = _SendState.idle;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _formKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(ctx,
+            duration: const Duration(milliseconds: 300), alignment: 0.1);
+      }
+      _messageFocus.requestFocus();
+    });
+  }
+
+  /// The details plus, when the assistant was involved, its last answers,
+  /// after the details so clipping on the developer's side never loses
+  /// the details or the user's words.
+  String _detailsWith(SupportDetails details) {
+    final h = _handoff;
+    final base = details.format();
+    if (h == null) return base;
+    final lines = <String>[base, '', '— Assistant —'];
+    if (h.flagged != null) {
+      lines.add('Flagged answer:');
+      lines.add(h.flagged!);
+    } else {
+      for (final a in h.lastAnswers) {
+        lines.add('Assistant: $a');
+      }
+    }
+    return lines.join('\n');
   }
 
   void _answer(Z2mRunning answer) {
@@ -128,10 +190,11 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   SupportMessage _messageFor(SupportDetails details) => SupportMessage(
         text: _message.text.trim(),
         email: _email.text.trim(),
-        details: details.format(),
+        details: _detailsWith(details),
         appVersion: details.appVersion,
         build: details.build,
         locale: Localizations.localeOf(context).toLanguageTag(),
+        kind: _handoff?.flagged != null ? 'ai_report' : 'support',
       );
 
   Future<void> _sendMessage(SupportDetails details) async {
@@ -254,6 +317,26 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),
+                // 3.5.0: the assistant, on setup origins, once the details
+                // are known; the form below is its "Talk to a person".
+                if (widget.setupOrigin && details != null) ...[
+                  AssistantPanel(
+                    from: widget.from,
+                    details: details,
+                    triage: AssistantTriage(
+                      running: switch (_running) {
+                        Z2mRunning.yes => 'yes',
+                        Z2mRunning.notSure => 'not_sure',
+                        _ => null,
+                      },
+                      platform: widget.platform,
+                    ),
+                    onTalkToPerson: _toForm,
+                    onReport: _toForm,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                KeyedSubtree(key: _formKey, child: const SizedBox.shrink()),
                 if (_send == _SendState.sent)
                   Card(
                     key: const Key('get-help-sent'),
@@ -270,12 +353,15 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                   TextField(
                     key: const Key('get-help-message'),
                     controller: _message,
+                    focusNode: _messageFocus,
                     minLines: 3,
                     maxLines: 6,
                     maxLength: 2000,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      hintText: l10n.getHelpEmailPrompt,
+                      hintText: _handoff?.flagged != null
+                          ? l10n.getHelpReportPrompt
+                          : l10n.getHelpEmailPrompt,
                       hintMaxLines: 2,
                       border: const OutlineInputBorder(),
                       counterText: '',
@@ -405,13 +491,17 @@ class GetHelpLink extends StatelessWidget {
 /// The warm way in on the empty scan (3.4.8): a button that promises help
 /// rather than a quiet link, opening Get help from the scan_empty origin.
 class GetHelpWarmButton extends StatelessWidget {
-  const GetHelpWarmButton({super.key});
+  const GetHelpWarmButton({super.key, this.platform});
+
+  /// The setup platform answer, if given; the assistant's triage reads it.
+  final String? platform;
 
   @override
   Widget build(BuildContext context) => FilledButton.tonalIcon(
         key: const Key('get-help-warm'),
-        onPressed: () =>
-            context.push(Routes.getHelpFrom(HelpFrom.scanEmpty.name)),
+        onPressed: () => context.push(
+          Routes.getHelpFrom(HelpFrom.scanEmpty.name, platform: platform),
+        ),
         icon: const Icon(Icons.favorite_outline),
         label: Text(context.l10n.getHelpWarm),
       );

@@ -2999,6 +2999,70 @@ class AppLocalizationsRu extends AppLocalizations {
   String get haConnectLooking => 'Ищу Home Assistant…';
 
   @override
+  String get assistantTitle => 'Помощник ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Этот ответ даёт ИИ-сервис, который видит ваши сведения для поддержки. Ему никогда не нужны ваши пароли или адреса.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Сканирование по $network проверило $hosts адресов и нашло брокеров: $brokers.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Вы сказали, что Zigbee2MQTT работает. Давайте его найдём.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Вы не были уверены, работает ли Zigbee2MQTT. Давайте выясним.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Расскажите, что вы пытались сделать, и я помогу подключиться.';
+
+  @override
+  String get assistantThinking => 'Думаю…';
+
+  @override
+  String get assistantResting =>
+      'Помощник сейчас отдыхает. Человек по-прежнему доступен ниже.';
+
+  @override
+  String get assistantRefused =>
+      'На это помощник ответить не может. Человек ниже может.';
+
+  @override
+  String get assistantFailed =>
+      'Не удалось связаться с помощником. Проверьте соединение или спросите человека ниже.';
+
+  @override
+  String get assistantRetry => 'Попробовать снова';
+
+  @override
+  String get assistantReplyHint => 'Спросите или ответьте здесь…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'На этом разговор заканчивается. Человек может продолжить.';
+
+  @override
+  String get assistantHelped => 'Это помогло?';
+
+  @override
+  String get assistantHelpedYes => 'Да';
+
+  @override
+  String get assistantHelpedNo => 'Нет';
+
+  @override
+  String get assistantTalkToPerson => 'Поговорить с человеком';
+
+  @override
+  String get getHelpReportPrompt => 'Что было не так в ответе помощника?';
+
+  @override
   String get demoBannerHelp => 'Получить помощь';
 
   @override

@@ -93,12 +93,19 @@ class Routes {
 
   /// Get help, opened [from] a place (an `HelpFrom` name), for a home or a
   /// setup error (a `SetupErrorKind` name) when there is one.
-  static String getHelpFrom(String from, {String? home, String? error}) => Uri(
+  static String getHelpFrom(
+    String from, {
+    String? home,
+    String? error,
+    String? platform,
+  }) => Uri(
     path: getHelp,
     queryParameters: {
       'from': from,
       if (home != null) 'home': home,
       if (error != null) 'error': error,
+      // 3.5.0: the setup platform answer, for the assistant's triage.
+      if (platform != null) 'platform': platform,
     },
   ).toString();
   static const deviceDiscovery =

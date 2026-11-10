@@ -2998,6 +2998,70 @@ class AppLocalizationsSv extends AppLocalizations {
   String get haConnectLooking => 'Letar efter Home Assistant…';
 
   @override
+  String get assistantTitle => 'ZigDash-assistent';
+
+  @override
+  String get assistantNotice =>
+      'Det här svaret kommer från en AI-tjänst som ser dina supportuppgifter. Den behöver aldrig dina lösenord eller adresser.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Din sökning via $network provade $hosts adresser och hittade $brokers brokers.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Du sa att Zigbee2MQTT kör. Låt oss hitta den.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Du var inte säker på om Zigbee2MQTT kör. Låt oss ta reda på det.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Berätta vad du försökte göra, så hjälper jag dig att ansluta.';
+
+  @override
+  String get assistantThinking => 'Tänker…';
+
+  @override
+  String get assistantResting =>
+      'Assistenten vilar just nu. En person går fortfarande att nå nedan.';
+
+  @override
+  String get assistantRefused =>
+      'Det kan assistenten inte svara på. Det kan en person, nedan.';
+
+  @override
+  String get assistantFailed =>
+      'Assistenten gick inte att nå. Kontrollera anslutningen eller fråga en person nedan.';
+
+  @override
+  String get assistantRetry => 'Försök igen';
+
+  @override
+  String get assistantReplyHint => 'Fråga eller svara här…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'Här slutar samtalet. En person kan ta över.';
+
+  @override
+  String get assistantHelped => 'Hjälpte det här?';
+
+  @override
+  String get assistantHelpedYes => 'Ja';
+
+  @override
+  String get assistantHelpedNo => 'Nej';
+
+  @override
+  String get assistantTalkToPerson => 'Prata med en person';
+
+  @override
+  String get getHelpReportPrompt => 'Vad var fel med assistentens svar?';
+
+  @override
   String get demoBannerHelp => 'Få hjälp';
 
   @override

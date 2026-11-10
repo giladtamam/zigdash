@@ -194,7 +194,7 @@ class _EmptyGuide extends ConsumerWidget {
         // help then asks whether Zigbee2MQTT runs at all before the form.
         if (current != GuideRung.help) ...[
           const SizedBox(height: 12),
-          const GetHelpWarmButton(),
+          GetHelpWarmButton(platform: state.platform?.name),
         ],
         const SizedBox(height: 24),
         const Divider(),

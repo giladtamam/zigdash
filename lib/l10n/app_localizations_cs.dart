@@ -2998,6 +2998,70 @@ class AppLocalizationsCs extends AppLocalizations {
   String get haConnectLooking => 'Hledám Home Assistant…';
 
   @override
+  String get assistantTitle => 'Asistent ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Tato odpověď pochází ze služby AI, která vidí vaše podrobnosti pro podporu. Nikdy nepotřebuje vaše hesla ani adresy.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'Hledání přes $network vyzkoušelo $hosts adres a našlo $brokers brokerů.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Řekli jste, že Zigbee2MQTT běží. Pojďme ho najít.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Nebyli jste si jisti, zda Zigbee2MQTT běží. Pojďme to zjistit.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Řekněte mi, co jste zkoušeli, a pomůžu vám s připojením.';
+
+  @override
+  String get assistantThinking => 'Přemýšlím…';
+
+  @override
+  String get assistantResting =>
+      'Asistent teď odpočívá. Člověk je dole stále k dispozici.';
+
+  @override
+  String get assistantRefused =>
+      'Na tohle asistent odpovědět nemůže. Člověk dole ano.';
+
+  @override
+  String get assistantFailed =>
+      'Asistenta se nepodařilo kontaktovat. Zkontrolujte připojení nebo se dole zeptejte člověka.';
+
+  @override
+  String get assistantRetry => 'Zkusit znovu';
+
+  @override
+  String get assistantReplyHint => 'Zeptejte se nebo odpovězte zde…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'Tady rozhovor končí. Člověk může pokračovat.';
+
+  @override
+  String get assistantHelped => 'Pomohlo to?';
+
+  @override
+  String get assistantHelpedYes => 'Ano';
+
+  @override
+  String get assistantHelpedNo => 'Ne';
+
+  @override
+  String get assistantTalkToPerson => 'Mluvit s člověkem';
+
+  @override
+  String get getHelpReportPrompt => 'Co bylo na odpovědi asistenta špatně?';
+
+  @override
   String get demoBannerHelp => 'Získat pomoc';
 
   @override
