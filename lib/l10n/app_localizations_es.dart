@@ -1450,12 +1450,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Dos intentos sin conexión. Dinos qué hub tienes y qué escribiste, y te ayudamos a encontrarlo.';
 
   @override
-  String get guidedStuckTelegram => 'Preguntar en Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Consejos y correo';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Se probaron $count direcciones';
   }
@@ -2980,16 +2974,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get settingsGetHelpSubtitle =>
       '¿No consigues que funcione? Primero consejos, luego contacto';
-
-  @override
-  String get settingsCommunity => 'Únete a la comunidad de ZigDash';
-
-  @override
-  String get settingsCommunitySubtitle =>
-      'Grupo de Telegram: preguntas, ideas y novedades';
-
-  @override
-  String get getHelpCommunity => 'Preguntar en el grupo de Telegram';
 
   @override
   String get getHelpWarm => '¿No se encontró nada? Tranquilo, te ayudo';

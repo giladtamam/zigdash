@@ -1446,12 +1446,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Dva pokusy bez připojení. Napiš nám, jaký máš hub a co jsi zadal, a pomůžeme ti ho najít.';
 
   @override
-  String get guidedStuckTelegram => 'Zeptat se na Telegramu';
-
-  @override
-  String get guidedStuckHelp => 'Tipy a e-mail';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Vyzkoušené adresy: $count';
   }
@@ -2967,16 +2961,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get settingsGetHelpSubtitle =>
       'Nedaří se to zprovoznit? Nejdřív tipy, pak kontakt';
-
-  @override
-  String get settingsCommunity => 'Přidej se ke komunitě ZigDash';
-
-  @override
-  String get settingsCommunitySubtitle =>
-      'Skupina na Telegramu: otázky, nápady a co se chystá';
-
-  @override
-  String get getHelpCommunity => 'Zeptat se ve skupině na Telegramu';
 
   @override
   String get getHelpWarm => 'Nic nenalezeno? Nebojte, pomůžu vám';

@@ -1450,12 +1450,6 @@ class AppLocalizationsNl extends AppLocalizations {
       'Twee pogingen zonder verbinding. Vertel ons welke hub je hebt en wat je hebt ingevuld, dan helpen we je hem te vinden.';
 
   @override
-  String get guidedStuckTelegram => 'Vragen in Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Tips en e-mail';
-
-  @override
   String ladderTriedHint(Object count) {
     return '$count adressen geprobeerd';
   }
@@ -2978,16 +2972,6 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get settingsGetHelpSubtitle =>
       'Lukt het niet? Eerst tips, dan contact';
-
-  @override
-  String get settingsCommunity => 'Word lid van de ZigDash-community';
-
-  @override
-  String get settingsCommunitySubtitle =>
-      'Telegram-groep: vragen, ideeën en wat eraan komt';
-
-  @override
-  String get getHelpCommunity => 'Vraag het in de Telegram-groep';
 
   @override
   String get getHelpWarm => 'Niets gevonden? Geen zorgen, ik help je';

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/core/analytics/analytics_events.dart';
 import 'package:zigdash/features/onboarding/setup/setup_error_guidance.dart';
-import 'package:zigdash/features/support/community.dart';
 import 'package:zigdash/features/support/get_help_screen.dart';
 import 'package:zigdash/features/support/help_tips.dart';
 import 'package:zigdash/features/support/support_facts.dart';
@@ -244,21 +243,4 @@ void main() {
         tipsFor(l, HelpFrom.noConnection, null));
   });
 
-  testWidgets('Ask in the Telegram group opens the community link',
-      (tester) async {
-    Uri? opened;
-    openCommunityLink = (url) async {
-      opened = url;
-      return true;
-    };
-    await tester.pumpWidget(
-        _app(const GetHelpScreen(from: HelpFrom.noConnection)));
-    await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Ask in the Telegram group'), 200,
-        scrollable: find.byType(Scrollable).first);
-    await tester.tap(find.text('Ask in the Telegram group'));
-    await tester.pump();
-    expect(opened, communityUrl);
-    expect(opened.toString(), 'https://t.me/zigdash_app');
-  });
 }

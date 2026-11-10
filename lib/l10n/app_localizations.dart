@@ -2676,18 +2676,6 @@ abstract class AppLocalizations {
   /// **'Two tries without a connection. Tell us which hub you have and what you typed, and we\'ll help you find it.'**
   String get guidedStuckBody;
 
-  /// No description provided for @guidedStuckTelegram.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask in Telegram'**
-  String get guidedStuckTelegram;
-
-  /// No description provided for @guidedStuckHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Tips and email'**
-  String get guidedStuckHelp;
-
   /// No description provided for @ladderTriedHint.
   ///
   /// In en, this message translates to:
@@ -5327,24 +5315,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Can\'t get it working? Tips first, then contact'**
   String get settingsGetHelpSubtitle;
-
-  /// No description provided for @settingsCommunity.
-  ///
-  /// In en, this message translates to:
-  /// **'Join the ZigDash community'**
-  String get settingsCommunity;
-
-  /// No description provided for @settingsCommunitySubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Telegram group: questions, ideas and what\'s coming'**
-  String get settingsCommunitySubtitle;
-
-  /// No description provided for @getHelpCommunity.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask in the Telegram group'**
-  String get getHelpCommunity;
 
   /// No description provided for @getHelpWarm.
   ///

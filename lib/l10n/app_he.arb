@@ -565,8 +565,6 @@
   "guidedBackToForm": "עריכת הגדרות",
   "guidedStuckTitle": "נתקעתם? שאלו אדם",
   "guidedStuckBody": "שני ניסיונות בלי חיבור. ספרו לנו איזו רכזת יש לכם ומה הקלדתם, ונעזור למצוא אותה.",
-  "guidedStuckTelegram": "לשאול בטלגרם",
-  "guidedStuckHelp": "טיפים ואימייל",
   "ladderTriedHint": "נוסו {count} כתובות",
   "@ladderTriedHint": {
     "placeholders": {
@@ -1021,9 +1019,6 @@
   "settingsHelpSupport": "עזרה ותמיכה",
   "settingsGetHelp": "קבלת עזרה",
   "settingsGetHelpSubtitle": "לא מצליחים להפעיל? קודם טיפים, אחר כך פנייה",
-  "settingsCommunity": "הצטרפו לקהילת ZigDash",
-  "settingsCommunitySubtitle": "קבוצת טלגרם: שאלות, רעיונות ומה בדרך",
-  "getHelpCommunity": "לשאול בקבוצת הטלגרם",
   "getHelpWarm": "לא נמצא כלום? אל דאגה, אני אעזור לך",
   "getHelpAskRunning": "האם Zigbee2MQTT פועל כרגע איפשהו בבית שלך?",
   "getHelpEmailHint": "האימייל שלך, אם תרצה תשובה",

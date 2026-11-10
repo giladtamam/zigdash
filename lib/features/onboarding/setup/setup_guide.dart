@@ -530,7 +530,6 @@ class _EmptyGuide extends ConsumerWidget {
             onPressed: () =>
                 context.push(Routes.getHelpFrom(HelpFrom.noConnection.name)),
           ),
-          const CommunityLink(from: HelpFrom.noConnection),
           OutlinedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),

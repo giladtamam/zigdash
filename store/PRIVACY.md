@@ -169,7 +169,7 @@ never from anything you typed or anything your broker sent.
 | `help_offered` | From 2.9.2: the "ask a person" card was shown after two failed checks on the broker form | where: the broker form |
 | `support_contact` | Support details were shared from Get help | where from (as above); email, copy or (from 3.4.8) the share sheet |
 | `support_sent` | From 3.4.8: Send was tapped on Get help | where from (as above); whether it was delivered, failed, or was shared after failing. Never the message |
-| `community_opened` | The Telegram community link was opened | where from: Settings, the one-time dashboard card, or the place Get help was opened from (as above) |
+| `community_opened` | Until 3.4.7: the Telegram community link was opened (the link is gone from 3.4.8) | where from: Settings, the one-time dashboard card, or the place Get help was opened from (as above) |
 | `shortcut_added` | A Quick Settings tile was given a device, a home-screen widget was added, or ZigDash's Device Controls were first shown | tile, control, widget, scene widget or group widget; from 3.3.3, where it was added from (the offer below, a tile's menu, a device's page, a section, or outside the app) |
 | `shortcut_nudge` | From 3.3.3: ZigDash offered to put a device you switch often on your home screen or in Quick Settings, and what you chose (shown, home screen, Quick Settings, or not now). Never which device; how often each device was switched is counted only on your phone | the step |
 | `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |

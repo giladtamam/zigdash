@@ -358,8 +358,9 @@ void main() {
     await tester.tap(find.text('Retry'));
     await tester.pumpAndSettle();
     expect(find.text('Stuck? Ask a person'), findsOneWidget);
-    expect(find.text('Ask in Telegram'), findsOneWidget);
-    expect(find.text('Tips and email'), findsOneWidget);
+    // 3.4.8: help lives inside the app; no Telegram button.
+    expect(find.text('Ask in Telegram'), findsNothing);
+    expect(find.text('Get help'), findsOneWidget);
   });
 
   testWidgets('retry re-runs the ladder and can reach success', (tester) async {

@@ -55,7 +55,7 @@ class _JoinHomeScreenState extends ConsumerState<JoinHomeScreen> {
       const SetupStep(SetupStepKind.complete, via: SetupVia.shared),
     );
     // 3.4.8: the review prompt keeps quiet for a while after this.
-    await markSetupCompleted(ref.read(sharedPreferencesProvider));
+    await markSetupCompleted(() => ref.read(sharedPreferencesProvider));
     var imported = false;
     try {
       final mgr = await ref.read(mqttManagerProvider(id).future);

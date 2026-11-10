@@ -6,7 +6,6 @@
 [![Platform](https://img.shields.io/badge/Platform-Android-blue.svg)](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash)
 [![Built with Flutter](https://img.shields.io/badge/Built%20with-Flutter-02569B.svg)](https://flutter.dev)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2.svg)](https://github.com/sponsors/giladtamam)
-[![Telegram](https://img.shields.io/badge/Telegram-Join%20the%20community-26A5E4.svg?logo=telegram&logoColor=white)](https://t.me/zigdash_app)
 [![Website](https://img.shields.io/badge/Website-zigdash.app-006a6a.svg)](https://zigdash.app)
 
 ZigDash discovers your Zigbee devices automatically — no manual topic wiring —
@@ -99,8 +98,8 @@ details (no passwords, addresses or device names), or write to
 giladtamam1@gmail.com. I usually reply within 3 days, in English or Hebrew.
 I'll never ask for your passwords or for remote access.
 
-**Community:** the ZigDash Telegram group, https://t.me/zigdash_app, for questions,
-ideas and release news. **Join the ZigDash community** in Settings opens it.
+**Questions and ideas:** Get help inside the app (Settings › Get help) has a
+Send button that reaches me directly; GitHub issues work too.
 
 Feature requests, bug reports, and ideas are welcome too — open a
 [GitHub issue](https://github.com/giladtamam/zigdash/issues).

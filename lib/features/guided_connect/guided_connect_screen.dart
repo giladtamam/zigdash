@@ -10,7 +10,6 @@ import '../onboarding/setup/setup_completed_at.dart';
 import '../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../support/get_help_screen.dart' show GetHelpLink;
-import '../support/community.dart';
 import '../support/support_log.dart';
 import '../../core/analytics/analytics.dart';
 import '../../core/l10n/l10n_ext.dart';
@@ -519,7 +518,6 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
       children: [
         if (offer) ...[
           _StuckCard(
-            onTelegram: () => openCommunity(ref, HelpFrom.manualConnect),
             onHelp: () =>
                 context.push(Routes.getHelpFrom(HelpFrom.manualConnect.name)),
           ),
@@ -643,7 +641,8 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                       );
                   ref.read(aiHelpUsedProvider.notifier).state = false;
                   // 3.4.8: the review prompt keeps quiet for a while after this.
-                  await markSetupCompleted(ref.read(sharedPreferencesProvider));
+                  await markSetupCompleted(
+                      () => ref.read(sharedPreferencesProvider));
                   try {
                     await ref.read(firstRunProvider).finish(id);
                   } catch (_) {
@@ -747,9 +746,8 @@ class _EmptyBrokerCard extends StatelessWidget {
 
 /// After two failed checks: a person can help, in one tap (2.9.2).
 class _StuckCard extends StatelessWidget {
-  const _StuckCard({required this.onTelegram, required this.onHelp});
+  const _StuckCard({required this.onHelp});
 
-  final VoidCallback onTelegram;
   final VoidCallback onHelp;
 
   @override
@@ -767,20 +765,11 @@ class _StuckCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(l10n.guidedStuckBody, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                FilledButton.icon(
-                  onPressed: onTelegram,
-                  icon: const Icon(Icons.forum_outlined),
-                  label: Text(l10n.guidedStuckTelegram),
-                ),
-                OutlinedButton(
-                  onPressed: onHelp,
-                  child: Text(l10n.guidedStuckHelp),
-                ),
-              ],
+            // 3.4.8: help lives inside the app; the Telegram button is gone.
+            FilledButton.icon(
+              onPressed: onHelp,
+              icon: const Icon(Icons.support_agent),
+              label: Text(l10n.getHelpTitle),
             ),
           ],
         ),

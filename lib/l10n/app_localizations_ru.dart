@@ -1451,12 +1451,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Две попытки без подключения. Напишите, какой у вас хаб и что вы ввели, и мы поможем его найти.';
 
   @override
-  String get guidedStuckTelegram => 'Спросить в Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Советы и почта';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Проверено адресов: $count';
   }
@@ -2966,16 +2960,6 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get settingsGetHelpSubtitle =>
       'Не получается настроить? Сначала советы, потом связь';
-
-  @override
-  String get settingsCommunity => 'Присоединяйтесь к сообществу ZigDash';
-
-  @override
-  String get settingsCommunitySubtitle =>
-      'Группа в Telegram: вопросы, идеи и что дальше';
-
-  @override
-  String get getHelpCommunity => 'Спросить в группе Telegram';
 
   @override
   String get getHelpWarm => 'Ничего не найдено? Не волнуйтесь, я помогу';

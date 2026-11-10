@@ -1430,12 +1430,6 @@ class AppLocalizationsHe extends AppLocalizations {
       'שני ניסיונות בלי חיבור. ספרו לנו איזו רכזת יש לכם ומה הקלדתם, ונעזור למצוא אותה.';
 
   @override
-  String get guidedStuckTelegram => 'לשאול בטלגרם';
-
-  @override
-  String get guidedStuckHelp => 'טיפים ואימייל';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'נוסו $count כתובות';
   }
@@ -2939,16 +2933,6 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get settingsGetHelpSubtitle =>
       'לא מצליחים להפעיל? קודם טיפים, אחר כך פנייה';
-
-  @override
-  String get settingsCommunity => 'הצטרפו לקהילת ZigDash';
-
-  @override
-  String get settingsCommunitySubtitle =>
-      'קבוצת טלגרם: שאלות, רעיונות ומה בדרך';
-
-  @override
-  String get getHelpCommunity => 'לשאול בקבוצת הטלגרם';
 
   @override
   String get getHelpWarm => 'לא נמצא כלום? אל דאגה, אני אעזור לך';
