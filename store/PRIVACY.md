@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.4.7 is published (replaces the policy published with ZigDash 3.4.6)
+**Effective date:** the day ZigDash 3.5.0 is published (replaces the policy published with ZigDash 3.4.7)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -47,7 +47,7 @@ All data stays on your device:
 - **Support details** — the kind of the last connection error and what the
   last hub scan tried (how many addresses, how many brokers found, Wi-Fi or
   Ethernet), kept only until the next successful connection. No addresses or
-  names. They leave your device only if you send or copy them yourself from
+  names. They leave your device only if you send or share them yourself from
   Get help or Report a problem. They are not included in Android backups.
 - **Ask your AI** (from 3.1.5) — where setup is stuck, ZigDash can write up
   what it found for an AI assistant of your choice: how ZigDash connects, your
@@ -165,10 +165,11 @@ never from anything you typed or anything your broker sent.
 | `setup_step` | Each step of first-run setup | the step (started, scan found, scan empty, needs login, login rejected, failed, review, complete, manual, demo); the type of setup error, if any; number of devices found (0, 1–5, 6–20, 21+); from 2.5, your answer to where Zigbee2MQTT runs, if you gave one (Home Assistant, SMLIGHT hub, Raspberry Pi or Docker, not sure; from 3.1.3 also ZHA, Home Assistant's own Zigbee); and for an empty scan, the kind of hub it saw instead (Home Assistant, Zigbee2MQTT frontend, SMLIGHT hub, or none), how many addresses it tried (0, 1–253, 254–1020, 1021+), whether it widened to the surrounding network, and which private range your phone is in (192.168, 10, 172.16, other); from 2.6.2, also how many addresses answered at all (0, 1–5, 6–20, 21+), whether a VPN was on, and the kind of network (Wi-Fi, Ethernet, other); and for the address check (the address you type on the empty result), only its outcome: a broker found, a hub page found, nothing answered, the name could not be looked up, not a home address, or nothing typed; from 2.7.2, for Test & connect on the broker form, only whether it connected or which step failed (name lookup, connection, MQTT handshake, login), the number of devices found (0, 1–5, 6–20, 21+), and whether the app tidied what you typed (for example a pasted browser link); and when the scan saw Zigbee2MQTT's web page but no broker, only what asking that page found: a broker, a broker that listens only on its own machine, one that didn't answer, or no answer; from 2.9.3, how many addresses answered only to the scan's second, slower look (0, 1–5, 6–20, 21+), and for Test & connect, whether the failure was a .local name, Home Assistant without a broker, or a Home Assistant login; from 2.9.4, when your phone had no home network address, only why: mobile data, no network, or unknown; from 2.9.6, for Test & connect, also whether the failure was an SMLIGHT hub not accepting connections from other devices or a Zigbee2MQTT machine whose broker accepts only local connections; from 2.9.6 until 3.1.13, on an empty scan, which of its three choices you tapped (no hub yet, Home Assistant, hub on another network); from 2.9.7, that you tapped Remind me tomorrow, and that the app was opened from that reminder; and on the first screen, that you tapped Try the demo home or Which hub to get; from 2.10, for Connect through Home Assistant, only how each try ended (connected, no address, nothing answered, not Home Assistant, certificate not trusted, sign-in cancelled, refused or failed, token refused, not an administrator, no MQTT integration); never the address; from 2.10.2, at the device review, how many devices were ticked in advance (0, 1–5, 6–20, 21+), and that you left the review without creating a dashboard, with how many devices were listed and ticked at that moment; from 2.10.4, when asking Zigbee2MQTT's web page, also whether it named its broker by a name only that machine knows, or whether the page is protected by a token; for Test & connect, the class of the port you typed (1883, 8883, a web port, other) and whether the failure was a Zigbee2MQTT machine whose settings name the broker elsewhere; never the address; from 3.1.3, your answer to where Zigbee2MQTT runs also at the moment you pick it, and that you opened Connect through Home Assistant during setup, and from where: while scanning, the card on an empty result, the note under "I use Home Assistant", Home Assistant found without a broker, the login prompt, or the broker form (from 3.1.9 also the no-Wi-Fi screen); and when setup is finished, which way it finished: the scan, Home Assistant sign-in, or the broker form; never the address; from 3.1.5, that you opened the "Ask your AI" write-up on a setup screen and whether you then shared or copied it, with which screen (empty scan, setup failure, broker without Zigbee2MQTT, login, Home Assistant sign-in), and when setup is finished, whether you had shared or copied it first; never the write-up; from 3.1.6, when you press back on the device list, which you chose: create the dashboard, start over, or stay, with how many devices were listed and ticked; from 3.1.7, a setup can also finish by joining a Home shared from another phone; from 3.1.8, whether looking for Home Assistant on your network found one, several or none (or found it by its usual name), and that a sign-in used the address it found; never the address; from 3.1.12, for each Connect through Home Assistant try, only the kind of address it went to (nothing typed, a home address in your phone's own network, a home address in another network, a home address with your phone's network unknown, a .local or short name, a Nabu Casa address, another web address, a public IP address) and the class of its port (8123, 443, other); never the address; from 3.2, your answer to the first question (Zigbee2MQTT, Home Assistant with the Zigbee2MQTT add-on or with ZHA, an SMLIGHT hub) is counted like the answer to where Zigbee2MQTT runs, a setup can also finish through the Zigbee2MQTT web page, the Home Assistant sign-in can be opened from that first question, and two more kinds of setup error are told apart (Zigbee2MQTT's device list missing, Home Assistant without Zigbee2MQTT); Remind me tomorrow is gone; never the address; from 3.2.7, after the SMLIGHT answer, which SMLIGHT device you have (an SMHUB, or an SLZB adapter); from 3.2.8, on an empty scan that saw no hub, your answer to whether Zigbee2MQTT already runs (yes, not yet, not sure); from 3.3.2, also whether looking for Home Assistant found it by checking your phone's own network for Home Assistant's port; on an empty scan, which step of the step-by-step guide you reached (VPN, guest network, hub found, what you open to add a Zigbee device, Home Assistant sign-in, ZHA, whether Zigbee2MQTT runs, Zigbee2MQTT not set up yet, Zigbee2MQTT's page, the whole network, the address, help) and whether you took its action or tapped That didn't help; and at the login, that you opened No MQTT login? Make one, or tapped Try without a login; never the address; from 3.3.4, on Connect through Home Assistant, which you tapped for where you open Home Assistant (at home, Nabu Casa, DuckDNS, own domain or Cloudflare); never the address; from 3.4, on the "Nothing yet" screen (no hub runs Zigbee2MQTT yet), where it was opened from (the first screen or the setup guide) and what you tapped there: one of the three ways to a hub (an SMHUB, a Raspberry Pi, Home Assistant), the hubs page, the demo home, Remind me in a week, or I have one now; the taps on the first screen's Try the demo home and Which hub to get are gone with it; Remind me in a week is one notification on your phone a week later, like Remind me tomorrow was; from 3.4.1, when the broker asks for a login, only what looking for Zigbee2MQTT's web page found first (its page wanting a password, no page, or not looked) and what kind of web page answers on the broker's machine (Home Assistant, Zigbee2MQTT, SMLIGHT hub, or none); never the address; on the Home Assistant sign-in, how the address got into its field (typed, found by ZigDash, pasted with the Paste button, or shared from another app), and whether pasted or shared text held an address (yes or no). Never the address, and never the text. The Paste button reads your clipboard only when you tap it, and keeps only the address in it; text another app shares to ZigDash is used the same way |
 | `feature_used` | The first use of a feature in a session | Devices tab, device page, Scenes, Edit mode, Wall display, tile added (with the kind of tile, such as "light" or "toggle"), history (from 2.7), controlling a device from the app (from 2.9.2, with only the kind of device, such as "light" or "cover"; never which device or what it was set to), or kiosk (with whether a PIN is set, whether Android screen pinning is on, and the dim delay as one of off, 1, 5 or 15 minutes; from 2.9 also what the idle screen shows (dimmed, clock, clock and readings, or black) and whether wake on motion, the night schedule and alarm takeover are on), or, from 3.1.2, a scene created or run from the app (never which scene or what it does) |
 | `ha_import` | From 2.8, the import from Home Assistant | the step (the offer after setup accepted or declined, a read that failed, the preview, the import done); for a failed read only why (no address, no token, nothing answered, not Home Assistant, token refused, certificate not trusted, read failed, home not connected); counts in buckets (0, 1–5, 6–20, 21+) of devices, rooms, renamed tiles; from 2.9.7, only whether you signed in on Home Assistant's login page or pasted a token, and how it ended (signed in, cancelled, refused by Home Assistant, failed); never the address or the token and added dashboards; and whether Home Assistant had only ZHA devices. Never the address, the token, or any device or room name |
-| `help_opened` | Get help was opened | where from: no connection found, a setup error, manual connect, home can't be reached, device list missing, Settings, or the demo |
+| `help_opened` | Get help was opened | where from: no connection found, a setup error, manual connect, home can't be reached, device list missing, Settings, the demo, or (from 3.5.0) the help button on an empty scan |
 | `help_offered` | From 2.9.2: the "ask a person" card was shown after two failed checks on the broker form | where: the broker form |
-| `support_contact` | A support request was started from Get help | where from (as above); email or copy |
-| `community_opened` | The Telegram community link was opened | where from: Settings, the one-time dashboard card, or the place Get help was opened from (as above) |
+| `support_contact` | Support details were shared from Get help | where from (as above); email, copy or (from 3.5.0) the share sheet |
+| `support_sent` | From 3.5.0: Send was tapped on Get help | where from (as above); whether it was delivered, failed, or was shared after failing. Never the message |
+| `community_opened` | Until 3.4.7: the Telegram community link was opened (the link is gone from 3.5.0) | where from: Settings, the one-time dashboard card, or the place Get help was opened from (as above) |
 | `shortcut_added` | A Quick Settings tile was given a device, a home-screen widget was added, or ZigDash's Device Controls were first shown | tile, control, widget, scene widget or group widget; from 3.3.3, where it was added from (the offer below, a tile's menu, a device's page, a section, or outside the app) |
 | `shortcut_nudge` | From 3.3.3: ZigDash offered to put a device you switch often on your home screen or in Quick Settings, and what you chose (shown, home screen, Quick Settings, or not now). Never which device; how often each device was switched is counted only on your phone | the step |
 | `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |
@@ -194,11 +195,54 @@ values; error messages.
 Because nothing identifies you, the developer cannot find or delete "your"
 events on request. To stop sending, turn the switch off.
 
-## Support emails
+## Support messages
 
-If you contact support, your email (and the Support details you choose to
-include) is used only to help you, is never shared, and is deleted within 6
-months after the issue is closed.
+From 3.5.0, Get help has a Send button. Only when you tap it, what you typed,
+the email you may have given and the Support details are sent to a small
+service the developer runs on Cloudflare, which passes the message straight
+on to the developer's Telegram account and keeps nothing; it does not log the
+message. Telegram (Telegram FZ-LLC) therefore stores the message as part of
+that chat, under [its privacy policy](https://telegram.org/privacy). If Send
+fails, nothing is sent; the app offers Android's share sheet instead, and
+where the message goes is then your choice.
+
+Whatever way you contact support, your email and the Support details you
+chose to include are used only to help you, are never shared, and are
+deleted within 6 months after the issue is closed; a Telegram message is
+deleted from the chat once answered.
+
+## The assistant on Get help (from 3.5.0)
+
+When Get help is opened from setup (an empty scan, a setup error, the
+broker form), an assistant answers first. To answer, the app sends the
+Support details, your answers to its questions (whether Zigbee2MQTT runs,
+which kind of hub) and the app's language to a small service the developer
+runs on Cloudflare, which adds its instructions and forwards the request to
+Anthropic's Claude API; when you reply to the assistant, what you type goes
+the same way. Nothing is sent before the panel opens on such a screen, and
+nothing from Settings or the demo. Anthropic keeps API inputs for up to 30
+days for abuse monitoring under [its own terms](https://www.anthropic.com/legal/commercial-terms)
+and does not train on them. The developer's service keeps nothing and does
+not log the messages; the conversation lives only in the app's memory until
+you leave the screen. No account, device or install identifier is sent;
+limits are applied by network address, at the service. The assistant never
+needs, and is instructed never to ask for, your passwords, tokens or
+addresses; it is also instructed never to suggest turning off a broker's
+login, opening a port to the internet, or editing Zigbee2MQTT's
+configuration by hand.
+
+"Did this help? No" opens the Send form with that answer attached, which is
+also how you report a bad answer; it reaches the developer like any other
+support message (see Support messages above).
+
+| Event | What it records | Values |
+|---|---|---|
+| `assistant` | From 3.5.0: what happened with the assistant on Get help | where Get help was opened from (as above); that it was shown, answered, was resting (over a limit), declined, failed, got a reply from you (which one: 1st, 2nd-3rd, 4th-9th, 10th or later), got a yes or a no to "Did this help?", or that Talk to a person was tapped. Never the text |
+
+The `setup_step` event's `complete` step gains `help_seen`: whether the
+assistant had answered on this phone within the last 24 hours before the
+setup finished, read from a timestamp kept in the app's preferences. Yes
+or no, nothing else.
 
 ## Automations and ZigDash Engine (from 3.0)
 
