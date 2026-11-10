@@ -12,6 +12,7 @@
 //
 // Answers: 200 sent, 400 bad body, 413 too large, 405 wrong method,
 // 503 over a limit or Telegram unreachable (the app then offers Share).
+// No CORS: the caller is the app, not a web page.
 
 const MAX_BODY = 8 * 1024;
 const PER_HOUR = 5;
@@ -19,28 +20,30 @@ const PER_DAY_ALL = 200;
 const TELEGRAM_MAX = 4096;
 
 export default {
+  // Called by the app only, never by a browser page: no CORS headers, so a
+  // web page cannot fire this endpoint from a visitor's browser.
   async fetch(request, env) {
-    if (request.method === 'OPTIONS') return cors(new Response(null, { status: 204 }));
-    if (request.method !== 'POST') return cors(text(405, 'POST only'));
+    if (request.method !== 'POST') return text(405, 'POST only');
     const url = new URL(request.url);
-    if (url.pathname !== '/v1/message') return cors(text(404, 'not here'));
+    if (url.pathname !== '/v1/message') return text(404, 'not here');
 
     const length = Number(request.headers.get('content-length') || 0);
-    if (length > MAX_BODY) return cors(text(413, 'too large'));
+    if (length > MAX_BODY) return text(413, 'too large');
     const raw = await request.text();
-    if (raw.length > MAX_BODY) return cors(text(413, 'too large'));
+    if (raw.length > MAX_BODY) return text(413, 'too large');
 
     let body;
     try {
       body = JSON.parse(raw);
     } catch {
-      return cors(text(400, 'bad json'));
+      return text(400, 'bad json');
     }
     const message = String(body.text ?? '').trim();
-    if (!message) return cors(text(400, 'text required'));
+    if (!message) return text(400, 'text required');
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    if (!(await allow(env, ip))) return cors(text(503, 'over limit'));
+    const counters = await read(env, ip);
+    if (!counters.allowed) return text(503, 'over limit');
 
     const lines = [
       `ZigDash support, ${String(body.app ?? '?')}+${String(body.build ?? '?')}, ${String(body.locale ?? '?')}`,
@@ -52,19 +55,15 @@ export default {
       String(body.details ?? ''),
     ];
     const sent = await telegram(env, clip(lines.join('\n'), TELEGRAM_MAX));
-    return cors(sent ? text(200, 'sent') : text(503, 'not sent'));
+    // Counted only when delivered, so a Telegram outage does not burn the
+    // user's hourly budget.
+    if (sent) await bump(env, counters);
+    return sent ? text(200, 'sent') : text(503, 'not sent');
   },
 };
 
 function text(status, s) {
   return new Response(s, { status, headers: { 'content-type': 'text/plain; charset=utf-8' } });
-}
-
-function cors(response) {
-  response.headers.set('access-control-allow-origin', '*');
-  response.headers.set('access-control-allow-methods', 'POST, OPTIONS');
-  response.headers.set('access-control-allow-headers', 'content-type');
-  return response;
 }
 
 function clip(s, max) {
@@ -78,26 +77,35 @@ function clip(s, max) {
 /// approximate; that is accepted (a few extra messages, never a lost one),
 /// so do not replace this with Durable Objects. A KV failure counts as
 /// allowed: losing a message is worse than a burst.
-async function allow(env, ip) {
+async function read(env, ip) {
+  const hour = Math.floor(Date.now() / 3_600_000);
+  const day = Math.floor(Date.now() / 86_400_000);
+  const ipKey = `ip:${hash(ip)}:${hour}`;
+  const dayKey = `day:${day}`;
   try {
-    const hour = Math.floor(Date.now() / 3_600_000);
-    const day = Math.floor(Date.now() / 86_400_000);
-    const ipKey = `ip:${hash(ip)}:${hour}`;
-    const dayKey = `day:${day}`;
     const [ipCount, dayCount] = await Promise.all([
       env.RATE.get(ipKey),
       env.RATE.get(dayKey),
     ]);
     const perIp = Number(ipCount || 0);
     const perDay = Number(dayCount || 0);
-    if (perIp >= PER_HOUR || perDay >= PER_DAY_ALL) return false;
-    await Promise.all([
-      env.RATE.put(ipKey, String(perIp + 1), { expirationTtl: 3600 }),
-      env.RATE.put(dayKey, String(perDay + 1), { expirationTtl: 86400 }),
-    ]);
-    return true;
+    return {
+      allowed: perIp < PER_HOUR && perDay < PER_DAY_ALL,
+      ipKey, dayKey, perIp, perDay,
+    };
   } catch {
-    return true;
+    return { allowed: true, ipKey, dayKey, perIp: 0, perDay: 0 };
+  }
+}
+
+async function bump(env, c) {
+  try {
+    await Promise.all([
+      env.RATE.put(c.ipKey, String(c.perIp + 1), { expirationTtl: 3600 }),
+      env.RATE.put(c.dayKey, String(c.perDay + 1), { expirationTtl: 86400 }),
+    ]);
+  } catch {
+    // Counting failed; the message was delivered, which matters more.
   }
 }
 

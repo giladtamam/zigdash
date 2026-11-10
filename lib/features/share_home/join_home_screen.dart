@@ -11,6 +11,9 @@ import '../../data/repositories/backup_service.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
 import '../onboarding/first_run.dart';
+import '../onboarding/setup/setup_completed_at.dart';
+import '../settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
 import 'home_share.dart';
 
 /// Opened by the camera app from another phone's "Share this home" code
@@ -51,6 +54,8 @@ class _JoinHomeScreenState extends ConsumerState<JoinHomeScreen> {
     analytics.track(
       const SetupStep(SetupStepKind.complete, via: SetupVia.shared),
     );
+    // 3.4.8: the review prompt keeps quiet for a while after this.
+    await markSetupCompleted(ref.read(sharedPreferencesProvider));
     var imported = false;
     try {
       final mgr = await ref.read(mqttManagerProvider(id).future);
