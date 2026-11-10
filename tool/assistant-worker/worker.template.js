@@ -89,7 +89,9 @@ export default {
     if (typeof input === 'string') return text(400, input);
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    const counters = await readCounters(env, ip);
+    // Hourly caps are per door too, so bubble chatter never rests a setup
+    // card in the same hour.
+    const counters = await readCounters(env, ip, input.mode);
     if (!counters.allowed) return text(503, 'resting');
     // Each door has its own month: idle chat in the bubble can never rest
     // the setup card, and the other way round.
@@ -301,10 +303,11 @@ function costUsd(model, usage) {
 // replace this with Durable Objects for a few dollars of slack. A KV failure
 // counts as allowed: a lost answer is worse than a burst.
 
-async function readCounters(env, ip) {
+async function readCounters(env, ip, mode) {
   const hour = Math.floor(Date.now() / 3_600_000);
-  const ipKey = `ip:${hash(ip)}:${hour}`;
-  const allKey = `all:${hour}`;
+  const door = mode === 'home' ? 'home:' : '';
+  const ipKey = `ip:${door}${hash(ip)}:${hour}`;
+  const allKey = `all:${door}${hour}`;
   try {
     const [ipCount, allCount] = await Promise.all([env.RATE.get(ipKey), env.RATE.get(allKey)]);
     const perIp = Number(ipCount || 0);

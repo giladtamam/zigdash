@@ -54,7 +54,7 @@ The rest of this plan is written for B, with A as its first release: everything 
 
 ## What is measured
 
-One `assistant` event: `step` in `shown`, `answered`, `limited`, `failed`, `helped_yes`, `helped_no`, `escalated`; **(B)** also `asked` with the turn bucketed 1, 2-3, 4-9, 10+; plus the Get help origin. Kinds and counts only, never the text. The Worker counts calls and tokens in Cloudflare's metrics, nothing per user.
+One `assistant` event: `step` in `shown`, `answered`, `resting`, `failed`, `helped_yes`, `helped_no`, `escalated`; **(B)** also `asked` with the turn bucketed 1, 2-3, 4-9, 10+; plus the Get help origin. Kinds and counts only, never the text. The Worker counts calls and tokens in Cloudflare's metrics, nothing per user.
 
 Population for every read: **setup-origin Get help opens that passed the triage** (the people the card is shown to), compared with the same population on 3.4.8, which is why 3.5.0 branches only after 3.4.8 has three weeks of data. The join the data cannot make on its own (no install id, and the analytics session rotates after an hour) is made on the phone: `setup_step complete` gains `help_seen` (Get help opened within the last 24 hours, yes or no) from a timestamp kept in the app's preferences, the persisted cousin of the in-memory `aiHelpUsed` flag, so nothing new leaves the device. The baseline is that same flag shipped in 3.4.8's next point release for the plain Get help, three weeks before 3.5.0; in 3.5.0 it means the card was shown.
 
@@ -189,11 +189,14 @@ topic.
 An independent review scored the section above 6/10. What changed:
 - **Two cached blocks, not one.** The Worker sends SYSTEM_TEXT (prompt +
   setup knowledge) on every call and appends HOME_TEXT (home knowledge) in
-  home mode only, each with its own cache_control. A setup call's prefix is
-  byte-identical to 3.5.0's plan: it never pays for home knowledge.
+  home mode only, each with its own cache_control. Home knowledge never enters a
+  setup call; the prompt itself gained the short home-mode scope, so the
+  setup block grew by that paragraph only.
 - **Each door has its own month.** Home mode spends against `cost:home:` with
   its own stop (HOME_STOP_USD, default $15); setup keeps `cost:` and $60.
-  Idle chat in the bubble can never rest the setup card. Home conversations
+  Hourly caps (10 per address, 100 for everyone) are keyed by door as well,
+  so idle chat in the bubble can never rest the setup card, by the hour or
+  by the month. Home conversations
   are capped at 8 turns (setup: 12). If the combined line crosses $25 in a
   month, the bubble is the door that is cut (pill → dot, HOME_STOP_USD → 5).
 - **Chips send one text.** A chip shows its label in the person's language
@@ -229,3 +232,10 @@ An independent review scored the section above 6/10. What changed:
 3. Strings in 13 languages, policy paragraph, changelog 108, tests
    (bubble states, hide, sheet opens, chip sends, no call on open), emulator
    run with a connected home, Play build 3.5.0+108.
+
+### Re-scored 8 (2026-11-10, after the build)
+The same reviewer, on the plan plus the code: 8/10 (a 7, b 8, c 8, d 8,
+e 7). Taken the same day: hourly caps keyed by door; the opening line
+falls back to the generic line when Zigbee2MQTT facts are missing. Left for
+3.5.1: the panel's own scroll inside the sheet (drags over the conversation
+scroll the list, not the sheet), and a test for the attention-count line.

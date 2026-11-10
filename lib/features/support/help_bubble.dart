@@ -354,8 +354,12 @@ class _AssistantSheet extends ConsumerWidget {
               shownState: state,
               details: d.withAttention(attention),
               triage: const AssistantTriage(),
-              opening: connected
-                  ? l10n.assistantHomeOpening(name, d.z2m?.devices ?? 0)
+              // "connected and N devices report" only when Zigbee2MQTT
+              // answered; otherwise the generic line, never "0 devices".
+              opening: connected && d.z2m?.devices != null
+                  ? l10n.assistantHomeOpening(name, d.z2m!.devices!)
+                  : connected
+                  ? l10n.assistantOpeningGeneric
                   : l10n.assistantHomeOpeningOffline(name),
               chips: chips,
               onTalkToPerson: onPerson,
