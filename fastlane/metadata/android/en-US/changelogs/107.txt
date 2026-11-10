@@ -1,0 +1,3 @@
+New: Get help now has a Send button that reaches the developer directly, and Share details instead of Copy. On an empty scan, a "Don't worry, I'll help you" button is one tap away.
+
+Changed: the review request waits for a moment when you have just used the dashboard, and the Home Assistant sign-in button says when it is still looking for Home Assistant.

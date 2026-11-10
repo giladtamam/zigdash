@@ -32,13 +32,6 @@ Widget _app(Widget child, {SupportLog? log, SupportSender? sender}) =>
       ),
     );
 
-/// The share sheet, replaced: records what was shared.
-String? _fakeShare(WidgetTester tester, {bool available = true}) {
-  final saved = shareText;
-  addTearDown(() => shareText = saved);
-  return null;
-}
-
 void main() {
   testWidgets('a setup error opens straight to its own tips', (tester) async {
     await tester.pumpWidget(_app(const GetHelpScreen(
