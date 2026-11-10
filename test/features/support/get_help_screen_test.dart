@@ -350,7 +350,7 @@ void main() {
         (tester) async {
       final seen = <AssistantRequest>[];
       await tester.pumpWidget(_app(
-        const GetHelpScreen(from: HelpFrom.scanEmpty, platform: 'piOrDocker'),
+        const GetHelpScreen(from: HelpFrom.scanEmpty, platform: 'pi_or_docker'),
         assistant: (r, t) async {
           seen.add(r);
           return const AssistantReply(AssistantOutcome.answered, text: 'Hi');
@@ -363,7 +363,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('ZigDash assistant'), findsOneWidget);
       expect(seen.single.triage.running, 'yes');
-      expect(seen.single.triage.platform, 'piOrDocker');
+      expect(seen.single.triage.platform, 'pi_or_docker');
     });
   });
 

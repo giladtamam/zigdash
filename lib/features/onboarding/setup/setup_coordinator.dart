@@ -60,6 +60,15 @@ typedef ScanRunFactory = ScanRun Function(String deviceIp, Set<HubKind> hubs);
 /// counted to size a move from ZHA (wayfinder map "ZHA to ZigDash").
 enum SetupPlatform { homeAssistant, smlight, piOrDocker, zha, notSure }
 
+/// The platform as the usage data and the assistant name it (3.5.0):
+/// `home_assistant`, `smlight`, `pi_or_docker`, `zha`, `not_sure`.
+extension SetupPlatformWire on SetupPlatform {
+  String get wireName => name.replaceAllMapped(
+        RegExp('[A-Z]'),
+        (m) => '_${m[0]!.toLowerCase()}',
+      );
+}
+
 /// The hub kinds a platform answer makes the scan look for, on top of the
 /// default ones (Home Assistant and the Zigbee2MQTT frontend).
 Set<HubKind> hubsForPlatform(SetupPlatform? platform) => {

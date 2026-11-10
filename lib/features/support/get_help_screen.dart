@@ -493,7 +493,9 @@ class GetHelpLink extends StatelessWidget {
 class GetHelpWarmButton extends StatelessWidget {
   const GetHelpWarmButton({super.key, this.platform});
 
-  /// The setup platform answer, if given; the assistant's triage reads it.
+  /// The setup platform answer as its wire name (`pi_or_docker`,
+  /// `home_assistant`, `smlight`, `zha`, `not_sure`), if given; the
+  /// assistant's triage reads it.
   final String? platform;
 
   @override
