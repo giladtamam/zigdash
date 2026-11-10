@@ -140,6 +140,12 @@ enum SetupStepKind {
   /// Assistant (3.3.4), with [SetupStep.choice] (a [HaWhere]).
   haWhere,
 
+  /// The Home Assistant sign-in's "couldn't find it" card (3.5.2,
+  /// ha-nothing-found.md), with [SetupStep.choice] (a [HaNoneChoice]):
+  /// shown once per look that found nothing (with [SetupStep.network],
+  /// Wi-Fi or other), or which of its ways on was tapped.
+  haNone,
+
   /// The Paste button on the Home Assistant sign-in (ha-share-paste.md),
   /// with [SetupStep.result] (a [HaHandover]): whether what was copied
   /// held an address. Never what was copied.
@@ -520,6 +526,9 @@ class SetupStep extends AnalyticsEvent {
   };
 }
 
+/// What happened on the Home Assistant "couldn't find it" card (3.5.2).
+enum HaNoneChoice { shown, openApp, lookAgain, assistant }
+
 enum Feature {
   devicesTab,
   devicePage,
@@ -643,6 +652,10 @@ enum HelpFrom {
   /// The help bubble on a connected home's dashboard (3.5.0,
   /// assistant-in-app-2026-11.md revision 5).
   bubble,
+
+  /// "Not sure? Ask the assistant" on the Home Assistant sign-in when the
+  /// look found nothing (3.5.2, ha-nothing-found.md).
+  haConnect,
 }
 
 /// How Support details left the phone: a mail app, the clipboard (platforms

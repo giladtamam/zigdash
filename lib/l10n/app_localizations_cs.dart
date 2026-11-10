@@ -1737,7 +1737,53 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Tvůj telefon na broker nedosáhne, ale na Home Assistant ano. Přihlas se jednou a ZigDash bude se Zigbee2MQTT mluvit přes Home Assistant: doma i mimo domov, bez nastavení brokeru.';
+      'Přihlaste se jednou přes Home Assistant a ZigDash bude mluvit se Zigbee2MQTT přes něj: doma i venku, bez nastavení brokeru.';
+
+  @override
+  String get haNoneTitle => 'ZigDash z tohoto telefonu Home Assistant nenašel';
+
+  @override
+  String get haNoneOffWifi =>
+      'Tento telefon není na Wi-Fi. Připojte se k domácí Wi-Fi a klepněte na Hledat znovu, nebo použijte adresu, kterou Home Assistant otevíráte zvenku.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Může být v jiné síti, nebo ho otevíráte zvenku (Nabu Casa, DuckDNS, vlastní doména).';
+
+  @override
+  String get haNoneGetAddress => 'Získejte jeho adresu z Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Otevřít aplikaci Home Assistant';
+
+  @override
+  String get haNoneAppStep1 =>
+      'V aplikaci otevřete Nastavení › Doprovodná aplikace.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Klepněte na svůj server, pak nahoře na ikonu sdílení a vyberte ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Klepněte na svůj server, pak nahoře na ikonu sdílení a Kopírovat odkaz. Vraťte se a klepněte na Vložit.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Otevřete Home Assistant v prohlížeči, který pro něj používáte, pak Sdílet › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Otevřete Home Assistant v prohlížeči, který pro něj používáte, zkopírujte adresu z adresního řádku, vraťte se a klepněte na Vložit.';
+
+  @override
+  String get haNoneTypeLabel => 'Nebo zadejte adresu';
+
+  @override
+  String get haNoneLookAgain => 'Hledat znovu';
+
+  @override
+  String get haNoneAssistant => 'Nejste si jistí? Zeptejte se asistenta';
 
   @override
   String get haConnectAddressHelp =>

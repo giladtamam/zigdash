@@ -1743,7 +1743,53 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Tu teléfono no alcanza el broker, pero sí a Home Assistant. Inicia sesión una vez y ZigDash hablará con Zigbee2MQTT a través de Home Assistant: en casa o fuera, sin ajustes del broker.';
+      'Inicia sesión una vez con Home Assistant y ZigDash habla con Zigbee2MQTT a través de él: en casa o fuera, sin ajustes de bróker.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash no encontró Home Assistant desde este teléfono';
+
+  @override
+  String get haNoneOffWifi =>
+      'Este teléfono no está en Wi-Fi. Conéctate al Wi-Fi de casa y toca Buscar de nuevo, o usa la dirección con la que abres Home Assistant desde fuera.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Puede estar en otra red, o lo abres desde fuera (Nabu Casa, DuckDNS, tu propio dominio).';
+
+  @override
+  String get haNoneGetAddress => 'Consigue su dirección desde Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Abrir la app de Home Assistant';
+
+  @override
+  String get haNoneAppStep1 => 'En la app, abre Ajustes › Companion app.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Toca tu servidor, luego el icono de compartir arriba, y elige ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Toca tu servidor, luego el icono de compartir arriba, y Copiar enlace. Vuelve y toca Pegar.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Abre Home Assistant en el navegador que usas para ello y luego Compartir › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Abre Home Assistant en el navegador que usas para ello, copia la dirección de la barra de direcciones, vuelve y toca Pegar.';
+
+  @override
+  String get haNoneTypeLabel => 'O escribe la dirección';
+
+  @override
+  String get haNoneLookAgain => 'Buscar de nuevo';
+
+  @override
+  String get haNoneAssistant => '¿No estás seguro? Pregunta al asistente';
 
   @override
   String get haConnectAddressHelp =>

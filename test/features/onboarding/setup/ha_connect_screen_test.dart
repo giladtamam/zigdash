@@ -314,22 +314,162 @@ void main() {
       expect(find.text('Home · 192.168.68.64:8123'), findsOneWidget);
     });
 
-    testWidgets('3.1.12: none says so at once, and names the remote address', (
-      tester,
-    ) async {
+    testWidgets('3.5.2: nothing found puts the card first, with a way to '
+        'get the address and two ways on', (tester) async {
       await pump(tester, signIn: signIn, findHa: () async => []);
+      final card = find.byKey(const Key('ha-none-card'));
+      expect(card, findsOneWidget);
       expect(
-        find.textContaining("can't see Home Assistant on this Wi-Fi"),
+        find.text("ZigDash couldn't find Home Assistant from this phone"),
         findsOneWidget,
       );
-      expect(find.textContaining('ui.nabu.casa'), findsWidgets);
-      expect(find.textContaining('Companion app'), findsOneWidget);
+      // Above the field, not in the middle of the page.
+      expect(
+        tester.getTopLeft(card).dy,
+        lessThan(tester.getTopLeft(find.byType(TextField).first).dy),
+      );
+      expect(find.text('Or type the address'), findsOneWidget);
+      // No Home Assistant app in tests: the browser line, copy wording.
+      expect(find.byKey(const Key('ha-none-open-app')), findsNothing);
+      expect(find.byKey(const Key('ha-none-browser')), findsOneWidget);
+      expect(find.textContaining('tap Paste'), findsWidgets);
+      expect(find.byKey(const Key('ha-none-look-again')), findsOneWidget);
+      expect(find.byKey(const Key('ha-none-assistant')), findsOneWidget);
+      // The old mid-page lines are gone in this state.
+      expect(
+        find.textContaining("can't see Home Assistant on this Wi-Fi"),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('ha-handover-help')), findsNothing);
+      // The intro no longer claims the broker failed.
+      expect(find.textContaining("can't reach the broker"), findsNothing);
       expect(
         tester
             .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
             .onPressed,
         isNull,
       );
+    });
+
+    testWidgets('3.5.2: share wording when ZigDash is in the share sheet', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () async => [],
+        shareTarget: true,
+      );
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Share › ZigDash'), findsOneWidget);
+    });
+
+    testWidgets('3.5.2: the card stays put while typing', (tester) async {
+      await pump(tester, signIn: signIn, findHa: () async => []);
+      final card = find.byKey(const Key('ha-none-card'));
+      final before = tester.getTopLeft(card).dy;
+      await tester.enterText(find.byType(TextField).first, '192.168.1.20');
+      await tester.pump();
+      expect(card, findsOneWidget);
+      expect(tester.getTopLeft(card).dy, before);
+      expect(
+        tester
+            .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
+            .onPressed,
+        isNotNull,
+      );
+    });
+
+    testWidgets('3.5.2: Look again keeps the card, says it is looking, and '
+        'takes the card away when Home Assistant turns up', (tester) async {
+      final sent = <String>[];
+      final looks = <AnalyticsEvent>[];
+      var calls = 0;
+      final second = Completer<List<HaFound>>();
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () {
+          calls++;
+          return calls == 1 ? Future.value(const []) : second.future;
+        },
+        onEvent: looks.add,
+        overrides: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_Sink(sent), enabled: true),
+          ),
+        ],
+      );
+      await tester.tap(find.byKey(const Key('ha-none-look-again')));
+      await tester.pump();
+      expect(find.byKey(const Key('ha-none-card')), findsOneWidget);
+      expect(
+        find.text('Looking for Home Assistant on this network…'),
+        findsOneWidget,
+      );
+      second.complete(const [HaFound(address: 'http://192.168.68.64:8123')]);
+      await tester.pumpAndSettle();
+      expect(calls, 2);
+      expect(find.byKey(const Key('ha-none-card')), findsNothing);
+      expect(field(tester).controller!.text, 'http://192.168.68.64:8123');
+      expect(
+        sent.where((e) => e.contains('ha_none') && e.contains('look_again')),
+        hasLength(1),
+      );
+      expect(
+        looks.whereType<SetupStep>().where(
+          (e) => e.step == SetupStepKind.haDiscovery,
+        ),
+        hasLength(2),
+      );
+    });
+
+    testWidgets('3.5.2: shown is counted once per look, with the network', (
+      tester,
+    ) async {
+      final sent = <String>[];
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () async => [],
+        phoneIp: '192.168.1.37',
+        overrides: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_Sink(sent), enabled: true),
+          ),
+        ],
+      );
+      await tester.pumpAndSettle();
+      final shown = sent
+          .where((e) => e.contains('ha_none') && e.contains('shown'))
+          .toList();
+      expect(shown, hasLength(1));
+      expect(shown.single, contains('net: wifi'));
+      expect(
+        find.textContaining('It may be on another network'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('3.5.2: off Wi-Fi, the card says so and keeps Look again', (
+      tester,
+    ) async {
+      await pump(tester, signIn: signIn, findHa: () async => []);
+      await tester.pumpAndSettle();
+      expect(find.textContaining("isn't on Wi-Fi"), findsOneWidget);
+      expect(find.byKey(const Key('ha-none-look-again')), findsOneWidget);
+    });
+
+    testWidgets('3.5.2: signing in again for a home never shows the card', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () async => [],
+        again: 'c1',
+      );
+      expect(find.byKey(const Key('ha-none-card')), findsNothing);
     });
 
     testWidgets('3.3.4: where they open it says what to type and where '
@@ -351,7 +491,7 @@ void main() {
       await tester.pump();
       expect(find.textContaining('Remote access'), findsOneWidget);
       expect(field(tester).decoration?.hintText, contains('ui.nabu.casa'));
-      expect(sent, ['setup_step {step: ha_where, choice: nabu_casa}']);
+      expect(sent.where((e) => e.contains('ha_where')), ['setup_step {step: ha_where, choice: nabu_casa}']);
 
       await tester.tap(find.byKey(const Key('ha-where-duckDns')));
       await tester.pump();

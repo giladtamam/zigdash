@@ -154,6 +154,9 @@ void main(List<String> args) {
       ...claim(['diagTcpHaNoBroker', 'diagAuthRejectedHa', 'setupGuideHa', 'setupAuthHintHa']),
       ...byPrefix('haConnect'),
       ...byPrefix('haWhere'),
+      // 3.5.2: the "couldn't find it" card on the sign-in, which opens
+      // the assistant; it should know what the card already says.
+      ...byPrefix('haNone'),
       ...claim([
         'haImportAddressHelp', 'haImportUnreachable', 'haImportCertificate',
         'haImportSignInRefused', 'haImportSignInUnfinished', 'haImportZhaOnly',

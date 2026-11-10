@@ -22,7 +22,9 @@ List<HelpTip> tipsFor(
     t(l.tipByAddressTitle, l.tipByAddressBody),
   ];
   return switch (from) {
-    HelpFrom.noConnection || HelpFrom.scanEmpty => noConnection,
+    HelpFrom.noConnection ||
+    HelpFrom.scanEmpty ||
+    HelpFrom.haConnect => noConnection,
     HelpFrom.setupError => switch (error) {
       SetupErrorKind.hostUnreachable => [
         t(l.tipSameNetworkTitle, l.tipSameNetworkBody),
@@ -101,5 +103,6 @@ String openedFromLabel(HelpFrom from, SetupErrorKind? error) => switch (from) {
   HelpFrom.demo => 'Demo',
   HelpFrom.card => 'Dashboard › community card',
   HelpFrom.scanEmpty => 'Setup › Nothing found › help button',
+  HelpFrom.haConnect => "Setup › Home Assistant sign-in › couldn't find it",
   HelpFrom.bubble => 'Dashboard › help bubble',
 };

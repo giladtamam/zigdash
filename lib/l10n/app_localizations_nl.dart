@@ -1744,7 +1744,53 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Je telefoon bereikt de broker niet, maar wel Home Assistant. Meld je één keer aan, en ZigDash praat via Home Assistant met Zigbee2MQTT: thuis of onderweg, zonder brokerinstellingen.';
+      'Log één keer in met Home Assistant, en ZigDash praat via Home Assistant met Zigbee2MQTT: thuis of onderweg, zonder brokerinstellingen.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash vond Home Assistant niet vanaf deze telefoon';
+
+  @override
+  String get haNoneOffWifi =>
+      'Deze telefoon zit niet op wifi. Maak verbinding met je wifi thuis en tik op Opnieuw zoeken, of gebruik het adres waarmee je Home Assistant van buitenaf opent.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Het zit misschien op een ander netwerk, of je opent het van buitenaf (Nabu Casa, DuckDNS, je eigen domein).';
+
+  @override
+  String get haNoneGetAddress => 'Haal het adres uit Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Home Assistant-app openen';
+
+  @override
+  String get haNoneAppStep1 => 'Open in de app Instellingen › Companion-app.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Tik op je server, dan bovenaan op het deelicoon, en kies ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Tik op je server, dan bovenaan op het deelicoon, en Link kopiëren. Kom terug en tik op Plakken.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Open Home Assistant in de browser die je ervoor gebruikt, dan Delen › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Open Home Assistant in de browser die je ervoor gebruikt, kopieer het adres uit de adresbalk, kom terug en tik op Plakken.';
+
+  @override
+  String get haNoneTypeLabel => 'Of typ het adres';
+
+  @override
+  String get haNoneLookAgain => 'Opnieuw zoeken';
+
+  @override
+  String get haNoneAssistant => 'Twijfel je? Vraag het de assistent';
 
   @override
   String get haConnectAddressHelp =>

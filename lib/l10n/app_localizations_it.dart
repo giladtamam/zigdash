@@ -1741,7 +1741,54 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Il tuo telefono non raggiunge il broker, ma raggiunge Home Assistant. Accedi una volta e ZigDash parlerà con Zigbee2MQTT tramite Home Assistant: a casa o fuori, senza impostazioni del broker.';
+      'Accedi una volta con Home Assistant e ZigDash parla con Zigbee2MQTT attraverso di esso: a casa o fuori, senza impostazioni del broker.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash non ha trovato Home Assistant da questo telefono';
+
+  @override
+  String get haNoneOffWifi =>
+      'Questo telefono non è sul Wi-Fi. Collegati al Wi-Fi di casa e tocca Cerca di nuovo, oppure usa l\'indirizzo con cui apri Home Assistant da fuori.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Potrebbe essere su un\'altra rete, oppure lo apri da fuori (Nabu Casa, DuckDNS, il tuo dominio).';
+
+  @override
+  String get haNoneGetAddress => 'Prendi il suo indirizzo da Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Apri l\'app Home Assistant';
+
+  @override
+  String get haNoneAppStep1 =>
+      'Nell\'app, apri Impostazioni › App complementare.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Tocca il tuo server, poi l\'icona di condivisione in alto, e scegli ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Tocca il tuo server, poi l\'icona di condivisione in alto, e Copia link. Torna qui e tocca Incolla.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Apri Home Assistant nel browser che usi per esso, poi Condividi › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Apri Home Assistant nel browser che usi per esso, copia l\'indirizzo dalla barra degli indirizzi, torna qui e tocca Incolla.';
+
+  @override
+  String get haNoneTypeLabel => 'Oppure scrivi l\'indirizzo';
+
+  @override
+  String get haNoneLookAgain => 'Cerca di nuovo';
+
+  @override
+  String get haNoneAssistant => 'Non sei sicuro? Chiedi all\'assistente';
 
   @override
   String get haConnectAddressHelp =>

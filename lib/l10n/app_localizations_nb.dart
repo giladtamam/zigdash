@@ -1734,7 +1734,53 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Telefonen din når ikke megleren, men den når Home Assistant. Logg inn én gang, så snakker ZigDash med Zigbee2MQTT via Home Assistant: hjemme eller borte, uten meglerinnstillinger.';
+      'Logg inn én gang med Home Assistant, så snakker ZigDash med Zigbee2MQTT gjennom den: hjemme eller borte, uten broker-innstillinger.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash fant ikke Home Assistant fra denne telefonen';
+
+  @override
+  String get haNoneOffWifi =>
+      'Denne telefonen er ikke på Wi-Fi. Koble til Wi-Fi hjemme og trykk Søk igjen, eller bruk adressen du åpner Home Assistant med utenfra.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Den kan være på et annet nettverk, eller du åpner den utenfra (Nabu Casa, DuckDNS, ditt eget domene).';
+
+  @override
+  String get haNoneGetAddress => 'Hent adressen fra Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Åpne Home Assistant-appen';
+
+  @override
+  String get haNoneAppStep1 => 'Åpne Innstillinger › Companion-app i appen.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Trykk på serveren din, så på delingsikonet øverst, og velg ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Trykk på serveren din, så på delingsikonet øverst, og Kopier lenke. Kom tilbake og trykk Lim inn.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Åpne Home Assistant i nettleseren du bruker til det, så Del › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Åpne Home Assistant i nettleseren du bruker til det, kopier adressen fra adressefeltet, kom tilbake og trykk Lim inn.';
+
+  @override
+  String get haNoneTypeLabel => 'Eller skriv adressen';
+
+  @override
+  String get haNoneLookAgain => 'Søk igjen';
+
+  @override
+  String get haNoneAssistant => 'Usikker? Spør assistenten';
 
   @override
   String get haConnectAddressHelp =>
