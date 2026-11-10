@@ -1,6 +1,6 @@
 # An assistant inside the app (plan, 2026-11-10)
 
-Status: plan for ZigDash 3.5.0, to branch from `release/3.4.8` after that release's three-week Send read, so the two do not blur each other. Not built. Decided by the user on 2026-11-10 ("chatbot inside the app"; "any help should be inside the app"). Revision 3, after two independent reviews (6, then 8) and one measurement that changes the premise; see "What the data says" and the "Changed" sections at the end.
+Status: plan for ZigDash 3.5.0, to branch from `release/3.4.8` after that release's three-week Send read, so the two do not blur each other. Not built. Decided by the user on 2026-11-10 ("chatbot inside the app"; "any help should be inside the app"). Revision 3, after independent reviews scoring 6, 8 and finally 9 and one measurement that changes the premise; see "What the data says" and the "Changed" sections at the end.
 
 ## What the data says about the premise
 
@@ -60,7 +60,7 @@ Population for every read: **setup-origin Get help opens that passed the triage*
 
 Read at three weeks:
 
-- **Does it help:** completion rate of that population against the 3.4.8 baseline, both read as `help_seen` on completions. Bar: 1.5 times. A miss with "Did this help?" mostly yes means pleasant but not useful; then B is not built and the card stays only if it costs under $25 a month.
+- **Does it help:** rate = completions carrying `help_seen` over `help_opened` events from setup origins that passed the triage, read the same way on both releases; in 3.5.0 the timestamp is set when the card **answered**, not when it was shown, so a timed-out or rate-limited card counts as the 3.4.8 experience. Bar: 1.5 times the baseline. Read at three weeks; if the baseline window holds fewer than 40 flagged completions, read again at six weeks before deciding, and treat a result within plus or minus 5 completions of the bar as flat, not a miss. A miss with "Did this help?" mostly yes means pleasant but not useful; then B is not built and the card stays only if it costs under $25 a month.
 - **Is it a doorway:** share of card views that tap Talk to a person within the session. Over 50 percent means the card is in the way; it moves below Send.
 - **(B) Do people type:** conversations with at least one reply. Under 15 a week: the reply field goes.
 - **Cost:** the dollar rules above, read monthly; the card alone is cut above $25 a month.
@@ -90,7 +90,7 @@ A: about 5 days. B: about 3 more. The eval cases come from the last 30 days: an 
 
 ## Changed in revision 3
 
-After the second review (score 8): cost re-estimated from 3.4.8's setup-origin opens, about 700 cards a month on a cold cache, roughly $16; the cut line is $25, not $5; the Worker enforces the $60 stop from its own token counter, the console alert is the backstop; the completion join is a `help_seen` flag on the `complete` event from a persisted timestamp on the phone, with the baseline flag shipped in a 3.4.8 point release; "Did this help? No" messages are tagged so the Send read excludes them; an 8-second timeout on the card call with the tips visible meanwhile; the details-format check described as tidiness, not defence.
+After the third review (score 9): the lift read waits for at least 40 baseline completions or six weeks, a result within 5 completions of the bar is flat; `help_seen` set on answered, not shown; the rate's denominator stated. After the second review (score 8): cost re-estimated from 3.4.8's setup-origin opens, about 700 cards a month on a cold cache, roughly $16; the cut line is $25, not $5; the Worker enforces the $60 stop from its own token counter, the console alert is the backstop; the completion join is a `help_seen` flag on the `complete` event from a persisted timestamp on the phone, with the baseline flag shipped in a 3.4.8 point release; "Did this help? No" messages are tagged so the Send read excludes them; an 8-second timeout on the card call with the tips visible meanwhile; the details-format check described as tidiness, not defence.
 
 ## Changed in revision 2
 
