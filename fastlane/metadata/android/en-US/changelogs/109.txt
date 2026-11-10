@@ -1,7 +1,7 @@
-New: an assistant inside ZigDash. On a dashboard, a "Need help?" bubble answers questions about tiles, devices, scenes, automations and more, in your language; when a scan finds nothing, it reads what the app already knows and suggests what to check. You can ask it back, and reach a person in one tap. Sending to a person now works from inside the app, and Share details replaces Copy.
+New: an assistant inside ZigDash. A "Need help?" bubble on your dashboard answers questions about tiles, devices, scenes and automations in your language, and when a scan finds nothing it suggests what to check. Ask it back, or reach a person in one tap: Send now works from inside the app.
 
 New: a new ZigDash icon.
 
-Changed: the review request waits for a moment when you have just used the dashboard, and the Home Assistant sign-in button says when it is still looking.
+Changed: the review request waits until you have just used the dashboard.
 
-Removed: the Telegram group links. Help is inside the app now.
+Removed: the Telegram links. Help is inside the app now.
