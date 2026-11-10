@@ -99,3 +99,133 @@ After the third review (score 9): the lift read waits for at least 40 baseline c
 ## Changed in revision 2
 
 After the review (score 6): the "Ask your AI" measurement added, which lowers the expected effect and puts the one-shot card first; the install id dropped, with IP limits and an hourly global cap instead; the opener is a template, so the model is called once per card and not on every Get help open; Haiku's missing fallback handled by model; the prompt forbids recommending disabled authentication, opened ports or configuration edits; "Did this help? No" doubles as the Play-required report path and attaches the answer; the transcript attachment is ordered so clipping never loses the details; measurement population fixed to setup-origin, triage-passed opens with a 24-hour completion window on the same install; cost rules in dollars with a spend alert; setup origins only; the branch waits for the 3.4.8 read; estimate raised to 5 plus 3 days.
+
+## Revision 5: the help bubble on the home screen (2026-11-10)
+
+Decided with the developer on 2026-11-10: the 3.5.0 release carries the
+assistant on Get help (above) and a second doorway to the same assistant on
+the home screen. One element, three states, as the mock
+(https://claude.ai/artifact/Et3qYHrepHx361zLQ8u6m5) shows.
+
+### Premise
+Connected users never find Get help (it sits behind Settings): 10 ratings
+and 2-3 emails in a month against ~700 setup cards. A door on the screen
+they use every day is the cheapest way to learn what connected people
+struggle with, and the same Worker, prompt and panel answer there.
+
+### What the user sees
+- **Resting.** A pill "Need help?" with the assistant's dot, on the
+  Dashboards tab, start side (bottom-left in LTR, bottom-right in Hebrew),
+  above the bottom bar. The start side because the dashboard's own "Add
+  tile" button owns the end side. Compact layouts only; on a rail layout the
+  same control is the rail's trailing item.
+- **Quiet.** After the first open, only the dot (icon-only button). A
+  long-press offers Hide; hidden is remembered in SharedPreferences. Settings
+  › Get help gets a switch "Help bubble on the home screen" to bring it back.
+  The Get help screen is unchanged and always there.
+- **Open.** A modal bottom sheet (DraggableScrollableSheet, 60% to 95%)
+  with the assistant panel in home mode: title, the AI notice, an opening
+  line from the home's facts ("Office is connected and 12 devices report.
+  What do you need?" / "ZigDash can't reach Office right now."), four chips
+  (A device stopped responding · Add a tile · Automations · Home can't be
+  reached), the reply field enabled from the start, "Did this help?" under
+  each answer, Talk to a person. Nothing is sent until a chip is tapped or
+  a message is sent; a chip is sent as the user's first message.
+- Hidden while Edit mode is on, while the wall display hides its chrome,
+  in kiosk mode, and on the Devices, Scenes and Automations tabs.
+- Talk to a person closes the sheet and opens Get help (from = bubble, home
+  = this home) with the handoff (last two answers, or the flagged one)
+  carried as a route extra, never in the URL. Get help for a connected
+  home shows no assistant panel, only the form, as today.
+
+### What is sent
+The same request as Get help, plus `mode: "home"`: the Support details of
+this home (app version, Android, phone model, connection kind, port and
+address shape, Zigbee2MQTT version, bridge state and device count, last
+error, last scan), the locale, the messages. No triage. Never device names,
+dashboard names, addresses or logins (SupportDetails holds none by
+construction). The home's name appears only in the opening line on the
+phone; it is not sent.
+
+### Worker
+- `validate()` accepts `mode` in {setup, home}; missing = setup.
+- `buildMessages()` adds a `Mode:` line to the head. In home mode with no
+  messages the Worker answers 400 (the phone never does this).
+- One system text, one cached block: the prompt gains a "Home mode" scope
+  (using the app: tiles, dashboards, scenes, automations, alerts, history,
+  Pro, remote, wall tablet, kiosk, backup, sharing; and a connected home
+  that misbehaves: device not responding, home unreachable, list missing)
+  and the knowledge gains sections generated from the app's own strings for
+  those features. Setup-mode rules are unchanged; the 20 setup eval cases
+  must still pass after the rebuild.
+- Same caps (10/h per address, 100/h global, $60 stop). The prefix grows
+  by about 4,000 tokens: a cold answer about $0.08, a warm one about $0.015
+  on Opus 5.5.
+- The bubble does not write `assistant_answered_at_ms`, so `help_seen` on
+  a later setup stays a setup signal.
+
+### Rules carried over, plus three
+Never passwords, tokens, addresses; never opening ports or editing
+configuration by hand; hand off to a person outside the knowledge. New: in
+home mode never claim to see a device's state beyond the facts line; never
+offer to change anything itself (it cannot); point to the right screen by
+its name as the app shows it (Devices, Add tile, Automations, Settings ›
+Alerts), and when a device does not respond, the first check is always
+Zigbee2MQTT's own page and the device's link quality, then the tile's
+topic.
+
+### Measurement
+- `assistant` event gains `from = bubble`, `chip` on the asked step (one
+  of the four chip names, or `typed`), and a `hidden` step (long-press
+  Hide). Opens = `shown` from bubble. No new identifier.
+- Read at three weeks (about 2026-12-02): opens per weekly active home,
+  helped-yes share, escalations. Kill rule: under 2 percent of weekly
+  active homes opening it, or helped-yes under 40 percent of answered
+  conversations, and the pill becomes the dot only from the first launch.
+  Cost line as revision 4: $25 cut, $40 alert, $60 stop, now across both
+  doors.
+
+### Scored 6 → revised (2026-11-10)
+An independent review scored the section above 6/10. What changed:
+- **Two cached blocks, not one.** The Worker sends SYSTEM_TEXT (prompt +
+  setup knowledge) on every call and appends HOME_TEXT (home knowledge) in
+  home mode only, each with its own cache_control. A setup call's prefix is
+  byte-identical to 3.5.0's plan: it never pays for home knowledge.
+- **Each door has its own month.** Home mode spends against `cost:home:` with
+  its own stop (HOME_STOP_USD, default $15); setup keeps `cost:` and $60.
+  Idle chat in the bubble can never rest the setup card. Home conversations
+  are capped at 8 turns (setup: 12). If the combined line crosses $25 in a
+  month, the bubble is the door that is cut (pill → dot, HOME_STOP_USD → 5).
+- **Chips send one text.** A chip shows its label in the person's language
+  but sends the English wording, so the Worker, the eval and the read see
+  one text in thirteen languages. Chips fit the state: a connected home gets
+  "A device stopped responding", "Add a tile", "Automations"; an
+  unreachable home gets only "Home can't be reached".
+- **Counts in the details.** Home-mode Support details gain one line,
+  "Devices needing attention: N (M not responding)", from what the Devices
+  tab already computes. Counts only; never names.
+- **Pill decay.** The pill never shows in the hour after setup (that screen
+  has its own first steps), decays to the dot after 7 days unopened, and
+  the demo home has no bubble at all. Hide is also a visible button in the
+  sheet, so TalkBack users and people who never long-press can find it.
+- **The read, defined.** Weekly active home = `app_started` sessions with a
+  real home (the event exists). Opens = `assistant shown from=bubble`, with
+  `state: pill|dot`. Helped rate = yes / (yes + no), reported only at 30 or
+  more ratings, else "inconclusive". Read three weeks after the release
+  goes live, not on a calendar date. Kill: under 1 percent of weekly active
+  homes opening it on two consecutive reads removes the bubble and the home
+  prefix in the next release; under 2 percent, or helped under 40 percent,
+  makes the pill the dot from first launch.
+- Not taken: turning "Add a tile" and "Automations" into in-app links. Those
+  two chips are the cheapest way to learn what connected people cannot find;
+  an $0.08 answer that names the screen is the point of the probe.
+
+### Work
+1. Worker: mode, prompt, knowledge sections, rebuild, deploy, 10 home eval
+   cases plus the 20 setup cases.
+2. App: `HelpBubble` + `showAssistantSheet`, panel home mode (no auto call,
+   chips, reply enabled, no stamp), `HelpFrom.bubble` through every switch,
+   route extra for the handoff, Settings switch, HomeShell placement.
+3. Strings in 13 languages, policy paragraph, changelog 108, tests
+   (bubble states, hide, sheet opens, chip sends, no call on open), emulator
+   run with a connected home, Play build 3.5.0+108.

@@ -3071,6 +3071,55 @@ class AppLocalizationsNl extends AppLocalizations {
   String get assistantTalkToPerson => 'Praat met een persoon';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count apparaten melden zich',
+      one: '1 apparaat meldt zich',
+      zero: 'geen apparaat meldt zich',
+    );
+    return '$home is verbonden en $_temp0. Waarmee kan ik helpen?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash bereikt $home nu niet. Waarmee kan ik helpen?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Een apparaat reageert niet meer';
+
+  @override
+  String get assistantChipTile => 'Een tegel toevoegen';
+
+  @override
+  String get assistantChipAutomations => 'Automatiseringen';
+
+  @override
+  String get assistantChipUnreachable => 'Huis niet bereikbaar';
+
+  @override
+  String get helpBubbleLabel => 'Hulp nodig?';
+
+  @override
+  String get helpBubbleHide => 'Verbergen';
+
+  @override
+  String get helpBubbleHideSheet => 'Deze knop verbergen';
+
+  @override
+  String get helpBubbleHidden =>
+      'Verborgen. Zet hem terug aan via Instellingen › Hulp krijgen.';
+
+  @override
+  String get settingsHelpBubble => 'Hulpknop op het startscherm';
+
+  @override
+  String get settingsHelpBubbleSubtitle =>
+      'Vraag de assistent vanaf een dashboard';
+
+  @override
   String get getHelpReportPrompt =>
       'Wat klopte er niet aan het antwoord van de assistent?';
 

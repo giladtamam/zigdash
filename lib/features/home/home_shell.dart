@@ -19,6 +19,7 @@ import '../kiosk/kiosk.dart';
 import '../devices/devices_providers.dart';
 import '../hub_backup/hub_backup_providers.dart';
 import '../panels/widgets/edit_grid.dart' show askSectionName;
+import '../support/help_bubble.dart';
 
 /// The navigation shell of one home (docs/design/dashboard-1.12.md §6):
 /// Dashboards, Devices, Scenes and Automations in the bottom bar, all showing the current
@@ -121,6 +122,19 @@ class HomeShell extends ConsumerWidget {
               labelType: NavigationRailLabelType.all,
               groupAlignment: -1,
               minWidth: 88,
+              // The help bubble (3.5.0): the rail's last item, on the
+              // Dashboards tab, out of Edit mode.
+              trailing: selected == 0 && editing == null
+                  ? Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: HelpBubble(connectionId: connectionId),
+                        ),
+                      ),
+                    )
+                  : null,
               destinations: [
                 NavigationRailDestination(
                   icon: const SignalIcon(Symbols.dashboard),
@@ -167,6 +181,12 @@ class HomeShell extends ConsumerWidget {
 
     return Scaffold(
       body: child,
+      // The help bubble (3.5.0) floats at the start side above the bar; the
+      // dashboard's own Add tile button owns the end side. Not in Edit mode.
+      floatingActionButton: selected == 0 && editing == null
+          ? HelpBubble(connectionId: connectionId)
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       // In Edit mode the bar offers the two ways to add, instead of the tabs.
       bottomNavigationBar: editing != null && selected == 0
           ? _EditBar(connectionId: connectionId, dashboardId: editing)

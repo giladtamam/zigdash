@@ -25,6 +25,21 @@ bool assistantHelpedRecently(SharedPreferences prefs, {DateTime? now}) {
   return t.isAfter(then) && t.difference(then) < const Duration(hours: 24);
 }
 
+/// A quick first message on the home bubble: [label] is shown and sent,
+/// [tag] is what analytics records (never the text).
+class AssistantChip {
+  const AssistantChip(this.label, this.tag, this.sent);
+
+  /// Shown, in the person's language.
+  final String label;
+
+  /// What analytics records.
+  final String tag;
+
+  /// What is sent: the English wording, one text in every language.
+  final String sent;
+}
+
 /// What the panel hands to Send when the user wants a person, in the order
 /// that survives clipping on the developer's side: details first, the
 /// user's words, then the last two answers.
@@ -52,11 +67,37 @@ class AssistantPanel extends ConsumerStatefulWidget {
     required this.triage,
     required this.onTalkToPerson,
     required this.onReport,
+    this.mode = AssistantMode.setup,
+    this.opening,
+    this.chips = const [],
+    this.framed = true,
+    this.shownState,
   });
 
   final HelpFrom from;
   final SupportDetails details;
   final AssistantTriage triage;
+
+  /// Setup: the first answer is fetched when the panel opens. Home (the
+  /// bubble, revision 5): nothing is sent until the person taps a chip or
+  /// writes; the reply field is open from the start, and no `help_seen`
+  /// stamp is written, so that stays a setup signal.
+  final AssistantMode mode;
+
+  /// The opening line, when the caller knows better than the scan facts
+  /// (the bubble: the home's name, state and device count).
+  final String? opening;
+
+  /// Quick first messages, shown until the first one is sent. Each is sent
+  /// as the person's words; [AssistantChip.tag] goes to analytics.
+  final List<AssistantChip> chips;
+
+  /// In a Card with its own padding (Get help), or bare (the bubble's sheet
+  /// supplies both).
+  final bool framed;
+
+  /// The bubble state that was tapped (`pill` or `dot`), on the shown event.
+  final String? shownState;
 
   /// Talk to a person: opens the Send form with the handoff attached.
   final ValueChanged<AssistantHandoff> onTalkToPerson;
@@ -79,15 +120,24 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
   /// Per answer index: true = helped, false = did not, null = not asked.
   final _helped = <int, bool>{};
 
+  bool get _home => widget.mode == AssistantMode.home;
+
   @override
   void initState() {
     super.initState();
     _reply.addListener(() => setState(() {}));
-    ref.read(analyticsProvider).track(AssistantEvent(
-          AssistantStep.shown,
-          widget.from,
-        ));
-    WidgetsBinding.instance.addPostFrameCallback((_) => _ask(first: true));
+    ref
+        .read(analyticsProvider)
+        .track(
+          AssistantEvent(
+            AssistantStep.shown,
+            widget.from,
+            state: widget.shownState,
+          ),
+        );
+    if (!_home) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _ask(first: true));
+    }
   }
 
   @override
@@ -98,13 +148,14 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
   }
 
   AssistantRequest _request() => AssistantRequest(
-        details: widget.details.format(),
-        triage: widget.triage,
-        locale: Localizations.localeOf(context).toLanguageTag(),
-        appVersion: widget.details.appVersion,
-        build: widget.details.build,
-        turns: List.unmodifiable(_turns),
-      );
+    mode: widget.mode,
+    details: widget.details.format(),
+    triage: widget.triage,
+    locale: Localizations.localeOf(context).toLanguageTag(),
+    appVersion: widget.details.appVersion,
+    build: widget.details.build,
+    turns: List.unmodifiable(_turns),
+  );
 
   Future<void> _ask({bool first = false}) async {
     if (_busy) return;
@@ -123,13 +174,18 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
         _turns.add(AssistantTurn.assistant(reply.text!));
         analytics.track(AssistantEvent(AssistantStep.answered, widget.from));
         // Best effort: the stamp is bookkeeping for help_seen, never a
-        // reason to fail the answer.
-        try {
-          await ref.read(sharedPreferencesProvider).setInt(
-                kAssistantAnsweredAtMs,
-                DateTime.now().millisecondsSinceEpoch,
-              );
-        } catch (_) {}
+        // reason to fail the answer. Setup only: an answer in the bubble
+        // says nothing about a setup that follows.
+        if (!_home) {
+          try {
+            await ref
+                .read(sharedPreferencesProvider)
+                .setInt(
+                  kAssistantAnsweredAtMs,
+                  DateTime.now().millisecondsSinceEpoch,
+                );
+          } catch (_) {}
+        }
       case AssistantOutcome.resting:
         analytics.track(AssistantEvent(AssistantStep.resting, widget.from));
       case AssistantOutcome.refused:
@@ -161,55 +217,84 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
     final text = _reply.text.trim();
     if (text.isEmpty || _busy) return;
     _reply.clear();
-    setState(() => _turns.add(AssistantTurn.user(text)));
+    await _say(text, chip: 'typed');
+  }
+
+  /// A chip is the person's first message, in their words' place.
+  Future<void> _chip(AssistantChip chip) =>
+      _say(chip.sent, chip: chip.tag, display: chip.label);
+
+  int get _limit => assistantTurnLimit(widget.mode);
+
+  Future<void> _say(
+    String text, {
+    required String chip,
+    String? display,
+  }) async {
+    if (_busy || _turns.length >= _limit) return;
+    setState(() => _turns.add(AssistantTurn.user(text, display: display)));
     _asked += 1;
-    ref.read(analyticsProvider).track(AssistantEvent(
-          AssistantStep.asked,
-          widget.from,
-          nth: _asked,
-        ));
-    await _ask();
+    ref
+        .read(analyticsProvider)
+        .track(
+          AssistantEvent(
+            AssistantStep.asked,
+            widget.from,
+            nth: _asked,
+            // Which door opened a home conversation; setup records none.
+            chip: _home && _asked == 1 ? chip : null,
+          ),
+        );
+    await _ask(first: _home && _turns.length == 1);
   }
 
   List<String> get _lastAnswers => [
-        for (final t in _turns.where((t) => !t.fromUser)) t.text,
-      ].reversed.take(2).toList().reversed.toList();
+    for (final t in _turns.where((t) => !t.fromUser)) t.text,
+  ].reversed.take(2).toList().reversed.toList();
 
   void _helpedTap(int index, bool yes) {
     setState(() => _helped[index] = yes);
-    ref.read(analyticsProvider).track(AssistantEvent(
-          yes ? AssistantStep.helpedYes : AssistantStep.helpedNo,
-          widget.from,
-        ));
+    ref
+        .read(analyticsProvider)
+        .track(
+          AssistantEvent(
+            yes ? AssistantStep.helpedYes : AssistantStep.helpedNo,
+            widget.from,
+          ),
+        );
     if (!yes) {
-      widget.onReport(AssistantHandoff(
-        lastAnswers: _lastAnswers,
-        flagged: _turns[index].text,
-      ));
+      widget.onReport(
+        AssistantHandoff(
+          lastAnswers: _lastAnswers,
+          flagged: _turns[index].text,
+        ),
+      );
     }
   }
 
   void _person() {
-    ref.read(analyticsProvider).track(AssistantEvent(
-          AssistantStep.escalated,
-          widget.from,
-        ));
+    ref
+        .read(analyticsProvider)
+        .track(AssistantEvent(AssistantStep.escalated, widget.from));
     widget.onTalkToPerson(AssistantHandoff(lastAnswers: _lastAnswers));
   }
 
   /// The template line: what the app already knows, in the user's words'
   /// place, so the first answer does not start from nothing.
   String _opening(AppLocalizations l10n) {
+    if (widget.opening != null) return widget.opening!;
     final d = widget.details;
     final scan = d.lastScan;
     final parts = <String>[];
     if (scan != null) {
       // Positional as the string names them: network, hosts, brokers.
-      parts.add(l10n.assistantOpeningScan(
-        scan.network ?? 'Wi-Fi',
-        scan.hostsTried,
-        scan.brokersFound,
-      ));
+      parts.add(
+        l10n.assistantOpeningScan(
+          scan.network ?? 'Wi-Fi',
+          scan.hostsTried,
+          scan.brokersFound,
+        ),
+      );
     }
     if (widget.triage.running == 'yes') {
       parts.add(l10n.assistantOpeningRunningYes);
@@ -226,141 +311,159 @@ class _AssistantPanelState extends ConsumerState<AssistantPanel> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final answers = _turns.where((t) => !t.fromUser).length;
-    final canReply =
-        answers > 0 && !_busy && _turns.length < assistantMaxTurns;
+    final canReply = (answers > 0 || _home) && !_busy && _turns.length < _limit;
+    final showChips = _home && widget.chips.isNotEmpty && _turns.isEmpty;
 
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    final column = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Icon(Icons.auto_awesome, color: scheme.primary, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(l10n.assistantTitle,
-                      style: theme.textTheme.titleMedium),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              l10n.assistantNotice,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: scheme.onSurfaceVariant),
-            ),
-            const SizedBox(height: 12),
-            Text(_opening(l10n), style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 12),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 360),
-              child: ListView(
-                controller: _scroll,
-                shrinkWrap: true,
-                children: [
-                  for (var i = 0; i < _turns.length; i++)
-                    _Bubble(
-                      turn: _turns[i],
-                      helped: _helped[i],
-                      onHelped: _turns[i].fromUser
-                          ? null
-                          : (yes) => _helpedTap(i, yes),
-                    ),
-                  if (_busy)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        children: [
-                          SizedBox.square(
-                            dimension: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                          SizedBox(width: 10),
-                          _TypingText(),
-                        ],
-                      ),
-                    ),
-                  if (!_busy && _last != null &&
-                      _last != AssistantOutcome.answered)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Text(
-                        switch (_last!) {
-                          AssistantOutcome.resting => l10n.assistantResting,
-                          AssistantOutcome.refused => l10n.assistantRefused,
-                          _ => l10n.assistantFailed,
-                        },
-                        key: const Key('assistant-status'),
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: scheme.error),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            if (!_busy && _last == AssistantOutcome.failed && answers == 0)
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: TextButton.icon(
-                  key: const Key('assistant-retry'),
-                  onPressed: () => _ask(first: true),
-                  icon: const Icon(Icons.refresh),
-                  label: Text(l10n.assistantRetry),
-                ),
-              ),
-            if (answers > 0) ...[
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      key: const Key('assistant-reply'),
-                      controller: _reply,
-                      enabled: canReply,
-                      minLines: 1,
-                      maxLines: 4,
-                      maxLength: assistantMaxTurnChars,
-                      textCapitalization: TextCapitalization.sentences,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => _send(),
-                      decoration: InputDecoration(
-                        hintText: _turns.length >= assistantMaxTurns
-                            ? l10n.assistantTurnsUsed
-                            : l10n.assistantReplyHint,
-                        border: const OutlineInputBorder(),
-                        counterText: '',
-                        isDense: true,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton.filled(
-                    key: const Key('assistant-send'),
-                    onPressed:
-                        canReply && _reply.text.trim().isNotEmpty ? _send : null,
-                    icon: const Icon(Icons.arrow_upward),
-                    tooltip: l10n.getHelpSend,
-                  ),
-                ],
-              ),
-            ],
-            const SizedBox(height: 8),
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: TextButton.icon(
-                key: const Key('assistant-person'),
-                onPressed: _person,
-                icon: const Icon(Icons.support_agent),
-                label: Text(l10n.assistantTalkToPerson),
+            Icon(Icons.auto_awesome, color: scheme.primary, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                l10n.assistantTitle,
+                style: theme.textTheme.titleMedium,
               ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 4),
+        Text(
+          l10n.assistantNotice,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(_opening(l10n), style: theme.textTheme.bodyMedium),
+        if (showChips) ...[
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final c in widget.chips)
+                ActionChip(
+                  key: Key('assistant-chip-${c.tag}'),
+                  label: Text(c.label),
+                  onPressed: _busy ? null : () => _chip(c),
+                ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 12),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: _home ? 420 : 360),
+          child: ListView(
+            controller: _scroll,
+            shrinkWrap: true,
+            children: [
+              for (var i = 0; i < _turns.length; i++)
+                _Bubble(
+                  turn: _turns[i],
+                  helped: _helped[i],
+                  onHelped: _turns[i].fromUser
+                      ? null
+                      : (yes) => _helpedTap(i, yes),
+                ),
+              if (_busy)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      SizedBox.square(
+                        dimension: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 10),
+                      _TypingText(),
+                    ],
+                  ),
+                ),
+              if (!_busy && _last != null && _last != AssistantOutcome.answered)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    switch (_last!) {
+                      AssistantOutcome.resting => l10n.assistantResting,
+                      AssistantOutcome.refused => l10n.assistantRefused,
+                      _ => l10n.assistantFailed,
+                    },
+                    key: const Key('assistant-status'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: scheme.error,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        if (!_busy && _last == AssistantOutcome.failed && answers == 0)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              key: const Key('assistant-retry'),
+              onPressed: () => _ask(first: true),
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.assistantRetry),
+            ),
+          ),
+        if (answers > 0 || _home) ...[
+          const SizedBox(height: 8),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextField(
+                  key: const Key('assistant-reply'),
+                  controller: _reply,
+                  enabled: canReply,
+                  minLines: 1,
+                  maxLines: 4,
+                  maxLength: assistantMaxTurnChars,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.send,
+                  onSubmitted: (_) => _send(),
+                  decoration: InputDecoration(
+                    hintText: _turns.length >= _limit
+                        ? l10n.assistantTurnsUsed
+                        : l10n.assistantReplyHint,
+                    border: const OutlineInputBorder(),
+                    counterText: '',
+                    isDense: true,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton.filled(
+                key: const Key('assistant-send'),
+                onPressed: canReply && _reply.text.trim().isNotEmpty
+                    ? _send
+                    : null,
+                icon: const Icon(Icons.arrow_upward),
+                tooltip: l10n.getHelpSend,
+              ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 8),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton.icon(
+            key: const Key('assistant-person'),
+            onPressed: _person,
+            icon: const Icon(Icons.support_agent),
+            label: Text(l10n.assistantTalkToPerson),
+          ),
+        ),
+      ],
+    );
+    if (!widget.framed) return column;
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(padding: const EdgeInsets.all(16), child: column),
     );
   }
 }
@@ -380,19 +483,22 @@ class _Bubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
-        crossAxisAlignment:
-            mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: mine
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           Container(
             constraints: const BoxConstraints(maxWidth: 520),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: mine ? scheme.primaryContainer : scheme.surfaceContainerHigh,
+              color: mine
+                  ? scheme.primaryContainer
+                  : scheme.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(12),
             ),
             child: SelectableText.rich(
               lightMarkdown(
-                turn.text,
+                turn.shown,
                 theme.textTheme.bodyMedium?.copyWith(
                   color: mine ? scheme.onPrimaryContainer : scheme.onSurface,
                 ),
@@ -406,9 +512,12 @@ class _Bubble extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 4,
                 children: [
-                  Text(l10n.assistantHelped,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: scheme.onSurfaceVariant)),
+                  Text(
+                    l10n.assistantHelped,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
                   IconButton(
                     key: const Key('assistant-helped-yes'),
                     visualDensity: VisualDensity.compact,
@@ -442,9 +551,9 @@ class _TypingText extends StatelessWidget {
   const _TypingText();
   @override
   Widget build(BuildContext context) => Text(
-        context.l10n.assistantThinking,
-        style: Theme.of(context).textTheme.bodySmall,
-      );
+    context.l10n.assistantThinking,
+    style: Theme.of(context).textTheme.bodySmall,
+  );
 }
 
 /// The light markdown the assistant is allowed: `**bold**` becomes bold,
@@ -452,7 +561,8 @@ class _TypingText extends StatelessWidget {
 TextSpan lightMarkdown(String text, TextStyle? style) {
   final parts = text.split('**');
   if (parts.length < 3) return TextSpan(text: text, style: style);
-  final bold = style?.copyWith(fontWeight: FontWeight.w600) ??
+  final bold =
+      style?.copyWith(fontWeight: FontWeight.w600) ??
       const TextStyle(fontWeight: FontWeight.w600);
   return TextSpan(
     style: style,

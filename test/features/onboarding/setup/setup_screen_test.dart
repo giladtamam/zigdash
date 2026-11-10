@@ -187,6 +187,8 @@ Future<SetupCoordinator> _pump(
         }),
         firstRunProvider.overrideWithValue(firstRun ?? _FakeFirstRun()),
         setupReminderProvider.overrideWithValue(reminder ?? _FakeReminder()),
+        // Finishing setup stamps setup_completed_at (3.4.8).
+        sharedPreferencesProvider.overrideWithValue(_prefs),
         ...extra,
       ],
       child: MaterialApp.router(
@@ -245,7 +247,13 @@ Future<void> _guideTo(WidgetTester tester, String rung) async {
   fail('the guide never reached $rung');
 }
 
+late SharedPreferences _prefs;
+
 void main() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    _prefs = await SharedPreferences.getInstance();
+  });
   group('3.1.4: a way out of setup', () {
     // A scan still running, with one broker found to tap.
     Future<SetupCoordinator> found(
@@ -1841,11 +1849,9 @@ void main() {
       List<Override> out, {
       bool available = true,
     }) async {
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = _prefs;
       final sink = _SinkSpy();
       out.addAll([
-        sharedPreferencesProvider.overrideWithValue(prefs),
         analyticsSinkProvider.overrideWithValue(sink),
         analyticsAvailableProvider.overrideWithValue(available),
       ]);

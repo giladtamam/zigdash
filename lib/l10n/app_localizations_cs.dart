@@ -3059,6 +3059,54 @@ class AppLocalizationsCs extends AppLocalizations {
   String get assistantTalkToPerson => 'Mluvit s člověkem';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zařízení hlásí',
+      few: '$count zařízení hlásí',
+      one: '1 zařízení hlásí',
+      zero: 'žádné zařízení nehlásí',
+    );
+    return '$home je připojen a $_temp0. S čím pomoci?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash se teď k $home nedostane. S čím pomoci?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Zařízení přestalo reagovat';
+
+  @override
+  String get assistantChipTile => 'Přidat dlaždici';
+
+  @override
+  String get assistantChipAutomations => 'Automatizace';
+
+  @override
+  String get assistantChipUnreachable => 'Domov je nedostupný';
+
+  @override
+  String get helpBubbleLabel => 'Potřebujete pomoc?';
+
+  @override
+  String get helpBubbleHide => 'Skrýt';
+
+  @override
+  String get helpBubbleHideSheet => 'Skrýt tuto bublinu';
+
+  @override
+  String get helpBubbleHidden => 'Skryto. Vrátíte v Nastavení › Získat pomoc.';
+
+  @override
+  String get settingsHelpBubble => 'Bublina nápovědy na domovské obrazovce';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'Zeptejte se asistenta z nástěnky';
+
+  @override
   String get getHelpReportPrompt => 'Co bylo na odpovědi asistenta špatně?';
 
   @override

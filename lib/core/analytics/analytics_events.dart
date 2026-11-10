@@ -639,6 +639,10 @@ enum HelpFrom {
 
   /// The warm button on the empty scan's guide (help-and-review-2026-11.md).
   scanEmpty,
+
+  /// The help bubble on a connected home's dashboard (3.5.0,
+  /// assistant-in-app-2026-11.md revision 5).
+  bubble,
 }
 
 /// How Support details left the phone: a mail app, the clipboard (platforms
@@ -679,15 +683,26 @@ enum AssistantStep {
   helpedYes,
   helpedNo,
   escalated,
+
+  /// Long-press › Hide on the home bubble (3.5.0).
+  hidden,
 }
 
 class AssistantEvent extends AnalyticsEvent {
-  const AssistantEvent(this.step, this.from, {this.nth});
+  const AssistantEvent(this.step, this.from, {this.nth, this.chip, this.state});
   final AssistantStep step;
   final HelpFrom from;
 
   /// Which of the user's replies this was, on [AssistantStep.asked].
   final int? nth;
+
+  /// On the home bubble's [AssistantStep.asked]: which chip opened the
+  /// conversation (device, tile, automations, unreachable) or `typed`.
+  final String? chip;
+
+  /// On the home bubble's [AssistantStep.shown]: which state was tapped,
+  /// `pill` or `dot`.
+  final String? state;
   @override
   String get name => 'assistant';
   @override
@@ -695,7 +710,14 @@ class AssistantEvent extends AnalyticsEvent {
     'step': _snake(step.name),
     'from': _snake(from.name),
     if (nth != null)
-      'nth': bucket(nth!, const [1], ranges: const [(2, 3), (4, 9)], top: '10+'),
+      'nth': bucket(
+        nth!,
+        const [1],
+        ranges: const [(2, 3), (4, 9)],
+        top: '10+',
+      ),
+    if (chip != null) 'chip': chip!,
+    if (state != null) 'state': state!,
   };
 }
 

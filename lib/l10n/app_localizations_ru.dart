@@ -3060,6 +3060,56 @@ class AppLocalizationsRu extends AppLocalizations {
   String get assistantTalkToPerson => 'Поговорить с человеком';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'отвечают $count устройства',
+      many: 'отвечают $count устройств',
+      few: 'отвечают $count устройства',
+      one: 'отвечает $count устройство',
+      zero: 'устройства не отвечают',
+    );
+    return '$home подключён, $_temp0. Чем помочь?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash сейчас не может связаться с $home. Чем помочь?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Устройство перестало отвечать';
+
+  @override
+  String get assistantChipTile => 'Добавить плитку';
+
+  @override
+  String get assistantChipAutomations => 'Автоматизации';
+
+  @override
+  String get assistantChipUnreachable => 'Дом недоступен';
+
+  @override
+  String get helpBubbleLabel => 'Нужна помощь?';
+
+  @override
+  String get helpBubbleHide => 'Скрыть';
+
+  @override
+  String get helpBubbleHideSheet => 'Скрыть этот пузырь';
+
+  @override
+  String get helpBubbleHidden =>
+      'Скрыто. Вернуть можно в Настройки › Получить помощь.';
+
+  @override
+  String get settingsHelpBubble => 'Пузырь помощи на главном экране';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'Спросить ассистента с дашборда';
+
+  @override
   String get getHelpReportPrompt => 'Что было не так в ответе помощника?';
 
   @override

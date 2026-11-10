@@ -3028,6 +3028,53 @@ class AppLocalizationsHe extends AppLocalizations {
   String get assistantTalkToPerson => 'לדבר עם אדם';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count מכשירים מדווחים',
+      one: 'מכשיר אחד מדווח',
+      zero: 'אף מכשיר לא מדווח',
+    );
+    return '$home מחובר ו$_temp0. במה אפשר לעזור?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash לא מצליח להגיע אל $home כרגע. במה אפשר לעזור?';
+  }
+
+  @override
+  String get assistantChipDevice => 'מכשיר הפסיק להגיב';
+
+  @override
+  String get assistantChipTile => 'הוספת אריח';
+
+  @override
+  String get assistantChipAutomations => 'אוטומציות';
+
+  @override
+  String get assistantChipUnreachable => 'אי אפשר להגיע לבית';
+
+  @override
+  String get helpBubbleLabel => 'צריכים עזרה?';
+
+  @override
+  String get helpBubbleHide => 'הסתרה';
+
+  @override
+  String get helpBubbleHideSheet => 'להסתיר את הבועה';
+
+  @override
+  String get helpBubbleHidden => 'הוסתר. אפשר להחזיר דרך הגדרות › קבלת עזרה.';
+
+  @override
+  String get settingsHelpBubble => 'בועת עזרה במסך הבית';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'לשאול את העוזר מתוך לוח מחוונים';
+
+  @override
   String get getHelpReportPrompt => 'מה היה לא נכון בתשובת העוזר?';
 
   @override

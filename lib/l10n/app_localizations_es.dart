@@ -3073,6 +3073,55 @@ class AppLocalizationsEs extends AppLocalizations {
   String get assistantTalkToPerson => 'Hablar con una persona';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivos informan',
+      one: '1 dispositivo informa',
+      zero: 'ningún dispositivo informa',
+    );
+    return '$home está conectado y $_temp0. ¿Qué necesitas?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash no puede conectar con $home ahora mismo. ¿Qué necesitas?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Un dispositivo dejó de responder';
+
+  @override
+  String get assistantChipTile => 'Añadir un mosaico';
+
+  @override
+  String get assistantChipAutomations => 'Automatizaciones';
+
+  @override
+  String get assistantChipUnreachable => 'No se puede acceder al hogar';
+
+  @override
+  String get helpBubbleLabel => '¿Necesitas ayuda?';
+
+  @override
+  String get helpBubbleHide => 'Ocultar';
+
+  @override
+  String get helpBubbleHideSheet => 'Ocultar esta burbuja';
+
+  @override
+  String get helpBubbleHidden =>
+      'Oculto. Vuelve a activarlo en Ajustes › Obtener ayuda.';
+
+  @override
+  String get settingsHelpBubble => 'Burbuja de ayuda en la pantalla de inicio';
+
+  @override
+  String get settingsHelpBubbleSubtitle =>
+      'Pregunta al asistente desde un panel';
+
+  @override
   String get getHelpReportPrompt =>
       '¿Qué estaba mal en la respuesta del asistente?';
 

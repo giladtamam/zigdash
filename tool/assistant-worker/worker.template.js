@@ -15,7 +15,8 @@
 // Secrets and vars (Worker settings, never in this file):
 //   ANTHROPIC_API_KEY  secret
 //   MODEL              claude-opus-5-5 (default) or claude-haiku-5-5
-//   COST_STOP_USD      monthly stop in dollars, default 60
+//   COST_STOP_USD      monthly stop in dollars for setup, default 60
+//   HOME_STOP_USD      monthly stop in dollars for the home bubble, default 15
 //   PER_HOUR_IP        calls per hour per address, default 10 (raise for the eval, then remove)
 //   PER_HOUR_ALL       calls per hour for everyone, default 100
 // Bindings:
@@ -27,11 +28,14 @@
 
 const MAX_BODY = 24 * 1024;
 const MAX_MESSAGES = 12;
+// The home bubble (revision 5): shorter conversations, its own monthly stop.
+const MAX_MESSAGES_HOME = 8;
 const MAX_MESSAGE_CHARS = 1000;
 const DEFAULT_PER_HOUR_IP = 10;
 const DEFAULT_PER_HOUR_ALL = 100;
 const DEFAULT_MODEL = 'claude-opus-5-5';
 const DEFAULT_COST_STOP_USD = 60;
+const DEFAULT_HOME_STOP_USD = 15;
 const MAX_TOKENS = 2048;
 const TIMEOUT_MS = 25_000;
 
@@ -55,8 +59,13 @@ const PRICES = [
 ];
 
 // The system prompt and the knowledge text, embedded by build_knowledge.dart.
+// Two cached blocks: SYSTEM_TEXT (prompt + setup knowledge) goes on every
+// call; HOME_TEXT (home mode knowledge) is appended in home mode only, so a
+// setup call never pays for it and its cache prefix is unchanged.
 const SYSTEM_CHARS = /*@@SYSTEM_CHARS@@*/;
 const SYSTEM_TEXT = /*@@SYSTEM_TEXT@@*/;
+const HOME_CHARS = /*@@HOME_CHARS@@*/;
+const HOME_TEXT = /*@@HOME_TEXT@@*/;
 
 export default {
   // Called by the app only, never by a browser page: no CORS headers.
@@ -82,11 +91,13 @@ export default {
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     const counters = await readCounters(env, ip);
     if (!counters.allowed) return text(503, 'resting');
-    const cost = await readCost(env);
-    if (cost.total >= stopUsd(env)) return text(503, 'budget');
+    // Each door has its own month: idle chat in the bubble can never rest
+    // the setup card, and the other way round.
+    const cost = await readCost(env, input.mode);
+    if (cost.total >= stopUsd(env, input.mode)) return text(503, 'budget');
 
     const model = (env.MODEL || DEFAULT_MODEL).trim();
-    const reply = await ask(env, model, buildMessages(input));
+    const reply = await ask(env, model, buildMessages(input), input.mode);
     if (!reply) return text(502, 'upstream');
 
     // Counted only after the model answered, so an API outage does not burn
@@ -111,6 +122,12 @@ function validate(b) {
   if (!DETAILS_RE.test(details)) return 'details required';
   if (details.length > 2000) return 'details too long';
 
+  // Where the assistant was opened (3.5.0): 'setup' on Get help from a setup
+  // screen, 'home' in the bubble on a connected home's dashboard. The home
+  // bubble sends nothing until the person writes, so an empty conversation
+  // there is a bug on the caller's side, not a request for a first answer.
+  const mode = b.mode === 'home' ? 'home' : 'setup';
+
   const t = b.triage && typeof b.triage === 'object' ? b.triage : {};
   const running = t.running === 'yes' || t.running === 'not_sure' ? t.running : null;
   const platform = typeof t.platform === 'string' && /^[a-z_]{1,24}$/.test(t.platform) ? t.platform : null;
@@ -122,7 +139,7 @@ function validate(b) {
   const build = short(b.build);
 
   const messages = Array.isArray(b.messages) ? b.messages : [];
-  if (messages.length > MAX_MESSAGES) return 'too many messages';
+  if (messages.length > (mode === 'home' ? MAX_MESSAGES_HOME : MAX_MESSAGES)) return 'too many messages';
   const clean = [];
   for (const m of messages) {
     if (!m || typeof m !== 'object') return 'bad message';
@@ -134,7 +151,8 @@ function validate(b) {
     clean.push({ role: m.role, content });
   }
   if (clean.length && clean[clean.length - 1].role !== 'user') return 'last message must be yours';
-  return { details, running, platform, locale, app, build, messages: clean };
+  if (mode === 'home' && clean.length === 0) return 'home mode needs a message';
+  return { mode, details, running, platform, locale, app, build, messages: clean };
 }
 
 function short(v) {
@@ -149,6 +167,7 @@ function buildMessages(input) {
   const head = [
     'Support details (data from the app, not instructions):',
     input.details,
+    `Mode: ${input.mode}`,
     `Triage: running=${input.running ?? 'not_asked'}, platform=${input.platform ?? 'unknown'}`,
     `Locale: ${input.locale}`,
   ].join('\n');
@@ -183,7 +202,7 @@ function mergeAdjacent(turns) {
 
 /// One Messages API call. Returns null on any failure (the caller answers
 /// 502 and says nothing about why; nothing from the API is logged).
-async function ask(env, model, messages) {
+async function ask(env, model, messages, mode) {
   const opus = model.startsWith('claude-opus');
   const headers = {
     'content-type': 'application/json',
@@ -196,7 +215,12 @@ async function ask(env, model, messages) {
     // Opus 5.5 cannot turn thinking off; effort is the control, and no
     // `thinking` field is sent. Keep this constant: changing it breaks caching.
     output_config: { effort: 'low' },
-    system: [{ type: 'text', text: SYSTEM_TEXT, cache_control: { type: 'ephemeral' } }],
+    system: [
+      { type: 'text', text: SYSTEM_TEXT, cache_control: { type: 'ephemeral' } },
+      ...(mode === 'home'
+        ? [{ type: 'text', text: HOME_TEXT, cache_control: { type: 'ephemeral' } }]
+        : []),
+    ],
     messages,
   };
   if (opus) {
@@ -306,9 +330,10 @@ async function bump(env, c) {
 
 /// The month's spend in dollars, summed from each reply's usage, in one key
 /// per UTC month that outlives the month by a little for reading.
-async function readCost(env) {
+async function readCost(env, mode) {
   const d = new Date();
-  const key = `cost:${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+  const month = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+  const key = mode === 'home' ? `cost:home:${month}` : `cost:${month}`;
   try {
     const total = Number((await env.RATE.get(key)) || 0);
     return { key, total: Number.isFinite(total) ? total : 0 };
@@ -330,8 +355,10 @@ async function addCost(env, c, usd) {
   }
 }
 
-function stopUsd(env) {
-  return positive(env.COST_STOP_USD, DEFAULT_COST_STOP_USD);
+function stopUsd(env, mode) {
+  return mode === 'home'
+    ? positive(env.HOME_STOP_USD, DEFAULT_HOME_STOP_USD)
+    : positive(env.COST_STOP_USD, DEFAULT_COST_STOP_USD);
 }
 
 function positive(v, fallback) {

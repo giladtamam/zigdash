@@ -67,7 +67,9 @@ List<HelpTip> tipsFor(
       t(l.tipRestartZ2mButtonTitle, l.tipRestartZ2mButtonBody),
       t(l.tipZ2mRunningTitle, l.tipZ2mRunningBody),
     ],
-    HelpFrom.settings => [
+    // The bubble's "Talk to a person" lands here: a connected home, so the
+    // Settings tips fit.
+    HelpFrom.settings || HelpFrom.bubble => [
       t(l.tipCantConnectTitle, l.tipCantConnectBody),
       t(l.tipDeviceWrongTitle, l.tipDeviceWrongBody),
       t(l.tipRenameHomeTitle, l.tipRenameHomeBody),
@@ -99,4 +101,5 @@ String openedFromLabel(HelpFrom from, SetupErrorKind? error) => switch (from) {
   HelpFrom.demo => 'Demo',
   HelpFrom.card => 'Dashboard › community card',
   HelpFrom.scanEmpty => 'Setup › Nothing found › help button',
+  HelpFrom.bubble => 'Dashboard › help bubble',
 };

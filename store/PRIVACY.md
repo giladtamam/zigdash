@@ -211,7 +211,7 @@ chose to include are used only to help you, are never shared, and are
 deleted within 6 months after the issue is closed; a Telegram message is
 deleted from the chat once answered.
 
-## The assistant on Get help (from 3.5.0)
+## The assistant on Get help and the help bubble (from 3.5.0)
 
 When Get help is opened from setup (an empty scan, a setup error, the
 broker form), an assistant answers first. To answer, the app sends the
@@ -220,7 +220,20 @@ which kind of hub) and the app's language to a small service the developer
 runs on Cloudflare, which adds its instructions and forwards the request to
 Anthropic's Claude API; when you reply to the assistant, what you type goes
 the same way. Nothing is sent before the panel opens on such a screen, and
-nothing from Settings or the demo. Anthropic keeps API inputs for up to 30
+nothing from Settings or the demo.
+
+The same assistant is behind the "Need help?" bubble on a home's dashboard
+(from 3.5.0). Opening the bubble sends nothing; the first request leaves
+when you tap one of its quick questions or write a message. It carries the
+Support details of that home (the connection kind, port and address shape,
+the Zigbee2MQTT version, whether its bridge is online, how many devices it
+has, how many the Devices tab lists under Needs attention and how many of
+those did not answer, the last error and the last scan), the app's language,
+and your messages. Never the home's name, device names, dashboard names,
+addresses or logins. A quick question is sent as its English wording. The
+bubble can be hidden from its own sheet, by a long-press, or in Settings ›
+Get help; hiding it is remembered on the phone only. The demo home has no
+bubble. Anthropic keeps API inputs for up to 30
 days for abuse monitoring under [its own terms](https://www.anthropic.com/legal/commercial-terms)
 and does not train on them. The developer's service keeps nothing and does
 not log the messages; the conversation lives only in the app's memory until
@@ -237,7 +250,7 @@ support message (see Support messages above).
 
 | Event | What it records | Values |
 |---|---|---|
-| `assistant` | From 3.5.0: what happened with the assistant on Get help | where Get help was opened from (as above); that it was shown, answered, was resting (over a limit), declined, failed, got a reply from you (which one: 1st, 2nd-3rd, 4th-9th, 10th or later), got a yes or a no to "Did this help?", or that Talk to a person was tapped. Never the text |
+| `assistant` | From 3.5.0: what happened with the assistant on Get help or in the help bubble | where it was opened from (as above, or the bubble); that it was shown (for the bubble, whether as the "Need help?" pill or the small dot), answered, was resting (over a limit), declined, failed, got a reply from you (which one: 1st, 2nd-3rd, 4th-9th, 10th or later; for the bubble's first message, which quick question it was: a device stopped responding, add a tile, automations, home can't be reached, or typed), got a yes or a no to "Did this help?", that Talk to a person was tapped, or that the bubble was hidden. Never the text |
 
 The `setup_step` event's `complete` step gains `help_seen`: whether the
 assistant had answered on this phone within the last 24 hours before the

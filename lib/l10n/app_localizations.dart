@@ -5484,6 +5484,78 @@ abstract class AppLocalizations {
   /// **'Talk to a person'**
   String get assistantTalkToPerson;
 
+  /// No description provided for @assistantHomeOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'{home} is connected and {count, plural, =0{no devices report} =1{1 device reports} other{{count} devices report}}. What do you need?'**
+  String assistantHomeOpening(String home, int count);
+
+  /// No description provided for @assistantHomeOpeningOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can\'t reach {home} right now. What do you need?'**
+  String assistantHomeOpeningOffline(String home);
+
+  /// No description provided for @assistantChipDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'A device stopped responding'**
+  String get assistantChipDevice;
+
+  /// No description provided for @assistantChipTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a tile'**
+  String get assistantChipTile;
+
+  /// No description provided for @assistantChipAutomations.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations'**
+  String get assistantChipAutomations;
+
+  /// No description provided for @assistantChipUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Home can\'t be reached'**
+  String get assistantChipUnreachable;
+
+  /// No description provided for @helpBubbleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help?'**
+  String get helpBubbleLabel;
+
+  /// No description provided for @helpBubbleHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get helpBubbleHide;
+
+  /// No description provided for @helpBubbleHideSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this bubble'**
+  String get helpBubbleHideSheet;
+
+  /// No description provided for @helpBubbleHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden. Bring it back in Settings › Get help.'**
+  String get helpBubbleHidden;
+
+  /// No description provided for @settingsHelpBubble.
+  ///
+  /// In en, this message translates to:
+  /// **'Help bubble on the home screen'**
+  String get settingsHelpBubble;
+
+  /// No description provided for @settingsHelpBubbleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the assistant from a dashboard'**
+  String get settingsHelpBubbleSubtitle;
+
   /// No description provided for @getHelpReportPrompt.
   ///
   /// In en, this message translates to:

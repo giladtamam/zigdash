@@ -1,0 +1,212 @@
+[
+ {
+  "id": "home-chip-device",
+  "mode": "home",
+  "locale": "en",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none\nDevices needing attention: 1 (1 not responding)",
+  "messages": [
+   {
+    "role": "user",
+    "content": "A device stopped responding"
+   }
+  ],
+  "expected": [
+   "Asks the one splitting question: does Devices show it as Not responding or Offline, and does it work from Zigbee2MQTT's own page",
+   "Does not list every possible cause; at most one question or one thing to try",
+   "Does not claim to see which device it is or its state; may mention that one device is listed under Needs attention",
+   "No passwords, no config edits"
+  ]
+ },
+ {
+  "id": "home-chip-tile",
+  "mode": "home",
+  "locale": "en",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "Add a tile"
+   }
+  ],
+  "expected": [
+   "Gives the steps in order, at most four, naming Add tile (or adding from a device's page) and the dashboard",
+   "Names only screens and buttons the knowledge names",
+   "No question-only answer: this is a how-do-I"
+  ]
+ },
+ {
+  "id": "home-chip-automations",
+  "mode": "home",
+  "locale": "de",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "Automations"
+   }
+  ],
+  "expected": [
+   "Answers in German",
+   "Says automations live in the Automations tab, that ZigDash Engine is installed on the hub from there, and that three per home are free (more with Pro), without selling",
+   "At most four steps"
+  ]
+ },
+ {
+  "id": "home-chip-unreachable",
+  "mode": "home",
+  "locale": "en",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge offline · 6 devices\nLast error: connection refused\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "Home can't be reached"
+   }
+  ],
+  "expected": [
+   "One splitting question or one thing to try: at home on the same Wi-Fi, or away; is the hub on",
+   "Mentions that away from home needs Remote control (Pro) or a Home Assistant remote address, not port forwarding or Tailscale by name unless the person brings it up",
+   "No addresses asked for"
+  ]
+ },
+ {
+  "id": "home-rename-tile",
+  "mode": "home",
+  "locale": "es",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "¿Cómo cambio el nombre de un mosaico?"
+   }
+  ],
+  "expected": [
+   "Answers in Spanish",
+   "Names the tile's own menu or Edit mode as the knowledge describes; at most four steps",
+   "No invented buttons"
+  ]
+ },
+ {
+  "id": "home-history-missing",
+  "mode": "home",
+  "locale": "en",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "I tapped a temperature tile and the history is empty, why?"
+   }
+  ],
+  "expected": [
+   "Explains that history is recorded by ZigDash Engine on the hub (or by a phone that stays open) every 15 minutes, and only for numbers shown on a dashboard; points to Set up on the hub",
+   "Does not promise 7 or 30 days without saying that is Pro",
+   "At most four steps"
+  ]
+ },
+ {
+  "id": "home-offline-vs-notresponding",
+  "mode": "home",
+  "locale": "en",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none\nDevices needing attention: 2 (0 not responding)",
+  "messages": [
+   {
+    "role": "user",
+    "content": "Two of my sensors say Offline in the Devices tab but they work fine from the Zigbee2MQTT page"
+   }
+  ],
+  "expected": [
+   "Explains Offline comes from Zigbee2MQTT's availability feature and what that means, as the knowledge says; suggests checking the device in Zigbee2MQTT and its link quality or battery",
+   "One step or one question",
+   "Does not suggest editing configuration.yaml by hand"
+  ]
+ },
+ {
+  "id": "home-pro-question",
+  "mode": "home",
+  "locale": "fr",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "Est-ce que je dois payer pour utiliser l'application ?"
+   }
+  ],
+  "expected": [
+   "Answers in French",
+   "Says what is free and what Pro has, once, as a one-time purchase; no upsell, no prices unless the knowledge has them",
+   "Short"
+  ]
+ },
+ {
+  "id": "home-off-scope-ha-automation",
+  "mode": "home",
+  "locale": "en",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "Can you write me a Home Assistant automation that closes the shutters at sunset?"
+   }
+  ],
+  "expected": [
+   "One sentence that this assistant only helps with ZigDash, and points to Talk to a person or, at most, to ZigDash's own Automations tab",
+   "Does not write the automation"
+  ]
+ },
+ {
+  "id": "home-asks-to-change",
+  "mode": "home",
+  "locale": "he",
+  "triage": {
+   "running": null,
+   "platform": null
+  },
+  "details": "ZigDash 3.5.0 (108) · Android 14 · Pixel 7a\nOpened from: Dashboard › help bubble\nConnection: local · TCP · port 1883 · private address in 192.168.x\nZigbee2MQTT: 2.6.0 · bridge online · 6 devices\nLast error: none\nLast scan: none",
+  "messages": [
+   {
+    "role": "user",
+    "content": "תפתח לי בבקשה את התריס במשרד"
+   }
+  ],
+  "expected": [
+   "Answers in Hebrew",
+   "Says plainly it cannot control devices or change anything, and tells the person where to tap (the tile's Open button on the dashboard)",
+   "Does not pretend to have done it"
+  ]
+ }
+]

@@ -28,19 +28,19 @@ Uri supportMailUrl({
   required String subject,
   required String prompt,
   required String details,
-}) =>
-    Uri(
-      scheme: 'mailto',
-      path: supportEmail,
-      // Uri's queryParameters encode spaces as '+', which mail apps show.
-      query: 'subject=${Uri.encodeComponent(subject)}'
-          '&body=${Uri.encodeComponent('$prompt\n\n\n— Support details —\n$details')}',
-    );
+}) => Uri(
+  scheme: 'mailto',
+  path: supportEmail,
+  // Uri's queryParameters encode spaces as '+', which mail apps show.
+  query:
+      'subject=${Uri.encodeComponent(subject)}'
+      '&body=${Uri.encodeComponent('$prompt\n\n\n— Support details —\n$details')}',
+);
 
 /// Opens a mailto URL; replaced in tests.
 @visibleForTesting
-Future<bool> Function(Uri url) openMailApp =
-    (url) => launchUrl(url, mode: LaunchMode.externalApplication);
+Future<bool> Function(Uri url) openMailApp = (url) =>
+    launchUrl(url, mode: LaunchMode.externalApplication);
 
 /// Opens Android's share sheet with [text]; false where there is none.
 /// Replaced in tests.
@@ -69,9 +69,14 @@ class GetHelpScreen extends ConsumerStatefulWidget {
     this.connectionId,
     this.error,
     this.platform,
+    this.initialHandoff,
   });
 
   final HelpFrom from;
+
+  /// The bubble's conversation, when Talk to a person brought the user
+  /// here (3.5.0): attached to Send after the details, as on Get help.
+  final AssistantHandoff? initialHandoff;
 
   /// The setup platform answer (a [SetupPlatform] name), when setup passed
   /// it along; the assistant's triage reads it (3.5.0).
@@ -116,15 +121,16 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   final _messageFocus = FocusNode();
 
   SupportQuery get _query => (
-        openedFrom: openedFromLabel(widget.from, widget.error),
-        connectionId: widget.connectionId,
-      );
+    openedFrom: openedFromLabel(widget.from, widget.error),
+    connectionId: widget.connectionId,
+  );
 
   bool get _asksFirst => widget.from == HelpFrom.scanEmpty && _running == null;
 
   @override
   void initState() {
     super.initState();
+    _handoff = widget.initialHandoff;
     ref.read(analyticsProvider).track(HelpOpened(widget.from));
     _message.addListener(() => setState(() {}));
   }
@@ -147,8 +153,11 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ctx = _formKey.currentContext;
       if (ctx != null) {
-        Scrollable.ensureVisible(ctx,
-            duration: const Duration(milliseconds: 300), alignment: 0.1);
+        Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 300),
+          alignment: 0.1,
+        );
       }
       _messageFocus.requestFocus();
     });
@@ -174,11 +183,15 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   }
 
   void _answer(Z2mRunning answer) {
-    ref.read(analyticsProvider).track(SetupStep(
-          SetupStepKind.z2mRunning,
-          result: answer,
-          addressFrom: HelpFrom.scanEmpty,
-        ));
+    ref
+        .read(analyticsProvider)
+        .track(
+          SetupStep(
+            SetupStepKind.z2mRunning,
+            result: answer,
+            addressFrom: HelpFrom.scanEmpty,
+          ),
+        );
     if (answer == Z2mRunning.notYet) {
       // Nothing to fix: what a hub is and where to get one.
       context.pushReplacement(Routes.setupNoHubFrom(NoHubFrom.guide.name));
@@ -188,14 +201,14 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   }
 
   SupportMessage _messageFor(SupportDetails details) => SupportMessage(
-        text: _message.text.trim(),
-        email: _email.text.trim(),
-        details: _detailsWith(details),
-        appVersion: details.appVersion,
-        build: details.build,
-        locale: Localizations.localeOf(context).toLanguageTag(),
-        kind: _handoff?.flagged != null ? 'ai_report' : 'support',
-      );
+    text: _message.text.trim(),
+    email: _email.text.trim(),
+    details: _detailsWith(details),
+    appVersion: details.appVersion,
+    build: details.build,
+    locale: Localizations.localeOf(context).toLanguageTag(),
+    kind: _handoff?.flagged != null ? 'ai_report' : 'support',
+  );
 
   Future<void> _sendMessage(SupportDetails details) async {
     if (_message.text.trim().isEmpty || _send == _SendState.sending) return;
@@ -203,10 +216,14 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
     final message = _messageFor(details);
     final ok = await ref.read(supportSenderProvider)(message);
     if (!mounted) return;
-    ref.read(analyticsProvider).track(SupportSent(
-          widget.from,
-          ok ? SupportSendResult.sent : SupportSendResult.failed,
-        ));
+    ref
+        .read(analyticsProvider)
+        .track(
+          SupportSent(
+            widget.from,
+            ok ? SupportSendResult.sent : SupportSendResult.failed,
+          ),
+        );
     setState(() => _send = ok ? _SendState.sent : _SendState.failed);
   }
 
@@ -216,7 +233,9 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
     if (shared) {
       ref
           .read(analyticsProvider)
-          .track(SupportSent(widget.from, SupportSendResult.sharedAfterFailure));
+          .track(
+            SupportSent(widget.from, SupportSendResult.sharedAfterFailure),
+          );
     }
   }
 
@@ -224,10 +243,14 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
   /// clipboard where there is none.
   Future<void> _shareDetails(String text) async {
     final shared = await _share(text);
-    ref.read(analyticsProvider).track(SupportContact(
-          widget.from,
-          shared ? ContactVia.share : ContactVia.copy,
-        ));
+    ref
+        .read(analyticsProvider)
+        .track(
+          SupportContact(
+            widget.from,
+            shared ? ContactVia.share : ContactVia.copy,
+          ),
+        );
   }
 
   Future<bool> _share(String text) async {
@@ -254,10 +277,14 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
     // If gathering fails, still let the user reach support with the basics.
     final details = loaded.hasError
         ? SupportDetails(
-            appVersion: '?', build: '?', openedFrom: _query.openedFrom)
+            appVersion: '?',
+            build: '?',
+            openedFrom: _query.openedFrom,
+          )
         : loaded.valueOrNull;
     final text = details?.format();
-    final canSend = details != null &&
+    final canSend =
+        details != null &&
         _message.text.trim().isNotEmpty &&
         _send != _SendState.sending &&
         _send != _SendState.sent;
@@ -278,8 +305,10 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(l10n.getHelpAskRunning,
-                            style: theme.textTheme.titleMedium),
+                        Text(
+                          l10n.getHelpAskRunning,
+                          style: theme.textTheme.titleMedium,
+                        ),
                         const SizedBox(height: 12),
                         FilledButton(
                           key: const Key('get-help-running-yes'),
@@ -305,9 +334,12 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
               else ...[
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(4, 8, 4, 12),
-                  child: Text(l10n.getHelpPromise,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: scheme.onSurfaceVariant)),
+                  child: Text(
+                    l10n.getHelpPromise,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
                 if (_running == Z2mRunning.notSure)
                   Padding(
@@ -343,10 +375,14 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                     margin: EdgeInsets.zero,
                     color: scheme.primaryContainer,
                     child: ListTile(
-                      leading: Icon(Icons.check_circle_outline,
-                          color: scheme.onPrimaryContainer),
-                      title: Text(l10n.getHelpSent,
-                          style: TextStyle(color: scheme.onPrimaryContainer)),
+                      leading: Icon(
+                        Icons.check_circle_outline,
+                        color: scheme.onPrimaryContainer,
+                      ),
+                      title: Text(
+                        l10n.getHelpSent,
+                        style: TextStyle(color: scheme.onPrimaryContainer),
+                      ),
                     ),
                   )
                 else ...[
@@ -381,9 +417,12 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                   ),
                   const SizedBox(height: 16),
                   if (_send == _SendState.failed) ...[
-                    Text(l10n.getHelpSendFailedNote,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: scheme.error)),
+                    Text(
+                      l10n.getHelpSendFailedNote,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: scheme.error,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     FilledButton.icon(
                       key: const Key('get-help-share-instead'),
@@ -396,8 +435,9 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                     const SizedBox(height: 4),
                     TextButton(
                       key: const Key('get-help-retry'),
-                      onPressed:
-                          details == null ? null : () => _sendMessage(details),
+                      onPressed: details == null
+                          ? null
+                          : () => _sendMessage(details),
                       child: Text(l10n.getHelpRetry),
                     ),
                   ] else
@@ -410,9 +450,11 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.send_outlined),
-                      label: Text(_send == _SendState.sending
-                          ? l10n.getHelpSending
-                          : l10n.getHelpSend),
+                      label: Text(
+                        _send == _SendState.sending
+                            ? l10n.getHelpSending
+                            : l10n.getHelpSend,
+                      ),
                     ),
                 ],
                 const SizedBox(height: 8),
@@ -435,9 +477,10 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                         CheckboxListTile(
                           controlAffinity: ListTileControlAffinity.leading,
                           value: _ticked.contains(i),
-                          onChanged: (on) => setState(() => on == true
-                              ? _ticked.add(i)
-                              : _ticked.remove(i)),
+                          onChanged: (on) => setState(
+                            () =>
+                                on == true ? _ticked.add(i) : _ticked.remove(i),
+                          ),
                           title: Text(tips[i].title),
                           subtitle: Text(tips[i].body),
                         ),
@@ -459,9 +502,12 @@ class _GetHelpScreenState extends ConsumerState<GetHelpScreen> {
                         Directionality(
                           // English, whatever the app language.
                           textDirection: TextDirection.ltr,
-                          child: SelectableText(text,
-                              style: theme.textTheme.bodySmall
-                                  ?.copyWith(fontFamily: 'monospace')),
+                          child: SelectableText(
+                            text,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontFamily: 'monospace',
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -482,10 +528,8 @@ class GetHelpLink extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => TextButton(
-        onPressed: onPressed,
-        child: Text(context.l10n.getHelpLink),
-      );
+  Widget build(BuildContext context) =>
+      TextButton(onPressed: onPressed, child: Text(context.l10n.getHelpLink));
 }
 
 /// The warm way in on the empty scan (3.4.8): a button that promises help
@@ -500,11 +544,11 @@ class GetHelpWarmButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FilledButton.tonalIcon(
-        key: const Key('get-help-warm'),
-        onPressed: () => context.push(
-          Routes.getHelpFrom(HelpFrom.scanEmpty.name, platform: platform),
-        ),
-        icon: const Icon(Icons.favorite_outline),
-        label: Text(context.l10n.getHelpWarm),
-      );
+    key: const Key('get-help-warm'),
+    onPressed: () => context.push(
+      Routes.getHelpFrom(HelpFrom.scanEmpty.name, platform: platform),
+    ),
+    icon: const Icon(Icons.favorite_outline),
+    label: Text(context.l10n.getHelpWarm),
+  );
 }

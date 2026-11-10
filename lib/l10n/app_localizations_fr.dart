@@ -3083,6 +3083,55 @@ class AppLocalizationsFr extends AppLocalizations {
   String get assistantTalkToPerson => 'Parler à une personne';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count appareils répondent',
+      one: '1 appareil répond',
+      zero: 'aucun appareil ne répond',
+    );
+    return '$home est connecté et $_temp0. De quoi avez-vous besoin ?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash ne joint pas $home pour le moment. De quoi avez-vous besoin ?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Un appareil ne répond plus';
+
+  @override
+  String get assistantChipTile => 'Ajouter une tuile';
+
+  @override
+  String get assistantChipAutomations => 'Automatisations';
+
+  @override
+  String get assistantChipUnreachable => 'Maison injoignable';
+
+  @override
+  String get helpBubbleLabel => 'Besoin d\'aide ?';
+
+  @override
+  String get helpBubbleHide => 'Masquer';
+
+  @override
+  String get helpBubbleHideSheet => 'Masquer cette bulle';
+
+  @override
+  String get helpBubbleHidden =>
+      'Masquée. Réactivez-la dans Réglages › Obtenir de l\'aide.';
+
+  @override
+  String get settingsHelpBubble => 'Bulle d\'aide sur l\'écran d\'accueil';
+
+  @override
+  String get settingsHelpBubbleSubtitle =>
+      'Interroger l\'assistant depuis un tableau de bord';
+
+  @override
   String get getHelpReportPrompt =>
       'Qu\'est-ce qui n\'allait pas dans la réponse de l\'assistant ?';
 

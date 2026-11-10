@@ -3060,6 +3060,54 @@ class AppLocalizationsNb extends AppLocalizations {
   String get assistantTalkToPerson => 'Snakk med en person';
 
   @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter rapporterer',
+      one: '1 enhet rapporterer',
+      zero: 'ingen enheter rapporterer',
+    );
+    return '$home er tilkoblet og $_temp0. Hva trenger du?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash når ikke $home akkurat nå. Hva trenger du?';
+  }
+
+  @override
+  String get assistantChipDevice => 'En enhet sluttet å svare';
+
+  @override
+  String get assistantChipTile => 'Legg til en flis';
+
+  @override
+  String get assistantChipAutomations => 'Automatiseringer';
+
+  @override
+  String get assistantChipUnreachable => 'Hjemmet kan ikke nås';
+
+  @override
+  String get helpBubbleLabel => 'Trenger du hjelp?';
+
+  @override
+  String get helpBubbleHide => 'Skjul';
+
+  @override
+  String get helpBubbleHideSheet => 'Skjul denne boblen';
+
+  @override
+  String get helpBubbleHidden =>
+      'Skjult. Hent den tilbake i Innstillinger › Få hjelp.';
+
+  @override
+  String get settingsHelpBubble => 'Hjelpeboble på startskjermen';
+
+  @override
+  String get settingsHelpBubbleSubtitle => 'Spør assistenten fra et dashbord';
+
+  @override
   String get getHelpReportPrompt => 'Hva var galt med assistentens svar?';
 
   @override

@@ -7,6 +7,7 @@
 #     URL   defaults to https://assistant.giladha.com/v1/chat
 #     FROM  1-based case number to start from (to resume after a 503)
 #   DRY=1 tool/assistant-worker/eval/run.sh   writes the request bodies only, no network
+#   CASES=cases_home.json tool/assistant-worker/eval/run.sh   the home-mode cases (3.5.0)
 #
 # The Worker allows 10 calls an hour per address: set the Worker var
 # PER_HOUR_IP to 100 for the run and remove it afterwards (README.md).
@@ -19,12 +20,13 @@ out="$here/out"
 mkdir -p "$out"
 command -v jq >/dev/null || { echo "jq is needed (brew install jq)" >&2; exit 1; }
 
-count=$(jq length "$here/cases.json")
+cases="$here/${CASES:-cases.json}"
+count=$(jq length "$cases")
 for ((i = from - 1; i < count; i++)); do
-  case=$(jq -c ".[$i]" "$here/cases.json")
+  case=$(jq -c ".[$i]" "$cases")
   id=$(jq -r .id <<<"$case")
   num=$(printf '%02d' $((i + 1)))
-  body=$(jq -c '{details, triage, locale, app: "3.5.0", build: "107", messages: (.messages // [])}' <<<"$case")
+  body=$(jq -c '{mode: (.mode // "setup"), details, triage, locale, app: "3.5.0", build: "108", messages: (.messages // [])}' <<<"$case")
 
   if [[ "${DRY:-}" == 1 ]]; then
     printf '%s\n' "$body" > "$out/$num-$id.request.json"

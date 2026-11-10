@@ -18,14 +18,28 @@ const assistantReplyTimeout = Duration(seconds: 30);
 /// What the Worker accepts: at most this many turns, each at most this long;
 /// the phone trims the oldest turns before sending.
 const assistantMaxTurns = 12;
+
+/// The home bubble keeps conversations shorter (revision 5).
+const assistantMaxTurnsHome = 8;
 const assistantMaxTurnChars = 1000;
+
+int assistantTurnLimit(AssistantMode mode) =>
+    mode == AssistantMode.home ? assistantMaxTurnsHome : assistantMaxTurns;
 
 /// One turn of the conversation, the user's or the assistant's.
 class AssistantTurn {
-  const AssistantTurn.user(this.text) : fromUser = true;
-  const AssistantTurn.assistant(this.text) : fromUser = false;
+  const AssistantTurn.user(this.text, {this.display}) : fromUser = true;
+  const AssistantTurn.assistant(this.text) : fromUser = false, display = null;
 
+  /// What is sent. A chip sends its English wording so the Worker and the
+  /// eval see one text in every language; the model still answers in the
+  /// locale.
   final String text;
+
+  /// What the person sees in their bubble when it differs (a chip's label
+  /// in their language).
+  final String? display;
+  String get shown => display ?? text;
   final bool fromUser;
 
   Map<String, String> toJson() => {
@@ -47,6 +61,12 @@ class AssistantTriage {
   Map<String, String?> toJson() => {'running': running, 'platform': platform};
 }
 
+/// Where the assistant was opened, as the Worker names it: Get help on a
+/// setup screen, or the bubble on a connected home's dashboard (3.5.0,
+/// assistant-in-app-2026-11.md revision 5). The mode sets the Worker's
+/// scope; in home mode the phone never asks for a first answer on its own.
+enum AssistantMode { setup, home }
+
 /// Everything one call needs. [turns] is empty for the first answer.
 class AssistantRequest {
   const AssistantRequest({
@@ -55,9 +75,11 @@ class AssistantRequest {
     required this.locale,
     required this.appVersion,
     required this.build,
+    this.mode = AssistantMode.setup,
     this.turns = const [],
   });
 
+  final AssistantMode mode;
   final String details;
   final AssistantTriage triage;
   final String locale;
@@ -66,10 +88,12 @@ class AssistantRequest {
   final List<AssistantTurn> turns;
 
   Map<String, Object?> toJson() {
-    final kept = turns.length > assistantMaxTurns
-        ? turns.sublist(turns.length - assistantMaxTurns)
+    final limit = assistantTurnLimit(mode);
+    final kept = turns.length > limit
+        ? turns.sublist(turns.length - limit)
         : turns;
     return {
+      'mode': mode.name,
       'details': details,
       'triage': triage.toJson(),
       'locale': locale,
@@ -111,16 +135,11 @@ Future<AssistantReply> postAssistant(
 ) async {
   final client = HttpClient()..connectionTimeout = timeout;
   try {
-    final http = await client
-        .postUrl(Uri.parse(assistantUrl))
-        .timeout(timeout);
+    final http = await client.postUrl(Uri.parse(assistantUrl)).timeout(timeout);
     http.headers.contentType = ContentType.json;
     http.write(jsonEncode(request.toJson()));
     final response = await http.close().timeout(timeout);
-    final body = await response
-        .transform(utf8.decoder)
-        .join()
-        .timeout(timeout);
+    final body = await response.transform(utf8.decoder).join().timeout(timeout);
     if (response.statusCode == 503) {
       return const AssistantReply(AssistantOutcome.resting);
     }
@@ -150,6 +169,4 @@ Future<AssistantReply> postAssistant(
 }
 
 /// Swapped for a fake in tests.
-final assistantCallerProvider = Provider<AssistantCaller>(
-  (_) => postAssistant,
-);
+final assistantCallerProvider = Provider<AssistantCaller>((_) => postAssistant);
