@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.5.2 is published (replaces the policy published with ZigDash 3.5.1)
+**Effective date:** the day ZigDash 3.5.3 is published (replaces the policy published with ZigDash 3.5.2)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -99,7 +99,9 @@ passes through it is encrypted (see [Remote control](#remote-control-from-31)).
 The app requests the **INTERNET** permission to connect to your broker and,
 unless you opt out, to send the anonymous usage events described below. On
 Android 17 it also asks for the **local network** permission, which Android
-requires for talking to a hub on your home network.
+requires for talking to a hub on your home network. On iPhone and iPad, iOS
+asks for **Local Network** access the first time ZigDash looks for your hub,
+for the same reason.
 
 ## Alerts
 
@@ -181,12 +183,12 @@ never from anything you typed or anything your broker sent.
 | `alarm_shown` | From 2.9: alarm takeover filled a wall display | only the kind: leak, smoke, gas or carbon monoxide. Never the device or where it is |
 | `history_setup` | From 2.7: setting up the history recorder on the hub ended | installed, updated, imported by hand (Node-RED asked for a login), no Node-RED found, or refused; from 2.9.1 also recording on this device instead |
 | `engine_setup` | From 3.0: a step of putting ZigDash Engine on the hub | offered, installed, consent shown, given or declined, Zigbee2MQTT too old, failed, removed, started again, seen paused or stopped; which screen it came from (automations, alerts or history); Zigbee2MQTT's version as major.minor only |
-| `hub_backup` | From 3.3: hub backup | the step only: a backup of Zigbee2MQTT's data folder was taken (and whether automatically or by hand), Zigbee2MQTT on the hub could not make one or did not answer, a copy was saved, or a backup was restored (or the restore stopped). Never the backup, its size, or anything in it |
+| `hub_backup` | From 3.3: hub backup | the step: a backup of Zigbee2MQTT's data folder was taken (and whether automatically or by hand), Zigbee2MQTT on the hub could not make one or did not answer, a copy was saved, or a backup was restored (or the restore stopped). From 3.5.3 also how long taking it took (under 10 s, 10-30 s, 30-60 s, over 60 s), whether it was the first or second automatic try, and for one that got no answer whether the app had left the screen or the connection dropped meanwhile. Never the backup, its size, or anything in it |
 | `automation_saved` | From 3.0: an automation was saved | its shape only: the kind of trigger (a device's state, a button, a reading, a clock time or the sun), how many conditions, a scene or a device, whether it turns off again, new or edited, and how many the home has, in ranges. Never a device, a name or a time |
 | `home_share` | From 3.1.7, sharing a Home with another phone | that a phone showed its share code, that another phone joined, and whether the dashboards arrived; never the Home, its address or its login |
-| `pro` | From 2.7, Google Play version only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. Nothing about the payment, the price or the currency |
+| `pro` | From 2.7, Google Play and App Store versions only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. Nothing about the payment, the price or the currency |
 | `sale_card` | From 3.4.6, Google Play version only: the card on the Devices tab that announces a sale on ZigDash Pro | the step only: shown, opened or closed |
-| `review_prompt` | From 2.6.5: the app asked Google Play to show its "rate this app" dialog (after a device you control has answered on two different days) | whether the dialog was requested, or could not be because the Play review flow is not available on the device. Nothing about whether you rated, or what |
+| `review_prompt` | From 2.6.5: the app asked Google Play (or, on iPhone and iPad, the App Store) to show its "rate this app" dialog (after a device you control has answered on two different days) | whether the dialog was requested, or could not be because the Play review flow is not available on the device. Nothing about whether you rated, or what |
 
 **Never sent:** broker addresses, ports, usernames or passwords; the address you type into setup; MQTT topics or
 messages; device names or addresses; home or dashboard names; device states or
@@ -334,18 +336,20 @@ network: no copy is sent to the developer or anyone else.
 
 ## ZigDash Pro (from 2.7)
 
-ZigDash Pro is an optional one-time purchase in the Google Play version.
-Google Play handles the payment under Google's privacy policy; ZigDash never
-sees your payment details and stores nothing about the purchase on your device:
-the app asks Google Play whether Pro was bought. If you turn on Remote control,
-the relay keeps a one-way hash of the purchase token, as described there. Versions
+ZigDash Pro is an optional one-time purchase in the Google Play version and,
+on iPhone and iPad, the App Store version. Google Play or Apple's App Store
+handles the payment under its own privacy policy; ZigDash never sees your
+payment details and stores nothing about the purchase on your device: the app
+asks the store whether Pro was bought. If you turn on Remote control, the relay
+keeps a one-way hash of the purchase, as described there. Versions
 from GitHub, IzzyOnDroid and F-Droid contain no billing code and have Pro
 unlocked.
 
 ## Remote control (from 3.1)
 
 Remote control is off until you turn it on for a Home (Settings › Home ›
-Remote control). It is part of ZigDash Pro in the Google Play version. When
+Remote control). It is part of ZigDash Pro in the Google Play and App Store
+versions. When
 you turn it on:
 
 - **How it works.** ZigDash Engine on your hub keeps one connection open to
@@ -360,11 +364,14 @@ you turn it on:
   3.1.7 the same applies to your automations: their rules, whether ZigDash
   Engine is running, and its last runs travel sealed the same way, so a phone
   away from home can show and change them.
-- **Checking Pro.** When you turn it on, the app sends the Google Play
-  purchase token of your Pro purchase to the relay, and the relay asks Google
-  Play whether it is a completed purchase of Pro. The relay keeps only a
-  one-way hash (SHA-256) of the token, so the same purchase brings back the
-  same Home after a reinstall. It never receives your name, email address or
+- **Checking Pro.** When you turn it on, the app sends the proof of your Pro
+  purchase to the relay: on Android the Google Play purchase token, and the
+  relay asks Google Play whether it is a completed purchase of Pro; on iPhone
+  and iPad the App Store's signed transaction, which the relay checks against
+  Apple's signature itself, without contacting Apple. The relay keeps only a
+  one-way hash (SHA-256) of the token, or of the App Store's original
+  transaction number, so the same purchase brings back the same Home after a
+  reinstall. It never receives your name, email address or
   payment details.
 - **What the relay stores**, for each Home: a random Home ID, the hash of the
   purchase token and when the Home was created; logins for the hub and for up
@@ -388,8 +395,8 @@ you turn it on:
   control on again with the same purchase. Email us to have them deleted
   too; we do so within 30 days.
 - **Why we may process it:** to provide the feature you bought (Art. 6(1)(b)
-  GDPR). It is shared with no one; only the purchase check goes to Google
-  Play, under Google's privacy policy.
+  GDPR). It is shared with no one; only the Google Play purchase check goes
+  to Google, under Google's privacy policy.
 - **Fair use.** Remote control is included with Pro while the relay runs, for
   one Home, up to five phones and normal household use. It may change or end
   with notice.
