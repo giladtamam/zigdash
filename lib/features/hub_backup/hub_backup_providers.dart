@@ -116,9 +116,14 @@ class HubBackupRunner {
         _ref.read(homeBaseTopicProvider(connectionId)) ?? 'zigbee2mqtt';
     final generation = mgr.connectionGeneration;
     var left = false;
+    // Inactive (the notification shade, a system dialog) is not leaving.
     final life = AppLifecycleListener(
       onStateChange: (s) {
-        if (s != AppLifecycleState.resumed) left = true;
+        if (s == AppLifecycleState.paused ||
+            s == AppLifecycleState.hidden ||
+            s == AppLifecycleState.detached) {
+          left = true;
+        }
       },
     );
     try {
