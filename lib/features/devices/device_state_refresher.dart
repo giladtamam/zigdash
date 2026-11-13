@@ -30,6 +30,10 @@ class DeviceStateRefresher {
   /// When [stateTopic] was asked on the current connection, if it was.
   DateTime? askedAt(String stateTopic) => _askedAt[stateTopic];
 
+  /// When any device was last asked (the automatic backup waits for quiet).
+  DateTime? get lastAskedAt => _lastAskedAt;
+  DateTime? _lastAskedAt;
+
   /// Requests [stateTopic]'s state unless already asked on this connection.
   void request(String stateTopic, DeviceProfile profile) {
     if (!_mgr.isConnected) return;
@@ -44,7 +48,7 @@ class DeviceStateRefresher {
     _queue = _queue.then((_) async {
       if (!_mgr.isConnected || _mgr.connectionGeneration != generation) return;
       _mgr.publish('$stateTopic/get', json.encode(payload), '');
-      _askedAt[stateTopic] = DateTime.now();
+      _askedAt[stateTopic] = _lastAskedAt = DateTime.now();
       if (!_askedController.isClosed) _askedController.add(stateTopic);
       await Future<void>.delayed(spacing);
     });

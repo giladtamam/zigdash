@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/widgets.dart' show AppLifecycleListener, AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,6 +18,7 @@ import '../../engine/engine_providers.dart' show MqttHubLink;
 import '../../mqtt/endpoint.dart';
 import '../../mqtt/mqtt_status.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
+import '../devices/device_state_refresher.dart' show deviceStateRefresherProvider;
 import '../devices/devices_providers.dart' show homeBaseTopicProvider;
 import 'hub_backup.dart';
 import 'hub_restore.dart';
@@ -100,6 +102,7 @@ class HubBackupRunner {
   Future<HubBackupOutcome> run(
     String connectionId, {
     required bool auto,
+    int? attempt,
     DateTime? now,
   }) async {
     final home = await _ref.read(connectionRepoProvider).getById(connectionId);
@@ -111,37 +114,74 @@ class HubBackupRunner {
     if (mgr.activeEndpoint == MqttEndpoint.relay) return HubBackupOutcome.away;
     final base =
         _ref.read(homeBaseTopicProvider(connectionId)) ?? 'zigbee2mqtt';
-    return take(
-      MqttHubLink(mgr),
-      base,
-      connectionId,
-      auto: auto,
-      now: now ?? DateTime.now(),
+    final generation = mgr.connectionGeneration;
+    var left = false;
+    final life = AppLifecycleListener(
+      onStateChange: (s) {
+        if (s != AppLifecycleState.resumed) left = true;
+      },
     );
+    try {
+      return await take(
+        MqttHubLink(mgr),
+        base,
+        connectionId,
+        auto: auto,
+        attempt: attempt,
+        now: now ?? DateTime.now(),
+        why: () => !mgr.isConnected || mgr.connectionGeneration != generation
+            ? HubBackupWhy.disconnected
+            : left
+            ? HubBackupWhy.background
+            : HubBackupWhy.noAnswer,
+      );
+    } finally {
+      life.dispose();
+    }
   }
 
-  /// The part after the connection checks, over any [link].
+  /// The part after the connection checks, over any [link]. [why] says,
+  /// when no answer came, what happened meanwhile.
   Future<HubBackupOutcome> take(
     HubLink link,
     String base,
     String connectionId, {
     required bool auto,
     required DateTime now,
+    int? attempt,
+    HubBackupWhy Function()? why,
+    Duration within = hubBackupWait,
   }) async {
     final analytics = _ref.read(analyticsProvider);
-    final answer = await requestHubBackup(link, base);
+    final clock = Stopwatch()..start();
+    final answer = await requestHubBackup(link, base, within: within);
+    final took = hubBackupTook(clock.elapsed);
     switch (answer) {
       case HubBackupZip(:final bytes):
         final store = await _ref.read(hubBackupStoreProvider.future);
         await store.save(connectionId, bytes, now);
         _ref.invalidate(hubBackupsProvider(connectionId));
-        analytics.track(HubBackupEvent(HubBackupStep.made, auto: auto));
+        analytics.track(
+          HubBackupEvent(
+            HubBackupStep.made,
+            auto: auto,
+            took: took,
+            attempt: attempt,
+          ),
+        );
         return HubBackupOutcome.made;
       case HubBackupRefused():
         analytics.track(HubBackupEvent(HubBackupStep.unsupported, auto: auto));
         return HubBackupOutcome.refused;
       case HubBackupNoAnswer():
-        analytics.track(HubBackupEvent(HubBackupStep.failed, auto: auto));
+        analytics.track(
+          HubBackupEvent(
+            HubBackupStep.failed,
+            auto: auto,
+            attempt: attempt,
+            why: why?.call() ?? HubBackupWhy.noAnswer,
+          ),
+        );
         return HubBackupOutcome.noAnswer;
     }
   }
@@ -203,8 +243,11 @@ final hubRestoreRunnerProvider = Provider<HubRestoreRunner>(
 
 /// Watched while a home is open (HomeShell): once it is connected on the
 /// home network and its newest backup is a day old, takes one quietly.
-/// Tries at most once per connection, so a hub that can't back up isn't
-/// asked again and again.
+/// Waits until the dashboard has finished asking its devices for their
+/// state (Zigbee2MQTT's backup queues behind those requests), and tries a
+/// second time a few minutes later if Zigbee2MQTT didn't answer. At most
+/// two tries per connection, so a hub that can't back up isn't asked
+/// again and again.
 final hubBackupAutoProvider = Provider.autoDispose.family<void, String>((
   ref,
   connectionId,
@@ -226,17 +269,39 @@ final hubBackupAutoProvider = Provider.autoDispose.family<void, String>((
       }
       if (tried) return;
       tried = true;
-      // Let the dashboard's own subscriptions go first.
-      await Future<void>.delayed(const Duration(seconds: 20));
-      if (disposed) return;
+      final generation = mgr.connectionGeneration;
+      bool gone() =>
+          disposed ||
+          !mgr.isConnected ||
+          mgr.connectionGeneration != generation;
+      // Let the dashboard's own subscriptions and state requests go first.
+      await Future<void>.delayed(hubBackupAutoDelay);
+      if (gone()) return;
       try {
-        final store = await ref.read(hubBackupStoreProvider.future);
-        final list = await store.list(connectionId);
-        if (!hubBackupDue(list.firstOrNull?.at, DateTime.now())) return;
-        await ref.read(hubBackupRunnerProvider).run(connectionId, auto: true);
+        final refresher = await ref.read(
+          deviceStateRefresherProvider(connectionId).future,
+        );
+        await waitForQuiet(() => refresher.lastAskedAt);
+        for (var attempt = 1; attempt <= 2; attempt++) {
+          if (gone()) return;
+          final store = await ref.read(hubBackupStoreProvider.future);
+          final list = await store.list(connectionId);
+          if (!hubBackupDue(list.firstOrNull?.at, DateTime.now())) return;
+          final outcome = await ref
+              .read(hubBackupRunnerProvider)
+              .run(connectionId, auto: true, attempt: attempt);
+          if (outcome != HubBackupOutcome.noAnswer) return;
+          await Future<void>.delayed(hubBackupRetryAfter);
+        }
       } catch (_) {
         // A backup never gets in the way of the dashboard.
       }
     });
   }());
 });
+
+/// When the automatic backup starts after a home connects, at the earliest.
+const hubBackupAutoDelay = Duration(seconds: 20);
+
+/// When the automatic backup tries again after Zigbee2MQTT didn't answer.
+const hubBackupRetryAfter = Duration(minutes: 3);

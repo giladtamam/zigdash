@@ -151,8 +151,15 @@ class ZigDashRestore {
     const fs = this.fs;
     const path = require('path');
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const keep = path.join(this.dataDir, 'zigdash-restore-previous', stamp);
+    const previous = path.join(this.dataDir, 'zigdash-restore-previous');
+    const keep = path.join(previous, stamp);
     fs.mkdirSync(keep, { recursive: true });
+    // Only the last KEEP_PREVIOUS restores' copies stay: the folder is inside
+    // Zigbee2MQTT's data folder, so every later backup would carry them all.
+    const stamps = fs.readdirSync(previous).sort();
+    for (const old of stamps.slice(0, Math.max(0, stamps.length - KEEP_PREVIOUS))) {
+      try { fs.rmSync(path.join(previous, old), { recursive: true, force: true }); } catch (_) {}
+    }
     for (const f of files) {
       const target = path.join(this.dataDir, f.name);
       if (fs.existsSync(target)) {
@@ -171,6 +178,8 @@ class ZigDashRestore {
     }
   }
 }
+
+const KEEP_PREVIOUS = 2;
 
 module.exports = ZigDashRestore;
 module.exports.unzip = unzip;

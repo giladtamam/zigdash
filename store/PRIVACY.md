@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.5.2 is published (replaces the policy published with ZigDash 3.5.1)
+**Effective date:** the day ZigDash 3.5.3 is published (replaces the policy published with ZigDash 3.5.2)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -181,7 +181,7 @@ never from anything you typed or anything your broker sent.
 | `alarm_shown` | From 2.9: alarm takeover filled a wall display | only the kind: leak, smoke, gas or carbon monoxide. Never the device or where it is |
 | `history_setup` | From 2.7: setting up the history recorder on the hub ended | installed, updated, imported by hand (Node-RED asked for a login), no Node-RED found, or refused; from 2.9.1 also recording on this device instead |
 | `engine_setup` | From 3.0: a step of putting ZigDash Engine on the hub | offered, installed, consent shown, given or declined, Zigbee2MQTT too old, failed, removed, started again, seen paused or stopped; which screen it came from (automations, alerts or history); Zigbee2MQTT's version as major.minor only |
-| `hub_backup` | From 3.3: hub backup | the step only: a backup of Zigbee2MQTT's data folder was taken (and whether automatically or by hand), Zigbee2MQTT on the hub could not make one or did not answer, a copy was saved, or a backup was restored (or the restore stopped). Never the backup, its size, or anything in it |
+| `hub_backup` | From 3.3: hub backup | the step: a backup of Zigbee2MQTT's data folder was taken (and whether automatically or by hand), Zigbee2MQTT on the hub could not make one or did not answer, a copy was saved, or a backup was restored (or the restore stopped). From 3.5.3 also how long taking it took (under 10 s, 10-30 s, 30-60 s, over 60 s), whether it was the first or second automatic try, and for one that got no answer whether the app had left the screen or the connection dropped meanwhile. Never the backup, its size, or anything in it |
 | `automation_saved` | From 3.0: an automation was saved | its shape only: the kind of trigger (a device's state, a button, a reading, a clock time or the sun), how many conditions, a scene or a device, whether it turns off again, new or edited, and how many the home has, in ranges. Never a device, a name or a time |
 | `home_share` | From 3.1.7, sharing a Home with another phone | that a phone showed its share code, that another phone joined, and whether the dashboards arrived; never the Home, its address or its login |
 | `pro` | From 2.7, Google Play version only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. Nothing about the payment, the price or the currency |

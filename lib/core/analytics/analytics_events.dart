@@ -1145,8 +1145,10 @@ class SaleCardEvent extends AnalyticsEvent {
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or
 /// by hand), Zigbee2MQTT refused or never answered, a copy was saved, or a
-/// backup was restored (or the restore stopped). Never a size, a file name
-/// or anything inside the backup.
+/// backup was restored (or the restore stopped). From 3.5.3 also how long
+/// it took (a bucket), which automatic try it was, and why a failed one
+/// ended: no answer, the app left the screen, or the connection dropped.
+/// Never a size, a file name or anything inside the backup.
 enum HubBackupStep {
   made,
   failed,
@@ -1156,11 +1158,21 @@ enum HubBackupStep {
   restoreFailed,
 }
 
+/// Why a backup request got no answer.
+enum HubBackupWhy { noAnswer, background, disconnected }
+
 class HubBackupEvent extends AnalyticsEvent {
-  const HubBackupEvent(this.step, {this.auto});
+  const HubBackupEvent(this.step, {this.auto, this.took, this.attempt, this.why});
 
   final HubBackupStep step;
   final bool? auto;
+
+  /// A bucket from hubBackupTook.
+  final String? took;
+
+  /// The automatic try in this connection (1 or 2).
+  final int? attempt;
+  final HubBackupWhy? why;
 
   @override
   String get name => 'hub_backup';
@@ -1169,6 +1181,9 @@ class HubBackupEvent extends AnalyticsEvent {
   Map<String, String> get props => {
     'step': _snake(step.name),
     if (auto != null) 'auto': auto! ? 'yes' : 'no',
+    if (took != null) 'took': took!,
+    if (attempt != null) 'try': '$attempt',
+    if (why != null) 'why': _snake(why!.name),
   };
 }
 
