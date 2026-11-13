@@ -17,6 +17,8 @@ import '../../../mqtt/endpoint.dart';
 import '../../../mqtt/ha_address.dart';
 import '../../../mqtt/ha_mqtt_client.dart';
 import '../../../mqtt/ha_token.dart';
+import '../../connections/discovery/hub_probe.dart';
+import '../../connections/discovery/hub_prober.dart';
 import '../../ha_import/ha_auth.dart';
 import '../../ha_import/ha_import_controller.dart' show HaSignIn;
 import 'ha_address_shape.dart';
@@ -92,6 +94,21 @@ typedef HaAdopt = Future<void> Function(Uri address, String signIn);
 /// when it does.
 typedef HaReach = Future<HaConnectProblem?> Function(Uri base);
 
+/// Whether the page at [base] is Home Assistant's, asked only for the
+/// port-80 guess of an address typed without a port ([isImpliedHaPort80]).
+typedef HaConfirm = Future<bool> Function(Uri base);
+
+/// The real confirm: Home Assistant's own page answers at [base], by the
+/// same look the scan gives a hub page.
+Future<bool> confirmHomeAssistant(Uri base) async {
+  try {
+    return await createPatientHubProber().probe(base.host, base.port) ==
+        HubKind.homeAssistant;
+  } catch (_) {
+    return false;
+  }
+}
+
 /// The real reach (3.1.4): one request to Home Assistant's sign-in
 /// providers. Only silence or a bad certificate stops the sign-in: a page
 /// that answers in any way goes on to the browser, which shows it.
@@ -151,10 +168,12 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     HaProbe probe = probeHomeAssistant,
     HaSignIn? signIn,
     HaReach? reach,
+    HaConfirm? confirm,
     HaFind? find,
     HaPhoneIp? phoneIp,
     this.onEvent,
   }) : _adopt = adopt,
+       _confirm = confirm,
        _phoneIpOf = phoneIp,
        _probe = probe,
        _signIn = signIn,
@@ -166,6 +185,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   final HaProbe _probe;
   final HaSignIn? _signIn;
   final HaReach? _reach;
+  final HaConfirm? _confirm;
   final HaFind? _find;
   final HaPhoneIp? _phoneIpOf;
 
@@ -208,6 +228,14 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   /// Usage events: how each try ended. Never the address or a token.
   final void Function(AnalyticsEvent event)? onEvent;
 
+  /// How the address now in the field got there (ha-share-paste.md): the
+  /// screen says so when it fills the field, and takes it back to typed
+  /// when the user edits it. Counted with each try.
+  HaAddressFrom addressFrom = HaAddressFrom.typed;
+
+  /// Set for a try whose address was swapped for the one the look found.
+  HaAddressFrom? _tryFrom;
+
   bool get canSignIn => _signIn != null;
 
   String get _address => switch (value) {
@@ -236,6 +264,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
           result: outcome,
           shape: shape,
           portClass: base == null ? null : haPortClassOf(base),
+          addressFrom: _tryFrom ?? addressFrom,
         ),
       );
 
@@ -258,6 +287,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
           SetupStepKind.haDiscovery,
           result: switch (found.length) {
             0 => HaDiscoveryOutcome.none,
+            _ when found.first.bySweep => HaDiscoveryOutcome.bySweep,
             1 when found.single.byName => HaDiscoveryOutcome.byName,
             1 => HaDiscoveryOutcome.one,
             _ => HaDiscoveryOutcome.several,
@@ -269,6 +299,36 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     }();
   }
 
+  /// Whether the phone has a home-network address right now (3.5.2): the
+  /// "couldn't find it" card's why line. Asked fresh each time; false when
+  /// it can't be told.
+  Future<bool> onHomeNetwork() async {
+    final ask = _phoneIpOf;
+    if (ask == null) return false;
+    try {
+      return (await ask()) != null;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Looks once more (3.5.2, ha-nothing-found.md): for someone who just
+  /// joined the right Wi-Fi. Only from the ask state with the last look
+  /// ended, so a sign-in waiting on a look is never handed a new one. The
+  /// phone's address is asked again too: the network may have changed.
+  Future<List<HaFound>> lookAgain() {
+    if (_find == null || !_lookDone || value is! HaConnectAsk) {
+      return _looking ?? look();
+    }
+    _looking = null;
+    _found = const [];
+    _lookDone = false;
+    _askingPhone = null;
+    _phoneIp = null;
+    notifyListeners();
+    return look();
+  }
+
   /// Home Assistant's own login page in the browser, then the check.
   Future<void> signInAndConnect(String address) async {
     final signIn = _signIn;
@@ -276,6 +336,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     var base = haBaseUri(address);
     final typed = address;
     final t = ++_try;
+    _tryFrom = null;
     if (base == null && _looking != null) {
       // Signed in before the look ended, with nothing typed: wait for it.
       _checking(address);
@@ -284,6 +345,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       if (found.isNotEmpty) {
         address = found.first.address;
         base = haBaseUri(address);
+        _tryFrom = HaAddressFrom.found;
       }
     } else if (base != null &&
         base.host.toLowerCase().endsWith('.local') &&
@@ -292,6 +354,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       // found, by its address.
       address = _found.single.address;
       base = haBaseUri(address);
+      _tryFrom = HaAddressFrom.found;
     }
     if (base == null) {
       final shape = await _shapeOf(address);
@@ -318,8 +381,17 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     final advice = swapped ? null : shape;
     // A Home Assistant that can't be reached would open the browser on an
     // error page, and closing it read as nothing happening (3.1.4).
-    final unreached = await _reach?.call(base);
+    final (reached, unreached) = await _reachFirst(
+      swapped ? [base] : haBaseCandidates(address),
+    );
     if (t != _try) return;
+    if (unreached == null && reached != base) {
+      // The typed remote name answered another way (3.3.4): the field and
+      // the home take the address that worked.
+      base = reached;
+      address = haAddressText(reached);
+      _tryAddress = address;
+    }
     if (unreached != null) {
       _count(
         unreached == HaConnectProblem.certificate
@@ -358,10 +430,35 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     );
   }
 
+  /// The first of [candidates] that answers, with null; when none does,
+  /// the first with a certificate problem, else the first, with why. All
+  /// are tried at once, so a remote name costs one wait, not three.
+  Future<(Uri, HaConnectProblem?)> _reachFirst(List<Uri> candidates) async {
+    final reach = _reach;
+    if (reach == null) return (candidates.first, null);
+    final results = await Future.wait(candidates.map(reach));
+    for (final wanted in [null, HaConnectProblem.certificate]) {
+      for (var i = 0; i < results.length; i++) {
+        if (results[i] != wanted) continue;
+        // Port 80 that nobody typed: a router or an SMHUB answers there
+        // too, and the browser would open on its error page. It counts
+        // only when the page is Home Assistant's.
+        if (wanted == null &&
+            isImpliedHaPort80(candidates, candidates[i]) &&
+            !(await _confirm?.call(candidates[i]) ?? true)) {
+          continue;
+        }
+        return (candidates[i], wanted);
+      }
+    }
+    return (candidates.first, results.first);
+  }
+
   /// A pasted long-lived token.
   Future<void> connectWithToken(String address, String token) async {
     final base = haBaseUri(address);
     final t = ++_try;
+    _tryFrom = null;
     if (base == null) {
       final shape = await _shapeOf(address);
       if (t != _try) return;
@@ -372,7 +469,20 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     _checking(address);
     final shape = await _shapeOf(address);
     if (t != _try) return;
-    await _check(t, base, address, token.trim(), shape);
+    var at = base;
+    final candidates = haBaseCandidates(address);
+    if (candidates.length > 1) {
+      final (reached, unreached) = await _reachFirst(candidates);
+      if (t != _try) return;
+      if (unreached == null) at = reached;
+    }
+    await _check(
+      t,
+      at,
+      at == base ? address : haAddressText(at),
+      token.trim(),
+      shape,
+    );
   }
 
   Future<void> _check(

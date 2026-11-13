@@ -16,6 +16,7 @@ import '../../features/hub_backup/hub_backup_screen.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
 import '../../features/onboarding/setup/ha_connect_screen.dart';
+import '../../features/onboarding/setup/no_hub_screen.dart';
 import '../../features/onboarding/setup/setup_screen.dart';
 import '../../features/dashboards/screens/dashboard_form_screen.dart';
 import '../../features/dashboards/screens/dashboards_screen.dart';
@@ -30,9 +31,11 @@ import '../../features/home/list_detail.dart';
 import '../../features/scenes/screens/scene_form_screen.dart';
 import '../../features/help/screens/help_screen.dart';
 import '../../features/onboarding/setup/setup_error_guidance.dart';
+import '../../features/support/assistant_panel.dart' show AssistantHandoff;
 import '../../features/support/get_help_screen.dart';
 import '../../shortcuts/shortcut_tile_picker.dart';
-import '../analytics/analytics_events.dart' show HelpFrom;
+import '../analytics/analytics_events.dart'
+    show HelpFrom, NoHubFrom, RemoteFrom;
 import '../../features/settings/screens/home_settings_screen.dart';
 import '../../features/settings/screens/language_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
@@ -90,11 +93,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Share this home (3.1.7): another phone's QR code, opened by the camera app.
       GoRoute(
         path: Routes.joinHome,
-        builder: (_, state) => JoinHomeScreen(code: state.uri.queryParameters['c']),
+        builder: (_, state) =>
+            JoinHomeScreen(code: state.uri.queryParameters['c']),
       ),
       GoRoute(
         path: '/pair-phone',
-        builder: (_, state) => PairPhoneScreen(code: state.uri.queryParameters['c']),
+        builder: (_, state) =>
+            PairPhoneScreen(code: state.uri.queryParameters['c']),
       ),
       // First run and adding a home: outside the navigation shell.
       GoRoute(
@@ -113,10 +118,22 @@ final routerProvider = Provider<GoRouter>((ref) {
             ),
           ),
           GoRoute(
+            path: 'no-hub',
+            pageBuilder: (_, state) => _slideUp(
+              NoHubScreen(
+                from:
+                    NoHubFrom.values
+                        .asNameMap()[state.uri.queryParameters['from']] ??
+                    NoHubFrom.welcome,
+              ),
+            ),
+          ),
+          GoRoute(
             path: 'home-assistant',
             pageBuilder: (_, state) => _slideUp(
               HaConnectScreen(
                 initialHost: state.uri.queryParameters['host'],
+                shared: state.uri.queryParameters['from'] == 'shared',
                 again: state.uri.queryParameters['again'],
                 offWifi: state.uri.queryParameters['wifi'] == 'off',
               ),
@@ -145,6 +162,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               from: HelpFrom.values.asNameMap()[q['from']] ?? HelpFrom.settings,
               connectionId: q['home'],
               error: SetupErrorKind.values.asNameMap()[q['error']],
+              platform: q['platform'],
+              initialHandoff: state.extra is AssistantHandoff
+                  ? state.extra as AssistantHandoff
+                  : null,
             ),
           );
         },
@@ -347,8 +368,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
               GoRoute(
                 path: 'remote',
-                builder: (_, state) =>
-                    RemoteScreen(connectionId: state.pathParameters['id']!),
+                builder: (_, state) => RemoteScreen(
+                  connectionId: state.pathParameters['id']!,
+                  from: state.uri.queryParameters['from'] == 'door'
+                      ? RemoteFrom.door
+                      : RemoteFrom.settings,
+                ),
               ),
               GoRoute(
                 path: 'share',

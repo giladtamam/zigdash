@@ -22,6 +22,9 @@ class AppStarted extends AnalyticsEvent {
     required this.tiles,
     required this.demo,
     this.daysInstalled,
+    this.automations = 0,
+    this.scenes = 0,
+    this.shortcuts = 0,
   });
 
   final FormFactor form;
@@ -36,6 +39,17 @@ class AppStarted extends AnalyticsEvent {
   /// is sent: it shows whether people come back, which a daily-changing
   /// anonymous id can't.
   final int? daysInstalled;
+
+  /// What the real homes on this phone have set up (3.4.1), as ranges: the
+  /// only way to read "share of homes with an automation", since every other
+  /// event counts taps, not homes. [automations] is the rule count the
+  /// Home's Engine last reported to this phone (0 where this phone never
+  /// saw an Engine); [scenes] the saved scenes, without the built-in
+  /// shutter ones; [shortcuts] the widgets and Quick Settings tiles
+  /// (Device Controls keep no record). The demo home is left out.
+  final int automations;
+  final int scenes;
+  final int shortcuts;
 
   @override
   String get name => 'app_started';
@@ -62,6 +76,14 @@ class AppStarted extends AnalyticsEvent {
         top: '31+',
       ),
     },
+    'automations': bucket(
+      automations,
+      const [0],
+      ranges: const [(1, 3)],
+      top: '4+',
+    ),
+    'scenes': bucket(scenes, const [0], top: '1+'),
+    'shortcuts': bucket(shortcuts, const [0], top: '1+'),
   };
 }
 
@@ -114,6 +136,26 @@ enum SetupStepKind {
   /// [SetupStep.choice] saying from where (a [HaSignInFrom]).
   haOpened,
 
+  /// On the Home Assistant sign-in, where the user said they open Home
+  /// Assistant (3.3.4), with [SetupStep.choice] (a [HaWhere]).
+  haWhere,
+
+  /// The Home Assistant sign-in's "couldn't find it" card (3.5.2,
+  /// ha-nothing-found.md), with [SetupStep.choice] (a [HaNoneChoice]):
+  /// shown once per look that found nothing (with [SetupStep.network],
+  /// Wi-Fi or other), or which of its ways on was tapped.
+  haNone,
+
+  /// The Paste button on the Home Assistant sign-in (ha-share-paste.md),
+  /// with [SetupStep.result] (a [HaHandover]): whether what was copied
+  /// held an address. Never what was copied.
+  haPaste,
+
+  /// Text shared to ZigDash from another app (ha-share-paste.md), with
+  /// [SetupStep.result] (a [HaHandover]): whether it held an address.
+  /// Never the text.
+  haShare,
+
   /// An answer to "where does Zigbee2MQTT run?" was picked (3.1.3), with
   /// [SetupStep.platform]; counted when given, not only with later steps.
   platformChosen,
@@ -129,8 +171,9 @@ enum SetupStepKind {
   reviewBack,
 
   /// Looking for Home Assistant on the network (3.1.8), with its
-  /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name or
-  /// none when the look ends; used when a sign-in goes to a found address.
+  /// [SetupStep.result] (a `HaDiscoveryOutcome`): one, several, by_name,
+  /// by_sweep (3.3.1, found on port 8123 or 80 of the phone's `/24`) or none when
+  /// the look ends; used when a sign-in goes to a found address.
   haDiscovery,
 
   /// The review was left without creating a dashboard (2.10.2): back, or
@@ -145,7 +188,65 @@ enum SetupStepKind {
   /// The answer to "Is Zigbee2MQTT already running?" on an empty result
   /// with no hub found (3.2.8), with [SetupStep.choice] (a [Z2mRunning]).
   z2mRunning,
+
+  /// A step of the guide on an empty result (3.3.2), with
+  /// [SetupStep.choice] (a [GuideRung]) and [SetupStep.result] (a
+  /// [GuideAction]): its action was taken, it didn't help, or (for the
+  /// last step, help) it was reached.
+  guide,
+
+  /// The "Nothing yet" screen (3.4): what to get when no hub runs
+  /// Zigbee2MQTT yet. [SetupStep.choice] says where it was opened from (a
+  /// [NoHubFrom]) and [SetupStep.result] what was done there (a
+  /// [NoHubAction]). The first screen's hubs link ([welcomeHubs]) and demo
+  /// link ([welcomeDemo]) are gone with it; the ZHA note's demo counts as
+  /// [demo].
+  noHub,
 }
+
+/// Where the "Nothing yet" screen was opened from (3.4): the first
+/// question's fourth answer, or the guide's "Zigbee2MQTT not set up yet".
+enum NoHubFrom { welcome, guide }
+
+/// What was done on the "Nothing yet" screen (3.4): it opened, one of the
+/// three ways to a hub was read (an SMHUB, a Raspberry Pi, Home Assistant),
+/// the hubs page was opened, the demo was started, a reminder for a week
+/// later was set, or "I have one now" went back.
+enum NoHubAction {
+  opened,
+  smhub,
+  pi,
+  homeAssistant,
+  hubsPage,
+  demo,
+  remind,
+  haveOne,
+}
+
+/// The steps of the guide on an empty result (3.3.2), in the order they
+/// can appear; `setup_guide.dart` picks the ones that apply.
+enum GuideRung {
+  vpn,
+  isolated,
+  hub,
+  which,
+  homeAssistant,
+  zha,
+  running,
+  notYet,
+  z2mPage,
+  wider,
+  address,
+  help,
+
+  /// "No MQTT login? Make one" on the login step: opened (reached), or
+  /// "Try without a login" (done).
+  login,
+}
+
+/// What happened on a guide step (3.3.2): its action was taken, "That
+/// didn't help" moved on, or the step was reached (counted for help only).
+enum GuideAction { done, next, reached }
 
 /// The SMLIGHT device named on the welcome question (3.2.7): an SMHUB runs
 /// Zigbee2MQTT itself; an SLZB adapter is only the radio, with Zigbee2MQTT
@@ -174,6 +275,19 @@ enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 /// the first button when Home Assistant was found without a broker, the
 /// broker's login prompt, or the link on the broker form; from 3.1.9 also
 /// the no-Wi-Fi screen ([noWifi]), where a remote address is the way in.
+/// Where the user opens Home Assistant (3.3.4): the chips under the
+/// sign-in's address when Home Assistant wasn't found. Never the address.
+enum HaWhere { home, nabuCasa, duckDns, ownDomain }
+
+/// How the address on the Home Assistant sign-in got into its field
+/// (ha-share-paste.md): typed by hand, filled in by the look or the scan,
+/// pasted with the Paste button, or shared from another app. Never the
+/// address.
+enum HaAddressFrom { typed, found, pasted, shared }
+
+/// Whether pasted or shared text held a Home Assistant address.
+enum HaHandover { address, noAddress }
+
 enum HaSignInFrom {
   scanning,
   emptyCard,
@@ -250,7 +364,9 @@ class SetupStep extends AnalyticsEvent {
     this.portClass,
     this.via,
     this.aiHelped,
+    this.helpSeen,
     this.shape,
+    this.addressFrom,
   });
 
   final SetupStepKind step;
@@ -260,16 +376,29 @@ class SetupStep extends AnalyticsEvent {
   /// address.
   final Enum? shape;
 
+  /// How the address of a Home Assistant try got into the field (an
+  /// [HaAddressFrom]), on [SetupStepKind.haConnect] (ha-share-paste.md).
+  /// Sent as `from`, and with the result as `path` (`pasted/ok`), since
+  /// the analytics service cannot cross two properties.
+  final Enum? addressFrom;
+
   /// Whether "Ask your AI" was shared or copied earlier in this setup, on
   /// [SetupStepKind.complete] (3.1.5).
   final bool? aiHelped;
+
+  /// Whether the assistant answered on Get help within the last 24 hours,
+  /// on [SetupStepKind.complete] (3.5.0): the only way to read whether a
+  /// setup that finished had the assistant's help first, since no
+  /// identifier leaves the phone.
+  final bool? helpSeen;
 
   /// How setup succeeded, on [SetupStepKind.complete] (3.1.3).
   final SetupVia? via;
 
   /// The choice tapped on the empty result (a [ScanEmptyChoice]), when
   /// [step] is emptyChoice; where the sign-in was opened from (a
-  /// [HaSignInFrom]), when [step] is haOpened.
+  /// [HaSignInFrom]), when [step] is haOpened; a [HaWhere] when [step] is
+  /// haWhere.
   final Enum? choice;
 
   /// The setup error kind's name, when [step] is failed.
@@ -308,6 +437,7 @@ class SetupStep extends AnalyticsEvent {
   final Enum? platform;
 
   /// The hub kind an empty scan found; null on an empty scan means none.
+  /// At the login (3.4.1), what answers on the broker's machine.
   final Enum? hub;
 
   /// Whether the broker form cleaned up what was typed (a pasted browser
@@ -347,7 +477,10 @@ class SetupStep extends AnalyticsEvent {
     if (platform != null) 'platform': _snake(platform!.name),
     if (via != null) 'via': _snake(via!.name),
     if (aiHelped != null) 'ai': aiHelped! ? 'yes' : 'no',
-    if (step == SetupStepKind.scanEmpty)
+    if (helpSeen != null) 'help_seen': helpSeen! ? 'yes' : 'no',
+    if (step == SetupStepKind.scanEmpty ||
+        step == SetupStepKind.needsLogin ||
+        step == SetupStepKind.loginRejected)
       'hub': hub == null ? 'none' : _snake(hub!.name),
     if (hostsTried != null)
       'hosts': bucket(
@@ -380,6 +513,9 @@ class SetupStep extends AnalyticsEvent {
     if (noNetwork != null) 'why': _snake(noNetwork!.name),
     if (choice != null) 'choice': _snake(choice!.name),
     if (shape != null) 'shape': _snake(shape!.name),
+    if (addressFrom != null) 'from': _snake(addressFrom!.name),
+    if (addressFrom != null && result != null)
+      'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
   };
 
   /// The interface kind as a fixed label: wifi, ethernet or other.
@@ -389,6 +525,9 @@ class SetupStep extends AnalyticsEvent {
     _ => 'other',
   };
 }
+
+/// What happened on the Home Assistant "couldn't find it" card (3.5.2).
+enum HaNoneChoice { shown, openApp, lookAgain, assistant }
 
 enum Feature {
   devicesTab,
@@ -506,9 +645,94 @@ enum HelpFrom {
 
   /// The one-time community card on a dashboard (community_opened only).
   card,
+
+  /// The warm button on the empty scan's guide (help-and-review-2026-11.md).
+  scanEmpty,
+
+  /// The help bubble on a connected home's dashboard (3.5.0,
+  /// assistant-in-app-2026-11.md revision 5).
+  bubble,
+
+  /// "Not sure? Ask the assistant" on the Home Assistant sign-in when the
+  /// look found nothing (3.5.2, ha-nothing-found.md).
+  haConnect,
 }
 
-enum ContactVia { email, copy }
+/// How Support details left the phone: a mail app, the clipboard (platforms
+/// without a share sheet), or Android's share sheet (3.4.8, replaces copy).
+enum ContactVia { email, copy, share }
+
+/// What an in-app Send ended in (help-and-review-2026-11.md §2): delivered
+/// to the support receiver, failed, or failed and then shared instead.
+enum SupportSendResult { sent, failed, sharedAfterFailure }
+
+/// The user tapped Send on Get help (3.4.8). Only where from and how it
+/// ended; never the message.
+class SupportSent extends AnalyticsEvent {
+  const SupportSent(this.from, this.result);
+  final HelpFrom from;
+  final SupportSendResult result;
+  @override
+  String get name => 'support_sent';
+  @override
+  Map<String, String> get props => {
+    'from': _snake(from.name),
+    'result': _snake(result.name),
+  };
+}
+
+/// What happened with the assistant on Get help (3.5.0,
+/// assistant-in-app-2026-11.md): shown, answered, resting (over a limit),
+/// refused, failed, a reply sent (with which turn, bucketed), "Did this
+/// help?" yes or no, or Talk to a person tapped. Kinds and counts only;
+/// never the text.
+enum AssistantStep {
+  shown,
+  answered,
+  resting,
+  refused,
+  failed,
+  asked,
+  helpedYes,
+  helpedNo,
+  escalated,
+
+  /// Long-press › Hide on the home bubble (3.5.0).
+  hidden,
+}
+
+class AssistantEvent extends AnalyticsEvent {
+  const AssistantEvent(this.step, this.from, {this.nth, this.chip, this.state});
+  final AssistantStep step;
+  final HelpFrom from;
+
+  /// Which of the user's replies this was, on [AssistantStep.asked].
+  final int? nth;
+
+  /// On the home bubble's [AssistantStep.asked]: which chip opened the
+  /// conversation (device, tile, automations, unreachable) or `typed`.
+  final String? chip;
+
+  /// On the home bubble's [AssistantStep.shown]: which state was tapped,
+  /// `pill` or `dot`.
+  final String? state;
+  @override
+  String get name => 'assistant';
+  @override
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    'from': _snake(from.name),
+    if (nth != null)
+      'nth': bucket(
+        nth!,
+        const [1],
+        ranges: const [(2, 3), (4, 9)],
+        top: '10+',
+      ),
+    if (chip != null) 'chip': chip!,
+    if (state != null) 'state': state!,
+  };
+}
 
 /// Get help was opened.
 class HelpOpened extends AnalyticsEvent {
@@ -578,18 +802,48 @@ enum ShortcutEventKind {
   final String wire;
 }
 
+/// Where a shortcut was added from (3.3.3): the nudge after a device was
+/// switched in a few sessions, a dashboard tile's long-press menu, a
+/// device's page, a section's header, or outside the app (the launcher's
+/// widget picker, the Quick Settings editor).
+enum ShortcutFrom { nudge, tileMenu, devicePage, section, outside }
+
 /// A Quick Settings tile or a home-screen widget was given a device, or
 /// Device Controls were first set up.
 class ShortcutAdded extends AnalyticsEvent {
-  const ShortcutAdded(this.kind);
+  const ShortcutAdded(this.kind, {this.from});
 
   final ShortcutEventKind kind;
+
+  /// Where it was added from; null for Device Controls.
+  final ShortcutFrom? from;
 
   @override
   String get name => 'shortcut_added';
 
   @override
-  Map<String, String> get props => {'kind': kind.wire};
+  Map<String, String> get props => {
+    'kind': kind.wire,
+    if (from != null) 'from': _snake(from!.name),
+  };
+}
+
+/// What the user did with the shortcut nudge (3.3.3): it was [shown], or
+/// answered with a home-screen widget, a Quick Settings tile, or Not now.
+enum ShortcutNudgeStep { shown, widget, tile, later }
+
+/// The "switch it without opening ZigDash" nudge, shown once per device
+/// after it was switched from the app in a few sessions. Never which device.
+class ShortcutNudge extends AnalyticsEvent {
+  const ShortcutNudge(this.step);
+
+  final ShortcutNudgeStep step;
+
+  @override
+  String get name => 'shortcut_nudge';
+
+  @override
+  Map<String, String> get props => {'step': step.name};
 }
 
 /// A shortcut was used, sent at most once per app session for each kind.
@@ -648,29 +902,36 @@ class AlertAdded extends AnalyticsEvent {
   Map<String, String> get props => {'kind': kind};
 }
 
-/// The "What should ZigDash do next?" poll's choices
-/// (docs/design/roadmap-post-2.0.md, 2.2 §6).
+/// The "What should ZigDash do next?" poll's choices (3.3.5; until 3.1.13
+/// notifications, history graphs, kiosk mode and Zigbee groups, all built
+/// since). [other] also opens Request a feature for the words.
 enum PollChoice {
-  notifications('notifications'),
-  history('history'),
-  kiosk('kiosk'),
-  groups('zigbee_groups');
+  pair('pair'),
+  deviceSettings('device_settings'),
+  zha('zha'),
+  aiAssistant('ai_assistant'),
+  other('other');
 
   const PollChoice(this.wire);
   final String wire;
 }
 
-/// The one-time poll was answered.
+/// Where the poll was answered: the one-time dashboard card, or its row in
+/// Settings.
+enum PollFrom { card, settings }
+
+/// The poll was answered: one event for each choice picked.
 class PollAnswer extends AnalyticsEvent {
-  const PollAnswer(this.choice);
+  const PollAnswer(this.choice, this.from);
 
   final PollChoice choice;
+  final PollFrom from;
 
   @override
   String get name => 'poll_answer';
 
   @override
-  Map<String, String> get props => {'choice': choice.wire};
+  Map<String, String> get props => {'choice': choice.wire, 'from': from.name};
 }
 
 /// What made someone try ZigDash (3.1.10), from the one-time card after
@@ -707,16 +968,30 @@ enum ReviewPromptResult { requested, unavailable }
 /// The local review prompt policy was satisfied (review_prompt_policy.dart).
 /// Google gives no signal whether the dialog was then shown or answered, so
 /// this is the only way to know the prompt fires at all.
+/// What made the request (3.4.8): a command the user sent and saw
+/// confirmed, or a passive device report (sensor-only homes).
+enum ReviewTrigger { command, report }
+
 class ReviewPrompted extends AnalyticsEvent {
-  const ReviewPrompted(this.result);
+  const ReviewPrompted(this.result, {this.trigger, this.nth});
 
   final ReviewPromptResult result;
+  final ReviewTrigger? trigger;
+
+  /// Which confirmed command of the session made the request (3.4.8);
+  /// sent bucketed as 3, 4-9, 10+.
+  final int? nth;
 
   @override
   String get name => 'review_prompt';
 
   @override
-  Map<String, String> get props => {'result': result.name};
+  Map<String, String> get props => {
+    'result': result.name,
+    if (trigger != null) 'trigger': trigger!.name,
+    if (nth != null)
+      'nth': bucket(nth!, const [3], ranges: const [(4, 9)], top: '10+'),
+  };
 }
 
 /// What setting up the history recorder ended in (2.7).
@@ -816,22 +1091,64 @@ class HaImportEvent extends AnalyticsEvent {
 /// unlocked afterwards. Nothing about the payment.
 enum ProStep { lockedShown, screenShown, unlockTapped, unlocked }
 
+/// Where the Pro screen was opened from (3.4.4).
+enum ProFrom {
+  remoteDoor,
+  remoteSettings,
+  settings,
+  history,
+  automations,
+  wall,
+  saleCard,
+}
+
 class ProEvent extends AnalyticsEvent {
-  const ProEvent(this.step);
+  const ProEvent(this.step, {this.from, this.sale});
 
   final ProStep step;
+
+  /// The view that led to the Pro screen; null for a locked view.
+  final ProFrom? from;
+
+  /// Whether a sale price was on the button when it was tapped.
+  final bool? sale;
 
   @override
   String get name => 'pro';
 
+  /// `path` is `from/step`: the service lists one property at a time, so
+  /// "bought after coming from the remote door" has to be one value.
   @override
-  Map<String, String> get props => {'step': _snake(step.name)};
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    if (from != null) 'from': _snake(from!.name),
+    if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
+    if (sale != null) 'sale': sale! ? 'yes' : 'no',
+  };
+}
+
+/// The sale card on the Devices tab (3.4.6, devices-sale-card.md): counted
+/// once when shown for a sale, then opened or put away. Nothing else.
+enum SaleCardStep { shown, opened, closed }
+
+class SaleCardEvent extends AnalyticsEvent {
+  const SaleCardEvent(this.step);
+
+  final SaleCardStep step;
+
+  @override
+  String get name => 'sale_card';
+
+  @override
+  Map<String, String> get props => {'step': step.name};
 }
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or
 /// by hand), Zigbee2MQTT refused or never answered, a copy was saved, or a
-/// backup was restored (or the restore stopped). Never a size, a file name
-/// or anything inside the backup.
+/// backup was restored (or the restore stopped). From 3.5.3 also how long
+/// it took (a bucket), which automatic try it was, and why a failed one
+/// ended: no answer, the app left the screen, or the connection dropped.
+/// Never a size, a file name or anything inside the backup.
 enum HubBackupStep {
   made,
   failed,
@@ -841,11 +1158,21 @@ enum HubBackupStep {
   restoreFailed,
 }
 
+/// Why a backup request got no answer.
+enum HubBackupWhy { noAnswer, background, disconnected }
+
 class HubBackupEvent extends AnalyticsEvent {
-  const HubBackupEvent(this.step, {this.auto});
+  const HubBackupEvent(this.step, {this.auto, this.took, this.attempt, this.why});
 
   final HubBackupStep step;
   final bool? auto;
+
+  /// A bucket from hubBackupTook.
+  final String? took;
+
+  /// The automatic try in this connection (1 or 2).
+  final int? attempt;
+  final HubBackupWhy? why;
 
   @override
   String get name => 'hub_backup';
@@ -854,28 +1181,68 @@ class HubBackupEvent extends AnalyticsEvent {
   Map<String, String> get props => {
     'step': _snake(step.name),
     if (auto != null) 'auto': auto! ? 'yes' : 'no',
+    if (took != null) 'took': took!,
+    if (attempt != null) 'try': '$attempt',
+    if (why != null) 'why': _snake(why!.name),
   };
 }
 
-/// Remote control (3.1.11): the one-time offer on the dashboard was shown,
-/// opened or put away, and remote control was turned on or off. [pro] is
-/// whether this phone has Pro. Nothing about the home or the relay.
-enum RemoteStep { offerShown, offerOpened, offerNotNow, turnedOn, turnedOff }
+/// Remote control: it was turned on or off (3.1.11), its page was opened
+/// (3.4.4, once per app start and home), or "See Pro" was tapped there
+/// (once per app start). [pro] is whether this phone has Pro. Nothing about
+/// the home or the relay. The offer steps were sent until 3.4.3, by the
+/// one-time card the door replaced.
+enum RemoteStep {
+  offerShown,
+  offerOpened,
+  offerNotNow,
+  turnedOn,
+  turnedOff,
+  opened,
+  seePro,
+}
+
+/// How the Remote control page was reached.
+enum RemoteFrom { door, settings }
+
+/// What the Remote control page had to show when it opened.
+enum RemoteState {
+  noPro,
+  noProOffline,
+  noEngine,
+  away,
+  ready,
+  on,
+  proOffline,
+  unfit,
+  notSold,
+}
 
 class RemoteEvent extends AnalyticsEvent {
-  const RemoteEvent(this.step, {this.pro});
+  const RemoteEvent(this.step, {this.pro, this.from, this.state});
 
   final RemoteStep step;
   final bool? pro;
 
+  /// With [RemoteStep.opened] and [RemoteStep.seePro].
+  final RemoteFrom? from;
+
+  /// With [RemoteStep.opened].
+  final RemoteState? state;
+
   @override
   String get name => 'remote';
 
+  /// `open` is `from/state` and `went` is where "See Pro" was tapped from:
+  /// each number the read needs is one value of one property.
   @override
   Map<String, String> get props => {
-        'step': _snake(step.name),
-        if (pro != null) 'pro': pro! ? 'yes' : 'no',
-      };
+    'step': _snake(step.name),
+    if (pro != null) 'pro': pro! ? 'yes' : 'no',
+    if (step == RemoteStep.opened && from != null && state != null)
+      'open': '${from!.name}/${_snake(state!.name)}',
+    if (step == RemoteStep.seePro && from != null) 'went': from!.name,
+  };
 }
 
 /// [n] as a coarse label: an exact value from [exact], a "lo-hi" range from
@@ -930,10 +1297,10 @@ class EngineEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {
-        'step': _snake(step.name),
-        'from': from.name,
-        if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
-      };
+    'step': _snake(step.name),
+    'from': from.name,
+    if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
+  };
 }
 
 /// "2.14.1" → "2.14"; null when unreadable.
@@ -971,13 +1338,18 @@ class AutomationSaved extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {
-        'trigger': trigger,
-        'conditions': bucket(conditions, const [0, 1], top: '2+'),
-        'action': action,
-        'off_after': offAfter ? 'yes' : 'no',
-        'new': isNew ? 'yes' : 'no',
-        'count': bucket(homeCount, const [1, 2, 3], ranges: const [(4, 10)], top: '11+'),
-      };
+    'trigger': trigger,
+    'conditions': bucket(conditions, const [0, 1], top: '2+'),
+    'action': action,
+    'off_after': offAfter ? 'yes' : 'no',
+    'new': isNew ? 'yes' : 'no',
+    'count': bucket(
+      homeCount,
+      const [1, 2, 3],
+      ranges: const [(4, 10)],
+      top: '11+',
+    ),
+  };
 }
 
 /// "Share this home" (3.1.7): a phone showed its code, another joined, and
@@ -995,4 +1367,3 @@ class HomeShareEvent extends AnalyticsEvent {
   @override
   Map<String, String> get props => {'step': _snake(step.name)};
 }
-

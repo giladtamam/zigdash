@@ -404,7 +404,9 @@ class _ProNote extends ConsumerWidget {
       leading: const Icon(Icons.workspace_premium_outlined),
       title: Text(l10n.wallProNote),
       trailing: TextButton(
-        onPressed: buy == null ? null : () => openPro(context),
+        onPressed: buy == null
+            ? null
+            : () => openPro(context, from: ProFrom.wall),
         child: Text(l10n.historyUnlock),
       ),
     );

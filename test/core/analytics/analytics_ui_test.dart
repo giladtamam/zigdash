@@ -416,7 +416,12 @@ void main() {
           null,
           const SetupNeedsAuth(hub, platform: SetupPlatform.homeAssistant),
         )!.props,
-        {'step': 'needs_login', 'platform': 'home_assistant'},
+        {
+          'step': 'needs_login',
+          'platform': 'home_assistant',
+          'result': 'not_tried',
+          'hub': 'none',
+        },
       );
       expect(
         setupStepFor(
@@ -424,11 +429,45 @@ void main() {
           const SetupNeedsAuth(hub, rejected: true),
           platform: SetupPlatform.piOrDocker,
         )!.props,
-        {'step': 'login_rejected', 'platform': 'pi_or_docker'},
+        {
+          'step': 'login_rejected',
+          'platform': 'pi_or_docker',
+          'result': 'not_tried',
+          'hub': 'none',
+        },
       );
       expect(setupStepFor(null, const SetupNeedsAuth(hub))!.props, {
         'step': 'needs_login',
+        'result': 'not_tried',
+        'hub': 'none',
       });
+    });
+
+    // 3.4.1: four lost at the login on 5 Nov 2026, three with the hub
+    // found. Why the page route did not spare them, and what the broker's
+    // machine is.
+    test('the login says what the page look found and the broker machine', () {
+      const hub = SetupCandidate(
+        host: '192.168.1.10',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+      );
+      expect(
+        setupStepFor(
+          null,
+          const SetupNeedsAuth(
+            hub,
+            page: PageLook.locked,
+            brokerHost: HubKind.homeAssistant,
+          ),
+        )!.props,
+        {'step': 'needs_login', 'result': 'locked', 'hub': 'home_assistant'},
+      );
+      expect(
+        setupStepFor(null, const SetupNeedsAuth(hub, page: PageLook.none))!
+            .props,
+        {'step': 'needs_login', 'result': 'none', 'hub': 'none'},
+      );
     });
   });
 

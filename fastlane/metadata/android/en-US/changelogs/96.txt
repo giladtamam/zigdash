@@ -1,0 +1,1 @@
+Switch your devices without opening ZigDash. After you've switched a plug, light or shutter a few times, ZigDash offers to put it on your home screen as a widget or in Quick Settings, in one tap. Long-press any tile on a dashboard to add it there too.

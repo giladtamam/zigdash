@@ -18,4 +18,6 @@
     <string name="widget_group_sample_off">Off</string>
     <string name="widget_group_sample_3">Blinds</string>
     <string name="widget_group_sample_scene">Night</string>
+    <!-- Under ZigDash in another app's share sheet (ha-share-paste.md). -->
+    <string name="share_ha_label">Connect Home Assistant</string>
 </resources>

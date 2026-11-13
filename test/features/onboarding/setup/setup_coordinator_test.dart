@@ -1224,7 +1224,7 @@ void main() {
       final h = _Harness(
         pagePresent: (host, port) async {
           asked.add('$host:$port');
-          return true;
+          return PageLook.found;
         },
       );
       await h.coordinator.selectCandidate(locked);
@@ -1238,9 +1238,31 @@ void main() {
     });
 
     test('no page: the login prompt as before', () async {
-      final h = _Harness(pagePresent: (_, __) async => false);
+      final h = _Harness(pagePresent: (_, __) async => PageLook.none);
       await h.coordinator.selectCandidate(locked);
-      expect(h.coordinator.state, isA<SetupNeedsAuth>());
+      final auth = h.coordinator.state as SetupNeedsAuth;
+      expect(auth.page, PageLook.none);
+      expect(auth.brokerHost, isNull);
+    });
+
+    test('3.4.1: the login says the page wanted its token, and what the broker machine is', () async {
+      final h = _Harness(
+        pagePresent: (_, __) async => PageLook.locked,
+        identifyHub: (host) async =>
+            host == '192.168.1.10' ? HubKind.homeAssistant : null,
+      );
+      await h.coordinator.selectCandidate(locked);
+      final auth = h.coordinator.state as SetupNeedsAuth;
+      expect(auth.page, PageLook.locked);
+      expect(auth.brokerHost, HubKind.homeAssistant);
+    });
+
+    test('3.4.1: without a page look, the login says so', () async {
+      final h = _Harness(identifyHub: (_) async => HubKind.smlight);
+      await h.coordinator.selectCandidate(locked);
+      final auth = h.coordinator.state as SetupNeedsAuth;
+      expect(auth.page, PageLook.notTried);
+      expect(auth.brokerHost, HubKind.smlight);
     });
 
     test('a login given and refused stays a refusal, the page is not tried again', () async {
@@ -1249,7 +1271,7 @@ void main() {
         reports: [failAt(DiagnosticStep.auth, 'diagAuthRejected')],
         pagePresent: (_, __) async {
           asked++;
-          return false;
+          return PageLook.none;
         },
       );
       await h.coordinator.selectCandidate(locked);

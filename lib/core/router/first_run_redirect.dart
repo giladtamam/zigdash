@@ -11,6 +11,8 @@ const _firstRunLocations = {
   // 3.1.8: Home Assistant's sign-in, opened from setup and from manual
   // entry; without it every button to it led back to setup.
   Routes.haConnect,
+  // 3.4: "Nothing yet", what to get when no hub runs Zigbee2MQTT.
+  Routes.setupNoHub,
   Routes.help,
   Routes.getHelp,
 };

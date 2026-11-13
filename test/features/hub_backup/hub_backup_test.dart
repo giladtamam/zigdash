@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/core/analytics/analytics.dart';
@@ -202,7 +203,11 @@ void main() {
       final store = await container.read(hubBackupStoreProvider.future);
       expect(await store.list('home-a'), hasLength(1));
       expect(sink.sent.single.$1, 'hub_backup');
-      expect(sink.sent.single.$2, {'step': 'made', 'auto': 'yes'});
+      expect(sink.sent.single.$2, {
+        'step': 'made',
+        'auto': 'yes',
+        'took': 'under_10s',
+      });
     });
 
     test('a hub that can\'t back up is counted as unsupported', () async {
@@ -210,5 +215,99 @@ void main() {
       expect(await take(link, auto: false), HubBackupOutcome.refused);
       expect(sink.sent.single.$2, {'step': 'unsupported', 'auto': 'no'});
     });
+
+    test('an automatic try that gets no answer says which try and why',
+        () async {
+      final outcome = await container
+          .read(hubBackupRunnerProvider)
+          .take(
+            _Link(),
+            'zigbee2mqtt',
+            'home-a',
+            auto: true,
+            attempt: 2,
+            now: DateTime.utc(2026, 11, 13),
+            why: () => HubBackupWhy.background,
+            within: const Duration(milliseconds: 20),
+          );
+      expect(outcome, HubBackupOutcome.noAnswer);
+      expect(sink.sent.single.$2, {
+        'step': 'failed',
+        'auto': 'yes',
+        'try': '2',
+        'why': 'background',
+      });
+    });
+  });
+
+  test('Zigbee2MQTT gets two minutes to answer, not 30 seconds', () {
+    // It first asks the coordinator, queued behind the dashboard's device
+    // requests: 1 in 7 automatic backups ran out of 30 s (Nov 10-13).
+    expect(hubBackupWait, const Duration(minutes: 2));
+  });
+
+  test('a slow answer is kept while the request still waits', () async {
+    final link = _Link();
+    link.onPublish = (topic, payload) => Timer(
+      const Duration(milliseconds: 60),
+      () => link.emit(
+        'zigbee2mqtt/bridge/response/backup',
+        jsonEncode({
+          'status': 'ok',
+          'transaction': _tx(payload),
+          'data': {'zip': base64Encode(_zip)},
+        }),
+      ),
+    );
+    final answer = await requestHubBackup(
+      link,
+      'zigbee2mqtt',
+      within: const Duration(milliseconds: 500),
+    );
+    expect(answer, isA<HubBackupZip>());
+  });
+
+  group('waiting for the dashboard to go quiet', () {
+    test('returns at once when nothing was asked', () async {
+      fakeAsync((async) {
+        var done = false;
+        waitForQuiet(() => null, now: () => async.getClock(DateTime(2026)).now())
+            .then((_) => done = true);
+        async.flushMicrotasks();
+        expect(done, isTrue);
+      });
+    });
+
+    test('waits until the last request is 10 s old', () async {
+      fakeAsync((async) {
+        DateTime now() => async.getClock(DateTime(2026)).now();
+        final last = now();
+        var done = false;
+        waitForQuiet(() => last, now: now).then((_) => done = true);
+        async.elapse(const Duration(seconds: 9));
+        expect(done, isFalse);
+        async.elapse(const Duration(seconds: 2));
+        expect(done, isTrue);
+      });
+    });
+
+    test('gives up after 40 s of steady requests', () async {
+      fakeAsync((async) {
+        DateTime now() => async.getClock(DateTime(2026)).now();
+        var done = false;
+        waitForQuiet(now, now: now).then((_) => done = true);
+        async.elapse(const Duration(seconds: 39));
+        expect(done, isFalse);
+        async.elapse(const Duration(seconds: 2));
+        expect(done, isTrue);
+      });
+    });
+  });
+
+  test('backup durations are counted in four buckets', () {
+    expect(hubBackupTook(const Duration(seconds: 1)), 'under_10s');
+    expect(hubBackupTook(const Duration(seconds: 29)), '10_30s');
+    expect(hubBackupTook(const Duration(seconds: 45)), '30_60s');
+    expect(hubBackupTook(const Duration(seconds: 90)), 'over_60s');
   });
 }

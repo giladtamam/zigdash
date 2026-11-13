@@ -19,6 +19,7 @@ import '../services/automation_config_publisher.dart';
 import '../models/panel_config.dart';
 import '../../../shortcuts/add_tile_button.dart';
 import '../../../shortcuts/shortcut_service.dart';
+import '../../../core/analytics/analytics.dart' show ShortcutFrom;
 
 /// The Edit-mode actions of one tile (docs/design/dashboard-1.12.md §7):
 /// size, move to section, edit, duplicate, replace with a device tile
@@ -72,6 +73,41 @@ Future<void> showTileActions(
               },
             ),
           ),
+          // A device or scene tile can also live on the home screen, and
+          // one that switches or moves something in Quick Settings (3.3.3:
+          // first in the list, where they are seen).
+          if (AddShortcutButton.available &&
+              ((panel.type == PanelType.device && panel.deviceIeee != null) ||
+                  _sceneId(panel) != null))
+            ListTile(
+              key: const Key('tile-add-widget'),
+              leading: const Icon(Icons.add_to_home_screen),
+              title: Text(l10n.shortcutAddToHome),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                final scene = _sceneId(panel);
+                addHomeScreenWidget(host, container.read(shortcutServiceProvider),
+                    kind: scene != null ? 'scene' : 'device',
+                    connectionId: connectionId,
+                    target: scene ?? panel.deviceIeee!,
+                    name: panel.name,
+                    from: ShortcutFrom.tileMenu);
+              },
+            ),
+          if (AddShortcutButton.available && _nfcToggleable(panel))
+            ListTile(
+              key: const Key('tile-add-quick-settings'),
+              leading: const Icon(Icons.dashboard_customize_outlined),
+              title: Text(l10n.shortcutAddTile),
+              onTap: () {
+                Navigator.pop(sheetCtx);
+                AddTileButton.add(host, container.read,
+                    connectionId: connectionId,
+                    ieee: panel.deviceIeee!,
+                    name: panel.name,
+                    from: ShortcutFrom.tileMenu);
+              },
+            ),
           ListTile(
             leading: const Icon(Icons.drive_file_move_outline),
             title: Text(l10n.editMoveToSection),
@@ -105,23 +141,6 @@ Future<void> showTileActions(
                 Navigator.pop(sheetCtx);
                 router?.push(
                     Routes.homeDevice(connectionId, panel.deviceIeee!));
-              },
-            ),
-          // A device or scene tile can also live on the home screen.
-          if (AddShortcutButton.available &&
-              ((panel.type == PanelType.device && panel.deviceIeee != null) ||
-                  _sceneId(panel) != null))
-            ListTile(
-              leading: const Icon(Icons.add_to_home_screen),
-              title: Text(l10n.shortcutAddToHome),
-              onTap: () {
-                Navigator.pop(sheetCtx);
-                final scene = _sceneId(panel);
-                addHomeScreenWidget(host, container.read(shortcutServiceProvider),
-                    kind: scene != null ? 'scene' : 'device',
-                    connectionId: connectionId,
-                    target: scene ?? panel.deviceIeee!,
-                    name: panel.name);
               },
             ),
           // 3.3: a tag that runs the scene or switches the device.
@@ -173,7 +192,8 @@ Future<void> showTileActions(
 }
 
 /// The scene a scene tile runs, or null.
-/// A device tile whose tap switches or moves something: what a tag toggles.
+/// A device tile whose tap switches or moves something: what a tag toggles
+/// and a Quick Settings tile switches.
 bool _nfcToggleable(Panel panel) {
   if (panel.type != PanelType.device || panel.deviceIeee == null) return false;
   final c = PanelConfig.decode(panel.type, panel.config);

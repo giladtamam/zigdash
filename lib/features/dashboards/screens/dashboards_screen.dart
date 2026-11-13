@@ -37,7 +37,8 @@ import '../../kiosk/wall_display_sheet.dart';
 import '../widgets/export_dialog.dart';
 import '../../../alerts/alerts_paused_banner.dart';
 import '../../../engine/automations_paused_chip.dart';
-import '../widgets/remote_offer_card.dart';
+import '../widgets/poll_card.dart';
+import '../../../remote/remote_door.dart';
 import '../widgets/connection_status_banner.dart';
 
 /// Per-connection dashboards screen. Shows a TabBar of all dashboards
@@ -85,6 +86,7 @@ class DashboardsScreen extends ConsumerWidget {
             appBar: AppBar(
               title: HomeTitle(connectionId: connectionId),
               actions: [
+                RemoteDoor(connectionId: connectionId),
                 const SettingsAction(),
                 _DashboardMenu(connectionId: connectionId),
               ],
@@ -243,6 +245,7 @@ class _DashboardsTabbed extends ConsumerWidget {
                                     status: connectionStatus,
                                     endpoint: ref.watch(connectionEndpointProvider(connectionId)).valueOrNull,
                                   ),
+                                RemoteDoor(connectionId: connectionId),
                                 IconButton(
                                   icon: const Icon(Icons.edit_outlined),
                                   tooltip: l10n.dashEditDashboard,
@@ -295,7 +298,7 @@ class _DashboardsTabbed extends ConsumerWidget {
                       const UpdateBanner(),
                       HaImportOfferCard(connectionId: connectionId),
                       AnalyticsConsentCard(connectionId: connectionId),
-                      RemoteOfferCard(connectionId: connectionId),
+                      PollCard(connectionId: connectionId),
                     ],
                     AlertsPausedBanner(connectionId: connectionId),
                     AutomationsPausedBanner(connectionId: connectionId),

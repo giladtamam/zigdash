@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">כבוי</string>
     <string name="widget_group_sample_3">תריסים</string>
     <string name="widget_group_sample_scene">לילה</string>
+    <string name="share_ha_label">חיבור Home Assistant</string>
 </resources>

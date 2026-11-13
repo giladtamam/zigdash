@@ -1,0 +1,3 @@
+Asked for your broker's login? When the broker runs on Home Assistant or an SMLIGHT hub, ZigDash now shows the matching help, including signing in with Home Assistant instead of an MQTT login.
+
+Usage data, for those who share it, now says whether a home has automations, scenes or shortcuts (as ranges, never names), and at the login, what kind of hub the broker runs on (never the address), so the next versions can help where people stop. The privacy policy lists both.

@@ -126,7 +126,27 @@ void main() {
         'tiles': '11-30',
         'demo': 'no',
         'installed': 'unknown',
+        'automations': '0',
+        'scenes': '0',
+        'shortcuts': '0',
       });
+    });
+
+    test('app_started: what the homes have set up, as ranges', () {
+      Map<String, String> props(int n) => AppStarted(
+        form: FormFactor.phone,
+        theme: ThemeChoice.system,
+        materialYou: true,
+        homes: 1,
+        tiles: 0,
+        demo: false,
+        automations: n,
+        scenes: n,
+        shortcuts: n,
+      ).props;
+      expect([for (final n in [0, 1, 3, 4, 40]) props(n)['automations']], ['0', '1-3', '1-3', '4+', '4+']);
+      expect([for (final n in [0, 1, 12]) props(n)['scenes']], ['0', '1+', '1+']);
+      expect([for (final n in [0, 1, 12]) props(n)['shortcuts']], ['0', '1+', '1+']);
     });
 
     test('app_started: days since install, as a range', () {

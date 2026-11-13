@@ -1453,12 +1453,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Due tentativi senza connessione. Dicci che hub hai e cosa hai scritto, e ti aiutiamo a trovarlo.';
 
   @override
-  String get guidedStuckTelegram => 'Chiedi su Telegram';
-
-  @override
-  String get guidedStuckHelp => 'Consigli ed email';
-
-  @override
   String ladderTriedHint(Object count) {
     return 'Provati $count indirizzi';
   }
@@ -1562,7 +1556,67 @@ class AppLocalizationsIt extends AppLocalizations {
   String get setupRunningWhatToGet => 'Cosa ti serve';
 
   @override
-  String get setupAskNothing => 'Ancora niente?';
+  String get setupAskNothing => 'Ancora niente';
+
+  @override
+  String get setupAskNothingSub =>
+      'Nessun hub o Zigbee2MQTT per ora, o stai ancora scegliendo';
+
+  @override
+  String get noHubTitle => 'Ancora niente';
+
+  @override
+  String get noHubHeadline => 'Procurati un hub che esegua Zigbee2MQTT';
+
+  @override
+  String get noHubIntro =>
+      'ZigDash ha bisogno di una piccola scatola in casa che esegua Zigbee2MQTT, il software libero che parla con i dispositivi Zigbee. Scegli una delle tre strade qui sotto, associa i dispositivi dalla sua pagina e ZigDash costruisce la dashboard. Niente cloud, nessun account.';
+
+  @override
+  String get noHubSmhub => 'SMLIGHT SMHUB: la partenza facile';
+
+  @override
+  String get noHubSmhubBody =>
+      'Una piccola scatola con Zigbee2MQTT e il broker integrati. Collegala al router e associa i dispositivi dalla sua pagina web. Niente da installare.';
+
+  @override
+  String get noHubPi => 'Un Raspberry Pi o qualsiasi macchina Linux';
+
+  @override
+  String get noHubPiBody =>
+      'Installa da solo Zigbee2MQTT e il broker Mosquitto. Circa un\'ora, con la guida di Zigbee2MQTT.';
+
+  @override
+  String get noHubHa => 'Home Assistant';
+
+  @override
+  String get noHubHaBody =>
+      'Aggiungi i componenti aggiuntivi Mosquitto broker e Zigbee2MQTT, poi accedi da ZigDash con il tuo utente Home Assistant.';
+
+  @override
+  String get noHubRadio =>
+      'Un Pi o Home Assistant ha bisogno anche di un adattatore Zigbee, come un SLZB-06 o una chiavetta Sonoff. L\'SMHUB ne ha uno integrato.';
+
+  @override
+  String get noHubDemoNote =>
+      'Nel frattempo guarda come funziona ZigDash, con una casa di prova.';
+
+  @override
+  String get noHubRemind => 'Ricordamelo tra una settimana';
+
+  @override
+  String get noHubRemindSet =>
+      'Te lo ricorderemo tra una settimana, su questo telefono.';
+
+  @override
+  String get noHubHaveOne => 'Ora ne ho uno';
+
+  @override
+  String get reminderHubTitle => 'È arrivato il tuo hub?';
+
+  @override
+  String get reminderHubBody =>
+      'ZigDash lo configura in circa un minuto. Apri l\'app a casa, sul tuo Wi-Fi.';
 
   @override
   String get setupAskHaWhich => 'Come gestisce Zigbee il tuo Home Assistant?';
@@ -1695,7 +1749,54 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Il tuo telefono non raggiunge il broker, ma raggiunge Home Assistant. Accedi una volta e ZigDash parlerà con Zigbee2MQTT tramite Home Assistant: a casa o fuori, senza impostazioni del broker.';
+      'Accedi una volta con Home Assistant e ZigDash parla con Zigbee2MQTT attraverso di esso: a casa o fuori, senza impostazioni del broker.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash non ha trovato Home Assistant da questo telefono';
+
+  @override
+  String get haNoneOffWifi =>
+      'Questo telefono non è sul Wi-Fi. Collegati al Wi-Fi di casa e tocca Cerca di nuovo, oppure usa l\'indirizzo con cui apri Home Assistant da fuori.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Potrebbe essere su un\'altra rete, oppure lo apri da fuori (Nabu Casa, DuckDNS, il tuo dominio).';
+
+  @override
+  String get haNoneGetAddress => 'Prendi il suo indirizzo da Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Apri l\'app Home Assistant';
+
+  @override
+  String get haNoneAppStep1 =>
+      'Nell\'app, apri Impostazioni › App complementare.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Tocca il tuo server, poi l\'icona di condivisione in alto, e scegli ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Tocca il tuo server, poi l\'icona di condivisione in alto, e Copia link. Torna qui e tocca Incolla.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Apri Home Assistant nel browser che usi per esso, poi Condividi › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Apri Home Assistant nel browser che usi per esso, copia l\'indirizzo dalla barra degli indirizzi, torna qui e tocca Incolla.';
+
+  @override
+  String get haNoneTypeLabel => 'Oppure scrivi l\'indirizzo';
+
+  @override
+  String get haNoneLookAgain => 'Cerca di nuovo';
+
+  @override
+  String get haNoneAssistant => 'Non sei sicuro? Chiedi all\'assistente';
 
   @override
   String get haConnectAddressHelp =>
@@ -1756,6 +1857,28 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get haFindNone =>
       'Questo telefono non vede Home Assistant su questa rete Wi-Fi. Usa l\'indirizzo che apre la tua app Home Assistant: spesso uno remoto, come https://abcd1234.ui.nabu.casa o https://casamia.duckdns.org.';
+
+  @override
+  String get haPaste => 'Incolla';
+
+  @override
+  String get haPasteNothing => 'Nessun indirizzo in quello che hai copiato.';
+
+  @override
+  String get haSharedNote =>
+      'Questo è l\'indirizzo che hai condiviso. Accedi per connetterti.';
+
+  @override
+  String get haShareNothing =>
+      'Non conteneva un indirizzo. Nell\'app Home Assistant apri Impostazioni › App companion, tocca il tuo server e poi l\'icona di condivisione in alto.';
+
+  @override
+  String get haHandoverShare =>
+      'Il modo più rapido: nell\'app Home Assistant apri Impostazioni › App companion, tocca il tuo server, poi l\'icona di condivisione in alto, e scegli ZigDash. Da un browser, condividi la pagina con ZigDash.';
+
+  @override
+  String get haHandoverCopy =>
+      'Il modo più rapido: nell\'app Home Assistant apri Impostazioni › App companion, tocca il tuo server, poi l\'icona di condivisione in alto e Copia link. Torna qui e tocca Incolla.';
 
   @override
   String haConnectOtherNetwork(String network) {
@@ -2920,14 +3043,154 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non riesci a farlo funzionare? Prima i consigli, poi il contatto';
 
   @override
-  String get settingsCommunity => 'Unisciti alla community di ZigDash';
+  String get getHelpWarm => 'Non trovato nulla? Tranquillo, ti aiuto io';
 
   @override
-  String get settingsCommunitySubtitle =>
-      'Gruppo Telegram: domande, idee e novità in arrivo';
+  String get getHelpAskRunning =>
+      'Zigbee2MQTT è in funzione adesso da qualche parte in casa tua?';
 
   @override
-  String get getHelpCommunity => 'Chiedi nel gruppo Telegram';
+  String get getHelpEmailHint => 'La tua email, se vuoi una risposta';
+
+  @override
+  String get getHelpSend => 'Invia';
+
+  @override
+  String get getHelpSending => 'Invio…';
+
+  @override
+  String get getHelpSent =>
+      'Inviato. Di solito rispondo entro 3 giorni se hai lasciato un\'email.';
+
+  @override
+  String get getHelpSendFailed => 'Invio non riuscito. Condividi invece';
+
+  @override
+  String get getHelpSendFailedNote =>
+      'Riprova tra un\'ora, oppure condividi i dettagli in altro modo.';
+
+  @override
+  String get getHelpRetry => 'Riprova a inviare';
+
+  @override
+  String get getHelpShare => 'Condividi dettagli';
+
+  @override
+  String get haConnectLooking => 'Ricerca di Home Assistant…';
+
+  @override
+  String get assistantTitle => 'Assistente ZigDash';
+
+  @override
+  String get assistantNotice =>
+      'Questa risposta arriva da un servizio IA che vede i tuoi dettagli di supporto. Non ha mai bisogno di password o indirizzi.';
+
+  @override
+  String assistantOpeningScan(Object network, Object hosts, Object brokers) {
+    return 'La ricerca su $network ha provato $hosts indirizzi e trovato $brokers broker.';
+  }
+
+  @override
+  String get assistantOpeningRunningYes =>
+      'Hai detto che Zigbee2MQTT è in funzione. Troviamolo.';
+
+  @override
+  String get assistantOpeningRunningNotSure =>
+      'Non eri sicuro che Zigbee2MQTT fosse in funzione. Scopriamolo.';
+
+  @override
+  String get assistantOpeningGeneric =>
+      'Dimmi cosa stavi cercando di fare e ti aiuto a connetterti.';
+
+  @override
+  String get assistantThinking => 'Sto pensando…';
+
+  @override
+  String get assistantResting =>
+      'L\'assistente è in pausa. Una persona resta raggiungibile qui sotto.';
+
+  @override
+  String get assistantRefused =>
+      'L\'assistente non può rispondere a questo. Una persona sì, qui sotto.';
+
+  @override
+  String get assistantFailed =>
+      'Impossibile raggiungere l\'assistente. Controlla la connessione o chiedi a una persona qui sotto.';
+
+  @override
+  String get assistantRetry => 'Riprova';
+
+  @override
+  String get assistantReplyHint => 'Chiedi o rispondi qui…';
+
+  @override
+  String get assistantTurnsUsed =>
+      'La conversazione finisce qui. Una persona può proseguire.';
+
+  @override
+  String get assistantHelped => 'È stato utile?';
+
+  @override
+  String get assistantHelpedYes => 'Sì';
+
+  @override
+  String get assistantHelpedNo => 'No';
+
+  @override
+  String get assistantTalkToPerson => 'Parla con una persona';
+
+  @override
+  String assistantHomeOpening(String home, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivi rispondono',
+      one: '1 dispositivo risponde',
+      zero: 'nessun dispositivo risponde',
+    );
+    return '$home è connessa e $_temp0. Di cosa hai bisogno?';
+  }
+
+  @override
+  String assistantHomeOpeningOffline(String home) {
+    return 'ZigDash non raggiunge $home in questo momento. Di cosa hai bisogno?';
+  }
+
+  @override
+  String get assistantChipDevice => 'Un dispositivo non risponde più';
+
+  @override
+  String get assistantChipTile => 'Aggiungere un riquadro';
+
+  @override
+  String get assistantChipAutomations => 'Automazioni';
+
+  @override
+  String get assistantChipUnreachable => 'Casa non raggiungibile';
+
+  @override
+  String get helpBubbleLabel => 'Serve aiuto?';
+
+  @override
+  String get helpBubbleHide => 'Nascondi';
+
+  @override
+  String get helpBubbleHideSheet => 'Nascondi questa bolla';
+
+  @override
+  String get helpBubbleHidden =>
+      'Nascosta. La ritrovi in Impostazioni › Ottieni aiuto.';
+
+  @override
+  String get settingsHelpBubble => 'Bolla di aiuto nella schermata iniziale';
+
+  @override
+  String get settingsHelpBubbleSubtitle =>
+      'Chiedi all\'assistente da una dashboard';
+
+  @override
+  String get getHelpReportPrompt =>
+      'Cosa c\'era di sbagliato nella risposta dell\'assistente?';
 
   @override
   String get demoBannerHelp => 'Ottieni aiuto';
@@ -3293,19 +3556,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get pollBody =>
-      'Scegli quello che useresti di più. La tua risposta viene inviata con i tuoi dati di utilizzo anonimi.';
-
-  @override
-  String get pollNotifications => 'Notifiche';
-
-  @override
-  String get pollHistory => 'Grafici della cronologia';
-
-  @override
-  String get pollKiosk => 'Modalità kiosk per un tablet a parete';
-
-  @override
-  String get pollGroups => 'Gruppi Zigbee';
+      'Scegli tutto ciò che useresti. Le risposte vengono inviate con i tuoi dati di utilizzo anonimi.';
 
   @override
   String get pollNotNow => 'Non ora';
@@ -3313,6 +3564,28 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get pollThanks =>
       'Grazie! Questo aiuta a decidere cosa arriverà dopo.';
+
+  @override
+  String get pollPair => 'Associare nuovi dispositivi da ZigDash';
+
+  @override
+  String get pollDeviceSettings =>
+      'Impostazioni dei dispositivi e aggiornamenti firmware';
+
+  @override
+  String get pollZha => 'Funzionare con ZHA, senza Zigbee2MQTT';
+
+  @override
+  String get pollAiAssistant => 'Controllare la casa dal mio assistente IA';
+
+  @override
+  String get pollOther => 'Altro';
+
+  @override
+  String get pollSend => 'Invia';
+
+  @override
+  String get settingsPollSubtitle => 'Vota cosa arriva dopo';
 
   @override
   String get whyTitle => 'Perché hai provato ZigDash?';
@@ -4681,17 +4954,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get remoteIntroTitle => 'Controlla la tua casa da ovunque';
 
   @override
-  String get remoteOfferBody =>
-      'Raggiungi i tuoi dispositivi quando sei fuori, tramite il relay cifrato di ZigDash. Incluso in Pro: un solo pagamento, nessun canone mensile. Configuralo mentre sei a casa.';
-
-  @override
-  String get remoteOfferBodyPro =>
-      'Hai Pro: attiva il controllo remoto mentre sei a casa, poi raggiungi i tuoi dispositivi da ovunque.';
-
-  @override
-  String get remoteOfferShow => 'Mostra';
-
-  @override
   String get remoteIntroBody =>
       'Il tuo hub mantiene una connessione al relay di ZigDash. Fuori casa, questo telefono raggiunge i dispositivi tramite il relay. Tutto è cifrato sull\'hub e sul telefono, quindi il relay non può leggere i dispositivi né cosa fanno.';
 
@@ -5117,4 +5379,288 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get hubBackupRestoreNotBack =>
       'Il backup è stato scritto, ma Zigbee2MQTT non si è riavviato. Riavvialo sull\'hub, poi controlla qui.';
+
+  @override
+  String get guideIntro => 'Troviamolo insieme, un passo alla volta.';
+
+  @override
+  String guideStep(int step, int total) {
+    return 'Passo $step di $total';
+  }
+
+  @override
+  String get guideNotHelped => 'Non è servito';
+
+  @override
+  String get guideBack => 'Indietro';
+
+  @override
+  String get guideSkipToHelp => 'Vai all\'aiuto';
+
+  @override
+  String get guideVpnTitle => 'Disattiva la VPN';
+
+  @override
+  String get guideIsolatedTitle => 'Connettiti al Wi-Fi principale';
+
+  @override
+  String get guideHubTitle => 'Il tuo hub è qui';
+
+  @override
+  String get guideWhichTitle =>
+      'Cosa apri per aggiungere un dispositivo Zigbee?';
+
+  @override
+  String get guideWhichHa => 'Home Assistant';
+
+  @override
+  String get guideWhichZ2m => 'La pagina di Zigbee2MQTT';
+
+  @override
+  String get guideWhichSmlight => 'La pagina del mio hub SMLIGHT';
+
+  @override
+  String get guideWhichNothing => 'Ancora niente';
+
+  @override
+  String get guideHaTitle => 'Accedi a Home Assistant';
+
+  @override
+  String get guideHaBody =>
+      'ZigDash può connettersi tramite Home Assistant con l\'accesso che usi già lì. Non serve la password del broker.';
+
+  @override
+  String get guideZhaTitle => 'Usi ZHA?';
+
+  @override
+  String get guideRunningTitle => 'Zigbee2MQTT è in funzione?';
+
+  @override
+  String get guideNotYetTitle => 'Prima configura Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageTitle => 'Apri la pagina di Zigbee2MQTT';
+
+  @override
+  String get guideZ2mPageBody =>
+      'ZigDash chiede a Zigbee2MQTT dove si trova il suo broker. Scrivi l\'indirizzo della pagina come lo mostra il browser, per esempio 192.168.1.20:8080.';
+
+  @override
+  String get guideWiderTitle => 'Cerca in tutta la rete';
+
+  @override
+  String get guideWiderBody =>
+      'ZigDash ha cercato tra gli indirizzi vicini al tuo telefono. Il Wi-Fi mesh e i router più grandi ne usano di più. Cercarli tutti richiede circa un minuto.';
+
+  @override
+  String get guideAddressTitle => 'Inserisci tu l\'indirizzo';
+
+  @override
+  String get guideHelpTitle => 'Ti aiutiamo noi';
+
+  @override
+  String get guideHelpBody =>
+      'Ancora niente? Non fermarti qui. Chiedi al tuo assistente IA con il riepilogo che prepara ZigDash, o chiedi a noi: ogni messaggio riceve una risposta.';
+
+  @override
+  String get loginGuideTitle => 'Nessun accesso MQTT? Creane uno';
+
+  @override
+  String get loginGuidePick => 'Dove gira il tuo broker?';
+
+  @override
+  String get loginGuideHa1 =>
+      'In Home Assistant apri il tuo profilo (il tuo nome in fondo alla barra laterale) e attiva la Modalità avanzata.';
+
+  @override
+  String get loginGuideHa2 =>
+      'Vai in Impostazioni › Persone, apri la scheda Utenti e tocca Aggiungi utente.';
+
+  @override
+  String get loginGuideHa3 =>
+      'Dagli un nome, per esempio zigdash, imposta una password e crealo. Non serve che sia amministratore.';
+
+  @override
+  String get loginGuideHa4 =>
+      'Scrivi qui il suo nome utente (quello sotto Nome utente, in minuscolo, non il nome visualizzato) e la password. I nomi homeassistant e addons non funzionano.';
+
+  @override
+  String get loginGuidePi1 =>
+      'Zigbee2MQTT accede già: il suo configuration.yaml ha utente e password sotto mqtt. Puoi usare quelli.';
+
+  @override
+  String get loginGuidePi2 =>
+      'Oppure crea un nuovo utente sulla macchina dove gira Mosquitto. Chiede la password due volte:';
+
+  @override
+  String get loginGuidePi3 => 'Poi riavvia Mosquitto:';
+
+  @override
+  String get loginGuidePi4 =>
+      'In Docker, esegui entrambi nel container, con il file che mosquitto.conf indica in password_file:';
+
+  @override
+  String get loginGuideSmlight1 =>
+      'Apri la pagina web dell\'hub e vai in Settings › MQTT.';
+
+  @override
+  String get loginGuideSmlight2 =>
+      'Copia il nome utente e la password mostrati, oppure attiva Allow Anonymous e salva.';
+
+  @override
+  String get loginGuideSmlight3 =>
+      'Con Allow Anonymous attivo non serve alcun accesso:';
+
+  @override
+  String get loginTryAnonymous => 'Prova senza accesso';
+
+  @override
+  String get loginCopied => 'Copiato';
+
+  @override
+  String shortcutNudge(Object name) {
+    return 'Controlla $name senza aprire ZigDash';
+  }
+
+  @override
+  String get shortcutNudgeLater => 'Non ora';
+
+  @override
+  String get shortcutNudgeTile => 'Impostazioni rapide';
+
+  @override
+  String get shortcutNudgeWidget => 'Schermata Home';
+
+  @override
+  String get haWhereAsk => 'Dove apri Home Assistant?';
+
+  @override
+  String get haWhereHome => 'A casa';
+
+  @override
+  String get haWhereNabuCasa => 'Nabu Casa';
+
+  @override
+  String get haWhereDuckDns => 'DuckDNS';
+
+  @override
+  String get haWhereOwnDomain => 'Dominio proprio / Cloudflare';
+
+  @override
+  String get haWhereHomeHelp =>
+      'A casa il suo indirizzo è tipo 192.168.1.20:8123. Lo trovi in Home Assistant in Impostazioni › Sistema › Rete, o nell\'app Home Assistant in Impostazioni › App complementare › il tuo server. Questo telefono deve essere sulla stessa Wi-Fi.';
+
+  @override
+  String get haWhereNabuCasaHelp =>
+      'In Home Assistant, apri Impostazioni › Home Assistant Cloud e copia l\'indirizzo sotto Accesso remoto: https://….ui.nabu.casa. Funziona ovunque.';
+
+  @override
+  String get haWhereDuckDnsHelp =>
+      'Il nome scelto su duckdns.org, con la porta di Home Assistant: myhome.duckdns.org:8123. Funziona ovunque.';
+
+  @override
+  String get haWhereOwnDomainHelp =>
+      'L\'indirizzo con cui apri Home Assistant fuori casa, come ha.example.com. Con un tunnel Cloudflare, è il nome host impostato per Home Assistant in Cloudflare. Funziona ovunque.';
+
+  @override
+  String get remoteNowTitle => 'Come questo telefono raggiunge casa';
+
+  @override
+  String remoteNowHome(String address) {
+    return 'A casa, direttamente al tuo broker su $address';
+  }
+
+  @override
+  String remoteNowOwn(String address) {
+    return 'Fuori casa, tramite il tuo indirizzo $address';
+  }
+
+  @override
+  String get remoteNowRelay => 'Fuori casa, tramite il relay di ZigDash';
+
+  @override
+  String get remoteNowOffline => 'Non connesso a casa tua in questo momento';
+
+  @override
+  String get remoteWaysTitle => 'Due modi per raggiungere casa da fuori';
+
+  @override
+  String get remoteWayOwnTitle => 'Il tuo indirizzo';
+
+  @override
+  String remoteWayOwnSet(String address) {
+    return 'Gratis. Impostato su $address.';
+  }
+
+  @override
+  String get remoteWayOwnUnset =>
+      'Gratis. Tailscale, una VPN o una porta inoltrata: aggiungi l\'indirizzo alla connessione di questa casa.';
+
+  @override
+  String get remoteWayRelayBody =>
+      'Tramite il relay cifrato di ZigDash. Niente VPN, niente da aprire sul router. Fa parte di Pro.';
+
+  @override
+  String get remoteStepsTitle => 'Cosa serve';
+
+  @override
+  String get remoteStepEngine => 'ZigDash Engine sul tuo hub (gratis)';
+
+  @override
+  String get remoteStepEngineInstall =>
+      'Non ancora installato. Installalo in Automazioni.';
+
+  @override
+  String get remoteStepEngineTooOld =>
+      'Lo Zigbee2MQTT di questo hub è troppo vecchio. Aggiorna prima Zigbee2MQTT.';
+
+  @override
+  String get remoteStepEngineLater => 'Si controlla quando sei a casa';
+
+  @override
+  String get remoteStepEngineSeen =>
+      'Installato l\'ultima volta che questo telefono ha visto il tuo hub';
+
+  @override
+  String get remoteStepDone => 'Fatto';
+
+  @override
+  String get remoteStepProNeeded => 'Un solo pagamento, nessun canone mensile';
+
+  @override
+  String get remoteStepOnLater => 'Attivalo quando sei a casa';
+
+  @override
+  String remoteSeePro(String price) {
+    return 'Vedi Pro · $price';
+  }
+
+  @override
+  String get remoteUnfitHa =>
+      'Questa casa si raggiunge tramite Home Assistant. Da fuori funziona quando funziona il tuo indirizzo di Home Assistant.';
+
+  @override
+  String get remoteUnfitZ2m =>
+      'Questa casa si raggiunge tramite la pagina di Zigbee2MQTT. Il controllo remoto richiede una casa connessa al suo broker.';
+
+  @override
+  String proSale(int percent, String date) {
+    return 'Offerta: $percent% di sconto fino al $date';
+  }
+
+  @override
+  String proSaleNoEnd(int percent) {
+    return 'Offerta: $percent% di sconto';
+  }
+
+  @override
+  String get proSaleEnded => 'L\'offerta è terminata. Questo è il prezzo ora.';
+
+  @override
+  String get saleCardRemote =>
+      'ZigDash Pro: controlla la tua casa da ovunque, e altro ancora.';
+
+  @override
+  String get saleCardHomeAssistant =>
+      'ZigDash Pro: cronologia più lunga, più automazioni e altro ancora.';
 }

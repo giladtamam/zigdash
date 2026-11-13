@@ -180,6 +180,7 @@ class SupportDetails {
     this.z2m,
     this.lastFailure,
     this.lastScan,
+    this.attention,
   });
 
   final String appVersion;
@@ -192,6 +193,24 @@ class SupportDetails {
   final Z2mFacts? z2m;
   final FailureKind? lastFailure;
   final ScanSummary? lastScan;
+
+  /// The home bubble (3.5.0): how many devices the Devices tab lists under
+  /// Needs attention, and how many of those did not answer a state request.
+  /// Counts only, never names.
+  final DeviceAttention? attention;
+
+  SupportDetails withAttention(DeviceAttention? a) => SupportDetails(
+    appVersion: appVersion,
+    build: build,
+    openedFrom: openedFrom,
+    android: android,
+    phone: phone,
+    connection: connection,
+    z2m: z2m,
+    lastFailure: lastFailure,
+    lastScan: lastScan,
+    attention: a,
+  );
 
   String format() {
     final c = connection;
@@ -208,8 +227,16 @@ class SupportDetails {
       'Zigbee2MQTT: ${z == null || (z.version == null && z.online == null && z.devices == null) ? 'not found' : [if (z.version != null) z.version!, if (z.online != null) z.online! ? 'bridge online' : 'bridge offline', if (z.devices != null) '${z.devices} devices'].join(' · ')}',
       'Last error: ${lastFailure == null ? 'none' : failureKindLabel(lastFailure!)}',
       'Last scan: ${lastScan?.label ?? 'none'}',
+      if (attention != null)
+        'Devices needing attention: ${attention!.total} (${attention!.notResponding} not responding)',
     ].join('\n');
   }
+}
+
+class DeviceAttention {
+  const DeviceAttention({required this.total, required this.notResponding});
+  final int total;
+  final int notResponding;
 }
 
 String _thousands(int n) =>

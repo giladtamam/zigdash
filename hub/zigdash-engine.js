@@ -42,7 +42,7 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.2.3';
+const ENGINE_VERSION = '3.4.5';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
 const STATE_EVERY_MS = 30000;
@@ -1077,7 +1077,7 @@ class ZigDashEngine {
       } else {
         const rule = JSON.parse(data.message);
         const problem = validateRule(rule);
-        if (problem) { this.rules.delete(id); this.unknown[id] = problem; } else { delete this.unknown[id]; this.rules.set(id, rule); }
+        if (problem) { this.rules.delete(id); this.unknown[id] = problem; } else { delete this.unknown[id]; this.rules.set(id, rule); this.seedLastValues(rule); }
       }
       this.publishState();
     } else if (sub === 'meta') {
@@ -1090,6 +1090,29 @@ class ZigDashEngine {
         this.writeStopFlag(false);
         this.publishState();
       }
+    }
+  }
+
+  /**
+   * What Zigbee2MQTT last saw for the devices a rule watches, taken from its
+   * state cache the first time the rule loads. Without this, the Engine starts
+   * blind after every restart (a Zigbee2MQTT restart, or the app's silent
+   * update): a device whose trigger value already held fired the rule on its
+   * next routine report, as if it had just changed. A property the cache
+   * doesn't hold stays unknown and keeps the old behaviour.
+   */
+  seedLastValues(rule) {
+    const watched = [rule.trigger, ...(rule.conditions || [])].filter((w) => w && w.type === 'device' && w.ieee && w.property);
+    for (const w of watched) {
+      const key = `${w.ieee}|${w.property}`;
+      if (this.lastValue.has(key)) continue;
+      let cached;
+      try {
+        const entity = this.zigbee.resolveEntity(w.ieee);
+        const cache = this.stateCache;
+        if (entity && cache && typeof cache.get === 'function') cached = cache.get(entity);
+      } catch (_) { cached = undefined; }
+      if (cached && typeof cached === 'object' && w.property in cached) this.lastValue.set(key, cached[w.property]);
     }
   }
 

@@ -1,0 +1,7 @@
+New: an assistant inside ZigDash. A "Need help?" bubble on your dashboard answers questions about tiles, devices, scenes and automations in your language, and when a scan finds nothing it suggests what to check. Ask it back, or reach a person in one tap: Send now works from inside the app.
+
+New: a new ZigDash icon.
+
+Changed: the review request waits until you have just used the dashboard.
+
+Removed: the Telegram links. Help is inside the app now.

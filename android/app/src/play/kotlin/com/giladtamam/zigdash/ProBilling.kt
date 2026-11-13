@@ -23,7 +23,12 @@ import io.flutter.plugin.common.MethodChannel
  *
  * Channel "zigdash/billing":
  *  - status -> "unlocked" | "locked" | "pending" | "unavailable"
- *  - buy    -> the status after Play's purchase sheet closes
+ *  - offer  -> what Play sells Pro for now: price, priceMicros, currency,
+ *              and during a discount offer fullPriceMicros, percent, endMs
+ *              and offerId (3.4.4); null when unknown
+ *  - buy    -> the status after Play's purchase sheet closes, or "changed"
+ *              when the price that was shown (offerId, priceMicros) is no
+ *              longer what Play sells, in which case nothing was launched
  *
  * Nothing is stored by ZigDash: Play's own purchase record is the truth, and
  * a purchase restores on a new device by asking Play again.
@@ -46,8 +51,12 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
         MethodChannel(messenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
                 "status" -> status { reply(result, it) }
-                "buy" -> buy(result)
-                "price" -> price { reply(result, it) }
+                "buy" -> buy(
+                    result,
+                    call.argument<String>("offerId"),
+                    call.argument<Number>("priceMicros")?.toLong(),
+                )
+                "offer" -> offer { o -> main.post { result.success(o) } }
                 "token" -> token { reply(result, it) }
                 else -> result.notImplemented()
             }
@@ -88,13 +97,53 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
         }
     }
 
-    /** Pro's price as Play formats it for this user, or "" when unknown. */
-    private fun price(done: (String) -> Unit) = connected { ok ->
+    /**
+     * The way Pro is sold to this user right now: a discount offer whose
+     * time window holds, else the plain buy option. A rental is not Pro.
+     * Null when Play lists nothing this app can sell.
+     */
+    private fun current(details: ProductDetails): ProductDetails.OneTimePurchaseOfferDetails? {
+        val all = details.oneTimePurchaseOfferDetailsList
+            ?.filter { it.rentalDetails == null }
+            .orEmpty()
+        if (all.isEmpty()) return details.oneTimePurchaseOfferDetails
+        val now = System.currentTimeMillis()
+        val discounted = all.filter { o ->
+            val w = o.validTimeWindow
+            o.discountDisplayInfo != null && o.fullPriceMicros != null &&
+                (w == null || (now >= (w.startTimeMillis ?: Long.MIN_VALUE) &&
+                    now < (w.endTimeMillis ?: Long.MAX_VALUE)))
+        }
+        return discounted.minByOrNull { it.priceAmountMicros }
+            ?: all.firstOrNull { it.discountDisplayInfo == null }
+            ?: all.first()
+    }
+
+    /** Pro's price for this user, with the sale's details during one. */
+    private fun offer(done: (Map<String, Any?>?) -> Unit) = connected { ok ->
         if (!ok) {
-            done("")
+            done(null)
             return@connected
         }
-        product { done(it?.oneTimePurchaseOfferDetails?.formattedPrice ?: "") }
+        product { details ->
+            val o = details?.let(::current)
+            if (o == null) {
+                done(null)
+                return@product
+            }
+            val sale = o.discountDisplayInfo != null && o.fullPriceMicros != null
+            done(
+                mapOf(
+                    "price" to o.formattedPrice,
+                    "priceMicros" to o.priceAmountMicros,
+                    "currency" to o.priceCurrencyCode,
+                    "fullPriceMicros" to if (sale) o.fullPriceMicros else null,
+                    "percent" to if (sale) o.discountDisplayInfo?.percentageDiscount else null,
+                    "endMs" to if (sale) o.validTimeWindow?.endTimeMillis else null,
+                    "offerId" to if (sale) o.offerId else null,
+                )
+            )
+        }
     }
 
     /** Owned (and acknowledged), pending, or for sale. */
@@ -140,7 +189,14 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
         }
     }
 
-    private fun buy(result: MethodChannel.Result) = connected { ok ->
+    /**
+     * Launches Play's sheet for the price the screen showed: the discount
+     * offer [offerId] at [priceMicros], or the plain price. Play is asked
+     * again first, and when the fresh answer is a different price (a sale
+     * ended, or began, in between) nothing is launched and "changed" goes
+     * back, so the buyer is never charged another price than the one shown.
+     */
+    private fun buy(result: MethodChannel.Result, offerId: String?, priceMicros: Long?) = connected { ok ->
         if (!ok) {
             reply(result, "unavailable")
             return@connected
@@ -150,14 +206,29 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
                 reply(result, "unavailable")
                 return@product
             }
+            val now = current(details)
+            val nowId = if (now?.discountDisplayInfo != null) now.offerId else null
+            if (priceMicros != null &&
+                (now == null || now.priceAmountMicros != priceMicros || nowId != offerId)
+            ) {
+                reply(result, "changed")
+                return@product
+            }
             main.post {
                 pendingBuy?.success("locked")
                 pendingBuy = result
+                val one = BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(details)
+                // Play's new product model wants the token of the option
+                // being bought; the old single-offer answer has none to give.
+                val token = now?.offerToken
+                if (!details.oneTimePurchaseOfferDetailsList.isNullOrEmpty() &&
+                    !token.isNullOrEmpty()
+                ) {
+                    one.setOfferToken(token)
+                }
                 val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(
-                    listOf(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                            .setProductDetails(details).build()
-                    )
+                    listOf(one.build())
                 ).build()
                 val r = client.launchBillingFlow(activity, params)
                 if (r.responseCode != BillingClient.BillingResponseCode.OK) {

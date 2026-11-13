@@ -69,9 +69,11 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
     // 3.2: a page that answers (bridge/info) without a token.
     pagePresent: (host, port) async {
       try {
-        return await fetchZ2mMqttConfig(host, port) != null;
+        return await fetchZ2mMqttConfig(host, port) != null
+            ? PageLook.found
+            : PageLook.none;
       } on Z2mPageLocked {
-        return false;
+        return PageLook.locked;
       }
     },
     // The page's usual port; the Home Assistant add-on's sits behind

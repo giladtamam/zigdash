@@ -126,11 +126,7 @@ final engineViewProvider =
     if (out.isClosed) return;
     final v = view();
     out.add(v);
-    if (v.installed) {
-      unawaited(prefs.setBool(_installedKey(connectionId), true));
-    } else if (v.phase == HubEnginePhase.notInstalled || v.phase == HubEnginePhase.needsConsent) {
-      unawaited(prefs.remove(_installedKey(connectionId)));
-    }
+    rememberEngine(prefs, connectionId, v);
     // A silent update needs Zigbee2MQTT's bridge, which the relay never
     // carries: it waits until the phone is home.
     if (!updateTried && v.phase == HubEnginePhase.running && !v.away) {
@@ -195,6 +191,30 @@ String _installedKey(String connectionId) => 'engine.installed.$connectionId';
 /// This phone has seen the Engine installed on the Home's hub.
 bool engineKnownInstalled(SharedPreferences prefs, String connectionId) =>
     prefs.getBool(_installedKey(connectionId)) ?? false;
+
+/// Keeps what the dashboard needs before any broker answers: whether this
+/// phone has seen the Engine on the Home's hub, and (3.4.1) how many
+/// Automations it last reported, for `app_started`.
+void rememberEngine(SharedPreferences prefs, String connectionId, EngineView v) {
+  if (v.installed) {
+    unawaited(prefs.setBool(_installedKey(connectionId), true));
+    final rules = v.report?.rulesLoaded;
+    if (rules != null && prefs.getInt(_rulesKey(connectionId)) != rules) {
+      unawaited(prefs.setInt(_rulesKey(connectionId), rules));
+    }
+  } else if (v.phase == HubEnginePhase.notInstalled || v.phase == HubEnginePhase.needsConsent) {
+    unawaited(prefs.remove(_installedKey(connectionId)));
+    unawaited(prefs.remove(_rulesKey(connectionId)));
+  }
+}
+
+String _rulesKey(String connectionId) => 'engine.rules.$connectionId';
+
+/// How many Automations the Home's Engine last reported to this phone; 0
+/// where this phone never saw an Engine there. A floor: it is as old as the
+/// last time the dashboard or the Automations tab heard the Engine.
+int engineKnownRules(SharedPreferences prefs, String connectionId) =>
+    engineKnownInstalled(prefs, connectionId) ? prefs.getInt(_rulesKey(connectionId)) ?? 0 : 0;
 
 String _declinedKey(String connectionId) => 'engine.declined.$connectionId';
 

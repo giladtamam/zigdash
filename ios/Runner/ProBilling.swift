@@ -40,6 +40,15 @@ final class ProBilling {
       try? await AppStore.sync()
       return await status()
     case "price": return try? await Product.products(for: [Self.product]).first?.displayPrice
+    // 3.4.4: the Dart side asks for the whole offer (Play also sends sale
+    // fields); the App Store build sells at the plain price only.
+    case "offer":
+      guard let p = try? await Product.products(for: [Self.product]).first else { return nil }
+      return [
+        "price": p.displayPrice,
+        "priceMicros": NSDecimalNumber(decimal: p.price * 1_000_000).int64Value,
+        "currency": p.priceFormatStyle.currencyCode,
+      ] as [String: Any]
     case "token": return await owned()?.jws
     default: return FlutterMethodNotImplemented
     }

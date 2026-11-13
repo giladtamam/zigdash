@@ -1,0 +1,1 @@
+Easier Home Assistant sign-in. A remote address like your Nabu Casa, DuckDNS or Cloudflare name now works without typing https://. When ZigDash can't find Home Assistant, pick where you open it and it shows where to find the address.

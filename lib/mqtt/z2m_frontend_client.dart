@@ -58,6 +58,7 @@ class Z2mFrontendClient extends mc.MqttClient {
     String? username,
     String? password,
   ]) async {
+    final attempt = ++_attempt;
     _status.state = mc.MqttConnectionState.connecting;
     try {
       final target = password == null || password.isEmpty
@@ -66,6 +67,7 @@ class Z2mFrontendClient extends mc.MqttClient {
       final socket = await WebSocket.connect(
         target.toString(),
       ).timeout(Duration(milliseconds: connectTimeoutPeriod));
+      if (attempt != _attempt) return _abandoned(socket);
       _socket = socket;
       socket.listen(_onFrame, onDone: _onClosed, onError: (_) => _onClosed());
       // A wrong token is not an HTTP 401: Zigbee2MQTT upgrades, then closes
@@ -74,6 +76,7 @@ class Z2mFrontendClient extends mc.MqttClient {
         const Duration(seconds: 5),
         onTimeout: () => false,
       );
+      if (attempt != _attempt) return _abandoned(socket);
       if (!ok) {
         _status
           ..state = mc.MqttConnectionState.faulted
@@ -94,6 +97,19 @@ class Z2mFrontendClient extends mc.MqttClient {
   }
 
   final _firstInfo = Completer<bool>();
+
+  /// Counts connect attempts; [disconnect] moves it on, so an attempt the
+  /// owner gave up on (the manager's budget ran out while waiting for
+  /// bridge/info) closes its socket instead of keeping it open and
+  /// buffering every frame for nobody.
+  var _attempt = 0;
+
+  mc.MqttClientConnectionStatus _abandoned(WebSocket socket) {
+    socket.close();
+    if (identical(_socket, socket)) _socket = null;
+    _status.state = mc.MqttConnectionState.disconnected;
+    return _status;
+  }
 
   void _onFrame(Object? data) {
     if (data is! String) return;
@@ -190,6 +206,7 @@ class Z2mFrontendClient extends mc.MqttClient {
 
   @override
   void disconnect() {
+    _attempt++;
     final wasConnected = _status.state == mc.MqttConnectionState.connected;
     _status.state = mc.MqttConnectionState.disconnected;
     _socket?.close();

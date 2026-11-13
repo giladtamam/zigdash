@@ -223,3 +223,13 @@ shortcuts do not change. Known gaps to close for release:
 2. Next feature release: route A behind "Connect through Home Assistant",
    with the credential handling above and its privacy text.
 3. After: route B for non-admin users, once verified on Home Assistant OS.
+
+## Port 80 (2026-11-06)
+
+Home Assistant OS installed since 2026.8 serves on port 80; Home Assistant Container and every older install keep 8123 ([http integration](https://www.home-assistant.io/integrations/http/)). ZigDash assumed 8123 wherever no port was given, so a new Home Assistant OS could only be reached through DNS-SD, which carries the port.
+
+- **A typed home address without a port** (`192.168.1.20`, `homeassistant.local`) is tried on 8123 and on port 80 at once; 8123 wins when both answer. Port 80 that nobody typed counts only when the page there is Home Assistant's (the hub probe's look): a router, a printer or an SMHUB answers on port 80 too, and the browser must not open on their error page. The address that worked goes into the field and onto the home, as for remote names since 3.3.4.
+- **A typed port is the only one tried**, including `:80`: Dart's `Uri` forgets a scheme's default port, and `192.168.1.20:80` used to go to 8123.
+- **Looking for Home Assistant** (the usual names and the sweep of the phone's `/24`) asks both ports of each address at once and says which answered. Measured on the home network: the `/24` on both ports in about 3 seconds.
+- **The setup scan's hub look** tries Home Assistant on 8123 and 80. An SMLIGHT page seen on port 80 is still reported only when SMLIGHT was asked for, and with the SMLIGHT pass on, port 80 is asked once per host.
+- **Not changed:** Import from Home Assistant still fills in `:8123` from the broker's address and tries only what is in the field; a home on port 80 needs the port taken out there.

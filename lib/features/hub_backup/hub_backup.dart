@@ -32,12 +32,18 @@ class HubBackupNoAnswer extends HubBackupAnswer {
   const HubBackupNoAnswer();
 }
 
+/// How long a backup request waits for Zigbee2MQTT. It first asks the
+/// coordinator for its own backup, in the same adapter queue as device
+/// requests, so right after a dashboard opens it can take well over the
+/// 30 seconds 3.3 to 3.5.2 waited (1 in 7 automatic backups ran out).
+const hubBackupWait = Duration(minutes: 2);
+
 /// Asks Zigbee2MQTT at [base] for its backup and waits for the answer with
 /// the same transaction.
 Future<HubBackupAnswer> requestHubBackup(
   HubLink link,
   String base, {
-  Duration within = const Duration(seconds: 30),
+  Duration within = hubBackupWait,
 }) async {
   final tx = 'zigdash-backup-${DateTime.now().millisecondsSinceEpoch}';
   final done = Completer<HubBackupAnswer>();
@@ -175,6 +181,32 @@ class HubBackupStore {
     return DateTime.utc(g(1), g(2), g(3), g(4), g(5), g(6));
   }
 }
+
+/// Waits until [lastAsked] (when the dashboard last asked a device for its
+/// state) is [quiet] in the past, so the automatic backup isn't queued
+/// behind those requests; gives up waiting after [atMost].
+Future<void> waitForQuiet(
+  DateTime? Function() lastAsked, {
+  Duration quiet = const Duration(seconds: 10),
+  Duration atMost = const Duration(seconds: 40),
+  Duration tick = const Duration(seconds: 1),
+  DateTime Function() now = DateTime.now,
+}) async {
+  final until = now().add(atMost);
+  while (now().isBefore(until)) {
+    final last = lastAsked();
+    if (last == null || now().difference(last) >= quiet) return;
+    await Future<void>.delayed(tick);
+  }
+}
+
+/// How long a backup took, in the buckets the usage data counts.
+String hubBackupTook(Duration d) => switch (d.inSeconds) {
+  < 10 => 'under_10s',
+  < 30 => '10_30s',
+  < 60 => '30_60s',
+  _ => 'over_60s',
+};
 
 /// How long a backup stays fresh before the automatic one takes another.
 const hubBackupEvery = Duration(hours: 24);

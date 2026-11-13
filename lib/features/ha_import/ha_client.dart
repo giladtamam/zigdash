@@ -5,7 +5,8 @@ import 'dart:io';
 import '../../mqtt/ha_address.dart';
 import 'ha_registry.dart';
 
-export '../../mqtt/ha_address.dart' show haBaseUri, haWebSocketUri;
+export '../../mqtt/ha_address.dart'
+    show haBaseCandidates, haBaseUri, haWebSocketUri;
 
 /// Why reading Home Assistant failed, for the import screen.
 enum HaReadError {

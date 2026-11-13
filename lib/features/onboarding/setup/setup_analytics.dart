@@ -13,6 +13,7 @@ SetupStep? setupStepFor(
   SetupState next, {
   SetupPlatform? platform,
   bool aiHelped = false,
+  bool? helpSeen,
 }) => switch (next) {
   SetupScanning() when previous is! SetupScanning => const SetupStep(
     SetupStepKind.started,
@@ -79,9 +80,13 @@ SetupStep? setupStepFor(
     vpn: network?.vpn,
     network: network?.kind,
   ),
-  SetupNeedsAuth(:final rejected) => SetupStep(
+  SetupNeedsAuth(:final rejected, :final page, :final brokerHost) => SetupStep(
     rejected ? SetupStepKind.loginRejected : SetupStepKind.needsLogin,
     platform: next.platform ?? platform,
+    // 3.4.1: why the page route didn't spare the login, and what the
+    // broker's machine is.
+    result: page,
+    hub: brokerHost,
   ),
   SetupFailed(:final kind, :final noNetwork) => SetupStep(
     SetupStepKind.failed,
@@ -100,6 +105,7 @@ SetupStep? setupStepFor(
     platform: platform,
     via: via,
     aiHelped: aiHelped,
+    helpSeen: helpSeen,
   ),
   _ => null,
 };

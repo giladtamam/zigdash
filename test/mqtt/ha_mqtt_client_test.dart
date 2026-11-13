@@ -18,6 +18,7 @@ class _FakeHa {
     this.admin = true,
     this.mqtt = true,
     this.refreshWorks = true,
+    this.refreshDelay = Duration.zero,
   });
 
   final String accessToken;
@@ -25,6 +26,9 @@ class _FakeHa {
   final bool admin;
   final bool mqtt;
   final bool refreshWorks;
+
+  /// How long the token exchange takes to answer.
+  final Duration refreshDelay;
 
   late HttpServer server;
   final received = <Map<String, Object?>>[];
@@ -38,6 +42,7 @@ class _FakeHa {
     server.listen((request) async {
       if (request.uri.path == '/auth/token') {
         refreshCalls++;
+        if (refreshDelay > Duration.zero) await Future<void>.delayed(refreshDelay);
         final body = Uri.splitQueryString(await utf8.decodeStream(request));
         final ok =
             refreshWorks &&
@@ -298,6 +303,31 @@ void main() {
     expect(pongs, greaterThanOrEqualTo(2));
     client.disconnect();
   });
+
+  test(
+    'disconnected mid-exchange: the attempt stops, no socket, no sign-in',
+    () async {
+      // The manager's budget ran out while the token exchange was still on
+      // its way: the attempt it gave up on must not finish on its own.
+      ha = _FakeHa(refreshDelay: const Duration(milliseconds: 300));
+      await ha.start();
+      final client = HaMqttClient(ha.wsUri, 'zd-test')
+        ..connectTimeoutPeriod = 3000
+        ..keepAlivePeriod = 1;
+      var dropped = 0;
+      client.onDisconnected = () => dropped++;
+      final attempt = client.connect(null, haStoredRefresh('refresh'));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      client.disconnect();
+      final status = await attempt;
+      expect(status?.state, mc.MqttConnectionState.disconnected);
+      await Future<void>.delayed(const Duration(milliseconds: 1500));
+      expect(ha.sockets, isEmpty);
+      expect(ha.received, isEmpty);
+      expect(dropped, 0);
+      expect(client.connectionStatus?.state, mc.MqttConnectionState.disconnected);
+    },
+  );
 
   test('the server closing the socket reports a disconnect', () async {
     ha = _FakeHa();

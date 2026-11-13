@@ -16,10 +16,24 @@ class Routes {
 
   /// Connecting through Home Assistant (docs/design/ha-route.md), with
   /// the address filled in when the scan saw Home Assistant.
+  /// "Nothing yet": what to get when no hub runs Zigbee2MQTT (3.4), with
+  /// where it was opened from (a `NoHubFrom` name).
+  static const setupNoHub = '/setup/no-hub';
+  static String setupNoHubFrom(String from) =>
+      Uri(path: setupNoHub, queryParameters: {'from': from}).toString();
+
   static const haConnect = '/setup/home-assistant';
   static String haConnectAt(String? host) => host == null
       ? haConnect
       : Uri(path: haConnect, queryParameters: {'host': host}).toString();
+
+  /// The Home Assistant sign-in opened by text shared to ZigDash from
+  /// another app (ha-share-paste.md), with the address it held, or with
+  /// none when it held no address.
+  static String haConnectShared(String? host) => Uri(
+    path: haConnect,
+    queryParameters: {'host': ?host, 'from': 'shared'},
+  ).toString();
 
   /// Connecting through Home Assistant from the no-Wi-Fi screen (3.1.9):
   /// no network to look on, so the address (a remote one) is typed.
@@ -40,8 +54,9 @@ class Routes {
   static const settingsLanguage = '/settings/language';
   static String settingsHome(String connectionId) =>
       '/settings/home/$connectionId';
-  static String homeRemote(String connectionId) =>
-      '/settings/home/$connectionId/remote';
+  /// Remote control; [fromDoor] when the dashboard's door opened it (3.4.4).
+  static String homeRemote(String connectionId, {bool fromDoor = false}) =>
+      '/settings/home/$connectionId/remote${fromDoor ? '?from=door' : ''}';
   /// The Automations tab (3.1.1): the fourth destination of a home.
   static String homeAutomations(String connectionId) =>
       '/connections/$connectionId/automations';
@@ -78,12 +93,19 @@ class Routes {
 
   /// Get help, opened [from] a place (an `HelpFrom` name), for a home or a
   /// setup error (a `SetupErrorKind` name) when there is one.
-  static String getHelpFrom(String from, {String? home, String? error}) => Uri(
+  static String getHelpFrom(
+    String from, {
+    String? home,
+    String? error,
+    String? platform,
+  }) => Uri(
     path: getHelp,
     queryParameters: {
       'from': from,
       if (home != null) 'home': home,
       if (error != null) 'error': error,
+      // 3.5.0: the setup platform answer, for the assistant's triage.
+      if (platform != null) 'platform': platform,
     },
   ).toString();
   static const deviceDiscovery =

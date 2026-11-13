@@ -26,14 +26,20 @@ class AppUpdateBridge {
   AppUpdateBridge() {
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'downloaded') _downloaded.add(null);
+      if (call.method == 'failed') _failed.add(null);
     });
   }
 
   static const _channel = MethodChannel('zigdash/update');
   final _downloaded = StreamController<void>.broadcast();
+  final _failed = StreamController<void>.broadcast();
 
   /// Fires when Play finished downloading the update.
   Stream<void> get downloaded => _downloaded.stream;
+
+  /// Play's download stopped short (failed or cancelled): the update is
+  /// still available, just not on its way.
+  Stream<void> get failed => _failed.stream;
 
   /// Play's answer, or null when it can't say (no Play, no network).
   Future<({bool available, int versionCode, bool downloaded})?> check() async {
@@ -87,6 +93,7 @@ final installedVersionCodeProvider = FutureProvider<int>(
 /// Play build, never.
 class AppUpdateController extends Notifier<AppUpdateState> {
   StreamSubscription<void>? _sub;
+  StreamSubscription<void>? _failedSub;
 
   @override
   AppUpdateState build() {
@@ -95,7 +102,15 @@ class AppUpdateController extends Notifier<AppUpdateState> {
     _sub = bridge.downloaded.listen((_) {
       state = AppUpdateState(AppUpdatePhase.ready, behind: state.behind);
     });
-    ref.onDispose(() => _sub?.cancel());
+    _failedSub = bridge.failed.listen((_) {
+      if (state.phase == AppUpdatePhase.downloading) {
+        state = AppUpdateState(AppUpdatePhase.available, behind: state.behind);
+      }
+    });
+    ref.onDispose(() {
+      _sub?.cancel();
+      _failedSub?.cancel();
+    });
     unawaited(_check(bridge));
     return AppUpdateState.none;
   }
@@ -115,6 +130,8 @@ class AppUpdateController extends Notifier<AppUpdateState> {
   }
 
   /// Starts Play's download; the banner shows it until Play says it's done.
+  /// Play answers only once its dialog closes, and false when the user said
+  /// no, so the banner never shows a download that isn't happening.
   Future<void> update() async {
     final started = await ref.read(appUpdateBridgeProvider).start();
     if (started) {

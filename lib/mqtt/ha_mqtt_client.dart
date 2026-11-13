@@ -88,6 +88,7 @@ class HaMqttClient extends mc.MqttClient {
     String? username,
     String? password,
   ]) async {
+    final attempt = ++_attempt;
     _status
       ..state = mc.MqttConnectionState.connecting
       ..returnCode = mc.MqttConnectReturnCode.noneSpecified;
@@ -98,6 +99,7 @@ class HaMqttClient extends mc.MqttClient {
     );
     // The exchange first, so the socket's budget is only the socket's.
     final access = await haAccessTokenFor(base, password ?? '');
+    if (attempt != _attempt) return _abandoned();
     final token = access.token;
     if (token == null) {
       return _fail(
@@ -118,6 +120,7 @@ class HaMqttClient extends mc.MqttClient {
       _status.state = mc.MqttConnectionState.faulted;
       rethrow;
     }
+    if (attempt != _attempt) return _abandoned(socket);
     _socket = socket;
     final auth = _auth = Completer<Map<String, Object?>>();
     socket.listen(
@@ -129,6 +132,7 @@ class HaMqttClient extends mc.MqttClient {
       Duration(milliseconds: connectTimeoutPeriod),
       onTimeout: () => const {},
     );
+    if (attempt != _attempt) return _abandoned(socket);
     if (hello['type'] != 'auth_ok') {
       await socket.close();
       return _fail(
@@ -142,8 +146,10 @@ class HaMqttClient extends mc.MqttClient {
     // Admin and the MQTT integration, found out now rather than on the
     // first real subscription.
     final user = await _call({'type': 'auth/current_user'});
+    if (attempt != _attempt) return _abandoned(socket);
     isAdmin = (user?['result'] as Map?)?['is_admin'] as bool?;
     final probe = await _call({'type': 'mqtt/subscribe', 'topic': probeTopic});
+    if (attempt != _attempt) return _abandoned(socket);
     if (probe?['success'] != true) {
       final code = ((probe?['error'] as Map?)?['code']).toString();
       await socket.close();
@@ -165,6 +171,20 @@ class HaMqttClient extends mc.MqttClient {
         (_) => _send({'type': 'ping'}),
       );
     }
+    return _status;
+  }
+
+  /// Counts connect attempts; [disconnect] moves it on, so an attempt the
+  /// owner gave up on (the manager's budget ran out mid-exchange) finds out
+  /// at its next step and stops, instead of finishing on its own: an open
+  /// socket, a sign-in and a ping timer that nobody holds.
+  var _attempt = 0;
+
+  mc.MqttClientConnectionStatus _abandoned([WebSocket? socket]) {
+    socket?.close();
+    _status
+      ..state = mc.MqttConnectionState.disconnected
+      ..returnCode = mc.MqttConnectReturnCode.noneSpecified;
     return _status;
   }
 
@@ -304,6 +324,7 @@ class HaMqttClient extends mc.MqttClient {
 
   @override
   void disconnect() {
+    _attempt++;
     _ping?.cancel();
     final wasConnected = _status.state == mc.MqttConnectionState.connected;
     _status.state = mc.MqttConnectionState.disconnected;

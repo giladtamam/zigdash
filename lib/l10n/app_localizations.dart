@@ -2682,18 +2682,6 @@ abstract class AppLocalizations {
   /// **'Two tries without a connection. Tell us which hub you have and what you typed, and we\'ll help you find it.'**
   String get guidedStuckBody;
 
-  /// No description provided for @guidedStuckTelegram.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask in Telegram'**
-  String get guidedStuckTelegram;
-
-  /// No description provided for @guidedStuckHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Tips and email'**
-  String get guidedStuckHelp;
-
   /// No description provided for @ladderTriedHint.
   ///
   /// In en, this message translates to:
@@ -2880,11 +2868,113 @@ abstract class AppLocalizations {
   /// **'What you need'**
   String get setupRunningWhatToGet;
 
-  /// No description provided for @setupAskNothing.
+  /// The fourth answer on the first screen (3.4): no hub, no Zigbee2MQTT yet.
   ///
   /// In en, this message translates to:
-  /// **'Nothing yet?'**
+  /// **'Nothing yet'**
   String get setupAskNothing;
+
+  /// No description provided for @setupAskNothingSub.
+  ///
+  /// In en, this message translates to:
+  /// **'No hub or Zigbee2MQTT yet, or still choosing'**
+  String get setupAskNothingSub;
+
+  /// App bar of the screen for people without a hub (3.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get noHubTitle;
+
+  /// No description provided for @noHubHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a hub that runs Zigbee2MQTT'**
+  String get noHubHeadline;
+
+  /// No description provided for @noHubIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash needs one small box at home running Zigbee2MQTT, the free software that talks to Zigbee devices. Pick one of the three ways below, pair your devices on its page, and ZigDash builds the dashboard. No cloud, no account.'**
+  String get noHubIntro;
+
+  /// First way to a hub: SMLIGHT's SMHUB, ready-made. Keep the product names.
+  ///
+  /// In en, this message translates to:
+  /// **'SMLIGHT SMHUB: the easy start'**
+  String get noHubSmhub;
+
+  /// No description provided for @noHubSmhubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A small box with Zigbee2MQTT and the broker built in. Plug it into your router and pair on its web page. Nothing to install.'**
+  String get noHubSmhubBody;
+
+  /// No description provided for @noHubPi.
+  ///
+  /// In en, this message translates to:
+  /// **'A Raspberry Pi or any Linux box'**
+  String get noHubPi;
+
+  /// No description provided for @noHubPiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Zigbee2MQTT and the Mosquitto broker yourself. About an hour, with Zigbee2MQTT\'s own guide.'**
+  String get noHubPiBody;
+
+  /// No description provided for @noHubHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get noHubHa;
+
+  /// No description provided for @noHubHaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.'**
+  String get noHubHaBody;
+
+  /// Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names.
+  ///
+  /// In en, this message translates to:
+  /// **'A Pi or Home Assistant also needs a Zigbee adapter, such as an SLZB-06 or a Sonoff dongle. The SMHUB has one built in.'**
+  String get noHubRadio;
+
+  /// No description provided for @noHubDemoNote.
+  ///
+  /// In en, this message translates to:
+  /// **'See how ZigDash works meanwhile, with a pretend home.'**
+  String get noHubDemoNote;
+
+  /// Button on the no-hub screen: one notification a week later.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me in a week'**
+  String get noHubRemind;
+
+  /// No description provided for @noHubRemindSet.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll remind you in a week, on this phone.'**
+  String get noHubRemindSet;
+
+  /// Back to the first screen to set the hub up.
+  ///
+  /// In en, this message translates to:
+  /// **'I have one now'**
+  String get noHubHaveOne;
+
+  /// Notification title a week after Remind me in a week (3.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Got your hub?'**
+  String get reminderHubTitle;
+
+  /// No description provided for @reminderHubBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash sets it up in about a minute. Open it at home, on your Wi-Fi.'**
+  String get reminderHubBody;
 
   /// No description provided for @setupAskHaWhich.
   ///
@@ -3117,8 +3207,86 @@ abstract class AppLocalizations {
   /// No description provided for @haConnectIntro.
   ///
   /// In en, this message translates to:
-  /// **'Your phone can\'t reach the broker, but it can reach Home Assistant. Sign in once, and ZigDash talks to Zigbee2MQTT through Home Assistant: at home or away, with no broker settings.'**
+  /// **'Sign in once with Home Assistant, and ZigDash talks to Zigbee2MQTT through it: at home or away, with no broker settings.'**
   String get haConnectIntro;
+
+  /// No description provided for @haNoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash couldn\'t find Home Assistant from this phone'**
+  String get haNoneTitle;
+
+  /// No description provided for @haNoneOffWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone isn\'t on Wi-Fi. Join your home Wi-Fi and tap Look again, or use the address you open Home Assistant with from outside.'**
+  String get haNoneOffWifi;
+
+  /// No description provided for @haNoneOnWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'It may be on another network, or you open it from outside (Nabu Casa, DuckDNS, your own domain).'**
+  String get haNoneOnWifi;
+
+  /// No description provided for @haNoneGetAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Get its address from Home Assistant:'**
+  String get haNoneGetAddress;
+
+  /// No description provided for @haNoneOpenApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the Home Assistant app'**
+  String get haNoneOpenApp;
+
+  /// No description provided for @haNoneAppStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'In the app, open Settings › Companion app.'**
+  String get haNoneAppStep1;
+
+  /// No description provided for @haNoneAppStep2Share.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your server, then the share icon at the top, and pick ZigDash.'**
+  String get haNoneAppStep2Share;
+
+  /// No description provided for @haNoneAppStep2Copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.'**
+  String get haNoneAppStep2Copy;
+
+  /// No description provided for @haNoneBrowserShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Home Assistant in the browser you use for it, then Share › ZigDash.'**
+  String get haNoneBrowserShare;
+
+  /// No description provided for @haNoneBrowserCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Home Assistant in the browser you use for it, copy the address from the address bar, then come back and tap Paste.'**
+  String get haNoneBrowserCopy;
+
+  /// No description provided for @haNoneTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Or type the address'**
+  String get haNoneTypeLabel;
+
+  /// No description provided for @haNoneLookAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Look again'**
+  String get haNoneLookAgain;
+
+  /// No description provided for @haNoneAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure? Ask the assistant'**
+  String get haNoneAssistant;
 
   /// No description provided for @haConnectAddressHelp.
   ///
@@ -3221,6 +3389,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This phone can\'t see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.'**
   String get haFindNone;
+
+  /// Button beside the Home Assistant address field: pastes the address that was copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get haPaste;
+
+  /// No description provided for @haPasteNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No address in what you copied.'**
+  String get haPasteNothing;
+
+  /// No description provided for @haSharedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address you shared. Sign in to connect.'**
+  String get haSharedNote;
+
+  /// No description provided for @haShareNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.'**
+  String get haShareNothing;
+
+  /// The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. From a browser, share the page to ZigDash.'**
+  String get haHandoverShare;
+
+  /// As haHandoverShare; 'Copy link' is Android's own button on the share sheet, in the phone's language.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.'**
+  String get haHandoverCopy;
 
   /// No description provided for @haConnectOtherNetwork.
   ///
@@ -5220,23 +5424,251 @@ abstract class AppLocalizations {
   /// **'Can\'t get it working? Tips first, then contact'**
   String get settingsGetHelpSubtitle;
 
-  /// No description provided for @settingsCommunity.
+  /// No description provided for @getHelpWarm.
   ///
   /// In en, this message translates to:
-  /// **'Join the ZigDash community'**
-  String get settingsCommunity;
+  /// **'Nothing found? Don\'t worry, I\'ll help you'**
+  String get getHelpWarm;
 
-  /// No description provided for @settingsCommunitySubtitle.
+  /// No description provided for @getHelpAskRunning.
   ///
   /// In en, this message translates to:
-  /// **'Telegram group: questions, ideas and what\'s coming'**
-  String get settingsCommunitySubtitle;
+  /// **'Is Zigbee2MQTT running somewhere in your home right now?'**
+  String get getHelpAskRunning;
 
-  /// No description provided for @getHelpCommunity.
+  /// No description provided for @getHelpEmailHint.
   ///
   /// In en, this message translates to:
-  /// **'Ask in the Telegram group'**
-  String get getHelpCommunity;
+  /// **'Your email, if you want an answer'**
+  String get getHelpEmailHint;
+
+  /// No description provided for @getHelpSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get getHelpSend;
+
+  /// No description provided for @getHelpSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get getHelpSending;
+
+  /// No description provided for @getHelpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent. I usually answer within 3 days if you left an email.'**
+  String get getHelpSent;
+
+  /// No description provided for @getHelpSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send. Share instead'**
+  String get getHelpSendFailed;
+
+  /// No description provided for @getHelpSendFailedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again in an hour, or share the details another way.'**
+  String get getHelpSendFailedNote;
+
+  /// No description provided for @getHelpRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try sending again'**
+  String get getHelpRetry;
+
+  /// No description provided for @getHelpShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share details'**
+  String get getHelpShare;
+
+  /// No description provided for @haConnectLooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for Home Assistant…'**
+  String get haConnectLooking;
+
+  /// No description provided for @assistantTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash assistant'**
+  String get assistantTitle;
+
+  /// No description provided for @assistantNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This answer comes from an AI service that sees your Support details. It never needs your passwords or addresses.'**
+  String get assistantNotice;
+
+  /// No description provided for @assistantOpeningScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Your scan on {network} tried {hosts} addresses and found {brokers} brokers.'**
+  String assistantOpeningScan(Object network, Object hosts, Object brokers);
+
+  /// No description provided for @assistantOpeningRunningYes.
+  ///
+  /// In en, this message translates to:
+  /// **'You said Zigbee2MQTT is running. Let\'s find it.'**
+  String get assistantOpeningRunningYes;
+
+  /// No description provided for @assistantOpeningRunningNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'You weren\'t sure whether Zigbee2MQTT runs. Let\'s find out.'**
+  String get assistantOpeningRunningNotSure;
+
+  /// No description provided for @assistantOpeningGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell me what you were trying to do, and I\'ll help you get connected.'**
+  String get assistantOpeningGeneric;
+
+  /// No description provided for @assistantThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking…'**
+  String get assistantThinking;
+
+  /// No description provided for @assistantResting.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant is resting right now. A person is still reachable below.'**
+  String get assistantResting;
+
+  /// No description provided for @assistantRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant can\'t answer that one. A person can, below.'**
+  String get assistantRefused;
+
+  /// No description provided for @assistantFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The assistant couldn\'t be reached. Check your connection, or ask a person below.'**
+  String get assistantFailed;
+
+  /// No description provided for @assistantRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get assistantRetry;
+
+  /// No description provided for @assistantReplyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask or answer here…'**
+  String get assistantReplyHint;
+
+  /// No description provided for @assistantTurnsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s the end of this conversation. A person can take it from here.'**
+  String get assistantTurnsUsed;
+
+  /// No description provided for @assistantHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'Did this help?'**
+  String get assistantHelped;
+
+  /// No description provided for @assistantHelpedYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get assistantHelpedYes;
+
+  /// No description provided for @assistantHelpedNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get assistantHelpedNo;
+
+  /// No description provided for @assistantTalkToPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a person'**
+  String get assistantTalkToPerson;
+
+  /// No description provided for @assistantHomeOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'{home} is connected and {count, plural, =0{no devices report} =1{1 device reports} other{{count} devices report}}. What do you need?'**
+  String assistantHomeOpening(String home, int count);
+
+  /// No description provided for @assistantHomeOpeningOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can\'t reach {home} right now. What do you need?'**
+  String assistantHomeOpeningOffline(String home);
+
+  /// No description provided for @assistantChipDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'A device stopped responding'**
+  String get assistantChipDevice;
+
+  /// No description provided for @assistantChipTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a tile'**
+  String get assistantChipTile;
+
+  /// No description provided for @assistantChipAutomations.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations'**
+  String get assistantChipAutomations;
+
+  /// No description provided for @assistantChipUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Home can\'t be reached'**
+  String get assistantChipUnreachable;
+
+  /// No description provided for @helpBubbleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Need help?'**
+  String get helpBubbleLabel;
+
+  /// No description provided for @helpBubbleHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get helpBubbleHide;
+
+  /// No description provided for @helpBubbleHideSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide this bubble'**
+  String get helpBubbleHideSheet;
+
+  /// No description provided for @helpBubbleHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden. Bring it back in Settings › Get help.'**
+  String get helpBubbleHidden;
+
+  /// No description provided for @settingsHelpBubble.
+  ///
+  /// In en, this message translates to:
+  /// **'Help bubble on the home screen'**
+  String get settingsHelpBubble;
+
+  /// No description provided for @settingsHelpBubbleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the assistant from a dashboard'**
+  String get settingsHelpBubbleSubtitle;
+
+  /// No description provided for @getHelpReportPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What was wrong with the assistant\'s answer?'**
+  String get getHelpReportPrompt;
 
   /// No description provided for @demoBannerHelp.
   ///
@@ -5850,35 +6282,11 @@ abstract class AppLocalizations {
   /// **'What should ZigDash do next?'**
   String get pollTitle;
 
-  /// Under the poll title, for people who share usage data.
+  /// Under the poll title, for people who share usage data. Several choices can be picked.
   ///
   /// In en, this message translates to:
-  /// **'Pick the one you\'d use most. Your answer is sent with your anonymous usage data.'**
+  /// **'Pick any you\'d use. Your answers are sent with your anonymous usage data.'**
   String get pollBody;
-
-  /// Poll choice: alerts on the phone (door opened, leak…).
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications'**
-  String get pollNotifications;
-
-  /// Poll choice: graphs of past readings.
-  ///
-  /// In en, this message translates to:
-  /// **'History graphs'**
-  String get pollHistory;
-
-  /// Poll choice: a full-screen mode for a wall tablet.
-  ///
-  /// In en, this message translates to:
-  /// **'Kiosk mode for a wall tablet'**
-  String get pollKiosk;
-
-  /// Poll choice: control Zigbee2MQTT groups.
-  ///
-  /// In en, this message translates to:
-  /// **'Zigbee groups'**
-  String get pollGroups;
 
   /// Hides the poll for good.
   ///
@@ -5891,6 +6299,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thanks! That helps decide what comes next.'**
   String get pollThanks;
+
+  /// Poll choice: put new Zigbee devices in pairing mode and add them from the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair new devices from ZigDash'**
+  String get pollPair;
+
+  /// Poll choice: change a device's settings (calibration, reporting) and update its firmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Device settings and firmware updates'**
+  String get pollDeviceSettings;
+
+  /// Poll choice: work with Home Assistant's own Zigbee (ZHA) instead of Zigbee2MQTT.
+  ///
+  /// In en, this message translates to:
+  /// **'Work with ZHA, without Zigbee2MQTT'**
+  String get pollZha;
+
+  /// Poll choice: control the home by asking an AI assistant such as Claude or ChatGPT.
+  ///
+  /// In en, this message translates to:
+  /// **'Control my home from my AI assistant'**
+  String get pollAiAssistant;
+
+  /// Poll choice; also opens Request a feature to say what.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get pollOther;
+
+  /// Button that sends the picked poll choices.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get pollSend;
+
+  /// Settings row under 'What should ZigDash do next?', which opens the poll.
+  ///
+  /// In en, this message translates to:
+  /// **'Vote for what comes next'**
+  String get settingsPollSubtitle;
 
   /// One-time dashboard card after the first setup, asking why the user tried the app.
   ///
@@ -8208,24 +8658,6 @@ abstract class AppLocalizations {
   /// **'Control your home from anywhere'**
   String get remoteIntroTitle;
 
-  /// No description provided for @remoteOfferBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Reach your devices when you\'re away, through ZigDash\'s encrypted relay. Part of Pro: one payment, no monthly fee. Set it up while you\'re at home.'**
-  String get remoteOfferBody;
-
-  /// No description provided for @remoteOfferBodyPro.
-  ///
-  /// In en, this message translates to:
-  /// **'You have Pro: turn on remote control while you\'re at home, then reach your devices from anywhere.'**
-  String get remoteOfferBodyPro;
-
-  /// No description provided for @remoteOfferShow.
-  ///
-  /// In en, this message translates to:
-  /// **'Show me'**
-  String get remoteOfferShow;
-
   /// No description provided for @remoteIntroBody.
   ///
   /// In en, this message translates to:
@@ -8939,6 +9371,486 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The backup was written, but Zigbee2MQTT hasn\'t started again. Restart it on the hub, then check it here.'**
   String get hubBackupRestoreNotBack;
+
+  /// No description provided for @guideIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s find it together, one step at a time.'**
+  String get guideIntro;
+
+  /// No description provided for @guideStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String guideStep(int step, int total);
+
+  /// No description provided for @guideNotHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t help'**
+  String get guideNotHelped;
+
+  /// No description provided for @guideBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get guideBack;
+
+  /// No description provided for @guideSkipToHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to help'**
+  String get guideSkipToHelp;
+
+  /// No description provided for @guideVpnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off the VPN'**
+  String get guideVpnTitle;
+
+  /// No description provided for @guideIsolatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join your main Wi-Fi'**
+  String get guideIsolatedTitle;
+
+  /// No description provided for @guideHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub is here'**
+  String get guideHubTitle;
+
+  /// No description provided for @guideWhichTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you open to add a Zigbee device?'**
+  String get guideWhichTitle;
+
+  /// No description provided for @guideWhichHa.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant'**
+  String get guideWhichHa;
+
+  /// No description provided for @guideWhichZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT\'s own page'**
+  String get guideWhichZ2m;
+
+  /// No description provided for @guideWhichSmlight.
+  ///
+  /// In en, this message translates to:
+  /// **'My SMLIGHT hub\'s page'**
+  String get guideWhichSmlight;
+
+  /// No description provided for @guideWhichNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get guideWhichNothing;
+
+  /// No description provided for @guideHaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to Home Assistant'**
+  String get guideHaTitle;
+
+  /// No description provided for @guideHaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can connect through Home Assistant with the login you already use there. No broker password needed.'**
+  String get guideHaBody;
+
+  /// No description provided for @guideZhaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Using ZHA?'**
+  String get guideZhaTitle;
+
+  /// No description provided for @guideRunningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Is Zigbee2MQTT running?'**
+  String get guideRunningTitle;
+
+  /// No description provided for @guideNotYetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Zigbee2MQTT first'**
+  String get guideNotYetTitle;
+
+  /// No description provided for @guideZ2mPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Zigbee2MQTT\'s page'**
+  String get guideZ2mPageTitle;
+
+  /// No description provided for @guideZ2mPageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash asks Zigbee2MQTT where its broker is. Type the page\'s address as your browser shows it, for example 192.168.1.20:8080.'**
+  String get guideZ2mPageBody;
+
+  /// No description provided for @guideWiderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Look on the whole network'**
+  String get guideWiderTitle;
+
+  /// No description provided for @guideWiderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash looked at the addresses next to your phone. Mesh Wi-Fi and bigger routers use more of them. Looking at all of them takes about a minute.'**
+  String get guideWiderBody;
+
+  /// No description provided for @guideAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the address yourself'**
+  String get guideAddressTitle;
+
+  /// No description provided for @guideHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get you help'**
+  String get guideHelpTitle;
+
+  /// No description provided for @guideHelpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Still nothing? Don\'t stop here. Ask your AI assistant with the write-up ZigDash prepares, or ask us: every message gets an answer.'**
+  String get guideHelpBody;
+
+  /// No description provided for @loginGuideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No MQTT login? Make one'**
+  String get loginGuideTitle;
+
+  /// No description provided for @loginGuidePick.
+  ///
+  /// In en, this message translates to:
+  /// **'Where does your broker run?'**
+  String get loginGuidePick;
+
+  /// No description provided for @loginGuideHa1.
+  ///
+  /// In en, this message translates to:
+  /// **'In Home Assistant, open your profile (your name at the bottom of the sidebar) and turn on Advanced mode.'**
+  String get loginGuideHa1;
+
+  /// No description provided for @loginGuideHa2.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings › People, open the Users tab and tap Add user.'**
+  String get loginGuideHa2;
+
+  /// No description provided for @loginGuideHa3.
+  ///
+  /// In en, this message translates to:
+  /// **'Name it, for example zigdash, set a password and create it. It doesn\'t need to be an administrator.'**
+  String get loginGuideHa3;
+
+  /// No description provided for @loginGuideHa4.
+  ///
+  /// In en, this message translates to:
+  /// **'Type its username here (the one under Username, in small letters, not the display name) and its password. The names homeassistant and addons don\'t work.'**
+  String get loginGuideHa4;
+
+  /// No description provided for @loginGuidePi1.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT already logs in: its configuration.yaml has the user and password under mqtt. You can use those.'**
+  String get loginGuidePi1;
+
+  /// No description provided for @loginGuidePi2.
+  ///
+  /// In en, this message translates to:
+  /// **'Or make a new user on the machine that runs Mosquitto. It asks for the password twice:'**
+  String get loginGuidePi2;
+
+  /// No description provided for @loginGuidePi3.
+  ///
+  /// In en, this message translates to:
+  /// **'Then restart Mosquitto:'**
+  String get loginGuidePi3;
+
+  /// No description provided for @loginGuidePi4.
+  ///
+  /// In en, this message translates to:
+  /// **'In Docker, run both inside the container, with the file that mosquitto.conf names under password_file:'**
+  String get loginGuidePi4;
+
+  /// No description provided for @loginGuideSmlight1.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the hub\'s web page and go to Settings › MQTT.'**
+  String get loginGuideSmlight1;
+
+  /// No description provided for @loginGuideSmlight2.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the username and password shown there, or turn on Allow Anonymous and save.'**
+  String get loginGuideSmlight2;
+
+  /// No description provided for @loginGuideSmlight3.
+  ///
+  /// In en, this message translates to:
+  /// **'With Allow Anonymous on, no login is needed:'**
+  String get loginGuideSmlight3;
+
+  /// No description provided for @loginTryAnonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'Try without a login'**
+  String get loginTryAnonymous;
+
+  /// No description provided for @loginCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get loginCopied;
+
+  /// Banner after a device was switched from the app in a few sessions; offers a home-screen widget or a Quick Settings tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch {name} without opening ZigDash'**
+  String shortcutNudge(Object name);
+
+  /// No description provided for @shortcutNudgeLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get shortcutNudgeLater;
+
+  /// No description provided for @shortcutNudgeTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Settings'**
+  String get shortcutNudgeTile;
+
+  /// No description provided for @shortcutNudgeWidget.
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen'**
+  String get shortcutNudgeWidget;
+
+  /// No description provided for @haWhereAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Where do you open Home Assistant?'**
+  String get haWhereAsk;
+
+  /// No description provided for @haWhereHome.
+  ///
+  /// In en, this message translates to:
+  /// **'At home'**
+  String get haWhereHome;
+
+  /// No description provided for @haWhereNabuCasa.
+  ///
+  /// In en, this message translates to:
+  /// **'Nabu Casa'**
+  String get haWhereNabuCasa;
+
+  /// No description provided for @haWhereDuckDns.
+  ///
+  /// In en, this message translates to:
+  /// **'DuckDNS'**
+  String get haWhereDuckDns;
+
+  /// No description provided for @haWhereOwnDomain.
+  ///
+  /// In en, this message translates to:
+  /// **'Own domain / Cloudflare'**
+  String get haWhereOwnDomain;
+
+  /// No description provided for @haWhereHomeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At home its address looks like 192.168.1.20:8123. Find it in Home Assistant under Settings › System › Network, or in the Home Assistant app under Settings › Companion app › your server. This phone must be on the same Wi-Fi.'**
+  String get haWhereHomeHelp;
+
+  /// No description provided for @haWhereNabuCasaHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'In Home Assistant, open Settings › Home Assistant Cloud and copy the address under Remote access: https://….ui.nabu.casa. It works from anywhere.'**
+  String get haWhereNabuCasaHelp;
+
+  /// No description provided for @haWhereDuckDnsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The name you chose on duckdns.org, with Home Assistant\'s port: myhome.duckdns.org:8123. It works from anywhere.'**
+  String get haWhereDuckDnsHelp;
+
+  /// No description provided for @haWhereOwnDomainHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it\'s the hostname you set for Home Assistant in Cloudflare. It works from anywhere.'**
+  String get haWhereOwnDomainHelp;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'How this phone reaches home'**
+  String get remoteNowTitle;
+
+  /// No description provided for @remoteNowHome.
+  ///
+  /// In en, this message translates to:
+  /// **'At home, straight to your broker at {address}'**
+  String remoteNowHome(String address);
+
+  /// No description provided for @remoteNowOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Away, through your own address {address}'**
+  String remoteNowOwn(String address);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Away, through ZigDash\'s relay'**
+  String get remoteNowRelay;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to your home right now'**
+  String get remoteNowOffline;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Two ways to reach home from away'**
+  String get remoteWaysTitle;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Your own address'**
+  String get remoteWayOwnTitle;
+
+  /// No description provided for @remoteWayOwnSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Free. Set to {address}.'**
+  String remoteWayOwnSet(String address);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Free. Tailscale, a VPN or a forwarded port: add its address to this home\'s connection.'**
+  String get remoteWayOwnUnset;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Through ZigDash\'s encrypted relay. No VPN, nothing to open on your router. Part of Pro.'**
+  String get remoteWayRelayBody;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'What it takes'**
+  String get remoteStepsTitle;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine on your hub (free)'**
+  String get remoteStepEngine;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed yet. Install it under Automations.'**
+  String get remoteStepEngineInstall;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'This hub\'s Zigbee2MQTT is too old for it. Update Zigbee2MQTT first.'**
+  String get remoteStepEngineTooOld;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Checked when you\'re home'**
+  String get remoteStepEngineLater;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Installed when this phone last saw your hub'**
+  String get remoteStepEngineSeen;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get remoteStepDone;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'One payment, no monthly fee'**
+  String get remoteStepProNeeded;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn it on when you\'re home'**
+  String get remoteStepOnLater;
+
+  /// No description provided for @remoteSeePro.
+  ///
+  /// In en, this message translates to:
+  /// **'See Pro · {price}'**
+  String remoteSeePro(String price);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'This home is reached through Home Assistant. Away from home it works when your Home Assistant address does.'**
+  String get remoteUnfitHa;
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'This home is reached through Zigbee2MQTT\'s own page. Remote control needs a home connected to its broker.'**
+  String get remoteUnfitZ2m;
+
+  /// No description provided for @proSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale: {percent}% off until {date}'**
+  String proSale(int percent, String date);
+
+  /// No description provided for @proSaleNoEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale: {percent}% off'**
+  String proSaleNoEnd(int percent);
+
+  /// Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md).
+  ///
+  /// In en, this message translates to:
+  /// **'The sale has ended. This is the price now.'**
+  String get proSaleEnded;
+
+  /// Sale card on the Devices tab (3.4.6, docs/design/devices-sale-card.md).
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Pro: control your home from anywhere, and more.'**
+  String get saleCardRemote;
+
+  /// No description provided for @saleCardHomeAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Pro: longer history, more automations, and more.'**
+  String get saleCardHomeAssistant;
 }
 
 class _AppLocalizationsDelegate

@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">Éteint</string>
     <string name="widget_group_sample_3">Volets</string>
     <string name="widget_group_sample_scene">Nuit</string>
+    <string name="share_ha_label">Connecter Home Assistant</string>
 </resources>

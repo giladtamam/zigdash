@@ -1,0 +1,5 @@
+Fixed: after Zigbee2MQTT restarted, or ZigDash Engine updated itself, an automation could run once for a state that already held, such as "door open, light on" at the next report. The Engine (3.4.5) now starts from what Zigbee2MQTT last saw. Installed hubs update on their own.
+
+Fixed: a Home Assistant or Zigbee2MQTT-page connection that ZigDash had given up on could finish on its own and stay open in the background.
+
+Fixed: the update banner could stay on "Downloading" after "No thanks".

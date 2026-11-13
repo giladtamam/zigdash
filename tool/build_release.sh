@@ -28,6 +28,18 @@ if [[ -z "$KEY" && -f tool/.analytics_key ]]; then KEY="$(tr -d '[:space:]' < to
 DEFINES=()
 if [[ -n "$KEY" ]]; then DEFINES+=(--dart-define=ZIGDASH_ANALYTICS_KEY="$KEY"); else echo "note: no analytics key, building without analytics"; fi
 
+# ZIGDASH_ANALYTICS_SELFHOST=1 sends events to the self-hosted Aptabase on
+# the Pi (aptabase.giladha.com) instead of the cloud: the key comes from
+# tool/.analytics_key_selfhost (A-SH-…) and the host is passed alongside,
+# since the SDK refuses a self-hosted key without one. Default stays the cloud.
+if [[ "${ZIGDASH_ANALYTICS_SELFHOST:-0}" == 1 ]]; then
+  [[ -f tool/.analytics_key_selfhost ]] || { echo "ZIGDASH_ANALYTICS_SELFHOST=1 needs tool/.analytics_key_selfhost" >&2; exit 1; }
+  KEY="$(tr -d '[:space:]' < tool/.analytics_key_selfhost)"
+  HOST="${ZIGDASH_ANALYTICS_HOST:-https://aptabase.giladha.com}"
+  DEFINES=(--dart-define=ZIGDASH_ANALYTICS_KEY="$KEY" --dart-define=ZIGDASH_ANALYTICS_HOST="$HOST")
+  echo "note: analytics go to the self-hosted Aptabase at $HOST"
+fi
+
 # The Play build carries billing for ZigDash Pro (history-2.7.md). Pro has
 # been on sale since 2.9: a Play build without ZIGDASH_PRO_LIVE hides Pro from
 # the people who bought it (3.1.12 to 3.2.1 shipped so). On by default;

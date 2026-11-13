@@ -15,4 +15,5 @@
     <string name="widget_group_sample_off">Uit</string>
     <string name="widget_group_sample_3">Rolluiken</string>
     <string name="widget_group_sample_scene">Nacht</string>
+    <string name="share_ha_label">Home Assistant verbinden</string>
 </resources>
