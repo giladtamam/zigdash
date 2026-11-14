@@ -37,6 +37,7 @@ import '../../kiosk/wall_display_sheet.dart';
 import '../widgets/export_dialog.dart';
 import '../../../alerts/alerts_paused_banner.dart';
 import '../../../engine/automations_paused_chip.dart';
+import '../widgets/chat_early_card.dart';
 import '../widgets/poll_card.dart';
 import '../../../remote/remote_door.dart';
 import '../widgets/connection_status_banner.dart';
@@ -243,7 +244,13 @@ class _DashboardsTabbed extends ConsumerWidget {
                                 if (wide && !demo)
                                   _StatusChip(
                                     status: connectionStatus,
-                                    endpoint: ref.watch(connectionEndpointProvider(connectionId)).valueOrNull,
+                                    endpoint: ref
+                                        .watch(
+                                          connectionEndpointProvider(
+                                            connectionId,
+                                          ),
+                                        )
+                                        .valueOrNull,
                                   ),
                                 RemoteDoor(connectionId: connectionId),
                                 IconButton(
@@ -298,7 +305,12 @@ class _DashboardsTabbed extends ConsumerWidget {
                       const UpdateBanner(),
                       HaImportOfferCard(connectionId: connectionId),
                       AnalyticsConsentCard(connectionId: connectionId),
-                      PollCard(connectionId: connectionId),
+                      // 3.5.4: on Play the early-access card takes the
+                      // poll's slot for good; the poll stays in Settings.
+                      if (ref.watch(chatEarlyOfferedProvider))
+                        ChatEarlyCard(connectionId: connectionId)
+                      else
+                        PollCard(connectionId: connectionId),
                     ],
                     AlertsPausedBanner(connectionId: connectionId),
                     AutomationsPausedBanner(connectionId: connectionId),

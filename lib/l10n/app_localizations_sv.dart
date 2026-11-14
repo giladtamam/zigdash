@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5586,4 +5587,76 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: längre historik, fler automatiseringar och mer.';
+
+  @override
+  String get chatEarlyTitle => 'Chatta med ditt hem';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Skicka ett meddelande som \"stäng persiennen på kontoret\" eller \"är bakdörren öppen?\" så svarar ditt hem. Vi bestämmer oss för om vi ska bygga det. Om vi gör det får de första $count som anmäler sig det gratis i 3 månader, fjärråtkomst ingår.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Anmäl dig på Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Anmäl dig via e-post';
+
+  @override
+  String get chatEarlyNotForMe => 'Inte för mig';
+
+  @override
+  String get chatEarlyClose => 'Stäng';
+
+  @override
+  String get chatEarlyEmailHint => 'Din e-post';
+
+  @override
+  String get chatEarlyBadEmail => 'Det ser inte ut som en e-postadress.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'Vi använder den bara för att bjuda in dig till betan och berätta priset.';
+
+  @override
+  String get chatEarlyPrivacy => 'Integritet';
+
+  @override
+  String get chatEarlySend => 'Skicka';
+
+  @override
+  String get chatEarlyFailed =>
+      'Det gick inte att skicka. Prova Telegram, eller senare.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Du är nr $position på listan: bland de första $count. Om vi bygger det får du det gratis i 3 månader.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Du är nr $position på listan. De första $count platserna är tagna; du får veta först när det är klart.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Den här e-postadressen finns redan på listan.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Skulle 2,49 € i månaden vara okej efter de gratis månaderna?';
+
+  @override
+  String get chatEarlyYes => 'Ja';
+
+  @override
+  String get chatEarlyMaybe => 'Kanske';
+
+  @override
+  String get chatEarlyNo => 'Nej';
+
+  @override
+  String get chatEarlyThanks => 'Tack, noterat.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Tidig åtkomst: anmäl dig';
 }

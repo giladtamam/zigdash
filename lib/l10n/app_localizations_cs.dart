@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5576,4 +5577,76 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: delší historie, více automatizací a ještě víc.';
+
+  @override
+  String get chatEarlyTitle => 'Chatujte se svým domovem';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Rozhodujeme se, jestli to postavíme. Pokud ano, prvních $count přihlášených to dostane na 3 měsíce zdarma, včetně vzdáleného přístupu.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Přihlásit přes Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Přihlásit e-mailem';
+
+  @override
+  String get chatEarlyNotForMe => 'Není pro mě';
+
+  @override
+  String get chatEarlyClose => 'Zavřít';
+
+  @override
+  String get chatEarlyEmailHint => 'Váš e-mail';
+
+  @override
+  String get chatEarlyBadEmail => 'To nevypadá jako e-mailová adresa.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'Použijeme ho jen k pozvání do bety a sdělení ceny.';
+
+  @override
+  String get chatEarlyPrivacy => 'Ochrana soukromí';
+
+  @override
+  String get chatEarlySend => 'Odeslat';
+
+  @override
+  String get chatEarlyFailed =>
+      'Odeslání se nezdařilo. Zkuste Telegram nebo později.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Jste č. $position na seznamu: mezi prvními $count. Pokud to postavíme, dostanete to na 3 měsíce zdarma.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Jste č. $position na seznamu. Prvních $count míst je obsazeno; dozvíte se to jako první, až to bude hotové.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Tento e-mail už na seznamu je.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Bylo by po bezplatných měsících v pořádku 2,49 € měsíčně?';
+
+  @override
+  String get chatEarlyYes => 'Ano';
+
+  @override
+  String get chatEarlyMaybe => 'Možná';
+
+  @override
+  String get chatEarlyNo => 'Ne';
+
+  @override
+  String get chatEarlyThanks => 'Díky, zaznamenáno.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Předběžný přístup: přihlásit se';
 }

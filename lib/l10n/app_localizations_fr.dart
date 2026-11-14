@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5623,4 +5624,76 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro : historique plus long, plus d\'automatisations, et plus encore.';
+
+  @override
+  String get chatEarlyTitle => 'Discuter avec votre maison';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Envoyez un message comme « ferme le volet du bureau » ou « la porte arrière est-elle ouverte ? » et votre maison répond. Nous décidons encore si nous le construisons. Si oui, les $count premiers inscrits l\'auront gratuitement pendant 3 mois, accès à distance compris.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'S\'inscrire sur Telegram';
+
+  @override
+  String get chatEarlyEmail => 'S\'inscrire par e-mail';
+
+  @override
+  String get chatEarlyNotForMe => 'Pas pour moi';
+
+  @override
+  String get chatEarlyClose => 'Fermer';
+
+  @override
+  String get chatEarlyEmailHint => 'Votre e-mail';
+
+  @override
+  String get chatEarlyBadEmail => 'Cela ne ressemble pas à une adresse e-mail.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'Nous l\'utiliserons uniquement pour vous inviter à la bêta et vous en donner le prix.';
+
+  @override
+  String get chatEarlyPrivacy => 'Confidentialité';
+
+  @override
+  String get chatEarlySend => 'Envoyer';
+
+  @override
+  String get chatEarlyFailed =>
+      'Envoi impossible. Essayez Telegram, ou plus tard.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Vous êtes n° $position sur la liste : parmi les $count premiers. Si nous le construisons, vous l\'aurez gratuitement pendant 3 mois.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Vous êtes n° $position sur la liste. Les $count premières places sont prises ; vous serez prévenu en premier quand ce sera prêt.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Cet e-mail est déjà sur la liste.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Après les mois gratuits, 2,49 € par mois vous conviendrait-il ?';
+
+  @override
+  String get chatEarlyYes => 'Oui';
+
+  @override
+  String get chatEarlyMaybe => 'Peut-être';
+
+  @override
+  String get chatEarlyNo => 'Non';
+
+  @override
+  String get chatEarlyThanks => 'Merci, c\'est noté.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Accès anticipé : s\'inscrire';
 }

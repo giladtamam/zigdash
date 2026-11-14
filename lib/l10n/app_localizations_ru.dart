@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5583,4 +5584,76 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: более длинная история, больше автоматизаций и не только.';
+
+  @override
+  String get chatEarlyTitle => 'Чат с вашим домом';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Напишите, например, «закрой штору в кабинете» или «задняя дверь открыта?», и дом ответит. Мы решаем, делать ли это. Если сделаем, первые $count записавшихся получат это бесплатно на 3 месяца, вместе с удалённым доступом.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Записаться в Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Записаться по почте';
+
+  @override
+  String get chatEarlyNotForMe => 'Не для меня';
+
+  @override
+  String get chatEarlyClose => 'Закрыть';
+
+  @override
+  String get chatEarlyEmailHint => 'Ваша почта';
+
+  @override
+  String get chatEarlyBadEmail => 'Это не похоже на адрес почты.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'Мы используем её только чтобы пригласить вас в бету и сообщить цену.';
+
+  @override
+  String get chatEarlyPrivacy => 'Конфиденциальность';
+
+  @override
+  String get chatEarlySend => 'Отправить';
+
+  @override
+  String get chatEarlyFailed =>
+      'Не удалось отправить. Попробуйте Telegram или позже.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Вы №$position в списке: среди первых $count. Если мы это сделаем, вы получите это бесплатно на 3 месяца.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Вы №$position в списке. Первые $count мест заняты; вы узнаете первыми, когда всё будет готово.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Эта почта уже в списке.';
+
+  @override
+  String get chatEarlyPrice =>
+      'После бесплатных месяцев 2,49 € в месяц — нормально?';
+
+  @override
+  String get chatEarlyYes => 'Да';
+
+  @override
+  String get chatEarlyMaybe => 'Возможно';
+
+  @override
+  String get chatEarlyNo => 'Нет';
+
+  @override
+  String get chatEarlyThanks => 'Спасибо, учтём.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Ранний доступ: записаться';
 }
