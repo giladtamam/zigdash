@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5690,4 +5689,41 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Früher Zugang: auf die Liste';
+
+  @override
+  String get historyOnTitle => 'Dein Zuhause über Tage sehen';
+
+  @override
+  String get historyOnBody =>
+      'Schalte den Verlauf ein, um Temperaturen, Strom und Türen über Tage und Wochen zu sehen, nicht nur jetzt. ZigDash Engine zeichnet auf deinem Hub auf, auch wenn dein Handy aus ist.';
+
+  @override
+  String get historyOnTurnOn => 'Verlauf einschalten';
+
+  @override
+  String get historyOnLater => 'Nicht jetzt';
+
+  @override
+  String get historyOnWorking => 'Verlauf wird eingeschaltet…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine zeichnet den Verlauf auf deinem Hub auf, also auch, wenn dein Handy aus ist. Dein Zigbee2MQTT blockiert Erweiterungen, wie bei neuen Installationen üblich: ZigDash würde „Externes JavaScript erlauben“ einschalten und es neu starten.';
+
+  @override
+  String get historyOnAllow => 'Erlauben und neu starten';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Der Verlauf wird über deinen MQTT-Broker aufgezeichnet. ZigDash erreicht dieses Zuhause über die Zigbee2MQTT-Seite, füge also zuerst den Broker hinzu.';
+
+  @override
+  String get historyOnAddBroker => 'Broker hinzufügen';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Dein Hub kann ZigDash Engine nicht ausführen. Stattdessen kann dieses Handy aufzeichnen, solange ZigDash geöffnet ist: am besten ein Wandtablet, das an bleibt.';
+
+  @override
+  String get historyOnPhone => 'Auf diesem Handy aufzeichnen';
 }

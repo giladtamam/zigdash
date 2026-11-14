@@ -1676,5 +1676,16 @@
   "chatEarlyMaybe": "Talvez",
   "chatEarlyNo": "Não",
   "chatEarlyThanks": "Obrigado, anotado.",
-  "settingsChatEarlySubtitle": "Acesso antecipado: inscreva-se"
+  "settingsChatEarlySubtitle": "Acesso antecipado: inscreva-se",
+  "historyOnTitle": "Veja a sua casa ao longo dos dias",
+  "historyOnBody": "Ative o histórico para ver temperaturas, consumo e portas ao longo de dias e semanas, não só agora. O ZigDash Engine grava no seu hub, mesmo com o celular desligado.",
+  "historyOnTurnOn": "Ativar histórico",
+  "historyOnLater": "Agora não",
+  "historyOnWorking": "Ativando o histórico…",
+  "historyOnConsentBody": "O ZigDash Engine grava o histórico no seu hub, então continua mesmo com o celular desligado. Seu Zigbee2MQTT bloqueia complementos, como em instalações novas: o ZigDash ativaria \"Permitir JavaScript externo\" e o reiniciaria.",
+  "historyOnAllow": "Permitir e reiniciar",
+  "historyOnBrokerBody": "O histórico passa pelo seu broker MQTT. O ZigDash acessa esta casa pela página do Zigbee2MQTT, então adicione o broker primeiro.",
+  "historyOnAddBroker": "Adicionar o broker",
+  "historyOnPhoneBody": "Seu hub não consegue rodar o ZigDash Engine. Este celular pode gravar no lugar enquanto o ZigDash estiver aberto: melhor num tablet de parede sempre ligado.",
+  "historyOnPhone": "Gravar neste celular"
 }

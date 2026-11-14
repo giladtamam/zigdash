@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5680,4 +5679,41 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Accesso anticipato: iscriviti';
+
+  @override
+  String get historyOnTitle => 'Guarda la tua casa nei giorni';
+
+  @override
+  String get historyOnBody =>
+      'Attiva la cronologia per vedere temperature, consumi e porte nei giorni e nelle settimane, non solo ora. ZigDash Engine registra sul tuo hub, anche a telefono spento.';
+
+  @override
+  String get historyOnTurnOn => 'Attiva cronologia';
+
+  @override
+  String get historyOnLater => 'Non ora';
+
+  @override
+  String get historyOnWorking => 'Attivazione della cronologia…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine registra la cronologia sul tuo hub, quindi continua anche a telefono spento. Il tuo Zigbee2MQTT blocca le estensioni, come le nuove installazioni: ZigDash attiverebbe «Consenti JavaScript esterno» e lo riavvierebbe.';
+
+  @override
+  String get historyOnAllow => 'Consenti e riavvia';
+
+  @override
+  String get historyOnBrokerBody =>
+      'La cronologia passa dal tuo broker MQTT. ZigDash raggiunge questa casa tramite la pagina di Zigbee2MQTT, quindi aggiungi prima il broker.';
+
+  @override
+  String get historyOnAddBroker => 'Aggiungi il broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Il tuo hub non può eseguire ZigDash Engine. Questo telefono può registrare al suo posto finché ZigDash è aperto: ideale su un tablet a parete sempre acceso.';
+
+  @override
+  String get historyOnPhone => 'Registra su questo telefono';
 }

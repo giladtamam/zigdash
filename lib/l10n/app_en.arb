@@ -2003,5 +2003,17 @@
   "chatEarlyMaybe": "Maybe",
   "chatEarlyNo": "No",
   "chatEarlyThanks": "Thanks, noted.",
-  "settingsChatEarlySubtitle": "Early access: join the list"
+  "settingsChatEarlySubtitle": "Early access: join the list",
+  "historyOnTitle": "See your home over days",
+  "@historyOnTitle": {"description": "Turn on History card (3.6, docs/design/pro-trial-360.md §2)."},
+  "historyOnBody": "Turn on History to see temperatures, power and doors over days and weeks, not just now. ZigDash Engine records on your hub, even when your phone is off.",
+  "historyOnTurnOn": "Turn on History",
+  "historyOnLater": "Not now",
+  "historyOnWorking": "Turning on History…",
+  "historyOnConsentBody": "ZigDash Engine records History on your hub, so it keeps going when your phone is off. Your Zigbee2MQTT blocks add-ons, as new installs do: ZigDash would turn on \"Allow external JavaScript\" and restart it.",
+  "historyOnAllow": "Allow and restart",
+  "historyOnBrokerBody": "History is recorded through your MQTT broker. ZigDash reaches this home through Zigbee2MQTT's page, so add the broker first.",
+  "historyOnAddBroker": "Add the broker",
+  "historyOnPhoneBody": "Your hub can't run ZigDash Engine. This phone can record instead, while ZigDash is open: best on a wall tablet that stays on.",
+  "historyOnPhone": "Record on this phone"
 }

@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5656,4 +5655,41 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Ранний доступ: записаться';
+
+  @override
+  String get historyOnTitle => 'Смотрите дом за несколько дней';
+
+  @override
+  String get historyOnBody =>
+      'Включите историю, чтобы видеть температуру, потребление и двери за дни и недели, а не только сейчас. ZigDash Engine записывает на хабе, даже когда телефон выключен.';
+
+  @override
+  String get historyOnTurnOn => 'Включить историю';
+
+  @override
+  String get historyOnLater => 'Не сейчас';
+
+  @override
+  String get historyOnWorking => 'Включаем историю…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine записывает историю на хабе, поэтому она идёт и при выключенном телефоне. Ваш Zigbee2MQTT блокирует дополнения, как все новые установки: ZigDash включит «Разрешить внешний JavaScript» и перезапустит его.';
+
+  @override
+  String get historyOnAllow => 'Разрешить и перезапустить';
+
+  @override
+  String get historyOnBrokerBody =>
+      'История записывается через ваш MQTT-брокер. ZigDash подключён к этому дому через страницу Zigbee2MQTT, поэтому сначала добавьте брокер.';
+
+  @override
+  String get historyOnAddBroker => 'Добавить брокер';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Ваш хаб не может запустить ZigDash Engine. Вместо него может записывать этот телефон, пока ZigDash открыт: лучше всего настенный планшет, который всегда включён.';
+
+  @override
+  String get historyOnPhone => 'Записывать на этом телефоне';
 }

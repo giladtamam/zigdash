@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5674,4 +5673,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Acesso antecipado: inscreva-se';
+
+  @override
+  String get historyOnTitle => 'Veja a sua casa ao longo dos dias';
+
+  @override
+  String get historyOnBody =>
+      'Ative o histórico para ver temperaturas, consumo e portas ao longo de dias e semanas, não só agora. O ZigDash Engine grava no seu hub, mesmo com o celular desligado.';
+
+  @override
+  String get historyOnTurnOn => 'Ativar histórico';
+
+  @override
+  String get historyOnLater => 'Agora não';
+
+  @override
+  String get historyOnWorking => 'Ativando o histórico…';
+
+  @override
+  String get historyOnConsentBody =>
+      'O ZigDash Engine grava o histórico no seu hub, então continua mesmo com o celular desligado. Seu Zigbee2MQTT bloqueia complementos, como em instalações novas: o ZigDash ativaria \"Permitir JavaScript externo\" e o reiniciaria.';
+
+  @override
+  String get historyOnAllow => 'Permitir e reiniciar';
+
+  @override
+  String get historyOnBrokerBody =>
+      'O histórico passa pelo seu broker MQTT. O ZigDash acessa esta casa pela página do Zigbee2MQTT, então adicione o broker primeiro.';
+
+  @override
+  String get historyOnAddBroker => 'Adicionar o broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Seu hub não consegue rodar o ZigDash Engine. Este celular pode gravar no lugar enquanto o ZigDash estiver aberto: melhor num tablet de parede sempre ligado.';
+
+  @override
+  String get historyOnPhone => 'Gravar neste celular';
 }

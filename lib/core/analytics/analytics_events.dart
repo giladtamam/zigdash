@@ -1006,17 +1006,26 @@ enum HistorySetupResult {
   thisDevice,
 }
 
-/// The history recorder was set up from a history sheet.
+/// Where the recorder was set up from (3.6): a History sheet, the
+/// History card right after setup, or the same card later.
+enum HistorySetupFrom { sheet, finish, card }
+
+/// The history recorder was set up from a history sheet or, from 3.6, the
+/// "Turn on History" card.
 class HistorySetup extends AnalyticsEvent {
-  const HistorySetup(this.result);
+  const HistorySetup(this.result, {this.from = HistorySetupFrom.sheet});
 
   final HistorySetupResult result;
+  final HistorySetupFrom from;
 
   @override
   String get name => 'history_setup';
 
   @override
-  Map<String, String> get props => {'result': _snake(result.name)};
+  Map<String, String> get props => {
+    'result': _snake(result.name),
+    'from': from.name,
+  };
 }
 
 /// A step of the import from Home Assistant (2.8): the offer after setup
@@ -1287,7 +1296,7 @@ enum EngineStep {
 }
 
 /// Which screen led to the Engine: Automations, Alerts or History.
-enum EngineFrom { automations, alerts, history }
+enum EngineFrom { automations, alerts, history, historyOn }
 
 class EngineEvent extends AnalyticsEvent {
   const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations});
@@ -1304,7 +1313,7 @@ class EngineEvent extends AnalyticsEvent {
   @override
   Map<String, String> get props => {
     'step': _snake(step.name),
-    'from': from.name,
+    'from': _snake(from.name),
     if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
   };
 }
@@ -1404,6 +1413,36 @@ class ChatEarly extends AnalyticsEvent {
 
   @override
   String get name => 'chat_early';
+
+  @override
+  Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// The "Turn on History" card (3.6, pro-trial-360.md §2): shown (once per
+/// Home), tapped, put off, the consent shown or declined, this phone chosen,
+/// or a broker asked for. `from`: right after setup (finish) or later
+/// (card).
+enum HistoryOnStep {
+  shown('shown'),
+  tapped('tapped'),
+  later('later'),
+  consentShown('consent_shown'),
+  declined('declined'),
+  phone('phone'),
+  broker('broker');
+
+  const HistoryOnStep(this.wire);
+  final String wire;
+}
+
+class HistoryOnEvent extends AnalyticsEvent {
+  const HistoryOnEvent(this.step, this.from);
+
+  final HistoryOnStep step;
+  final HistorySetupFrom from;
+
+  @override
+  String get name => 'history_on';
 
   @override
   Map<String, String> get props => {'step': step.wire, 'from': from.name};

@@ -9893,6 +9893,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Early access: join the list'**
   String get settingsChatEarlySubtitle;
+
+  /// Turn on History card (3.6, docs/design/pro-trial-360.md §2).
+  ///
+  /// In en, this message translates to:
+  /// **'See your home over days'**
+  String get historyOnTitle;
+
+  /// No description provided for @historyOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on History to see temperatures, power and doors over days and weeks, not just now. ZigDash Engine records on your hub, even when your phone is off.'**
+  String get historyOnBody;
+
+  /// No description provided for @historyOnTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on History'**
+  String get historyOnTurnOn;
+
+  /// No description provided for @historyOnLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get historyOnLater;
+
+  /// No description provided for @historyOnWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Turning on History…'**
+  String get historyOnWorking;
+
+  /// No description provided for @historyOnConsentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine records History on your hub, so it keeps going when your phone is off. Your Zigbee2MQTT blocks add-ons, as new installs do: ZigDash would turn on \"Allow external JavaScript\" and restart it.'**
+  String get historyOnConsentBody;
+
+  /// No description provided for @historyOnAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow and restart'**
+  String get historyOnAllow;
+
+  /// No description provided for @historyOnBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'History is recorded through your MQTT broker. ZigDash reaches this home through Zigbee2MQTT\'s page, so add the broker first.'**
+  String get historyOnBrokerBody;
+
+  /// No description provided for @historyOnAddBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the broker'**
+  String get historyOnAddBroker;
+
+  /// No description provided for @historyOnPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub can\'t run ZigDash Engine. This phone can record instead, while ZigDash is open: best on a wall tablet that stays on.'**
+  String get historyOnPhoneBody;
+
+  /// No description provided for @historyOnPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Record on this phone'**
+  String get historyOnPhone;
 }
 
 class _AppLocalizationsDelegate

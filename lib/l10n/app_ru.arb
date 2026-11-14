@@ -1711,5 +1711,16 @@
   "chatEarlyMaybe": "Возможно",
   "chatEarlyNo": "Нет",
   "chatEarlyThanks": "Спасибо, учтём.",
-  "settingsChatEarlySubtitle": "Ранний доступ: записаться"
+  "settingsChatEarlySubtitle": "Ранний доступ: записаться",
+  "historyOnTitle": "Смотрите дом за несколько дней",
+  "historyOnBody": "Включите историю, чтобы видеть температуру, потребление и двери за дни и недели, а не только сейчас. ZigDash Engine записывает на хабе, даже когда телефон выключен.",
+  "historyOnTurnOn": "Включить историю",
+  "historyOnLater": "Не сейчас",
+  "historyOnWorking": "Включаем историю…",
+  "historyOnConsentBody": "ZigDash Engine записывает историю на хабе, поэтому она идёт и при выключенном телефоне. Ваш Zigbee2MQTT блокирует дополнения, как все новые установки: ZigDash включит «Разрешить внешний JavaScript» и перезапустит его.",
+  "historyOnAllow": "Разрешить и перезапустить",
+  "historyOnBrokerBody": "История записывается через ваш MQTT-брокер. ZigDash подключён к этому дому через страницу Zigbee2MQTT, поэтому сначала добавьте брокер.",
+  "historyOnAddBroker": "Добавить брокер",
+  "historyOnPhoneBody": "Ваш хаб не может запустить ZigDash Engine. Вместо него может записывать этот телефон, пока ZigDash открыт: лучше всего настенный планшет, который всегда включён.",
+  "historyOnPhone": "Записывать на этом телефоне"
 }

@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5585,4 +5584,41 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'גישה מוקדמת: הרשמה לרשימה';
+
+  @override
+  String get historyOnTitle => 'לראות את הבית לאורך ימים';
+
+  @override
+  String get historyOnBody =>
+      'הפעילו היסטוריה כדי לראות טמפרטורות, צריכת חשמל ודלתות לאורך ימים ושבועות, לא רק עכשיו. ZigDash Engine מקליט ברכזת, גם כשהטלפון כבוי.';
+
+  @override
+  String get historyOnTurnOn => 'הפעלת היסטוריה';
+
+  @override
+  String get historyOnLater => 'לא עכשיו';
+
+  @override
+  String get historyOnWorking => 'מפעילים היסטוריה…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine מקליט היסטוריה ברכזת, כך שהיא ממשיכה גם כשהטלפון כבוי. Zigbee2MQTT שלכם חוסם תוספים, כמו בהתקנות חדשות: ZigDash יפעיל \"Allow external JavaScript\" ויפעיל אותו מחדש.';
+
+  @override
+  String get historyOnAllow => 'לאשר ולהפעיל מחדש';
+
+  @override
+  String get historyOnBrokerBody =>
+      'ההיסטוריה עוברת דרך שרת ה-MQTT שלכם. ZigDash מתחבר לבית הזה דרך הדף של Zigbee2MQTT, אז הוסיפו קודם את השרת.';
+
+  @override
+  String get historyOnAddBroker => 'הוספת השרת';
+
+  @override
+  String get historyOnPhoneBody =>
+      'הרכזת שלכם לא יכולה להריץ את ZigDash Engine. הטלפון הזה יכול להקליט במקומה כל עוד ZigDash פתוח: הכי טוב בטאבלט קיר שנשאר דולק.';
+
+  @override
+  String get historyOnPhone => 'להקליט בטלפון הזה';
 }

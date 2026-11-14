@@ -1716,5 +1716,16 @@
   "chatEarlyMaybe": "Misschien",
   "chatEarlyNo": "Nee",
   "chatEarlyThanks": "Bedankt, genoteerd.",
-  "settingsChatEarlySubtitle": "Vroege toegang: meld je aan"
+  "settingsChatEarlySubtitle": "Vroege toegang: meld je aan",
+  "historyOnTitle": "Zie je huis over dagen",
+  "historyOnBody": "Zet geschiedenis aan om temperaturen, verbruik en deuren over dagen en weken te zien, niet alleen nu. ZigDash Engine neemt op je hub op, ook als je telefoon uit staat.",
+  "historyOnTurnOn": "Geschiedenis aanzetten",
+  "historyOnLater": "Niet nu",
+  "historyOnWorking": "Geschiedenis wordt aangezet…",
+  "historyOnConsentBody": "ZigDash Engine neemt de geschiedenis op je hub op, dus het gaat door als je telefoon uit staat. Je Zigbee2MQTT blokkeert uitbreidingen, zoals nieuwe installaties: ZigDash zou \"Externe JavaScript toestaan\" aanzetten en het herstarten.",
+  "historyOnAllow": "Toestaan en herstarten",
+  "historyOnBrokerBody": "Geschiedenis loopt via je MQTT-broker. ZigDash bereikt dit huis via de pagina van Zigbee2MQTT, voeg dus eerst de broker toe.",
+  "historyOnAddBroker": "Broker toevoegen",
+  "historyOnPhoneBody": "Je hub kan ZigDash Engine niet draaien. Deze telefoon kan in plaats daarvan opnemen zolang ZigDash open is: het best op een wandtablet dat aan blijft.",
+  "historyOnPhone": "Op deze telefoon opnemen"
 }

@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5654,4 +5653,41 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Tidlig tilgang: meld deg på';
+
+  @override
+  String get historyOnTitle => 'Se hjemmet ditt over flere dager';
+
+  @override
+  String get historyOnBody =>
+      'Slå på historikk for å se temperaturer, strøm og dører over dager og uker, ikke bare nå. ZigDash Engine tar opp på huben din, også når telefonen er av.';
+
+  @override
+  String get historyOnTurnOn => 'Slå på historikk';
+
+  @override
+  String get historyOnLater => 'Ikke nå';
+
+  @override
+  String get historyOnWorking => 'Slår på historikk…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine tar opp historikken på huben, så den fortsetter når telefonen er av. Zigbee2MQTT-en din blokkerer tillegg, slik nye installasjoner gjør: ZigDash ville slått på «Tillat ekstern JavaScript» og startet den på nytt.';
+
+  @override
+  String get historyOnAllow => 'Tillat og start på nytt';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Historikken går via MQTT-brokeren din. ZigDash når dette hjemmet via Zigbee2MQTT-siden, så legg til brokeren først.';
+
+  @override
+  String get historyOnAddBroker => 'Legg til brokeren';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Huben din kan ikke kjøre ZigDash Engine. Denne telefonen kan ta opp i stedet mens ZigDash er åpen: best på et veggnettbrett som alltid står på.';
+
+  @override
+  String get historyOnPhone => 'Ta opp på denne telefonen';
 }

@@ -1641,5 +1641,16 @@
   "chatEarlyMaybe": "Peut-être",
   "chatEarlyNo": "Non",
   "chatEarlyThanks": "Merci, c'est noté.",
-  "settingsChatEarlySubtitle": "Accès anticipé : s'inscrire"
+  "settingsChatEarlySubtitle": "Accès anticipé : s'inscrire",
+  "historyOnTitle": "Voir votre maison sur plusieurs jours",
+  "historyOnBody": "Activez l'historique pour voir températures, consommation et portes sur des jours et des semaines, pas seulement maintenant. ZigDash Engine enregistre sur votre hub, même téléphone éteint.",
+  "historyOnTurnOn": "Activer l'historique",
+  "historyOnLater": "Pas maintenant",
+  "historyOnWorking": "Activation de l'historique…",
+  "historyOnConsentBody": "ZigDash Engine enregistre l'historique sur votre hub, il continue donc même téléphone éteint. Votre Zigbee2MQTT bloque les extensions, comme les nouvelles installations : ZigDash activerait « Autoriser le JavaScript externe » et le redémarrerait.",
+  "historyOnAllow": "Autoriser et redémarrer",
+  "historyOnBrokerBody": "L'historique passe par votre broker MQTT. ZigDash rejoint cette maison via la page de Zigbee2MQTT : ajoutez d'abord le broker.",
+  "historyOnAddBroker": "Ajouter le broker",
+  "historyOnPhoneBody": "Votre hub ne peut pas faire tourner ZigDash Engine. Ce téléphone peut enregistrer à la place, tant que ZigDash est ouvert : idéal sur une tablette murale toujours allumée.",
+  "historyOnPhone": "Enregistrer sur ce téléphone"
 }

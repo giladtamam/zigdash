@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5649,4 +5648,41 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Předběžný přístup: přihlásit se';
+
+  @override
+  String get historyOnTitle => 'Sledujte domov v průběhu dní';
+
+  @override
+  String get historyOnBody =>
+      'Zapněte historii a uvidíte teploty, spotřebu a dveře za dny a týdny, nejen teď. ZigDash Engine nahrává na vašem hubu, i když je telefon vypnutý.';
+
+  @override
+  String get historyOnTurnOn => 'Zapnout historii';
+
+  @override
+  String get historyOnLater => 'Teď ne';
+
+  @override
+  String get historyOnWorking => 'Zapínám historii…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine nahrává historii na hubu, takže běží, i když je telefon vypnutý. Váš Zigbee2MQTT blokuje doplňky, jako nové instalace: ZigDash by zapnul „Povolit externí JavaScript“ a restartoval ho.';
+
+  @override
+  String get historyOnAllow => 'Povolit a restartovat';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Historie jde přes váš MQTT broker. ZigDash se k tomuto domovu připojuje přes stránku Zigbee2MQTT, takže nejdřív přidejte broker.';
+
+  @override
+  String get historyOnAddBroker => 'Přidat broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Váš hub nemůže spustit ZigDash Engine. Místo něj může nahrávat tento telefon, dokud je ZigDash otevřený: nejlépe nástěnný tablet, který je stále zapnutý.';
+
+  @override
+  String get historyOnPhone => 'Nahrávat na tomto telefonu';
 }

@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5672,4 +5671,41 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Vroege toegang: meld je aan';
+
+  @override
+  String get historyOnTitle => 'Zie je huis over dagen';
+
+  @override
+  String get historyOnBody =>
+      'Zet geschiedenis aan om temperaturen, verbruik en deuren over dagen en weken te zien, niet alleen nu. ZigDash Engine neemt op je hub op, ook als je telefoon uit staat.';
+
+  @override
+  String get historyOnTurnOn => 'Geschiedenis aanzetten';
+
+  @override
+  String get historyOnLater => 'Niet nu';
+
+  @override
+  String get historyOnWorking => 'Geschiedenis wordt aangezet…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine neemt de geschiedenis op je hub op, dus het gaat door als je telefoon uit staat. Je Zigbee2MQTT blokkeert uitbreidingen, zoals nieuwe installaties: ZigDash zou \"Externe JavaScript toestaan\" aanzetten en het herstarten.';
+
+  @override
+  String get historyOnAllow => 'Toestaan en herstarten';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Geschiedenis loopt via je MQTT-broker. ZigDash bereikt dit huis via de pagina van Zigbee2MQTT, voeg dus eerst de broker toe.';
+
+  @override
+  String get historyOnAddBroker => 'Broker toevoegen';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Je hub kan ZigDash Engine niet draaien. Deze telefoon kan in plaats daarvan opnemen zolang ZigDash open is: het best op een wandtablet dat aan blijft.';
+
+  @override
+  String get historyOnPhone => 'Op deze telefoon opnemen';
 }

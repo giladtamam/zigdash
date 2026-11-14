@@ -1716,5 +1716,16 @@
   "chatEarlyMaybe": "Kanske",
   "chatEarlyNo": "Nej",
   "chatEarlyThanks": "Tack, noterat.",
-  "settingsChatEarlySubtitle": "Tidig åtkomst: anmäl dig"
+  "settingsChatEarlySubtitle": "Tidig åtkomst: anmäl dig",
+  "historyOnTitle": "Se ditt hem över flera dagar",
+  "historyOnBody": "Slå på historik för att se temperaturer, el och dörrar över dagar och veckor, inte bara nu. ZigDash Engine spelar in på din hubb, även när telefonen är av.",
+  "historyOnTurnOn": "Slå på historik",
+  "historyOnLater": "Inte nu",
+  "historyOnWorking": "Slår på historik…",
+  "historyOnConsentBody": "ZigDash Engine spelar in historiken på din hubb, så den fortsätter när telefonen är av. Din Zigbee2MQTT blockerar tillägg, som nya installationer gör: ZigDash skulle slå på \"Tillåt extern JavaScript\" och starta om den.",
+  "historyOnAllow": "Tillåt och starta om",
+  "historyOnBrokerBody": "Historiken går via din MQTT-broker. ZigDash når det här hemmet via Zigbee2MQTT:s sida, så lägg till brokern först.",
+  "historyOnAddBroker": "Lägg till brokern",
+  "historyOnPhoneBody": "Din hubb kan inte köra ZigDash Engine. Den här telefonen kan spela in i stället medan ZigDash är öppen: bäst på en väggplatta som alltid är på.",
+  "historyOnPhone": "Spela in på den här telefonen"
 }

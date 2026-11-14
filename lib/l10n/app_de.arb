@@ -1716,5 +1716,16 @@
   "chatEarlyMaybe": "Vielleicht",
   "chatEarlyNo": "Nein",
   "chatEarlyThanks": "Danke, notiert.",
-  "settingsChatEarlySubtitle": "Früher Zugang: auf die Liste"
+  "settingsChatEarlySubtitle": "Früher Zugang: auf die Liste",
+  "historyOnTitle": "Dein Zuhause über Tage sehen",
+  "historyOnBody": "Schalte den Verlauf ein, um Temperaturen, Strom und Türen über Tage und Wochen zu sehen, nicht nur jetzt. ZigDash Engine zeichnet auf deinem Hub auf, auch wenn dein Handy aus ist.",
+  "historyOnTurnOn": "Verlauf einschalten",
+  "historyOnLater": "Nicht jetzt",
+  "historyOnWorking": "Verlauf wird eingeschaltet…",
+  "historyOnConsentBody": "ZigDash Engine zeichnet den Verlauf auf deinem Hub auf, also auch, wenn dein Handy aus ist. Dein Zigbee2MQTT blockiert Erweiterungen, wie bei neuen Installationen üblich: ZigDash würde „Externes JavaScript erlauben“ einschalten und es neu starten.",
+  "historyOnAllow": "Erlauben und neu starten",
+  "historyOnBrokerBody": "Der Verlauf wird über deinen MQTT-Broker aufgezeichnet. ZigDash erreicht dieses Zuhause über die Zigbee2MQTT-Seite, füge also zuerst den Broker hinzu.",
+  "historyOnAddBroker": "Broker hinzufügen",
+  "historyOnPhoneBody": "Dein Hub kann ZigDash Engine nicht ausführen. Stattdessen kann dieses Handy aufzeichnen, solange ZigDash geöffnet ist: am besten ein Wandtablet, das an bleibt.",
+  "historyOnPhone": "Auf diesem Handy aufzeichnen"
 }

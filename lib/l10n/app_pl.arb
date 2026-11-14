@@ -1711,5 +1711,16 @@
   "chatEarlyMaybe": "Może",
   "chatEarlyNo": "Nie",
   "chatEarlyThanks": "Dzięki, zanotowane.",
-  "settingsChatEarlySubtitle": "Wczesny dostęp: zapisz się"
+  "settingsChatEarlySubtitle": "Wczesny dostęp: zapisz się",
+  "historyOnTitle": "Zobacz dom na przestrzeni dni",
+  "historyOnBody": "Włącz historię, aby widzieć temperatury, zużycie prądu i drzwi na przestrzeni dni i tygodni, nie tylko teraz. ZigDash Engine nagrywa na twoim hubie, nawet gdy telefon jest wyłączony.",
+  "historyOnTurnOn": "Włącz historię",
+  "historyOnLater": "Nie teraz",
+  "historyOnWorking": "Włączanie historii…",
+  "historyOnConsentBody": "ZigDash Engine nagrywa historię na hubie, więc działa nawet przy wyłączonym telefonie. Twój Zigbee2MQTT blokuje dodatki, jak nowe instalacje: ZigDash włączyłby „Zezwól na zewnętrzny JavaScript” i go zrestartował.",
+  "historyOnAllow": "Zezwól i zrestartuj",
+  "historyOnBrokerBody": "Historia idzie przez twój broker MQTT. ZigDash łączy się z tym domem przez stronę Zigbee2MQTT, więc najpierw dodaj broker.",
+  "historyOnAddBroker": "Dodaj broker",
+  "historyOnPhoneBody": "Twój hub nie może uruchomić ZigDash Engine. Ten telefon może nagrywać zamiast niego, gdy ZigDash jest otwarty: najlepiej na tablecie ściennym, który stale działa.",
+  "historyOnPhone": "Nagrywaj na tym telefonie"
 }

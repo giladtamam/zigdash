@@ -1631,5 +1631,16 @@
   "chatEarlyMaybe": "Možná",
   "chatEarlyNo": "Ne",
   "chatEarlyThanks": "Díky, zaznamenáno.",
-  "settingsChatEarlySubtitle": "Předběžný přístup: přihlásit se"
+  "settingsChatEarlySubtitle": "Předběžný přístup: přihlásit se",
+  "historyOnTitle": "Sledujte domov v průběhu dní",
+  "historyOnBody": "Zapněte historii a uvidíte teploty, spotřebu a dveře za dny a týdny, nejen teď. ZigDash Engine nahrává na vašem hubu, i když je telefon vypnutý.",
+  "historyOnTurnOn": "Zapnout historii",
+  "historyOnLater": "Teď ne",
+  "historyOnWorking": "Zapínám historii…",
+  "historyOnConsentBody": "ZigDash Engine nahrává historii na hubu, takže běží, i když je telefon vypnutý. Váš Zigbee2MQTT blokuje doplňky, jako nové instalace: ZigDash by zapnul „Povolit externí JavaScript“ a restartoval ho.",
+  "historyOnAllow": "Povolit a restartovat",
+  "historyOnBrokerBody": "Historie jde přes váš MQTT broker. ZigDash se k tomuto domovu připojuje přes stránku Zigbee2MQTT, takže nejdřív přidejte broker.",
+  "historyOnAddBroker": "Přidat broker",
+  "historyOnPhoneBody": "Váš hub nemůže spustit ZigDash Engine. Místo něj může nahrávat tento telefon, dokud je ZigDash otevřený: nejlépe nástěnný tablet, který je stále zapnutý.",
+  "historyOnPhone": "Nahrávat na tomto telefonu"
 }
