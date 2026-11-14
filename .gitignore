@@ -61,3 +61,4 @@ wayfinder/
 test/goldens/failures/
 tool/.telegram_bot
 tool/.telegram_offset
+tool/.assistant_bot
