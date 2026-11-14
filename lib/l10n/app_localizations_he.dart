@@ -1719,7 +1719,52 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'הטלפון לא מגיע לברוקר, אבל כן מגיע ל-Home Assistant. היכנסו פעם אחת, ו-ZigDash ידבר עם Zigbee2MQTT דרך Home Assistant: בבית או בחוץ, בלי הגדרות ברוקר.';
+      'התחברו פעם אחת עם Home Assistant, ו-ZigDash ידבר דרכו עם Zigbee2MQTT: בבית או בחוץ, בלי הגדרות ברוקר.';
+
+  @override
+  String get haNoneTitle => 'ZigDash לא מצא את Home Assistant מהטלפון הזה';
+
+  @override
+  String get haNoneOffWifi =>
+      'הטלפון הזה לא מחובר ל-Wi-Fi. התחברו ל-Wi-Fi של הבית והקישו על חיפוש מחדש, או השתמשו בכתובת שבה אתם פותחים את Home Assistant מבחוץ.';
+
+  @override
+  String get haNoneOnWifi =>
+      'ייתכן שהוא ברשת אחרת, או שאתם פותחים אותו מבחוץ (Nabu Casa, DuckDNS, דומיין משלכם).';
+
+  @override
+  String get haNoneGetAddress => 'קחו את הכתובת שלו מ-Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'פתיחת אפליקציית Home Assistant';
+
+  @override
+  String get haNoneAppStep1 => 'באפליקציה, פתחו הגדרות › Companion app.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'הקישו על השרת שלכם, ואז על סמל השיתוף למעלה, ובחרו ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'הקישו על השרת שלכם, ואז על סמל השיתוף למעלה, ועל העתקת קישור. חזרו והקישו על הדבקה.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'פתחו את Home Assistant בדפדפן שבו אתם משתמשים בשבילו, ואז שיתוף › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'פתחו את Home Assistant בדפדפן שבו אתם משתמשים בשבילו, העתיקו את הכתובת משורת הכתובת, חזרו והקישו על הדבקה.';
+
+  @override
+  String get haNoneTypeLabel => 'או הקלידו את הכתובת';
+
+  @override
+  String get haNoneLookAgain => 'חיפוש מחדש';
+
+  @override
+  String get haNoneAssistant => 'לא בטוחים? שאלו את העוזר';
 
   @override
   String get haConnectAddressHelp =>

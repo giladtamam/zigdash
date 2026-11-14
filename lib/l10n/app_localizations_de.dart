@@ -1747,7 +1747,54 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Dein Telefon erreicht den Broker nicht, aber Home Assistant schon. Melde dich einmal an, und ZigDash spricht über Home Assistant mit Zigbee2MQTT: zu Hause oder unterwegs, ohne Broker-Einstellungen.';
+      'Melde dich einmal bei Home Assistant an, und ZigDash spricht darüber mit Zigbee2MQTT: zu Hause oder unterwegs, ohne Broker-Einstellungen.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash hat Home Assistant von diesem Handy aus nicht gefunden';
+
+  @override
+  String get haNoneOffWifi =>
+      'Dieses Handy ist nicht im WLAN. Verbinde dich mit deinem WLAN zu Hause und tippe auf Erneut suchen, oder nutze die Adresse, mit der du Home Assistant von unterwegs öffnest.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Es ist vielleicht in einem anderen Netzwerk, oder du öffnest es von außen (Nabu Casa, DuckDNS, eigene Domain).';
+
+  @override
+  String get haNoneGetAddress => 'Hol dir die Adresse aus Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Home-Assistant-App öffnen';
+
+  @override
+  String get haNoneAppStep1 =>
+      'Öffne in der App Einstellungen › Companion-App.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Tippe auf deinen Server, dann oben auf das Teilen-Symbol, und wähle ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Tippe auf deinen Server, dann oben auf das Teilen-Symbol, und Link kopieren. Komm zurück und tippe auf Einfügen.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Öffne Home Assistant in dem Browser, den du dafür nutzt, dann Teilen › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Öffne Home Assistant in dem Browser, den du dafür nutzt, kopiere die Adresse aus der Adresszeile, komm zurück und tippe auf Einfügen.';
+
+  @override
+  String get haNoneTypeLabel => 'Oder gib die Adresse ein';
+
+  @override
+  String get haNoneLookAgain => 'Erneut suchen';
+
+  @override
+  String get haNoneAssistant => 'Unsicher? Frag den Assistenten';
 
   @override
   String get haConnectAddressHelp =>

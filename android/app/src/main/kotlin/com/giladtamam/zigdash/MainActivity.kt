@@ -60,6 +60,22 @@ class MainActivity : FlutterActivity() {
                     android.provider.Settings.System.getString(
                         contentResolver, "firebase.test.lab") == "true"
                 } catch (_: Exception) { false })
+                // Setup (3.5.2): whether the Home Assistant app can be
+                // opened, and opening it. Nothing is read from it.
+                "haAppInstalled" -> result.success(haAppLaunch() != null)
+                "openHaApp" -> {
+                    val launch = haAppLaunch()
+                    if (launch == null) {
+                        result.success(false)
+                    } else {
+                        try {
+                            startActivity(launch)
+                            result.success(true)
+                        } catch (_: Exception) {
+                            result.success(false)
+                        }
+                    }
+                }
                 // "Ask your AI" in setup (3.1.5): Android's share sheet, so
                 // the write-up reaches whichever AI app the user picks.
                 "shareText" -> {
@@ -177,6 +193,19 @@ class MainActivity : FlutterActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         takeAction(intent)?.let { channel?.invokeMethod("action", it) }
+    }
+
+    /// The launch intent of the Home Assistant app (full or minimal), or
+    /// null when neither is installed or enabled.
+    private fun haAppLaunch(): Intent? = listOf(
+        "io.homeassistant.companion.android",
+        "io.homeassistant.companion.android.minimal",
+    ).firstNotNullOfOrNull { pkg ->
+        try {
+            packageManager.getLaunchIntentForPackage(pkg)
+        } catch (_: Exception) {
+            null
+        }
     }
 
     /** The shortcut request in [intent], once. */

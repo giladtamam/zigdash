@@ -116,3 +116,18 @@ test('a zip without a configuration is refused and nothing changes', () => {
   assert.strictEqual(h.published[0][1].status, 'error');
   assert.ok(fs.existsSync(path.join(h.dir, 'extension', 'zigdash-restore.js')));
 });
+
+test('only the last two restores keep copies of the files they replaced', async () => {
+  const h = harness();
+  const previous = path.join(h.dir, 'zigdash-restore-previous');
+  for (const old of ['2026-01-01T00-00-00-000Z', '2026-02-01T00-00-00-000Z', '2026-03-01T00-00-00-000Z']) {
+    fs.mkdirSync(path.join(previous, old), { recursive: true });
+    fs.writeFileSync(path.join(previous, old, 'configuration.yaml'), old);
+  }
+  h.send({ tx: 't1', zip: zip({ 'configuration.yaml': 'pan_id: 0x2ef6\n' }).toString('base64') });
+  const left = fs.readdirSync(previous).sort();
+  assert.strictEqual(left.length, 2);
+  assert.strictEqual(left[0], '2026-03-01T00-00-00-000Z');
+  assert.ok(left[1] > '2026-11-01', 'the copy from this restore stays');
+  await new Promise((r) => setTimeout(r, 1700));
+});

@@ -3195,8 +3195,86 @@ abstract class AppLocalizations {
   /// No description provided for @haConnectIntro.
   ///
   /// In en, this message translates to:
-  /// **'Your phone can\'t reach the broker, but it can reach Home Assistant. Sign in once, and ZigDash talks to Zigbee2MQTT through Home Assistant: at home or away, with no broker settings.'**
+  /// **'Sign in once with Home Assistant, and ZigDash talks to Zigbee2MQTT through it: at home or away, with no broker settings.'**
   String get haConnectIntro;
+
+  /// No description provided for @haNoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash couldn\'t find Home Assistant from this phone'**
+  String get haNoneTitle;
+
+  /// No description provided for @haNoneOffWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone isn\'t on Wi-Fi. Join your home Wi-Fi and tap Look again, or use the address you open Home Assistant with from outside.'**
+  String get haNoneOffWifi;
+
+  /// No description provided for @haNoneOnWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'It may be on another network, or you open it from outside (Nabu Casa, DuckDNS, your own domain).'**
+  String get haNoneOnWifi;
+
+  /// No description provided for @haNoneGetAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Get its address from Home Assistant:'**
+  String get haNoneGetAddress;
+
+  /// No description provided for @haNoneOpenApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the Home Assistant app'**
+  String get haNoneOpenApp;
+
+  /// No description provided for @haNoneAppStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'In the app, open Settings › Companion app.'**
+  String get haNoneAppStep1;
+
+  /// No description provided for @haNoneAppStep2Share.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your server, then the share icon at the top, and pick ZigDash.'**
+  String get haNoneAppStep2Share;
+
+  /// No description provided for @haNoneAppStep2Copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.'**
+  String get haNoneAppStep2Copy;
+
+  /// No description provided for @haNoneBrowserShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Home Assistant in the browser you use for it, then Share › ZigDash.'**
+  String get haNoneBrowserShare;
+
+  /// No description provided for @haNoneBrowserCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Home Assistant in the browser you use for it, copy the address from the address bar, then come back and tap Paste.'**
+  String get haNoneBrowserCopy;
+
+  /// No description provided for @haNoneTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Or type the address'**
+  String get haNoneTypeLabel;
+
+  /// No description provided for @haNoneLookAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Look again'**
+  String get haNoneLookAgain;
+
+  /// No description provided for @haNoneAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sure? Ask the assistant'**
+  String get haNoneAssistant;
 
   /// No description provided for @haConnectAddressHelp.
   ///

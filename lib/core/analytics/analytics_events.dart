@@ -140,6 +140,12 @@ enum SetupStepKind {
   /// Assistant (3.3.4), with [SetupStep.choice] (a [HaWhere]).
   haWhere,
 
+  /// The Home Assistant sign-in's "couldn't find it" card (3.5.2,
+  /// ha-nothing-found.md), with [SetupStep.choice] (a [HaNoneChoice]):
+  /// shown once per look that found nothing (with [SetupStep.network],
+  /// Wi-Fi or other), or which of its ways on was tapped.
+  haNone,
+
   /// The Paste button on the Home Assistant sign-in (ha-share-paste.md),
   /// with [SetupStep.result] (a [HaHandover]): whether what was copied
   /// held an address. Never what was copied.
@@ -520,6 +526,9 @@ class SetupStep extends AnalyticsEvent {
   };
 }
 
+/// What happened on the Home Assistant "couldn't find it" card (3.5.2).
+enum HaNoneChoice { shown, openApp, lookAgain, assistant }
+
 enum Feature {
   devicesTab,
   devicePage,
@@ -643,6 +652,10 @@ enum HelpFrom {
   /// The help bubble on a connected home's dashboard (3.5.0,
   /// assistant-in-app-2026-11.md revision 5).
   bubble,
+
+  /// "Not sure? Ask the assistant" on the Home Assistant sign-in when the
+  /// look found nothing (3.5.2, ha-nothing-found.md).
+  haConnect,
 }
 
 /// How Support details left the phone: a mail app, the clipboard (platforms
@@ -1132,8 +1145,10 @@ class SaleCardEvent extends AnalyticsEvent {
 
 /// Hub backup (3.3, hub-backup.md): a backup was made (automatically or
 /// by hand), Zigbee2MQTT refused or never answered, a copy was saved, or a
-/// backup was restored (or the restore stopped). Never a size, a file name
-/// or anything inside the backup.
+/// backup was restored (or the restore stopped). From 3.5.3 also how long
+/// it took (a bucket), which automatic try it was, and why a failed one
+/// ended: no answer, the app left the screen, or the connection dropped.
+/// Never a size, a file name or anything inside the backup.
 enum HubBackupStep {
   made,
   failed,
@@ -1143,11 +1158,21 @@ enum HubBackupStep {
   restoreFailed,
 }
 
+/// Why a backup request got no answer.
+enum HubBackupWhy { noAnswer, background, disconnected }
+
 class HubBackupEvent extends AnalyticsEvent {
-  const HubBackupEvent(this.step, {this.auto});
+  const HubBackupEvent(this.step, {this.auto, this.took, this.attempt, this.why});
 
   final HubBackupStep step;
   final bool? auto;
+
+  /// A bucket from hubBackupTook.
+  final String? took;
+
+  /// The automatic try in this connection (1 or 2).
+  final int? attempt;
+  final HubBackupWhy? why;
 
   @override
   String get name => 'hub_backup';
@@ -1156,6 +1181,9 @@ class HubBackupEvent extends AnalyticsEvent {
   Map<String, String> get props => {
     'step': _snake(step.name),
     if (auto != null) 'auto': auto! ? 'yes' : 'no',
+    if (took != null) 'took': took!,
+    if (attempt != null) 'try': '$attempt',
+    if (why != null) 'why': _snake(why!.name),
   };
 }
 

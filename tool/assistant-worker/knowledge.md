@@ -175,7 +175,7 @@ Connecting through Home Assistant, and its addresses.
 - Home Assistant's broker refused this login. Use the name and password of a Home Assistant user (Settings › People › Users); a separate user just for MQTT works best.
 - Home Assistant: make sure the Mosquitto broker app and the Zigbee2MQTT app are installed and running (Settings › Apps).
 - Home Assistant: use a Home Assistant user. Most people create one just for MQTT under Settings › People › Users, and the Mosquitto broker app accepts it.
-- **Connect through Home Assistant** — Your phone can't reach the broker, but it can reach Home Assistant. Sign in once, and ZigDash talks to Zigbee2MQTT through Home Assistant: at home or away, with no broker settings.
+- **Connect through Home Assistant** — Sign in once with Home Assistant, and ZigDash talks to Zigbee2MQTT through it: at home or away, with no broker settings.
 - The address you open Home Assistant with: 192.168.1.20:8123, or a remote address like your Nabu Casa or Cloudflare address.
 - Home Assistant's own login opens in your browser. ZigDash never sees your password.
 - ZigDash keeps this sign-in on your phone and acts as you in Home Assistant, for MQTT only. End it any time in Home Assistant under Profile › Security.
@@ -193,6 +193,19 @@ Connecting through Home Assistant, and its addresses.
 - **Nabu Casa** — In Home Assistant, open Settings › Home Assistant Cloud and copy the address under Remote access: https://....ui.nabu.casa. It works from anywhere.
 - **DuckDNS** — The name you chose on duckdns.org, with Home Assistant's port: myhome.duckdns.org:8123. It works from anywhere.
 - **Own domain / Cloudflare** — The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it's the hostname you set for Home Assistant in Cloudflare. It works from anywhere.
+- **ZigDash couldn't find Home Assistant from this phone**
+- This phone isn't on Wi-Fi. Join your home Wi-Fi and tap Look again, or use the address you open Home Assistant with from outside.
+- It may be on another network, or you open it from outside (Nabu Casa, DuckDNS, your own domain).
+- Get its address from Home Assistant:
+- Open the Home Assistant app.
+- In the app, open Settings › Companion app.
+- Tap your server, then the share icon at the top, and pick ZigDash.
+- Tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.
+- Open Home Assistant in the browser you use for it, then Share › ZigDash.
+- Open Home Assistant in the browser you use for it, copy the address from the address bar, then come back and tap Paste.
+- Or type the address.
+- Look again.
+- Not sure? Ask the assistant.
 - **Home Assistant address** — The address you open Home Assistant with, like 192.168.1.20:8123.
 - Nothing answered at that address. Check it, and that your phone is on your home network. It's the address you open Home Assistant with in your browser, which may not be your broker's.
 - Your phone doesn't trust this Home Assistant's certificate. Try its http:// address on your home network.

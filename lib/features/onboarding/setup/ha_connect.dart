@@ -299,6 +299,36 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     }();
   }
 
+  /// Whether the phone has a home-network address right now (3.5.2): the
+  /// "couldn't find it" card's why line. Asked fresh each time; false when
+  /// it can't be told.
+  Future<bool> onHomeNetwork() async {
+    final ask = _phoneIpOf;
+    if (ask == null) return false;
+    try {
+      return (await ask()) != null;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Looks once more (3.5.2, ha-nothing-found.md): for someone who just
+  /// joined the right Wi-Fi. Only from the ask state with the last look
+  /// ended, so a sign-in waiting on a look is never handed a new one. The
+  /// phone's address is asked again too: the network may have changed.
+  Future<List<HaFound>> lookAgain() {
+    if (_find == null || !_lookDone || value is! HaConnectAsk) {
+      return _looking ?? look();
+    }
+    _looking = null;
+    _found = const [];
+    _lookDone = false;
+    _askingPhone = null;
+    _phoneIp = null;
+    notifyListeners();
+    return look();
+  }
+
   /// Home Assistant's own login page in the browser, then the check.
   Future<void> signInAndConnect(String address) async {
     final signIn = _signIn;

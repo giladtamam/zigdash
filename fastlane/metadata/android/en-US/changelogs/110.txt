@@ -1,0 +1,3 @@
+Better: when ZigDash can't find Home Assistant on your network, it now says so first and shows how to get the address out of Home Assistant, with a button that opens the Home Assistant app. Look again after joining your Wi-Fi, or ask the assistant.
+
+Fixed: the Home Assistant sign-in no longer says your phone can't reach the broker when you came straight from the start.

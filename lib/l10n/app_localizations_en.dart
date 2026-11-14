@@ -1731,7 +1731,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Your phone can\'t reach the broker, but it can reach Home Assistant. Sign in once, and ZigDash talks to Zigbee2MQTT through Home Assistant: at home or away, with no broker settings.';
+      'Sign in once with Home Assistant, and ZigDash talks to Zigbee2MQTT through it: at home or away, with no broker settings.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash couldn\'t find Home Assistant from this phone';
+
+  @override
+  String get haNoneOffWifi =>
+      'This phone isn\'t on Wi-Fi. Join your home Wi-Fi and tap Look again, or use the address you open Home Assistant with from outside.';
+
+  @override
+  String get haNoneOnWifi =>
+      'It may be on another network, or you open it from outside (Nabu Casa, DuckDNS, your own domain).';
+
+  @override
+  String get haNoneGetAddress => 'Get its address from Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Open the Home Assistant app';
+
+  @override
+  String get haNoneAppStep1 => 'In the app, open Settings › Companion app.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Tap your server, then the share icon at the top, and pick ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Open Home Assistant in the browser you use for it, then Share › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Open Home Assistant in the browser you use for it, copy the address from the address bar, then come back and tap Paste.';
+
+  @override
+  String get haNoneTypeLabel => 'Or type the address';
+
+  @override
+  String get haNoneLookAgain => 'Look again';
+
+  @override
+  String get haNoneAssistant => 'Not sure? Ask the assistant';
 
   @override
   String get haConnectAddressHelp =>

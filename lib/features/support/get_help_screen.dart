@@ -87,6 +87,7 @@ class GetHelpScreen extends ConsumerStatefulWidget {
   /// connecting Zigbee2MQTT would refuse.
   bool get setupOrigin => switch (from) {
     HelpFrom.scanEmpty ||
+    HelpFrom.haConnect ||
     HelpFrom.noConnection ||
     HelpFrom.setupError ||
     HelpFrom.manualConnect ||

@@ -1742,7 +1742,53 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Ваш телефон не достаёт до брокера, но достаёт до Home Assistant. Войдите один раз, и ZigDash будет общаться с Zigbee2MQTT через Home Assistant: дома или вне дома, без настроек брокера.';
+      'Войдите один раз через Home Assistant, и ZigDash будет говорить с Zigbee2MQTT через него: дома и вне дома, без настроек брокера.';
+
+  @override
+  String get haNoneTitle => 'ZigDash не нашёл Home Assistant с этого телефона';
+
+  @override
+  String get haNoneOffWifi =>
+      'Этот телефон не в Wi-Fi. Подключитесь к домашнему Wi-Fi и нажмите Искать снова или используйте адрес, по которому открываете Home Assistant вне дома.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Возможно, он в другой сети, или вы открываете его снаружи (Nabu Casa, DuckDNS, свой домен).';
+
+  @override
+  String get haNoneGetAddress => 'Возьмите его адрес из Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Открыть приложение Home Assistant';
+
+  @override
+  String get haNoneAppStep1 =>
+      'В приложении откройте Настройки › Companion app.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Нажмите на свой сервер, затем на значок «Поделиться» вверху и выберите ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Нажмите на свой сервер, затем на значок «Поделиться» вверху и «Копировать ссылку». Вернитесь и нажмите «Вставить».';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Откройте Home Assistant в браузере, которым пользуетесь для него, затем «Поделиться» › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Откройте Home Assistant в браузере, которым пользуетесь для него, скопируйте адрес из адресной строки, вернитесь и нажмите «Вставить».';
+
+  @override
+  String get haNoneTypeLabel => 'Или введите адрес';
+
+  @override
+  String get haNoneLookAgain => 'Искать снова';
+
+  @override
+  String get haNoneAssistant => 'Не уверены? Спросите ассистента';
 
   @override
   String get haConnectAddressHelp =>

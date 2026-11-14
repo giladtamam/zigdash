@@ -1747,7 +1747,54 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Twój telefon nie dociera do brokera, ale dociera do Home Assistant. Zaloguj się raz, a ZigDash będzie rozmawiać z Zigbee2MQTT przez Home Assistant: w domu i poza nim, bez ustawień brokera.';
+      'Zaloguj się raz przez Home Assistant, a ZigDash będzie rozmawiać z Zigbee2MQTT przez niego: w domu i poza nim, bez ustawień brokera.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash nie znalazł Home Assistant z tego telefonu';
+
+  @override
+  String get haNoneOffWifi =>
+      'Ten telefon nie jest w Wi-Fi. Połącz się z domowym Wi-Fi i stuknij Szukaj ponownie albo użyj adresu, którym otwierasz Home Assistant spoza domu.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Może być w innej sieci albo otwierasz go z zewnątrz (Nabu Casa, DuckDNS, własna domena).';
+
+  @override
+  String get haNoneGetAddress => 'Weź jego adres z Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Otwórz aplikację Home Assistant';
+
+  @override
+  String get haNoneAppStep1 =>
+      'W aplikacji otwórz Ustawienia › Aplikacja towarzysząca.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Stuknij swój serwer, potem ikonę udostępniania u góry i wybierz ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Stuknij swój serwer, potem ikonę udostępniania u góry i Kopiuj link. Wróć i stuknij Wklej.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Otwórz Home Assistant w przeglądarce, której do tego używasz, potem Udostępnij › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Otwórz Home Assistant w przeglądarce, której do tego używasz, skopiuj adres z paska adresu, wróć i stuknij Wklej.';
+
+  @override
+  String get haNoneTypeLabel => 'Albo wpisz adres';
+
+  @override
+  String get haNoneLookAgain => 'Szukaj ponownie';
+
+  @override
+  String get haNoneAssistant => 'Nie wiesz? Zapytaj asystenta';
 
   @override
   String get haConnectAddressHelp =>

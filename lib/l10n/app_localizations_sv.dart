@@ -1734,7 +1734,53 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get haConnectIntro =>
-      'Din telefon når inte mäklaren, men den når Home Assistant. Logga in en gång, så pratar ZigDash med Zigbee2MQTT via Home Assistant: hemma eller borta, utan mäklarinställningar.';
+      'Logga in en gång med Home Assistant, så pratar ZigDash med Zigbee2MQTT genom den: hemma eller borta, utan broker-inställningar.';
+
+  @override
+  String get haNoneTitle =>
+      'ZigDash hittade inte Home Assistant från den här telefonen';
+
+  @override
+  String get haNoneOffWifi =>
+      'Den här telefonen är inte på Wi-Fi. Anslut till ditt Wi-Fi hemma och tryck Sök igen, eller använd adressen du öppnar Home Assistant med utifrån.';
+
+  @override
+  String get haNoneOnWifi =>
+      'Den kan vara på ett annat nätverk, eller så öppnar du den utifrån (Nabu Casa, DuckDNS, din egen domän).';
+
+  @override
+  String get haNoneGetAddress => 'Hämta adressen från Home Assistant:';
+
+  @override
+  String get haNoneOpenApp => 'Öppna Home Assistant-appen';
+
+  @override
+  String get haNoneAppStep1 => 'Öppna Inställningar › Companion-app i appen.';
+
+  @override
+  String get haNoneAppStep2Share =>
+      'Tryck på din server, sedan på delningsikonen överst, och välj ZigDash.';
+
+  @override
+  String get haNoneAppStep2Copy =>
+      'Tryck på din server, sedan på delningsikonen överst, och Kopiera länk. Kom tillbaka och tryck Klistra in.';
+
+  @override
+  String get haNoneBrowserShare =>
+      'Öppna Home Assistant i webbläsaren du använder för den, sedan Dela › ZigDash.';
+
+  @override
+  String get haNoneBrowserCopy =>
+      'Öppna Home Assistant i webbläsaren du använder för den, kopiera adressen från adressfältet, kom tillbaka och tryck Klistra in.';
+
+  @override
+  String get haNoneTypeLabel => 'Eller skriv adressen';
+
+  @override
+  String get haNoneLookAgain => 'Sök igen';
+
+  @override
+  String get haNoneAssistant => 'Osäker? Fråga assistenten';
 
   @override
   String get haConnectAddressHelp =>
