@@ -1162,7 +1162,13 @@ enum HubBackupStep {
 enum HubBackupWhy { noAnswer, background, disconnected }
 
 class HubBackupEvent extends AnalyticsEvent {
-  const HubBackupEvent(this.step, {this.auto, this.took, this.attempt, this.why});
+  const HubBackupEvent(
+    this.step, {
+    this.auto,
+    this.took,
+    this.attempt,
+    this.why,
+  });
 
   final HubBackupStep step;
   final bool? auto;
@@ -1366,4 +1372,39 @@ class HomeShareEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': _snake(step.name)};
+}
+
+/// "Chat with your home" early access (3.5.4, assistant-early-access.md §6):
+/// the card was shown (once per install), Telegram or email chosen, an
+/// email sign-up sent or failed, "Not for me", or the price question
+/// answered. Never the email or the Telegram chat.
+enum ChatEarlyStep {
+  shown('shown'),
+  telegram('telegram'),
+  emailSent('email_sent'),
+  emailFailed('email_failed'),
+  notForMe('not_for_me'),
+  priceYes('price_yes'),
+  priceMaybe('price_maybe'),
+  priceNo('price_no');
+
+  const ChatEarlyStep(this.wire);
+  final String wire;
+}
+
+/// Where the early-access choices were opened: the dashboard card or
+/// Settings.
+enum ChatEarlyFrom { card, settings }
+
+class ChatEarly extends AnalyticsEvent {
+  const ChatEarly(this.step, this.from);
+
+  final ChatEarlyStep step;
+  final ChatEarlyFrom from;
+
+  @override
+  String get name => 'chat_early';
+
+  @override
+  Map<String, String> get props => {'step': step.wire, 'from': from.name};
 }

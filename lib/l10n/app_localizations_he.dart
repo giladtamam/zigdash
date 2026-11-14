@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5513,4 +5514,75 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: היסטוריה ארוכה יותר, יותר אוטומציות, ועוד.';
+
+  @override
+  String get chatEarlyTitle => 'צ\'אט עם הבית';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'שלחו הודעה כמו \"תסגור את התריס במשרד\" או \"הדלת האחורית פתוחה?\" והבית עונה. אנחנו עוד מחליטים אם לבנות את זה. אם כן, $count הראשונים שנרשמים יקבלו את זה בחינם ל-3 חודשים, כולל גישה מרחוק.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'הרשמה בטלגרם';
+
+  @override
+  String get chatEarlyEmail => 'הרשמה במייל';
+
+  @override
+  String get chatEarlyNotForMe => 'לא בשבילי';
+
+  @override
+  String get chatEarlyClose => 'סגירה';
+
+  @override
+  String get chatEarlyEmailHint => 'המייל שלך';
+
+  @override
+  String get chatEarlyBadEmail => 'זה לא נראה כמו כתובת מייל.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'נשתמש בו רק כדי להזמין אותך לבטא ולספר לך את המחיר.';
+
+  @override
+  String get chatEarlyPrivacy => 'מדיניות פרטיות';
+
+  @override
+  String get chatEarlySend => 'שליחה';
+
+  @override
+  String get chatEarlyFailed => 'השליחה נכשלה. נסו בטלגרם, או מאוחר יותר.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'את/ה מספר $position ברשימה: מתוך $count הראשונים. אם נבנה את זה, תקבלו את זה בחינם ל-3 חודשים.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'את/ה מספר $position ברשימה. $count המקומות הראשונים תפוסים; תשמעו ראשונים כשזה יהיה מוכן.';
+  }
+
+  @override
+  String get chatEarlyListed => 'המייל הזה כבר ברשימה.';
+
+  @override
+  String get chatEarlyPrice =>
+      'אחרי החודשים החינמיים, 2.49 אירו לחודש יהיה בסדר?';
+
+  @override
+  String get chatEarlyYes => 'כן';
+
+  @override
+  String get chatEarlyMaybe => 'אולי';
+
+  @override
+  String get chatEarlyNo => 'לא';
+
+  @override
+  String get chatEarlyThanks => 'תודה, נרשם.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'גישה מוקדמת: הרשמה לרשימה';
 }

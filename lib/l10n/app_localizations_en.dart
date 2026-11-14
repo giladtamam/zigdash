@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5578,4 +5579,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: longer history, more automations, and more.';
+
+  @override
+  String get chatEarlyTitle => 'Chat with your home';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. We\'re deciding whether to build it. If we do, the first $count to join get it free for 3 months, remote access included.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Join on Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Join by email';
+
+  @override
+  String get chatEarlyNotForMe => 'Not for me';
+
+  @override
+  String get chatEarlyClose => 'Close';
+
+  @override
+  String get chatEarlyEmailHint => 'Your email';
+
+  @override
+  String get chatEarlyBadEmail => 'That doesn\'t look like an email address.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'We\'ll only use this to invite you to the beta and tell you its price.';
+
+  @override
+  String get chatEarlyPrivacy => 'Privacy policy';
+
+  @override
+  String get chatEarlySend => 'Send';
+
+  @override
+  String get chatEarlyFailed => 'Couldn\'t send. Try Telegram, or later.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'You\'re #$position on the list: one of the first $count. If we build it, you get it free for 3 months.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'You\'re #$position on the list. The first $count places are taken; you\'ll hear first when it\'s ready.';
+  }
+
+  @override
+  String get chatEarlyListed => 'This email is already on the list.';
+
+  @override
+  String get chatEarlyPrice =>
+      'After the free months, would €2.49 a month be OK?';
+
+  @override
+  String get chatEarlyYes => 'Yes';
+
+  @override
+  String get chatEarlyMaybe => 'Maybe';
+
+  @override
+  String get chatEarlyNo => 'No';
+
+  @override
+  String get chatEarlyThanks => 'Thanks, noted.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Early access: join the list';
 }

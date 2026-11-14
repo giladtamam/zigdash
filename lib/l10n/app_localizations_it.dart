@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -5607,4 +5608,76 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: cronologia più lunga, più automazioni e altro ancora.';
+
+  @override
+  String get chatEarlyTitle => 'Chatta con la tua casa';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Invia un messaggio come «chiudi la tapparella dell\'ufficio» o «la porta sul retro è aperta?» e la tua casa risponde. Stiamo decidendo se realizzarlo. Se lo faremo, i primi $count iscritti lo avranno gratis per 3 mesi, accesso remoto incluso.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Iscriviti su Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Iscriviti via email';
+
+  @override
+  String get chatEarlyNotForMe => 'Non fa per me';
+
+  @override
+  String get chatEarlyClose => 'Chiudi';
+
+  @override
+  String get chatEarlyEmailHint => 'La tua email';
+
+  @override
+  String get chatEarlyBadEmail => 'Non sembra un indirizzo email.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'La useremo solo per invitarti alla beta e dirti il prezzo.';
+
+  @override
+  String get chatEarlyPrivacy => 'Privacy';
+
+  @override
+  String get chatEarlySend => 'Invia';
+
+  @override
+  String get chatEarlyFailed =>
+      'Invio non riuscito. Prova con Telegram o più tardi.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Sei il n. $position della lista: tra i primi $count. Se lo realizzeremo, lo avrai gratis per 3 mesi.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Sei il n. $position della lista. I primi $count posti sono presi; lo saprai per primo quando sarà pronto.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Questa email è già nella lista.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Dopo i mesi gratuiti, 2,49 € al mese andrebbero bene?';
+
+  @override
+  String get chatEarlyYes => 'Sì';
+
+  @override
+  String get chatEarlyMaybe => 'Forse';
+
+  @override
+  String get chatEarlyNo => 'No';
+
+  @override
+  String get chatEarlyThanks => 'Grazie, annotato.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Accesso anticipato: iscriviti';
 }

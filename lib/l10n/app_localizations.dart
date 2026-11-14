@@ -9767,6 +9767,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ZigDash Pro: longer history, more automations, and more.'**
   String get saleCardHomeAssistant;
+
+  /// Chat with your home early-access card and Settings row (3.5.4, docs/design/assistant-early-access.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with your home'**
+  String get chatEarlyTitle;
+
+  /// No description provided for @chatEarlyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. We\'re deciding whether to build it. If we do, the first {count} to join get it free for 3 months, remote access included.'**
+  String chatEarlyBody(int count);
+
+  /// No description provided for @chatEarlyTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Join on Telegram'**
+  String get chatEarlyTelegram;
+
+  /// No description provided for @chatEarlyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Join by email'**
+  String get chatEarlyEmail;
+
+  /// No description provided for @chatEarlyNotForMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Not for me'**
+  String get chatEarlyNotForMe;
+
+  /// No description provided for @chatEarlyClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get chatEarlyClose;
+
+  /// No description provided for @chatEarlyEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email'**
+  String get chatEarlyEmailHint;
+
+  /// No description provided for @chatEarlyBadEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'That doesn\'t look like an email address.'**
+  String get chatEarlyBadEmail;
+
+  /// No description provided for @chatEarlyEmailUse.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll only use this to invite you to the beta and tell you its price.'**
+  String get chatEarlyEmailUse;
+
+  /// No description provided for @chatEarlyPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get chatEarlyPrivacy;
+
+  /// No description provided for @chatEarlySend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get chatEarlySend;
+
+  /// No description provided for @chatEarlyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send. Try Telegram, or later.'**
+  String get chatEarlyFailed;
+
+  /// No description provided for @chatEarlyInFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re #{position} on the list: one of the first {count}. If we build it, you get it free for 3 months.'**
+  String chatEarlyInFirst(int position, int count);
+
+  /// No description provided for @chatEarlyAfterFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re #{position} on the list. The first {count} places are taken; you\'ll hear first when it\'s ready.'**
+  String chatEarlyAfterFirst(int position, int count);
+
+  /// No description provided for @chatEarlyListed.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already on the list.'**
+  String get chatEarlyListed;
+
+  /// No description provided for @chatEarlyPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'After the free months, would €2.49 a month be OK?'**
+  String get chatEarlyPrice;
+
+  /// No description provided for @chatEarlyYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get chatEarlyYes;
+
+  /// No description provided for @chatEarlyMaybe.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe'**
+  String get chatEarlyMaybe;
+
+  /// No description provided for @chatEarlyNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get chatEarlyNo;
+
+  /// No description provided for @chatEarlyThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks, noted.'**
+  String get chatEarlyThanks;
+
+  /// No description provided for @settingsChatEarlySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Early access: join the list'**
+  String get settingsChatEarlySubtitle;
 }
 
 class _AppLocalizationsDelegate
