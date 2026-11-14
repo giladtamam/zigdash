@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.5.3 is published (replaces the policy published with ZigDash 3.5.2)
+**Effective date:** the day ZigDash 3.5.4 is published (replaces the policy published with ZigDash 3.5.3)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -8,14 +8,20 @@ the app does and does not do with your data.
 
 ## Summary
 
-ZigDash does **not** collect or share personal data. Your broker settings,
-passwords, devices, topics and their values stay on your device. There is no
-advertising and no user account.
+ZigDash does not collect personal data unless you choose to give it: an
+email in a support message, or a place on the "Chat with your home"
+early-access list (from 3.5.4, see
+[Chat with your home](#chat-with-your-home-early-access)). It never shares or
+sells personal data. Your broker settings, passwords, devices, topics and
+their values stay on your device. There is no advertising and no user
+account.
 
-The developer runs two servers: the ZigDash relay, used only if you turn
-on **Remote control** (part of ZigDash Pro), which carries your home's data
+The developer runs these servers: a small service on Cloudflare that
+passes support messages on and keeps the early-access list; the ZigDash
+relay, used only if you turn on **Remote control** (part of ZigDash Pro),
+which carries your home's data
 encrypted so the developer cannot read it (see
-[Remote control](#remote-control-from-31)), and from 3.4.7 the usage-data
+[Remote control](#remote-control-from-31)); and from 3.4.7 the usage-data
 server described next.
 
 Unless you **opt out**, ZigDash sends a short list of **anonymous usage
@@ -175,6 +181,7 @@ never from anything you typed or anything your broker sent.
 | `shortcut_added` | A Quick Settings tile was given a device, a home-screen widget was added, or ZigDash's Device Controls were first shown | tile, control, widget, scene widget or group widget; from 3.3.3, where it was added from (the offer below, a tile's menu, a device's page, a section, or outside the app) |
 | `shortcut_nudge` | From 3.3.3: ZigDash offered to put a device you switch often on your home screen or in Quick Settings, and what you chose (shown, home screen, Quick Settings, or not now). Never which device; how often each device was switched is counted only on your phone | the step |
 | `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |
+| `chat_early` | From 3.5.4, Google Play build only: the "Chat with your home" card was shown (once per install), Join on Telegram or Join by email was tapped, an email sign-up was sent or failed, "Not for me" was tapped, or the price question was answered (never the email address or the Telegram chat) | which of these happened, and whether it was on the card or in Settings |
 | `poll_answer` | "What should ZigDash do next?" was answered: until 3.1.13 on a one-time card; from 3.3.5 on a one-time card or in Settings, one event for each choice picked (Not now sends nothing; what you write after "Something else" goes only where you send it, by email or on GitHub) | until 3.1.13: notifications, history graphs, kiosk mode or Zigbee groups; from 3.3.5: pairing new devices, device settings and firmware updates, working with ZHA, control from an AI assistant, or something else; and from 3.3.5, where it was answered (the card or Settings) |
 | `why_zigdash` | From 3.1.10 until 3.1.13: the one-time "What made you try ZigDash?" card after the first setup was answered (Not now sends nothing; the card is gone from 3.2) | quicker than another app, easy for the family, a wall tablet, works without Home Assistant, or something else |
 | `remote` | From 3.1.11: remote control was turned on or off. From 3.4.4: the Remote control page was opened, or "See Pro" was tapped on it (each counted once per app start). Until 3.4.3: the one-time "Control your home from anywhere" card was shown, opened or put away | the step, and whether this phone has Pro. From 3.4.4, for an opened page: how it was reached (the button on the dashboard or Settings) and what it had to show (no Pro, not connected, no ZigDash Engine, away from home, ready, on, or a home it can't work for). Nothing about the home, its address or the relay |
@@ -212,6 +219,35 @@ Whatever way you contact support, your email and the Support details you
 chose to include are used only to help you, are never shared, and are
 deleted within 6 months after the issue is closed; a Telegram message is
 deleted from the chat once answered.
+
+## Chat with your home: early access
+
+From 3.5.4 the Google Play build asks whether you'd like to control your home
+by sending chat messages, a feature that is not built yet. Nothing is sent
+unless you join the list:
+
+- **Join on Telegram** opens the ZigDash Home bot (@ZigDashHomeBot) in
+  Telegram. If you start it, the developer's service on Cloudflare keeps the
+  chat's id, the language your Telegram app reports, the date, your place on
+  the list, whether you joined from the card with usage data on, and your
+  answer to the price question. Telegram (Telegram FZ-LLC) also holds the
+  chat, under [its privacy policy](https://telegram.org/privacy).
+- **Join by email** sends the email address you type, the app's language, a
+  random id the app makes for this sign-up, and whether you joined from the
+  card with usage data on. The same service keeps them with the date, your
+  place on the list and your answer to the price question.
+
+**Why:** only to invite you to the beta of "Chat with your home" and to tell
+you its price. The developer is told that someone joined (place, Telegram or
+email, language), never your address. Nothing is shared or sold, and nothing
+about your home is sent.
+
+**How long:** each entry is deleted after 180 days, or earlier once you have
+answered the beta invitation, or when you ask. If the feature is not built,
+the whole list is deleted and everyone on it gets one message saying so.
+
+**Deleting it yourself:** send /stop to the bot, or email the address under
+[Contact](#contact).
 
 ## The assistant on Get help and the help bubble (from 3.5.1)
 
