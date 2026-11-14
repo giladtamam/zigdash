@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../mqtt/ha_token.dart';
 import '../../../mqtt/ha_address.dart';
@@ -16,6 +17,8 @@ import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shortcuts/shortcut_service.dart' show appChannel;
 import '../../ha_import/ha_auth.dart';
+import '../../settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
 import '../../connections/discovery/network_info.dart';
 import '../../connections/discovery/subnet.dart';
 import 'ai_help.dart';
@@ -38,7 +41,12 @@ class HaConnectScreen extends ConsumerStatefulWidget {
     this.controller,
     this.again,
     this.offWifi = false,
+    this.highlightPaste = false,
   });
+
+  /// Back from the Home Assistant app after ZigDash was closed meanwhile
+  /// (3.6): Paste is pointed out at once.
+  final bool highlightPaste;
 
   /// Opened by text shared to ZigDash from another app
   /// (ha-share-paste.md): [initialHost] is the address it held, or null
@@ -73,6 +81,11 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
   /// "shown" was counted, and whether Look again is running (the card
   /// stays in place meanwhile).
   var _haApp = false;
+
+  /// 3.6: the Home Assistant app was opened from here and the person
+  /// hasn't come back yet; then Paste is pointed out.
+  var _leftForHaApp = false;
+  late var _highlightPaste = widget.highlightPaste;
   bool? _onWifi;
   var _noneCounted = false;
   var _retrying = false;
@@ -101,7 +114,14 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
   /// the right line and the right button.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed || !_nothingFound) return;
+    if (state != AppLifecycleState.resumed) return;
+    if (_leftForHaApp) {
+      _leftForHaApp = false;
+      _none(HaNoneChoice.returned);
+      clearHaAppLeft(ref.read(sharedPreferencesProvider));
+      setState(() => _highlightPaste = true);
+    }
+    if (!_nothingFound) return;
     _checkWifi();
     _checkHaApp();
   }
@@ -111,13 +131,20 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
       .track(SetupStep(SetupStepKind.haNone, choice: choice, network: network));
 
   Future<void> _openHaApp() async {
-    _none(HaNoneChoice.openApp);
     var opened = false;
     try {
       opened = await appChannel.invokeMethod<bool>('openHaApp') ?? false;
     } catch (_) {}
+    // 3.6: counted after the answer, so a tap that opened nothing isn't
+    // an "open_app".
+    _none(opened ? HaNoneChoice.openApp : HaNoneChoice.openAppFailed);
+    if (opened) {
+      _leftForHaApp = true;
+      await markHaAppLeft(ref.read(sharedPreferencesProvider));
+      return;
+    }
     // Disabled since the check: the browser lines show instead.
-    if (!opened && mounted) setState(() => _haApp = false);
+    if (mounted) setState(() => _haApp = false);
   }
 
   Future<void> _lookAgain() async {
@@ -333,6 +360,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
                 setState(() => _fill(address, HaAddressFrom.found)),
             onPaste: _paste,
             pasteNothing: _pasteNothing,
+            highlightPaste: _highlightPaste,
             // What a share brought: its address, still in the field, or
             // nothing usable.
             shared: !widget.shared
@@ -389,6 +417,7 @@ class _Ask extends StatefulWidget {
     this.onWhere,
     this.onPaste,
     this.pasteNothing = false,
+    this.highlightPaste = false,
     this.shared,
     this.shareTarget = false,
   });
@@ -398,6 +427,10 @@ class _Ask extends StatefulWidget {
   /// no address in what was copied.
   final VoidCallback? onPaste;
   final bool pasteNothing;
+
+  /// Back from the Home Assistant app (3.6): Paste stands out and scrolls
+  /// into view.
+  final bool highlightPaste;
 
   /// What a share from another app brought, while it is still what the
   /// field says; null when the screen was opened another way.
@@ -503,12 +536,21 @@ class _AskState extends State<_Ask> {
         if (widget.onPaste != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              key: const Key('ha-paste'),
-              onPressed: widget.onPaste,
-              icon: const Icon(Icons.content_paste, size: 18),
-              label: Text(l10n.haPaste),
-            ),
+            child: widget.highlightPaste
+                ? _ScrollIntoView(
+                    child: FilledButton.tonalIcon(
+                      key: const Key('ha-paste'),
+                      onPressed: widget.onPaste,
+                      icon: const Icon(Icons.content_paste, size: 18),
+                      label: Text(l10n.haPaste),
+                    ),
+                  )
+                : TextButton.icon(
+                    key: const Key('ha-paste'),
+                    onPressed: widget.onPaste,
+                    icon: const Icon(Icons.content_paste, size: 18),
+                    label: Text(l10n.haPaste),
+                  ),
           ),
         if (widget.pasteNothing)
           Semantics(
@@ -907,4 +949,55 @@ String _unreachableText(
     HaAddressShape.publicIp => l10n.haConnectRemoteUnreachable,
     _ => l10n.haImportUnreachable,
   };
+}
+
+/// Scrolls its child into view once, when it first appears.
+class _ScrollIntoView extends StatefulWidget {
+  const _ScrollIntoView({required this.child});
+  final Widget child;
+
+  @override
+  State<_ScrollIntoView> createState() => _ScrollIntoViewState();
+}
+
+class _ScrollIntoViewState extends State<_ScrollIntoView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0.5,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+/// When the Home Assistant app was opened from setup (3.6), so a restart
+/// soon after (Android may close ZigDash meanwhile) comes back here.
+const haAppLeftAtKey = 'ha_app_left_at_ms';
+
+/// How long after leaving a restart still counts as coming back.
+const haAppReturnWindow = Duration(minutes: 30);
+
+Future<void> markHaAppLeft(SharedPreferences prefs) =>
+    prefs.setInt(haAppLeftAtKey, DateTime.now().millisecondsSinceEpoch);
+
+Future<void> clearHaAppLeft(SharedPreferences prefs) =>
+    prefs.remove(haAppLeftAtKey);
+
+/// True (and forgotten) when ZigDash starts again within
+/// [haAppReturnWindow] of opening the Home Assistant app.
+bool takeHaAppColdReturn(SharedPreferences prefs, {DateTime? now}) {
+  final at = prefs.getInt(haAppLeftAtKey);
+  if (at == null) return false;
+  prefs.remove(haAppLeftAtKey);
+  final left = DateTime.fromMillisecondsSinceEpoch(at);
+  return (now ?? DateTime.now()).difference(left) < haAppReturnWindow;
 }

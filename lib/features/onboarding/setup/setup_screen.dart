@@ -30,6 +30,7 @@ import 'setup_error_guidance.dart';
 import 'ai_help.dart';
 import 'setup_analytics.dart';
 import 'setup_providers.dart';
+import 'ha_connect_screen.dart' show takeHaAppColdReturn;
 import 'setup_waiting.dart';
 import 'setup_reminder.dart';
 
@@ -365,6 +366,21 @@ class _WelcomeState extends ConsumerState<_Welcome> {
   @override
   void initState() {
     super.initState();
+    // 3.6: ZigDash was closed while the person was in the Home Assistant
+    // app copying the address: back to that screen, Paste pointed out.
+    if (_coldReturnFromHaApp()) {
+      ref
+          .read(analyticsProvider)
+          .track(
+            const SetupStep(
+              SetupStepKind.haNone,
+              choice: HaNoneChoice.returnedCold,
+            ),
+          );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.push(Routes.haConnectBackFromApp);
+      });
+    }
     // Counted only here: the reminder opens the app on this screen.
     ref.read(setupReminderProvider).openedFromReminder().then((yes) {
       if (yes && mounted) {
@@ -373,6 +389,16 @@ class _WelcomeState extends ConsumerState<_Welcome> {
             .track(const SetupStep(SetupStepKind.reminderOpened));
       }
     });
+  }
+
+  /// Best effort: screens shown without preferences (golden tests) never
+  /// count as coming back.
+  bool _coldReturnFromHaApp() {
+    try {
+      return takeHaAppColdReturn(ref.read(sharedPreferencesProvider));
+    } catch (_) {
+      return false;
+    }
   }
 
   bool get _asking =>

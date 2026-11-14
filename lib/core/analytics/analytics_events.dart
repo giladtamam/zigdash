@@ -527,7 +527,18 @@ class SetupStep extends AnalyticsEvent {
 }
 
 /// What happened on the Home Assistant "couldn't find it" card (3.5.2).
-enum HaNoneChoice { shown, openApp, lookAgain, assistant }
+/// 3.6: `openApp` only when the app really opened, `openAppFailed` when it
+/// didn't; `returned` once back from it, `returnedCold` when ZigDash had
+/// been closed meanwhile and started again within 30 minutes.
+enum HaNoneChoice {
+  shown,
+  openApp,
+  lookAgain,
+  assistant,
+  openAppFailed,
+  returned,
+  returnedCold,
+}
 
 enum Feature {
   devicesTab,

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/core/router/routes.dart';
@@ -32,6 +33,7 @@ void main() {
     List<Override> overrides = const [],
     bool shared = false,
     bool shareTarget = false,
+    bool highlightPaste = false,
     void Function(AnalyticsEvent event)? onEvent,
   }) async {
     final controller = HaConnectController(
@@ -60,6 +62,7 @@ void main() {
             controller: controller,
             again: again,
             offWifi: offWifi,
+            highlightPaste: highlightPaste,
           ),
         ),
       ],
@@ -796,6 +799,63 @@ void main() {
       expect(find.textContaining('and pick ZigDash'), findsNothing);
     });
   });
+  // 3.6: back from the Home Assistant app (pro-trial-360.md §4).
+  group('back from the Home Assistant app', () {
+    testWidgets('after a restart, Paste is pointed out', (tester) async {
+      await pump(tester, highlightPaste: true);
+      expect(
+        find.ancestor(
+          of: find.text('Paste'),
+          matching: find.byKey(const Key('ha-paste')),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        tester.widget(find.byKey(const Key('ha-paste'))),
+        isA<FilledButton>(),
+      );
+    });
+
+    testWidgets('otherwise Paste stays a plain button', (tester) async {
+      await pump(tester);
+      expect(
+        tester.widget(find.byKey(const Key('ha-paste'))),
+        isA<TextButton>(),
+      );
+    });
+
+    test('a restart within 30 minutes counts as coming back, once', () async {
+      SharedPreferences.setMockInitialValues({});
+      final p = await SharedPreferences.getInstance();
+      expect(takeHaAppColdReturn(p), isFalse);
+      await markHaAppLeft(p);
+      expect(
+        takeHaAppColdReturn(
+          p,
+          now: DateTime.now().add(const Duration(minutes: 10)),
+        ),
+        isTrue,
+      );
+      expect(takeHaAppColdReturn(p), isFalse);
+      await markHaAppLeft(p);
+      expect(
+        takeHaAppColdReturn(
+          p,
+          now: DateTime.now().add(const Duration(minutes: 40)),
+        ),
+        isFalse,
+      );
+    });
+
+    test('the new choices on the wire', () {
+      String wire(HaNoneChoice c) =>
+          SetupStep(SetupStepKind.haNone, choice: c).props['choice']!;
+      expect(wire(HaNoneChoice.openAppFailed), 'open_app_failed');
+      expect(wire(HaNoneChoice.returned), 'returned');
+      expect(wire(HaNoneChoice.returnedCold), 'returned_cold');
+    });
+  });
+
 }
 
 class _Sink implements AnalyticsSink {

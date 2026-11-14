@@ -136,6 +136,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 shared: state.uri.queryParameters['from'] == 'shared',
                 again: state.uri.queryParameters['again'],
                 offWifi: state.uri.queryParameters['wifi'] == 'off',
+                highlightPaste: state.uri.queryParameters['paste'] == '1',
               ),
             ),
           ),
