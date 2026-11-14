@@ -62,3 +62,4 @@ test/goldens/failures/
 tool/.telegram_bot
 tool/.telegram_offset
 tool/.assistant_bot
+tool/.assistant_webhook_secret
