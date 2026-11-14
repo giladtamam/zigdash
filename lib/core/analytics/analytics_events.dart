@@ -1109,12 +1109,19 @@ enum ProFrom {
   automations,
   wall,
   saleCard,
+
+  /// 3.6: the card two days before the trial ends.
+  trialEnd,
 }
 
 class ProEvent extends AnalyticsEvent {
-  const ProEvent(this.step, {this.from, this.sale});
+  const ProEvent(this.step, {this.from, this.sale, this.trial});
 
   final ProStep step;
+
+  /// 3.6: the 14-day trial at the time: none, running or ended, so a
+  /// purchase on day 20 from Settings still shows it came after a trial.
+  final String? trial;
 
   /// The view that led to the Pro screen; null for a locked view.
   final ProFrom? from;
@@ -1133,6 +1140,7 @@ class ProEvent extends AnalyticsEvent {
     if (from != null) 'from': _snake(from!.name),
     if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
     if (sale != null) 'sale': sale! ? 'yes' : 'no',
+    if (trial != null) 'trial': trial!,
   };
 }
 
@@ -1446,4 +1454,42 @@ class HistoryOnEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// The 14-day Pro trial (3.6, pro-trial-360.md §5): started (from where,
+/// the Home's platform, the install's first-open week), declined (the
+/// offer), a feature used (once each), the ending card shown, ended, or
+/// kept (Pro bought while it ran or within a week after).
+enum ProTrialStep {
+  started('started'),
+  declined('declined'),
+  used('used'),
+  endingShown('ending_shown'),
+  ended('ended'),
+  kept('kept');
+
+  const ProTrialStep(this.wire);
+  final String wire;
+}
+
+class ProTrialEvent extends AnalyticsEvent {
+  const ProTrialEvent(this.step, {this.from, this.hub, this.week, this.what});
+
+  final ProTrialStep step;
+  final String? from;
+  final String? hub;
+  final String? week;
+  final String? what;
+
+  @override
+  String get name => 'pro_trial';
+
+  @override
+  Map<String, String> get props => {
+    'step': step.wire,
+    if (from != null) 'from': from!,
+    if (hub != null) 'hub': hub!,
+    if (week != null) 'week': week!,
+    if (what != null) 'what': what!,
+  };
 }

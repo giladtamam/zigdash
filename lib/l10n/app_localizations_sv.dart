@@ -4107,7 +4107,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Konfiguration, instrumentpaneler, styrning av alla enheter, widgetar, snabbinställningsrutor, aviseringar, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.';
+      'Konfiguration, instrumentpaneler, styrning av alla enheter, widgetar, snabbinställningsrutor, aviseringar, tre automationer per hem och själva väggplattan förblir gratis. Inget som är gratis i dag blir betalt.';
 
   @override
   String get proBuy => 'Skaffa Pro';
@@ -5695,4 +5695,61 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'Spela in på den här telefonen';
+
+  @override
+  String get proTrialStartedTitle => 'Pro är på i 14 dagar';
+
+  @override
+  String get proTrialOfferTitle => 'Prova ZigDash Pro gratis i 14 dagar';
+
+  @override
+  String get proTrialWhat =>
+      'Historik för 7 och 30 dagar, extrafunktionerna för väggplattan och fler än tre automationer.';
+
+  @override
+  String get proTrialNoPayment => 'Ingen betalning, inget förnyas.';
+
+  @override
+  String get proTrialStart => 'Starta provperioden';
+
+  @override
+  String get proTrialEndingTitle => 'Din Pro-provperiod slutar om 2 dagar';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Behåll Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'vecko- och månadshistoriken';
+
+  @override
+  String get proTrialUsedWall => 'väggplattans extrafunktioner';
+
+  @override
+  String get proTrialUsedAutomation => 'fler än tre automationer';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Du använde $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Efteråt finns allt du ställt in kvar; vecko- och månadsvyerna och nya automationer utöver tre kräver Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Provperiod: $days dagar kvar',
+      one: 'Provperiod: 1 dag kvar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Din provperiod är slut. Allt du ställt in finns kvar.';
 }

@@ -4110,7 +4110,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Настройка, панели, управление любым устройством, виджеты, плитки быстрых настроек, оповещения, три автоматизации на дом и сам настенный планшет остаются бесплатными. Ничто из того, чем вы пользуетесь сегодня, не будет заблокировано.';
+      'Настройка, панели, управление любым устройством, виджеты, плитки быстрых настроек, оповещения, три автоматизации на дом и сам настенный планшет остаются бесплатными. Ничто из того, что сегодня бесплатно, не станет платным.';
 
   @override
   String get proBuy => 'Получить Pro';
@@ -5692,4 +5692,62 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'Записывать на этом телефоне';
+
+  @override
+  String get proTrialStartedTitle => 'Pro включён на 14 дней';
+
+  @override
+  String get proTrialOfferTitle => 'Попробуйте ZigDash Pro бесплатно 14 дней';
+
+  @override
+  String get proTrialWhat =>
+      'История за 7 и 30 дней, функции настенного планшета и больше трёх автоматизаций.';
+
+  @override
+  String get proTrialNoPayment => 'Без оплаты, ничего не продлевается.';
+
+  @override
+  String get proTrialStart => 'Начать пробный период';
+
+  @override
+  String get proTrialEndingTitle => 'Пробный период Pro закончится через 2 дня';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Оставить Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'историю за неделю и месяц';
+
+  @override
+  String get proTrialUsedWall => 'функции настенного планшета';
+
+  @override
+  String get proTrialUsedAutomation => 'больше трёх автоматизаций';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Вы пользовались: $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'После него всё настроенное останется; виды за неделю и месяц и новые автоматизации сверх трёх требуют Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Пробный период: осталось $days дней',
+      few: 'Пробный период: осталось $days дня',
+      one: 'Пробный период: остался 1 день',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Пробный период закончился. Всё, что вы настроили, на месте.';
 }

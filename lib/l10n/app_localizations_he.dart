@@ -4062,7 +4062,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'ההגדרה, הדשבורדים, השליטה בכל מכשיר, הווידג\'טים, אריחי ההגדרות המהירות, ההתראות, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שאתם משתמשים בו היום לא ננעל.';
+      'ההגדרה, הדשבורדים, השליטה בכל מכשיר, הווידג\'טים, אריחי ההגדרות המהירות, ההתראות, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שחינמי היום לא יהפוך לבתשלום.';
 
   @override
   String get proBuy => 'לקבלת Pro';
@@ -5621,4 +5621,60 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'להקליט בטלפון הזה';
+
+  @override
+  String get proTrialStartedTitle => 'Pro פעיל ל-14 יום';
+
+  @override
+  String get proTrialOfferTitle => 'נסו את ZigDash Pro בחינם ל-14 יום';
+
+  @override
+  String get proTrialWhat =>
+      'היסטוריה של 7 ו-30 יום, התוספות לטאבלט הקיר ויותר משלוש אוטומציות.';
+
+  @override
+  String get proTrialNoPayment => 'בלי תשלום, שום דבר לא מתחדש.';
+
+  @override
+  String get proTrialStart => 'להתחיל ניסיון';
+
+  @override
+  String get proTrialEndingTitle => 'הניסיון של Pro מסתיים בעוד יומיים';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'להשאיר את Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'היסטוריית השבוע והחודש';
+
+  @override
+  String get proTrialUsedWall => 'התוספות לטאבלט הקיר';
+
+  @override
+  String get proTrialUsedAutomation => 'יותר משלוש אוטומציות';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'השתמשתם ב: $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'אחרי שהוא מסתיים, כל מה שהגדרתם נשאר; תצוגות השבוע והחודש ואוטומציות חדשות מעבר לשלוש דורשות Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'ניסיון: נשארו $days ימים',
+      one: 'ניסיון: נשאר יום אחד',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded => 'הניסיון הסתיים. כל מה שהגדרתם עדיין שם.';
 }

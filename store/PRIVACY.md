@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.5.4 is published (replaces the policy published with ZigDash 3.5.3)
+**Effective date:** the day ZigDash 3.6 is published (replaces the policy published with ZigDash 3.5.4)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -186,12 +186,14 @@ never from anything you typed or anything your broker sent.
 | `alerts_setup` | A step of setting alerts up | the step (flow installed, flow installed by hand, no Node-RED, phone registered, no Google services, test sent, test failed); the channel (push, ntfy, Pushover) |
 | `alert_added` | An alert was added | its kind: leak, smoke, door or window opened, or battery low |
 | `alarm_shown` | From 2.9: alarm takeover filled a wall display | only the kind: leak, smoke, gas or carbon monoxide. Never the device or where it is |
-| `history_setup` | From 2.7: setting up the history recorder on the hub ended | installed, updated, imported by hand (Node-RED asked for a login), no Node-RED found, or refused; from 2.9.1 also recording on this device instead |
-| `engine_setup` | From 3.0: a step of putting ZigDash Engine on the hub | offered, installed, consent shown, given or declined, Zigbee2MQTT too old, failed, removed, started again, seen paused or stopped; which screen it came from (automations, alerts or history); Zigbee2MQTT's version as major.minor only |
+| `history_setup` | From 2.7: setting up the history recorder on the hub ended | installed, updated, imported by hand (Node-RED asked for a login), no Node-RED found, or refused; from 2.9.1 also recording on this device instead; from 3.6 also where it was set up (a History sheet, the Turn on History card right after setup, or that card later) |
+| `engine_setup` | From 3.0: a step of putting ZigDash Engine on the hub | offered, installed, consent shown, given or declined, Zigbee2MQTT too old, failed, removed, started again, seen paused or stopped; which screen it came from (automations, alerts, history or, from 3.6, the Turn on History card); Zigbee2MQTT's version as major.minor only |
 | `hub_backup` | From 3.3: hub backup | the step: a backup of Zigbee2MQTT's data folder was taken (and whether automatically or by hand), Zigbee2MQTT on the hub could not make one or did not answer, a copy was saved, or a backup was restored (or the restore stopped). From 3.5.3 also how long taking it took (under 10 s, 10-30 s, 30-60 s, over 60 s), whether it was the first or second automatic try, and for one that got no answer whether the app had left the screen or the connection dropped meanwhile. Never the backup, its size, or anything in it |
 | `automation_saved` | From 3.0: an automation was saved | its shape only: the kind of trigger (a device's state, a button, a reading, a clock time or the sun), how many conditions, a scene or a device, whether it turns off again, new or edited, and how many the home has, in ranges. Never a device, a name or a time |
 | `home_share` | From 3.1.7, sharing a Home with another phone | that a phone showed its share code, that another phone joined, and whether the dashboards arrived; never the Home, its address or its login |
-| `pro` | From 2.7, Google Play version only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. Nothing about the payment, the price or the currency |
+| `pro` | From 2.7, Google Play version only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. From 3.6: whether the 14-day trial had not started, was running or had ended. Nothing about the payment, the price or the currency |
+| `history_on` | From 3.6: the Turn on History card | shown, tapped, put off, the consent shown or declined, this phone chosen to record, or the broker asked for; and whether it was right after setup or later |
+| `pro_trial` | From 3.6, Google Play version only: the 14-day Pro trial | started (from where: right after setup, the History card, a History sheet or the offer; the Home's kind of connection; the week ZigDash was installed), the offer declined, a Pro feature used during it (the week or month History, the wall tablet extras, more than three automations; once each), the ending card shown, ended, or Pro bought during it or within a week after. Never a device, a reading or a time of day |
 | `sale_card` | From 3.4.6, Google Play version only: the card on the Devices tab that announces a sale on ZigDash Pro | the step only: shown, opened or closed |
 | `review_prompt` | From 2.6.5: the app asked Google Play to show its "rate this app" dialog (after a device you control has answered on two different days) | whether the dialog was requested, or could not be because the Play review flow is not available on the device. Nothing about whether you rated, or what |
 
@@ -377,6 +379,11 @@ the app asks Google Play whether Pro was bought. If you turn on Remote control,
 the relay keeps a one-way hash of the purchase token, as described there. Versions
 from GitHub, IzzyOnDroid and F-Droid contain no billing code and have Pro
 unlocked.
+
+From 3.6 the Google Play version offers 14 days of Pro to try, once per
+install, when History first records (or, for a Home that already recorded,
+when you start it). No payment is taken and nothing renews. The trial's dates
+stay on your phone, in a file that is not included in Android backups.
 
 ## Remote control (from 3.1)
 

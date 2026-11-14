@@ -4,10 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../core/l10n/l10n_ext.dart';
 import '../core/router/routes.dart';
-import '../features/settings/providers/settings_controller.dart'
-    show sharedPreferencesProvider;
+import '../features/settings/providers/settings_controller.dart' show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
-import '../features/pro/pro.dart';
 import '../features/pro/pro_screen.dart';
 import '../core/analytics/analytics.dart';
 import '../alerts/alerts_hint_card.dart';
@@ -17,8 +15,8 @@ import 'automation_editor_screen.dart';
 import 'automation_text.dart';
 import 'automations_repo.dart';
 import 'engine_installer.dart';
-import '../features/history/history_setup_flow.dart'
-    show allowEngineAndRestart, installEngineOn;
+import '../features/history/history_setup_flow.dart' show allowEngineAndRestart, installEngineOn;
+import '../features/pro/pro_trial.dart' show ProTrialUse, proAccessProvider, proTrialProvider;
 import 'engine_providers.dart';
 import 'engine_status.dart';
 
@@ -39,18 +37,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   _Busy _busy = _Busy.none;
   String? _error;
 
-  void _track(EngineStep step) => ref
-      .read(analyticsProvider)
-      .track(
-        EngineEvent(
-          step,
-          z2m: ref
-              .read(engineViewProvider(widget.connectionId))
-              .valueOrNull
-              ?.hub
-              ?.version,
-        ),
-      );
+  void _track(EngineStep step) => ref.read(analyticsProvider).track(EngineEvent(step,
+      z2m: ref.read(engineViewProvider(widget.connectionId)).valueOrNull?.hub?.version));
 
   final _seen = <HubEnginePhase>{};
 
@@ -83,24 +71,15 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     });
     final l10n = context.l10n;
     try {
-      final (answer, error) = await installEngineOn(
-        ref,
-        widget.connectionId,
-        from: EngineFrom.automations,
-        z2m: ref
-            .read(engineViewProvider(widget.connectionId))
-            .valueOrNull
-            ?.hub
-            ?.version,
-      );
+      final (answer, error) = await installEngineOn(ref, widget.connectionId,
+          from: EngineFrom.automations,
+          z2m: ref.read(engineViewProvider(widget.connectionId)).valueOrNull?.hub?.version);
       if (!mounted) return;
-      setState(
-        () => _error = switch (answer) {
-          HubAnswer.ok => null,
-          HubAnswer.refused => l10n.engineInstallRefused(error ?? ''),
-          HubAnswer.noAnswer => l10n.engineInstallNoAnswer,
-        },
-      );
+      setState(() => _error = switch (answer) {
+            HubAnswer.ok => null,
+            HubAnswer.refused => l10n.engineInstallRefused(error ?? ''),
+            HubAnswer.noAnswer => l10n.engineInstallNoAnswer,
+          });
     } catch (_) {
       if (mounted) setState(() => _error = l10n.engineInstallNoAnswer);
     } finally {
@@ -115,11 +94,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     });
     final l10n = context.l10n;
     try {
-      final answer = await allowEngineAndRestart(
-        ref,
-        widget.connectionId,
-        from: EngineFrom.automations,
-      );
+      final answer =
+          await allowEngineAndRestart(ref, widget.connectionId, from: EngineFrom.automations);
       if (!mounted) return;
       if (answer != HubAnswer.ok) {
         setState(() {
@@ -142,11 +118,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
 
   Future<void> _decline() async {
     _track(EngineStep.declined);
-    await setEngineDeclined(
-      ref.read(sharedPreferencesProvider),
-      widget.connectionId,
-      true,
-    );
+    await setEngineDeclined(ref.read(sharedPreferencesProvider), widget.connectionId, true);
     ref.invalidate(engineViewProvider(widget.connectionId));
   }
 
@@ -158,31 +130,22 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
         title: Text(l10n.engineRemoveTitle),
         content: Text(l10n.engineRemoveBody),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(l10n.engineRemove),
-          ),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel)),
+          FilledButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text(l10n.engineRemove)),
         ],
       ),
     );
     if (yes != true || !mounted) return;
     try {
-      final installer = await ref.read(
-        engineInstallerProvider(widget.connectionId).future,
-      );
+      final installer = await ref.read(engineInstallerProvider(widget.connectionId).future);
       final (answer, error) = await installer.remove();
       if (!mounted) return;
       if (answer == HubAnswer.ok) _track(EngineStep.removed);
       if (answer != HubAnswer.ok) {
-        setState(
-          () => _error = answer == HubAnswer.refused
-              ? l10n.engineInstallRefused(error ?? '')
-              : l10n.engineInstallNoAnswer,
-        );
+        setState(() => _error = answer == HubAnswer.refused
+            ? l10n.engineInstallRefused(error ?? '')
+            : l10n.engineInstallNoAnswer);
       }
     } catch (_) {
       if (mounted) setState(() => _error = l10n.engineInstallNoAnswer);
@@ -190,39 +153,29 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   }
 
   void _newAutomation() {
-    final count =
-        ref
-            .read(automationsProvider(widget.connectionId))
-            .valueOrNull
-            ?.length ??
-        0;
-    if (count >= freeAutomations &&
-        ref.read(proStatusProvider) != ProStatus.unlocked) {
+    final count = ref.read(automationsProvider(widget.connectionId)).valueOrNull?.length ?? 0;
+    if (count >= freeAutomations && !ref.read(proAccessProvider)) {
       showModalBottomSheet<void>(
         context: context,
         showDragHandle: true,
-        builder: (ctx) => _ProCeilingSheet(
-          onPro: () {
-            Navigator.of(ctx).pop();
-            openPro(context, from: ProFrom.automations);
-          },
-        ),
+        builder: (ctx) => _ProCeilingSheet(onPro: () {
+          Navigator.of(ctx).pop();
+          openPro(context, from: ProFrom.automations);
+        }),
       );
       return;
     }
+    // 3.6: past the free three while the trial runs: counted once.
+    if (count >= freeAutomations) {
+      ref.read(proTrialProvider.notifier).used(ProTrialUse.automation);
+    }
     // Above the bottom bar, like the scene editor.
-    Navigator.of(context, rootNavigator: true).push(
-      MaterialPageRoute<void>(
-        builder: (_) =>
-            AutomationEditorScreen(connectionId: widget.connectionId),
-      ),
-    );
+    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute<void>(
+        builder: (_) => AutomationEditorScreen(connectionId: widget.connectionId)));
   }
 
   Future<void> _startAgain() async {
-    final installer = await ref.read(
-      engineInstallerProvider(widget.connectionId).future,
-    );
+    final installer = await ref.read(engineInstallerProvider(widget.connectionId).future);
     installer.startAgain();
     _track(EngineStep.startedAgain);
   }
@@ -253,10 +206,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
             PopupMenuButton<void>(
               key: const Key('engine-menu'),
               itemBuilder: (_) => [
-                PopupMenuItem<void>(
-                  onTap: _confirmRemove,
-                  child: Text(l10n.engineRemove),
-                ),
+                PopupMenuItem<void>(onTap: _confirmRemove, child: Text(l10n.engineRemove)),
               ],
             ),
           const SettingsAction(),
@@ -264,20 +214,15 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       ),
       body: view.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) =>
-            _Message(title: l10n.engineChecking, body: l10n.engineNoConnection),
+        error: (_, __) => _Message(title: l10n.engineChecking, body: l10n.engineNoConnection),
         data: (v) => ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
           children: [
             ..._body(context, l10n, v),
-            if (v.installed && _busy == _Busy.none)
-              _AutomationsList(connectionId: widget.connectionId),
+            if (v.installed && _busy == _Busy.none) _AutomationsList(connectionId: widget.connectionId),
             if (_error != null) ...[
               const SizedBox(height: 12),
-              Text(
-                _error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
+              Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ],
           ],
         ),
@@ -285,11 +230,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     );
   }
 
-  List<Widget> _body(
-    BuildContext context,
-    AppLocalizations l10n,
-    EngineView v,
-  ) {
+  List<Widget> _body(BuildContext context, AppLocalizations l10n, EngineView v) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _seenPhase(v.phase);
     });
@@ -321,8 +262,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
-            onPressed: () =>
-                context.push('/connections/${widget.connectionId}/edit'),
+            onPressed: () => context.push('/connections/${widget.connectionId}/edit'),
             icon: const Icon(Icons.settings_ethernet),
             label: Text(l10n.engineNeedsBrokerButton),
           ),
@@ -352,10 +292,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       case HubEnginePhase.needsConsent:
         if (v.declined) {
           return [
-            _Message(
-              title: l10n.engineDeclinedTitle,
-              body: l10n.engineDeclinedBody,
-            ),
+            _Message(title: l10n.engineDeclinedTitle, body: l10n.engineDeclinedBody),
             const SizedBox(height: 16),
             FilledButton.tonal(
               key: const Key('engine-allow-after-all'),
@@ -365,15 +302,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           ];
         }
         return [
-          _Message(
-            title: l10n.engineConsentTitle,
-            body: l10n.engineConsentBody,
-          ),
-          _Bullets([
-            l10n.engineConsentOutage,
-            l10n.engineConsentOpen,
-            l10n.engineConsentUndo,
-          ]),
+          _Message(title: l10n.engineConsentTitle, body: l10n.engineConsentBody),
+          _Bullets([l10n.engineConsentOutage, l10n.engineConsentOpen, l10n.engineConsentUndo]),
           const SizedBox(height: 16),
           FilledButton(
             key: const Key('engine-consent'),
@@ -405,9 +335,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
             action: l10n.engineStartAgain,
             onAction: _startAgain,
             secondary: l10n.engineReportProblem,
-            onSecondary: () => context.push(
-              Routes.getHelpFrom('automations', home: widget.connectionId),
-            ),
+            onSecondary: () => context.push(Routes.getHelpFrom('automations', home: widget.connectionId)),
           ),
         ];
       case HubEnginePhase.running:
@@ -418,10 +346,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
             _Message(title: l10n.engineRunningTitle, body: l10n.autoEmptyBody),
           if (v.clockOff) ...[
             const SizedBox(height: 12),
-            Text(
-              l10n.engineClockOff,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
+            Text(l10n.engineClockOff, style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ],
           if ((r?.rulesUnknown ?? const []).isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -438,15 +363,15 @@ class _Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 32),
-    child: Column(
-      children: [
-        const CircularProgressIndicator(),
-        const SizedBox(height: 16),
-        Text(text, textAlign: TextAlign.center),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: Column(
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            Text(text, textAlign: TextAlign.center),
+          ],
+        ),
+      );
 }
 
 class _Message extends StatelessWidget {
@@ -474,24 +399,24 @@ class _Bullets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 12),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final i in items)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('•  '),
-                Expanded(child: Text(i)),
-              ],
-            ),
-          ),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.only(top: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final i in items)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('•  '),
+                    Expanded(child: Text(i)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      );
 }
 
 class _Alert extends StatelessWidget {
@@ -520,22 +445,16 @@ class _Alert extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(color: scheme.onErrorContainer),
-            ),
+            Text(title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: scheme.onErrorContainer)),
             const SizedBox(height: 8),
             Text(body, style: TextStyle(color: scheme.onErrorContainer)),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               children: [
-                if (action != null)
-                  FilledButton.tonal(onPressed: onAction, child: Text(action!)),
-                if (secondary != null)
-                  TextButton(onPressed: onSecondary, child: Text(secondary!)),
+                if (action != null) FilledButton.tonal(onPressed: onAction, child: Text(action!)),
+                if (secondary != null) TextButton(onPressed: onSecondary, child: Text(secondary!)),
               ],
             ),
           ],
@@ -544,6 +463,7 @@ class _Alert extends StatelessWidget {
     );
   }
 }
+
 
 /// The Home's Automations and Recent runs (zigdash-3.0.md §1).
 class _AutomationsList extends ConsumerWidget {
@@ -555,16 +475,10 @@ class _AutomationsList extends ConsumerWidget {
     final l10n = context.l10n;
     final ml = MaterialLocalizations.of(context);
     final theme = Theme.of(context);
-    final rules =
-        ref.watch(automationsProvider(connectionId)).valueOrNull ??
-        const <Automation>[];
-    final runs =
-        ref.watch(automationRunsProvider(connectionId)).valueOrNull ??
-        const <AutomationRun>[];
-    final pro = ref.watch(proStatusProvider) == ProStatus.unlocked;
-    String time(DateTime t) => MaterialLocalizations.of(
-      context,
-    ).formatTimeOfDay(TimeOfDay.fromDateTime(t));
+    final rules = ref.watch(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
+    final runs = ref.watch(automationRunsProvider(connectionId)).valueOrNull ?? const <AutomationRun>[];
+    final pro = ref.watch(proAccessProvider);
+    String time(DateTime t) => MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(t));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -577,64 +491,37 @@ class _AutomationsList extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(r.name, style: theme.textTheme.titleMedium),
-                      ),
-                      Switch(
-                        value: r.enabled,
-                        onChanged: (on) => ref
-                            .read(automationsRepoProvider)
-                            .save(connectionId, r.copyWith(enabled: on)),
-                      ),
-                    ],
-                  ),
+                  Row(children: [
+                    Expanded(child: Text(r.name, style: theme.textTheme.titleMedium)),
+                    Switch(
+                      value: r.enabled,
+                      onChanged: (on) => ref.read(automationsRepoProvider).save(connectionId, r.copyWith(enabled: on)),
+                    ),
+                  ]),
                   Opacity(
                     opacity: r.enabled ? 1 : 0.55,
                     child: Text(
                       [
                         triggerText(l10n, ml, r.trigger),
                         if (r.conditions.isNotEmpty)
-                          l10n.autoOnlyIfList(
-                            r.conditions
-                                .map((c) => conditionText(l10n, c))
-                                .join(', '),
-                          ),
+                          l10n.autoOnlyIfList(r.conditions.map((c) => conditionText(l10n, c)).join(', ')),
                         actionText(l10n, r.action),
                       ].join('\n'),
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () =>
-                            Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => AutomationEditorScreen(
-                                  connectionId: connectionId,
-                                  existing: r,
-                                ),
-                              ),
-                            ),
-                        child: Text(l10n.autoEdit),
-                      ),
-                      const Spacer(),
-                      () {
-                        final last = runs
-                            .where((x) => x.id == r.id)
-                            .firstOrNull;
-                        return Chip(
-                          label: Text(
-                            last == null
-                                ? l10n.autoNeverRan
-                                : l10n.autoRanAt(time(last.at)),
-                          ),
-                        );
-                      }(),
-                    ],
-                  ),
+                  Row(children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context, rootNavigator: true).push(MaterialPageRoute<void>(
+                          builder: (_) => AutomationEditorScreen(connectionId: connectionId, existing: r))),
+                      child: Text(l10n.autoEdit),
+                    ),
+                    const Spacer(),
+                    () {
+                      final last = runs.where((x) => x.id == r.id).firstOrNull;
+                      return Chip(label: Text(last == null ? l10n.autoNeverRan : l10n.autoRanAt(time(last.at))));
+                    }(),
+                  ]),
                 ],
               ),
             ),
@@ -642,23 +529,15 @@ class _AutomationsList extends ConsumerWidget {
         if (!pro)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              l10n.autoFreeCount(rules.length, freeAutomations),
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall,
-            ),
+            child: Text(l10n.autoFreeCount(rules.length, freeAutomations),
+                textAlign: TextAlign.center, style: theme.textTheme.bodySmall),
           ),
         if (runs.isNotEmpty) ...[
           const SizedBox(height: 16),
-          Text(
-            l10n.autoRecentRuns.toUpperCase(),
-            style: theme.textTheme.labelLarge,
-          ),
+          Text(l10n.autoRecentRuns.toUpperCase(), style: theme.textTheme.labelLarge),
           const SizedBox(height: 8),
           for (final run in runs.take(10))
-            Text(
-              '${time(run.at)} · ${rules.where((x) => x.id == run.id).firstOrNull?.name ?? l10n.autoDeleted}',
-            ),
+            Text('${time(run.at)} · ${rules.where((x) => x.id == run.id).firstOrNull?.name ?? l10n.autoDeleted}'),
         ],
       ],
     );
@@ -679,18 +558,11 @@ class _ProCeilingSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l10n.autoCeilingTitle(freeAutomations),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text(l10n.autoCeilingTitle(freeAutomations), style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(l10n.autoCeilingBody),
             const SizedBox(height: 16),
-            FilledButton(
-              key: const Key('auto-ceiling-pro'),
-              onPressed: onPro,
-              child: Text(l10n.autoCeilingSeePro),
-            ),
+            FilledButton(key: const Key('auto-ceiling-pro'), onPressed: onPro, child: Text(l10n.autoCeilingSeePro)),
           ],
         ),
       ),

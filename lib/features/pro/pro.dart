@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/analytics/analytics.dart';
+import 'pro_trial.dart'
+    show proTrialOfferedProvider, proTrialProp, proTrialProvider;
 import '../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 
@@ -97,7 +99,15 @@ class ProBilling extends Notifier<ProStatus> {
     final from = ref.read(proFromProvider);
     final shown = ref.read(proOfferProvider).valueOrNull;
     final sale = shown?.onSale(DateTime.now()) ?? false;
-    analytics.track(ProEvent(ProStep.unlockTapped, from: from, sale: sale));
+    final trial = ref.read(proTrialProvider);
+    final trialWire = proTrialProp(
+      ref.read(proTrialOfferedProvider),
+      trial,
+      DateTime.now(),
+    );
+    analytics.track(
+      ProEvent(ProStep.unlockTapped, from: from, sale: sale, trial: trialWire),
+    );
     final answer = await _ask('buy', {
       'offerId': shown?.offerId,
       'priceMicros': shown?.priceMicros,
@@ -110,7 +120,15 @@ class ProBilling extends Notifier<ProStatus> {
       return;
     }
     if (state == ProStatus.unlocked) {
-      analytics.track(ProEvent(ProStep.unlocked, from: from, sale: sale));
+      analytics.track(
+        ProEvent(ProStep.unlocked, from: from, sale: sale, trial: trialWire),
+      );
+      // 3.6: bought while the trial ran or within a week after it.
+      final end = trial.end;
+      if (end != null &&
+          DateTime.now().isBefore(end.add(const Duration(days: 7)))) {
+        analytics.track(const ProTrialEvent(ProTrialStep.kept));
+      }
     }
   }
 }

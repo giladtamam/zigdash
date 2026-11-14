@@ -9,6 +9,7 @@ import '../../engine/engine_status.dart';
 import '../../engine/engine_installer.dart' show EngineInstaller, HubAnswer;
 import '../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
+import '../pro/pro_trial.dart' show ProTrialFrom, proTrialProvider;
 import 'app_history_recorder.dart' show historyRecordHereProvider;
 import 'history_service.dart';
 
@@ -156,6 +157,7 @@ Future<void> recordOnThisPhone(
 }) async {
   await ref.read(historyRecordHereProvider(connectionId).notifier).set(true);
   _track(ref, HistorySetupResult.thisDevice, from);
+  await markHistoryTurnedOn(ref, from);
 }
 
 Future<HistoryOn> _publish(
@@ -166,8 +168,19 @@ Future<HistoryOn> _publish(
 ) async {
   await ref.read(historyServiceProvider).publishConfig(connectionId);
   _track(ref, result, from);
+  await markHistoryTurnedOn(ref, from);
   return HistoryOn.on;
 }
+
+/// This install turned History on itself: the 14-day trial starts when a
+/// recorder first reports online (pro_trial.dart).
+Future<void> markHistoryTurnedOn(WidgetRef ref, HistorySetupFrom from) => ref
+    .read(proTrialProvider.notifier)
+    .markOwnAction(switch (from) {
+      HistorySetupFrom.finish => ProTrialFrom.finish,
+      HistorySetupFrom.card => ProTrialFrom.card,
+      HistorySetupFrom.sheet => ProTrialFrom.sheet,
+    });
 
 void _track(WidgetRef ref, HistorySetupResult r, HistorySetupFrom from) =>
     ref.read(analyticsProvider).track(HistorySetup(r, from: from));

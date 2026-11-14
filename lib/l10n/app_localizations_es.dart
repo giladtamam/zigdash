@@ -4125,7 +4125,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'La configuración, los paneles, el control de cada dispositivo, los widgets, los iconos de ajustes rápidos, las alertas, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que usas hoy se bloquea.';
+      'La configuración, los paneles, el control de cada dispositivo, los widgets, los iconos de ajustes rápidos, las alertas, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que hoy es gratis pasará a ser de pago.';
 
   @override
   String get proBuy => 'Obtener Pro';
@@ -5714,4 +5714,61 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'Grabar en este móvil';
+
+  @override
+  String get proTrialStartedTitle => 'Pro está activo 14 días';
+
+  @override
+  String get proTrialOfferTitle => 'Prueba ZigDash Pro gratis durante 14 días';
+
+  @override
+  String get proTrialWhat =>
+      'Historial de 7 y 30 días, los extras de la tablet de pared y más de tres automatizaciones.';
+
+  @override
+  String get proTrialNoPayment => 'Sin pago, nada se renueva.';
+
+  @override
+  String get proTrialStart => 'Empezar la prueba';
+
+  @override
+  String get proTrialEndingTitle => 'Tu prueba de Pro termina en 2 días';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Quedarme con Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'el historial semanal y mensual';
+
+  @override
+  String get proTrialUsedWall => 'los extras de la tablet de pared';
+
+  @override
+  String get proTrialUsedAutomation => 'más de tres automatizaciones';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Usaste $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Al terminar, todo lo que configuraste se queda; las vistas de semana y mes y las automatizaciones nuevas a partir de la cuarta necesitan Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Prueba: quedan $days días',
+      one: 'Prueba: queda 1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Tu prueba terminó. Todo lo que configuraste sigue ahí.';
 }

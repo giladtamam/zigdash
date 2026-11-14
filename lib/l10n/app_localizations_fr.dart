@@ -4137,7 +4137,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'La configuration, les tableaux de bord, le contrôle de chaque appareil, les widgets, les tuiles des réglages rapides, les alertes, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce que vous utilisez aujourd\'hui ne sera verrouillé.';
+      'La configuration, les tableaux de bord, le contrôle de chaque appareil, les widgets, les tuiles des réglages rapides, les alertes, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce qui est gratuit aujourd\'hui ne deviendra payant.';
 
   @override
   String get proBuy => 'Obtenir Pro';
@@ -5732,4 +5732,62 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'Enregistrer sur ce téléphone';
+
+  @override
+  String get proTrialStartedTitle => 'Pro est activé pour 14 jours';
+
+  @override
+  String get proTrialOfferTitle =>
+      'Essayez ZigDash Pro gratuitement pendant 14 jours';
+
+  @override
+  String get proTrialWhat =>
+      'L\'historique sur 7 et 30 jours, les extras de la tablette murale et plus de trois automatisations.';
+
+  @override
+  String get proTrialNoPayment => 'Aucun paiement, rien ne se renouvelle.';
+
+  @override
+  String get proTrialStart => 'Commencer l\'essai';
+
+  @override
+  String get proTrialEndingTitle => 'Votre essai Pro se termine dans 2 jours';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Garder Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'l\'historique semaine et mois';
+
+  @override
+  String get proTrialUsedWall => 'les extras de la tablette murale';
+
+  @override
+  String get proTrialUsedAutomation => 'plus de trois automatisations';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Vous avez utilisé $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Ensuite, tout ce que vous avez configuré reste ; les vues semaine et mois et les nouvelles automatisations au-delà de trois demandent Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Essai : $days jours restants',
+      one: 'Essai : 1 jour restant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Votre essai est terminé. Tout ce que vous avez configuré est toujours là.';
 }

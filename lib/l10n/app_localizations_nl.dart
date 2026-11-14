@@ -4121,7 +4121,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.';
+      'Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat vandaag gratis is, wordt betaald.';
 
   @override
   String get proBuy => 'Pro nemen';
@@ -5708,4 +5708,61 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'Op deze telefoon opnemen';
+
+  @override
+  String get proTrialStartedTitle => 'Pro staat 14 dagen aan';
+
+  @override
+  String get proTrialOfferTitle => 'Probeer ZigDash Pro 14 dagen gratis';
+
+  @override
+  String get proTrialWhat =>
+      'Geschiedenis van 7 en 30 dagen, de extra\'s voor de wandtablet en meer dan drie automatiseringen.';
+
+  @override
+  String get proTrialNoPayment => 'Geen betaling, niets verlengt zich.';
+
+  @override
+  String get proTrialStart => 'Proef starten';
+
+  @override
+  String get proTrialEndingTitle => 'Je Pro-proef eindigt over 2 dagen';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Pro houden · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'de week- en maandgeschiedenis';
+
+  @override
+  String get proTrialUsedWall => 'de wandtablet-extra\'s';
+
+  @override
+  String get proTrialUsedAutomation => 'meer dan drie automatiseringen';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Je gebruikte $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Daarna blijft alles wat je instelde; de week- en maandweergave en nieuwe automatiseringen na de derde vragen Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Proef: nog $days dagen',
+      one: 'Proef: nog 1 dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Je proef is voorbij. Alles wat je instelde, is er nog.';
 }

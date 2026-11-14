@@ -4101,7 +4101,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.';
+      'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing that is free today becomes paid.';
 
   @override
   String get proBuy => 'Get Pro';
@@ -5686,4 +5686,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historyOnPhone => 'Record on this phone';
+
+  @override
+  String get proTrialStartedTitle => 'Pro is on for 14 days';
+
+  @override
+  String get proTrialOfferTitle => 'Try ZigDash Pro free for 14 days';
+
+  @override
+  String get proTrialWhat =>
+      'History for 7 and 30 days, the wall tablet extras, and more than three automations.';
+
+  @override
+  String get proTrialNoPayment => 'No payment, nothing renews.';
+
+  @override
+  String get proTrialStart => 'Start the trial';
+
+  @override
+  String get proTrialEndingTitle => 'Your Pro trial ends in 2 days';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Keep Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'the week and month History';
+
+  @override
+  String get proTrialUsedWall => 'the wall tablet extras';
+
+  @override
+  String get proTrialUsedAutomation => 'more than three automations';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'You used $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'After it ends, everything you set up stays; the week and month views and new automations past three need Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Trial: $days days left',
+      one: 'Trial: 1 day left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Your trial ended. Everything you set up is still there.';
 }
