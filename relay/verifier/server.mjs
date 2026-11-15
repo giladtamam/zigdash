@@ -22,8 +22,9 @@
 //                                                    Docker networks can reach it
 //   TICKETS_PER_HOUR (20)                            tickets per Home an hour (each one asks Play)
 //
-//   POST /v1/homes/<id>/chat-ticket   phone Basic login, {purchaseToken, client_id?, request_topic?,
-//                                     answer_topic?} -> {ticket, home_id, client_id, request_topic,
+//   POST /v1/homes/<id>/chat-ticket   phone Basic login, {purchase_token, client_id?, request_topic?,
+//                                     answer_topic?} (topics only with client_id, both or neither)
+//                                     -> {ticket, home_id, client_id, request_topic,
 //                                     answer_topic, exp}; 401 wrong login, 402 purchase not valid or not
 //                                     this Home's, 400 bad body, 429, 503 (Chat off, or Play unreachable)
 //   POST /v1/internal/chat-acl        INTERNAL_PORT only, header X-Chat-Acl-Secret, no forwarding
@@ -325,17 +326,23 @@ export function createVerifier(env = process.env, hooks = {}) {
       if (!phoneOf(req, homeId)) return send(res, 401, { error: 'not a phone of this home' });
       if (overLimit(`ticket:${homeId}`, cfg.ticketsPerHour)) return send(res, 429, { error: 'too many tickets' });
       const body = await readJson(req);
-      const token = body && typeof body.purchaseToken === 'string' ? body.purchaseToken : '';
-      if (!token || token.length > 16384) return send(res, 400, { error: 'purchaseToken missing' });
+      // purchase_token as the app sends it; purchaseToken as /v1/homes takes it.
+      const raw = body && (body.purchase_token ?? body.purchaseToken);
+      const token = typeof raw === 'string' ? raw : '';
+      if (!token || token.length > 16384) return send(res, 400, { error: 'purchase_token missing' });
+      // A link names the client and its two topics; a removal only the client; a listing nothing.
       const fields = { home_id: homeId, client_id: null, request_topic: null, answer_topic: null };
-      if (body.client_id !== undefined || body.request_topic !== undefined || body.answer_topic !== undefined) {
+      if (body.client_id !== undefined) {
+        if (typeof body.client_id !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(body.client_id)) return send(res, 400, { error: 'bad client_id' });
+        fields.client_id = body.client_id;
+      }
+      if (body.request_topic !== undefined || body.answer_topic !== undefined) {
         const topic = new RegExp(`^homes/${homeId}/x/[0-9a-f]{24}$`);
-        if (typeof body.client_id !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(body.client_id) ||
-            !topic.test(String(body.request_topic)) || !topic.test(String(body.answer_topic)) ||
+        if (!fields.client_id || !topic.test(String(body.request_topic)) || !topic.test(String(body.answer_topic)) ||
             body.request_topic === body.answer_topic) {
           return send(res, 400, { error: 'client_id, request_topic and answer_topic must name one Chat client of this home' });
         }
-        Object.assign(fields, { client_id: body.client_id, request_topic: body.request_topic, answer_topic: body.answer_topic });
+        Object.assign(fields, { request_topic: body.request_topic, answer_topic: body.answer_topic });
       }
       const home = db.prepare('select token_hash from homes where id = ?').get(homeId);
       if (!home || home.token_hash !== sha(token)) return send(res, 402, { error: 'not the purchase of this home' });

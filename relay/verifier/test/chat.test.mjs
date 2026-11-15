@@ -73,7 +73,7 @@ test('chat: tickets and the chat role\'s ACL entries, against a real broker', { 
   const ticketPath = `/v1/homes/${H}/chat-ticket`;
 
   await t.test('ticket: a phone of the Home with its valid purchase gets a signed ticket for 10 minutes', async () => {
-    const r = await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client }, A.body.phone);
+    const r = await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', ...client }, A.body.phone);
     assert.equal(r.status, 200);
     assert.deepEqual(Object.keys(r.body).sort(), ['answer_topic', 'client_id', 'exp', 'home_id', 'request_topic', 'ticket']);
     const { payload } = verifyTicket(TICKET_SECRET, r.body.ticket);
@@ -84,21 +84,25 @@ test('chat: tickets and the chat role\'s ACL entries, against a real broker', { 
     const bare = await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA' }, A.body.phone);
     assert.equal(bare.status, 200);
     assert.equal(verifyTicket(TICKET_SECRET, bare.body.ticket).payload.client_id, null);
+    // For a removal: the client only.
+    const removal = await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', client_id: 'tg-a1b2c3' }, A.body.phone);
+    assert.equal(removal.status, 200);
+    assert.deepEqual([removal.body.client_id, removal.body.request_topic], ['tg-a1b2c3', null]);
   });
 
   await t.test('ticket: a wrong login, or another Home\'s phone, is 401', async () => {
-    assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client }, { username: A.body.phone.username, password: 'wrong' })).status, 401);
-    assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client }, B.body.phone)).status, 401);
-    assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client })).status, 401);
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', ...client }, { username: A.body.phone.username, password: 'wrong' })).status, 401);
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', ...client }, B.body.phone)).status, 401);
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', ...client })).status, 401);
   });
 
   await t.test('ticket: another purchase, a refunded one, or Play down: 402, 402, 503', async () => {
-    assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-BBB', ...client }, A.body.phone)).status, 402, 'valid, but not this Home\'s');
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-BBB', ...client }, A.body.phone)).status, 402, 'valid, but not this Home\'s');
     refunded.add('test-pro-AAA');
-    assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client }, A.body.phone)).status, 402, 'checked with Play now, not only at pairing');
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', ...client }, A.body.phone)).status, 402, 'checked with Play now, not only at pairing');
     refunded.delete('test-pro-AAA');
     playDown = true;
-    assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client }, A.body.phone)).status, 503);
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', ...client }, A.body.phone)).status, 503);
     playDown = false;
     // An App Store Home is not in this beta: its binding is not a Play token.
     const apple = await api('POST', '/v1/homes', { purchaseToken: 'test-pro-IOS', store: 'apple' });
@@ -111,6 +115,7 @@ test('chat: tickets and the chat role\'s ACL entries, against a real broker', { 
     assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client, answer_topic: client.request_topic }, A.body.phone)).status, 400);
     assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client, client_id: 'no spaces' }, A.body.phone)).status, 400);
     assert.equal((await api('POST', ticketPath, { purchaseToken: 'test-pro-AAA', ...client, request_topic: `homes/${H}/#` }, A.body.phone)).status, 400);
+    assert.equal((await api('POST', ticketPath, { purchase_token: 'test-pro-AAA', request_topic: client.request_topic, answer_topic: client.answer_topic }, A.body.phone)).status, 400, 'topics without a client');
   });
 
   const body = { home_id: H, request_topic: client.request_topic, answer_topic: client.answer_topic };
