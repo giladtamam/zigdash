@@ -63,3 +63,6 @@ tool/.telegram_bot
 tool/.telegram_offset
 tool/.assistant_bot
 tool/.assistant_webhook_secret
+
+# ZigDash Chat milestone 1: the hand-installed 9.0.0-chat Engine (node hub/build.mjs --chat)
+/hub/build/
