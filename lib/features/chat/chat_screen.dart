@@ -109,7 +109,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _code = TextEditingController();
 
   List<ChatLinkInfo>? _links;
-  bool _linksFailed = false;
+  /// Why the linked accounts didn't load; null while they load or loaded.
+  ChatFail? _linksFail;
   String _scope = 'read';
 
   /// Switches the person moved; the rest keep their defaults.
@@ -151,15 +152,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       _analytics.track(const ChatLinkEvent(ChatLinkStep.intro));
     }
     List<ChatLinkInfo>? links;
+    ChatFail? why;
     try {
       links = await _linker.links(_id);
-    } on ChatException {
-      links = null;
+    } on ChatException catch (e) {
+      why = e.why;
     }
     if (!mounted) return;
     setState(() {
       _links = links;
-      _linksFailed = links == null;
+      _linksFail = why;
     });
     // Hub deletions owed are done at home; clients unlinked from the chat
     // (/unlink) are dropped here and deleted on the hub then.
@@ -223,7 +225,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       setState(() {
         if (info != null && !(_links ?? const []).any((l) => l.clientId == info.clientId)) {
           _links = [...?_links, info];
-          _linksFailed = false;
+          _linksFail = null;
         }
         _pending = null;
         _scope = 'read';
@@ -393,10 +395,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 ),
               // 5./6. Linked accounts, one per person.
               ListTile(title: Text(l10n.chatLinkedTitle, style: theme.textTheme.titleMedium)),
-              if (links == null && !_linksFailed)
+              if (links == null && _linksFail == null)
                 const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator()))
               else if (links == null)
-                ListTile(key: const Key('chat-links-failed'), title: Text(l10n.chatLinkedLoadFailed))
+                ListTile(
+                    key: const Key('chat-links-failed'),
+                    // The relay's login or the purchase says what to fix; only
+                    // a network failure is about the connection.
+                    title: Text(_linksFail == ChatFail.unreachable ? l10n.chatLinkedLoadFailed : _fail(l10n, _linksFail!, null)))
               else if (links.isEmpty)
                 ListTile(key: const Key('chat-links-none'), title: Text(l10n.chatLinkedNone))
               else

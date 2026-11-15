@@ -278,13 +278,18 @@ ChatRowState chatRowStateOf({
 }
 
 final chatRowStateProvider = Provider.autoDispose.family<ChatRowState, String>((ref, connectionId) {
-  return chatRowStateOf(
-    offered: ref.watch(chatOfferedProvider),
-    fits: ref.watch(remoteFitsProvider(connectionId)),
-    pro: ref.watch(proStatusProvider),
-    remoteOn: ref.watch(remoteHomeProvider(connectionId)).valueOrNull != null,
-    engineInstalled: engineKnownInstalled(ref.watch(sharedPreferencesProvider), connectionId),
-  );
+  ChatRowState of(bool engineInstalled) => chatRowStateOf(
+        offered: ref.watch(chatOfferedProvider),
+        fits: ref.watch(remoteFitsProvider(connectionId)),
+        pro: ref.watch(proStatusProvider),
+        remoteOn: ref.watch(remoteHomeProvider(connectionId)).valueOrNull != null,
+        engineInstalled: engineInstalled,
+      );
+  final state = of(engineKnownInstalled(ref.watch(sharedPreferencesProvider), connectionId));
+  if (state != ChatRowState.noEngine) return state;
+  // A phone that never opened Automations hasn't heard the Engine yet: ask
+  // the hub, so a Home that has it isn't sent to install it.
+  return of(ref.watch(engineViewProvider(connectionId)).valueOrNull?.installed ?? false);
 });
 
 /// Per IEEE address, the names of the tiles, sections and dashboards a

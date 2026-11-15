@@ -13,6 +13,7 @@ import 'package:zigdash/features/chat/chat_store.dart';
 import 'package:zigdash/features/devices/device_registry.dart';
 import 'package:zigdash/features/devices/devices_providers.dart';
 import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
+import 'package:zigdash/features/pro/pro.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/remote/remote_setup.dart';
@@ -64,6 +65,7 @@ Future<_Page> _open(
   bool atHome = true,
   String engine = '3.7.0',
   List<ChatLinkInfo> listed = const [],
+  ChatFail? ticketFails,
   Widget? child,
   _Page? reuse,
 }) async {
@@ -73,7 +75,9 @@ Future<_Page> _open(
   SharedPreferences.setMockInitialValues({'analytics_consent': true});
   final p = await SharedPreferences.getInstance();
   final log = reuse?.log ?? <String>[];
-  final api = reuse?.api ?? (FakeChatApi(log)..listed = [...listed]);
+  final api = reuse?.api ?? (FakeChatApi(log)
+    ..listed = [...listed]
+    ..ticketFails = ticketFails);
   final hub = reuse?.hub ?? FakeChatHub(log);
   final store = reuse?.store ?? MemoryChatStore();
   final launched = reuse?.launched ?? <Uri>[];
@@ -216,6 +220,37 @@ void main() {
     await _open(tester, engine: '3.6.2');
     expect(find.byKey(const Key('chat-engine-old')), findsOneWidget);
     expect(tester.widget<FilledButton>(find.byKey(const Key('chat-link'))).onPressed, isNull);
+  });
+
+  testWidgets('linked accounts that do not load say why: the relay login is not the internet', (tester) async {
+    await _open(tester, ticketFails: ChatFail.login);
+    final failed = find.byKey(const Key('chat-links-failed'));
+    expect(find.descendant(of: failed, matching: find.textContaining("didn't accept this phone's remote login")), findsOneWidget);
+    await _open(tester, ticketFails: ChatFail.unreachable);
+    expect(find.descendant(of: failed, matching: find.textContaining('Check the internet connection')), findsOneWidget);
+  });
+
+  test('a phone that never heard the Engine asks the hub before saying it is missing', () async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    Future<ChatRowState> row(HubEnginePhase phase) async {
+      final box = ProviderContainer(overrides: [
+        sharedPreferencesProvider.overrideWithValue(p),
+        chatOfferedProvider.overrideWithValue(true),
+        remoteFitsProvider.overrideWith((ref, _) => true),
+        proStatusProvider.overrideWithValue(ProStatus.unlocked),
+        remoteHomeProvider.overrideWith((ref, _) async => relayLogin),
+        engineViewProvider.overrideWith((ref, _) => Stream.value(EngineView(phase: phase))),
+      ]);
+      addTearDown(box.dispose);
+      box.listen(chatRowStateProvider('c1'), (_, _) {});
+      await box.read(remoteHomeProvider('c1').future);
+      await box.read(engineViewProvider('c1').future);
+      return box.read(chatRowStateProvider('c1'));
+    }
+
+    expect(await row(HubEnginePhase.running), ChatRowState.ready);
+    expect(await row(HubEnginePhase.notInstalled), ChatRowState.noEngine);
   });
 
   testWidgets('cancel while waiting takes the hub client back', (tester) async {
