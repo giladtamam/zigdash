@@ -5563,7 +5563,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Rozhodujeme se, jestli to postavíme. Pokud ano, prvních $count přihlášených to dostane na 3 měsíce zdarma, včetně vzdáleného přístupu.';
+    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Stavíme to. Prvních $count přihlášených to dostane na 3 měsíce zdarma, včetně vzdáleného přístupu.';
   }
 
   @override
@@ -5600,7 +5600,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Jste č. $position na seznamu: mezi prvními $count. Pokud to postavíme, dostanete to na 3 měsíce zdarma.';
+    return 'Jste č. $position na seznamu: mezi prvními $count. Až to bude hotové, dostanete to na 3 měsíce zdarma.';
   }
 
   @override
@@ -5781,4 +5781,193 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get historyUsePhoneInstead => 'Použít raději tento telefon';
+
+  @override
+  String get chatTitle => 'Chat (beta)';
+
+  @override
+  String get chatRowReady => 'Mluvte se svým domovem přes Telegram';
+
+  @override
+  String get chatRowNoPro => 'Součást ZigDash Pro (není ve zkušební verzi)';
+
+  @override
+  String get chatRowNoRemote => 'Nejdřív zapněte dálkové ovládání';
+
+  @override
+  String get chatRowNoEngine => 'Potřebuje ZigDash Engine na vašem hubu';
+
+  @override
+  String get chatIntroTitle => 'Mluvte se svým domovem přes Telegram';
+
+  @override
+  String get chatIntroBody =>
+      'Pošlete botovi ZigDash Home v Telegramu zprávu jako „jsou zadní dveře otevřené?“ nebo „zavři roletu v pracovně“ a domov odpoví. Čte, co hlásí vaše zařízení, i jejich historii; s volbou Číst a ovládat umí také přepínat světla, rolety, spínače, zásuvky a termostaty, které vyberete.';
+
+  @override
+  String get chatIntroNever =>
+      'Nikdy neotevírá, nezavírá ani nemění zámky, ventily či sirény a nikdy nemění automatizace ani nastavení: kvůli nim vás pošle do ZigDash.';
+
+  @override
+  String get chatIntroBeta =>
+      'Zdarma během bety: až 300 zpráv měsíčně pro tento domov.';
+
+  @override
+  String get chatIntroWho =>
+      'Kdo zprávy čte: Telegram, který je přenáší; náš server v EU, který konverzaci uchovává 24 hodin; a Anthropic (Claude) v USA, který píše odpovědi. To, co Chat čte o vašem domově, jde stejnou cestou.';
+
+  @override
+  String get chatPolicy => 'Jak Chat zachází s vašimi daty';
+
+  @override
+  String get chatLinkedTitle => 'Propojené účty';
+
+  @override
+  String get chatLinkedNone => 'Zatím není propojený žádný účet Telegram.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'Propojené účty se nepodařilo načíst. Zkontrolujte připojení k internetu.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · naposledy použito $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · zatím nepoužito';
+  }
+
+  @override
+  String get chatRemove => 'Odebrat';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'Odebrat $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'Tento účet Telegram už se k vašemu domovu nedostane a jeho konverzace se smaže.';
+
+  @override
+  String get chatRemovedLater =>
+      'Odebráno. Váš hub ho zapomene, až bude ZigDash příště otevřený doma.';
+
+  @override
+  String get chatAuditTitle => 'Co Chat udělal';
+
+  @override
+  String get chatAuditShow => 'Zobrazit';
+
+  @override
+  String get chatAuditEmpty => 'Zatím nic.';
+
+  @override
+  String get chatAuditFailed => 'Váš hub neodpověděl. Zkuste to později.';
+
+  @override
+  String get chatLinkNew => 'Propojit účet Telegram';
+
+  @override
+  String get chatLinkAnother => 'Propojit další účet Telegram';
+
+  @override
+  String get chatScopeRead => 'Číst';
+
+  @override
+  String get chatScopeReadHelp => 'Odpovídá na otázky. Nic nemění.';
+
+  @override
+  String get chatScopeControl => 'Číst a ovládat';
+
+  @override
+  String get chatScopeControlHelp => 'Přepíná i zařízení, která vyberete níže.';
+
+  @override
+  String get chatControlsTitle => 'Co smí Chat přepínat';
+
+  @override
+  String get chatControlsHelp =>
+      'Na začátku zapnuto: světla a rolety na vašich nástěnkách. Na začátku vypnuto: spínače a zásuvky (mohou napájet topení, bojler nebo čerpadlo), termostaty, brány a garážová vrata. Zámky, ventily a sirény se nikdy nezobrazují.';
+
+  @override
+  String get chatControlsEmpty => 'Zatím nejsou žádná zařízení na výběr.';
+
+  @override
+  String get chatKindLight => 'Světlo';
+
+  @override
+  String get chatKindCover => 'Roleta';
+
+  @override
+  String get chatKindSwitch => 'Spínač nebo zásuvka';
+
+  @override
+  String get chatKindThermostat => 'Termostat';
+
+  @override
+  String get chatGateNote => 'brána nebo dveře, na začátku vypnuto';
+
+  @override
+  String get chatAgeAndAccount =>
+      'Každý propojuje svůj vlastní účet Telegram s vlastním rozsahem. Propojené osoby musí mít 16 let nebo víc. Kdokoli používá propojený účet Telegram, může dělat, co jeho rozsah dovoluje. I Číst ukazuje, jestli je někdo doma a které dveře a okna jsou otevřené.';
+
+  @override
+  String get chatEngineOld =>
+      'ZigDash Engine na vašem hubu se aktualizuje na verzi s Chatem. Zkuste to znovu za minutu.';
+
+  @override
+  String get chatLinkButton => 'Propojit Telegram';
+
+  @override
+  String get chatLinkAway =>
+      'Propojte doma: ZigDash to nastaví na vašem hubu přes domácí síť.';
+
+  @override
+  String get chatCodeTitle => 'Dokončete v Telegramu';
+
+  @override
+  String get chatCodeBody =>
+      'V Telegramu klepněte u bota ZigDash Home na Spustit. Pošle vám 4místný kód: zadejte ho sem do 10 minut.';
+
+  @override
+  String get chatCodeHint => '4místný kód';
+
+  @override
+  String get chatCodeConfirm => 'Potvrdit';
+
+  @override
+  String get chatOpenTelegram => 'Znovu otevřít Telegram';
+
+  @override
+  String get chatLinkedDone =>
+      'Propojeno. Pošlete botovi zprávu a vyzkoušejte to.';
+
+  @override
+  String get chatFailUnreachable =>
+      'Servery ZigDash nejsou dostupné. Zkontrolujte připojení k internetu a zkuste to znovu.';
+
+  @override
+  String get chatFailLogin =>
+      'Relay nepřijal vzdálené přihlášení tohoto telefonu. Otevřete Dálkové ovládání, vypněte ho a znovu zapněte.';
+
+  @override
+  String get chatFailPurchase =>
+      'Google Play nepotvrzuje nákup ZigDash Pro pro tento domov.';
+
+  @override
+  String get chatFailTooMany =>
+      'Příliš mnoho pokusů. Zkuste to znovu za hodinu.';
+
+  @override
+  String get chatFailExpired => 'Platnost kódu vypršela. Začněte znovu.';
+
+  @override
+  String get chatFailWrongCode =>
+      'To není kód, který poslal bot. Zkontrolujte ho a zkuste to znovu.';
+
+  @override
+  String get chatFailRefused => 'Nepovedlo se. Zkuste to později.';
 }

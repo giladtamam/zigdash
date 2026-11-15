@@ -5571,7 +5571,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Skicka ett meddelande som \"stäng persiennen på kontoret\" eller \"är bakdörren öppen?\" så svarar ditt hem. Vi bestämmer oss för om vi ska bygga det. Om vi gör det får de första $count som anmäler sig det gratis i 3 månader, fjärråtkomst ingår.';
+    return 'Skicka ett meddelande som \"stäng persiennen på kontoret\" eller \"är bakdörren öppen?\" så svarar ditt hem. Vi bygger det nu. De första $count som anmäler sig det gratis i 3 månader, fjärråtkomst ingår.';
   }
 
   @override
@@ -5608,7 +5608,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Du är nr $position på listan: bland de första $count. Om vi bygger det får du det gratis i 3 månader.';
+    return 'Du är nr $position på listan: bland de första $count. När det är klart får du det gratis i 3 månader.';
   }
 
   @override
@@ -5788,4 +5788,193 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get historyUsePhoneInstead => 'Använd den här telefonen i stället';
+
+  @override
+  String get chatTitle => 'Chat (beta)';
+
+  @override
+  String get chatRowReady => 'Prata med ditt hem från Telegram';
+
+  @override
+  String get chatRowNoPro => 'Del av ZigDash Pro (ingår inte i provperioden)';
+
+  @override
+  String get chatRowNoRemote => 'Slå på fjärrstyrning först';
+
+  @override
+  String get chatRowNoEngine => 'Behöver ZigDash Engine på din hubb';
+
+  @override
+  String get chatIntroTitle => 'Prata med ditt hem från Telegram';
+
+  @override
+  String get chatIntroBody =>
+      'Skicka ZigDash Home-boten på Telegram ett meddelande som \"är bakdörren öppen?\" eller \"stäng persiennen på kontoret\", så svarar ditt hem. Den läser vad dina enheter rapporterar och deras historik; med Läsa och styra kan den också slå av och på de lampor, persienner, brytare, uttag och termostater du väljer.';
+
+  @override
+  String get chatIntroNever =>
+      'Den öppnar, stänger eller ändrar aldrig lås, ventiler eller sirener, och ändrar aldrig automationer eller inställningar: för det ber den dig öppna ZigDash.';
+
+  @override
+  String get chatIntroBeta =>
+      'Gratis under betan: upp till 300 meddelanden i månaden för det här hemmet.';
+
+  @override
+  String get chatIntroWho =>
+      'Vem som läser meddelandena: Telegram, som för fram dem; vår server i EU, som sparar samtalet i 24 timmar; och Anthropic (Claude) i USA, som skriver svaren. Det Chat läser om ditt hem går samma väg.';
+
+  @override
+  String get chatPolicy => 'Hur Chat hanterar dina data';
+
+  @override
+  String get chatLinkedTitle => 'Länkade konton';
+
+  @override
+  String get chatLinkedNone => 'Inget Telegram-konto länkat än.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'Kunde inte läsa in de länkade kontona. Kontrollera internetanslutningen.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · senast använt $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · inte använt än';
+  }
+
+  @override
+  String get chatRemove => 'Ta bort';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'Ta bort $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'Det här Telegram-kontot når inte längre ditt hem, och dess samtal raderas.';
+
+  @override
+  String get chatRemovedLater =>
+      'Borttaget. Din hubb glömmer det nästa gång ZigDash är öppet hemma.';
+
+  @override
+  String get chatAuditTitle => 'Vad Chat har gjort';
+
+  @override
+  String get chatAuditShow => 'Visa';
+
+  @override
+  String get chatAuditEmpty => 'Inget än.';
+
+  @override
+  String get chatAuditFailed => 'Din hubb svarade inte. Försök igen senare.';
+
+  @override
+  String get chatLinkNew => 'Länka ett Telegram-konto';
+
+  @override
+  String get chatLinkAnother => 'Länka ett till Telegram-konto';
+
+  @override
+  String get chatScopeRead => 'Läsa';
+
+  @override
+  String get chatScopeReadHelp => 'Svarar på frågor. Ändrar inget.';
+
+  @override
+  String get chatScopeControl => 'Läsa och styra';
+
+  @override
+  String get chatScopeControlHelp =>
+      'Slår också av och på enheterna du väljer nedan.';
+
+  @override
+  String get chatControlsTitle => 'Vad Chat får slå av och på';
+
+  @override
+  String get chatControlsHelp =>
+      'På från början: lampor och persienner på dina instrumentpaneler. Av från början: brytare och uttag (de kan driva ett element, en varmvattenberedare eller en pump), termostater, grindar och garageportar. Lås, ventiler och sirener visas aldrig.';
+
+  @override
+  String get chatControlsEmpty => 'Inga enheter att välja än.';
+
+  @override
+  String get chatKindLight => 'Lampa';
+
+  @override
+  String get chatKindCover => 'Persienn';
+
+  @override
+  String get chatKindSwitch => 'Brytare eller uttag';
+
+  @override
+  String get chatKindThermostat => 'Termostat';
+
+  @override
+  String get chatGateNote => 'grind eller dörr, av från början';
+
+  @override
+  String get chatAgeAndAccount =>
+      'Varje person länkar sitt eget Telegram-konto, med egen behörighet. Länkade personer måste vara 16 år eller äldre. Alla som använder ett länkat Telegram-konto kan göra det behörigheten tillåter. Även Läsa visar om någon är hemma och vilka dörrar och fönster som är öppna.';
+
+  @override
+  String get chatEngineOld =>
+      'ZigDash Engine på din hubb uppdateras till versionen med Chat. Försök igen om en minut.';
+
+  @override
+  String get chatLinkButton => 'Länka Telegram';
+
+  @override
+  String get chatLinkAway =>
+      'Länka hemma: ZigDash ställer in det på din hubb via ditt hemnätverk.';
+
+  @override
+  String get chatCodeTitle => 'Slutför i Telegram';
+
+  @override
+  String get chatCodeBody =>
+      'Tryck på Starta hos ZigDash Home-boten i Telegram. Den skickar en fyrsiffrig kod: skriv den här inom 10 minuter.';
+
+  @override
+  String get chatCodeHint => 'Fyrsiffrig kod';
+
+  @override
+  String get chatCodeConfirm => 'Bekräfta';
+
+  @override
+  String get chatOpenTelegram => 'Öppna Telegram igen';
+
+  @override
+  String get chatLinkedDone =>
+      'Länkat. Skicka ett meddelande till boten för att prova.';
+
+  @override
+  String get chatFailUnreachable =>
+      'Kunde inte nå ZigDashs servrar. Kontrollera internetanslutningen och försök igen.';
+
+  @override
+  String get chatFailLogin =>
+      'Reläet godtog inte telefonens fjärrinloggning. Öppna Fjärrstyrning, stäng av den och slå på den igen.';
+
+  @override
+  String get chatFailPurchase =>
+      'Google Play bekräftar inget köp av ZigDash Pro för det här hemmet.';
+
+  @override
+  String get chatFailTooMany => 'För många försök. Försök igen om en timme.';
+
+  @override
+  String get chatFailExpired => 'Koden har gått ut. Börja om.';
+
+  @override
+  String get chatFailWrongCode =>
+      'Det är inte koden som boten skickade. Kontrollera den och försök igen.';
+
+  @override
+  String get chatFailRefused => 'Det gick inte. Försök igen senare.';
 }

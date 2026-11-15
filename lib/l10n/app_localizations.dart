@@ -9747,7 +9747,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatEarlyBody.
   ///
   /// In en, this message translates to:
-  /// **'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. We\'re deciding whether to build it. If we do, the first {count} to join get it free for 3 months, remote access included.'**
+  /// **'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. We\'re building it. The first {count} to join get it free for 3 months, remote access included.'**
   String chatEarlyBody(int count);
 
   /// No description provided for @chatEarlyTelegram.
@@ -9813,7 +9813,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatEarlyInFirst.
   ///
   /// In en, this message translates to:
-  /// **'You\'re #{position} on the list: one of the first {count}. If we build it, you get it free for 3 months.'**
+  /// **'You\'re #{position} on the list: one of the first {count}. When it\'s ready, you get it free for 3 months.'**
   String chatEarlyInFirst(int position, int count);
 
   /// No description provided for @chatEarlyAfterFirst.
@@ -10115,6 +10115,336 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use this phone instead'**
   String get historyUsePhoneInstead;
+
+  /// ZigDash Chat (3.7.0, docs/design/chat-linking.md §3): Home settings row and screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat (beta)'**
+  String get chatTitle;
+
+  /// No description provided for @chatRowReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to your home from Telegram'**
+  String get chatRowReady;
+
+  /// No description provided for @chatRowNoPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of ZigDash Pro (not included in the trial)'**
+  String get chatRowNoPro;
+
+  /// No description provided for @chatRowNoRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on remote control first'**
+  String get chatRowNoRemote;
+
+  /// No description provided for @chatRowNoEngine.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs ZigDash Engine on your hub'**
+  String get chatRowNoEngine;
+
+  /// No description provided for @chatIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to your home from Telegram'**
+  String get chatIntroTitle;
+
+  /// No description provided for @chatIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the ZigDash Home bot on Telegram a message like \"is the back door open?\" or \"close the office shutter\", and your home answers. It reads what your devices report and their history; with Read and control, it can also switch the lights, covers, switches, plugs and thermostats you choose.'**
+  String get chatIntroBody;
+
+  /// No description provided for @chatIntroNever.
+  ///
+  /// In en, this message translates to:
+  /// **'It never opens, closes or changes locks, valves or sirens, and never changes automations or settings: for those it tells you to open ZigDash.'**
+  String get chatIntroNever;
+
+  /// No description provided for @chatIntroBeta.
+  ///
+  /// In en, this message translates to:
+  /// **'Free during the beta: up to 300 messages a month for this Home.'**
+  String get chatIntroBeta;
+
+  /// No description provided for @chatIntroWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who reads the messages: Telegram, which carries them; our server in the EU, which keeps the conversation for 24 hours; and Anthropic (Claude) in the US, which writes the answers. What Chat reads about your home goes the same way.'**
+  String get chatIntroWho;
+
+  /// No description provided for @chatPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'How Chat handles your data'**
+  String get chatPolicy;
+
+  /// No description provided for @chatLinkedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked accounts'**
+  String get chatLinkedTitle;
+
+  /// No description provided for @chatLinkedNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No Telegram account linked yet.'**
+  String get chatLinkedNone;
+
+  /// No description provided for @chatLinkedLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the linked accounts. Check the internet connection.'**
+  String get chatLinkedLoadFailed;
+
+  /// No description provided for @chatLinkedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{scope} · last used {when}'**
+  String chatLinkedLine(String scope, String when);
+
+  /// No description provided for @chatLinkedNeverUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{scope} · not used yet'**
+  String chatLinkedNeverUsed(String scope);
+
+  /// No description provided for @chatRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get chatRemove;
+
+  /// No description provided for @chatRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String chatRemoveTitle(String name);
+
+  /// No description provided for @chatRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This Telegram account can no longer reach your home, and its conversation is deleted.'**
+  String get chatRemoveBody;
+
+  /// No description provided for @chatRemovedLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed. Your hub forgets it the next time ZigDash is open at home.'**
+  String get chatRemovedLater;
+
+  /// No description provided for @chatAuditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What Chat did'**
+  String get chatAuditTitle;
+
+  /// No description provided for @chatAuditShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get chatAuditShow;
+
+  /// No description provided for @chatAuditEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet.'**
+  String get chatAuditEmpty;
+
+  /// No description provided for @chatAuditFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub didn\'t answer. Try again later.'**
+  String get chatAuditFailed;
+
+  /// No description provided for @chatLinkNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a Telegram account'**
+  String get chatLinkNew;
+
+  /// No description provided for @chatLinkAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Link another Telegram account'**
+  String get chatLinkAnother;
+
+  /// No description provided for @chatScopeRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get chatScopeRead;
+
+  /// No description provided for @chatScopeReadHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers questions. Changes nothing.'**
+  String get chatScopeReadHelp;
+
+  /// No description provided for @chatScopeControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Read and control'**
+  String get chatScopeControl;
+
+  /// No description provided for @chatScopeControlHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Also switches the devices you choose below.'**
+  String get chatScopeControlHelp;
+
+  /// No description provided for @chatControlsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What Chat may switch'**
+  String get chatControlsTitle;
+
+  /// No description provided for @chatControlsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'On to start: lights and covers on your dashboards. Off to start: switches and plugs (they can run a heater, a boiler or a pump), thermostats, gates and garage doors. Locks, valves and sirens are never listed.'**
+  String get chatControlsHelp;
+
+  /// No description provided for @chatControlsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices to choose from yet.'**
+  String get chatControlsEmpty;
+
+  /// No description provided for @chatKindLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get chatKindLight;
+
+  /// No description provided for @chatKindCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get chatKindCover;
+
+  /// No description provided for @chatKindSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch or plug'**
+  String get chatKindSwitch;
+
+  /// No description provided for @chatKindThermostat.
+  ///
+  /// In en, this message translates to:
+  /// **'Thermostat'**
+  String get chatKindThermostat;
+
+  /// No description provided for @chatGateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'gate or door, off to start'**
+  String get chatGateNote;
+
+  /// No description provided for @chatAgeAndAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Each person links their own Telegram account, with its own scope. Linked people must be 16 or older. Anyone using a linked Telegram account can do what its scope allows. Even Read shows whether anyone is home and which doors and windows are open.'**
+  String get chatAgeAndAccount;
+
+  /// No description provided for @chatEngineOld.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine on your hub is updating to the version with Chat. Try again in a minute.'**
+  String get chatEngineOld;
+
+  /// No description provided for @chatLinkButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Telegram'**
+  String get chatLinkButton;
+
+  /// No description provided for @chatLinkAway.
+  ///
+  /// In en, this message translates to:
+  /// **'Link at home: ZigDash sets this up on your hub over your home network.'**
+  String get chatLinkAway;
+
+  /// No description provided for @chatCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish in Telegram'**
+  String get chatCodeTitle;
+
+  /// No description provided for @chatCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In Telegram, tap Start in the ZigDash Home bot. It sends you a 4-digit code: type it here within 10 minutes.'**
+  String get chatCodeBody;
+
+  /// No description provided for @chatCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'4-digit code'**
+  String get chatCodeHint;
+
+  /// No description provided for @chatCodeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get chatCodeConfirm;
+
+  /// No description provided for @chatOpenTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Telegram again'**
+  String get chatOpenTelegram;
+
+  /// No description provided for @chatLinkedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked. Send the bot a message to try it.'**
+  String get chatLinkedDone;
+
+  /// No description provided for @chatFailUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach ZigDash\'s servers. Check the internet connection and try again.'**
+  String get chatFailUnreachable;
+
+  /// No description provided for @chatFailLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'The relay didn\'t accept this phone\'s remote login. Open Remote control and turn it off and on again.'**
+  String get chatFailLogin;
+
+  /// No description provided for @chatFailPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play doesn\'t confirm a ZigDash Pro purchase for this Home.'**
+  String get chatFailPurchase;
+
+  /// No description provided for @chatFailTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Try again in an hour.'**
+  String get chatFailTooMany;
+
+  /// No description provided for @chatFailExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The code ran out. Start again.'**
+  String get chatFailExpired;
+
+  /// No description provided for @chatFailWrongCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That isn\'t the code the bot sent. Check it and try again.'**
+  String get chatFailWrongCode;
+
+  /// No description provided for @chatFailRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t work. Try again later.'**
+  String get chatFailRefused;
 }
 
 class _AppLocalizationsDelegate
