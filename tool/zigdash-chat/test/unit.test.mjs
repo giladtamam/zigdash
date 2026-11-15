@@ -158,3 +158,23 @@ test('telegram: long replies are split under Telegram\'s limit; the buttons go w
   assert.deepEqual(tg.sent.map((s) => s.text.length), [4000, 4000, 1000]);
   assert.deepEqual(tg.sent.map((s) => !!s.markup), [false, false, true]);
 });
+
+test('cli adopt: milestone 1\'s tg1 gets its chat and topics, and the verifier adds its ACL entries', async () => {
+  const { runCli } = await import('../cli.mjs');
+  const { configFromEnv } = await import('../service.mjs');
+  const dir = tmpDir();
+  fs.writeFileSync(path.join(dir, 'acl'), 'acl-secret\n', { mode: 0o600 });
+  const config = { ...configFromEnv({}), keysFile: path.join(dir, 'keys.json'), secretsFile: path.join(dir, 'secrets.json'), verifierUrl: 'http://verifier.test:8788', aclSecretFile: path.join(dir, 'acl') };
+  const serviceKey = loadServiceKey(config.secretsFile, { create: true });
+  const key = crypto.randomBytes(32).toString('base64');
+  writeKeys(config.keysFile, serviceKey, { clients: { tg1: { name: "Owner's Telegram", token: 't'.repeat(43), key, scope: 'control', controls: [], home_id: 'f3a2993b55c4ed99' } } });
+  const calls = [];
+  const fetchImpl = async (url, init) => { calls.push({ url, secret: init.headers['X-Chat-Acl-Secret'], body: JSON.parse(init.body) }); return { status: 200 }; };
+  const out = [];
+  await runCli(['adopt', 'tg1', '--chat', '424242'], { config, fetchImpl, print: (l) => out.push(l) });
+  const entry = readKeys(config.keysFile, serviceKey).clients.tg1;
+  const t = chatTopics({ transport: 'relay', clientId: 'tg1', key: Buffer.from(key, 'base64'), homeId: 'f3a2993b55c4ed99' });
+  assert.deepEqual([entry.chat_id, entry.client_id, entry.request_topic, entry.answer_topic, entry.telegram_name], ['424242', 'tg1', t.req, t.res, "Owner's Telegram"]);
+  assert.deepEqual(calls, [{ url: 'http://verifier.test:8788/v1/internal/chat-acl', secret: 'acl-secret', body: { home_id: 'f3a2993b55c4ed99', request_topic: t.req, answer_topic: t.res, op: 'add' } }]);
+  assert.ok(!out.join('\n').includes('acl-secret') && !out.join('\n').includes(key));
+});
