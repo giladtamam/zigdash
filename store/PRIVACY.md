@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.6.2 is published (replaces the policy published with ZigDash 3.6.1)
+**Effective date:** the day ZigDash 3.7.0 is published (replaces the policy published with ZigDash 3.6.3)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -9,9 +9,11 @@ the app does and does not do with your data.
 ## Summary
 
 ZigDash does not collect personal data unless you choose to give it: an
-email in a support message, or a place on the "Chat with your home"
+email in a support message, a place on the "Chat with your home"
 early-access list (from 3.5.4, see
-[Chat with your home](#chat-with-your-home-early-access)). It never shares or
+[Chat with your home](#chat-with-your-home-early-access)), or, from 3.7.0, a
+Telegram account you link to your home for ZigDash Chat (see
+[ZigDash Chat (beta)](#zigdash-chat-beta)). It never shares or
 sells personal data. Your broker settings, passwords, devices, topics and
 their values stay on your device. There is no advertising and no user
 account.
@@ -21,8 +23,11 @@ passes support messages on and keeps the early-access list; the ZigDash
 relay, used only if you turn on **Remote control** (part of ZigDash Pro),
 which carries your home's data
 encrypted so the developer cannot read it (see
-[Remote control](#remote-control-from-31)); and from 3.4.7 the usage-data
-server described next.
+[Remote control](#remote-control-from-31)); from 3.4.7 the usage-data
+server described next; and from 3.7.0 the ZigDash Chat service at
+chat.zigdash.app, used only for a Home where someone links a Telegram
+account to it, which does read what it answers about that home (see
+[ZigDash Chat (beta)](#zigdash-chat-beta)).
 
 Unless you **opt out**, ZigDash sends a short list of **anonymous usage
 events** (which setup steps fail, which features get used) to a server the
@@ -182,6 +187,7 @@ never from anything you typed or anything your broker sent.
 | `shortcut_nudge` | From 3.3.3: ZigDash offered to put a device you switch often on your home screen or in Quick Settings, and what you chose (shown, home screen, Quick Settings, or not now). Never which device; how often each device was switched is counted only on your phone | the step |
 | `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |
 | `chat_early` | From 3.5.4, Google Play build only: the "Chat with your home" card was shown (once per install), Join on Telegram or Join by email was tapped, an email sign-up was sent or failed, "Not for me" was tapped, or the price question was answered (never the email address or the Telegram chat) | which of these happened, and whether it was on the card or in Settings |
+| `chat_link` | From 3.7.0, Google Play build only: the ZigDash Chat screen was opened on a Home that can link, a Telegram account was linked or removed, or a step failed | which of these happened, and for a failure only why: away from home, ZigDash Engine too old, a server not reachable, the relay refused this phone's login, Google Play did not confirm the purchase, too many tries, the code ran out, a wrong code, or refused. Never a name, a code, the Telegram account or anything about the home |
 | `poll_answer` | "What should ZigDash do next?" was answered: until 3.1.13 on a one-time card; from 3.3.5 on a one-time card or in Settings, one event for each choice picked (Not now sends nothing; what you write after "Something else" goes only where you send it, by email or on GitHub) | until 3.1.13: notifications, history graphs, kiosk mode or Zigbee groups; from 3.3.5: pairing new devices, device settings and firmware updates, working with ZHA, control from an AI assistant, or something else; and from 3.3.5, where it was answered (the card or Settings) |
 | `why_zigdash` | From 3.1.10 until 3.1.13: the one-time "What made you try ZigDash?" card after the first setup was answered (Not now sends nothing; the card is gone from 3.2) | quicker than another app, easy for the family, a wall tablet, works without Home Assistant, or something else |
 | `remote` | From 3.1.11: remote control was turned on or off. From 3.4.4: the Remote control page was opened, or "See Pro" was tapped on it (each counted once per app start). Until 3.4.3: the one-time "Control your home from anywhere" card was shown, opened or put away | the step, and whether this phone has Pro. From 3.4.4, for an opened page: how it was reached (the button on the dashboard or Settings) and what it had to show (no Pro, not connected, no ZigDash Engine, away from home, ready, on, or a home it can't work for). Nothing about the home, its address or the relay |
@@ -251,6 +257,85 @@ the whole list is deleted and everyone on it gets one message saying so.
 **Deleting it yourself:** send /stop to the bot, or email the address under
 [Contact](#contact).
 
+## ZigDash Chat (beta)
+
+<!-- OWNER: before 3.7.0 is published, confirm (1) Anthropic's API retention
+     wording below against Anthropic's commercial terms and DPA on that day,
+     (2) the netcup order-processing agreement is still listed in the
+     customer panel, (3) the legal basis for linked family members. -->
+
+From 3.7.0, in the Google Play build, owners of ZigDash Pro can link a
+Telegram account to a Home and talk to it from Telegram ("is the back door
+open?", "close the office shutter"). It is a free beta: up to 300 messages a
+month for each Home. Nothing about it runs until someone links an account in
+**Settings › Home › Chat**. The App Store version is not in this beta.
+
+Unlike remote control, ZigDash Chat is **not end-to-end encrypted**: to
+answer, the Chat service and Anthropic read the question and what your home
+says about the devices it asks about. Link it only if that is fine for you.
+
+- **What it can do.** Read: answer questions about your devices, their
+  states and their recorded history. Read and control: also switch the
+  lights, covers, switches, plugs and thermostats chosen on the Chat screen.
+  It never opens, closes or changes locks, valves or sirens, whatever the
+  setting, and never changes automations, alerts or settings.
+- **Linking.** At home, the app creates a Chat client for that one Telegram
+  account on your hub, over your home network: a random token (the hub keeps
+  only its SHA-256 hash), a key made on your phone for this link only (not
+  the Home's remote key), the scope and the list of devices it may switch.
+  ZigDash Engine takes them into its data folder and clears the copy on your
+  broker. The relay checks this phone's remote login and asks Google Play
+  again whether the Pro purchase is valid and belongs to this Home, and signs
+  a ticket valid for 10 minutes. The app sends the ticket, the token, the key
+  and the scope to the Chat service, which gives back a code; Telegram opens
+  with it, and the bot sends a 4-digit code that you type into the app to
+  finish. A link that is never finished is deleted.
+- **What the Chat service reads and keeps.** The service runs at
+  chat.zigdash.app on a server the developer rents from netcup in Vienna,
+  Austria (EU), under netcup's data processing agreement. For each linked
+  account it keeps the Home's relay ID, the client ID, the Telegram chat ID
+  and the name Telegram shows for it, the scope, the token and key
+  (encrypted with a key kept separately from them), when it was linked and
+  when it was last used, and how many messages the Home sent this month. It
+  reads your messages and what ZigDash Engine on your hub returns for them
+  (device and group names, states, readings and history, and which devices
+  Chat may switch), only for the linked Home. The conversation (the last 10
+  turns) is kept for 24 hours, then deleted; a list of your devices and rooms
+  is kept in memory only, never written to disk. The service's logs hold
+  counters only (messages, tool calls, costs), never message text or names.
+- **Through the relay.** The service reaches your hub through the ZigDash
+  relay, sealed with the link's own key (AES-256-GCM) under topic ids that
+  reveal nothing, so the relay itself still sees only sealed data. Requests
+  carry a time and a random id, and your hub refuses old or repeated ones.
+- **Telegram.** Messages travel through Telegram (Telegram FZ-LLC). Bot chats
+  are not end-to-end encrypted: Telegram's servers can read them, and
+  Telegram keeps them under [its own privacy policy](https://telegram.org/privacy)
+  whatever we delete.
+- **Anthropic.** To write each answer, the service sends your message, the
+  recent conversation and what your hub returned to Anthropic's Claude API
+  (Anthropic, PBC, in the United States), which processes them for us. The
+  transfer to the US relies on the Standard Contractual Clauses in
+  Anthropic's data processing terms. Anthropic keeps API inputs and outputs
+  only as its commercial API terms allow and does not train on them; see
+  [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+- **On your hub.** ZigDash Engine keeps a list of the last 200 Chat actions,
+  refusals and rejected requests (time, client, what, which device, result)
+  on your own broker, so the Chat screen can show **What Chat did**.
+- **Family members.** Each person links their own Telegram account, with its
+  own scope. Linked people must be 16 or older. Anyone who can use a linked
+  Telegram account can do what its scope allows, and even Read shows whether
+  anyone is home and which doors and windows are open.
+- **Removing a link.** Remove it in **Settings › Home › Chat** (at home or
+  away), or send /unlink to the bot from the linked chat. The service deletes
+  that account's binding, token, key and conversation at once; your hub
+  deletes its client then, or the next time ZigDash is open at home. To ask
+  for a copy of what the service holds about your Telegram account, or for
+  its deletion, email the address under [Contact](#contact) with your
+  Telegram chat ID or the Home ID.
+- **Why we may process it:** to provide the feature you linked
+  (Art. 6(1)(b) GDPR). The usage counters are kept to run the beta's limits
+  and its costs.
+
 ## The assistant on Get help and the help bubble (from 3.5.1)
 
 When Get help is opened from setup (an empty scan, a setup error, the
@@ -314,6 +399,12 @@ Zigbee2MQTT's "Allow external JavaScript" setting and restarting it. Remove
 from hub deletes the file; your automations stay on your broker until you
 delete them. From 3.6.2 you can save an automation before ZigDash Engine is on
 your hub: it is kept on your broker the same way, not running.
+
+From 3.7.0 ZigDash Engine also contains the code for
+[ZigDash Chat](#zigdash-chat-beta). Because ZigDash keeps the Engine on your
+hub up to date by itself, every hub with ZigDash Engine gets this code, but it
+stays dormant: until a Telegram account is linked for that Home, it only
+listens on your own broker for a Chat setup and sends nothing anywhere.
 
 ## Optional automation panels
 
@@ -447,8 +538,8 @@ you turn it on:
 
 ## Your rights
 
-For the data on the relay, you can ask for access, correction, deletion or
-a copy, or object, by email (below). Give the Home ID shown in the app, as
+For the data on the relay or the Chat service, you can ask for access,
+correction, deletion or a copy, or object, by email (below). Give the Home ID shown in the app, as
 the relay holds nothing else that identifies you. You can also complain to a
 data protection authority in the EU country where you live.
 
@@ -472,6 +563,6 @@ new effective date.
 
 ## Contact
 
-The controller for the relay is the developer, Gilad Tamamski, Israel.
+The controller for the relay and the Chat service is the developer, Gilad Tamamski, Israel.
 
 Questions about this policy: **giladtamam1@gmail.com**
