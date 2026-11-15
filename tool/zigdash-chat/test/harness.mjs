@@ -1,4 +1,4 @@
-// Test harness: the 9.0.0-chat Engine on a fake Zigbee2MQTT, a broker (a real
+// Test harness: the release Engine (3.7.0, with Chat) on a fake Zigbee2MQTT, a broker (a real
 // local mosquitto when installed, otherwise an in-process fake), a fake
 // Telegram and a scripted fake Claude. Nothing here talks to the internet.
 
@@ -19,14 +19,12 @@ export function tmpDir(prefix = 'zigdash-chat-') {
   return fs.mkdtempSync(path.join(os.tmpdir(), prefix));
 }
 
-/** Builds the 9.0.0-chat Engine into a temporary folder and loads it. */
+/** The release Engine (hub/zigdash-engine.js, Chat included since 3.7.0). */
 export function loadChatEngine() {
-  const dir = tmpDir('zigdash-chat-engine-');
-  process.env.ZIGBEE2MQTT_DATA = dir;
-  const out = path.join(dir, 'zigdash-engine.js');
-  const r = spawnSync(process.execPath, [path.join(repo, 'hub/build.mjs'), '--chat', '--out', out]);
-  if (r.status !== 0) throw new Error(String(r.stderr));
-  return createRequire(import.meta.url)(out);
+  process.env.ZIGBEE2MQTT_DATA = tmpDir('zigdash-chat-engine-');
+  const r = spawnSync(process.execPath, [path.join(repo, 'hub/build.mjs'), '--check']);
+  if (r.status !== 0) throw new Error(`hub/zigdash-engine.js is stale: ${String(r.stderr)}`);
+  return createRequire(import.meta.url)(path.join(repo, 'hub/zigdash-engine.js'));
 }
 
 // ---------- brokers ----------
@@ -157,12 +155,20 @@ export async function startHub(Engine, client, { relay } = {}) {
     devices[name] = d;
   }
   const state = {};
+  // As Zigbee2MQTT: a topic it published to (skipReceive on, the default) is
+  // never handed to extensions again; skipReceive off lets the echo through.
+  const publishedTopics = new Set();
   client.on('message', (topic, payload) => {
+    if (publishedTopics.has(topic)) return;
     for (const cb of listeners.mqtt) cb({ topic, message: payload.toString() });
   });
   const z2mMqtt = {
-    publish: (topic, payload, options) => new Promise((resolve) => client.publish(`${options.baseTopic}/${topic}`, payload, { qos: 1, retain: !!options.clientOptions.retain }, () => resolve())),
-    subscribe: (topic) => new Promise((resolve) => client.subscribe(topic, { qos: 1, nl: true }, () => resolve())),
+    publish: (topic, payload, options) => {
+      const full = `${options.baseTopic}/${topic}`;
+      if (options.skipReceive !== false) publishedTopics.add(full);
+      return new Promise((resolve) => client.publish(full, payload, { qos: 1, retain: !!options.clientOptions.retain }, () => resolve()));
+    },
+    subscribe: (topic) => new Promise((resolve) => client.subscribe(topic, { qos: 1 }, () => resolve())),
     unsubscribe: (topic) => { client.unsubscribe(topic); return Promise.resolve(); },
     onMessage: (topic, buf) => injected.push({ topic, payload: JSON.parse(buf.toString()) }),
   };
@@ -181,12 +187,14 @@ export async function startHub(Engine, client, { relay } = {}) {
   const logger = { info() {}, warning() {}, error() {}, debug() {} };
   const engine = new Engine(zigbee, z2mMqtt, { get: (e) => state[e.ieeeAddr] }, null, eventBus, null, null, null, settings, logger);
   engine.readRemoteConfig = () => null;
+  const chatFile = path.join(tmpDir('zigdash-chat-hub-'), 'zigdash-chat.json');
+  engine.chatFilePath = () => chatFile;
   if (relay) engine.mqttConnect = (url, options) => relay.connectLater({ clientId: options.clientId, will: options.will });
   await engine.start();
   // Zigbee2MQTT's retained device list, as the CLI reads it.
   await new Promise((r) => client.publish('zigbee2mqtt/bridge/devices', JSON.stringify(Object.entries(HOME).map(([ieee, [name]]) => ({ ieee_address: ieee, friendly_name: name, type: 'EndDevice' }))), { qos: 1, retain: true }, r));
   return {
-    engine, injected,
+    engine, injected, chatFile,
     report: (name, message) => {
       state[ieeeOf(name)] = { ...(state[ieeeOf(name)] || {}), ...message };
       for (const cb of listeners.entity) cb({ entity: devices[name], message });
@@ -211,7 +219,8 @@ export function fakeTelegram() {
     const reply = (result) => ({ json: async () => ({ ok: true, result }), status: 200 });
     if (method === 'getMe') return reply({ id: 1, username: 'ZigDashHomeDevBot' });
     if (method === 'sendChatAction') return reply(true);
-    if (method === 'sendMessage') { sent.push({ chatId: String(body.chat_id), text: body.text }); waiters.splice(0).forEach((w) => w()); return reply({}); }
+    if (method === 'sendMessage') { sent.push({ chatId: String(body.chat_id), text: body.text, markup: body.reply_markup }); waiters.splice(0).forEach((w) => w()); return reply({}); }
+    if (method === 'answerCallbackQuery') return reply(true);
     if (method === 'getUpdates') {
       for (;;) {
         const ready = queue.filter((u) => u.update_id >= body.offset);
@@ -227,8 +236,17 @@ export function fakeTelegram() {
   return {
     fetchImpl, sent, calls,
     send(chatId, text, { type = 'private', firstName = 'Owner' } = {}) {
-      queue.push({ update_id: ++updateId, message: { message_id: updateId, from: { id: Number(chatId), first_name: firstName }, chat: { id: Number(chatId), type }, text } });
+      queue.push(this.update(chatId, text, { type, firstName }));
     },
+    /** A message update, as Telegram would send it (for the webhook too). */
+    update(chatId, text, { type = 'private', firstName = 'Owner', lang = 'en' } = {}) {
+      return { update_id: ++updateId, message: { message_id: updateId, from: { id: Number(chatId), first_name: firstName, language_code: lang }, chat: { id: Number(chatId), type }, ...(text === null ? { photo: [] } : { text }) } };
+    },
+    /** A button press. */
+    callback(chatId, data, { lang = 'en' } = {}) {
+      return { update_id: ++updateId, callback_query: { id: `cb${updateId}`, data, from: { id: Number(chatId), first_name: 'Owner', language_code: lang }, message: { message_id: 1, chat: { id: Number(chatId), type: 'private' } } } };
+    },
+    press(chatId, data) { queue.push(this.callback(chatId, data)); },
     /** Resolves with the next reply to [chatId]. */
     async replyTo(chatId, timeoutMs = 8000) {
       const start = sent.filter((s) => s.chatId === String(chatId)).length;

@@ -1,62 +1,67 @@
 #!/usr/bin/env node
-// ZigDash Chat, milestone 1 (docs/design/whatsapp-assistant.md, revision 6):
-// the owner's Telegram chat talks to the owner's home through the 9.0.0-chat
-// Engine, over the home broker or the ZigDash relay. Configuration (all paths
-// may start with ~/; secrets are read from files and never printed):
+// ZigDash Chat service (docs/design/chat-linking.md, phase 3): many Homes,
+// each linked Telegram chat talking to its own Home through the Engine, over
+// the ZigDash relay (or, for development at home, the hub's own broker).
+// Linking happens from the app over HTTPS (http.mjs, bot.mjs). Configuration
+// (paths may start with ~/; secrets are read from files and never printed):
 //
-//   TELEGRAM_TOKEN_FILE      the dev bot's token             (~/.config/zigdash/dev_bot_token)
-//   ALLOWED_CHATS_FILE       allowed Telegram chat ids, one per line (~/.config/zigdash/dev_allowed_chat_ids)
-//   ANTHROPIC_API_KEY, or ANTHROPIC_KEY_FILE                 (~/.config/zigdash/anthropic_key)
-//   ZIGDASH_CHAT_KEYS        the encrypted keys file (cli.mjs writes it)   (~/.config/zigdash/chat-keys.json)
-//   ZIGDASH_CHAT_SECRETS     the service key that opens it                 (~/.config/zigdash/chat-secrets.json)
-//   ZIGDASH_CHAT_CLIENT      which client in the keys file (default: the only one)
-//   ZIGDASH_TRANSPORT        broker (home broker) or relay                 (broker)
-//   ZIGDASH_MQTT_URL         mqtt://<hub>:1883, or mqtts://relay.zigdash.app:8883
-//   ZIGDASH_MQTT_USER, ZIGDASH_MQTT_PASSWORD_FILE   the MQTT login, if any
-//   ZIGDASH_HOME_ID          the relay home id (default: the client's home_id from the CLI)
-//   MODEL                    (claude-haiku-5-5)        TIME_ZONE (the host's)
+//   TELEGRAM_TOKEN_FILE        the bot's token                                  (~/.config/zigdash/dev_bot_token)
+//   TELEGRAM_MODE              polling (dev bot) or webhook (live bot)          (polling)
+//   TELEGRAM_WEBHOOK_SECRET_FILE  webhook mode: the /v1/tg/<secret> path part and the header secret
+//   BOT_USERNAME               for the link URL                                 (ZigDashHomeBot)
+//   ANTHROPIC_API_KEY, or ANTHROPIC_KEY_FILE                                     (~/.config/zigdash/anthropic_key)
+//   ZIGDASH_CHAT_KEYS          the encrypted keys file (bindings)              (~/.config/zigdash/chat-keys.json)
+//   ZIGDASH_CHAT_SECRETS       the service key that opens it                    (~/.config/zigdash/chat-secrets.json)
+//   ZIGDASH_CHAT_STATE         counters, last use, ACL retries (no secrets)     (~/.config/zigdash/chat-state.json)
+//   ZIGDASH_TRANSPORT          relay, or broker (the hub's own broker, dev)     (broker)
+//   ZIGDASH_MQTT_URL           mqtts://relay.zigdash.app:8883, or mqtt://<hub>:1883
+//   ZIGDASH_MQTT_USER, ZIGDASH_MQTT_PASSWORD_FILE   the service's MQTT login
+//   HTTP_PORT, HTTP_HOST       the API                                          (8790, 0.0.0.0; HTTP_PORT=off: none)
+//   CHAT_TICKET_SECRET_FILE    checks the verifier's tickets (the API is off without it)
+//   VERIFIER_INTERNAL_URL, CHAT_ACL_SECRET_FILE   the verifier's internal ACL route (http://zigdash-relay-verifier-1:8788)
+//   WORKER_URL, WORKER_SECRET_FILE   the support Worker: early access and the linked list (https://support.giladha.com)
+//   MONTHLY_CAP                messages a Home a month                          (300)
+//   MONTHLY_BUDGET_USD         model spend a month, all Homes, then Chat pauses (20)
+//   MODEL                      (claude-haiku-5-5)        TIME_ZONE (the host's)
 
-import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
-import { expandHome, keyring, loadServiceKey, readSecretFile } from './keystore.mjs';
-import { HomeLink } from './link.mjs';
+import { expandHome, loadServiceKey, readSecretFile } from './keystore.mjs';
 import { makeAgent, DEFAULT_MODEL } from './agent.mjs';
-import { startTelegram } from './telegram.mjs';
+import { makeBot, startPolling } from './telegram.mjs';
 import { makeMetrics } from './metrics.mjs';
+import { makeBindings, makeState } from './store.mjs';
+import { makeChat } from './bot.mjs';
+import { makeHttp } from './http.mjs';
 
 export function configFromEnv(env = process.env) {
   const path = (name, fallback) => expandHome(env[name] || fallback);
+  const optional = (name) => (env[name] ? expandHome(env[name]) : null);
   return {
     tokenFile: path('TELEGRAM_TOKEN_FILE', '~/.config/zigdash/dev_bot_token'),
-    allowedFile: path('ALLOWED_CHATS_FILE', '~/.config/zigdash/dev_allowed_chat_ids'),
+    telegramMode: env.TELEGRAM_MODE === 'webhook' ? 'webhook' : 'polling',
+    webhookSecretFile: optional('TELEGRAM_WEBHOOK_SECRET_FILE'),
+    botUsername: env.BOT_USERNAME || 'ZigDashHomeBot',
     anthropicKeyFile: path('ANTHROPIC_KEY_FILE', '~/.config/zigdash/anthropic_key'),
     keysFile: path('ZIGDASH_CHAT_KEYS', '~/.config/zigdash/chat-keys.json'),
     secretsFile: path('ZIGDASH_CHAT_SECRETS', '~/.config/zigdash/chat-secrets.json'),
-    clientId: env.ZIGDASH_CHAT_CLIENT || null,
+    stateFile: path('ZIGDASH_CHAT_STATE', '~/.config/zigdash/chat-state.json'),
     transport: env.ZIGDASH_TRANSPORT === 'relay' ? 'relay' : 'broker',
     mqttUrl: env.ZIGDASH_MQTT_URL || 'mqtt://127.0.0.1:1883',
     mqttUser: env.ZIGDASH_MQTT_USER || undefined,
-    mqttPasswordFile: env.ZIGDASH_MQTT_PASSWORD_FILE ? expandHome(env.ZIGDASH_MQTT_PASSWORD_FILE) : null,
-    homeId: env.ZIGDASH_HOME_ID || null,
+    mqttPasswordFile: optional('ZIGDASH_MQTT_PASSWORD_FILE'),
+    homeId: env.ZIGDASH_HOME_ID || null, // the CLI's default for milestone 1's hand-made client
+    httpPort: env.HTTP_PORT === 'off' ? null : Number(env.HTTP_PORT || 8790),
+    httpHost: env.HTTP_HOST || '0.0.0.0',
+    ticketSecretFile: optional('CHAT_TICKET_SECRET_FILE'),
+    verifierUrl: env.VERIFIER_INTERNAL_URL || null,
+    aclSecretFile: optional('CHAT_ACL_SECRET_FILE'),
+    workerUrl: env.WORKER_URL || null,
+    workerSecretFile: optional('WORKER_SECRET_FILE'),
+    cap: Number(env.MONTHLY_CAP || 300),
+    budgetUsd: Number(env.MONTHLY_BUDGET_USD || 20),
     model: env.MODEL || DEFAULT_MODEL,
     timeZone: env.TIME_ZONE || undefined,
-  };
-}
-
-/** The allowed chat ids, read again when the file changes. Never logged. */
-export function allowlist(file) {
-  let stamp = null;
-  let ids = new Set();
-  return () => {
-    let st = null;
-    try { st = fs.statSync(file); } catch { /* missing: nobody */ }
-    const now = st ? `${st.mtimeMs}:${st.size}` : 'none';
-    if (now !== stamp) {
-      stamp = now;
-      ids = new Set(st ? fs.readFileSync(file, 'utf8').split(/\r?\n/).map((l) => l.replace(/#.*/, '').trim()).filter((l) => /^-?\d{1,20}$/.test(l)) : []);
-    }
-    return ids;
   };
 }
 
@@ -76,45 +81,56 @@ export async function connectMqtt(connect, { url, username, password, metrics })
 
 /**
  * Starts the service. [deps] are injectable for tests: anthropic (an SDK client
- * or a fake), mqttClient (connected), fetchImpl (Telegram), metrics.
+ * or a fake), mqttClient (connected), fetchImpl (Telegram, the verifier and
+ * the Worker), metrics, and secrets in place of their files.
  */
-export async function startService(config, { anthropic, mqttClient, fetchImpl = fetch, metrics = makeMetrics(), telegramToken, pollSeconds } = {}) {
+export async function startService(config, { anthropic, mqttClient, fetchImpl = fetch, metrics = makeMetrics(), telegramToken, pollSeconds, secrets = {}, now = Date.now } = {}) {
+  const secret = (name, file) => secrets[name] || (file ? readSecretFile(file) : null);
   const serviceKey = loadServiceKey(config.secretsFile);
-  const keys = keyring(config.keysFile, serviceKey);
-  const links = new Map(); // client id -> { key, link }
-
-  async function linkNow() {
-    const clients = keys.current().clients;
-    const ids = Object.keys(clients);
-    const id = config.clientId || (ids.length === 1 ? ids[0] : null);
-    const entry = id && clients[id];
-    if (!entry) return null;
-    const have = links.get(id);
-    if (have && have.key === entry.key && have.token === entry.token) return have.link;
-    if (have) have.link.stop();
-    const link = new HomeLink({
-      mqtt: mqttClient, transport: config.transport, homeId: config.homeId || entry.home_id,
-      clientId: id, token: entry.token, key: entry.key,
-    });
-    await link.start();
-    links.set(id, { key: entry.key, token: entry.token, link });
-    return link;
-  }
-
-  const agent = makeAgent({ anthropic, model: config.model, linkFor: () => linkNow().catch(() => null), metrics, timeZone: config.timeZone });
-  const onText = (chatId, text) => agent.handle(chatId, text);
-  await linkNow().catch(() => null);
-  const telegram = startTelegram({
-    token: telegramToken || readSecretFile(config.tokenFile),
-    allowed: allowlist(config.allowedFile),
-    onText, metrics, fetchImpl, pollSeconds,
+  const bindings = makeBindings(config.keysFile, serviceKey);
+  const state = makeState(config.stateFile, { now });
+  const token = telegramToken || readSecretFile(config.tokenFile);
+  const bot = makeBot({ token, fetchImpl });
+  const verifierSecret = secret('acl', config.aclSecretFile);
+  const workerSecret = secret('worker', config.workerSecretFile);
+  let chat = null;
+  const agent = makeAgent({
+    anthropic, model: config.model, metrics, timeZone: config.timeZone, now,
+    linkFor: (chatId) => chat.linkFor(chatId).catch(() => null),
+    onCost: (chatId, usd) => chat.costSink(chatId, usd),
   });
-  metrics.count('started');
+  chat = makeChat({
+    bindings, state, bot, agent, metrics, mqtt: mqttClient, fetchImpl, now,
+    config: {
+      transport: config.transport, botUsername: config.botUsername, cap: config.cap, budgetUsd: config.budgetUsd,
+      ticketSecret: secret('ticket', config.ticketSecretFile),
+      verifier: config.verifierUrl && verifierSecret ? { url: config.verifierUrl.replace(/\/$/, ''), secret: verifierSecret } : null,
+      worker: config.workerUrl && workerSecret ? { url: config.workerUrl.replace(/\/$/, ''), secret: workerSecret } : null,
+    },
+  });
+
+  let api = null;
+  let port = null;
+  const webhookSecret = config.telegramMode === 'webhook' ? secret('webhook', config.webhookSecretFile) : null;
+  if (config.telegramMode === 'webhook' && !webhookSecret) throw new Error('webhook mode needs TELEGRAM_WEBHOOK_SECRET_FILE');
+  const ticketsOn = !!secret('ticket', config.ticketSecretFile);
+  if (config.httpPort !== null && (ticketsOn || webhookSecret)) {
+    api = makeHttp({ chat, metrics, webhookSecret });
+    port = await api.listen(config.httpPort, config.httpHost);
+  }
+  const polling = config.telegramMode === 'polling'
+    ? startPolling({ token, onUpdate: (u) => chat.onUpdate(u), metrics, fetchImpl, pollSeconds })
+    : null;
+  chat.syncWorker().catch(() => {});
+  chat.retryAcl().catch(() => {});
+  metrics.count('started', { webhook: webhookSecret ? 1 : 0, linked: bindings.list().length });
   return {
-    agent,
+    agent, chat, port,
     async stop() {
-      await telegram.stop();
-      for (const { link } of links.values()) link.stop();
+      if (polling) await polling.stop();
+      if (api) await api.close();
+      await chat.idle();
+      chat.stop();
     },
   };
 }

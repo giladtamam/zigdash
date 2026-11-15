@@ -100,7 +100,11 @@ export function costUsd(model, u) {
  * [anthropic]: an Anthropic SDK client (or a fake with messages.create).
  * [linkFor(chatId)]: the HomeLink for a chat (or a promise of it), or null when it isn't linked.
  */
-export function makeAgent({ anthropic, model = DEFAULT_MODEL, linkFor, metrics, timeZone, now = Date.now, deadlineMs = DEADLINE_MS }) {
+/**
+ * [onCost(chatId, usd)]: optional, told what the model cost for each message
+ * (the service's monthly budget).
+ */
+export function makeAgent({ anthropic, model = DEFAULT_MODEL, linkFor, metrics, timeZone, now = Date.now, deadlineMs = DEADLINE_MS, onCost }) {
   const conversations = new Map(); // chat id -> { turns: [{user, assistant}], last }
   const pending = new Map(); // chat id -> { expires, actions: [{tool, args}], names }
   const indexes = new WeakMap(); // link -> { at, text }
@@ -289,6 +293,7 @@ export function makeAgent({ anthropic, model = DEFAULT_MODEL, linkFor, metrics, 
       else { metrics.count('model_error', { status: Number(e && e.status) || 0 }); reply = TEXT.sorry; }
     }
     remember(chatId, userText, reply);
+    if (onCost) onCost(chatId, costUsd(model, usage));
     metrics.count('message', {
       latency_ms: now() - ctx.started,
       tool_calls: ctx.calls,

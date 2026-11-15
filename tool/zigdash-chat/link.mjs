@@ -39,6 +39,7 @@ export class HomeLink {
 
   stop() {
     this.mqtt.removeListener?.('message', this.onMessage);
+    try { this.mqtt.unsubscribe?.(this.topics.res); } catch { /* the connection is going anyway */ }
     for (const p of this.pending.values()) { clearTimeout(p.timer); p.reject(new LinkError('offline', 'stopped')); }
     this.pending.clear();
   }
