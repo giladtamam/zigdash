@@ -9,7 +9,7 @@ import '../core/analytics/analytics.dart';
 import 'engine_installer.dart';
 import 'engine_providers.dart';
 import 'engine_status.dart';
-import 'engine_sheet.dart' show confirmWaitingRules, watchWaitingRules;
+import 'engine_sheet.dart' show WaitingRulesWatch, confirmWaitingRules;
 
 /// How "make sure the Engine is on the hub" ended.
 enum EngineSetup {
@@ -41,7 +41,7 @@ Future<EngineSetup> ensureEngine(BuildContext context, WidgetRef ref, String con
     VoidCallback? onChecked,
     bool Function()? abandoned,
     void Function(EngineWhy why)? failedWhy}) async {
-  final rules = watchWaitingRules(ref, connectionId);
+  final rules = WaitingRulesWatch(ref, connectionId);
   try {
     final check = await checkEngine(ref, connectionId);
     if (!context.mounted || (abandoned?.call() ?? false)) return EngineSetup.cancelled;
@@ -58,7 +58,8 @@ Future<EngineSetup> ensureEngine(BuildContext context, WidgetRef ref, String con
       if (context.mounted) context.go(Routes.homeAutomations(connectionId));
       return EngineSetup.needsUser;
     }
-    if (!await confirmWaitingRules(context, ref, connectionId, rules.read().valueOrNull ?? const [])) {
+    final waiting = await rules.rules();
+    if (!context.mounted || !await confirmWaitingRules(context, ref, connectionId, waiting)) {
       return EngineSetup.cancelled;
     }
     if (!context.mounted) return EngineSetup.cancelled;

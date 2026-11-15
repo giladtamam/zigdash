@@ -5,7 +5,7 @@ import '../../data/database/tables/connections.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../engine/automation.dart' show Automation;
 import '../../engine/engine_providers.dart';
-import '../../engine/engine_sheet.dart' show watchWaitingRules;
+import '../../engine/engine_sheet.dart' show WaitingRulesWatch;
 import '../../engine/engine_setup.dart';
 import '../../engine/engine_status.dart';
 import '../../engine/engine_installer.dart' show EngineInstaller, HubAnswer;
@@ -115,7 +115,7 @@ Future<HistoryOn> turnOnHistory(
   if (transportOf(home?.transport) == ConnectionTransport.z2mPage) {
     return HistoryOn.needsBroker;
   }
-  final rules = watchWaitingRules(ref, connectionId);
+  final rules = WaitingRulesWatch(ref, connectionId);
   try {
     final check = await checkEngine(ref, connectionId);
     if (abandoned?.call() ?? false) return HistoryOn.cancelled;
@@ -139,9 +139,9 @@ Future<HistoryOn> turnOnHistory(
       case HubEnginePhase.needsBroker:
         return HistoryOn.needsBroker;
       case HubEnginePhase.notInstalled:
-        final go =
-            await beforeInstall?.call(rules.read().valueOrNull ?? const []) ??
-            true;
+        final waiting = await rules.rules();
+        if (abandoned?.call() ?? false) return HistoryOn.cancelled;
+        final go = await beforeInstall?.call(waiting) ?? true;
         if (!go || (abandoned?.call() ?? false)) return HistoryOn.cancelled;
         ref
             .read(analyticsProvider)

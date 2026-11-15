@@ -12,7 +12,7 @@ import '../../../data/repositories/connection_repo.dart';
 import '../../../engine/engine_providers.dart' show setEngineDeclined;
 import '../../../engine/automation.dart' show Automation;
 import '../../../engine/engine_sheet.dart'
-    show confirmWaitingRules, watchWaitingRules;
+    show WaitingRulesWatch, confirmWaitingRules;
 import '../../history/app_history_recorder.dart' show historyRecordHereProvider;
 import '../../history/history_service.dart' show historyRecorderOnlineProvider;
 import '../../history/history_setup_flow.dart';
@@ -80,7 +80,7 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   /// The Home's rules, coming in from the first tap, for the waiting-rules
   /// sheet before any install (consent included).
-  ProviderSubscription<AsyncValue<List<Automation>>>? _rules;
+  WaitingRulesWatch? _rules;
   Timer? _grace;
   late final HistorySetupFrom _from;
 
@@ -134,7 +134,7 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   Future<void> _turnOn() async {
     _track(HistoryOnStep.tapped);
-    _rules ??= watchWaitingRules(ref, widget.connectionId);
+    _rules ??= WaitingRulesWatch(ref, widget.connectionId);
     setState(() => _stage = _Stage.checking);
     final result = await turnOnHistory(
       ref,
@@ -176,11 +176,13 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   Future<void> _allow() async {
     // Rules waiting for the Engine are asked about before the restart.
+    final waiting = await _rules?.rules() ?? const <Automation>[];
+    if (!mounted) return;
     final go = await confirmWaitingRules(
       context,
       ref,
       widget.connectionId,
-      _rules?.read().valueOrNull ?? const [],
+      waiting,
     );
     if (!mounted) return;
     if (!go) {

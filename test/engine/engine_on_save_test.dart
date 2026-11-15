@@ -17,6 +17,7 @@ import 'package:zigdash/engine/automations_screen.dart';
 import 'package:zigdash/engine/engine_installer.dart';
 import 'package:zigdash/engine/engine_providers.dart';
 import 'package:zigdash/engine/engine_setup.dart';
+import 'package:zigdash/engine/engine_sheet.dart' show waitingRulesWait;
 import 'package:zigdash/engine/engine_status.dart';
 import 'package:zigdash/features/devices/devices_providers.dart' show homeBaseTopicProvider;
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
@@ -113,6 +114,7 @@ Future<_Rig> _pump(
   Widget home, {
   required Stream<EngineView> Function() view,
   List<Automation> rules = const [],
+  Stream<List<Automation>> Function()? rulesLater,
   Map<String, Object> prefs = const {},
   List<Override> extra = const [],
 }) async {
@@ -147,7 +149,7 @@ Future<_Rig> _pump(
       bridgeDevicesStreamProvider.overrideWith((ref, _) => Stream.value(_devices())),
       scenesForConnectionProvider.overrideWith((ref, _) => Stream.value(<Scene>[])),
       automationsRepoProvider.overrideWith((ref) => AutomationsRepo((_) async => mgr, p, timeZone: () async => 'UTC')),
-      automationsProvider.overrideWith((ref, _) => Stream.value(rules)),
+      automationsProvider.overrideWith((ref, _) => rulesLater?.call() ?? Stream.value(rules)),
       automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
       engineViewProvider.overrideWith((ref, _) => view()),
       engineInstallerProvider.overrideWith((ref, _) async => EngineInstaller(link, base: 'zigbee2mqtt')),
@@ -179,6 +181,9 @@ Future<void> _makeAndSave(WidgetTester tester) async {
   await tester.tap(find.text('Hallway light').last);
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(const Key('auto-save')));
+  await tester.pump();
+  // An empty broker: the rules' wait (waitingRulesWait) runs out first.
+  await tester.pump(waitingRulesWait);
   await tester.pumpAndSettle();
 }
 
@@ -534,6 +539,55 @@ void main() {
         expect(rig.sink.sent, contains('engine_setup {step: install_tapped, from: ${from.name}, z2m: 2.14}'));
       });
     }
+  });
+
+  // Re-review: the hub check can settle before the broker's retained rules
+  // arrive; the install still waits for them (WaitingRulesWatch).
+  group('rules arriving after the hub check', () {
+    Stream<List<Automation>> late() async* {
+      yield const [];
+      await Future<void>.delayed(const Duration(seconds: 1));
+      yield [_rule('old')];
+    }
+
+    Widget opener(void Function(EngineSetup) done) => Consumer(builder: (context, ref, _) => Scaffold(
+          body: TextButton(
+            onPressed: () async => done(await ensureEngine(context, ref, 'c1', from: EngineFrom.alerts)),
+            child: const Text('set up'),
+          ),
+        ));
+
+    testWidgets('the check settles first, the rules come 1 s later: the sheet still lists them', (tester) async {
+      EngineSetup? result;
+      final rig = await _pump(tester, opener((r) => result = r),
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)), rulesLater: late);
+      await tester.tap(find.text('set up'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.byKey(const Key('engine-waiting-old')), findsNothing);
+      expect(rig.requests, isEmpty, reason: 'no install while the rules may still come');
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('engine-waiting-old')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('engine-sheet-save'))); // Not now
+      await tester.pumpAndSettle();
+      expect(result, EngineSetup.cancelled);
+      expect(rig.requests, isEmpty);
+    });
+
+    testWidgets('an empty broker: the install goes on after about 2 s, no sheet', (tester) async {
+      EngineSetup? result;
+      final rig = await _pump(tester, opener((r) => result = r),
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)));
+      await tester.tap(find.text('set up'));
+      await tester.pump();
+      expect(rig.requests, isEmpty);
+      await tester.pump(waitingRulesWait);
+      await _settle(tester);
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      expect(rig.requests, ['extension/save']);
+      expect(result, EngineSetup.ready);
+    });
   });
 
   group('the hub check (20 s) and why', () {

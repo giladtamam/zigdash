@@ -12,6 +12,7 @@ import 'package:zigdash/engine/automation.dart';
 import 'package:zigdash/engine/automations_repo.dart';
 import 'package:zigdash/engine/engine_installer.dart';
 import 'package:zigdash/engine/engine_providers.dart';
+import 'package:zigdash/engine/engine_sheet.dart' show waitingRulesWait;
 import 'package:zigdash/engine/engine_status.dart';
 import 'package:zigdash/features/dashboards/widgets/history_on_card.dart';
 import 'package:zigdash/features/history/history_service.dart';
@@ -92,6 +93,7 @@ Future<_Rig> _pump(
   ConnectionTransport? transport,
   bool answerInstall = true,
   List<Automation> rules = const [],
+  Stream<List<Automation>> Function()? rulesLater,
   Stream<EngineView> Function()? views,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
@@ -131,7 +133,9 @@ Future<_Rig> _pump(
         engineSourceProvider.overrideWith((ref) async => '// engine'),
         historyServiceProvider.overrideWithValue(history),
         // 3.6.2: rules waiting for the Engine are asked about first.
-        automationsProvider.overrideWith((ref, _) => Stream.value(rules)),
+        automationsProvider.overrideWith(
+          (ref, _) => rulesLater?.call() ?? Stream.value(rules),
+        ),
         automationsRepoProvider.overrideWith(
           (ref) => AutomationsRepo((_) async => mgr, p, timeZone: () async => 'UTC'),
         ),
@@ -195,7 +199,7 @@ void main() {
     final rig = await _pump(tester);
     await tester.tap(find.byKey(const Key('history-on-turn-on')));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(waitingRulesWait); // an empty broker's rules
     // The install's futures run partly outside the test's fake clock.
     for (var i = 0; i < 10; i++) {
       await tester.runAsync(
@@ -471,6 +475,27 @@ void main() {
         rig.link.published.map((p) => p.$1).first,
         'zigbee2mqtt/bridge/request/options',
       );
+    });
+
+    testWidgets('rules arriving 1 s after the hub check are still asked about', (
+      tester,
+    ) async {
+      Stream<List<Automation>> late() async* {
+        yield const [];
+        await Future<void>.delayed(const Duration(seconds: 1));
+        yield [heater];
+      }
+
+      final rig = await _pump(tester, rulesLater: late);
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.byKey(const Key('engine-waiting-heater')), findsNothing);
+      expect(rig.link.published, isEmpty);
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.byKey(const Key('engine-waiting-heater')), findsOneWidget);
+      expect(rig.link.published, isEmpty);
     });
 
     testWidgets('"Not now" to add-ons kept on this phone: this phone instead', (

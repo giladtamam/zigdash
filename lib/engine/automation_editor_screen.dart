@@ -68,12 +68,12 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
 
   /// 3.6.2: the Home's rules stay at hand for the Engine sheet's "waiting
   /// from before" list, whatever screen is under this one.
-  late final ProviderSubscription<AsyncValue<List<Automation>>> _rules;
+  late final WaitingRulesWatch _rules;
 
   @override
   void initState() {
     super.initState();
-    _rules = ref.listenManual(automationsProvider(widget.connectionId), (_, __) {});
+    _rules = WaitingRulesWatch(ref, widget.connectionId);
     final e = widget.existing;
     _name = TextEditingController(text: e?.name ?? '');
     _enabled = e?.enabled ?? true;
@@ -211,7 +211,9 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
     final bool ok;
     var running = true;
     if (view == null || !view.installed && !(view.phase == HubEnginePhase.unreachable && _knownInstalled)) {
-      final result = await showEngineSaveSheet(context, ref, widget.connectionId, rule, check);
+      final waiting = await _rules.rules();
+      if (!mounted) return;
+      final result = await showEngineSaveSheet(context, ref, widget.connectionId, rule, check, waiting);
       if (!mounted) return;
       if (result == null) return setState(() => _saving = false);
       ok = result.saved;

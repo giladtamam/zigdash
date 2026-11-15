@@ -43,6 +43,21 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
 
   final _seen = <HubEnginePhase>{};
 
+  /// 3.6.2: the rules for the switches before an install, from the start.
+  late final WaitingRulesWatch _rules;
+
+  @override
+  void initState() {
+    super.initState();
+    _rules = WaitingRulesWatch(ref, widget.connectionId);
+  }
+
+  @override
+  void dispose() {
+    _rules.close();
+    super.dispose();
+  }
+
   /// Each phase worth counting, once per visit to this screen.
   void _seenPhase(HubEnginePhase phase) {
     if (!_seen.add(phase)) return;
@@ -122,8 +137,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   Future<void> _installTapped() async {
     // Add-ons blocked meanwhile: the consent screen shows; never install past it.
     if (ref.read(engineViewProvider(widget.connectionId)).valueOrNull?.phase != HubEnginePhase.notInstalled) return;
-    final rules = waitingRules(ref, widget.connectionId);
-    if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
+    final rules = await _rules.rules();
+    if (!mounted || !await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
     _track(EngineStep.installTapped);
     await _install();
   }
@@ -131,8 +146,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   /// The consent buttons: rules waiting for the Engine are asked about
   /// first, as before any install.
   Future<void> _consentTapped() async {
-    final rules = waitingRules(ref, widget.connectionId);
-    if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
+    final rules = await _rules.rules();
+    if (!mounted || !await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
     await _consent();
   }
 

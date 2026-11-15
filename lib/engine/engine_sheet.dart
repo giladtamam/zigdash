@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -67,21 +69,57 @@ bool engineAwayWithoutEngine(EngineView? view, {required bool knownInstalled}) =
     (view.away || view.phase == HubEnginePhase.unreachable) &&
     !knownInstalled;
 
-/// The Home's rules that wait for the Engine (on the broker).
-List<Automation> waitingRules(WidgetRef ref, String connectionId, {List<Automation>? onBroker}) =>
-    onBroker ?? ref.read(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
+/// How long after subscribing an empty rules list is believed: the
+/// broker's retained rules arrive a moment after, and an empty broker
+/// sends nothing at all.
+const waitingRulesWait = Duration(seconds: 2);
 
-/// Keeps the Home's rules coming in while the hub is checked, so they are
-/// there when the install asks about them (the retained rules arrive a
-/// moment after subscribing).
-ProviderSubscription<AsyncValue<List<Automation>>> watchWaitingRules(WidgetRef ref, String connectionId) =>
-    ref.listenManual(automationsProvider(connectionId), (_, __) {});
+/// The Home's rules for the switches before an install, on every install
+/// path. Subscribe early (before the hub check); [rules] gives them as
+/// soon as some have come, or once [waitingRulesWait] has passed since
+/// subscribing with none, whichever is first.
+class WaitingRulesWatch {
+  WaitingRulesWatch(WidgetRef ref, String connectionId) : _since = DateTime.now() {
+    _sub = ref.listenManual(automationsProvider(connectionId), (_, __) => _arrived?.call());
+  }
 
-/// Before an install from any path: when rules wait, asks for each whether
-/// it runs, saves the paused ones disabled and says whether to go on.
-/// True at once when nothing waits.
+  final DateTime _since;
+  late final ProviderSubscription<AsyncValue<List<Automation>>> _sub;
+  void Function()? _arrived;
+
+  List<Automation> _now() {
+    try {
+      return _sub.read().valueOrNull ?? const [];
+    } catch (_) {
+      return const []; // closed with its widget
+    }
+  }
+
+  Future<List<Automation>> rules() async {
+    final left = waitingRulesWait - DateTime.now().difference(_since);
+    if (_now().isNotEmpty || left <= Duration.zero) return _now();
+    final done = Completer<void>();
+    void finish() {
+      if (!done.isCompleted) done.complete();
+    }
+    _arrived = () {
+      if (_now().isNotEmpty) finish();
+    };
+    final timer = Timer(left, finish);
+    await done.future;
+    timer.cancel();
+    _arrived = null;
+    return _now();
+  }
+
+  void close() => _sub.close();
+}
+
+/// Before an install from any path: when rules wait ([rules] from a
+/// [WaitingRulesWatch]), asks for each whether it runs, saves the paused
+/// ones disabled and says whether to go on. True at once when nothing waits.
 Future<bool> confirmWaitingRules(BuildContext context, WidgetRef ref, String connectionId, List<Automation> rules) async {
-  final waiting = waitingRules(ref, connectionId, onBroker: rules);
+  final waiting = rules;
   if (waiting.isEmpty) return true;
   if (!context.mounted) return false;
   final go = await showModalBottomSheet<bool>(
@@ -94,10 +132,10 @@ Future<bool> confirmWaitingRules(BuildContext context, WidgetRef ref, String con
 }
 
 /// Saving [rule] on a hub without the Engine ([check] as the hub check
-/// left it).
-Future<EngineSaveResult?> showEngineSaveSheet(
-    BuildContext context, WidgetRef ref, String connectionId, Automation rule, EngineCheck check) async {
-  final waiting = waitingRules(ref, connectionId).where((r) => r.id != rule.id).toList();
+/// left it; [rules] from a [WaitingRulesWatch]).
+Future<EngineSaveResult?> showEngineSaveSheet(BuildContext context, WidgetRef ref, String connectionId,
+    Automation rule, EngineCheck check, List<Automation> rules) async {
+  final waiting = rules.where((r) => r.id != rule.id).toList();
   var saved = false;
   final result = await showModalBottomSheet<EngineSaveResult>(
     context: context,
