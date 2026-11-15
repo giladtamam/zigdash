@@ -236,7 +236,12 @@ Object.assign(ZigDashEngine.prototype, {
       if (sub === 'audit' && !chat.auditLoaded) {
         chat.auditLoaded = true;
         const old = message && String(message) ? JSON.parse(String(message)) : [];
-        if (Array.isArray(old)) chat.audit = [...chat.audit, ...old].slice(0, CHAT_AUDIT_MAX);
+        if (Array.isArray(old)) {
+          // Entries written since start, then the kept ones (once each, newest first).
+          const seen = new Set(chat.audit.map((a) => JSON.stringify(a)));
+          const kept = old.filter((a) => a && typeof a === 'object' && !seen.has(JSON.stringify(a)));
+          chat.audit = [...chat.audit, ...kept].sort((a, b) => String(b.at).localeCompare(String(a.at))).slice(0, CHAT_AUDIT_MAX);
+        }
       }
     } catch (e) {
       this.log('warning', `chat: ${sub.split('/')[0]}: ${e && e.message}`);
