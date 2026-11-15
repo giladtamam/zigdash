@@ -4374,27 +4374,6 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle =>
-      'Automatiseringen draaien op je hub, niet op je telefoon';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash zet ZigDash Engine in Zigbee2MQTT op je hub. Het let op je apparaten en voert je regels uit, zodat een lamp aangaat als de deur opengaat, ook met je telefoon uit en zonder internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Niets met de hand te installeren. ZigDash doet het via je thuisnetwerk.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Je Zigbee2MQTT is versie $version.';
-  }
-
-  @override
-  String get engineIntroRemove =>
-      'Je kunt hem altijd vanaf dit scherm verwijderen.';
-
-  @override
   String get engineInstall => 'Installeren op de hub';
 
   @override
@@ -5771,6 +5750,10 @@ class AppLocalizationsNl extends AppLocalizations {
       'Automatiseringen draaien op je hub met ZigDash Engine. ZigDash zet het daar zodra je je eerste opslaat.';
 
   @override
+  String get engineAwayMakeAtHome =>
+      'Maak automatiseringen thuis: ZigDash zet zijn Engine dan via je thuisnetwerk op je hub.';
+
+  @override
   String get engineSheetSource => 'Bekijk de broncode op GitHub';
 
   @override
@@ -5788,10 +5771,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get engineSheetSave => 'Opslaan';
-
-  @override
-  String get engineSheetAway =>
-      'Je bent niet thuis, en ZigDash Engine wordt via je thuisnetwerk geïnstalleerd. Sla nu op. ZigDash vraagt je de Engine te installeren zodra deze telefoon weer thuis is.';
 
   @override
   String get engineSheetNoAnswer =>

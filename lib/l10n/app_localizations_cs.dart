@@ -4360,25 +4360,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle => 'Automatizace běží na hubu, ne v telefonu';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash vloží ZigDash Engine do Zigbee2MQTT na vašem hubu. Sleduje vaše zařízení a spouští pravidla, takže se světlo rozsvítí při otevření dveří, i když je telefon vypnutý a nejde internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Nic se neinstaluje ručně. ZigDash to udělá přes domácí síť.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Váš Zigbee2MQTT má verzi $version.';
-  }
-
-  @override
-  String get engineIntroRemove => 'Kdykoli ho můžete odebrat z této obrazovky.';
-
-  @override
   String get engineInstall => 'Nainstalovat na hub';
 
   @override
@@ -5749,6 +5730,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Automatizace běží na vašem hubu díky ZigDash Engine. ZigDash ho tam nainstaluje, až uložíte první automatizaci.';
 
   @override
+  String get engineAwayMakeAtHome =>
+      'Automatizace vytvářejte doma: ZigDash pak nainstaluje svůj Engine na váš hub přes domácí síť.';
+
+  @override
   String get engineSheetSource => 'Zdrojový kód na GitHubu';
 
   @override
@@ -5766,10 +5751,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get engineSheetSave => 'Uložit';
-
-  @override
-  String get engineSheetAway =>
-      'Nejste doma a ZigDash Engine se instaluje přes domácí síť. Uložte teď. ZigDash vás požádá o instalaci, až bude tento telefon příště doma.';
 
   @override
   String get engineSheetNoAnswer =>

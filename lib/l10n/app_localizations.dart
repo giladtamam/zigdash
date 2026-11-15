@@ -7704,36 +7704,6 @@ abstract class AppLocalizations {
   /// **'Your Zigbee2MQTT is version {version}. Automations need 2.4 or newer. Update Zigbee2MQTT on your hub, then come back here.'**
   String engineTooOldBody(Object version);
 
-  /// No description provided for @engineIntroTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Automations run on your hub, not on your phone'**
-  String get engineIntroTitle;
-
-  /// No description provided for @engineIntroBody.
-  ///
-  /// In en, this message translates to:
-  /// **'ZigDash puts ZigDash Engine inside Zigbee2MQTT on your hub. It watches your devices and runs your rules, so a light turns on when the door opens even with your phone off and the internet down.'**
-  String get engineIntroBody;
-
-  /// No description provided for @engineIntroNothingByHand.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing to install by hand. ZigDash does it over your home network.'**
-  String get engineIntroNothingByHand;
-
-  /// No description provided for @engineIntroVersion.
-  ///
-  /// In en, this message translates to:
-  /// **'Your Zigbee2MQTT is version {version}.'**
-  String engineIntroVersion(Object version);
-
-  /// No description provided for @engineIntroRemove.
-  ///
-  /// In en, this message translates to:
-  /// **'You can remove it any time from this screen.'**
-  String get engineIntroRemove;
-
   /// No description provided for @engineInstall.
   ///
   /// In en, this message translates to:
@@ -10050,6 +10020,12 @@ abstract class AppLocalizations {
   /// **'Automations run on your hub with ZigDash Engine. ZigDash puts it there when you save your first one.'**
   String get engineSlimCard;
 
+  /// No description provided for @engineAwayMakeAtHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Make automations at home: ZigDash puts its Engine on your hub then, over your home network.'**
+  String get engineAwayMakeAtHome;
+
   /// No description provided for @engineSheetSource.
   ///
   /// In en, this message translates to:
@@ -10085,12 +10061,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get engineSheetSave;
-
-  /// No description provided for @engineSheetAway.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'re away from home, and ZigDash Engine is installed over your home network. Save now. ZigDash asks you to install the Engine the next time this phone is home.'**
-  String get engineSheetAway;
 
   /// No description provided for @engineSheetNoAnswer.
   ///

@@ -4391,27 +4391,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle =>
-      'Les automatisations tournent sur le hub, pas sur le téléphone';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash place ZigDash Engine dans Zigbee2MQTT sur votre hub. Il surveille vos appareils et exécute vos règles : une lumière s\'allume quand la porte s\'ouvre, même téléphone éteint et sans internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Rien à installer à la main. ZigDash s\'en charge par le réseau de la maison.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Votre Zigbee2MQTT est en version $version.';
-  }
-
-  @override
-  String get engineIntroRemove =>
-      'Vous pouvez le retirer à tout moment depuis cet écran.';
-
-  @override
   String get engineInstall => 'Installer sur le hub';
 
   @override
@@ -5796,6 +5775,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les automatisations tournent sur votre hub avec ZigDash Engine. ZigDash l\'y installe quand vous enregistrez la première.';
 
   @override
+  String get engineAwayMakeAtHome =>
+      'Créez vos automatisations à la maison : ZigDash installe alors son Engine sur votre hub, par votre réseau domestique.';
+
+  @override
   String get engineSheetSource => 'Voir son code source sur GitHub';
 
   @override
@@ -5813,10 +5796,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get engineSheetSave => 'Enregistrer';
-
-  @override
-  String get engineSheetAway =>
-      'Vous n\'êtes pas chez vous, et ZigDash Engine s\'installe par votre réseau domestique. Enregistrez maintenant. ZigDash vous proposera de l\'installer la prochaine fois que ce téléphone sera à la maison.';
 
   @override
   String get engineSheetNoAnswer =>
