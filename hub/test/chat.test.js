@@ -259,6 +259,18 @@ test('chat: writes are rate-limited per device', async (t) => {
   assert.match(ask('set_device', { device: 'Desk lamp', command: { state: 'TOGGLE' } }).result.refused[0].reason, /several commands/);
 });
 
+test('chat: an answer too large for the relay is replaced by a short sealed error', async (t) => {
+  const { z, ask, responses } = await home(t);
+  for (let i = 0; i < 400; i++) {
+    const ieee = `0xbig${i}`;
+    z.devices[ieee] = { name: `A long device name number ${i} padded out to sixty chars...`, ieeeAddr: ieee, definition: light, isDevice: () => true, isGroup: () => false };
+  }
+  const r = ask('list_devices');
+  assert.equal(r.ok, false);
+  assert.match(r.result.error, /too large/);
+  assert.ok(String(responses().at(-1).payload).length <= 60000);
+});
+
 // ---------- sealing, replay, time window ----------
 
 test('chat: replay of the same sealed request is rejected and audited', async (t) => {

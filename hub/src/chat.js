@@ -35,7 +35,7 @@ const CHAT_PREFIX = `${ROOT}/chat`;
 const CHAT_WINDOW_MS = 120000;
 const CHAT_SEEN_MAX = 1000;
 const CHAT_AUDIT_MAX = 200;
-const CHAT_RESULT_MAX = 60000; // the relay takes 64 KB a message
+const CHAT_RESULT_MAX = 60000; // characters on the wire; the relay takes 64 KB a message
 const CHAT_MAX_TARGETS = 50;
 const CHAT_WRITES_PER_MINUTE = 10;
 const CHAT_DEVICE_WRITES_PER_MINUTE = 3;
@@ -348,11 +348,12 @@ Object.assign(ZigDashEngine.prototype, {
       while (chat.seenOrder.length > CHAT_SEEN_MAX) chat.seen.delete(chat.seenOrder.shift());
       const args = msg.args && typeof msg.args === 'object' && !Array.isArray(msg.args) ? msg.args : {};
       const out = this.chatRunTool(clientId, client, tool, args);
-      let body = { id: msg.id, at: Date.now(), ok: !out.isError, result: out.data };
-      if (JSON.stringify(body).length > CHAT_RESULT_MAX) {
-        body = { id: msg.id, at: Date.now(), ok: false, result: { error: 'answer too large; ask about fewer devices or fewer days' } };
+      // Measured as it travels (base64 of the seal), under the relay's 64 KB a message.
+      let sealed = seal(client.key, { id: msg.id, at: Date.now(), ok: !out.isError, result: out.data }).toString('base64');
+      if (sealed.length > CHAT_RESULT_MAX) {
+        sealed = seal(client.key, { id: msg.id, at: Date.now(), ok: false, result: { error: 'answer too large; ask about fewer devices or fewer days' } }).toString('base64');
       }
-      this.chatSealedReply(clientId, client, via, body);
+      this.chatReply(clientId, via, sealed);
     } catch (e) {
       try { this.chatAudit(clientId, tool, null, 'rejected: malformed'); } catch (_) {}
       this.log('warning', `chat: request from ${clientId}: ${e && e.message}`);

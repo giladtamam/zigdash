@@ -142,7 +142,7 @@ export function makeAgent({ anthropic, model = DEFAULT_MODEL, linkFor, metrics, 
     return text;
   }
 
-  async function runPending(chatId, link, p) {
+  async function runPending(chatId, link, p, ctx) {
     const sent = [], refused = [];
     for (const action of p.actions) {
       const res = await link.request(action.tool, action.args);
@@ -152,6 +152,8 @@ export function makeAgent({ anthropic, model = DEFAULT_MODEL, linkFor, metrics, 
     }
     let reply = sent.length ? `Done: sent to ${sent.length} device${sent.length === 1 ? '' : 's'} (${nameList(sent)}).` : 'Nothing was changed.';
     if (refused.length) reply += ` Not changed from chat: ${nameList(refused)}. Open ZigDash to change those.`;
+    ctx.touched += sent.length;
+    ctx.refusals += refused.length;
     metrics.count('confirm_done', { devices: sent.length, refusals: refused.length });
     return reply;
   }
@@ -276,7 +278,7 @@ export function makeAgent({ anthropic, model = DEFAULT_MODEL, linkFor, metrics, 
           metrics.count('confirm_expired');
           reply = TEXT.expired;
         } else {
-          reply = await runPending(chatId, link, p);
+          reply = await runPending(chatId, link, p, ctx);
         }
       } else {
         ({ reply, userText } = await runModel(chatId, link, text, ctx, usage));
