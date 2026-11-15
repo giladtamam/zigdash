@@ -980,18 +980,15 @@ enum ReviewPromptResult { requested, unavailable }
 /// Google gives no signal whether the dialog was then shown or answered, so
 /// this is the only way to know the prompt fires at all.
 /// What made the request (3.4.8): a command the user sent and saw
-/// confirmed, or a passive device report (sensor-only homes).
-enum ReviewTrigger { command, report }
+/// confirmed, a passive device report (sensor-only homes), or (3.6.1)
+/// closing History after a week or month chart with data.
+enum ReviewTrigger { command, report, history }
 
 class ReviewPrompted extends AnalyticsEvent {
-  const ReviewPrompted(this.result, {this.trigger, this.nth});
+  const ReviewPrompted(this.result, {this.trigger});
 
   final ReviewPromptResult result;
   final ReviewTrigger? trigger;
-
-  /// Which confirmed command of the session made the request (3.4.8);
-  /// sent bucketed as 3, 4-9, 10+.
-  final int? nth;
 
   @override
   String get name => 'review_prompt';
@@ -1000,8 +997,6 @@ class ReviewPrompted extends AnalyticsEvent {
   Map<String, String> get props => {
     'result': result.name,
     if (trigger != null) 'trigger': trigger!.name,
-    if (nth != null)
-      'nth': bucket(nth!, const [3], ranges: const [(4, 9)], top: '10+'),
   };
 }
 

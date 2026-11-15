@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.6 is published (replaces the policy published with ZigDash 3.5.4)
+**Effective date:** the day ZigDash 3.6.1 is published (replaces the policy published with ZigDash 3.6)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -197,7 +197,7 @@ never from anything you typed or anything your broker sent.
 | `history_on` | From 3.6: the Turn on History card | shown, tapped, put off, the consent shown or declined, this phone chosen to record, or the broker asked for; and whether it was right after setup or later |
 | `pro_trial` | From 3.6, Google Play version only: the 14-day Pro trial | started (from where: right after setup, the History card, a History sheet or the offer; the Home's kind of connection; the week ZigDash was installed), the offer declined, a Pro feature used during it (the week or month History, the wall tablet extras, more than three automations; once each), the ending card shown, ended, or Pro bought during it or within a week after. Never a device, a reading or a time of day |
 | `sale_card` | From 3.4.6, Google Play version only: the card on the Devices tab that announces a sale on ZigDash Pro | the step only: shown, opened or closed |
-| `review_prompt` | From 2.6.5: the app asked Google Play (or, on iPhone and iPad, the App Store) to show its "rate this app" dialog (after a device you control has answered on two different days) | whether the dialog was requested, or could not be because the Play review flow is not available on the device. Nothing about whether you rated, or what |
+| `review_prompt` | From 2.6.5: the app asked Google Play (or, on iPhone and iPad, the App Store) to show its "rate this app" dialog, at most once in 90 days and only from the second day of use. From 3.6.1 at one of three moments: a device you control answered, a home with sensors only after four days of use, or closing History after a week or month chart | whether the dialog was requested, or could not be because the review flow is not available on the device, and which of the three moments it was. Nothing about whether you rated, or what |
 
 **Never sent:** broker addresses, ports, usernames or passwords; the address you type into setup; MQTT topics or
 messages; device names or addresses; home or dashboard names; device states or

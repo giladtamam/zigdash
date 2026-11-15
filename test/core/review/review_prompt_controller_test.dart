@@ -54,11 +54,11 @@ _setup({
   return (c, launcher, clock, prefs);
 }
 
-/// A command the user sent was confirmed, and it was the [nth] of the
-/// session: what the trigger does on the third one.
-Future<bool> _commandWin(ReviewPromptController c, {int nth = 3}) async {
+/// A command the user sent was confirmed: what the trigger does on the
+/// first one of a visit (3.6.1).
+Future<bool> _commandWin(ReviewPromptController c) async {
   await c.recordCommandConfirmed();
-  return c.maybeRequest(trigger: ReviewTrigger.command, nth: nth);
+  return c.maybeRequest(trigger: ReviewTrigger.command);
 }
 
 /// A device reported on its own: counts the day, then the passive ask.
@@ -190,7 +190,7 @@ void main() {
 
     test('maybeRequest with a command trigger marks the install', () async {
       final (c, _, _, _) = await _setup();
-      await c.maybeRequest(trigger: ReviewTrigger.command, nth: 3);
+      await c.maybeRequest(trigger: ReviewTrigger.command);
       expect(c.commandEver, isTrue);
     });
   });
@@ -253,13 +253,13 @@ void main() {
   });
 
   group('sensor-only homes (report trigger)', () {
-    test('no command ever, 7 counted days, a report: prompts', () async {
+    test('no command ever, 4 counted days, a report: prompts', () async {
       final (c, launcher, clock, _) = await _setup();
-      for (var day = 1; day <= 6; day++) {
+      for (var day = 1; day <= 3; day++) {
         expect(await _reportWin(c), isFalse, reason: 'day $day');
         clock.advance(1);
       }
-      expect(c.sessions, 6);
+      expect(c.sessions, 3);
       expect(await _reportWin(c), isTrue);
       expect(launcher.requests, 1);
     });
@@ -298,23 +298,33 @@ void main() {
       expect(launcher.requests, 0);
     });
 
-    test('fewer than 7 counted days: no passive ask, however old', () async {
+    test('fewer than 4 counted days: no passive ask, however old', () async {
       final (c, launcher, _, _) = await _setup(
-        initial: _eligible(sessions: 5),
+        initial: _eligible(sessions: 2),
       );
-      // Today's report makes it 6.
+      // Today's report makes it 3.
       expect(await _reportWin(c), isFalse);
-      expect(c.sessions, 6);
+      expect(c.sessions, 3);
       expect(launcher.requests, 0);
     });
 
-    test('the seventh counted day itself may ask', () async {
+    test('the fourth counted day itself may ask', () async {
       final (c, launcher, _, _) = await _setup(
-        initial: _eligible(sessions: 6),
+        initial: _eligible(sessions: 3),
       );
-      // The day is counted (6 -> 7) before the ask.
+      // The day is counted (3 -> 4) before the ask.
       expect(await _reportWin(c), isTrue);
-      expect(c.sessions, 7);
+      expect(c.sessions, 4);
+      expect(launcher.requests, 1);
+    });
+
+    test('a report and a command at the same moment ask once', () async {
+      final (c, launcher, _, _) = await _setup(initial: _eligible());
+      final results = await Future.wait([
+        c.maybeRequest(trigger: ReviewTrigger.report),
+        c.maybeRequest(trigger: ReviewTrigger.command),
+      ]);
+      expect(results.where((r) => r), hasLength(1));
       expect(launcher.requests, 1);
     });
 
@@ -327,7 +337,7 @@ void main() {
 
   group('usage event', () {
     test(
-      'sent only when the policy is met, with result, trigger and nth',
+      'sent only when the policy is met, with result and trigger',
       () async {
         final sink = _FakeSink();
         final (c, launcher, clock, _) = await _setup(sink: sink);
@@ -346,25 +356,35 @@ void main() {
         expect(sink.sent.single.$2, {
           'result': 'requested',
           'trigger': 'command',
-          'nth': '3',
         });
 
         // Unavailable flow: reported as such, nothing requested.
         launcher.available = false;
         clock.advance(90);
-        expect(await _commandWin(c, nth: 12), isFalse);
+        expect(await _commandWin(c), isFalse);
         expect(sink.sent.length, 2);
         expect(sink.sent.last.$1, 'review_prompt');
         expect(sink.sent.last.$2, {
           'result': 'unavailable',
           'trigger': 'command',
-          'nth': '10+',
         });
         expect(launcher.requests, 1);
       },
     );
 
-    test('a passive ask reports the report trigger and no nth', () async {
+    test('a history ask reports the history trigger', () async {
+      final sink = _FakeSink();
+      final (c, launcher, _, _) = await _setup(initial: _eligible(), sink: sink);
+      expect(await c.maybeRequest(trigger: ReviewTrigger.history), isTrue);
+      expect(launcher.requests, 1);
+      expect(c.commandEver, isFalse, reason: 'History is not a command');
+      expect(sink.sent.single.$2, {
+        'result': 'requested',
+        'trigger': 'history',
+      });
+    });
+
+    test('a passive ask reports the report trigger', () async {
       final sink = _FakeSink();
       final (c, _, _, _) = await _setup(initial: _eligible(), sink: sink);
       expect(await _reportWin(c), isTrue);
