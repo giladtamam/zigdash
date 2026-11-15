@@ -1,62 +1,68 @@
-# 3.6.3: Android 17's local-network question, at the right moment (v1)
+# 3.6.3: stop asking Android 17 for a permission ZigDash doesn't need (v2)
 
-## What the data and a real device say
+v2 after review (v1 scored 4/10): v1 looked for the trigger only in Dart. The trigger is ZigDash's own
+Android code, and Google says apps at our target SDK must not ask at all. The plan is now: remove the
+request, test what happens to people who already said no, and leave the "ask with a reason" design to the
+later move to target SDK 37.
+
+## What we found
 
 **Android 17 is now our largest group and sets up half as often** (self-hosted analytics, last 6 days,
-Play robots excluded, per session):
+Play robots excluded, per session): Android 17 51 setup sessions, 5 completed (**10%**), empty scan 76%;
+older Android 92, 20 completed (**22%**), empty scan 68%. First opens: Android 17 86, Android 16 71.
 
-| | Setup started | Completed | Rate | Empty scan |
-|---|---|---|---|---|
-| Android 17 | 51 | 5 | **10%** | 39 (76%) |
-| Older | 92 | 20 | **22%** | 63 (68%) |
+**The prompt is ours.** `MainActivity.onCreate` (android/app/src/main/kotlin/com/giladtamam/zigdash/
+MainActivity.kt:184–188) requests `android.permission.ACCESS_LOCAL_NETWORK` on every launch on SDK ≥ 37
+until it is granted, and the manifest declares it (AndroidManifest.xml:10). Added in 2.3 (commit 21fe3a90,
+alerts-2.3.md §3), before Android 17's rules were final. Seen on a real Galaxy Tab S12 Ultra (Android 17,
+One UI 9) on Nov 15: the "find, connect to, and determine the relative position of nearby devices" prompt
+over the first screen, before any tap. (ACCESS_LOCAL_NETWORK is in the NEARBY_DEVICES group, hence the
+wording.)
 
-First opens: Android 17 86, Android 16 71, 13–15 81. Small numbers, but the gap is large and the group is
-growing (new Samsungs and Pixels ship with 17).
-
-**On a real Galaxy Tab S12 Ultra (Android 17, One UI 9, Samsung Remote Test Lab, Nov 15):** at the very
-first launch, before any tap, Android shows "Allow ZigDash to **find, connect to, and determine the
-relative position of nearby devices**?". That is the new `ACCESS_LOCAL_NETWORK` permission (declared in
-android/app/src/main/AndroidManifest.xml:10; targetSdk 36). Without it the setup scan, the broker test and
-any local address fail. A new user who taps "Don't allow" on an unexplained, location-sounding prompt
-can't set up, and today nothing tells them why: the scan just finds nothing, and `scan_failed` maps to
-`noLocalNetwork` (lib/features/support/support_details.dart:53) only in support details.
-
-What we don't know yet: what triggers the prompt at launch (no code requests it; nothing on the welcome
-screen opens a socket in setup_screen.dart initState), and how many people deny it (not logged).
+**Google's rule** (developer.android.com/privacy-and-security/local-network-permission, "Split permission
+model"): local network protection applies only to apps targeting SDK 37+. Apps targeting < 37 with INTERNET
+"receive an implicit permission grant for ACCESS_LOCAL_NETWORK"; "For these lower target SDKs, don't add
+ACCESS_LOCAL_NETWORK to your manifest or request it at runtime." ZigDash targets 36
+(android/app/build.gradle.kts:51). So the prompt buys nothing, scares new users on the first screen, and a
+"Don't allow" may switch off the access they would otherwise have had (to be tested, step 2).
 
 ## The change
 
-1. **Find the trigger** on an Android 17 device (Remote Test Lab over adb, `logcat` for the permission
-   request and its caller at first launch). Then remove that early local-network access, so the first
-   prompt can only come from the steps below. If Android itself prompts at launch for any app that
-   declares the permission, record that, and the explanation in step 2 still applies.
-2. **Ask with a reason, when the person asks for setup.** On Android 17+, the first time setup needs the
-   home network (Find my setup, Zigbee2MQTT / SMLIGHT / Home Assistant local paths, a typed local address,
-   Check this address), a short ZigDash sheet comes first: "To find your hub, ZigDash looks on your home
-   Wi-Fi. Android will ask to let ZigDash find devices nearby: tap Allow. ZigDash only talks to your hub and
-   your Home Assistant; it doesn't use your location." [Continue] then the system prompt (requested
-   explicitly). Not on remote-only paths (a Nabu Casa / https Home Assistant address, the Zigbee2MQTT page
-   over https), which don't need it.
-3. **Denied: say so, and how to fix it.** If the permission is denied, the scan / test shows "ZigDash
-   can't look on your home network" with **Open settings** (the app's settings page) and **Try again**,
-   instead of an empty scan. Permanently denied ("don't ask again"): Open settings only.
-4. **Measure:** event `local_network {result: granted | denied | denied_forever | already, at: scan |
-   manual | ha | address}` once per request, and `scan_empty` gains `lan: granted | denied` on Android 17+.
-   PRIVACY.md row added (no new data: the answer and the step).
-5. **Small fixes from the same device run:**
-   - the Wall display sheet's last lines sit under One UI's tablet taskbar: bottom padding from the
-     system insets (view padding / safe area) on that sheet and the other long sheets that scroll;
+1. **Remove the request and the declaration** while targetSdk is 36: delete the block in
+   `MainActivity.onCreate` and the `ACCESS_LOCAL_NETWORK` line in the manifest. Comment in their place that
+   the permission comes back with the target-SDK-37 work, which has its own plan.
+2. **Test on a real Android 17 device** (Samsung Remote Test Lab over adb), in this order, with screenshots:
+   1. fresh install of 3.6.3: no prompt at launch; Find my setup and a typed local address reach a LAN
+      host (a test broker reachable from the lab device is not available, so: the scan runs without
+      EPERM in logcat, and `adb shell dumpsys package` shows the permission state);
+   2. install 3.6.2, tap **Don't allow**, then update to 3.6.3: is local access back (no EPERM, permission
+      state), or does the denial stick?
+   - If the denial sticks, add one thing: on Android 17, when a scan or local connection fails and the
+     NEARBY_DEVICES group is denied for ZigDash, the empty-scan screen shows "Android is blocking ZigDash
+     from your home network" with **Open settings** (app settings). Only then; no new sheet before setup.
+3. **Small fixes from the same device run:**
+   - the Wall display sheet's last lines sit under One UI's tablet taskbar: bottom padding from the system
+     insets on that sheet and the other long scrolling sheets;
    - demo home: "Wake on motion" says there are no motion or door sensors although the demo has Hallway
-     motion and Front door (the sensor check doesn't see demo devices);
+     motion and Front door;
    - "Nothing yet": the Home Assistant row says "add-ons"; Home Assistant calls them apps now (13 languages).
-6. **Before release:** run first launch, the sheet, Allow, Don't allow and Open settings on an Android 17
-   Samsung in Remote Test Lab, with screenshots; plus the emulator for older Android (no sheet).
+4. **PRIVACY.md:** the "Permissions" paragraph says Android 17 asks for the local network permission; it
+   changes to say ZigDash doesn't ask for it (Android gives apps like ZigDash local network access with the
+   internet permission). Effective 3.6.3.
+
+**Not in 3.6.3 (own plan, before target SDK 37, which Play will require around Aug 2027):** asking with a
+reason at Find my setup, the denied screen in general, the reset-counter re-ask, and the NSD picker
+(`DiscoveryRequest.FLAG_SHOW_PICKER`) for the scan. Paths that need the LAN then: the scan, a typed local
+address, any `.local` name, local http Home Assistant; not: https Home Assistant on a public name, the
+relay, a LAN DNS server (port 53 exempt).
 
 ## Read (3 weeks after 3.6.3 is live)
-- Android 17 setup completion against older versions. Bar: the Android 17 rate reaches at least 80% of
-  the older rate (today 45%), on at least 100 Android 17 setup sessions.
-- `local_network` denied share; if it stays above 20% after the explanation, the wording is the next work.
-- `scan_empty` on Android 17 with `lan: granted` vs older: if still higher, the gap is not the permission.
+Per device (an install's first setup, from `app_started homes=0` sessions), Android 17 vs older:
+- **Bar: Android 17's empty-scan share comes within 10 points of older Android** (today 76% vs 68% per
+  session; recomputed per device at release as the baseline).
+- Completion per device, Android 17 vs older, reported with its count (about 8 Android 17 setups a day, so
+  ~150 in 3 weeks); descriptive, since a 10% vs 18% gap is at the edge of what that volume shows.
+- Before/after on the same measure: Android 17 devices in the 3 weeks before 3.6.3 vs after.
 
 ## Effort
-About a day plus a 30-minute Remote Test Lab session.
+Half a day of code and copy, plus one 30-minute Remote Test Lab session (2 credits).
