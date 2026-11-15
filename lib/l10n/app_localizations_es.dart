@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4126,7 +4125,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'La configuración, los paneles, el control de cada dispositivo, los widgets, los iconos de ajustes rápidos, las alertas, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que usas hoy se bloquea.';
+      'La configuración, los paneles, el control de cada dispositivo, los widgets, los iconos de ajustes rápidos, las alertas, tres automatizaciones por hogar y la tablet de pared siguen siendo gratis. Nada de lo que hoy es gratis pasará a ser de pago.';
 
   @override
   String get proBuy => 'Obtener Pro';
@@ -5678,4 +5677,98 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Acceso anticipado: apúntate';
+
+  @override
+  String get historyOnTitle => 'Mira tu casa a lo largo de los días';
+
+  @override
+  String get historyOnBody =>
+      'Activa el historial para ver temperaturas, consumo y puertas a lo largo de días y semanas, no solo ahora. ZigDash Engine graba en tu hub, aunque el móvil esté apagado.';
+
+  @override
+  String get historyOnTurnOn => 'Activar historial';
+
+  @override
+  String get historyOnLater => 'Ahora no';
+
+  @override
+  String get historyOnWorking => 'Activando el historial…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine graba el historial en tu hub, así sigue aunque el móvil esté apagado. Tu Zigbee2MQTT bloquea complementos, como las instalaciones nuevas: ZigDash activaría «Permitir JavaScript externo» y lo reiniciaría.';
+
+  @override
+  String get historyOnAllow => 'Permitir y reiniciar';
+
+  @override
+  String get historyOnBrokerBody =>
+      'El historial se graba a través de tu broker MQTT. ZigDash llega a esta casa por la página de Zigbee2MQTT, así que añade primero el broker.';
+
+  @override
+  String get historyOnAddBroker => 'Añadir el broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Tu hub no puede ejecutar ZigDash Engine. Este móvil puede grabar en su lugar mientras ZigDash esté abierto: mejor en una tablet de pared siempre encendida.';
+
+  @override
+  String get historyOnPhone => 'Grabar en este móvil';
+
+  @override
+  String get proTrialStartedTitle => 'Pro está activo 14 días';
+
+  @override
+  String get proTrialOfferTitle => 'Prueba ZigDash Pro gratis durante 14 días';
+
+  @override
+  String get proTrialWhat =>
+      'Historial de 7 y 30 días, los extras de la tablet de pared y más de tres automatizaciones.';
+
+  @override
+  String get proTrialNoPayment => 'Sin pago, nada se renueva.';
+
+  @override
+  String get proTrialStart => 'Empezar la prueba';
+
+  @override
+  String get proTrialEndingTitle => 'Tu prueba de Pro termina en 2 días';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Quedarme con Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'el historial semanal y mensual';
+
+  @override
+  String get proTrialUsedWall => 'los extras de la tablet de pared';
+
+  @override
+  String get proTrialUsedAutomation => 'más de tres automatizaciones';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Usaste $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Al terminar, todo lo que configuraste se queda; las vistas de semana y mes y las automatizaciones nuevas a partir de la cuarta necesitan Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Prueba: quedan $days días',
+      one: 'Prueba: queda 1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Tu prueba terminó. Todo lo que configuraste sigue ahí.';
 }

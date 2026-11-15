@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4125,7 +4124,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Configurazione, dashboard, il controllo di ogni dispositivo, i widget, i riquadri delle impostazioni rapide, gli avvisi, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.';
+      'Configurazione, dashboard, il controllo di ogni dispositivo, i widget, i riquadri delle impostazioni rapide, gli avvisi, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che oggi è gratuito diventerà a pagamento.';
 
   @override
   String get proBuy => 'Ottieni Pro';
@@ -5680,4 +5679,98 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Accesso anticipato: iscriviti';
+
+  @override
+  String get historyOnTitle => 'Guarda la tua casa nei giorni';
+
+  @override
+  String get historyOnBody =>
+      'Attiva la cronologia per vedere temperature, consumi e porte nei giorni e nelle settimane, non solo ora. ZigDash Engine registra sul tuo hub, anche a telefono spento.';
+
+  @override
+  String get historyOnTurnOn => 'Attiva cronologia';
+
+  @override
+  String get historyOnLater => 'Non ora';
+
+  @override
+  String get historyOnWorking => 'Attivazione della cronologia…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine registra la cronologia sul tuo hub, quindi continua anche a telefono spento. Il tuo Zigbee2MQTT blocca le estensioni, come le nuove installazioni: ZigDash attiverebbe «Consenti JavaScript esterno» e lo riavvierebbe.';
+
+  @override
+  String get historyOnAllow => 'Consenti e riavvia';
+
+  @override
+  String get historyOnBrokerBody =>
+      'La cronologia passa dal tuo broker MQTT. ZigDash raggiunge questa casa tramite la pagina di Zigbee2MQTT, quindi aggiungi prima il broker.';
+
+  @override
+  String get historyOnAddBroker => 'Aggiungi il broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Il tuo hub non può eseguire ZigDash Engine. Questo telefono può registrare al suo posto finché ZigDash è aperto: ideale su un tablet a parete sempre acceso.';
+
+  @override
+  String get historyOnPhone => 'Registra su questo telefono';
+
+  @override
+  String get proTrialStartedTitle => 'Pro è attivo per 14 giorni';
+
+  @override
+  String get proTrialOfferTitle => 'Prova ZigDash Pro gratis per 14 giorni';
+
+  @override
+  String get proTrialWhat =>
+      'La cronologia di 7 e 30 giorni, gli extra per il tablet a parete e più di tre automazioni.';
+
+  @override
+  String get proTrialNoPayment => 'Nessun pagamento, niente si rinnova.';
+
+  @override
+  String get proTrialStart => 'Inizia la prova';
+
+  @override
+  String get proTrialEndingTitle => 'La tua prova di Pro finisce tra 2 giorni';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Tieni Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'la cronologia settimanale e mensile';
+
+  @override
+  String get proTrialUsedWall => 'gli extra per il tablet a parete';
+
+  @override
+  String get proTrialUsedAutomation => 'più di tre automazioni';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Hai usato $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Dopo, tutto ciò che hai configurato resta; le viste settimana e mese e le nuove automazioni oltre la terza richiedono Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Prova: $days giorni rimasti',
+      one: 'Prova: 1 giorno rimasto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'La prova è finita. Tutto ciò che hai configurato è ancora lì.';
 }

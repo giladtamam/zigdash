@@ -527,7 +527,18 @@ class SetupStep extends AnalyticsEvent {
 }
 
 /// What happened on the Home Assistant "couldn't find it" card (3.5.2).
-enum HaNoneChoice { shown, openApp, lookAgain, assistant }
+/// 3.6: `openApp` only when the app really opened, `openAppFailed` when it
+/// didn't; `returned` once back from it, `returnedCold` when ZigDash had
+/// been closed meanwhile and started again within 30 minutes.
+enum HaNoneChoice {
+  shown,
+  openApp,
+  lookAgain,
+  assistant,
+  openAppFailed,
+  returned,
+  returnedCold,
+}
 
 enum Feature {
   devicesTab,
@@ -1006,17 +1017,26 @@ enum HistorySetupResult {
   thisDevice,
 }
 
-/// The history recorder was set up from a history sheet.
+/// Where the recorder was set up from (3.6): a History sheet, the
+/// History card right after setup, or the same card later.
+enum HistorySetupFrom { sheet, finish, card }
+
+/// The history recorder was set up from a history sheet or, from 3.6, the
+/// "Turn on History" card.
 class HistorySetup extends AnalyticsEvent {
-  const HistorySetup(this.result);
+  const HistorySetup(this.result, {this.from = HistorySetupFrom.sheet});
 
   final HistorySetupResult result;
+  final HistorySetupFrom from;
 
   @override
   String get name => 'history_setup';
 
   @override
-  Map<String, String> get props => {'result': _snake(result.name)};
+  Map<String, String> get props => {
+    'result': _snake(result.name),
+    'from': from.name,
+  };
 }
 
 /// A step of the import from Home Assistant (2.8): the offer after setup
@@ -1100,12 +1120,19 @@ enum ProFrom {
   automations,
   wall,
   saleCard,
+
+  /// 3.6: the card two days before the trial ends.
+  trialEnd,
 }
 
 class ProEvent extends AnalyticsEvent {
-  const ProEvent(this.step, {this.from, this.sale});
+  const ProEvent(this.step, {this.from, this.sale, this.trial});
 
   final ProStep step;
+
+  /// 3.6: the 14-day trial at the time: none, running or ended, so a
+  /// purchase on day 20 from Settings still shows it came after a trial.
+  final String? trial;
 
   /// The view that led to the Pro screen; null for a locked view.
   final ProFrom? from;
@@ -1124,6 +1151,7 @@ class ProEvent extends AnalyticsEvent {
     if (from != null) 'from': _snake(from!.name),
     if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
     if (sale != null) 'sale': sale! ? 'yes' : 'no',
+    if (trial != null) 'trial': trial!,
   };
 }
 
@@ -1287,7 +1315,7 @@ enum EngineStep {
 }
 
 /// Which screen led to the Engine: Automations, Alerts or History.
-enum EngineFrom { automations, alerts, history }
+enum EngineFrom { automations, alerts, history, historyOn }
 
 class EngineEvent extends AnalyticsEvent {
   const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations});
@@ -1304,7 +1332,7 @@ class EngineEvent extends AnalyticsEvent {
   @override
   Map<String, String> get props => {
     'step': _snake(step.name),
-    'from': from.name,
+    'from': _snake(from.name),
     if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
   };
 }
@@ -1407,4 +1435,72 @@ class ChatEarly extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// The "Turn on History" card (3.6, pro-trial-360.md §2): shown (once per
+/// Home), tapped, put off, the consent shown or declined, this phone chosen,
+/// or a broker asked for. `from`: right after setup (finish) or later
+/// (card).
+enum HistoryOnStep {
+  shown('shown'),
+  tapped('tapped'),
+  later('later'),
+  consentShown('consent_shown'),
+  declined('declined'),
+  phone('phone'),
+  broker('broker');
+
+  const HistoryOnStep(this.wire);
+  final String wire;
+}
+
+class HistoryOnEvent extends AnalyticsEvent {
+  const HistoryOnEvent(this.step, this.from);
+
+  final HistoryOnStep step;
+  final HistorySetupFrom from;
+
+  @override
+  String get name => 'history_on';
+
+  @override
+  Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// The 14-day Pro trial (3.6, pro-trial-360.md §5): started (from where,
+/// the Home's platform, the install's first-open week), declined (the
+/// offer), a feature used (once each), the ending card shown, ended, or
+/// kept (Pro bought while it ran or within a week after).
+enum ProTrialStep {
+  started('started'),
+  declined('declined'),
+  used('used'),
+  endingShown('ending_shown'),
+  ended('ended'),
+  kept('kept');
+
+  const ProTrialStep(this.wire);
+  final String wire;
+}
+
+class ProTrialEvent extends AnalyticsEvent {
+  const ProTrialEvent(this.step, {this.from, this.hub, this.week, this.what});
+
+  final ProTrialStep step;
+  final String? from;
+  final String? hub;
+  final String? week;
+  final String? what;
+
+  @override
+  String get name => 'pro_trial';
+
+  @override
+  Map<String, String> get props => {
+    'step': step.wire,
+    if (from != null) 'from': from!,
+    if (hub != null) 'hub': hub!,
+    if (week != null) 'week': week!,
+    if (what != null) 'what': what!,
+  };
 }

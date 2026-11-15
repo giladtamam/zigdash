@@ -28,7 +28,7 @@ enum EngineSetup {
 /// directly when Zigbee2MQTT allows it.
 Future<EngineSetup> ensureEngine(BuildContext context, WidgetRef ref, String connectionId,
     {EngineFrom from = EngineFrom.automations}) async {
-  final view = await _settled(ref, connectionId);
+  final view = await settledEngineView(ref, connectionId);
   if (view == null) {
     if (context.mounted) context.go(Routes.homeAutomations(connectionId));
     return EngineSetup.needsUser;
@@ -53,7 +53,7 @@ Future<EngineSetup> ensureEngine(BuildContext context, WidgetRef ref, String con
 
 /// The first view past "checking", or null if the hub doesn't say within
 /// [within].
-Future<EngineView?> _settled(WidgetRef ref, String connectionId,
+Future<EngineView?> settledEngineView(WidgetRef ref, String connectionId,
     {Duration within = const Duration(seconds: 8)}) {
   final done = Completer<EngineView?>();
   final sub = ref.listenManual<AsyncValue<EngineView>>(engineViewProvider(connectionId), (_, next) {

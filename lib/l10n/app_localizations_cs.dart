@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4106,7 +4105,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Nastavení, nástěnky, ovládání všech zařízení, widgety, dlaždice Rychlého nastavení, upozornění, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.';
+      'Nastavení, nástěnky, ovládání všech zařízení, widgety, dlaždice Rychlého nastavení, upozornění, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co je dnes zdarma, nebude placené.';
 
   @override
   String get proBuy => 'Získat Pro';
@@ -5649,4 +5648,99 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Předběžný přístup: přihlásit se';
+
+  @override
+  String get historyOnTitle => 'Sledujte domov v průběhu dní';
+
+  @override
+  String get historyOnBody =>
+      'Zapněte historii a uvidíte teploty, spotřebu a dveře za dny a týdny, nejen teď. ZigDash Engine nahrává na vašem hubu, i když je telefon vypnutý.';
+
+  @override
+  String get historyOnTurnOn => 'Zapnout historii';
+
+  @override
+  String get historyOnLater => 'Teď ne';
+
+  @override
+  String get historyOnWorking => 'Zapínám historii…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine nahrává historii na hubu, takže běží, i když je telefon vypnutý. Váš Zigbee2MQTT blokuje doplňky, jako nové instalace: ZigDash by zapnul „Povolit externí JavaScript“ a restartoval ho.';
+
+  @override
+  String get historyOnAllow => 'Povolit a restartovat';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Historie jde přes váš MQTT broker. ZigDash se k tomuto domovu připojuje přes stránku Zigbee2MQTT, takže nejdřív přidejte broker.';
+
+  @override
+  String get historyOnAddBroker => 'Přidat broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Váš hub nemůže spustit ZigDash Engine. Místo něj může nahrávat tento telefon, dokud je ZigDash otevřený: nejlépe nástěnný tablet, který je stále zapnutý.';
+
+  @override
+  String get historyOnPhone => 'Nahrávat na tomto telefonu';
+
+  @override
+  String get proTrialStartedTitle => 'Pro je zapnuté na 14 dní';
+
+  @override
+  String get proTrialOfferTitle => 'Vyzkoušejte ZigDash Pro 14 dní zdarma';
+
+  @override
+  String get proTrialWhat =>
+      'Historie za 7 a 30 dní, doplňky pro nástěnný tablet a víc než tři automatizace.';
+
+  @override
+  String get proTrialNoPayment => 'Žádná platba, nic se neobnovuje.';
+
+  @override
+  String get proTrialStart => 'Začít zkušební dobu';
+
+  @override
+  String get proTrialEndingTitle => 'Zkušební doba Pro končí za 2 dny';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Ponechat Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'týdenní a měsíční historii';
+
+  @override
+  String get proTrialUsedWall => 'doplňky pro nástěnný tablet';
+
+  @override
+  String get proTrialUsedAutomation => 'víc než tři automatizace';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Používali jste: $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Potom vše, co jste nastavili, zůstane; týdenní a měsíční pohled a nové automatizace nad tři potřebují Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Zkušební doba: zbývá $days dní',
+      few: 'Zkušební doba: zbývají $days dny',
+      one: 'Zkušební doba: zbývá 1 den',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Zkušební doba skončila. Vše, co jste nastavili, tam pořád je.';
 }

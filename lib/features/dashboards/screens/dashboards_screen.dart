@@ -38,6 +38,8 @@ import '../widgets/export_dialog.dart';
 import '../../../alerts/alerts_paused_banner.dart';
 import '../../../engine/automations_paused_chip.dart';
 import '../widgets/chat_early_card.dart';
+import '../widgets/history_on_card.dart';
+import '../../pro/pro_trial_card.dart';
 import '../widgets/poll_card.dart';
 import '../../../remote/remote_door.dart';
 import '../widgets/connection_status_banner.dart';
@@ -305,9 +307,18 @@ class _DashboardsTabbed extends ConsumerWidget {
                       const UpdateBanner(),
                       HaImportOfferCard(connectionId: connectionId),
                       AnalyticsConsentCard(connectionId: connectionId),
+                      // 3.6: Turn on History first; the next one-time card
+                      // waits for its answer (cards never stack).
+                      HistoryOnCard(connectionId: connectionId),
+                      // 3.6: the 14-day Pro trial's card (it also starts
+                      // the trial when History first records).
+                      ProTrialCard(connectionId: connectionId),
                       // 3.5.4: on Play the early-access card takes the
                       // poll's slot for good; the poll stays in Settings.
-                      if (ref.watch(chatEarlyOfferedProvider))
+                      if (historyOnPending(ref, connectionId) ||
+                          proTrialCardFor(ref, connectionId) != null)
+                        const SizedBox.shrink()
+                      else if (ref.watch(chatEarlyOfferedProvider))
                         ChatEarlyCard(connectionId: connectionId)
                       else
                         PollCard(connectionId: connectionId),

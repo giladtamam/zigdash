@@ -15,12 +15,14 @@ import '../panels/providers/panel_value_provider.dart';
 import '../panels/widgets/device_tile_panel.dart' show formatReading;
 import '../kiosk/kiosk.dart';
 import '../pro/pro.dart';
+import '../pro/pro_trial.dart';
 import '../pro/pro_screen.dart';
 import 'history_chart.dart';
 import 'history_config.dart' show decodeHistoryReadings;
 import 'app_history_recorder.dart';
 import 'history_record.dart';
 import 'history_service.dart';
+import 'history_setup_flow.dart' show markHistoryTurnedOn;
 
 /// Opens a reading's history (docs/design/history-2.7.md): [ieee] and
 /// [path] name the reading, [title] is shown on top.
@@ -105,16 +107,28 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
         : active;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final now = (widget.now ?? DateTime.now)();
-    final pro = ref.watch(proStatusProvider);
+    // 3.6: open while the 14-day trial runs (pro_trial.dart).
+    final visible = ref.watch(proVisibleProvider);
     final ranges = [
       for (final r in HistoryRange.values)
-        if (!r.isPro || pro != ProStatus.unavailable) r,
+        if (!r.isPro || visible) r,
     ];
     final range = ranges.contains(_range) ? _range : HistoryRange.day;
-    final locked = range.isPro && pro == ProStatus.locked;
+    final locked = range.isPro && ref.watch(proLockedProvider);
     if (locked && !_lockedSeen) {
       _lockedSeen = true;
-      ref.read(analyticsProvider).track(const ProEvent(ProStep.lockedShown));
+      ref
+          .read(analyticsProvider)
+          .track(
+            ProEvent(
+              ProStep.lockedShown,
+              trial: proTrialProp(
+                ref.read(proTrialOfferedProvider),
+                ref.read(proTrialProvider),
+                DateTime.now(),
+              ),
+            ),
+          );
     }
     final online = ref
         .watch(historyRecorderOnlineProvider(widget.connectionId))
@@ -133,6 +147,15 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
                   .valueOrNull ??
               const {};
     final series = historySeries(range, now, days);
+    // 3.6: a week or month view that showed data counts as used in the
+    // trial (once; a purchase isn't a trial).
+    if (range.isPro && !locked && series.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ref.read(proTrialProvider.notifier).used(ProTrialUse.history);
+        }
+      });
+    }
     final from = now.subtract(range.span);
     final step = switch (range) {
       HistoryRange.day => const Duration(minutes: historySlotMinutes),
@@ -299,6 +322,7 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
       switch (r) {
         case EngineSetup.ready:
           _track(HistorySetupResult.installed);
+          await markHistoryTurnedOn(ref, HistorySetupFrom.sheet);
           await service.publishConfig(widget.connectionId);
           messenger.showSnackBar(SnackBar(content: Text(l10n.historyInstalled)));
           // A happy moment (2.8.1): the review policy still decides.
@@ -337,6 +361,7 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
         .read(historyRecordHereProvider(widget.connectionId).notifier)
         .set(true);
     _track(HistorySetupResult.thisDevice);
+    await markHistoryTurnedOn(ref, HistorySetupFrom.sheet);
     messenger.showSnackBar(SnackBar(content: Text(l10n.historyRecordingHere)));
   }
 

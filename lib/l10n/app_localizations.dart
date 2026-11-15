@@ -7299,7 +7299,7 @@ abstract class AppLocalizations {
   /// No description provided for @proFreeBody.
   ///
   /// In en, this message translates to:
-  /// **'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.'**
+  /// **'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing that is free today becomes paid.'**
   String get proFreeBody;
 
   /// No description provided for @proBuy.
@@ -9893,6 +9893,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Early access: join the list'**
   String get settingsChatEarlySubtitle;
+
+  /// Turn on History card (3.6, docs/design/pro-trial-360.md §2).
+  ///
+  /// In en, this message translates to:
+  /// **'See your home over days'**
+  String get historyOnTitle;
+
+  /// No description provided for @historyOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on History to see temperatures, power and doors over days and weeks, not just now. ZigDash Engine records on your hub, even when your phone is off.'**
+  String get historyOnBody;
+
+  /// No description provided for @historyOnTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on History'**
+  String get historyOnTurnOn;
+
+  /// No description provided for @historyOnLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get historyOnLater;
+
+  /// No description provided for @historyOnWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Turning on History…'**
+  String get historyOnWorking;
+
+  /// No description provided for @historyOnConsentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine records History on your hub, so it keeps going when your phone is off. Your Zigbee2MQTT blocks add-ons, as new installs do: ZigDash would turn on \"Allow external JavaScript\" and restart it.'**
+  String get historyOnConsentBody;
+
+  /// No description provided for @historyOnAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow and restart'**
+  String get historyOnAllow;
+
+  /// No description provided for @historyOnBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'History is recorded through your MQTT broker. ZigDash reaches this home through Zigbee2MQTT\'s page, so add the broker first.'**
+  String get historyOnBrokerBody;
+
+  /// No description provided for @historyOnAddBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the broker'**
+  String get historyOnAddBroker;
+
+  /// No description provided for @historyOnPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub can\'t run ZigDash Engine. This phone can record instead, while ZigDash is open: best on a wall tablet that stays on.'**
+  String get historyOnPhoneBody;
+
+  /// No description provided for @historyOnPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Record on this phone'**
+  String get historyOnPhone;
+
+  /// The 14-day Pro trial (3.6, docs/design/pro-trial-360.md §3).
+  ///
+  /// In en, this message translates to:
+  /// **'Pro is on for 14 days'**
+  String get proTrialStartedTitle;
+
+  /// No description provided for @proTrialOfferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try ZigDash Pro free for 14 days'**
+  String get proTrialOfferTitle;
+
+  /// No description provided for @proTrialWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'History for 7 and 30 days, the wall tablet extras, and more than three automations.'**
+  String get proTrialWhat;
+
+  /// No description provided for @proTrialNoPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment, nothing renews.'**
+  String get proTrialNoPayment;
+
+  /// No description provided for @proTrialStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the trial'**
+  String get proTrialStart;
+
+  /// No description provided for @proTrialEndingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Pro trial ends in 2 days'**
+  String get proTrialEndingTitle;
+
+  /// No description provided for @proTrialKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Pro · {price}'**
+  String proTrialKeep(String price);
+
+  /// No description provided for @proTrialUsedHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'the week and month History'**
+  String get proTrialUsedHistory;
+
+  /// No description provided for @proTrialUsedWall.
+  ///
+  /// In en, this message translates to:
+  /// **'the wall tablet extras'**
+  String get proTrialUsedWall;
+
+  /// No description provided for @proTrialUsedAutomation.
+  ///
+  /// In en, this message translates to:
+  /// **'more than three automations'**
+  String get proTrialUsedAutomation;
+
+  /// No description provided for @proTrialYouUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'You used {features}.'**
+  String proTrialYouUsed(String features);
+
+  /// No description provided for @proTrialAfterEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'After it ends, everything you set up stays; the week and month views and new automations past three need Pro.'**
+  String get proTrialAfterEnd;
+
+  /// No description provided for @proTrialDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Trial: 1 day left} other{Trial: {days} days left}}'**
+  String proTrialDaysLeft(int days);
+
+  /// No description provided for @proTrialEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trial ended. Everything you set up is still there.'**
+  String get proTrialEnded;
 }
 
 class _AppLocalizationsDelegate

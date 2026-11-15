@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4122,7 +4121,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.';
+      'Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat vandaag gratis is, wordt betaald.';
 
   @override
   String get proBuy => 'Pro nemen';
@@ -5672,4 +5671,98 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Vroege toegang: meld je aan';
+
+  @override
+  String get historyOnTitle => 'Zie je huis over dagen';
+
+  @override
+  String get historyOnBody =>
+      'Zet geschiedenis aan om temperaturen, verbruik en deuren over dagen en weken te zien, niet alleen nu. ZigDash Engine neemt op je hub op, ook als je telefoon uit staat.';
+
+  @override
+  String get historyOnTurnOn => 'Geschiedenis aanzetten';
+
+  @override
+  String get historyOnLater => 'Niet nu';
+
+  @override
+  String get historyOnWorking => 'Geschiedenis wordt aangezet…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine neemt de geschiedenis op je hub op, dus het gaat door als je telefoon uit staat. Je Zigbee2MQTT blokkeert uitbreidingen, zoals nieuwe installaties: ZigDash zou \"Externe JavaScript toestaan\" aanzetten en het herstarten.';
+
+  @override
+  String get historyOnAllow => 'Toestaan en herstarten';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Geschiedenis loopt via je MQTT-broker. ZigDash bereikt dit huis via de pagina van Zigbee2MQTT, voeg dus eerst de broker toe.';
+
+  @override
+  String get historyOnAddBroker => 'Broker toevoegen';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Je hub kan ZigDash Engine niet draaien. Deze telefoon kan in plaats daarvan opnemen zolang ZigDash open is: het best op een wandtablet dat aan blijft.';
+
+  @override
+  String get historyOnPhone => 'Op deze telefoon opnemen';
+
+  @override
+  String get proTrialStartedTitle => 'Pro staat 14 dagen aan';
+
+  @override
+  String get proTrialOfferTitle => 'Probeer ZigDash Pro 14 dagen gratis';
+
+  @override
+  String get proTrialWhat =>
+      'Geschiedenis van 7 en 30 dagen, de extra\'s voor de wandtablet en meer dan drie automatiseringen.';
+
+  @override
+  String get proTrialNoPayment => 'Geen betaling, niets verlengt zich.';
+
+  @override
+  String get proTrialStart => 'Proef starten';
+
+  @override
+  String get proTrialEndingTitle => 'Je Pro-proef eindigt over 2 dagen';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Pro houden · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'de week- en maandgeschiedenis';
+
+  @override
+  String get proTrialUsedWall => 'de wandtablet-extra\'s';
+
+  @override
+  String get proTrialUsedAutomation => 'meer dan drie automatiseringen';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Je gebruikte $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Daarna blijft alles wat je instelde; de week- en maandweergave en nieuwe automatiseringen na de derde vragen Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Proef: nog $days dagen',
+      one: 'Proef: nog 1 dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Je proef is voorbij. Alles wat je instelde, is er nog.';
 }

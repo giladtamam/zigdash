@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4138,7 +4137,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'La configuration, les tableaux de bord, le contrôle de chaque appareil, les widgets, les tuiles des réglages rapides, les alertes, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce que vous utilisez aujourd\'hui ne sera verrouillé.';
+      'La configuration, les tableaux de bord, le contrôle de chaque appareil, les widgets, les tuiles des réglages rapides, les alertes, trois automatisations par domicile et la tablette murale elle-même restent gratuits. Rien de ce qui est gratuit aujourd\'hui ne deviendra payant.';
 
   @override
   String get proBuy => 'Obtenir Pro';
@@ -5696,4 +5695,99 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'Accès anticipé : s\'inscrire';
+
+  @override
+  String get historyOnTitle => 'Voir votre maison sur plusieurs jours';
+
+  @override
+  String get historyOnBody =>
+      'Activez l\'historique pour voir températures, consommation et portes sur des jours et des semaines, pas seulement maintenant. ZigDash Engine enregistre sur votre hub, même téléphone éteint.';
+
+  @override
+  String get historyOnTurnOn => 'Activer l\'historique';
+
+  @override
+  String get historyOnLater => 'Pas maintenant';
+
+  @override
+  String get historyOnWorking => 'Activation de l\'historique…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine enregistre l\'historique sur votre hub, il continue donc même téléphone éteint. Votre Zigbee2MQTT bloque les extensions, comme les nouvelles installations : ZigDash activerait « Autoriser le JavaScript externe » et le redémarrerait.';
+
+  @override
+  String get historyOnAllow => 'Autoriser et redémarrer';
+
+  @override
+  String get historyOnBrokerBody =>
+      'L\'historique passe par votre broker MQTT. ZigDash rejoint cette maison via la page de Zigbee2MQTT : ajoutez d\'abord le broker.';
+
+  @override
+  String get historyOnAddBroker => 'Ajouter le broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Votre hub ne peut pas faire tourner ZigDash Engine. Ce téléphone peut enregistrer à la place, tant que ZigDash est ouvert : idéal sur une tablette murale toujours allumée.';
+
+  @override
+  String get historyOnPhone => 'Enregistrer sur ce téléphone';
+
+  @override
+  String get proTrialStartedTitle => 'Pro est activé pour 14 jours';
+
+  @override
+  String get proTrialOfferTitle =>
+      'Essayez ZigDash Pro gratuitement pendant 14 jours';
+
+  @override
+  String get proTrialWhat =>
+      'L\'historique sur 7 et 30 jours, les extras de la tablette murale et plus de trois automatisations.';
+
+  @override
+  String get proTrialNoPayment => 'Aucun paiement, rien ne se renouvelle.';
+
+  @override
+  String get proTrialStart => 'Commencer l\'essai';
+
+  @override
+  String get proTrialEndingTitle => 'Votre essai Pro se termine dans 2 jours';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Garder Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'l\'historique semaine et mois';
+
+  @override
+  String get proTrialUsedWall => 'les extras de la tablette murale';
+
+  @override
+  String get proTrialUsedAutomation => 'plus de trois automatisations';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Vous avez utilisé $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Ensuite, tout ce que vous avez configuré reste ; les vues semaine et mois et les nouvelles automatisations au-delà de trois demandent Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Essai : $days jours restants',
+      one: 'Essai : 1 jour restant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Votre essai est terminé. Tout ce que vous avez configuré est toujours là.';
 }

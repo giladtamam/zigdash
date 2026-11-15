@@ -1,0 +1,2 @@
+New: turn on History right after setup, so you see your temperatures, power and doors over days, recorded on your hub even when your phone is off. Then try ZigDash Pro free for 14 days: no payment, nothing renews.
+Home Assistant setup now brings you back to Paste after you copy your address in the Home Assistant app.

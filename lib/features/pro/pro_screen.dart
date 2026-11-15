@@ -8,6 +8,8 @@ import '../../l10n/app_localizations.dart';
 import '../../remote/remote_setup.dart' show remoteFits;
 import '../onboarding/demo_service.dart' show isDemoConnection;
 import 'pro.dart';
+import 'pro_trial.dart';
+import 'pro_trial_card.dart' show proTrialDaysLeftText;
 
 /// Opens the Pro screen. Settings and every Unlock lead here first, so
 /// nobody meets Play's purchase sheet before knowing what Pro adds and what
@@ -55,7 +57,17 @@ class _ProScreenState extends ConsumerState<ProScreen>
     WidgetsBinding.instance.addObserver(this);
     ref
         .read(analyticsProvider)
-        .track(ProEvent(ProStep.screenShown, from: widget.from));
+        .track(
+          ProEvent(
+            ProStep.screenShown,
+            from: widget.from,
+            trial: proTrialProp(
+              ref.read(proTrialOfferedProvider),
+              ref.read(proTrialProvider),
+              DateTime.now(),
+            ),
+          ),
+        );
   }
 
   @override
@@ -104,6 +116,26 @@ class _ProScreenState extends ConsumerState<ProScreen>
           padding: const EdgeInsets.all(16),
           children: [
             Text(l10n.proScreenIntro, style: theme.textTheme.bodyLarge),
+            // 3.6: the trial, while it runs or once it ended.
+            if (!unlocked && proTrialDaysLeftText(ref, l10n) != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                proTrialDaysLeftText(ref, l10n)!,
+                key: const Key('pro-trial-left'),
+                style: theme.textTheme.titleSmall,
+              ),
+            ] else if (!unlocked &&
+                ref.watch(proTrialOfferedProvider) &&
+                ref
+                    .watch(proTrialProvider)
+                    .endedAt(ref.read(proTrialNowProvider)())) ...[
+              const SizedBox(height: 12),
+              Text(
+                l10n.proTrialEnded,
+                key: const Key('pro-trial-ended'),
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
             const SizedBox(height: 24),
             Text(l10n.proWhatYouGet, style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),

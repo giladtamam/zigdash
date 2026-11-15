@@ -27,6 +27,13 @@ class Routes {
       ? haConnect
       : Uri(path: haConnect, queryParameters: {'host': host}).toString();
 
+  /// Back from the Home Assistant app after ZigDash was closed meanwhile
+  /// (3.6): the address screen, with Paste pointed out.
+  static final haConnectBackFromApp = Uri(
+    path: haConnect,
+    queryParameters: {'paste': '1'},
+  ).toString();
+
   /// The Home Assistant sign-in opened by text shared to ZigDash from
   /// another app (ha-share-paste.md), with the address it held, or with
   /// none when it held no address.

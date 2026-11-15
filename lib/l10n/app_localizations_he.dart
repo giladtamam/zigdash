@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -4063,7 +4062,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'ההגדרה, הדשבורדים, השליטה בכל מכשיר, הווידג\'טים, אריחי ההגדרות המהירות, ההתראות, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שאתם משתמשים בו היום לא ננעל.';
+      'ההגדרה, הדשבורדים, השליטה בכל מכשיר, הווידג\'טים, אריחי ההגדרות המהירות, ההתראות, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שחינמי היום לא יהפוך לבתשלום.';
 
   @override
   String get proBuy => 'לקבלת Pro';
@@ -5585,4 +5584,97 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get settingsChatEarlySubtitle => 'גישה מוקדמת: הרשמה לרשימה';
+
+  @override
+  String get historyOnTitle => 'לראות את הבית לאורך ימים';
+
+  @override
+  String get historyOnBody =>
+      'הפעילו היסטוריה כדי לראות טמפרטורות, צריכת חשמל ודלתות לאורך ימים ושבועות, לא רק עכשיו. ZigDash Engine מקליט ברכזת, גם כשהטלפון כבוי.';
+
+  @override
+  String get historyOnTurnOn => 'הפעלת היסטוריה';
+
+  @override
+  String get historyOnLater => 'לא עכשיו';
+
+  @override
+  String get historyOnWorking => 'מפעילים היסטוריה…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine מקליט היסטוריה ברכזת, כך שהיא ממשיכה גם כשהטלפון כבוי. Zigbee2MQTT שלכם חוסם תוספים, כמו בהתקנות חדשות: ZigDash יפעיל \"Allow external JavaScript\" ויפעיל אותו מחדש.';
+
+  @override
+  String get historyOnAllow => 'לאשר ולהפעיל מחדש';
+
+  @override
+  String get historyOnBrokerBody =>
+      'ההיסטוריה עוברת דרך שרת ה-MQTT שלכם. ZigDash מתחבר לבית הזה דרך הדף של Zigbee2MQTT, אז הוסיפו קודם את השרת.';
+
+  @override
+  String get historyOnAddBroker => 'הוספת השרת';
+
+  @override
+  String get historyOnPhoneBody =>
+      'הרכזת שלכם לא יכולה להריץ את ZigDash Engine. הטלפון הזה יכול להקליט במקומה כל עוד ZigDash פתוח: הכי טוב בטאבלט קיר שנשאר דולק.';
+
+  @override
+  String get historyOnPhone => 'להקליט בטלפון הזה';
+
+  @override
+  String get proTrialStartedTitle => 'Pro פעיל ל-14 יום';
+
+  @override
+  String get proTrialOfferTitle => 'נסו את ZigDash Pro בחינם ל-14 יום';
+
+  @override
+  String get proTrialWhat =>
+      'היסטוריה של 7 ו-30 יום, התוספות לטאבלט הקיר ויותר משלוש אוטומציות.';
+
+  @override
+  String get proTrialNoPayment => 'בלי תשלום, שום דבר לא מתחדש.';
+
+  @override
+  String get proTrialStart => 'להתחיל ניסיון';
+
+  @override
+  String get proTrialEndingTitle => 'הניסיון של Pro מסתיים בעוד יומיים';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'להשאיר את Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'היסטוריית השבוע והחודש';
+
+  @override
+  String get proTrialUsedWall => 'התוספות לטאבלט הקיר';
+
+  @override
+  String get proTrialUsedAutomation => 'יותר משלוש אוטומציות';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'השתמשתם ב: $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'אחרי שהוא מסתיים, כל מה שהגדרתם נשאר; תצוגות השבוע והחודש ואוטומציות חדשות מעבר לשלוש דורשות Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'ניסיון: נשארו $days ימים',
+      one: 'ניסיון: נשאר יום אחד',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded => 'הניסיון הסתיים. כל מה שהגדרתם עדיין שם.';
 }

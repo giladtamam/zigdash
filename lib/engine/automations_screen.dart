@@ -6,7 +6,6 @@ import '../core/l10n/l10n_ext.dart';
 import '../core/router/routes.dart';
 import '../features/settings/providers/settings_controller.dart' show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
-import '../features/pro/pro.dart';
 import '../features/pro/pro_screen.dart';
 import '../core/analytics/analytics.dart';
 import '../alerts/alerts_hint_card.dart';
@@ -16,6 +15,8 @@ import 'automation_editor_screen.dart';
 import 'automation_text.dart';
 import 'automations_repo.dart';
 import 'engine_installer.dart';
+import '../features/history/history_setup_flow.dart' show allowEngineAndRestart, installEngineOn;
+import '../features/pro/pro_trial.dart' show ProTrialUse, proAccessProvider, proTrialProvider;
 import 'engine_providers.dart';
 import 'engine_status.dart';
 
@@ -70,11 +71,10 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     });
     final l10n = context.l10n;
     try {
-      final installer = await ref.read(engineInstallerProvider(widget.connectionId).future);
-      final source = await ref.read(engineSourceProvider.future);
-      final (answer, error) = await installer.install(source);
+      final (answer, error) = await installEngineOn(ref, widget.connectionId,
+          from: EngineFrom.automations,
+          z2m: ref.read(engineViewProvider(widget.connectionId)).valueOrNull?.hub?.version);
       if (!mounted) return;
-      _track(answer == HubAnswer.ok ? EngineStep.installed : EngineStep.failed);
       setState(() => _error = switch (answer) {
             HubAnswer.ok => null,
             HubAnswer.refused => l10n.engineInstallRefused(error ?? ''),
@@ -93,11 +93,9 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       _error = null;
     });
     final l10n = context.l10n;
-    await setEngineDeclined(ref.read(sharedPreferencesProvider), widget.connectionId, false);
-    _track(EngineStep.consented);
     try {
-      final installer = await ref.read(engineInstallerProvider(widget.connectionId).future);
-      final answer = await installer.allowExtensionsAndRestart();
+      final answer =
+          await allowEngineAndRestart(ref, widget.connectionId, from: EngineFrom.automations);
       if (!mounted) return;
       if (answer != HubAnswer.ok) {
         setState(() {
@@ -156,7 +154,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
 
   void _newAutomation() {
     final count = ref.read(automationsProvider(widget.connectionId)).valueOrNull?.length ?? 0;
-    if (count >= freeAutomations && ref.read(proStatusProvider) != ProStatus.unlocked) {
+    if (count >= freeAutomations && !ref.read(proAccessProvider)) {
       showModalBottomSheet<void>(
         context: context,
         showDragHandle: true,
@@ -166,6 +164,10 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
         }),
       );
       return;
+    }
+    // 3.6: past the free three while the trial runs: counted once.
+    if (count >= freeAutomations) {
+      ref.read(proTrialProvider.notifier).used(ProTrialUse.automation);
     }
     // Above the bottom bar, like the scene editor.
     Navigator.of(context, rootNavigator: true).push(MaterialPageRoute<void>(
@@ -475,7 +477,7 @@ class _AutomationsList extends ConsumerWidget {
     final theme = Theme.of(context);
     final rules = ref.watch(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
     final runs = ref.watch(automationRunsProvider(connectionId)).valueOrNull ?? const <AutomationRun>[];
-    final pro = ref.watch(proStatusProvider) == ProStatus.unlocked;
+    final pro = ref.watch(proAccessProvider);
     String time(DateTime t) => MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(t));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
