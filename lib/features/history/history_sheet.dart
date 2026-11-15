@@ -111,6 +111,10 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   /// chosen meanwhile.
   bool _checking = false;
   bool _phoneChosen = false;
+
+  /// Each set-up tap; an older one left behind (this phone was chosen,
+  /// then set up tapped again) gives up after its check.
+  int _setUpRun = 0;
   bool _lockedSeen = false;
   bool _rangeDataSeen = false;
 
@@ -349,6 +353,7 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   Future<void> _install(AppLocalizations l10n) async {
     final service = ref.read(historyServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
+    final run = ++_setUpRun;
     setState(() {
       _busy = true;
       _checking = true;
@@ -364,10 +369,10 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
         onChecked: () {
           if (mounted) setState(() => _checking = false);
         },
-        abandoned: () => !mounted || _phoneChosen,
+        abandoned: () => !mounted || _phoneChosen || run != _setUpRun,
         failedWhy: (w) => why = w,
       );
-      if (!mounted) return;
+      if (!mounted || run != _setUpRun) return;
       switch (r) {
         case EngineSetup.ready:
           _track(HistorySetupResult.installed);
@@ -400,7 +405,7 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
           if (here == true) await _recordHere(l10n);
       }
     } finally {
-      if (mounted && !_phoneChosen) {
+      if (mounted && !_phoneChosen && run == _setUpRun) {
         setState(() {
           _busy = false;
           _checking = false;
