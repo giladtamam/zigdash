@@ -1,6 +1,7 @@
-# 3.6.3: stop asking Android 17 for a permission ZigDash doesn't need (v2)
+# 3.6.3: stop asking Android 17 for a permission ZigDash doesn't need (v3)
 
-v2 after review (v1 scored 4/10): v1 looked for the trigger only in Dart. The trigger is ZigDash's own
+v3 after the second review (v2 scored 8/10): a bar that isn't already met, the hint detected from the network,
+and a TCP check. v2 after review (v1 scored 4/10): v1 looked for the trigger only in Dart. The trigger is ZigDash's own
 Android code, and Google says apps at our target SDK must not ask at all. The plan is now: remove the
 request, test what happens to people who already said no, and leave the "ask with a reason" design to the
 later move to target SDK 37.
@@ -32,14 +33,17 @@ ACCESS_LOCAL_NETWORK to your manifest or request it at runtime." ZigDash targets
    `MainActivity.onCreate` and the `ACCESS_LOCAL_NETWORK` line in the manifest. Comment in their place that
    the permission comes back with the target-SDK-37 work, which has its own plan.
 2. **Test on a real Android 17 device** (Samsung Remote Test Lab over adb), in this order, with screenshots:
-   1. fresh install of 3.6.3: no prompt at launch; Find my setup and a typed local address reach a LAN
-      host (a test broker reachable from the lab device is not available, so: the scan runs without
-      EPERM in logcat, and `adb shell dumpsys package` shows the permission state);
-   2. install 3.6.2, tap **Don't allow**, then update to 3.6.3: is local access back (no EPERM, permission
-      state), or does the denial stick?
-   - If the denial sticks, add one thing: on Android 17, when a scan or local connection fails and the
-     NEARBY_DEVICES group is denied for ZigDash, the empty-scan screen shows "Android is blocking ZigDash
-     from your home network" with **Open settings** (app settings). Only then; no new sheet before setup.
+   1. fresh install of 3.6.3: no prompt at launch. **UDP:** Find my setup runs its mDNS sends without
+      EPERM in logcat. **TCP:** in Check this address, type the lab device's default gateway (from
+      `adb shell ip route`) on port **80** (not 53, which is exempt): a refusal or an HTTP answer means TCP
+      reached the LAN; a timeout means it was blocked.
+   2. install 3.6.2, tap **Don't allow**, then update to 3.6.3: run the same UDP and TCP checks. Is local
+      access back, or does the denial stick?
+   - If the denial sticks, add one thing, detected from the network, not the permission API (once the
+     permission is no longer declared, `checkSelfPermission` reports it denied for everyone): on Android
+     17, when the scan's mDNS send fails with **EPERM**, the empty-scan screen shows "Android is blocking
+     ZigDash from your home network" with **Open settings** (app settings). Only then; no new sheet before
+     setup. Tested on the lab device in the denied-then-updated state.
 3. **Small fixes from the same device run:**
    - the Wall display sheet's last lines sit under One UI's tablet taskbar: bottom padding from the system
      insets on that sheet and the other long scrolling sheets;
@@ -58,8 +62,9 @@ relay, a LAN DNS server (port 53 exempt).
 
 ## Read (3 weeks after 3.6.3 is live)
 Per device (an install's first setup, from `app_started homes=0` sessions), Android 17 vs older:
-- **Bar: Android 17's empty-scan share comes within 10 points of older Android** (today 76% vs 68% per
-  session; recomputed per device at release as the baseline).
+- **Bar: Android 17's own empty-scan share drops at least 15 points from its per-device baseline** (the
+  3 weeks before 3.6.3, computed at release; per session today it is 76%, older Android 68%), or the gap to
+  older Android shrinks to 3 points or less.
 - Completion per device, Android 17 vs older, reported with its count (about 8 Android 17 setups a day, so
   ~150 in 3 weeks); descriptive, since a 10% vs 18% gap is at the edge of what that volume shows.
 - Before/after on the same measure: Android 17 devices in the 3 weeks before 3.6.3 vs after.
