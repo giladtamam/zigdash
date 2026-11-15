@@ -9,6 +9,7 @@ import '../../engine/engine_setup.dart';
 import '../../core/analytics/analytics.dart';
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/review/review_prompt_controller.dart';
+import '../../core/review/review_prompt_trigger.dart' show kReviewDelay;
 import '../../core/theme/signal_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../panels/providers/panel_value_provider.dart';
@@ -26,6 +27,10 @@ import 'history_setup_flow.dart' show markHistoryTurnedOn;
 
 /// Opens a reading's history (docs/design/history-2.7.md): [ieee] and
 /// [path] name the reading, [title] is shown on top.
+///
+/// 3.6.1: a week or month chart with at least two days of points is a happy
+/// moment. The review is asked for after the sheet has closed, never over
+/// the chart, and only if the screen underneath is still the one showing.
 Future<void> showHistorySheet(
   BuildContext context, {
   required String connectionId,
@@ -34,20 +39,30 @@ Future<void> showHistorySheet(
   required String title,
   String? unit,
   String? topic,
-}) => showModalBottomSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  showDragHandle: true,
-  builder: (_) => HistorySheet(
-    connectionId: connectionId,
-    ieee: ieee,
-    path: path,
-    title: title,
-    unit: unit,
-    topic: topic,
-  ),
-);
+}) async {
+  var seen = false;
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    showDragHandle: true,
+    builder: (_) => HistorySheet(
+      connectionId: connectionId,
+      ieee: ieee,
+      path: path,
+      title: title,
+      unit: unit,
+      topic: topic,
+      onRangeDataSeen: () => seen = true,
+    ),
+  );
+  if (!seen || !context.mounted) return;
+  await Future<void>.delayed(kReviewDelay);
+  if (!context.mounted || ModalRoute.of(context)?.isCurrent == false) return;
+  await ProviderScope.containerOf(context, listen: false)
+      .read(reviewPromptControllerProvider)
+      .maybeRequest(trigger: ReviewTrigger.history);
+}
 
 class HistorySheet extends ConsumerStatefulWidget {
   const HistorySheet({
@@ -60,6 +75,7 @@ class HistorySheet extends ConsumerStatefulWidget {
     this.topic,
     this.now,
     this.padding = const EdgeInsets.fromLTRB(16, 0, 16, 24),
+    this.onRangeDataSeen,
   });
 
   /// Around the content: the sheet's margins, or none inside a card.
@@ -78,6 +94,10 @@ class HistorySheet extends ConsumerStatefulWidget {
   /// The clock, for tests.
   final DateTime Function()? now;
 
+  /// Called once when a week or month chart showed points on at least two
+  /// days (not locked), for the review ask after the sheet closes.
+  final VoidCallback? onRangeDataSeen;
+
   @override
   ConsumerState<HistorySheet> createState() => _HistorySheetState();
 }
@@ -87,6 +107,7 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   HistoryPoint? _scrub;
   bool _busy = false;
   bool _lockedSeen = false;
+  bool _rangeDataSeen = false;
 
   @override
   void initState() {
@@ -149,6 +170,13 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
     final series = historySeries(range, now, days);
     // 3.6: a week or month view that showed data counts as used in the
     // trial (once; a purchase isn't a trial).
+    if (range.isPro &&
+        !locked &&
+        !_rangeDataSeen &&
+        series.map((p) => DateUtils.dateOnly(p.at)).toSet().length >= 2) {
+      _rangeDataSeen = true;
+      widget.onRangeDataSeen?.call();
+    }
     if (range.isPro && !locked && series.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {

@@ -1,0 +1,1 @@
+ZigDash now asks for a rating at a better moment: after it has worked for you on two days, never during setup, and at most once in three months.

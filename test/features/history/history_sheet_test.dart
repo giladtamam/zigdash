@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/core/review/review_launcher.dart';
+import 'package:zigdash/core/review/review_prompt_controller.dart';
+import 'package:zigdash/core/review/review_prompt_trigger.dart'
+    show kReviewDelay;
 import 'package:zigdash/features/history/history_chart.dart';
 import 'package:zigdash/features/history/history_record.dart';
 import 'package:zigdash/features/history/history_service.dart';
@@ -27,6 +31,7 @@ Widget _app({
   ProStatus pro = ProStatus.unlocked,
   bool kiosk = false,
   String retained = _recordingThis,
+  VoidCallback? onRangeDataSeen,
 }) => ProviderScope(
   overrides: [
     if (kiosk) kioskProvider.overrideWith(_KioskOn.new),
@@ -50,6 +55,7 @@ Widget _app({
         title: 'Living room',
         unit: '°C',
         now: () => _now,
+        onRangeDataSeen: onRangeDataSeen,
       ),
     ),
   ),
@@ -62,7 +68,177 @@ final _today = {
   ],
 };
 
+final _twoDays = {
+  '2026-10-14': [HistoryPoint(DateTime(2026, 10, 14, 18), 20, 19, 21)],
+  ..._today,
+};
+
+/// Yesterday and today on the real clock: [showHistorySheet] has no test
+/// clock.
+Map<String, List<HistoryPoint>> _recentDays() {
+  final now = DateTime.now();
+  String key(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+  final today = DateTime(now.year, now.month, now.day);
+  final yesterday = today.subtract(const Duration(days: 1));
+  return {
+    key(yesterday): [
+      HistoryPoint(yesterday.add(const Duration(hours: 12)), 20, 19, 21),
+    ],
+    key(today): [HistoryPoint(today, 21, 20, 22)],
+  };
+}
+
+class _FakeLauncher implements ReviewLauncher {
+  int requests = 0;
+  @override
+  Future<bool> isAvailable() async => true;
+  @override
+  Future<void> requestReview() async => requests++;
+}
+
+/// A dashboard-like screen with a button that opens [showHistorySheet], and a
+/// review controller whose policy is already met.
+Future<_FakeLauncher> _pumpOpener(WidgetTester tester) async {
+  SharedPreferences.setMockInitialValues({
+    ReviewPromptController.kSessions: 9,
+    ReviewPromptController.kFirstSessionDay: '2026-01-01',
+    ReviewPromptController.kLastSessionDay: '2026-10-14',
+  });
+  final prefs = await SharedPreferences.getInstance();
+  final launcher = _FakeLauncher();
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        reviewPromptControllerProvider.overrideWithValue(
+          ReviewPromptController(prefs: prefs, launcher: launcher),
+        ),
+        proStatusProvider.overrideWithValue(ProStatus.unlocked),
+        historyRecorderOnlineProvider.overrideWith(
+          (ref, _) => Stream.value(true),
+        ),
+        historyDaysProvider.overrideWith(
+          (ref, _) => Stream.value(_recentDays()),
+        ),
+        historyRetainedConfigProvider.overrideWith(
+          (ref, _) => Stream.value(_recordingThis),
+        ),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => showHistorySheet(
+                context,
+                connectionId: 'c1',
+                ieee: '0xa1',
+                path: 'temperature',
+                title: 'Living room',
+                unit: '°C',
+              ),
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  return launcher;
+}
+
 void main() {
+  group('review ask after History (3.6.1)', () {
+    testWidgets('a week chart with two days of points counts, once', (
+      tester,
+    ) async {
+      var seen = 0;
+      await tester.pumpWidget(
+        _app(online: true, days: _twoDays, onRangeDataSeen: () => seen++),
+      );
+      await tester.pump();
+      expect(seen, 0, reason: '24 hours is not the moment');
+      await tester.tap(find.text('7 days'));
+      await tester.pump();
+      await tester.pump();
+      expect(seen, 1);
+    });
+
+    testWidgets('today only: not a moment', (tester) async {
+      var seen = 0;
+      await tester.pumpWidget(
+        _app(online: true, days: _today, onRangeDataSeen: () => seen++),
+      );
+      await tester.pump();
+      await tester.tap(find.text('7 days'));
+      await tester.pump();
+      expect(seen, 0);
+    });
+
+    testWidgets('locked: not a moment', (tester) async {
+      var seen = 0;
+      await tester.pumpWidget(
+        _app(
+          online: true,
+          days: _twoDays,
+          pro: ProStatus.locked,
+          onRangeDataSeen: () => seen++,
+        ),
+      );
+      await tester.pump();
+      await tester.tap(find.text('7 days'));
+      await tester.pump();
+      expect(seen, 0);
+    });
+
+    testWidgets('asks after the sheet closes, never while it is open', (
+      tester,
+    ) async {
+      final launcher = await _pumpOpener(tester);
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('7 days'));
+      await tester.pump();
+      await tester.pump(kReviewDelay * 2);
+      expect(launcher.requests, 0, reason: 'the chart is being read');
+
+      Navigator.of(tester.element(find.byType(HistorySheet))).pop();
+      await tester.pumpAndSettle();
+      await tester.pump(kReviewDelay);
+      await tester.pump();
+      expect(launcher.requests, 1);
+    });
+
+    testWidgets('no ask when only 24 hours was looked at', (tester) async {
+      final launcher = await _pumpOpener(tester);
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      Navigator.of(tester.element(find.byType(HistorySheet))).pop();
+      await tester.pumpAndSettle();
+      await tester.pump(kReviewDelay);
+      expect(launcher.requests, 0);
+    });
+
+    testWidgets('no ask when another screen covers it before the delay', (
+      tester,
+    ) async {
+      final launcher = await _pumpOpener(tester);
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('7 days'));
+      await tester.pump();
+      final nav = Navigator.of(tester.element(find.byType(HistorySheet)));
+      nav.pop();
+      await tester.pumpAndSettle();
+      nav.push(MaterialPageRoute<void>(builder: (_) => const Text('other')));
+      await tester.pumpAndSettle();
+      await tester.pump(kReviewDelay);
+      expect(launcher.requests, 0);
+    });
+  });
+
   testWidgets('no recorder and no data: the set-up card', (tester) async {
     await tester.pumpWidget(_app(online: null));
     await tester.pump();

@@ -34,7 +34,7 @@ class ReviewPromptController {
     Analytics? analytics,
     this.policy = const ReviewPromptPolicy(),
     this.setupWindow = const Duration(minutes: 10),
-    this.reportMinSessions = 7,
+    this.reportMinSessions = 4,
     DateTime Function()? now,
   }) : _prefs = prefs,
        _launcher = launcher,
@@ -96,9 +96,8 @@ class ReviewPromptController {
 
   /// Asks for a review if everything allows it: not within [setupWindow] of
   /// setup, the sensor-only rule for a [ReviewTrigger.report], then
-  /// [policy]. [nth] is which confirmed command of the session this is
-  /// (command trigger only). Returns true only when a review was requested.
-  Future<bool> maybeRequest({required ReviewTrigger trigger, int? nth}) async {
+  /// [policy]. Returns true only when a review was requested.
+  Future<bool> maybeRequest({required ReviewTrigger trigger}) async {
     if (_requesting) return false;
     _requesting = true;
     try {
@@ -125,11 +124,7 @@ class ReviewPromptController {
         // every eligible win. Now it reports once per cooldown.
         await _prefs.setString(kLastPromptDay, todayKey);
         _analytics?.track(
-          ReviewPrompted(
-            ReviewPromptResult.unavailable,
-            trigger: trigger,
-            nth: nth,
-          ),
+          ReviewPrompted(ReviewPromptResult.unavailable, trigger: trigger),
         );
         return false;
       }
@@ -137,7 +132,7 @@ class ReviewPromptController {
       await _launcher.requestReview();
       await _prefs.setString(kLastPromptDay, todayKey);
       _analytics?.track(
-        ReviewPrompted(ReviewPromptResult.requested, trigger: trigger, nth: nth),
+        ReviewPrompted(ReviewPromptResult.requested, trigger: trigger),
       );
       return true;
     } finally {
