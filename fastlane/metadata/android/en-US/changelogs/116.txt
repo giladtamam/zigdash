@@ -1,0 +1,1 @@
+On Android 17, ZigDash no longer asks about nearby devices when it opens: it never needed that permission. Also fixed: the wall display settings no longer hide behind a tablet's taskbar, and the demo home's motion and door sensors can wake the wall display.

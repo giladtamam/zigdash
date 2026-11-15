@@ -467,7 +467,7 @@
   "noHubPi": "Raspberry Pi nebo jakýkoli počítač s Linuxem",
   "noHubPiBody": "Nainstalujte si Zigbee2MQTT a broker Mosquitto sami. Asi hodina, podle návodu Zigbee2MQTT.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Přidejte doplňky Mosquitto broker a Zigbee2MQTT a pak se ze ZigDash přihlaste svým účtem Home Assistant.",
+  "noHubHaBody": "Přidejte aplikace Mosquitto broker a Zigbee2MQTT (Nastavení › Aplikace) a pak se ze ZigDash přihlaste svým účtem Home Assistant.",
   "noHubRadio": "Pi nebo Home Assistant potřebuje také Zigbee adaptér, třeba SLZB-06 nebo dongle Sonoff. SMHUB ho má vestavěný.",
   "noHubDemoNote": "Zatím se podívejte, jak ZigDash funguje, na ukázkovém domě.",
   "noHubRemind": "Připomenout za týden",

@@ -611,7 +611,7 @@
   "noHubPi": "Raspberry Pi או כל מחשב לינוקס",
   "noHubPiBody": "מתקינים לבד Zigbee2MQTT ואת ברוקר Mosquitto. בערך שעה, עם המדריך של Zigbee2MQTT.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "מוסיפים את התוספים Mosquitto broker ו-Zigbee2MQTT, ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.",
+  "noHubHaBody": "מוסיפים את היישומים Mosquitto broker ו-Zigbee2MQTT (הגדרות › יישומים), ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.",
   "noHubRadio": "ל-Pi או ל-Home Assistant צריך גם מתאם Zigbee, כמו SLZB-06 או דונגל של Sonoff. ב-SMHUB הוא מובנה.",
   "noHubDemoNote": "בינתיים אפשר לראות איך ZigDash עובד, עם בית לדוגמה.",
   "noHubRemind": "תזכירו לי בעוד שבוע",

@@ -2925,7 +2925,7 @@ abstract class AppLocalizations {
   /// No description provided for @noHubHaBody.
   ///
   /// In en, this message translates to:
-  /// **'Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.'**
+  /// **'Add the Mosquitto broker and Zigbee2MQTT apps (Settings › Apps), then sign in from ZigDash with your Home Assistant login.'**
   String get noHubHaBody;
 
   /// Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names.

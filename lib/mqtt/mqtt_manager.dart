@@ -248,12 +248,15 @@ class MqttManager {
       ];
 
   /// Seeds saved values (loaded before [connect]). A later subscription to
-  /// an exact topic starts with its saved value.
-  void seedLastKnown(Iterable<MqttRxMessage> messages) {
+  /// an exact topic starts with its saved value. [asLive] (the demo, which
+  /// never connects) seeds them as this session's values, so bridge topics
+  /// such as the device list replay too (3.6.3).
+  void seedLastKnown(Iterable<MqttRxMessage> messages, {bool asLive = false}) {
     for (final m in messages) {
       _lastKnown[m.topic] = m;
+      if (asLive) _latest[m.topic] = m;
       final entry = _subs[m.topic];
-      if (entry != null && !entry.subject.hasValue && _replayable(m.topic)) entry.subject.add(m);
+      if (entry != null && !entry.subject.hasValue && (asLive || _replayable(m.topic))) entry.subject.add(m);
     }
   }
 
