@@ -107,11 +107,18 @@ Automation _rule(String id) => Automation(
           kind: ActionKind.device, commands: [EngineCommand(ieee: '0xlight', payload: {'state': 'ON'})], label: 'Hallway light'),
     );
 
+final _engineRunning = engineViewProvider.overrideWith((ref, _) => Stream.value(EngineView(
+      phase: HubEnginePhase.running,
+      report: EngineReport(
+          version: '3.0.0', runningOn: 'hub', rulesLoaded: 0, rulesUnknown: const [], stoppedSelf: false, at: DateTime(2026)),
+    )));
+
 void main() {
   testWidgets('motion turns the light on for five minutes: saved retained for the Engine', (tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     addTearDown(tester.view.reset);
-    final mgr = await _pump(tester, const AutomationEditorScreen(connectionId: 'c1'));
+    // 3.6.2: with the Engine running, saving goes straight to the hub.
+    final mgr = await _pump(tester, const AutomationEditorScreen(connectionId: 'c1'), extra: [_engineRunning]);
 
     await tester.tap(find.byKey(const Key('auto-trigger-device')));
     await tester.pumpAndSettle();

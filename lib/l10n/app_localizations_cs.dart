@@ -4360,25 +4360,6 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle => 'Automatizace běží na hubu, ne v telefonu';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash vloží ZigDash Engine do Zigbee2MQTT na vašem hubu. Sleduje vaše zařízení a spouští pravidla, takže se světlo rozsvítí při otevření dveří, i když je telefon vypnutý a nejde internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Nic se neinstaluje ručně. ZigDash to udělá přes domácí síť.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Váš Zigbee2MQTT má verzi $version.';
-  }
-
-  @override
-  String get engineIntroRemove => 'Kdykoli ho můžete odebrat z této obrazovky.';
-
-  @override
   String get engineInstall => 'Nainstalovat na hub';
 
   @override
@@ -5743,4 +5724,61 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Zkušební doba skončila. Vše, co jste nastavili, tam pořád je.';
+
+  @override
+  String get engineSlimCard =>
+      'Automatizace běží na vašem hubu díky ZigDash Engine. ZigDash ho tam nainstaluje, až uložíte první automatizaci.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'Automatizace vytvářejte doma: ZigDash pak nainstaluje svůj Engine na váš hub přes domácí síť.';
+
+  @override
+  String get engineSheetSource => 'Zdrojový kód na GitHubu';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine spouští vaše automatizace';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine je jeden open-source soubor, který ZigDash přidá do složky Zigbee2MQTT na vašem hubu. Spouští tam vaše automatizace, i když je telefon vypnutý. Kdykoli ho odeberete na kartě Automatizace.';
+
+  @override
+  String get engineSheetInstallSave => 'Nainstalovat a uložit';
+
+  @override
+  String get engineSheetSaveOnly => 'Uložit bez spuštění';
+
+  @override
+  String get engineSheetSave => 'Uložit';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT na vašem hubu neodpověděl včas, takže ZigDash teď nemůže nainstalovat svůj Engine. Uložte teď a nainstalujte ho na kartě Automatizace, až hub odpoví.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Automatizace je uložená. Poběží, jakmile bude ZigDash Engine na vašem hubu.';
+
+  @override
+  String get engineWaitingTitle => 'Uložené dříve, čekají na ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Po instalaci poběží';
+
+  @override
+  String get engineWaitingPaused => 'Zůstane pozastavená';
+
+  @override
+  String get autoNotRunTitle => 'Žádná z nich zatím neběží';
+
+  @override
+  String get autoNotRunBody =>
+      'Neběží: ZigDash Engine není na vašem hubu. Do té doby je uchovává váš MQTT broker a broker bez persistence je při restartu ztratí.';
+
+  @override
+  String get autoNotRunning => 'Neběží';
+
+  @override
+  String get historyUsePhoneInstead => 'Použít raději tento telefon';
 }

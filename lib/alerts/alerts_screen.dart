@@ -224,6 +224,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           await ref.read(alertsServiceProvider).publish(_id);
           return true;
         case EngineSetup.needsUser:
+        case EngineSetup.cancelled:
           return false;
         case EngineSetup.failed:
           messenger.showSnackBar(SnackBar(content: Text(l10n.alertsHubFailed)));

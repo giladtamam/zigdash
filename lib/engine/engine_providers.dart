@@ -41,6 +41,12 @@ final engineSourceProvider =
     FutureProvider<String>((ref) => rootBundle.loadString(engineAsset));
 const engineAsset = 'hub/zigdash-engine.js';
 
+/// The Engine's source as this release ships it (3.6.2), never `main`: what
+/// someone reads before installing is what ZigDash installs. Move the tag
+/// to the release that ships a changed `hub/zigdash-engine.js`.
+final engineSourceUrl =
+    Uri.parse('https://github.com/giladtamam/zigdash/blob/v3.6.2/hub/zigdash-engine.js');
+
 /// Everything the Automations screen and the dashboard banner show about a
 /// Home's Engine.
 class EngineView {
@@ -51,6 +57,7 @@ class EngineView {
     this.clockOff = false,
     this.declined = false,
     this.away = false,
+    this.heardExtensions = false,
   });
 
   /// Reached through the relay (3.1.7): installing, reinstalling and
@@ -66,6 +73,10 @@ class EngineView {
 
   /// The user said "Not now" to the consent screen on this phone.
   final bool declined;
+
+  /// `bridge/extensions` arrived (3.6.2): with [hub], tells a hub check
+  /// that timed out apart (no info, or info but no extensions).
+  final bool heardExtensions;
 
   bool get installed =>
       phase == HubEnginePhase.running ||
@@ -120,6 +131,7 @@ final engineViewProvider =
       clockOff: clockOff,
       declined: engineDeclined(prefs, connectionId),
       away: away,
+      heardExtensions: extensions != null,
     );
   }
   void emit() {

@@ -1,0 +1,1 @@
+Make an automation first: when you save it, ZigDash puts its Engine on your hub to run it. The hub check also waits longer, and you can use this phone instead while it does.

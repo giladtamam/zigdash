@@ -4356,27 +4356,6 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle =>
-      'Automasjoner kjører på huben, ikke på telefonen';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash legger ZigDash Engine inn i Zigbee2MQTT på huben din. Det følger med på enhetene og kjører reglene dine, så en lampe tennes når døren åpnes selv med telefonen av og uten internett.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Ingenting å installere for hånd. ZigDash gjør det over hjemmenettet.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Zigbee2MQTT er versjon $version.';
-  }
-
-  @override
-  String get engineIntroRemove =>
-      'Du kan fjerne den når som helst fra denne skjermen.';
-
-  @override
   String get engineInstall => 'Installer på huben';
 
   @override
@@ -5747,4 +5726,61 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Prøveperioden er over. Alt du har satt opp, er der fortsatt.';
+
+  @override
+  String get engineSlimCard =>
+      'Automasjoner kjører på huben din med ZigDash Engine. ZigDash legger det dit når du lagrer den første.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'Lag automasjoner hjemme: da legger ZigDash sin Engine på huben din, over hjemmenettet.';
+
+  @override
+  String get engineSheetSource => 'Se kildekoden på GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine kjører automasjonene dine';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine er én åpen kildekode-fil som ZigDash legger i Zigbee2MQTT-mappen på huben din. Den kjører automasjonene dine der, også med telefonen av. Fjern den når som helst fra fanen Automasjoner.';
+
+  @override
+  String get engineSheetInstallSave => 'Installer og lagre';
+
+  @override
+  String get engineSheetSaveOnly => 'Lagre uten å kjøre';
+
+  @override
+  String get engineSheetSave => 'Lagre';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT på huben svarte ikke i tide, så ZigDash kan ikke installere Engine nå. Lagre nå, og installer den fra fanen Automasjoner når huben svarer.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Automasjonen er lagret. Den kjører når ZigDash Engine er på huben din.';
+
+  @override
+  String get engineWaitingTitle => 'Lagret tidligere, venter på ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Kjører etter installering';
+
+  @override
+  String get engineWaitingPaused => 'Forblir satt på pause';
+
+  @override
+  String get autoNotRunTitle => 'Ingen av disse kjører ennå';
+
+  @override
+  String get autoNotRunBody =>
+      'Kjører ikke: ZigDash Engine er ikke på huben din. Inntil da tar MQTT-brokeren vare på dem, og en broker uten persistens mister dem når den starter på nytt.';
+
+  @override
+  String get autoNotRunning => 'Kjører ikke';
+
+  @override
+  String get historyUsePhoneInstead => 'Bruk denne telefonen i stedet';
 }

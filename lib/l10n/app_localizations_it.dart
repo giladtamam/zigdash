@@ -4380,27 +4380,6 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle =>
-      'Le automazioni girano sull\'hub, non sul telefono';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash mette ZigDash Engine dentro Zigbee2MQTT sul tuo hub. Osserva i dispositivi ed esegue le tue regole, così una luce si accende quando la porta si apre anche col telefono spento e senza internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Niente da installare a mano. ZigDash lo fa tramite la rete di casa.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Il tuo Zigbee2MQTT è la versione $version.';
-  }
-
-  @override
-  String get engineIntroRemove =>
-      'Puoi rimuoverlo quando vuoi da questa schermata.';
-
-  @override
   String get engineInstall => 'Installa sull\'hub';
 
   @override
@@ -5773,4 +5752,61 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'La prova è finita. Tutto ciò che hai configurato è ancora lì.';
+
+  @override
+  String get engineSlimCard =>
+      'Le automazioni girano sul tuo hub con ZigDash Engine. ZigDash lo installa lì quando salvi la prima.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'Crea le automazioni a casa: ZigDash installa allora il suo Engine sul tuo hub, tramite la rete di casa.';
+
+  @override
+  String get engineSheetSource => 'Vedi il codice sorgente su GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine esegue le tue automazioni';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine è un singolo file open source che ZigDash aggiunge alla cartella di Zigbee2MQTT sul tuo hub. Esegue lì le tue automazioni, anche col telefono spento. Puoi rimuoverlo quando vuoi dalla scheda Automazioni.';
+
+  @override
+  String get engineSheetInstallSave => 'Installa e salva';
+
+  @override
+  String get engineSheetSaveOnly => 'Salva senza eseguire';
+
+  @override
+  String get engineSheetSave => 'Salva';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT sul tuo hub non ha risposto in tempo, quindi ZigDash non può installare il suo Engine ora. Salva ora e installalo dalla scheda Automazioni quando l\'hub risponde.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'La tua automazione è salvata. Verrà eseguita quando ZigDash Engine sarà sul tuo hub.';
+
+  @override
+  String get engineWaitingTitle => 'Salvate prima, in attesa di ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Partirà dopo l\'installazione';
+
+  @override
+  String get engineWaitingPaused => 'Resta in pausa';
+
+  @override
+  String get autoNotRunTitle => 'Nessuna è ancora attiva';
+
+  @override
+  String get autoNotRunBody =>
+      'Non attiva: ZigDash Engine non è sul tuo hub. Fino ad allora le conserva il tuo broker MQTT, e un broker senza persistenza le perde al riavvio.';
+
+  @override
+  String get autoNotRunning => 'Non attiva';
+
+  @override
+  String get historyUsePhoneInstead => 'Usa invece questo telefono';
 }

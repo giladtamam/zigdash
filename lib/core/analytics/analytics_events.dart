@@ -1019,10 +1019,13 @@ enum HistorySetupFrom { sheet, finish, card }
 /// The history recorder was set up from a history sheet or, from 3.6, the
 /// "Turn on History" card.
 class HistorySetup extends AnalyticsEvent {
-  const HistorySetup(this.result, {this.from = HistorySetupFrom.sheet});
+  const HistorySetup(this.result, {this.from = HistorySetupFrom.sheet, this.why});
 
   final HistorySetupResult result;
   final HistorySetupFrom from;
+
+  /// 3.6.2: why a `failed` failed.
+  final EngineWhy? why;
 
   @override
   String get name => 'history_setup';
@@ -1031,6 +1034,7 @@ class HistorySetup extends AnalyticsEvent {
   Map<String, String> get props => {
     'result': _snake(result.name),
     'from': from.name,
+    if (why != null) 'why': _snake(why!.name),
   };
 }
 
@@ -1307,19 +1311,32 @@ enum EngineStep {
   startedAgain,
   seenPaused,
   seenStopped,
+
+  /// 3.6.2: an Install button was tapped (offered → tapped → installed).
+  installTapped,
 }
 
-/// Which screen led to the Engine: Automations, Alerts or History.
-enum EngineFrom { automations, alerts, history, historyOn }
+/// Which screen led to the Engine: Automations, Alerts or History; from
+/// 3.6.2 also saving an Automation.
+enum EngineFrom { automations, alerts, history, historyOn, save }
+
+/// Why the Engine couldn't go on the hub (3.6.2): away through the relay,
+/// no broker connection, no `bridge/info`, info but no `bridge/extensions`,
+/// Zigbee2MQTT too old, add-ons blocked, Zigbee2MQTT refused, no answer to
+/// the install, or anything else.
+enum EngineWhy { relay, noConnection, noInfo, noExtensions, tooOld, blocked, refused, noAnswer, other }
 
 class EngineEvent extends AnalyticsEvent {
-  const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations});
+  const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations, this.why});
 
   final EngineStep step;
 
   /// Zigbee2MQTT's version string; reported as "major.minor".
   final String? z2m;
   final EngineFrom from;
+
+  /// 3.6.2: why a `failed` failed.
+  final EngineWhy? why;
 
   @override
   String get name => 'engine_setup';
@@ -1329,6 +1346,7 @@ class EngineEvent extends AnalyticsEvent {
     'step': _snake(step.name),
     'from': _snake(from.name),
     if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
+    if (why != null) 'why': _snake(why!.name),
   };
 }
 
@@ -1348,6 +1366,7 @@ class AutomationSaved extends AnalyticsEvent {
     required this.offAfter,
     required this.isNew,
     required this.homeCount,
+    required this.running,
   });
 
   /// device_state, device_action, device_reading, clock or sun.
@@ -1361,6 +1380,10 @@ class AutomationSaved extends AnalyticsEvent {
 
   /// How many Automations the Home has after saving.
   final int homeCount;
+
+  /// 3.6.2: ZigDash Engine runs it (no: saved before the Engine is on the
+  /// hub).
+  final bool running;
 
   @override
   String get name => 'automation_saved';
@@ -1378,6 +1401,7 @@ class AutomationSaved extends AnalyticsEvent {
       ranges: const [(4, 10)],
       top: '11+',
     ),
+    'running': running ? 'yes' : 'no',
   };
 }
 

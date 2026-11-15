@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/core/review/review_launcher.dart';
+import 'package:zigdash/engine/automations_repo.dart';
+import 'package:zigdash/engine/engine_providers.dart';
+import 'package:zigdash/engine/engine_status.dart';
 import 'package:zigdash/core/review/review_prompt_controller.dart';
 import 'package:zigdash/core/review/review_prompt_trigger.dart'
     show kReviewDelay;
@@ -16,6 +20,17 @@ import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 
 final _now = DateTime(2026, 10, 15, 12);
+
+class _Sink implements AnalyticsSink {
+  _Sink(this.sent);
+  final List<String> sent;
+  @override
+  Future<void> start() async {}
+  @override
+  Future<void> stop() async {}
+  @override
+  void send(String name, Map<String, String> props) => sent.add('$name $props');
+}
 
 const _recordingThis =
     '{"readings":[{"ieee":"0xa1","attr":"temperature","topic":"z/x","path":"temperature"}]}';
@@ -352,5 +367,62 @@ void main() {
     await tester.pump();
     expect(prefs.getBool('history_record_here_c1'), isTrue);
     expect(find.textContaining('This device records history'), findsOneWidget);
+  });
+
+  group('3.6.2: set up on the hub, the check up to 20 s', () {
+    Future<List<String>> pumpChecking(WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({'analytics_consent': true});
+      final prefs = await SharedPreferences.getInstance();
+      final sent = <String>[];
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            analyticsAvailableProvider.overrideWithValue(true),
+            analyticsSinkProvider.overrideWithValue(_Sink(sent)),
+            engineViewProvider.overrideWith(
+              (ref, _) =>
+                  Stream.value(const EngineView(phase: HubEnginePhase.checking)),
+            ),
+            automationsProvider.overrideWith(
+              (ref, _) => Stream.value(const []),
+            ),
+          ],
+          child: _app(online: null, retained: ''),
+        ),
+      );
+      await tester.pump();
+      await tester.ensureVisible(find.text('Set up on the hub'));
+      await tester.tap(find.text('Set up on the hub'));
+      await tester.pump();
+      expect(find.text('Checking your hub…'), findsOneWidget);
+      return sent;
+    }
+
+    testWidgets('Use this phone instead during the wait', (tester) async {
+      final sent = await pumpChecking(tester);
+      await tester.ensureVisible(find.byKey(const Key('history-use-phone')));
+      await tester.tap(find.byKey(const Key('history-use-phone')));
+      await tester.pump();
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool('history_record_here_c1'), isTrue);
+      await tester.pump(const Duration(seconds: 21));
+      await tester.pump();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(sent.where((e) => e.contains('failed')), isEmpty);
+    });
+
+    testWidgets('a silent hub: failed, why no_info, this device offered', (
+      tester,
+    ) async {
+      final sent = await pumpChecking(tester);
+      await tester.pump(const Duration(seconds: 21));
+      await tester.pump();
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(
+        sent,
+        contains('history_setup {result: failed, from: sheet, why: no_info}'),
+      );
+    });
   });
 }

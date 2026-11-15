@@ -10,6 +10,9 @@ import '../../../core/router/routes.dart';
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../engine/engine_providers.dart' show setEngineDeclined;
+import '../../../engine/automation.dart' show Automation;
+import '../../../engine/engine_sheet.dart'
+    show WaitingRulesWatch, confirmWaitingRules;
 import '../../history/app_history_recorder.dart' show historyRecordHereProvider;
 import '../../history/history_service.dart' show historyRecorderOnlineProvider;
 import '../../history/history_setup_flow.dart';
@@ -64,13 +67,20 @@ class HistoryOnCard extends ConsumerStatefulWidget {
   ConsumerState<HistoryOnCard> createState() => _HistoryOnCardState();
 }
 
-enum _Stage { offer, working, consent, broker, phone, done }
+enum _Stage { offer, checking, working, consent, broker, phone, done }
 
 class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
   _Stage _stage = _Stage.offer;
   bool _graceOver = false;
   bool _closed = false;
   bool _consentFailed = false;
+
+  /// "Use this phone instead" was tapped while the hub was checked.
+  bool _phoneChosen = false;
+
+  /// The Home's rules, coming in from the first tap, for the waiting-rules
+  /// sheet before any install (consent included).
+  WaitingRulesWatch? _rules;
   Timer? _grace;
   late final HistorySetupFrom _from;
 
@@ -90,6 +100,7 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   @override
   void dispose() {
+    _rules?.close();
     _grace?.cancel();
     super.dispose();
   }
@@ -123,10 +134,27 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   Future<void> _turnOn() async {
     _track(HistoryOnStep.tapped);
-    setState(() => _stage = _Stage.working);
-    final result = await turnOnHistory(ref, widget.connectionId, from: _from);
-    if (!mounted) return;
+    _rules ??= WaitingRulesWatch(ref, widget.connectionId);
+    setState(() => _stage = _Stage.checking);
+    final result = await turnOnHistory(
+      ref,
+      widget.connectionId,
+      from: _from,
+      onChecked: () {
+        if (mounted) setState(() => _stage = _Stage.working);
+      },
+      abandoned: () => !mounted || _phoneChosen,
+      beforeInstall: (rules) =>
+          confirmWaitingRules(context, ref, widget.connectionId, rules),
+    );
+    if (!mounted || _phoneChosen) return;
     _show(result);
+  }
+
+  /// 3.6.2: the hub check takes up to 20 s; nobody has to wait for it.
+  Future<void> _usePhone() async {
+    _phoneChosen = true;
+    await _phone();
   }
 
   void _show(HistoryOn result) {
@@ -141,10 +169,26 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
         setState(() => _stage = _Stage.broker);
       case HistoryOn.phoneInstead:
         setState(() => _stage = _Stage.phone);
+      case HistoryOn.cancelled:
+        setState(() => _stage = _Stage.offer);
     }
   }
 
   Future<void> _allow() async {
+    // Rules waiting for the Engine are asked about before the restart.
+    final waiting = await _rules?.rules() ?? const <Automation>[];
+    if (!mounted) return;
+    final go = await confirmWaitingRules(
+      context,
+      ref,
+      widget.connectionId,
+      waiting,
+    );
+    if (!mounted) return;
+    if (!go) {
+      setState(() => _stage = _Stage.offer);
+      return;
+    }
     setState(() {
       _stage = _Stage.working;
       _consentFailed = false;
@@ -268,7 +312,7 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
             ),
           ]),
         ],
-        _Stage.working => [
+        _Stage.checking || _Stage.working => [
           Row(
             children: [
               const SizedBox.square(
@@ -276,10 +320,24 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
                 child: CircularProgressIndicator(strokeWidth: 2),
               ),
               const SizedBox(width: 12),
-              Expanded(child: Text(l10n.historyOnWorking)),
+              Expanded(
+                child: Text(
+                  _stage == _Stage.checking
+                      ? l10n.engineChecking
+                      : l10n.historyOnWorking,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8),
+          if (_stage == _Stage.checking)
+            buttons([
+              TextButton(
+                key: const Key('history-on-use-phone'),
+                onPressed: _usePhone,
+                child: Text(l10n.historyUsePhoneInstead),
+              ),
+            ]),
         ],
         _Stage.consent => [
           text(l10n.historyOnConsentBody),

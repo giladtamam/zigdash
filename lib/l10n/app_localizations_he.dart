@@ -4311,25 +4311,6 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get engineIntroTitle => 'אוטומציות רצות ברכזת, לא בטלפון';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash מוסיף את ZigDash Engine בתוך Zigbee2MQTT ברכזת. הוא עוקב אחרי המכשירים ומריץ את הכללים, כך שאור נדלק כשהדלת נפתחת גם כשהטלפון כבוי ואין אינטרנט.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'אין מה להתקין ידנית. ZigDash עושה את זה דרך הרשת הביתית.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'גרסת Zigbee2MQTT שלך היא $version.';
-  }
-
-  @override
-  String get engineIntroRemove => 'אפשר להסיר אותו בכל עת מהמסך הזה.';
-
-  @override
   String get engineInstall => 'התקנה ברכזת';
 
   @override
@@ -5677,4 +5658,61 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get proTrialEnded => 'הניסיון הסתיים. כל מה שהגדרתם עדיין שם.';
+
+  @override
+  String get engineSlimCard =>
+      'אוטומציות רצות ברכזת עם ZigDash Engine. ‏ZigDash מתקין אותו שם כשתשמרו את הראשונה.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'יוצרים אוטומציות בבית: אז ZigDash מתקין את ה-Engine שלו ברכזת, דרך הרשת הביתית.';
+
+  @override
+  String get engineSheetSource => 'לקוד המקור ב-GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine מריץ את האוטומציות שלכם';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine הוא קובץ קוד פתוח אחד ש-ZigDash מוסיף לתיקייה של Zigbee2MQTT ברכזת. הוא מריץ שם את האוטומציות, גם כשהטלפון כבוי. אפשר להסיר אותו בכל עת מלשונית האוטומציות.';
+
+  @override
+  String get engineSheetInstallSave => 'להתקין ולשמור';
+
+  @override
+  String get engineSheetSaveOnly => 'לשמור בלי להפעיל';
+
+  @override
+  String get engineSheetSave => 'שמירה';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT ברכזת לא ענה בזמן, ולכן ZigDash לא יכול להתקין את ה-Engine עכשיו. שמרו עכשיו והתקינו אותו מלשונית האוטומציות כשהרכזת תענה.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'האוטומציה נשמרה. היא תרוץ ברגע ש-ZigDash Engine יהיה ברכזת.';
+
+  @override
+  String get engineWaitingTitle => 'נשמרו קודם, ממתינות ל-ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'תרוץ אחרי ההתקנה';
+
+  @override
+  String get engineWaitingPaused => 'נשארת מושהית';
+
+  @override
+  String get autoNotRunTitle => 'אף אחת מהן עוד לא רצה';
+
+  @override
+  String get autoNotRunBody =>
+      'לא רצה: ZigDash Engine לא נמצא ברכזת. עד שיהיה, ה-broker של MQTT שומר אותן, ו-broker בלי persistence מאבד אותן כשהוא מופעל מחדש.';
+
+  @override
+  String get autoNotRunning => 'לא רצה';
+
+  @override
+  String get historyUsePhoneInstead => 'להשתמש בטלפון הזה במקום';
 }

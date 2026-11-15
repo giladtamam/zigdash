@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/analytics/analytics.dart';
 import '../../data/database/tables/connections.dart';
 import '../../data/repositories/connection_repo.dart';
+import '../../engine/automation.dart' show Automation;
 import '../../engine/engine_providers.dart';
+import '../../engine/engine_sheet.dart' show WaitingRulesWatch;
 import '../../engine/engine_setup.dart';
 import '../../engine/engine_status.dart';
 import '../../engine/engine_installer.dart' show EngineInstaller, HubAnswer;
@@ -34,6 +36,7 @@ Future<(HubAnswer, String?)> installEngineOn(
           answer == HubAnswer.ok ? EngineStep.installed : EngineStep.failed,
           z2m: z2m,
           from: from,
+          why: answer == HubAnswer.ok ? null : installWhy(answer),
         ),
       );
   return (answer, error);
@@ -86,40 +89,81 @@ enum HistoryOn {
   /// The Engine can't go on this hub (too old, refused, no answer): this
   /// phone can record instead, while ZigDash is open.
   phoneInstead,
+
+  /// 3.6.2: the user stopped it (this phone instead while the hub was
+  /// checked, or Not now on the rules waiting for the Engine).
+  cancelled,
 }
 
 /// The recorder for [connectionId], by how the Home is connected: an MQTT
 /// broker or Home Assistant (which carries MQTT) get the Engine; a Home
 /// reached through Zigbee2MQTT's page needs a broker first.
+///
+/// 3.6.2: the hub check waits up to 20 s; [onChecked] runs when it ends,
+/// [abandoned] is asked then (this phone was chosen meanwhile, or the card
+/// left), and [beforeInstall] sees the rules waiting for the Engine.
 Future<HistoryOn> turnOnHistory(
   WidgetRef ref,
   String connectionId, {
   required HistorySetupFrom from,
+  void Function()? onChecked,
+  bool Function()? abandoned,
+  Future<bool> Function(List<Automation> waiting)? beforeInstall,
 }) async {
   final home = await ref.read(connectionRepoProvider).getById(connectionId);
+  if (abandoned?.call() ?? false) return HistoryOn.cancelled;
   if (transportOf(home?.transport) == ConnectionTransport.z2mPage) {
     return HistoryOn.needsBroker;
   }
-  final view = await settledEngineView(ref, connectionId);
-  final phase = view?.phase;
-  if (view != null && view.installed) {
-    return _publish(ref, connectionId, from, HistorySetupResult.installed);
-  }
-  switch (phase) {
-    case HubEnginePhase.needsConsent:
-      return HistoryOn.needsConsent;
-    case HubEnginePhase.needsBroker:
-      return HistoryOn.needsBroker;
-    case HubEnginePhase.notInstalled:
-      return installThenPublish(
+  final rules = WaitingRulesWatch(ref, connectionId);
+  try {
+    final check = await checkEngine(ref, connectionId);
+    if (abandoned?.call() ?? false) return HistoryOn.cancelled;
+    onChecked?.call();
+    final view = check.view;
+    if (view != null && view.installed) {
+      return await _publish(
         ref,
         connectionId,
-        from: from,
-        z2m: view?.hub?.version,
+        from,
+        HistorySetupResult.installed,
       );
-    default:
-      _track(ref, HistorySetupResult.failed, from);
-      return HistoryOn.phoneInstead;
+    }
+    switch (view?.phase) {
+      // "Not now" to add-ons on this phone is kept: this phone instead.
+      case HubEnginePhase.needsConsent when view!.declined:
+        _track(ref, HistorySetupResult.failed, from, why: EngineWhy.blocked);
+        return HistoryOn.phoneInstead;
+      case HubEnginePhase.needsConsent:
+        return HistoryOn.needsConsent;
+      case HubEnginePhase.needsBroker:
+        return HistoryOn.needsBroker;
+      case HubEnginePhase.notInstalled:
+        final waiting = await rules.rules();
+        if (abandoned?.call() ?? false) return HistoryOn.cancelled;
+        final go = await beforeInstall?.call(waiting) ?? true;
+        if (!go || (abandoned?.call() ?? false)) return HistoryOn.cancelled;
+        ref
+            .read(analyticsProvider)
+            .track(
+              EngineEvent(
+                EngineStep.installTapped,
+                z2m: view?.hub?.version,
+                from: EngineFrom.historyOn,
+              ),
+            );
+        return await installThenPublish(
+          ref,
+          connectionId,
+          from: from,
+          z2m: view?.hub?.version,
+        );
+      default:
+        _track(ref, HistorySetupResult.failed, from, why: engineWhy(check));
+        return HistoryOn.phoneInstead;
+    }
+  } finally {
+    rules.close();
   }
 }
 
@@ -139,11 +183,11 @@ Future<HistoryOn> installThenPublish(
       z2m: z2m,
     );
     if (answer != HubAnswer.ok) {
-      _track(ref, HistorySetupResult.failed, from);
+      _track(ref, HistorySetupResult.failed, from, why: installWhy(answer));
       return HistoryOn.phoneInstead;
     }
   } catch (_) {
-    _track(ref, HistorySetupResult.failed, from);
+    _track(ref, HistorySetupResult.failed, from, why: EngineWhy.other);
     return HistoryOn.phoneInstead;
   }
   return _publish(ref, connectionId, from, HistorySetupResult.installed);
@@ -182,5 +226,9 @@ Future<void> markHistoryTurnedOn(WidgetRef ref, HistorySetupFrom from) => ref
       HistorySetupFrom.sheet => ProTrialFrom.sheet,
     });
 
-void _track(WidgetRef ref, HistorySetupResult r, HistorySetupFrom from) =>
-    ref.read(analyticsProvider).track(HistorySetup(r, from: from));
+void _track(
+  WidgetRef ref,
+  HistorySetupResult r,
+  HistorySetupFrom from, {
+  EngineWhy? why,
+}) => ref.read(analyticsProvider).track(HistorySetup(r, from: from, why: why));

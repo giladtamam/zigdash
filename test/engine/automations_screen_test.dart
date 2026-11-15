@@ -52,15 +52,14 @@ Future<FakeLink> _pump(WidgetTester tester, EngineView view, {Map<String, Object
 const _hub = HubInfo(version: '2.8.0', externalJsAllowed: true);
 
 void main() {
-  testWidgets('not installed: explains and installs over Zigbee2MQTT', (tester) async {
+  // 3.6.2: make the automation first; the install moved to saving it
+  // (engine_on_save_test.dart).
+  testWidgets('not installed: the slim card and New automation, no install yet', (tester) async {
     final link = await _pump(tester, const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub));
-    expect(find.text('Automations run on your hub, not on your phone'), findsOneWidget);
-    expect(find.text('Your Zigbee2MQTT is version 2.8.0.'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('engine-install')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-    final save = link.published.singleWhere((p) => p.$1 == 'zigbee2mqtt/bridge/request/extension/save');
-    expect((jsonDecode(save.$2) as Map)['name'], engineExtensionName);
+    expect(find.textContaining('ZigDash puts it there when you save your first one'), findsOneWidget);
+    expect(find.byKey(const Key('auto-new')), findsOneWidget);
+    expect(find.byKey(const Key('engine-install')), findsNothing);
+    expect(link.published, isEmpty);
   });
 
   testWidgets('needs consent: says what happens; Not now remembers the answer', (tester) async {
