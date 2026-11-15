@@ -1,0 +1,35 @@
+# ZigDash Chat, milestone 1, on grocery-vps: its own Compose project, apart
+# from the relay's verifier and broker admin. It reaches the hub through the
+# relay with its own limited broker login (README.md, "On the VPS").
+# Nothing secret is baked in; two host folders are mounted read-only:
+#   CHAT_CONFIG_DIR   dev_bot_token, dev_allowed_chat_ids, anthropic_key,
+#                     relay_password, chat-keys.json (the encrypted keys file)
+#   CHAT_SECRETS_DIR  chat-secrets.json (the service key that opens it)
+# Every file mode 600, owned by CHAT_UID (the container runs as that user).
+name: zigdash-chat
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "5m", max-file: "3" }
+
+services:
+  chat:
+    build: ..
+    restart: unless-stopped
+    logging: *logging
+    user: "${CHAT_UID:-1000}:${CHAT_GID:-1000}"
+    read_only: true
+    environment:
+      TELEGRAM_TOKEN_FILE: /run/zigdash/dev_bot_token
+      ALLOWED_CHATS_FILE: /run/zigdash/dev_allowed_chat_ids
+      ANTHROPIC_KEY_FILE: /run/zigdash/anthropic_key
+      ZIGDASH_CHAT_KEYS: /run/zigdash/chat-keys.json
+      ZIGDASH_CHAT_SECRETS: /run/zigdash-secrets/chat-secrets.json
+      ZIGDASH_TRANSPORT: relay
+      ZIGDASH_MQTT_URL: mqtts://relay.zigdash.app:8883
+      ZIGDASH_MQTT_USER: ${CHAT_RELAY_USER:?the service's relay login}
+      ZIGDASH_MQTT_PASSWORD_FILE: /run/zigdash/relay_password
+      TIME_ZONE: ${TIME_ZONE:-Asia/Jerusalem}
+    volumes:
+      - ${CHAT_CONFIG_DIR:?a host folder}:/run/zigdash:ro
+      - ${CHAT_SECRETS_DIR:?another host folder}:/run/zigdash-secrets:ro
