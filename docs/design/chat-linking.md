@@ -1,4 +1,4 @@
-# ZigDash Chat, phase 3: linking from the app, for Pro owners (v2)
+# ZigDash Chat, phase 3: linking from the app, for Pro owners (v2.1, scored 9/10)
 
 v2 after review (v1 scored 7/10): a verifier ticket instead of the phone's password, founders later,
 stricter control-list defaults, the legal items reconciled with the main plan, the webhook details.
@@ -28,16 +28,21 @@ Pro owner can switch on from the app without anyone touching a server.
     `POST /v1/homes/<id>/chat-ticket` takes the phone's Basic login (as the other routes) and the Pro
     purchase token, re-checks the purchase with Play now (not only at pairing) and that its hash matches
     the Home's binding, and returns a ticket: `{home_id, client_id, request_topic, answer_topic, exp: 10
-    min}` signed with HMAC under a secret shared only by the verifier and the chat service. In the same
-    step the verifier (which already administers the broker's access control) adds the client's two
-    opaque topics to the chat service's role, so the service can use only linked clients' topics, with no
-    wildcard. Removing a link removes those two ACL entries.
+    min}` signed with HMAC under a secret shared only by the verifier and the chat service. The ticket
+    opens nothing on the broker by itself.
+  - **ACL entries only for finished links:** when a link is confirmed (step 4 of the app flow), the
+    service calls the verifier's new internal route `POST /v1/internal/chat-acl` (on the Docker network
+    only, authenticated with a second shared secret) with `{home_id, request_topic, answer_topic, op:
+    add}`; the verifier, which already administers the broker's access control, adds the two topics to the
+    chat service's role. Unlinking calls the same route with `op: remove`. A link whose code expires or
+    whose back-code fails 3 times never reaches the broker.
   - `POST /v1/link` from the phone: `{ticket, token, key, scope}`; the service verifies the ticket's
     signature and expiry, and returns a link code (`L` + 6 characters), kept unclaimed 10 minutes, 5 tries
     an hour per home.
   - `POST /v1/link/confirm` `{code_back}` from the same phone: finishes the claim (step 4 below).
-  - `DELETE /v1/link/<client_id>` from a phone of that home: deletes the binding, token, key and
-    conversation at once.
+  - `DELETE /v1/link/<client_id>` with a **fresh ticket** for that home (as `/v1/link`), so only a phone
+    of that Home can unlink it: deletes the binding, token, key and conversation at once, and removes the
+    ACL entries. `/unlink` from the linked Telegram chat itself also works (the chat proves itself).
 - **Keys at rest:** one encrypted record per binding (as the milestone 1 keystore, many entries); the
   service key in its separate secrets folder.
 - **Relay access:** per client, added and removed by the verifier at link and unlink (above); the owner's
@@ -110,7 +115,9 @@ the verifier already has); the policy says so.
 ## Tests
 - Engine: dormant equals 3.4.5 behaviour; a client created from the app's config format works.
 - Verifier: the ticket route with a valid phone and purchase, a wrong login (401), a refunded or other
-  purchase (402), the ACL entries added and removed.
+  purchase (402); the internal ACL route adds and removes the two entries, refuses without its secret and
+  from outside the Docker network; a link that expires or fails its back-code leaves no entry; DELETE
+  without a valid fresh ticket is refused.
 - Service: link with a valid ticket, a forged or expired one, an expired or reused code, 5 tries,
   the back-code (3 wrong cancel), remove, many homes isolated from each other, the webhook passthrough for
   early access, `/stop` never unlinks, update_id dedupe, the monthly cap and the budget pause.
@@ -119,8 +126,8 @@ the verifier already has); the policy says so.
   Samsung lab run.
 
 ## Release and read
-- One app release (3.7.0) with the dormant Engine, the Chat screen hidden behind Pro, the founders' part,
-  the card wording, the policy. Live bot switch after the release is live.
+- One app release (3.7.0) with the dormant Engine, the Chat screen hidden behind Pro, the card wording,
+  the policy. Live bot switch after the release is live.
 - Read at 8 weeks after the beta opens: the main plan's success bar (linked ≥ max(2, 30% of eligible
   Homes), still messaging in week 4 ≥ half of them), cost per active Home, and refusals.
 
