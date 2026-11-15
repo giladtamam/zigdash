@@ -1723,5 +1723,7 @@
   "chatFailTooMany": "Troppi tentativi. Riprova tra un'ora.",
   "chatFailExpired": "Il codice è scaduto. Ricomincia.",
   "chatFailWrongCode": "Non è il codice inviato dal bot. Controllalo e riprova.",
-  "chatFailRefused": "Non ha funzionato. Riprova più tardi."
+  "chatFailRefused": "Non ha funzionato. Riprova più tardi.",
+  "chatFailNotClaimed": "Il bot non ha ancora ricevuto il codice. Apri Telegram, tocca Avvia nel bot ZigDash Home, poi inserisci il codice che ti invia.",
+  "chatFailWrongCodeLeft": "Non è il codice inviato dal bot. Tentativi rimasti: {count}."
 }

@@ -1808,5 +1808,7 @@
   "chatFailTooMany": "För många försök. Försök igen om en timme.",
   "chatFailExpired": "Koden har gått ut. Börja om.",
   "chatFailWrongCode": "Det är inte koden som boten skickade. Kontrollera den och försök igen.",
-  "chatFailRefused": "Det gick inte. Försök igen senare."
+  "chatFailRefused": "Det gick inte. Försök igen senare.",
+  "chatFailNotClaimed": "Boten har inte fått koden än. Öppna Telegram, tryck på Starta hos ZigDash Home-boten och skriv sedan koden den skickar.",
+  "chatFailWrongCodeLeft": "Det är inte koden som boten skickade. Försök kvar: {count}."
 }

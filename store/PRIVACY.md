@@ -328,7 +328,8 @@ says about the devices it asks about. Link it only if that is fine for you.
 - **Removing a link.** Remove it in **Settings › Home › Chat** (at home or
   away), or send /unlink to the bot from the linked chat. The service deletes
   that account's binding, token, key and conversation at once; your hub
-  deletes its client then, or the next time ZigDash is open at home. To ask
+  deletes its client then if the phone is at home, or else the next time
+  the Chat screen is opened at home. To ask
   for a copy of what the service holds about your Telegram account, or for
   its deletion, email the address under [Contact](#contact) with your
   Telegram chat ID or the Home ID.

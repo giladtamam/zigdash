@@ -23,6 +23,10 @@ class FakeChatApi implements ChatApi {
   ChatFail? linkFails;
   ChatFail? unlinkFails;
   String goodCode = '4821';
+  Uri? linkUrl;
+
+  /// Answers to the next confirm calls, before the code is checked.
+  final confirmFails = <ChatException>[];
   var listed = <ChatLinkInfo>[];
   final linked = <String, Map<String, String>>{};
   final tickets = <Map<String, String?>>[];
@@ -37,20 +41,23 @@ class FakeChatApi implements ChatApi {
   }
 
   @override
-  Future<String> link({required String ticket, required String token, required String key, required String scope}) async {
+  Future<ChatLinkCode> link({required String ticket, required String token, required String key, required String scope}) async {
     log.add('link $scope');
     if (linkFails != null) throw ChatException(linkFails!);
     linked[ticket] = {'token': token, 'key': key, 'scope': scope};
-    return 'LK7Q2F9';
+    return (code: 'LK7Q2F9', url: linkUrl);
   }
 
   @override
-  Future<void> confirm({required String ticket, required String codeBack}) async {
+  Future<ChatLinkInfo?> confirm({required String ticket, required String codeBack}) async {
     log.add('confirm $codeBack');
-    if (codeBack != goodCode) throw const ChatException(ChatFail.wrongCode);
+    if (confirmFails.isNotEmpty) throw confirmFails.removeAt(0);
+    if (codeBack != goodCode) throw const ChatException(ChatFail.wrongCode, triesLeft: 2);
     final id = ticket.split(':').last;
     final scope = linked.entries.firstWhere((e) => e.key.endsWith(':$id')).value['scope']!;
-    listed = [...listed, ChatLinkInfo(clientId: id, telegramName: 'Dana', scope: scope)];
+    final info = ChatLinkInfo(clientId: id, telegramName: 'Dana', scope: scope);
+    listed = [...listed, info];
+    return info;
   }
 
   @override

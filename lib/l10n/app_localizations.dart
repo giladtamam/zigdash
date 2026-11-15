@@ -10445,6 +10445,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That didn\'t work. Try again later.'**
   String get chatFailRefused;
+
+  /// No description provided for @chatFailNotClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'The bot hasn\'t got the code yet. Open Telegram, tap Start in the ZigDash Home bot, then type the code it sends.'**
+  String get chatFailNotClaimed;
+
+  /// No description provided for @chatFailWrongCodeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'That isn\'t the code the bot sent. Tries left: {count}.'**
+  String chatFailWrongCodeLeft(int count);
 }
 
 class _AppLocalizationsDelegate

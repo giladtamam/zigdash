@@ -5985,4 +5985,13 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get chatFailRefused => 'Nie udało się. Spróbuj później.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'Bot nie dostał jeszcze kodu. Otwórz Telegram, dotknij Start u bota ZigDash Home, a potem wpisz kod, który wyśle.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'To nie jest kod wysłany przez bota. Pozostałe próby: $count.';
+  }
 }

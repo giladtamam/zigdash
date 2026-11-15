@@ -1723,5 +1723,7 @@
   "chatFailTooMany": "Příliš mnoho pokusů. Zkuste to znovu za hodinu.",
   "chatFailExpired": "Platnost kódu vypršela. Začněte znovu.",
   "chatFailWrongCode": "To není kód, který poslal bot. Zkontrolujte ho a zkuste to znovu.",
-  "chatFailRefused": "Nepovedlo se. Zkuste to později."
+  "chatFailRefused": "Nepovedlo se. Zkuste to později.",
+  "chatFailNotClaimed": "Bot kód ještě nedostal. Otevřete Telegram, u bota ZigDash Home klepněte na Spustit a pak zadejte kód, který pošle.",
+  "chatFailWrongCodeLeft": "To není kód, který poslal bot. Zbývající pokusy: {count}."
 }

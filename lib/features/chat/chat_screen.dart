@@ -74,15 +74,16 @@ class ChatSettingsRow extends ConsumerWidget {
   }
 }
 
-String _fail(AppLocalizations l10n, ChatFail why) => switch (why) {
+String _fail(AppLocalizations l10n, ChatFail why, int? triesLeft) => switch (why) {
       ChatFail.notAtHome => l10n.chatLinkAway,
       ChatFail.engineOld => l10n.chatEngineOld,
       ChatFail.unreachable => l10n.chatFailUnreachable,
       ChatFail.login => l10n.chatFailLogin,
       ChatFail.purchase => l10n.chatFailPurchase,
       ChatFail.tooMany => l10n.chatFailTooMany,
-      ChatFail.expired => l10n.chatFailExpired,
-      ChatFail.wrongCode => l10n.chatFailWrongCode,
+      ChatFail.expired || ChatFail.ticket => l10n.chatFailExpired,
+      ChatFail.wrongCode => triesLeft == null ? l10n.chatFailWrongCode : l10n.chatFailWrongCodeLeft(triesLeft),
+      ChatFail.notClaimed => l10n.chatFailNotClaimed,
       ChatFail.refused => l10n.chatFailRefused,
     };
 
@@ -116,6 +117,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   PendingChatLink? _pending;
   bool _busy = false;
   ChatFail? _error;
+  int? _triesLeft;
   String? _notice;
   List<ChatAuditEntry>? _audit;
   bool _auditLoading = false;
@@ -159,16 +161,19 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       _links = links;
       _linksFailed = links == null;
     });
-    if (ref.read(atHomeProvider(_id))) {
-      try {
-        await _linker.tidy(_id, listed: links);
-      } catch (_) {}
-    }
+    // Hub deletions owed are done at home; clients unlinked from the chat
+    // (/unlink) are dropped here and deleted on the hub then.
+    try {
+      await _linker.tidy(_id, listed: links);
+    } catch (_) {}
   }
 
-  void _failed(ChatFail why) {
+  void _failed(ChatFail why, {int? triesLeft}) {
     _analytics.track(ChatLinkEvent(ChatLinkStep.failed, why: why.wire));
-    setState(() => _error = why);
+    setState(() {
+      _error = why;
+      _triesLeft = triesLeft;
+    });
   }
 
   bool _engineReady() {
@@ -211,11 +216,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       _error = null;
     });
     try {
-      await _linker.confirm(_id, pending, _code.text);
+      final info = await _linker.confirm(_id, pending, _code.text);
       if (!mounted) return;
       _analytics.track(const ChatLinkEvent(ChatLinkStep.linked));
       _code.clear();
       setState(() {
+        if (info != null && !(_links ?? const []).any((l) => l.clientId == info.clientId)) {
+          _links = [...?_links, info];
+          _linksFailed = false;
+        }
         _pending = null;
         _scope = 'read';
         _changed.clear();
@@ -224,11 +233,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       unawaited(_load());
     } on ChatException catch (e) {
       if (!mounted) return;
-      if (e.why == ChatFail.expired) {
+      // Wrong, not claimed yet or try again: the same link waits.
+      if (e.why == ChatFail.expired || e.why == ChatFail.ticket) {
         unawaited(_linker.abandon(_id, pending));
         setState(() => _pending = null);
       }
-      _failed(e.why);
+      _failed(e.why, triesLeft: e.triesLeft);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -500,7 +510,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         if (_error != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(_fail(l10n, _error!), key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
+            child: Text(_fail(l10n, _error!, _triesLeft), key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
           ),
         // 4. Linking writes to the hub over the home network.
         Padding(
@@ -538,7 +548,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         if (_error != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(_fail(l10n, _error!), key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
+            child: Text(_fail(l10n, _error!, _triesLeft), key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
           ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),

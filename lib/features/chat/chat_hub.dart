@@ -113,8 +113,8 @@ abstract class ChatHub {
   /// would never get it.
   Future<void> createClient(String connectionId, String clientId, String config);
 
-  /// Deletes the client on the hub (an empty retained config); false when
-  /// the phone isn't at home, so it has to wait.
+  /// Deletes the client on the hub ([ChatWire.deleteConfig], retained);
+  /// false when the phone isn't at home, so it has to wait.
   Future<bool> revokeClient(String connectionId, String clientId);
 
   /// The client's own audit entries, at home or through the relay; null
@@ -213,7 +213,7 @@ class MqttChatHub implements ChatHub {
   Future<bool> revokeClient(String connectionId, String clientId) async {
     final mgr = await _atHome(connectionId);
     if (mgr == null) return false;
-    mgr.publish(ChatWire.clientTopic(clientId), '', '', qos: mc.MqttQos.atLeastOnce, retain: true);
+    mgr.publish(ChatWire.clientTopic(clientId), ChatWire.deleteConfig, '', qos: mc.MqttQos.atLeastOnce, retain: true);
     return true;
   }
 

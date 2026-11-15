@@ -13,9 +13,13 @@ import '../../remote/remote_seal.dart';
 abstract final class ChatWire {
   static final _random = Random.secure();
 
-  /// Where a Chat client's config goes, retained, on the home broker; an
-  /// empty retained payload deletes the client (the Engine forgets it).
+  /// Where a Chat client's config goes, retained, on the home broker.
   static String clientTopic(String clientId) => 'zigdash/chat/clients/$clientId';
+
+  /// Deletes a client when published retained on [clientTopic]. Unlike an
+  /// empty payload it waits for an Engine that is off at the time; the
+  /// Engine clears it after applying it.
+  static const deleteConfig = '{"v":1,"delete":true}';
 
   static String requestTopic(String clientId) => 'zigdash/chat/req/$clientId';
   static String answerTopic(String clientId) => 'zigdash/chat/res/$clientId';

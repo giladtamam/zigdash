@@ -5900,4 +5900,13 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get chatFailRefused => 'זה לא עבד. אפשר לנסות שוב מאוחר יותר.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'הבוט עוד לא קיבל את הקוד. פתחו את טלגרם, הקישו \"התחל\" בבוט ZigDash Home, ואז הקלידו את הקוד שהוא שולח.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'זה לא הקוד שהבוט שלח. ניסיונות שנשארו: $count.';
+  }
 }

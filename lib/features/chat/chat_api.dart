@@ -37,6 +37,12 @@ enum ChatFail {
   /// The 4-digit code from Telegram was wrong.
   wrongCode('wrong_code'),
 
+  /// Nobody has sent the link code to the bot yet: Telegram first.
+  notClaimed('not_claimed'),
+
+  /// The ticket ran out between steps; a fresh one is asked for once.
+  ticket('ticket'),
+
   /// Anything else the service refused.
   refused('refused');
 
@@ -45,8 +51,12 @@ enum ChatFail {
 }
 
 class ChatException implements Exception {
-  const ChatException(this.why);
+  const ChatException(this.why, {this.triesLeft});
   final ChatFail why;
+
+  /// For a wrong back-code: how many tries are left before the link is
+  /// cancelled.
+  final int? triesLeft;
 
   @override
   String toString() => 'ChatException(${why.wire})';
@@ -81,6 +91,9 @@ class ChatLinkInfo {
   }
 }
 
+/// A link code from the service, and the Telegram link it gave for it.
+typedef ChatLinkCode = ({String code, Uri? url});
+
 /// The relay's ticket route and the chat service's link routes
 /// (chat-linking.md §2). Every method throws [ChatException].
 abstract class ChatApi {
@@ -88,45 +101,63 @@ abstract class ChatApi {
   Future<String> ticket(String connectionId, {String? clientId, String? requestTopic, String? answerTopic});
 
   /// Hands the client's token and key to the service; returns the link code.
-  Future<String> link({required String ticket, required String token, required String key, required String scope});
+  Future<ChatLinkCode> link({required String ticket, required String token, required String key, required String scope});
 
-  /// Finishes the claim with the 4-digit code Telegram showed.
-  Future<void> confirm({required String ticket, required String codeBack});
+  /// Finishes the claim with the 4-digit code Telegram showed; the linked
+  /// account as the service now lists it, or null when it was linked already.
+  Future<ChatLinkInfo?> confirm({required String ticket, required String codeBack});
 
   Future<void> unlink({required String ticket, required String clientId});
 
   Future<List<ChatLinkInfo>> links({required String ticket});
 }
 
-ChatFail _failOf(int status, Object? body, {ChatFail other = ChatFail.refused}) {
+/// The service's `{error}` names first (tool/zigdash-chat/README.md), then
+/// the status. Only `wrong_code` ever reads as a wrong code.
+ChatFail _failOf(int status, Object? body) {
   final error = body is Map ? body['error'] : null;
   switch (error) {
     case 'wrong_code':
       return ChatFail.wrongCode;
+    case 'not_claimed':
+      return ChatFail.notClaimed;
     case 'expired' || 'cancelled' || 'unknown_code':
       return ChatFail.expired;
+    case 'bad_ticket' || 'ticket_expired':
+      return ChatFail.ticket;
     case 'too_many':
       return ChatFail.tooMany;
+    // The same code works again.
+    case 'try_again':
+      return ChatFail.unreachable;
   }
   return switch (status) {
-    0 => ChatFail.unreachable,
+    0 || 502 || 503 || 504 => ChatFail.unreachable,
     401 => ChatFail.login,
     402 => ChatFail.purchase,
     404 || 410 => ChatFail.expired,
     429 => ChatFail.tooMany,
-    _ => other,
+    _ => ChatFail.refused,
   };
 }
 
+ChatException _exceptionOf(int status, Object? body) {
+  final left = body is Map ? body['tries_left'] : null;
+  return ChatException(_failOf(status, body), triesLeft: left is num ? left.toInt() : null);
+}
+
 class HttpChatApi implements ChatApi {
-  HttpChatApi(this._remote, {HttpClient? http}) : _http = http ?? HttpClient();
+  HttpChatApi(this._remote, {HttpClient? http, String base = chatApiBase})
+      : _http = http ?? HttpClient(),
+        _base = base;
 
   final RemoteSetup _remote;
   final HttpClient _http;
+  final String _base;
 
   Future<(int, Object?)> _call(String method, String path, {Map<String, Object?>? body, String? ticket}) async {
     try {
-      final req = await _http.openUrl(method, Uri.parse('$chatApiBase$path')).timeout(const Duration(seconds: 15));
+      final req = await _http.openUrl(method, Uri.parse('$_base$path')).timeout(const Duration(seconds: 15));
       req.headers.contentType = ContentType.json;
       if (ticket != null) req.headers.set('X-Chat-Ticket', ticket);
       if (body != null) req.write(jsonEncode(body));
@@ -154,26 +185,35 @@ class HttpChatApi implements ChatApi {
   }
 
   @override
-  Future<String> link({required String ticket, required String token, required String key, required String scope}) async {
+  Future<ChatLinkCode> link({required String ticket, required String token, required String key, required String scope}) async {
     final (status, body) =
         await _call('POST', '/v1/link', body: {'ticket': ticket, 'token': token, 'key': key, 'scope': scope});
     final code = body is Map ? body['code'] : null;
-    if (status == 200 && code is String && code.isNotEmpty) return code;
+    if (status == 200 && code is String && code.isNotEmpty) {
+      final url = Uri.tryParse(body is Map ? '${body['url'] ?? ''}' : '');
+      // Only ever a Telegram link, whatever the answer says.
+      final telegram = url != null && url.scheme == 'https' && url.host == 't.me' ? url : null;
+      return (code: code, url: telegram);
+    }
     // A refused ticket here means it ran out, not a wrong login.
-    throw ChatException(status == 401 ? ChatFail.expired : _failOf(status, body));
+    final fail = _failOf(status, body);
+    throw ChatException(fail == ChatFail.login || fail == ChatFail.ticket ? ChatFail.expired : fail);
   }
 
   @override
-  Future<void> confirm({required String ticket, required String codeBack}) async {
+  Future<ChatLinkInfo?> confirm({required String ticket, required String codeBack}) async {
     final (status, body) = await _call('POST', '/v1/link/confirm', body: {'ticket': ticket, 'code_back': codeBack});
-    if (status == 200) return;
-    throw ChatException(_failOf(status, body, other: ChatFail.wrongCode));
+    if (status == 200) return ChatLinkInfo.fromJson(body);
+    if (status == 409 && body is Map && body['error'] == 'already_linked') return null;
+    // A refused ticket at this step is one that ran out: asked again once.
+    if (status == 401) throw const ChatException(ChatFail.ticket);
+    throw _exceptionOf(status, body);
   }
 
   @override
   Future<void> unlink({required String ticket, required String clientId}) async {
     final (status, body) = await _call('DELETE', '/v1/link/${Uri.encodeComponent(clientId)}', ticket: ticket);
-    // Already gone counts as removed.
+    // Gone already (404 not_linked) counts as removed; 403 wrong_client doesn't.
     if (status == 200 || status == 204 || status == 404) return;
     throw ChatException(_failOf(status, body));
   }

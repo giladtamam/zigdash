@@ -29,7 +29,14 @@ bool engineHasChat(EngineReport? report) {
 
 /// A link waiting for the 4-digit code Telegram shows.
 class PendingChatLink {
-  PendingChatLink({required this.client, required this.code, required this.ticket, required this.ticketAt, required this.topics});
+  PendingChatLink({
+    required this.client,
+    required this.code,
+    required this.ticket,
+    required this.ticketAt,
+    required this.topics,
+    this.url,
+  });
 
   final LocalChatClient client;
 
@@ -39,7 +46,10 @@ class PendingChatLink {
   DateTime ticketAt;
   final ({String req, String res}) topics;
 
-  Uri get telegram => Uri.parse('https://t.me/$chatBotName?start=$code');
+  /// The service's t.me link for the code, if it gave one.
+  final Uri? url;
+
+  Uri get telegram => url ?? Uri.parse('https://t.me/$chatBotName?start=$code');
 }
 
 /// Links, lists and removes Chat accounts for a Home (chat-linking.md §3):
@@ -101,27 +111,46 @@ class ChatLinker {
           controls: client.scope == 'control' ? controls : const [],
         ),
       );
-      final code = await _api.link(ticket: ticket, token: client.token, key: base64.encode(client.key), scope: client.scope);
-      return PendingChatLink(client: client, code: code, ticket: ticket, ticketAt: _now(), topics: topics);
+      final link = await _api.link(ticket: ticket, token: client.token, key: base64.encode(client.key), scope: client.scope);
+      return PendingChatLink(
+          client: client, code: link.code, url: link.url, ticket: ticket, ticketAt: _now(), topics: topics);
     } catch (_) {
       await _dropClient(connectionId, client.clientId);
       rethrow;
     }
   }
 
-  /// Step 4: the code Telegram showed. Throws [ChatException]
-  /// (`wrongCode`, or `expired` after 3 wrong ones or 10 minutes).
-  Future<void> confirm(String connectionId, PendingChatLink link, String codeBack) async {
-    if (_now().difference(link.ticketAt) > ticketFor) {
-      link.ticket = await _api.ticket(connectionId,
-          clientId: link.client.clientId, requestTopic: link.topics.req, answerTopic: link.topics.res);
-      link.ticketAt = _now();
+  Future<void> _freshTicket(String connectionId, PendingChatLink link) async {
+    link.ticket = await _api.ticket(connectionId,
+        clientId: link.client.clientId, requestTopic: link.topics.req, answerTopic: link.topics.res);
+    link.ticketAt = _now();
+  }
+
+  /// Step 4: the code Telegram showed; the linked account, when the service
+  /// says. Throws [ChatException]: `wrongCode` (with the tries left),
+  /// `notClaimed` (Telegram first), `unreachable` (the same code works
+  /// again), or `expired` after 3 wrong ones or 10 minutes.
+  Future<ChatLinkInfo?> confirm(String connectionId, PendingChatLink link, String codeBack) async {
+    if (_now().difference(link.ticketAt) > ticketFor) await _freshTicket(connectionId, link);
+    ChatLinkInfo? info;
+    try {
+      info = await _api.confirm(ticket: link.ticket, codeBack: codeBack.trim());
+    } on ChatException catch (e) {
+      if (e.why != ChatFail.ticket) rethrow;
+      // The ticket ran out anyway: once more with a fresh one.
+      await _freshTicket(connectionId, link);
+      try {
+        info = await _api.confirm(ticket: link.ticket, codeBack: codeBack.trim());
+      } on ChatException catch (e) {
+        if (e.why == ChatFail.ticket) throw const ChatException(ChatFail.expired);
+        rethrow;
+      }
     }
-    await _api.confirm(ticket: link.ticket, codeBack: codeBack.trim());
     await _save(connectionId, (r) => ChatHomeRecord(
           clients: [for (final c in r.clients) c.clientId == link.client.clientId ? c.confirm() : c],
           revokeOnHub: r.revokeOnHub,
         ));
+    return info;
   }
 
   /// A link left before it was confirmed: the service lets the code run
@@ -153,19 +182,20 @@ class ChatLinker {
     return !(await _store.read(connectionId)).revokeOnHub.contains(clientId);
   }
 
-  /// At home: the hub deletions owed, and links never confirmed (the code
-  /// ran out, the app was closed) that the service doesn't list.
+  /// The hub deletions owed (done when the hub is reachable, that is at
+  /// home), and clients this phone made that the service no longer lists:
+  /// unlinked from the chat itself (/unlink), or never confirmed (the code
+  /// ran out, the app was closed) after [abandonedAfter].
   Future<void> tidy(String connectionId, {required List<ChatLinkInfo>? listed}) async {
     final record = await _store.read(connectionId);
     final owed = {...record.revokeOnHub};
     final listedIds = listed?.map((l) => l.clientId).toSet();
     final keep = <LocalChatClient>[];
     for (final c in record.clients) {
-      final abandoned = !c.confirmed &&
-          listedIds != null &&
+      final gone = listedIds != null &&
           !listedIds.contains(c.clientId) &&
-          _now().difference(c.created) > abandonedAfter;
-      if (abandoned) {
+          (c.confirmed || _now().difference(c.created) > abandonedAfter);
+      if (gone) {
         owed.add(c.clientId);
       } else {
         keep.add(c);

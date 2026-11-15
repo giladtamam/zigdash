@@ -214,6 +214,57 @@ void main() {
     expect((await store.read('c1')).clients, isEmpty);
   });
 
+  test('a ticket that ran out at confirm is asked for again once; the code still works', () async {
+    final p = await linker.start('c1', scope: 'read', controls: const [], atHome: true, engineReady: true);
+    api.confirmFails.add(const ChatException(ChatFail.ticket));
+    log.clear();
+    final info = await linker.confirm('c1', p, '4821');
+    expect(log, ['confirm 4821', 'ticket ${p.client.clientId}', 'confirm 4821']);
+    expect(info!.telegramName, 'Dana');
+    expect((await store.read('c1')).clients.single.confirmed, isTrue);
+  });
+
+  test('not claimed, try again and a wrong code keep the link waiting; only wrong_code is a wrong code', () async {
+    final p = await linker.start('c1', scope: 'read', controls: const [], atHome: true, engineReady: true);
+    api.confirmFails.addAll([const ChatException(ChatFail.notClaimed), const ChatException(ChatFail.unreachable)]);
+    await expectLater(linker.confirm('c1', p, '4821'), throwsA(isA<ChatException>().having((e) => e.why, 'why', ChatFail.notClaimed)));
+    await expectLater(linker.confirm('c1', p, '4821'), throwsA(isA<ChatException>().having((e) => e.why, 'why', ChatFail.unreachable)));
+    await expectLater(linker.confirm('c1', p, '1111'),
+        throwsA(isA<ChatException>().having((e) => e.triesLeft, 'triesLeft', 2)));
+    expect(hub.configs.keys, [p.client.clientId]);
+    await linker.confirm('c1', p, '4821');
+  });
+
+  test('a client unlinked from the chat (/unlink): deleted on the hub at home, queued while away', () async {
+    final a = await linker.start('c1', scope: 'read', controls: const [], atHome: true, engineReady: true);
+    await linker.confirm('c1', a, '4821');
+    final b = await linker.start('c1', scope: 'read', controls: const [], atHome: true, engineReady: true);
+    await linker.confirm('c1', b, '4821');
+    // Both unlinked in Telegram; the phone is away.
+    api.listed = [];
+    hub.atHome = false;
+    await linker.tidy('c1', listed: await linker.links('c1'));
+    var record = await store.read('c1');
+    expect(record.clients, isEmpty);
+    expect(record.revokeOnHub, {a.client.clientId, b.client.clientId});
+    expect(hub.configs, hasLength(2));
+    // Home again.
+    hub.atHome = true;
+    await linker.tidy('c1', listed: await linker.links('c1'));
+    record = await store.read('c1');
+    expect(record.revokeOnHub, isEmpty);
+    expect(hub.configs, isEmpty);
+  });
+
+  test('a confirmed client the service still lists is kept', () async {
+    final a = await linker.start('c1', scope: 'read', controls: const [], atHome: true, engineReady: true);
+    await linker.confirm('c1', a, '4821');
+    now = now.add(const Duration(days: 30));
+    await linker.tidy('c1', listed: await linker.links('c1'));
+    expect((await store.read('c1')).clients, hasLength(1));
+    expect(hub.configs, hasLength(1));
+  });
+
   test('What Chat did: one sealed audit request per linked client, newest first', () async {
     final a = await linker.start('c1', scope: 'read', controls: const [], atHome: true, engineReady: true);
     await linker.confirm('c1', a, '4821');

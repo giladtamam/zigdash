@@ -65,18 +65,19 @@ Future<_Page> _open(
   String engine = '3.7.0',
   List<ChatLinkInfo> listed = const [],
   Widget? child,
+  _Page? reuse,
 }) async {
   tester.view.physicalSize = const Size(1080, 6000);
   tester.view.devicePixelRatio = 2.5;
   addTearDown(tester.view.reset);
   SharedPreferences.setMockInitialValues({'analytics_consent': true});
   final p = await SharedPreferences.getInstance();
-  final log = <String>[];
-  final api = FakeChatApi(log)..listed = [...listed];
-  final hub = FakeChatHub(log);
-  final store = MemoryChatStore();
-  final launched = <Uri>[];
-  final sink = _Sink();
+  final log = reuse?.log ?? <String>[];
+  final api = reuse?.api ?? (FakeChatApi(log)..listed = [...listed]);
+  final hub = reuse?.hub ?? FakeChatHub(log);
+  final store = reuse?.store ?? MemoryChatStore();
+  final launched = reuse?.launched ?? <Uri>[];
+  final sink = reuse?.sink ?? _Sink();
   final router = GoRouter(
     initialLocation: '/chat',
     routes: [
@@ -115,6 +116,9 @@ Future<_Page> _open(
   await tester.pumpAndSettle();
   return _Page(sink, api, hub, store, launched, log);
 }
+
+/// The Chat screen opened again later, with the same service, hub and phone.
+Future<_Page> _reopen(WidgetTester tester, _Page page) => _open(tester, reuse: page);
 
 bool _on(WidgetTester tester, String ieee) =>
     tester.widget<SwitchListTile>(find.byKey(Key('chat-control-$ieee'))).value;
@@ -184,7 +188,7 @@ void main() {
 
     await _code(tester, '1111');
     await _tap(tester, find.byKey(const Key('chat-confirm')));
-    expect(find.text("That isn't the code the bot sent. Check it and try again."), findsOneWidget);
+    expect(find.text("That isn't the code the bot sent. Tries left: 2."), findsOneWidget);
     expect(page.sink.sent.last, 'chat_link {step: failed, why: wrong_code}');
 
     await _code(tester, '4821');
@@ -271,6 +275,49 @@ void main() {
     page.hub.audits = null;
     await _tap(tester, find.descendant(of: find.byKey(const Key('chat-audit')), matching: find.byType(TextButton)));
     expect(find.byKey(const Key('chat-audit-failed')), findsOneWidget);
+  });
+
+  testWidgets('not claimed yet or try again: never a wrong code, and the same link waits', (tester) async {
+    final page = await _open(tester);
+    page.api.linkUrl = Uri.parse('https://t.me/ZigDashHomeDevBot?start=LK7Q2F9');
+    await _tap(tester, find.byKey(const Key('chat-link')));
+    // The service's own t.me link is the one opened.
+    expect(page.launched.single.host, 't.me');
+    expect(page.launched.single.path, '/ZigDashHomeDevBot');
+    page.api.confirmFails.addAll([
+      const ChatException(ChatFail.notClaimed),
+      const ChatException(ChatFail.unreachable),
+    ]);
+    await _code(tester, '4821');
+    await _tap(tester, find.byKey(const Key('chat-confirm')));
+    expect(find.textContaining("The bot hasn't got the code yet"), findsOneWidget);
+    expect(find.textContaining("isn't the code"), findsNothing);
+    expect(find.byKey(const Key('chat-finish')), findsOneWidget);
+    await _tap(tester, find.byKey(const Key('chat-confirm')));
+    expect(find.textContaining("Couldn't reach ZigDash's servers"), findsOneWidget);
+    expect(find.byKey(const Key('chat-finish')), findsOneWidget);
+    // The same code works again.
+    await _tap(tester, find.byKey(const Key('chat-confirm')));
+    expect(find.byKey(const Key('chat-finish')), findsNothing);
+    expect(find.text('Dana'), findsOneWidget);
+    expect(page.hub.configs, hasLength(1));
+  });
+
+  testWidgets('a client unlinked from the chat (/unlink) is deleted on the hub at home and forgotten', (tester) async {
+    final page = await _open(tester);
+    await _tap(tester, find.byKey(const Key('chat-link')));
+    await _code(tester, '4821');
+    await _tap(tester, find.byKey(const Key('chat-confirm')));
+    final id = page.hub.configs.keys.single;
+    // /unlink in Telegram: the service forgets it; the app opens again.
+    page.api.listed = [];
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    final again = await _reopen(tester, page);
+    expect(again.log.last, 'hub revoke $id');
+    expect(again.hub.configs, isEmpty);
+    expect((await again.store.read('c1')).clients, isEmpty);
+    expect(find.byKey(const Key('chat-links-none')), findsOneWidget);
   });
 
   testWidgets('a Home that is not ready says why, and remote off leads to Remote control', (tester) async {

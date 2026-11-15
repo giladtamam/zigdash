@@ -6017,4 +6017,13 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get chatFailRefused =>
       'Cela n\'a pas fonctionné. Réessayez plus tard.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'Le bot n\'a pas encore reçu le code. Ouvrez Telegram, touchez Démarrer dans le bot ZigDash Home, puis saisissez le code qu\'il envoie.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'Ce n\'est pas le code envoyé par le bot. Essais restants : $count.';
+  }
 }
