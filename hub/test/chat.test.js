@@ -1,4 +1,5 @@
-// ZigDash Chat, milestone 1: the 9.0.0-chat Engine build (hub/src/chat.js).
+// ZigDash Chat in the release Engine (3.7.0): hub/src/chat.js, built into
+// hub/zigdash-engine.js, dormant until a Chat client is linked.
 // Run: node --test hub/test/*.test.js
 'use strict';
 const test = require('node:test');
@@ -11,10 +12,7 @@ const { EventEmitter } = require('events');
 const { spawnSync } = require('child_process');
 
 process.env.ZIGBEE2MQTT_DATA = fs.mkdtempSync(path.join(os.tmpdir(), 'zigdash-chat-engine-'));
-const built = path.join(process.env.ZIGBEE2MQTT_DATA, 'zigdash-engine.js');
-const build = spawnSync(process.execPath, [path.join(__dirname, '..', 'build.mjs'), '--chat', '--out', built]);
-if (build.status !== 0) throw new Error(String(build.stderr));
-const Engine = require(built);
+const Engine = require('../zigdash-engine.js');
 const H = Engine.helpers;
 const C = Engine.chat;
 
@@ -41,10 +39,14 @@ const NAMES = {
   '0xvalve': 'Garden', '0xsiren': 'Hall', '0xtrv': 'Bedroom heating',
 };
 
-function fakeZ2m() {
+/** A Chat data file of its own for each Engine (one per test, or shared to model a restart). */
+const newChatFile = () => path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'zigdash-chat-file-')), C.CHAT_FILE);
+
+function fakeZ2m({ chatFile = newChatFile() } = {}) {
   const listeners = { mqtt: [], entity: [], published: [] };
   const published = [];
   const subscribed = [];
+  const unsubscribed = [];
   const injected = [];
   const devices = {};
   for (const [ieee, name] of Object.entries(NAMES)) {
@@ -64,9 +66,15 @@ function fakeZ2m() {
     removeListeners: () => { listeners.mqtt = []; listeners.entity = []; listeners.published = []; },
   };
   const mqtt = {
-    publish: (topic, payload, options) => { published.push({ topic: `${options.baseTopic}/${topic}`, payload, retain: options.clientOptions.retain }); return Promise.resolve(); },
+    publish: (topic, payload, options) => {
+      const full = `${options.baseTopic}/${topic}`;
+      published.push({ topic: full, payload, retain: options.clientOptions.retain, receive: options.skipReceive === false });
+      // As Zigbee2MQTT: a publish with skipReceive off comes back to the extension.
+      if (options.skipReceive === false) listeners.mqtt.forEach((cb) => cb({ topic: full, message: String(payload) }));
+      return Promise.resolve();
+    },
     subscribe: (topic) => { subscribed.push(topic); return Promise.resolve(); },
-    unsubscribe: () => Promise.resolve(),
+    unsubscribe: (topic) => { unsubscribed.push(topic); return Promise.resolve(); },
     onMessage: (topic, buf) => injected.push({ topic, payload: JSON.parse(buf.toString()) }),
   };
   const unique = () => [...new Set(Object.values(devices))];
@@ -79,8 +87,9 @@ function fakeZ2m() {
   const logger = { info() {}, warning() {}, error() {}, debug() {} };
   const engine = new Engine(zigbee, mqtt, {}, null, eventBus, null, null, null, settings, logger);
   engine.readRemoteConfig = () => null;
+  engine.chatFilePath = () => chatFile;
   return {
-    engine, published, injected, devices, subscribed,
+    engine, published, injected, devices, subscribed, unsubscribed, chatFile,
     mqttIn: (topic, message) => listeners.mqtt.forEach((cb) => cb({ topic, message })),
     device: (ieee, message) => listeners.entity.forEach((cb) => cb({ entity: devices[ieee], message })),
     at: (topic) => { const m = published.filter((p) => p.topic === topic).at(-1); return m && m.payload; },
@@ -119,21 +128,141 @@ async function home(t, over) {
 
 // ---------- the build ----------
 
-test('chat build: version 9.0.0-chat, above any release, and the release build has no chat code', () => {
-  assert.equal(Engine.ENGINE_VERSION, '9.0.0-chat');
+test('release build: version 3.7.0, with the chat code, as the app reads it', () => {
+  assert.equal(Engine.ENGINE_VERSION, '3.7.0');
   const release = fs.readFileSync(path.join(__dirname, '..', 'zigdash-engine.js'), 'utf8');
-  const version = /const ENGINE_VERSION = '([^']+)'/.exec(release)[1];
-  assert.notEqual(version, '9.0.0-chat');
-  assert.ok(+version.split('.')[0] < 9, 'the app must see 9.0.0-chat as newer than what it bundles');
-  assert.ok(!release.includes('zigdash/chat') && !release.includes('chatRequest'), 'no chat code in the release Engine');
   // The app reads the version with this exact pattern (lib/engine/engine_status.dart).
-  assert.equal(/const ENGINE_VERSION = '([^']+)'/.exec(fs.readFileSync(built, 'utf8'))[1], '9.0.0-chat');
+  assert.equal(/const ENGINE_VERSION = '([^']+)'/.exec(release)[1], '3.7.0');
+  assert.ok(release.includes('zigdash/chat') || release.includes('chatRequest'));
+  assert.equal(typeof Engine.prototype.chatRequest, 'function');
 });
 
-test('chat build: subscribes to its topics as well as everything the release Engine does', async (t) => {
-  const { z } = await home(t);
-  assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/chat/#', 'zigdash/history/#', 'zigdash/remote/set']);
-  assert.equal(JSON.parse(z.at('zigdash/automations/state')).engine, '9.0.0-chat');
+test('legacy --chat build: the same Engine as 9.0.0-chat', () => {
+  const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'zigdash-chat-legacy-')), 'zigdash-engine.js');
+  const r = spawnSync(process.execPath, [path.join(__dirname, '..', 'build.mjs'), '--chat', '--out', out]);
+  assert.equal(r.status, 0, String(r.stderr));
+  const legacy = fs.readFileSync(out, 'utf8');
+  const release = fs.readFileSync(path.join(__dirname, '..', 'zigdash-engine.js'), 'utf8');
+  assert.equal(/const ENGINE_VERSION = '([^']+)'/.exec(legacy)[1], '9.0.0-chat');
+  assert.equal(legacy.replace("'9.0.0-chat'", "'3.7.0'"), release);
+});
+
+// ---------- dormant until linked ----------
+
+test('dormant: subscribes only to the client config topic, beside everything the 3.4.5 Engine does', async (t) => {
+  const z = fakeZ2m();
+  await z.engine.start();
+  t.after(() => z.engine.stop());
+  assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/chat/clients/+', 'zigdash/history/#', 'zigdash/remote/set']);
+  assert.equal(JSON.parse(z.at('zigdash/automations/state')).engine, '3.7.0');
+  assert.equal(z.engine.chat.active, false);
+});
+
+test('dormant: a request, an audit or a day record does nothing; no data file', async (t) => {
+  const z = fakeZ2m();
+  await z.engine.start();
+  t.after(() => z.engine.stop());
+  const before = z.published.length;
+  z.mqttIn('zigdash/chat/req/tg1', sealReq(request('home_summary')));
+  z.mqttIn('zigdash/chat/audit', JSON.stringify([{ at: '2026-11-14T10:00:00.000Z', client: 'tg1', tool: 'x', result: 'sent' }]));
+  z.mqttIn('zigdash/history/0xdoor/battery/2026-11-14', JSON.stringify({ v: 1, unit: '%', b: [[0, 50, 49, 51]] }));
+  assert.equal(z.published.length, before, 'no answer, no "not linked", no audit');
+  assert.equal(z.engine.chat.history.size, 0);
+  assert.deepEqual(z.engine.chat.audit, []);
+  assert.ok(!fs.existsSync(z.chatFile));
+});
+
+test('dormant: with remote on, nothing chat is subscribed on the relay', async (t) => {
+  const z = fakeZ2m();
+  const relay = fakeRelay();
+  z.engine.mqttConnect = () => relay;
+  z.engine.remoteWipeMs = 10;
+  await z.engine.start();
+  t.after(() => z.engine.stop());
+  z.mqttIn('zigdash/remote/set', JSON.stringify(remoteCfg));
+  relay.emit('connect');
+  assert.deepEqual(relay.subscribed.map((s) => s.topic), ['homes/h1/c']);
+});
+
+// ---------- the client config: taken into the data folder, cleared on the broker ----------
+
+test('config: taken into the data folder (mode 600) and the retained copy cleared, without deleting the client', async (t) => {
+  const { z, ask } = await home(t);
+  const clear = z.published.filter((p) => p.topic === 'zigdash/chat/clients/tg1');
+  assert.deepEqual(clear.map((p) => [p.payload, p.retain, p.receive]), [['', true, true]], 'cleared once, retained, heard back');
+  assert.equal(ask('home_summary').ok, true, 'the echo of the clear is not a delete');
+  assert.equal(fs.statSync(z.chatFile).mode & 0o777, 0o600);
+  const saved = JSON.parse(fs.readFileSync(z.chatFile, 'utf8'));
+  assert.deepEqual(Object.keys(saved.clients), ['tg1']);
+  assert.equal(saved.clients.tg1.hash, C.chatSha256(TOKEN));
+  assert.equal(saved.clients.tg1.key, KEY.toString('base64'));
+  assert.deepEqual(saved.clients.tg1.controls.length, 8);
+  assert.ok(!JSON.stringify(saved).includes(TOKEN), 'the token itself is never on the hub');
+  // Once active: requests, the audit, and the recorded days read once more.
+  assert.deepEqual(z.subscribed.filter((s) => s.startsWith('zigdash/chat/') || s === 'zigdash/history/+/+/+').sort(),
+    ['zigdash/chat/audit', 'zigdash/chat/clients/+', 'zigdash/chat/req/+', 'zigdash/history/+/+/+']);
+});
+
+test('config: the app\'s config format makes a working client (published once, retained)', async (t) => {
+  const z = fakeZ2m();
+  await z.engine.start();
+  t.after(() => z.engine.stop());
+  const key = crypto.randomBytes(32);
+  const token = crypto.randomBytes(32).toString('base64url');
+  z.mqttIn('zigdash/chat/clients/tg-a1b2c3', JSON.stringify({ v: 1, name: 'Dana', hash: C.chatSha256(token), key: key.toString('base64'), scope: 'read', controls: [] }));
+  const req = { id: newId(), at: Date.now(), token, tool: 'list_devices', args: {} };
+  z.mqttIn('zigdash/chat/req/tg-a1b2c3', H.seal(key, req).toString('base64'));
+  const res = z.published.filter((p) => p.topic === 'zigdash/chat/res/tg-a1b2c3').map((p) => H.unseal(key, Buffer.from(String(p.payload), 'base64')));
+  assert.equal(res.length, 1);
+  assert.equal(res[0].ok, true);
+  assert.equal(res[0].result.devices.find((d) => d.name === 'Hallway light').chat, 'read only: this chat can only read');
+});
+
+test('config: after a restart the client comes back from the data folder', async (t) => {
+  const first = await home(t);
+  await first.z.engine.stop();
+  const z = fakeZ2m({ chatFile: first.z.chatFile });
+  await z.engine.start();
+  t.after(() => z.engine.stop());
+  assert.equal(z.engine.chat.active, true);
+  assert.ok(z.subscribed.includes('zigdash/chat/req/tg1') || z.subscribed.includes('zigdash/chat/req/+'));
+  assert.ok(!z.subscribed.includes('zigdash/history/+/+/+'), 'at start the usual history subscription brings the days');
+  z.engine.clock = () => new Date('2026-11-15T10:00:00Z');
+  z.mqttIn('zigdash/history/0xdoor/battery/2026-11-14', JSON.stringify({ v: 1, unit: '%', b: [[0, 50, 49, 51]] }));
+  const req = request('get_history', { device: 'Front door', property: 'battery', days: 2 });
+  z.mqttIn('zigdash/chat/req/tg1', sealReq(req));
+  const answer = z.published.filter((p) => p.topic === 'zigdash/chat/res/tg1').map((p) => H.unseal(KEY, Buffer.from(String(p.payload), 'base64'))).find((r) => r && r.id === req.id);
+  assert.equal(answer.ok, true);
+  assert.equal(answer.result.days[0].buckets[0].avg, 50);
+});
+
+test('config: {v:1, delete:true} deletes the client, clears the copy, and the file goes with the last client', async (t) => {
+  const { z, send, responses } = await home(t);
+  z.mqttIn('zigdash/chat/clients/tg1', JSON.stringify({ v: 1, delete: true }));
+  assert.ok(!fs.existsSync(z.chatFile));
+  assert.equal(z.published.filter((p) => p.topic === 'zigdash/chat/clients/tg1' && p.payload === '').length, 2);
+  send(request('home_summary'));
+  assert.deepEqual(JSON.parse(String(responses().at(-1).payload)), { error: 'not_linked' });
+});
+
+test('config: an empty payload from the app deletes; an unusable config is cleared too', async (t) => {
+  const { z, send, responses } = await home(t);
+  z.mqttIn('zigdash/chat/clients/tg1', '');
+  assert.ok(!fs.existsSync(z.chatFile));
+  send(request('home_summary'));
+  assert.deepEqual(JSON.parse(String(responses().at(-1).payload)), { error: 'not_linked' });
+  z.mqttIn('zigdash/chat/clients/tg9', JSON.stringify({ v: 1, hash: 'short', key: 'x' }));
+  assert.deepEqual(z.published.filter((p) => p.topic === 'zigdash/chat/clients/tg9').map((p) => p.payload), ['']);
+  assert.ok(!fs.existsSync(z.chatFile));
+});
+
+test('config: an echo of the clear that never comes back does not eat a later delete', async (t) => {
+  const { z, send, responses } = await home(t);
+  // Our clear came back already (the fake echoes); pretend one more is outstanding but stale.
+  z.engine.chat.clearing.set('tg1', { n: 1, until: Date.now() - 1 });
+  z.mqttIn('zigdash/chat/clients/tg1', '');
+  send(request('home_summary'));
+  assert.deepEqual(JSON.parse(String(responses().at(-1).payload)), { error: 'not_linked' });
 });
 
 // ---------- reading ----------
@@ -336,11 +465,12 @@ test('chat: the audit log is retained on the broker, newest first, at most 200',
 });
 
 test('chat: the audit kept on the broker survives an Engine restart', async (t) => {
-  const z = fakeZ2m();
+  const first = await home(t);
+  await first.z.engine.stop();
+  const z = fakeZ2m({ chatFile: first.z.chatFile });
   await z.engine.start();
   t.after(() => z.engine.stop());
   z.mqttIn('zigdash/chat/audit', JSON.stringify([{ at: '2026-11-14T10:00:00.000Z', client: 'tg1', tool: 'set_device', device: 'Desk lamp', result: 'sent' }]));
-  z.mqttIn('zigdash/chat/clients/tg1', clientConfig());
   z.mqttIn('zigdash/chat/req/tg1', sealReq(request('set_device', { device: 'Freezer plug', command: { state: 'OFF' } })));
   const log = JSON.parse(z.at('zigdash/chat/audit'));
   assert.equal(log.length, 2);

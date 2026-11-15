@@ -33,7 +33,11 @@
 // homes/<id>/c and are accepted only for <base>/.../set|get and automation rules,
 // within five minutes of being sealed. Presence: homes/<id>/hub online/offline.
 //
-// This file is BUILT from hub/src/engine.js by hub/build.mjs. Edit the source.
+// Chat (3.7.0, docs/design/chat-linking.md): hub/src/chat.js is appended by the
+// build. It stays dormant, subscribed to zigdash/chat/clients/+ only, until a
+// Chat client is linked; see the top of that part.
+//
+// This file is BUILT from hub/src/engine.js and hub/src/chat.js by hub/build.mjs. Edit the sources.
 //
 // Safety: Zigbee2MQTT has no crash guard, so every callback and timer here is wrapped.
 // After three caught errors within an hour the engine stops running rules (a flag file
@@ -41,7 +45,7 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.4.5';
+const ENGINE_VERSION = '3.7.0';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
 const STATE_EVERY_MS = 30000;
