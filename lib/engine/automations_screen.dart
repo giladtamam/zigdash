@@ -120,6 +120,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   /// The Install button under "None of these run yet": the waiting rules'
   /// switches, then install.
   Future<void> _installTapped() async {
+    // Add-ons blocked meanwhile: the consent screen shows; never install past it.
+    if (ref.read(engineViewProvider(widget.connectionId)).valueOrNull?.phase != HubEnginePhase.notInstalled) return;
     final rules = waitingRules(ref, widget.connectionId);
     if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
     _track(EngineStep.installTapped);
@@ -134,36 +136,23 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     await _consent();
   }
 
-  bool _homeBatchSeen = false;
-
-  /// 3.6.2: rules saved away from home reach the hub's broker now, and the
-  /// install sheet opens by itself, once per batch (the batch is cleared
-  /// first, so a closed sheet doesn't come back). Never installs untapped.
-  Future<void> _savedAwayNowHome(EngineView v) async {
-    final batch = ref.read(awaySavedRulesProvider(widget.connectionId));
-    final repo = ref.read(automationsRepoProvider);
-    for (final r in batch) {
-      if (!await repo.save(widget.connectionId, r)) return;
-    }
-    if (!mounted) return;
-    await ref.read(awaySavedRulesProvider(widget.connectionId).notifier).clear();
-    if (!mounted) return;
-    if (v.phase != HubEnginePhase.notInstalled && v.phase != HubEnginePhase.needsConsent) return;
-    final rules = [...waitingRules(ref, widget.connectionId), ...batch];
-    if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
-    if (v.phase == HubEnginePhase.needsConsent) return _consent();
-    _track(EngineStep.installTapped);
-    await _install();
-  }
-
   /// No Engine on the hub, but rules can be made (3.6.2): they wait for it.
-  bool _withoutEngine(EngineView v) => switch (v.phase) {
-        HubEnginePhase.notInstalled || HubEnginePhase.needsConsent || HubEnginePhase.tooOld => true,
-        // Away and the hub silent: unless this phone saw the Engine there.
-        HubEnginePhase.unreachable =>
-          !engineKnownInstalled(ref.read(sharedPreferencesProvider), widget.connectionId),
-        _ => false,
-      };
+  bool _withoutEngine(EngineView v) =>
+      !v.away &&
+      (v.phase == HubEnginePhase.notInstalled ||
+          v.phase == HubEnginePhase.needsConsent ||
+          v.phase == HubEnginePhase.tooOld);
+
+  /// Away and no Engine this phone has seen: automations are made at home.
+  bool _awayWithoutEngine(EngineView v) => engineAwayWithoutEngine(v,
+      knownInstalled: engineKnownInstalled(ref.read(sharedPreferencesProvider), widget.connectionId));
+
+  /// "Allow add-ons after all": back to the consent screen, with what the
+  /// restart means, before anything changes on the hub.
+  Future<void> _undecline() async {
+    await setEngineDeclined(ref.read(sharedPreferencesProvider), widget.connectionId, false);
+    if (mounted) ref.invalidate(engineViewProvider(widget.connectionId));
+  }
 
   Future<void> _decline() async {
     _track(EngineStep.declined);
@@ -202,8 +191,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   }
 
   void _newAutomation() {
-    // 3.6.2: rules kept on this phone (saved away) count too.
-    final count = waitingRules(ref, widget.connectionId).length;
+    final count = ref.read(automationsProvider(widget.connectionId)).valueOrNull?.length ?? 0;
     if (count >= freeAutomations && !ref.read(proAccessProvider)) {
       showModalBottomSheet<void>(
         context: context,
@@ -237,20 +225,6 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     final installed = view.valueOrNull?.installed ?? false;
     final v = view.valueOrNull;
     final waiting = v != null && _withoutEngine(v);
-    final savedAway = ref.watch(awaySavedRulesProvider(widget.connectionId));
-    if (v != null &&
-        savedAway.isNotEmpty &&
-        !_homeBatchSeen &&
-        !v.away &&
-        v.phase != HubEnginePhase.checking &&
-        v.phase != HubEnginePhase.unreachable &&
-        v.phase != HubEnginePhase.needsBroker) {
-      // Not while building: it saves and may open a sheet.
-      _homeBatchSeen = true;
-      Future.microtask(() {
-        if (mounted) _savedAwayNowHome(v);
-      });
-    }
     return Scaffold(
       floatingActionButton: (installed || waiting) && _busy == _Busy.none
           ? FloatingActionButton.extended(
@@ -290,7 +264,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
               _AutomationsList(
                 connectionId: widget.connectionId,
                 waiting: true,
-                onInstall: v.phase == HubEnginePhase.notInstalled && !v.away ? _installTapped : null,
+                onInstall: v.phase == HubEnginePhase.notInstalled ? _installTapped : null,
               ),
             if (_error != null) ...[
               const SizedBox(height: 12),
@@ -316,8 +290,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       case HubEnginePhase.checking:
         return [_Progress(text: l10n.engineChecking)];
       case HubEnginePhase.unreachable:
-        // 3.6.2: an Engine this phone never saw: rules can wait for it.
-        if (_withoutEngine(v)) return [const _SlimCard()];
+        // 3.6.2: an Engine this phone never saw: made at home.
+        if (_awayWithoutEngine(v)) return [const _SlimCard(away: true)];
         return [
           _Message(
             key: const Key('engine-away-unreachable'),
@@ -350,7 +324,9 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
         ];
       case HubEnginePhase.notInstalled:
         // 3.6.2: make the automation first; saving it puts the Engine on
-        // the hub (engine_sheet.dart), so the full story moved there.
+        // the hub (engine_sheet.dart), so the full story moved there. Once
+        // a rule waits, "None of these run yet" says it instead.
+        if (ref.watch(automationsProvider(widget.connectionId)).valueOrNull?.isNotEmpty ?? false) return const [];
         return [const _SlimCard()];
       case HubEnginePhase.needsConsent:
         if (v.declined) {
@@ -359,7 +335,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
             const SizedBox(height: 16),
             FilledButton.tonal(
               key: const Key('engine-allow-after-all'),
-              onPressed: _consentTapped,
+              onPressed: _undecline,
               child: Text(l10n.engineAllowAfterAll),
             ),
           ];
@@ -529,20 +505,22 @@ class _Alert extends StatelessWidget {
 
 
 /// "Automations run on your hub with ZigDash Engine…" (3.6.2): the slim
-/// card above the list while the Engine isn't on the hub.
+/// card while the Engine isn't on the hub and no rule waits for it. With
+/// [away], automations are made at home.
 class _SlimCard extends StatelessWidget {
-  const _SlimCard();
+  const _SlimCard({this.away = false});
+  final bool away;
 
   @override
   Widget build(BuildContext context) => Card(
-        key: const Key('engine-slim-card'),
+        key: Key(away ? 'engine-away-slim-card' : 'engine-slim-card'),
         margin: EdgeInsets.zero,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(context.l10n.engineSlimCard),
+              Text(away ? context.l10n.engineAwayMakeAtHome : context.l10n.engineSlimCard),
               const EngineSourceLink(),
             ],
           ),
@@ -564,9 +542,7 @@ class _AutomationsList extends ConsumerWidget {
     final l10n = context.l10n;
     final ml = MaterialLocalizations.of(context);
     final theme = Theme.of(context);
-    ref.watch(awaySavedRulesProvider(connectionId));
-    final onBroker = ref.watch(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
-    final rules = waiting ? waitingRules(ref, connectionId, onBroker: onBroker) : onBroker;
+    final rules = ref.watch(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
     final runs = waiting
         ? const <AutomationRun>[]
         : ref.watch(automationRunsProvider(connectionId)).valueOrNull ?? const <AutomationRun>[];

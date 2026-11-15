@@ -1321,9 +1321,10 @@ enum EngineStep {
 enum EngineFrom { automations, alerts, history, historyOn, save }
 
 /// Why the Engine couldn't go on the hub (3.6.2): away through the relay,
-/// no `bridge/info`, info but no `bridge/extensions`, Zigbee2MQTT too old,
-/// add-ons blocked, Zigbee2MQTT refused, or anything else.
-enum EngineWhy { relay, noInfo, noExtensions, tooOld, blocked, refused, other }
+/// no broker connection, no `bridge/info`, info but no `bridge/extensions`,
+/// Zigbee2MQTT too old, add-ons blocked, Zigbee2MQTT refused, no answer to
+/// the install, or anything else.
+enum EngineWhy { relay, noConnection, noInfo, noExtensions, tooOld, blocked, refused, noAnswer, other }
 
 class EngineEvent extends AnalyticsEvent {
   const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations, this.why});

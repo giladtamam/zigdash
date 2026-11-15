@@ -10,7 +10,9 @@ import '../../../core/router/routes.dart';
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../engine/engine_providers.dart' show setEngineDeclined;
-import '../../../engine/engine_sheet.dart' show confirmWaitingRules;
+import '../../../engine/automation.dart' show Automation;
+import '../../../engine/engine_sheet.dart'
+    show confirmWaitingRules, watchWaitingRules;
 import '../../history/app_history_recorder.dart' show historyRecordHereProvider;
 import '../../history/history_service.dart' show historyRecorderOnlineProvider;
 import '../../history/history_setup_flow.dart';
@@ -75,6 +77,10 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   /// "Use this phone instead" was tapped while the hub was checked.
   bool _phoneChosen = false;
+
+  /// The Home's rules, coming in from the first tap, for the waiting-rules
+  /// sheet before any install (consent included).
+  ProviderSubscription<AsyncValue<List<Automation>>>? _rules;
   Timer? _grace;
   late final HistorySetupFrom _from;
 
@@ -94,6 +100,7 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   @override
   void dispose() {
+    _rules?.close();
     _grace?.cancel();
     super.dispose();
   }
@@ -127,6 +134,7 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
 
   Future<void> _turnOn() async {
     _track(HistoryOnStep.tapped);
+    _rules ??= watchWaitingRules(ref, widget.connectionId);
     setState(() => _stage = _Stage.checking);
     final result = await turnOnHistory(
       ref,
@@ -167,6 +175,18 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
   }
 
   Future<void> _allow() async {
+    // Rules waiting for the Engine are asked about before the restart.
+    final go = await confirmWaitingRules(
+      context,
+      ref,
+      widget.connectionId,
+      _rules?.read().valueOrNull ?? const [],
+    );
+    if (!mounted) return;
+    if (!go) {
+      setState(() => _stage = _Stage.offer);
+      return;
+    }
     setState(() {
       _stage = _Stage.working;
       _consentFailed = false;

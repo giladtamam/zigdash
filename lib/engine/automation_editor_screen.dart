@@ -201,6 +201,13 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
     final check = await checkEngine(ref, widget.connectionId);
     if (!mounted) return;
     final view = check.view;
+    // Away with no Engine seen here: made at home (the tab says so too).
+    if (engineAwayWithoutEngine(view, knownInstalled: _knownInstalled)) {
+      return setState(() {
+        _saving = false;
+        _error = l10n.engineAwayMakeAtHome;
+      });
+    }
     final bool ok;
     var running = true;
     if (view == null || !view.installed && !(view.phase == HubEnginePhase.unreachable && _knownInstalled)) {
@@ -214,7 +221,12 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
     }
     if (!mounted) return;
     if (ok) {
-      final count = ref.read(automationsProvider(widget.connectionId)).valueOrNull?.length ?? 0;
+      // The rule may already be back from the broker (an install takes a
+      // while): count it once.
+      final count = {
+        ...?ref.read(automationsProvider(widget.connectionId)).valueOrNull?.map((r) => r.id),
+        rule.id,
+      }.length;
       ref.read(analyticsProvider).track(AutomationSaved(
         trigger: switch (rule.trigger) {
           DeviceTrigger t when t.above != null || t.below != null => 'device_reading',
@@ -226,7 +238,7 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
         action: rule.action.kind.name,
         offAfter: rule.action.offAfter > 0,
         isNew: widget.existing == null,
-        homeCount: widget.existing == null ? count + 1 : count,
+        homeCount: count,
         running: running,
       ));
       Navigator.of(context).pop();

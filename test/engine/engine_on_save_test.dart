@@ -293,18 +293,51 @@ void main() {
       await _end(tester);
     });
 
-    testWidgets('away (through the relay): Save only; this phone keeps the rule for home', (tester) async {
+    testWidgets('away (through the relay), no Engine seen: nothing saved, made at home', (tester) async {
       final rig = await _pump(tester, _editor,
           view: _view(const EngineView(phase: HubEnginePhase.unreachable, away: true)));
       await _makeAndSave(tester);
-      expect(find.textContaining('the next time this phone is home'), findsOneWidget);
+      expect(find.byKey(const Key('engine-sheet-save')), findsNothing);
+      expect(find.textContaining('Make automations at home'), findsOneWidget);
+      expect(rig.mgr.rules, isEmpty);
+      expect(rig.requests, isEmpty);
+      expect(rig.prefs.getKeys().where((k) => k.startsWith('automations.away')), isEmpty);
+      await _end(tester);
+    });
+
+    testWidgets('"Not now" to add-ons kept: no install offered, the rule kept, not running', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(
+              phase: HubEnginePhase.needsConsent,
+              hub: HubInfo(version: '2.14.0', externalJsAllowed: false),
+              declined: true)));
+      await _makeAndSave(tester);
+      expect(find.text('No automations on this hub'), findsOneWidget);
       expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
       await tester.tap(find.byKey(const Key('engine-sheet-save')));
       await tester.pumpAndSettle();
+      expect(rig.mgr.rules, hasLength(1));
       expect(rig.requests, isEmpty);
-      final kept = jsonDecode(rig.prefs.getString('automations.away.c1')!) as Map;
-      expect(kept, hasLength(1));
-      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: no'));
+      await _end(tester);
+    });
+
+    testWidgets('add-ons blocked with rules waiting: switches first, then the consent screen, then the install',
+        (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(
+              phase: HubEnginePhase.needsConsent, hub: HubInfo(version: '2.14.0', externalJsAllowed: false))),
+          rules: [_rule('old')]);
+      await _makeAndSave(tester);
+      await tester.tap(find.byKey(const Key('engine-waiting-old')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('30 seconds'), findsOneWidget);
+      expect(rig.requests, isEmpty, reason: 'nothing on the hub before the consent');
+      await tester.tap(find.byKey(const Key('engine-sheet-consent')));
+      await _settle(tester);
+      expect(rig.mgr.rules.first, ('old', false));
+      expect(rig.requests, ['options', 'restart', 'extension/save']);
       await _end(tester);
     });
 
@@ -363,6 +396,7 @@ void main() {
       final rig = await _pump(tester, tab,
           view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)), rules: [_rule('old')]);
       expect(find.text('NONE OF THESE RUN YET'), findsOneWidget);
+      expect(find.byKey(const Key('engine-slim-card')), findsNothing, reason: 'a rule waits: outdated');
       expect(find.textContaining('a broker without persistence'), findsOneWidget);
       expect(find.text('Not running'), findsOneWidget);
       await tester.tap(find.byKey(const Key('engine-install')));
@@ -390,11 +424,13 @@ void main() {
       expect(rig.mgr.rules, isEmpty);
     });
 
-    testWidgets('away, Engine never seen here: the list and New automation, no Install', (tester) async {
+    testWidgets('away, Engine never seen here: made at home; no New automation, no list', (tester) async {
       await _pump(tester, tab,
           view: _view(const EngineView(phase: HubEnginePhase.unreachable, away: true)), rules: [_rule('old')]);
-      expect(find.byKey(const Key('auto-new')), findsOneWidget);
-      expect(find.text('NONE OF THESE RUN YET'), findsOneWidget);
+      expect(find.byKey(const Key('engine-away-slim-card')), findsOneWidget);
+      expect(find.textContaining('Make automations at home'), findsOneWidget);
+      expect(find.byKey(const Key('auto-new')), findsNothing);
+      expect(find.text('NONE OF THESE RUN YET'), findsNothing);
       expect(find.byKey(const Key('engine-install')), findsNothing);
       expect(find.byKey(const Key('engine-away-unreachable')), findsNothing);
     });
@@ -407,44 +443,43 @@ void main() {
       expect(find.byKey(const Key('auto-new')), findsNothing);
     });
 
-    testWidgets('saved away, then the tab at home: the install sheet opens once; nothing installed untapped',
+    testWidgets('add-ons blocked with rules waiting: the consent screen, switches, then restart and install',
         (tester) async {
-      final away = _rule('away1', name: 'Saved on the train');
       final rig = await _pump(tester, tab,
-          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)),
-          prefs: {'automations.away.c1': jsonEncode({away.id: away.encode()})});
+          view: _view(const EngineView(
+              phase: HubEnginePhase.needsConsent, hub: HubInfo(version: '2.14.0', externalJsAllowed: false))),
+          rules: [_rule('old')]);
+      expect(find.text('Zigbee2MQTT needs one setting changed'), findsOneWidget);
+      expect(find.byKey(const Key('auto-new')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const Key('engine-consent')));
       await tester.pumpAndSettle();
-      expect(rig.mgr.rules, [('away1', true)], reason: 'now on the hub broker');
-      expect(rig.prefs.getString('automations.away.c1'), isNull);
-      expect(find.byKey(const Key('engine-sheet-install')), findsOneWidget);
-      expect(find.byKey(const Key('engine-waiting-away1')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('engine-consent')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-waiting-old')));
+      await tester.pumpAndSettle();
       expect(rig.requests, isEmpty);
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await _settle(tester);
+      expect(rig.mgr.rules, [('old', false)]);
+      expect(rig.requests, ['options', 'restart', 'extension/save']);
+    });
 
-      await tester.tap(find.byKey(const Key('engine-sheet-save'))); // Not now
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+    testWidgets('"Allow add-ons after all" goes back to the consent screen, nothing changed yet', (tester) async {
+      final views = StreamController<EngineView>.broadcast();
+      final rig = await _pump(tester, tab,
+          view: () => views.stream,
+          prefs: {'engine.declined.c1': true});
+      const hub = HubInfo(version: '2.14.0', externalJsAllowed: false);
+      views.add(const EngineView(phase: HubEnginePhase.needsConsent, hub: hub, declined: true));
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('engine-allow-after-all')));
+      await tester.pump();
+      views.add(const EngineView(phase: HubEnginePhase.needsConsent, hub: hub));
+      await tester.pump();
+      expect(find.text('Zigbee2MQTT needs one setting changed'), findsOneWidget);
+      expect(engineDeclined(rig.prefs, 'c1'), isFalse);
       expect(rig.requests, isEmpty);
-
-      // The next visit: the batch was asked about; no sheet by itself.
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpWidget(ProviderScope(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(rig.prefs),
-          automationsProvider.overrideWith((ref, _) => Stream.value([away])),
-          automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
-          connectionsStreamProvider.overrideWith((ref) => Stream.value(const [])),
-          engineViewProvider.overrideWith(
-              (ref, _) => Stream.value(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub))),
-        ],
-        child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: tab,
-        ),
-      ));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
-      expect(find.byKey(const Key('engine-install')), findsOneWidget, reason: 'the Install button stays');
+      unawaited(views.close());
     });
 
     testWidgets('Zigbee2MQTT-page home: the broker step, no New automation', (tester) async {
@@ -464,6 +499,41 @@ void main() {
       expect(find.text('3 automations are free. Want more?'), findsOneWidget);
       expect(find.text('New automation'), findsOneWidget, reason: 'the button, not the editor');
     });
+  });
+
+  // The History sheet and Alerts put the Engine on through ensureEngine.
+  group('ensureEngine (History sheet, Alerts) with rules waiting', () {
+    for (final from in [EngineFrom.history, EngineFrom.alerts]) {
+      testWidgets('from ${from.name}: switches before the install; Not now installs nothing', (tester) async {
+        EngineSetup? result;
+        final opener = Consumer(builder: (context, ref, _) => Scaffold(
+              body: TextButton(
+                onPressed: () async => result = await ensureEngine(context, ref, 'c1', from: from),
+                child: const Text('set up'),
+              ),
+            ));
+        final rig = await _pump(tester, opener,
+            view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)), rules: [_rule('old')]);
+        await tester.tap(find.text('set up'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('engine-waiting-old')), findsOneWidget);
+        await tester.tap(find.byKey(const Key('engine-sheet-save'))); // Not now
+        await tester.pumpAndSettle();
+        expect(result, EngineSetup.cancelled);
+        expect(rig.requests, isEmpty);
+
+        await tester.tap(find.text('set up'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('engine-waiting-old')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('engine-sheet-install')));
+        await _settle(tester);
+        expect(result, EngineSetup.ready);
+        expect(rig.mgr.rules, [('old', false)]);
+        expect(rig.requests, ['extension/save']);
+        expect(rig.sink.sent, contains('engine_setup {step: install_tapped, from: ${from.name}, z2m: 2.14}'));
+      });
+    }
   });
 
   group('the hub check (20 s) and why', () {
@@ -532,7 +602,8 @@ void main() {
       expect(why(HubEnginePhase.tooOld), EngineWhy.tooOld);
       expect(why(HubEnginePhase.needsConsent), EngineWhy.blocked);
       expect(installWhy(HubAnswer.refused), EngineWhy.refused);
-      expect(installWhy(HubAnswer.noAnswer), EngineWhy.blocked);
+      expect(installWhy(HubAnswer.noAnswer), EngineWhy.noAnswer);
+      expect(engineWhy((view: null, last: null)), EngineWhy.noConnection);
     });
 
     test('the source link names a release tag, never main', () {

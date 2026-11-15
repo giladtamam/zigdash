@@ -111,9 +111,11 @@ EngineWhy engineWhy(EngineCheck check) {
   final view = check.view;
   if (view == null) {
     final last = check.last;
-    if (last != null && last.away) return EngineWhy.relay;
-    if (last?.hub == null) return EngineWhy.noInfo;
-    return last!.heardExtensions ? EngineWhy.other : EngineWhy.noExtensions;
+    // No view at all: the broker connection never came up.
+    if (last == null) return EngineWhy.noConnection;
+    if (last.away) return EngineWhy.relay;
+    if (last.hub == null) return EngineWhy.noInfo;
+    return last.heardExtensions ? EngineWhy.other : EngineWhy.noExtensions;
   }
   return switch (view.phase) {
     HubEnginePhase.unreachable => EngineWhy.relay,
@@ -123,7 +125,7 @@ EngineWhy engineWhy(EngineCheck check) {
   };
 }
 
-/// Why an install failed: Zigbee2MQTT said no, or never answered (a 2.11+
-/// hub that blocks add-ons doesn't answer an extension save).
+/// Why an install failed: Zigbee2MQTT said no, or never answered (on a hub
+/// that showed add-ons allowed, so not "blocked").
 EngineWhy installWhy(HubAnswer answer) =>
-    answer == HubAnswer.refused ? EngineWhy.refused : answer == HubAnswer.noAnswer ? EngineWhy.blocked : EngineWhy.other;
+    answer == HubAnswer.refused ? EngineWhy.refused : answer == HubAnswer.noAnswer ? EngineWhy.noAnswer : EngineWhy.other;

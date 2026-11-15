@@ -39,33 +39,37 @@ enum EngineSheetKind {
   /// Zigbee2MQTT blocks add-ons: the consent screen comes first.
   consent,
 
+  /// The user said "Not now" to the consent screen on this phone: the
+  /// rule is kept, not running; "Allow add-ons after all" is on the tab.
+  declined,
+
   /// Zigbee2MQTT older than 2.4: the rule is kept, not running.
   tooOld,
-
-  /// Through the relay (which never carries Zigbee2MQTT's bridge): Save
-  /// only; ZigDash asks again when this phone is home.
-  away,
 
   /// The hub didn't say: Save only.
   noAnswer,
 }
 
+/// Never away: the editor isn't reachable there ([engineAwayWithoutEngine]).
 EngineSheetKind engineSheetKind(EngineView? view) => switch (view?.phase) {
-      null || HubEnginePhase.checking || HubEnginePhase.needsBroker => EngineSheetKind.noAnswer,
-      _ when view!.away => EngineSheetKind.away,
-      HubEnginePhase.unreachable => EngineSheetKind.away,
+      HubEnginePhase.notInstalled => EngineSheetKind.install,
+      HubEnginePhase.needsConsent => view!.declined ? EngineSheetKind.declined : EngineSheetKind.consent,
       HubEnginePhase.tooOld => EngineSheetKind.tooOld,
-      HubEnginePhase.needsConsent => EngineSheetKind.consent,
-      _ => EngineSheetKind.install,
+      _ => EngineSheetKind.noAnswer,
     };
 
-/// The Home's rules that wait for the Engine: on the broker, and saved
-/// away from home on this phone ([awaySavedRulesProvider]).
-List<Automation> waitingRules(WidgetRef ref, String connectionId, {List<Automation>? onBroker}) {
-  final away = ref.read(awaySavedRulesProvider(connectionId));
-  final rules = onBroker ?? ref.read(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
-  return {for (final r in [...rules, ...away]) r.id: r}.values.toList();
-}
+/// Away through the relay with no Engine this phone has seen (3.6.2): the
+/// relay reaches the hub's broker only through the Engine, so automations
+/// are made at home, where ZigDash can put the Engine on the hub.
+bool engineAwayWithoutEngine(EngineView? view, {required bool knownInstalled}) =>
+    view != null &&
+    !view.installed &&
+    (view.away || view.phase == HubEnginePhase.unreachable) &&
+    !knownInstalled;
+
+/// The Home's rules that wait for the Engine (on the broker).
+List<Automation> waitingRules(WidgetRef ref, String connectionId, {List<Automation>? onBroker}) =>
+    onBroker ?? ref.read(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
 
 /// Keeps the Home's rules coming in while the hub is checked, so they are
 /// there when the install asks about them (the retained rules arrive a
@@ -140,37 +144,35 @@ class _EngineSheetState extends ConsumerState<EngineSheet> {
   void _track(EngineStep step) =>
       ref.read(analyticsProvider).track(EngineEvent(step, z2m: _z2m, from: EngineFrom.save));
 
-  /// Paused rules are saved disabled before the Engine loads them.
-  Future<void> _applySwitches() async {
+  /// Paused rules are saved disabled before the Engine loads them. False
+  /// when the sheet went away meanwhile.
+  Future<bool> _applySwitches() async {
+    final repo = _repo;
     for (final r in widget.waiting) {
       final run = _run[r.id] ?? r.enabled;
-      if (run != r.enabled) await _repo.save(widget.connectionId, r.copyWith(enabled: run));
+      if (run != r.enabled) await repo.save(widget.connectionId, r.copyWith(enabled: run));
+      if (!mounted) return false;
     }
+    return true;
   }
 
-  /// Save without running (and the away, too-old and no-answer Save).
+  /// Save without running (and the declined, too-old and no-answer Save).
   Future<void> _saveOnly() async {
-    final rule = widget.rule!;
-    final ok = await _repo.save(widget.connectionId, rule);
+    final ok = await _repo.save(widget.connectionId, widget.rule!);
     if (ok) widget.onSaved?.call();
-    // Through the relay the rule never reaches the hub's broker without
-    // the Engine: this phone keeps it and saves it at home.
-    if (ok && _kind == EngineSheetKind.away) {
-      await ref.read(awaySavedRulesProvider(widget.connectionId).notifier).add(rule);
-    }
     if (mounted) Navigator.of(context).pop(EngineSaveResult(saved: ok, running: false));
   }
 
   Future<void> _installTapped() async {
     if (widget.rule == null) {
-      await _applySwitches();
-      if (mounted) Navigator.of(context).pop(true);
+      if (await _applySwitches() && mounted) Navigator.of(context).pop(true);
       return;
     }
     _track(EngineStep.installTapped);
+    final repo = _repo;
     setState(() => _stage = _Stage.installing);
-    await _applySwitches();
-    final ok = await _repo.save(widget.connectionId, widget.rule!);
+    if (!await _applySwitches()) return;
+    final ok = await repo.save(widget.connectionId, widget.rule!);
     if (ok) widget.onSaved?.call();
     if (!mounted) return;
     if (!ok) return Navigator.of(context).pop(const EngineSaveResult(saved: false, running: false));
@@ -213,8 +215,8 @@ class _EngineSheetState extends ConsumerState<EngineSheet> {
     }
     if (!mounted) return;
     if (answer != HubAnswer.ok) {
-      ref.read(analyticsProvider).track(
-          EngineEvent(EngineStep.failed, z2m: _z2m, from: EngineFrom.save, why: EngineWhy.blocked));
+      ref.read(analyticsProvider).track(EngineEvent(EngineStep.failed,
+          z2m: _z2m, from: EngineFrom.save, why: answer == HubAnswer.refused ? EngineWhy.refused : EngineWhy.blocked));
       setState(() {
         _stage = _Stage.failed;
         _error = l10n.engineConsentFailed;
@@ -315,10 +317,18 @@ class _EngineSheetState extends ConsumerState<EngineSheet> {
               FilledButton(
                   key: const Key('engine-sheet-save'), onPressed: _saveOnly, child: Text(l10n.engineSheetSaveOnly)),
             ],
-          EngineSheetKind.away || EngineSheetKind.noAnswer => [
+          EngineSheetKind.declined => [
+              Text(l10n.engineDeclinedTitle, style: theme.textTheme.titleLarge),
+              const SizedBox(height: 8),
+              Text(l10n.engineDeclinedBody),
+              const SizedBox(height: 16),
+              FilledButton(
+                  key: const Key('engine-sheet-save'), onPressed: _saveOnly, child: Text(l10n.engineSheetSaveOnly)),
+            ],
+          EngineSheetKind.noAnswer => [
               Text(l10n.engineSheetTitle, style: theme.textTheme.titleLarge),
               const SizedBox(height: 8),
-              Text(_kind == EngineSheetKind.away ? l10n.engineSheetAway : l10n.engineSheetNoAnswer),
+              Text(l10n.engineSheetNoAnswer),
               const SizedBox(height: 16),
               FilledButton(
                   key: const Key('engine-sheet-save'), onPressed: _saveOnly, child: Text(l10n.engineSheetSave)),

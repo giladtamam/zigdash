@@ -420,6 +420,81 @@ void main() {
     });
   });
 
+  group('3.6.2: consent and rules waiting for the Engine', () {
+    const blocked = EngineView(
+      phase: HubEnginePhase.needsConsent,
+      hub: HubInfo(version: '2.14.0', externalJsAllowed: false),
+    );
+    const heater = Automation(
+      id: 'heater',
+      name: 'Heater at 7',
+      enabled: true,
+      trigger: TimeTrigger(at: '07:00'),
+      action: AutomationAction(
+        kind: ActionKind.device,
+        commands: [
+          EngineCommand(ieee: '0xh', payload: {'state': 'ON'}),
+        ],
+      ),
+    );
+
+    Future<_Rig> toConsent(WidgetTester tester) async {
+      final rig = await _pump(tester, view: blocked, rules: [heater]);
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('history-on-allow')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('engine-waiting-heater')), findsOneWidget);
+      return rig;
+    }
+
+    testWidgets('Allow: the waiting rules first; Not now goes back to the offer', (
+      tester,
+    ) async {
+      final rig = await toConsent(tester);
+      await tester.tap(find.byKey(const Key('engine-sheet-save')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('history-on-turn-on')), findsOneWidget);
+      expect(rig.link.published, isEmpty);
+    });
+
+    testWidgets('Allow: a rule kept paused is saved disabled before the restart', (
+      tester,
+    ) async {
+      final rig = await toConsent(tester);
+      await tester.tap(find.byKey(const Key('engine-waiting-heater')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await tester.pump();
+      expect(rig.mgr.rules, [('heater', false)]);
+      expect(
+        rig.link.published.map((p) => p.$1).first,
+        'zigbee2mqtt/bridge/request/options',
+      );
+    });
+
+    testWidgets('"Not now" to add-ons kept on this phone: this phone instead', (
+      tester,
+    ) async {
+      final rig = await _pump(
+        tester,
+        view: const EngineView(
+          phase: HubEnginePhase.needsConsent,
+          hub: HubInfo(version: '2.14.0', externalJsAllowed: false),
+          declined: true,
+        ),
+      );
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('history-on-allow')), findsNothing);
+      expect(find.byKey(const Key('history-on-phone')), findsOneWidget);
+      expect(
+        rig.sink.sent,
+        contains('history_setup {result: failed, from: card, why: blocked}'),
+      );
+    });
+  });
+
   testWidgets('a Home already recording on this phone is not asked', (
     tester,
   ) async {

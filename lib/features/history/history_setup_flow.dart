@@ -130,6 +130,10 @@ Future<HistoryOn> turnOnHistory(
       );
     }
     switch (view?.phase) {
+      // "Not now" to add-ons on this phone is kept: this phone instead.
+      case HubEnginePhase.needsConsent when view!.declined:
+        _track(ref, HistorySetupResult.failed, from, why: EngineWhy.blocked);
+        return HistoryOn.phoneInstead;
       case HubEnginePhase.needsConsent:
         return HistoryOn.needsConsent;
       case HubEnginePhase.needsBroker:
