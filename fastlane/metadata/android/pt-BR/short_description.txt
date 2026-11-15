@@ -1,1 +1,1 @@
-Painel para Zigbee2MQTT. Sem Home Assistant: um hub pequeno e seu celular.
+Painel rápido do Zigbee2MQTT. Controle a casa de onde estiver, sem mensalidade.

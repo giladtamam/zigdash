@@ -1,1 +1,1 @@
-Nástěnka pro Zigbee2MQTT. Bez Home Assistantu: malý hub a tvůj telefon.
+Rychlý panel pro Zigbee2MQTT. Ovládejte domov odkudkoli, bez předplatného.

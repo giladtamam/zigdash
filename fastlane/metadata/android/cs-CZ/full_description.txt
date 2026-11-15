@@ -1,70 +1,49 @@
-ZigDash je MQTT nástěnka vytvořená pro Zigbee2MQTT: ovládej svůj chytrý Zigbee domov z telefonu. Sama najde tvoje zařízení, takže se nástěnka postaví sama. Bez cloudu, bez reklam, bez účtu: zdarma a open source.
-Ovládej světla, rolety, spínače a senzory z telefonu nebo z tabletu na zdi a automatizuj na svém hubu, i když je telefon vypnutý. Dostaneš upozornění, když se něco stane.
-
-Vyžaduje běžící Zigbee2MQTT a MQTT broker ve tvé síti. Ještě nemáš Zigbee2MQTT? Aplikace má demo domov na vyzkoušení.
+ZigDash je rychlý dashboard pro Zigbee2MQTT do telefonu i na tablet na zdi. Přihlaste se přes Home Assistant, pokud v něm Zigbee2MQTT běží, nebo se připojte ke svému MQTT brokeru, a dashboard se sestaví sám. Bez účtu, bez reklam.
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-AUTOMATICKÉ HLEDÁNÍ PRO ZIGBEE2MQTT
-• Prohledej svůj Zigbee2MQTT bridge a jedním klepnutím vytvoř panel pro každé zařízení — bez ručního nastavování témat.
+DVA ZPŮSOBY PŘIPOJENÍ
+• Home Assistant: přihlaste se a ZigDash v něm najde Zigbee2MQTT. Adresu sdílejte nebo vložte z aplikace Home Assistant, bez psaní.
+• Váš MQTT broker: Mosquitto, EMQX, hub SMLIGHT nebo Raspberry Pi. Nastavení ho hledá ve vaší Wi-Fi.
+• Ještě nemáte hub? Prohlédněte si ukázkovou domácnost.
+
+DASHBOARD SE SESTAVÍ SÁM
+• Každé zařízení ze Zigbee2MQTT dostane dlaždici: světla, žaluzie, zásuvky, vypínače, senzory, termostaty.
+• Místnosti a scény, k tomu vlastní MQTT dlaždice pro cokoli dalšího na brokeru.
+
+HISTORIE
+• Teploty, spotřeba a dveře v průběhu dní, zaznamenané ZigDash Engine na vašem hubu, i když je telefon vypnutý. Dnešek je zdarma; 7 a 30 dní je v Pro, se 14denní zkouškou zdarma.
+
+AUTOMATIZACE NA HUBU
+• „Když se otevřou dveře, rozsviť chodbu." ZigDash Engine spouští vaše pravidla uvnitř Zigbee2MQTT, takže fungují s vypnutým telefonem i bez internetu. Tři na domácnost jsou zdarma.
+
+UPOZORNĚNÍ
+• Únik vody, kouř, otevřené dveře nebo slabá baterie: oznámení na každém telefonu domácnosti, i když je ZigDash zavřený, šifrované end-to-end z vašeho hubu.
+
+TABLET NA ZDI
+• Nástěnný displej s hodinami a zámkem kiosku, zdarma. Pro přidává měření na hodinách, probuzení pohybem, noční plán a alarmy.
+
+BEZ OTEVÍRÁNÍ APLIKACE
+• Widgety na domovské obrazovce, dlaždice Rychlého nastavení a ovládání zařízení v Androidu.
+
+ZÁLOHA HUBU
+• Každý den kopie nastavení Zigbee2MQTT, sítě Zigbee a názvů zařízení, uložená v telefonu, aby šel resetovaný hub obnovit.
+
+VZDÁLENÉ OVLÁDÁNÍ
+• Ovládejte domácnost odkudkoli přes šifrované relé ZigDash: jedna platba, žádné předplatné, žádné přesměrování portů ani VPN. Domácnosti připojené přes Home Assistant fungují mimo domov všude, kde funguje vaše adresa Home Assistant.
+
+POMOC V APLIKACI
+• Asistent odpovídá česky na otázky o dlaždicích, zařízeních a automatizacích a člověk je jedno klepnutí daleko.
+
+SOUKROMÍ
+• Vaše zařízení zůstávají ve vaší síti: žádný cloudový účet. Anonymní data o používání, která můžete kdykoli vypnout. Open source (MIT).
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-PŘIPOJENÍ K JAKÉMUKOLI BROKERU
-• Jakýkoli MQTT broker — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Uživatelské jméno a heslo v hardwarově chráněném úložišti — nikdy jako prostý text.
-• Živý stav a automatické opětovné připojení.
-• Podpora Tailscale: vzdálený přístup přes tvou síť WireGuard, bez přesměrování portů.
+CO POTŘEBUJETE
+• Zigbee2MQTT, v Home Assistant, na hubu SMLIGHT, Raspberry Pi nebo v Dockeru. Automatizace a historie potřebují Zigbee2MQTT 2.4 nebo novější.
+• ZHA (vestavěné Zigbee v Home Assistant) není podporováno.
 
-━━━━━━━━━━━━━━━━━━━━━━
+ZigDash Pro je jedna platba: historie za více dní, neomezené automatizace, doplňky tabletu na zdi a vzdálené ovládání. Vše, co je dnes zdarma, zdarma zůstane.
 
-16 TYPŮ PANELŮ — OVLÁDEJ VŠECHNO
-Přepínač, Tlačítko, Posuvník, Roleta (otevřít/stop/zavřít s předvolbami), Více stavů, Rozbalovací seznam, Přepínače, LED indikátor, Stav uzlu, Průběh, Textové pole, Textový záznam, Scéna, Plán, Pravidlo automatického zavření a hledání zařízení Zigbee2MQTT. Od světel a rolet po senzory a scény — jedna Zigbee nástěnka pro všechna zařízení.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-ZKRATKY — BEZ OTEVÍRÁNÍ APLIKACE
-• Dlaždice Rychlého nastavení: zapni světlo nebo zásuvku jedním klepnutím, nebo nastav roletu posuvníkem, přímo z oznamovací lišty.
-• Ovládání zařízení v Androidu: každé zařízení z tvých nástěnek jako karta, s posuvníky pro jas a polohu rolety.
-• Widgety na ploše: jedno zařízení, scéna, nebo skupina až pěti zařízení s tlačítky scén.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-UPOZORNĚNÍ — I KDYŽ JE APLIKACE ZAVŘENÁ
-• Únik vody, kouř, dveře otevřené v noci nebo slabá baterie: Node-RED na tvém hubu hlídá, ZigDash ho nastaví jedním klepnutím a oznámení dorazí na telefon přes push službu Googlu, šifrované end-to-end. Bez účtu, bez další aplikace, bez vybíjení baterie.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-AUTOMATIZACE — BĚŽÍ, I KDYŽ JE TELEFON VYPNUTÝ
-• Panely plánu: denní časovače otevření/zavření uložené jako MQTT konfigurace s příznakem retain.
-• Pravidla automatického zavření: vypni zařízení N sekund po zapnutí — pro ventilátory, čerpadla a světla na čas.
-• Obojí běží na tvém stále zapnutém hubu (Node-RED na SMLIGHT, Raspberry Pi…).
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-VYLADĚNÉ — TELEFON I TABLET
-• Material 3 se světlým, tmavým a systémovým motivem; dynamické barvy Material You na Androidu 12+.
-• Telefon i tablet, na výšku i na šířku. Kiosk režim pro tablet na zdi: celá obrazovka, ztlumení, zámek PINem.
-• Dostupné v češtině, angličtině, francouzštině, němčině, španělštině, nizozemštině, švédštině, norštině, ruštině, polštině, portugalštině (Brazílie) a hebrejštině (עברית), s automatickým RTL.
-• Přizpůsobivá mřížka panelů, zámek nástěnky, záloha a obnovení jako přenosný JSON, scény.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-100% SOUKROMÉ. ŽÁDNÝ CLOUD.
-• Žádné reklamy. Žádný účet. Anonymní data o používání, která můžeš kdykoli vypnout.
-• Tvoje data jsou ve tvém zařízení a na tvém MQTT brokeru — nikde jinde.
-• Open source (MIT). Kód je veřejný a dá se zkontrolovat.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-PRO KOHO TO JE?
-Provozuješ Zigbee2MQTT s vlastním brokerem (Mosquitto na Raspberry Pi, SMLIGHT SMHUB…) — třeba vedle Home Assistantu — a chceš rychle ovládat chytrou domácnost z telefonu nebo tabletu na zdi, bez otevírání webového rozhraní Zigbee2MQTT. Nebaví tě cloudové aplikace, vázanost na výrobce a sběr dat? ZigDash je pro tebe.
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-CO POTŘEBUJEŠ
-• Zigbee2MQTT s MQTT brokerem ve tvé místní síti.
-• Tailscale (volitelně) pro vzdálený přístup mimo domov.
-• Node-RED (volitelně) pro automatizace na hubu.
-
-Vytvořil uživatel Zigbee2MQTT pro komunitu Zigbee2MQTT. Otázky a nápady: t.me/zigdash_app
+Česky, anglicky, francouzsky, hebrejsky, holandsky, italsky, německy, norsky, polsky, portugalsky, rusky, španělsky a švédsky.

@@ -1,1 +1,1 @@
-Zigbee2MQTT dashboard. No Home Assistant needed: a small hub and your phone.
+Fast Zigbee2MQTT dashboard. Control your home from anywhere, no monthly fee.

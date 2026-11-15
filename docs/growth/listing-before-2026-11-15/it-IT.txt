@@ -1,0 +1,51 @@
+SHORT: Dashboard Zigbee2MQTT veloce. Controlla casa da ovunque, senza abbonamento.
+
+ZigDash è la dashboard MQTT creata per Zigbee2MQTT: controlla la tua smart home Zigbee dal telefono. Trova i tuoi dispositivi in automatico, così la dashboard si costruisce da sola. Niente cloud, niente pubblicità, niente account: gratis e open source. Controlla luci, tapparelle, interruttori e sensori dal telefono o da un tablet a parete, e automatizza sul tuo hub, anche quando il telefono è spento.
+
+Richiede Zigbee2MQTT in esecuzione e un broker MQTT nella tua rete. Non hai ancora Zigbee2MQTT? L'app include una casa demo da esplorare.
+
+RILEVAMENTO AUTOMATICO PER ZIGBEE2MQTT
+• Scansiona il bridge Zigbee2MQTT e crea un pannello per ogni dispositivo con un solo tocco, senza collegare i topic a mano.
+
+QUALSIASI BROKER
+• Qualsiasi broker MQTT: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Nome utente e password in un archivio sicuro hardware, mai in chiaro.
+• Stato in tempo reale con riconnessione automatica (backoff esponenziale).
+• Supporto Tailscale: accesso remoto tramite la tua rete mesh WireGuard, senza port forwarding.
+
+16 TIPI DI PANNELLO: CONTROLLA TUTTO
+Interruttore, Pulsante, Cursore, Tapparella (apri/stop/chiudi con posizioni), Multi-stato, Combo, Radio, LED, Stato nodo, Barra, Input di testo, Log di testo, Scena, Programma, Chiusura automatica e Rilevamento dispositivi Zigbee2MQTT. Dalle luci ai sensori e alle scene: una sola dashboard Zigbee per tutto.
+
+SCORCIATOIE SENZA APRIRE L'APP
+• Riquadri delle Impostazioni rapide: accendi una luce o una presa con un tocco, o regola una tapparella con un cursore, direttamente dalla tendina delle notifiche.
+• Controllo dispositivi di Android: ogni dispositivo delle tue dashboard come scheda, con cursori per luminosità e posizione delle tapparelle.
+• Widget per la schermata Home: un dispositivo, una scena o un gruppo fino a cinque dispositivi con pulsanti scena.
+
+AVVISI, ANCHE CON L'APP CHIUSA
+• Una perdita, del fumo, una porta aperta di notte o una batteria scarica: Node-RED sul tuo hub controlla, ZigDash lo configura con un tocco, e la notifica arriva al telefono tramite il push di Google, cifrata end-to-end. Niente account, niente app in più, nessun consumo di batteria.
+
+AUTOMAZIONE CHE FUNZIONA A TELEFONO SPENTO
+• Pannelli Programma: orari giornalieri di apertura/chiusura salvati come configurazione MQTT retained.
+• Regole di chiusura automatica: spegni un dispositivo N secondi dopo l'accensione, per ventilatori, pompe e luci temporizzate.
+• Entrambe girano sul tuo hub sempre acceso (Node-RED su SMLIGHT, Raspberry Pi…).
+
+CURATA, SU TELEFONO E TABLET
+• Material 3 con tema chiaro, scuro e di sistema; colori dinamici Material You su Android 12+.
+• Telefono e tablet, verticale e orizzontale. Modalità kiosk per un tablet a parete: schermo intero, attenuazione, blocco con PIN.
+• Disponibile in italiano, inglese, francese, tedesco, spagnolo, olandese, svedese, norvegese, russo, polacco, portoghese (Brasile) ed ebraico (עברית), con RTL automatico.
+• Griglia di pannelli adattiva, blocco della dashboard, backup/ripristino in JSON portabile, scene.
+
+100% PRIVATA. NIENTE CLOUD.
+• Niente pubblicità. Niente account. Dati di utilizzo anonimi, che puoi disattivare quando vuoi.
+• I tuoi dati restano sul tuo dispositivo e sul tuo broker MQTT, da nessun'altra parte.
+• Open source (MIT). Il codice è pubblico e verificabile.
+
+PER CHI È?
+Usi Zigbee2MQTT con un tuo broker (Mosquitto su un Raspberry Pi, SMLIGHT SMHUB…), magari insieme a Home Assistant, e vuoi controllare velocemente la tua smart home dal telefono o da un tablet a parete senza aprire l'interfaccia web di Zigbee2MQTT. Stanco di app che dipendono dal cloud, dai vincoli dei produttori e dalla raccolta di dati? ZigDash fa per te.
+
+COSA TI SERVE
+• Zigbee2MQTT con un broker MQTT nella tua rete locale.
+• Tailscale (facoltativo) per l'accesso remoto fuori casa.
+• Node-RED (facoltativo) per le automazioni sull'hub.
+
+Creata da un utente di Zigbee2MQTT, per la community di Zigbee2MQTT. Domande e idee: t.me/zigdash_app

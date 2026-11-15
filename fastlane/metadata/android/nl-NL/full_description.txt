@@ -1,57 +1,49 @@
-ZigDash is het MQTT-dashboard gemaakt voor Zigbee2MQTT: het ontdekt je Zigbee-apparaten automatisch, zodat je smarthome-dashboard zichzelf opbouwt. Geen cloud, geen advertenties, geen account: gratis en open source. Bedien lampen, rolluiken, schakelaars en sensoren vanaf je telefoon of een wandtablet, en automatiseer op je hub, zelfs als je telefoon uit staat.
-
-Vereist een draaiende Zigbee2MQTT en een MQTT-broker in je netwerk. Nog geen Zigbee2MQTT? De app heeft een demohuis om rond te kijken.
-
-AUTOMATISCHE DETECTIE VOOR ZIGBEE2MQTT
-• Scan je Zigbee2MQTT-bridge en maak met één tik een paneel voor elk apparaat, zonder topics handmatig te koppelen.
-
-VERBIND MET ELKE BROKER
-• Elke MQTT-broker: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Gebruikersnaam en wachtwoord in hardwarematig beveiligde opslag, nooit als platte tekst.
-• Livestatus met automatisch opnieuw verbinden (exponentiële backoff).
-• Tailscale-ondersteuning: toegang op afstand via je WireGuard-mesh, zonder port forwarding.
-• Een volledige MQTT-client onder de motorkap: publiceer en abonneer op elk topic.
-
-16 PANEELTYPES – BEDIEN ALLES
-Schakelaar, Knop, Schuifregelaar, Rolluik (open/stop/dicht met presets), Multi-State, Combo, Radio, LED-indicator, Node-status, Voortgang, Tekstinvoer, Tekstlog, Scène, Schema, Auto-uit-regel en Zigbee2MQTT-apparaatdetectie. Van lampen en rolluiken tot sensoren en scènes: één Zigbee-dashboard voor elk apparaat.
-
-SNELKOPPELINGEN – ZONDER DE APP TE OPENEN
-• Tegels in Snelle instellingen: schakel een lamp of stekker met één tik, of zet een rolluik met een schuifregelaar, direct vanuit het meldingenpaneel.
-• Android-apparaatbediening: elk apparaat van je dashboards als kaart, met schuifregelaars voor helderheid en rolluikstand.
-• Widgets op het startscherm: één apparaat, een scène, of een groep van maximaal vijf apparaten met scèneknoppen.
-
-ALARMEN, OOK ALS DE APP DICHT IS
-
-• Een lek, rook, een deur die 's nachts opengaat of een bijna lege batterij: Node-RED op je hub houdt de wacht, ZigDash stelt het met één tik in, en de melding bereikt je telefoon via Googles push, end-to-end versleuteld. Geen account, geen extra app, geen batterijverbruik.
-
-• Deel de alarmen van een huis met het gezin, of ontvang ze met de ntfy-app op een telefoon zonder Google-diensten.
-
+ZigDash is een snel Zigbee2MQTT-dashboard voor je telefoon en een wandtablet. Log in met Home Assistant als Zigbee2MQTT daarin draait, of verbind met je MQTT-broker, en je dashboard bouwt zichzelf op. Geen account, geen advertenties.
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
+TWEE MANIEREN OM TE VERBINDEN
+• Home Assistant: log in en ZigDash vindt Zigbee2MQTT erin. Deel of plak het adres vanuit de Home Assistant-app, zonder typen.
+• Je MQTT-broker: Mosquitto, EMQX, een SMLIGHT-hub of een Raspberry Pi. De installatie zoekt hem op je wifi.
+• Nog geen hub? Kijk rond in het demohuis.
 
-AUTOMATISERING – WERKT OOK ALS JE TELEFOON UIT STAAT
-• Schemapanelen: dagelijkse open/dicht-timers opgeslagen als retained MQTT-configuratie.
-• Auto-uit-regels: schakel een apparaat N seconden na inschakelen weer uit, perfect voor ventilatoren, pompen en tijdgeschakelde verlichting.
-• Beide draaien op je altijd-aan hub (Node-RED op SMLIGHT, Raspberry Pi of elk MQTT-apparaat). Node-RED-flows meegeleverd.
+HET DASHBOARD BOUWT ZICHZELF
+• Elk Zigbee2MQTT-apparaat krijgt een tegel: lampen, rolluiken, stekkers, schakelaars, sensoren, thermostaten.
+• Kamers en scènes, plus eigen MQTT-tegels voor al het andere op je broker.
 
-VERZORGD – TELEFOON EN TABLET
-• Material 3 met licht, donker en systeemthema; Material You dynamische kleuren op Android 12+.
-• Telefoon en tablet, staand en liggend. Kioskmodus: volledig scherm, dimmen, pincode.
-• Beschikbaar in het Nederlands, Engels, Frans, Duits, Spaans, Zweeds, Noors, Russisch, Pools, Portugees en Hebreeuws, met automatische RTL.
-• Responsief paneelraster, dashboardvergrendeling, back-up/herstel als draagbare JSON, scènes.
+GESCHIEDENIS
+• Temperaturen, stroom en deuren over dagen, vastgelegd door ZigDash Engine op je hub, ook als je telefoon uit staat. Vandaag is gratis; 7 en 30 dagen zitten in Pro, met 14 dagen gratis proberen.
 
-100% PRIVÉ. GEEN CLOUD.
-• Geen advertenties. Geen account. Anonieme gebruiksgegevens, die je altijd kunt uitzetten.
-• Je gegevens staan op je apparaat en je MQTT-broker, nergens anders.
-• Open source (MIT). De code is openbaar en controleerbaar.
+AUTOMATISERINGEN OP JE HUB
+• "Als de deur opengaat, gaat de ganglamp aan." ZigDash Engine voert je regels uit in Zigbee2MQTT, dus ze werken met je telefoon uit en zonder internet. Drie per huis zijn gratis.
 
-VOOR WIE IS DIT?
-Je draait Zigbee2MQTT met je eigen broker, misschien naast Home Assistant, en wilt snelle bediening vanaf je telefoon of een wandtablet zonder de Zigbee2MQTT-webinterface te openen. Klaar met cloudafhankelijke apps, vendor lock-in en dataverzameling? ZigDash is voor jou.
+ALARMEN
+• Lekkage, rook, een open deur of een bijna lege batterij: een melding op elke telefoon van het huis, ook als ZigDash dicht is, end-to-end versleuteld vanaf je hub.
+
+WANDTABLET
+• Een wandscherm met klok en kioskvergrendeling, gratis. Pro voegt metingen op de klok, wakker worden bij beweging, een nachtschema en alarmen toe.
+
+ZONDER DE APP TE OPENEN
+• Widgets op je startscherm, snelle-instellingentegels en de apparaatbediening van Android.
+
+HUBBACK-UP
+• Elke dag een kopie van de instellingen van Zigbee2MQTT, het Zigbee-netwerk en de apparaatnamen, bewaard op je telefoon, om een gewiste hub terug te zetten.
+
+BEDIENING OP AFSTAND
+• Bedien je huis overal via de versleutelde ZigDash-relay: één keer betalen, geen abonnement, geen port forwarding of VPN. Huizen die via Home Assistant verbinden werken onderweg overal waar je Home Assistant-adres werkt.
+
+HULP IN DE APP
+• Een assistent beantwoordt vragen over tegels, apparaten en automatiseringen in het Nederlands, en een mens is één tik verder.
+
+PRIVÉ
+• Je apparaten blijven op je netwerk: geen cloudaccount. Anonieme gebruiksgegevens, die je altijd kunt uitzetten. Open source (MIT).
+
+━━━━━━━━━━━━━━━━━━━━━━
 
 WAT JE NODIG HEBT
-• Een Zigbee2MQTT-installatie met een MQTT-broker op je lokale netwerk.
-• Tailscale (optioneel) voor toegang op afstand buitenshuis.
-• Node-RED (optioneel) voor automatisering op de hub.
+• Zigbee2MQTT, in Home Assistant, op een SMLIGHT-hub, een Raspberry Pi of in Docker. Automatiseringen en geschiedenis vragen Zigbee2MQTT 2.4 of nieuwer.
+• ZHA (de ingebouwde Zigbee van Home Assistant) wordt niet ondersteund.
 
-Vragen en ideeën: Telegram-groep t.me/zigdash_app
+ZigDash Pro is één betaling: geschiedenis over dagen, onbeperkte automatiseringen, de wandtablet-extra's en bediening op afstand. Wat vandaag gratis is, blijft gratis.
+
+In het Nederlands, Duits, Engels, Frans, Hebreeuws, Italiaans, Noors, Pools, Portugees, Russisch, Spaans, Tsjechisch en Zweeds.

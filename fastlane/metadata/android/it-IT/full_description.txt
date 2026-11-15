@@ -1,49 +1,49 @@
-ZigDash è la dashboard MQTT creata per Zigbee2MQTT: controlla la tua smart home Zigbee dal telefono. Trova i tuoi dispositivi in automatico, così la dashboard si costruisce da sola. Niente cloud, niente pubblicità, niente account: gratis e open source. Controlla luci, tapparelle, interruttori e sensori dal telefono o da un tablet a parete, e automatizza sul tuo hub, anche quando il telefono è spento.
+ZigDash è una dashboard Zigbee2MQTT veloce per il telefono e per un tablet a parete. Accedi con Home Assistant se Zigbee2MQTT gira lì, oppure collegati al tuo broker MQTT, e la dashboard si costruisce da sola. Nessun account, nessuna pubblicità.
 
-Richiede Zigbee2MQTT in esecuzione e un broker MQTT nella tua rete. Non hai ancora Zigbee2MQTT? L'app include una casa demo da esplorare.
+━━━━━━━━━━━━━━━━━━━━━━
 
-RILEVAMENTO AUTOMATICO PER ZIGBEE2MQTT
-• Scansiona il bridge Zigbee2MQTT e crea un pannello per ogni dispositivo con un solo tocco, senza collegare i topic a mano.
+DUE MODI PER COLLEGARSI
+• Home Assistant: accedi e ZigDash ci trova Zigbee2MQTT. Condividi o incolla l'indirizzo dall'app di Home Assistant, senza digitare.
+• Il tuo broker MQTT: Mosquitto, EMQX, un hub SMLIGHT o un Raspberry Pi. La configurazione lo cerca sul tuo Wi-Fi.
+• Ancora senza hub? Dai un'occhiata alla casa demo.
 
-QUALSIASI BROKER
-• Qualsiasi broker MQTT: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Nome utente e password in un archivio sicuro hardware, mai in chiaro.
-• Stato in tempo reale con riconnessione automatica (backoff esponenziale).
-• Supporto Tailscale: accesso remoto tramite la tua rete mesh WireGuard, senza port forwarding.
+LA DASHBOARD SI COSTRUISCE DA SOLA
+• Ogni dispositivo Zigbee2MQTT ha il suo riquadro: luci, tapparelle, prese, interruttori, sensori, termostati.
+• Stanze e scene, più riquadri MQTT personalizzati per tutto il resto del tuo broker.
 
-16 TIPI DI PANNELLO: CONTROLLA TUTTO
-Interruttore, Pulsante, Cursore, Tapparella (apri/stop/chiudi con posizioni), Multi-stato, Combo, Radio, LED, Stato nodo, Barra, Input di testo, Log di testo, Scena, Programma, Chiusura automatica e Rilevamento dispositivi Zigbee2MQTT. Dalle luci ai sensori e alle scene: una sola dashboard Zigbee per tutto.
+CRONOLOGIA
+• Temperature, consumi e porte nei giorni, registrati da ZigDash Engine sul tuo hub, anche a telefono spento. Oggi è gratis; 7 e 30 giorni sono in Pro, con 14 giorni di prova gratuita.
 
-SCORCIATOIE SENZA APRIRE L'APP
-• Riquadri delle Impostazioni rapide: accendi una luce o una presa con un tocco, o regola una tapparella con un cursore, direttamente dalla tendina delle notifiche.
-• Controllo dispositivi di Android: ogni dispositivo delle tue dashboard come scheda, con cursori per luminosità e posizione delle tapparelle.
-• Widget per la schermata Home: un dispositivo, una scena o un gruppo fino a cinque dispositivi con pulsanti scena.
+AUTOMAZIONI SUL TUO HUB
+• «Quando si apre la porta, accendi la luce del corridoio.» ZigDash Engine esegue le tue regole dentro Zigbee2MQTT, quindi funzionano a telefono spento e senza internet. Tre per casa sono gratis.
 
-AVVISI, ANCHE CON L'APP CHIUSA
-• Una perdita, del fumo, una porta aperta di notte o una batteria scarica: Node-RED sul tuo hub controlla, ZigDash lo configura con un tocco, e la notifica arriva al telefono tramite il push di Google, cifrata end-to-end. Niente account, niente app in più, nessun consumo di batteria.
+AVVISI
+• Una perdita d'acqua, fumo, una porta aperta o una batteria scarica: una notifica su ogni telefono della casa, anche con ZigDash chiuso, cifrata end-to-end dal tuo hub.
 
-AUTOMAZIONE CHE FUNZIONA A TELEFONO SPENTO
-• Pannelli Programma: orari giornalieri di apertura/chiusura salvati come configurazione MQTT retained.
-• Regole di chiusura automatica: spegni un dispositivo N secondi dopo l'accensione, per ventilatori, pompe e luci temporizzate.
-• Entrambe girano sul tuo hub sempre acceso (Node-RED su SMLIGHT, Raspberry Pi…).
+TABLET A PARETE
+• Uno schermo a parete con orologio e blocco kiosk, gratis. Pro aggiunge letture sull'orologio, risveglio al movimento, orario notturno e allarmi.
 
-CURATA, SU TELEFONO E TABLET
-• Material 3 con tema chiaro, scuro e di sistema; colori dinamici Material You su Android 12+.
-• Telefono e tablet, verticale e orizzontale. Modalità kiosk per un tablet a parete: schermo intero, attenuazione, blocco con PIN.
-• Disponibile in italiano, inglese, francese, tedesco, spagnolo, olandese, svedese, norvegese, russo, polacco, portoghese (Brasile) ed ebraico (עברית), con RTL automatico.
-• Griglia di pannelli adattiva, blocco della dashboard, backup/ripristino in JSON portabile, scene.
+SENZA APRIRE L'APP
+• Widget nella schermata Home, riquadri delle Impostazioni rapide e i controlli dei dispositivi di Android.
 
-100% PRIVATA. NIENTE CLOUD.
-• Niente pubblicità. Niente account. Dati di utilizzo anonimi, che puoi disattivare quando vuoi.
-• I tuoi dati restano sul tuo dispositivo e sul tuo broker MQTT, da nessun'altra parte.
-• Open source (MIT). Il codice è pubblico e verificabile.
+BACKUP DELL'HUB
+• Ogni giorno una copia delle impostazioni di Zigbee2MQTT, della rete Zigbee e dei nomi dei dispositivi, salvata sul telefono, per rimettere in piedi un hub azzerato.
 
-PER CHI È?
-Usi Zigbee2MQTT con un tuo broker (Mosquitto su un Raspberry Pi, SMLIGHT SMHUB…), magari insieme a Home Assistant, e vuoi controllare velocemente la tua smart home dal telefono o da un tablet a parete senza aprire l'interfaccia web di Zigbee2MQTT. Stanco di app che dipendono dal cloud, dai vincoli dei produttori e dalla raccolta di dati? ZigDash fa per te.
+CONTROLLO DA REMOTO
+• Controlla la casa da ovunque tramite il relay cifrato di ZigDash: un solo pagamento, nessun abbonamento, niente port forwarding né VPN. Le case collegate tramite Home Assistant funzionano fuori casa ovunque funzioni il tuo indirizzo di Home Assistant.
+
+AIUTO NELL'APP
+• Un assistente risponde in italiano a domande su riquadri, dispositivi e automazioni, e una persona è a un tocco.
+
+PRIVATO
+• I tuoi dispositivi restano nella tua rete: nessun account cloud. Dati d'uso anonimi, disattivabili in qualsiasi momento. Open source (MIT).
+
+━━━━━━━━━━━━━━━━━━━━━━
 
 COSA TI SERVE
-• Zigbee2MQTT con un broker MQTT nella tua rete locale.
-• Tailscale (facoltativo) per l'accesso remoto fuori casa.
-• Node-RED (facoltativo) per le automazioni sull'hub.
+• Zigbee2MQTT, in Home Assistant, su un hub SMLIGHT, un Raspberry Pi o in Docker. Automazioni e cronologia richiedono Zigbee2MQTT 2.4 o successivo.
+• ZHA (lo Zigbee integrato di Home Assistant) non è supportato.
 
-Creata da un utente di Zigbee2MQTT, per la community di Zigbee2MQTT. Domande e idee: t.me/zigdash_app
+ZigDash Pro è un unico pagamento: cronologia di più giorni, automazioni illimitate, gli extra del tablet a parete e il controllo da remoto. Tutto ciò che oggi è gratis resta gratis.
+
+In italiano, ceco, ebraico, francese, inglese, norvegese, olandese, polacco, portoghese, russo, spagnolo, svedese e tedesco.
