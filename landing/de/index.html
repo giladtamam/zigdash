@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZigDash — Zigbee2MQTT App für Android und Wandtablet</title>
+<meta name="description" content="ZigDash ist ein schnelles Zigbee2MQTT-Dashboard für dein Handy und ein Wandtablet. Mit Home Assistant anmelden oder direkt mit dem MQTT-Broker verbinden. Automationen und Verlauf laufen auf dem Hub.">
+<link rel="canonical" href="https://zigdash.app/de/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/de/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/">
+<link rel="icon" href="../assets/icon.png">
+<meta property="og:title" content="ZigDash — Zigbee2MQTT App für Android und Wandtablet">
+<meta property="og:description" content="ZigDash ist ein schnelles Zigbee2MQTT-Dashboard für dein Handy und ein Wandtablet. Mit Home Assistant anmelden oder direkt mit dem MQTT-Broker verbinden. Automationen und Verlauf laufen auf dem Hub.">
+<meta property="og:url" content="https://zigdash.app/de/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../"><img src="../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../setup/">Setup</a>
+    <a href="../hubs/">Hubs</a>
+    <a href="../home-assistant/">Home Assistant</a>
+    <a href="../help/">Help</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Die Zigbee2MQTT App für Android und Wandtablet</h1>
+<p class="lead">ZigDash zeigt deine Zigbee2MQTT-Geräte auf dem Handy und auf einem Tablet an der Wand. Melde dich bei Home Assistant an, wenn Zigbee2MQTT dort läuft, oder verbinde dich mit dem MQTT-Broker auf deinem Hub, und das Dashboard baut sich von selbst auf. Home Assistant brauchst du nicht, aber es funktioniert auch damit.</p>
+
+<div class="buttons"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dde" data-goatcounter-click="play-de">Bei Google Play laden</a></div>
+<p class="note">Kostenlos, mit einem optionalen einmaligen Pro-Kauf. Kein Konto, keine Werbung. Die App gibt es auf Deutsch. ZHA (das eingebaute Zigbee von Home Assistant) wird nicht unterstützt.</p>
+
+<h2>Zwei Wege zur Verbindung</h2>
+<ul>
+  <li><strong>Home Assistant:</strong> anmelden, und ZigDash findet Zigbee2MQTT darin. Die Adresse aus der Home-Assistant-App teilen oder einfügen. Funktioniert zu Hause und unterwegs, überall dort, wo deine Home-Assistant-Adresse erreichbar ist.</li>
+  <li><strong>Dein MQTT-Broker:</strong> auf einem SMLIGHT SMHUB, einem Raspberry Pi oder in Docker. Die Einrichtung sucht ihn in deinem WLAN; sonst gibst du die Adresse des Hubs ein.</li>
+</ul>
+
+<h2>Was ZigDash kann</h2>
+<ul>
+  <li><strong>Das Dashboard baut sich selbst:</strong> eine Kachel für jede Lampe, jeden Rollladen, jede Steckdose, jeden Sensor und jedes Thermostat.</li>
+  <li><strong>Automationen auf dem Hub:</strong> ZigDash Engine führt deine Regeln in Zigbee2MQTT aus, auch mit ausgeschaltetem Handy. Drei pro Zuhause sind kostenlos (ab Zigbee2MQTT 2.4).</li>
+  <li><strong>Verlauf:</strong> Temperaturen, Strom und Türen über Tage, auf dem Hub aufgezeichnet. Heute ist kostenlos; 7 und 30 Tage gibt es in Pro, mit 14 Tagen kostenlosem Test.</li>
+  <li><strong>Alarme:</strong> Wasser, Rauch, eine offene Tür oder eine schwache Batterie: eine Benachrichtigung auf jedem Handy im Zuhause, Ende-zu-Ende-verschlüsselt.</li>
+  <li><strong>Wandtablet:</strong> Wandanzeige mit Uhr und Kiosk-Sperre, kostenlos. Pro bringt Messwerte auf der Uhr, Aufwecken bei Bewegung, einen Nachtplan und Alarme, die den Bildschirm übernehmen.</li>
+  <li><strong>Ohne die App zu öffnen:</strong> Widgets, Schnelleinstellungen-Kacheln und Androids Gerätesteuerung.</li>
+  <li><strong>Hub-Backup:</strong> jeden Tag eine Kopie der Zigbee2MQTT-Einstellungen, des Zigbee-Netzes und der Gerätenamen auf deinem Handy.</li>
+  <li><strong>Fernzugriff (Pro):</strong> über das verschlüsselte ZigDash-Relay, einmal zahlen, kein Abo, keine Portfreigabe und kein VPN.</li>
+</ul>
+
+<h2>Einrichten in vier Schritten</h2>
+<ol>
+  <li>Verbinde das Handy mit deinem WLAN zu Hause.</li>
+  <li>Öffne ZigDash und tippe auf <strong>Mein Setup finden</strong>.</li>
+  <li>Mit Home Assistant: <strong>Mit Home Assistant anmelden</strong>. Sonst den Login deines Brokers, falls er danach fragt.</li>
+  <li>Nichts gefunden? Gib die Adresse des Hubs ein (zum Beispiel 192.168.1.20).</li>
+</ol>
+<p>Die ausführlichen Anleitungen gibt es auf Englisch: <a href="../setup/">Einrichtung</a>, <a href="../home-assistant/">Home Assistant</a>, <a href="../hubs/">Hubs</a>. In der App hilft dir der Assistent unter <strong>Hilfe holen</strong> auf Deutsch.</p>
+
+<div class="callout">
+  <h2 style="margin-top:0">Open Source</h2>
+  <p>ZigDash steht unter der MIT-Lizenz und wird von einem Zigbee2MQTT-Nutzer gebaut. Code und Issues auf <a href="https://github.com/giladtamam/zigdash">GitHub</a>. Alles, was heute kostenlos ist, bleibt kostenlos.</p>
+</div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../" hreflang="en" lang="en">English</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

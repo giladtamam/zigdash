@@ -146,6 +146,62 @@ ban AI-written text, so these are the user's own words from my notes.
 - Recontact Jonatan Castro (ES, 106K), who said on Nov 1 he would look once ZigDash was on iPhone.
 - "Now on iPhone" on r/homeassistant (the user) and in the Telegram announcements.
 
+### Step 6. zigdash.app (added Nov 15 at the user's request)
+**Data (GoatCounter, Oct 18 – Nov 15):** 240 visits; 148 on /hubs and most others from Android with no
+referrer, i.e. people tapping links inside the app; 6 from Google; 1 tap on "Get it on Google Play". The
+site helps people who already have ZigDash and brings almost no one new. Google may not index it well:
+no robots.txt, no sitemap, and Search Console was never set up.
+
+**It is also out of date:** the hero says "without Home Assistant" while 8 of 18 recent working homes
+came through Home Assistant sign-in; the comparison table says automations run in Node-RED; the Home
+Assistant card describes the pre-2.10 Mosquitto login; nothing about History, the Engine or hub backup.
+
+What changes (source in the main repo's `landing/`, published by copying to `giladtamam/zigdash-site`,
+as today):
+1. **Truth first, same wording as the new listing.** Hero: "A fast Zigbee2MQTT dashboard for your phone
+   and wall tablet", with "No Home Assistant needed, and it signs in to Home Assistant too" underneath
+   (the October line, "works with it too", kept; never "better than Home Assistant"). The new headline
+   changes the October brand line, so the user approves it before the site is published. Pricing said
+   plainly: free, with an optional one-time Pro (the site says only "Free for Android" today). Comparison table
+   and cards rewritten from 3.6 (Engine, History, hub backup, Home Assistant sign-in). The Home
+   Assistant guide leads with sign-in; the Mosquitto login moves to "the older way". Home Assistant's
+   "add-ons" are now "apps" in its own menus; the guide uses its words.
+2. **What search engines need:** robots.txt, sitemap.xml, a unique title and description per page,
+   `SoftwareApplication` structured data on the home page (name, Android, free with in-app purchase; no
+   rating markup with 10 ratings, so no rich result is expected from it), `hreflang` on both `/` and
+   `/de/` pointing at each other plus `x-default`. The paths the app links to (`/hubs/`, `/setup/`,
+   `/home-assistant/`, `/help/`) stay where they are.
+3. **Google Search Console** on a URL-prefix property for https://zigdash.app/, verified with an HTML
+   file in the site repo (no DNS change). The user adds the property in their Google account (I can do
+   it in their browser if they say so); sitemap submitted. This gives the search queries Play no longer
+   shows, for the site.
+4. **Play links carry a referrer** (`utm_source=zigdash.app`, `utm_medium=site`, `utm_campaign=<page>`),
+   so installs from the site show in Play apart from explore.
+5. **Three new pages, each a real how-to that stands without the app:**
+   - `/zigbee2mqtt-android/`: "Control Zigbee2MQTT from your Android phone": the three ways in (Home
+     Assistant sign-in, the broker, the Zigbee2MQTT page), widgets and Quick Settings, what needs the
+     Engine. Search intent "zigbee2mqtt android app".
+   - `/wall-tablet/`: "A Zigbee2MQTT wall tablet": an old Android tablet, kiosk lock, keeping it charged,
+     what is free and what is Pro.
+   - `/de/`: a German page ("Zigbee2MQTT App für Android und Wandtablet"); Germany is the second country
+     on Play and on the site.
+   No page targets MQTT-only or ZHA users (same reason as the listing).
+6. **Links in**, because a month-old domain with none gets little from Google: the GitHub repo's
+   Website field and README point at zigdash.app; the Play listing's website field is checked to be
+   zigdash.app; the Step 4 forum and Zigbee2MQTT posts link `/zigbee2mqtt-android/` next to Play.
+7. **Not in this step:** a blog, more languages, an App Store badge (comes with Step 5).
+
+**Read (with the listing read, ~Jan 5):** Search Console impressions and clicks per query and page; site
+visits from Google (6 in the last 4 weeks); Play installs with `utm_source=zigdash.app`. Bar: Google sends
+50 visits in the 4 weeks from the first impression Search Console reports (not from publishing), read
+next to Play installs with `utm_source=zigdash.app`, since visits alone are not installs (1 Play tap in
+240 visits today). The site read can land after the ~Jan 5 listing read if Google is slow to show the
+site. If the bar fails, the pages stay (they are help pages anyway) and no more are written.
+
+**Effort:** about a day (me); a few minutes for the user to add the Search Console property and approve
+the headline. The listing is already submitted, so nothing waits on this step; it slips rather than
+anything else.
+
 ## 3. Not doing (from the profit plan and the outreach log)
 - Paid ads; the Google Ads draft stays unpublished (a working home costs ~$11 in ads, earns $0.60–1.20).
 - The big push (r/homeassistant feature post, German forum, simon42, Everything Smart Home): waits for
@@ -176,3 +232,5 @@ ban AI-written text, so these are the user's own words from my notes.
 | Mondays | Rank run + ratings count | me |
 | ~Jan 5 | Read | me |
 | Apple approval | Step 5 | me + user |
+| after the listing is submitted | Step 6: site fixes, SEO basics, three pages, publish (headline approved by the user) | me |
+| after publish | Search Console property + sitemap | user (or me, if asked) |

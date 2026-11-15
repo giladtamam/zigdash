@@ -35,7 +35,7 @@
 <details><summary>The scan found nothing</summary>
 <ul>
 <li>Phone and hub on the same Wi-Fi, not a guest network. Turn mobile data off.</li>
-<li>The broker is running: the Mosquitto add-on on Home Assistant, Mosquitto on a Pi, Settings › MQTT on SMLIGHT.</li>
+<li>The broker is running: the Mosquitto broker app on Home Assistant, Mosquitto on a Pi, Settings › MQTT on SMLIGHT.</li>
 <li>The broker accepts your phone: on SMLIGHT turn on Allow External; Mosquitto 2 needs <code>listener 1883</code> (see <a href="../setup/#hubs">setup</a>).</li>
 <li>Mesh Wi-Fi or two routers? Your phone may not see a hub on the second one. Connect by address.</li>
 </ul>
@@ -59,7 +59,7 @@
 <details><summary>ZigDash can't reach my home</summary>
 <ul>
 <li>Is the hub on? After a power cut or an update, give it a minute.</li>
-<li>Are you away from home? ZigDash needs a remote address, for example <a href="../setup/#away">Tailscale</a>. Use the hub's <code>100.x.y.z</code> address, not a <code>.ts.net</code> name.</li>
+<li>Are you away from home? ZigDash needs a way in: Home Assistant's remote address, Remote control (Pro) or Tailscale. See <a href="../setup/#away">Away from home</a>. With Tailscale, use the hub's <code>100.x.y.z</code> address, not a <code>.ts.net</code> name.</li>
 <li>Did the address change? After a router restart the hub may get a new one. Reserve it in your router's app, then update the home in ZigDash.</li>
 </ul>
 </details>
@@ -71,7 +71,7 @@
 </article>
 </main>
 <footer>
-  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></p>
 </footer>
 <script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>

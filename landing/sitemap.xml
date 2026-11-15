@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://zigdash.app/</loc>
+    <lastmod>2026-11-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee2mqtt-android/</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://zigdash.app/wall-tablet/</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://zigdash.app/home-assistant/</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://zigdash.app/setup/</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://zigdash.app/hubs/</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://zigdash.app/help/</loc>
+    <lastmod>2026-11-15</lastmod>
+  </url>
+  <url>
+    <loc>https://zigdash.app/de/</loc>
+    <lastmod>2026-11-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/"/>
+  </url>
+</urlset>

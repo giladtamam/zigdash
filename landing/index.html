@@ -3,16 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ZigDash — your Zigbee home, without Home Assistant</title>
-<meta name="description" content="ZigDash is a free Android dashboard for Zigbee2MQTT. A small hub and your phone are the whole setup: no Home Assistant, no server, no cloud. Works with Home Assistant too.">
+<title>ZigDash — a fast Zigbee2MQTT dashboard for Android</title>
+<meta name="description" content="ZigDash is a Zigbee2MQTT dashboard for your Android phone and a wall tablet. Sign in with Home Assistant or connect to your MQTT broker, and the dashboard builds itself. Automations and history run on your hub.">
 <link rel="canonical" href="https://zigdash.app/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/de/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/">
 <link rel="icon" href="assets/icon.png">
-<meta property="og:title" content="ZigDash — your Zigbee home, without Home Assistant">
-<meta property="og:description" content="A small hub running Zigbee2MQTT and ZigDash on your phone. No Home Assistant, no server, no cloud.">
+<meta property="og:title" content="ZigDash — a fast Zigbee2MQTT dashboard for Android">
+<meta property="og:description" content="Your Zigbee2MQTT devices on your phone and a wall tablet. Signs in with Home Assistant, or needs only a small hub. No account, no ads.">
 <meta property="og:url" content="https://zigdash.app/">
 <meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ZigDash",
+  "alternateName": "ZigDash: Zigbee2MQTT Dashboard",
+  "description": "A Zigbee2MQTT dashboard for Android phones and wall tablets. Signs in with Home Assistant or connects to an MQTT broker; automations and history run on the hub.",
+  "operatingSystem": "Android",
+  "applicationCategory": "UtilitiesApplication",
+  "url": "https://zigdash.app/",
+  "downloadUrl": "https://play.google.com/store/apps/details?id=com.giladtamam.zigdash",
+  "image": "https://zigdash.app/assets/icon.png",
+  "screenshot": "https://zigdash.app/assets/01-dashboard.jpg",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+}
+</script>
 </head>
 <body>
 <header>
@@ -28,13 +48,14 @@
 
 <main>
   <section class="hero">
-    <h1>Your Zigbee home, <span>without Home Assistant</span></h1>
-    <p>A small hub running Zigbee2MQTT — an SMLIGHT SMHUB, a Raspberry Pi, any Linux box — and ZigDash on your phone.
-       That's the whole setup. No server to maintain, no cloud, no account.</p>
+    <h1>A fast Zigbee2MQTT dashboard <span>for your phone and wall tablet</span></h1>
+    <p>Sign in with Home Assistant if Zigbee2MQTT runs there, or connect to the broker on your hub: an SMLIGHT SMHUB,
+       a Raspberry Pi, any Linux box. Your dashboard builds itself from your devices. No Home Assistant needed,
+       and it works with Home Assistant too.</p>
     <div class="buttons">
-      <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash" data-goatcounter-click="play-home">Get it on Google Play</a>
+      <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dhome" data-goatcounter-click="play-home">Get it on Google Play</a>
     </div>
-    <p class="note">Already on Home Assistant? ZigDash works with it too. Free for Android. Needs a running Zigbee2MQTT and an MQTT broker. No Zigbee2MQTT yet? Try the demo home in the app.</p>
+    <p class="note">Free for Android, with an optional one-time Pro. No account, no ads. Needs Zigbee2MQTT; ZHA (Home Assistant's built-in Zigbee) is not supported. No hub yet? Try the demo home in the app.</p>
   </section>
 
   <div class="shots">
@@ -48,55 +69,55 @@
   <h2>A lean setup</h2>
   <div class="compare">
   <table>
-    <thead><tr><th></th><th>With Home Assistant</th><th>With ZigDash</th></tr></thead>
+    <thead><tr><th></th><th>With Home Assistant</th><th>With ZigDash alone</th></tr></thead>
     <tbody>
       <tr><th>What you need</th><td>A server running Home Assistant and Zigbee2MQTT</td><td>A small hub running Zigbee2MQTT</td></tr>
-      <tr><th>What to maintain</th><td>Home Assistant, add-ons, updates, backups</td><td>Nothing extra: ZigDash is just an app</td></tr>
+      <tr><th>What to maintain</th><td>Home Assistant, its apps, updates, backups</td><td>Nothing extra: ZigDash is an app, and it backs up your hub daily</td></tr>
       <tr><th>Dashboard</th><td>You build it yourself</td><td>Builds itself from your devices</td></tr>
-      <tr><th>Automations and alerts</th><td>In Home Assistant</td><td>On the hub itself (Node-RED), even when your phone is off</td></tr>
+      <tr><th>Automations and alerts</th><td>In Home Assistant</td><td>On the hub itself (ZigDash Engine), even when your phone is off</td></tr>
     </tbody>
   </table>
   </div>
+  <p class="note" style="text-align:center">Already on Home Assistant? Sign in to it from ZigDash and keep everything you have. <a href="home-assistant/">How it works</a></p>
 
   <h2>What it does</h2>
   <div class="grid">
-    <div class="card"><h3>Builds itself</h3><p>Scans your network for the broker, reads your Zigbee2MQTT devices and makes a panel for each one. No topics to type.</p></div>
-    <div class="card"><h3>Works with Home Assistant</h3><p>Uses the Mosquitto add-on and signs in with your Home Assistant user.</p></div>
-    <div class="card"><h3>Without opening the app</h3><p>Home-screen widgets, Quick Settings tiles and Android Device Controls.</p></div>
-    <div class="card"><h3>Alerts</h3><p>A leak, smoke, a door at night or a low battery reaches your phone, even when ZigDash is closed.</p></div>
-    <div class="card"><h3>Wall tablet</h3><p>Kiosk mode with fullscreen, dimming and a PIN lock.</p></div>
-    <div class="card"><h3>Private</h3><p>Your data stays on your phone and your broker. Anonymous usage data, which you can turn off.</p></div>
+    <div class="card"><h3>Builds itself</h3><p>Finds your broker or Home Assistant, reads your Zigbee2MQTT devices and makes a tile for each one: lights, shutters, plugs, switches, sensors, thermostats. Custom MQTT tiles for anything else.</p></div>
+    <div class="card"><h3>Signs in to Home Assistant</h3><p>Share or paste the address from the Home Assistant app and sign in. ZigDash talks to Zigbee2MQTT through it, at home or away.</p></div>
+    <div class="card"><h3>History</h3><p>Temperatures, power and doors over days, recorded on your hub by ZigDash Engine even when your phone is off. Today is free; 7 and 30 days are in Pro, with a 14-day free trial.</p></div>
+    <div class="card"><h3>Automations on your hub</h3><p>"When the door opens, turn on the hall light." Rules run inside Zigbee2MQTT, with your phone off and the internet down. Three per home are free.</p></div>
+    <div class="card"><h3>Alerts</h3><p>A leak, smoke, an open door or a low battery reaches every phone of the home, even when ZigDash is closed, encrypted end to end from your hub.</p></div>
+    <div class="card"><h3>Wall tablet</h3><p>A wall display with a clock and a kiosk lock, free. Pro adds readings on the clock, wake on motion, a night schedule and alarms. <a href="wall-tablet/">Set one up</a></p></div>
+    <div class="card"><h3>Without opening the app</h3><p>Home-screen widgets, Quick Settings tiles and Android's device controls.</p></div>
+    <div class="card"><h3>Hub backup</h3><p>A daily copy of Zigbee2MQTT's settings, Zigbee network and device names, kept on your phone, to bring a reset hub back.</p></div>
+    <div class="card"><h3>Remote control</h3><p>From anywhere through the encrypted ZigDash relay, in Pro: one payment, no monthly fee, no port forwarding or VPN.</p></div>
+    <div class="card"><h3>Private</h3><p>Your devices stay on your network, with no cloud account. Anonymous usage data, which you can turn off.</p></div>
   </div>
 
   <h2 id="setup">Setting up</h2>
-  <figure class="video">
-    <video controls preload="none" poster="assets/setup-video.jpg" width="1920" height="1080">
-      <source src="assets/setup-video.mp4" type="video/mp4">
-    </video>
-    <figcaption>Set up in 30 seconds · <a href="https://youtu.be/1wI13XWMCCA">also on YouTube</a></figcaption>
-  </figure>
   <ol class="steps">
     <li>Connect your phone to your home Wi-Fi. <span>The scan only finds what is on the same network.</span></li>
-    <li>Open ZigDash and tap Find my setup. <span>It looks for your MQTT broker and Zigbee2MQTT.</span></li>
-    <li>If it asks for a login, use your broker's user. <span>On Home Assistant, that is your Home Assistant user.</span></li>
+    <li>Open ZigDash and tap Find my setup. <span>It looks for Home Assistant, your MQTT broker and Zigbee2MQTT.</span></li>
+    <li>On Home Assistant, choose Sign in with Home Assistant. <span>Otherwise use your broker's login if it asks for one.</span></li>
     <li>Not found? Type your hub's address (for example 192.168.1.20) and tap Check this address.</li>
   </ol>
   <div class="buttons" style="margin-top:20px">
     <a class="btn" href="setup/">Full setup guide</a>
-    <a class="btn" href="home-assistant/">Using Home Assistant?</a>
+    <a class="btn" href="zigbee2mqtt-android/">Zigbee2MQTT on Android</a>
     <a class="btn" href="help/">Something not working?</a>
   </div>
-  <p class="note" style="text-align:center">Stuck? Ask in the <a href="https://t.me/zigdash_app">Telegram group</a> or <a href="https://github.com/giladtamam/zigdash/issues">open an issue</a>.</p>
+  <p class="note" style="text-align:center">Stuck? Tap Get help in the app, ask in the <a href="https://t.me/zigdash_app">Telegram group</a> or <a href="https://github.com/giladtamam/zigdash/issues">open an issue</a>.</p>
 
   <div class="callout">
-    <h2 style="margin-top:0">Free and open source</h2>
+    <h2 style="margin-top:0">Open source</h2>
     <p>ZigDash is MIT-licensed and built by a Zigbee2MQTT user. The code and issues are on
-       <a href="https://github.com/giladtamam/zigdash">GitHub</a>.</p>
+       <a href="https://github.com/giladtamam/zigdash">GitHub</a>. Pro is an optional one-time purchase on Google Play;
+       nothing that is free today becomes paid.</p>
   </div>
 </main>
 
 <footer>
-  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="de/" hreflang="de" lang="de">Deutsch</a></p>
 </footer>
 <script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
