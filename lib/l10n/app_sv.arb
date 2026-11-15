@@ -1741,5 +1741,22 @@
   "proTrialYouUsed": "Du använde {features}.",
   "proTrialAfterEnd": "Efteråt finns allt du ställt in kvar; vecko- och månadsvyerna och nya automationer utöver tre kräver Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Provperiod: 1 dag kvar} other{Provperiod: {days} dagar kvar}}",
-  "proTrialEnded": "Din provperiod är slut. Allt du ställt in finns kvar."
+  "proTrialEnded": "Din provperiod är slut. Allt du ställt in finns kvar.",
+  "engineSlimCard": "Automationer körs på din hubb med ZigDash Engine. ZigDash lägger det där när du sparar din första.",
+  "engineSheetSource": "Se källkoden på GitHub",
+  "engineSheetTitle": "ZigDash Engine kör dina automationer",
+  "engineSheetBody": "ZigDash Engine är en enda fil med öppen källkod som ZigDash lägger i Zigbee2MQTT:s mapp på din hubb. Den kör dina automationer där, även med telefonen avstängd. Ta bort den när som helst från fliken Automationer.",
+  "engineSheetInstallSave": "Installera och spara",
+  "engineSheetSaveOnly": "Spara utan att köra",
+  "engineSheetSave": "Spara",
+  "engineSheetAway": "Du är borta, och ZigDash Engine installeras via ditt hemnätverk. Spara nu. ZigDash ber dig installera Engine nästa gång den här telefonen är hemma.",
+  "engineSheetNoAnswer": "Zigbee2MQTT på din hubb svarade inte i tid, så ZigDash kan inte installera sin Engine nu. Spara nu och installera den från fliken Automationer när hubben svarar.",
+  "engineSheetSavedNotRunning": "Din automation är sparad. Den körs när ZigDash Engine finns på din hubb.",
+  "engineWaitingTitle": "Sparade tidigare, väntar på ZigDash Engine",
+  "engineWaitingRun": "Körs efter installation",
+  "engineWaitingPaused": "Förblir pausad",
+  "autoNotRunTitle": "Ingen av dessa körs ännu",
+  "autoNotRunBody": "Körs inte: ZigDash Engine finns inte på din hubb. Till dess sparar din MQTT-broker dem, och en broker utan persistens tappar dem när den startar om.",
+  "autoNotRunning": "Körs inte",
+  "historyUsePhoneInstead": "Använd den här telefonen i stället"
 }

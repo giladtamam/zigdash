@@ -1656,5 +1656,22 @@
   "proTrialYouUsed": "Používali jste: {features}.",
   "proTrialAfterEnd": "Potom vše, co jste nastavili, zůstane; týdenní a měsíční pohled a nové automatizace nad tři potřebují Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Zkušební doba: zbývá 1 den} few{Zkušební doba: zbývají {days} dny} other{Zkušební doba: zbývá {days} dní}}",
-  "proTrialEnded": "Zkušební doba skončila. Vše, co jste nastavili, tam pořád je."
+  "proTrialEnded": "Zkušební doba skončila. Vše, co jste nastavili, tam pořád je.",
+  "engineSlimCard": "Automatizace běží na vašem hubu díky ZigDash Engine. ZigDash ho tam nainstaluje, až uložíte první automatizaci.",
+  "engineSheetSource": "Zdrojový kód na GitHubu",
+  "engineSheetTitle": "ZigDash Engine spouští vaše automatizace",
+  "engineSheetBody": "ZigDash Engine je jeden open-source soubor, který ZigDash přidá do složky Zigbee2MQTT na vašem hubu. Spouští tam vaše automatizace, i když je telefon vypnutý. Kdykoli ho odeberete na kartě Automatizace.",
+  "engineSheetInstallSave": "Nainstalovat a uložit",
+  "engineSheetSaveOnly": "Uložit bez spuštění",
+  "engineSheetSave": "Uložit",
+  "engineSheetAway": "Nejste doma a ZigDash Engine se instaluje přes domácí síť. Uložte teď. ZigDash vás požádá o instalaci, až bude tento telefon příště doma.",
+  "engineSheetNoAnswer": "Zigbee2MQTT na vašem hubu neodpověděl včas, takže ZigDash teď nemůže nainstalovat svůj Engine. Uložte teď a nainstalujte ho na kartě Automatizace, až hub odpoví.",
+  "engineSheetSavedNotRunning": "Automatizace je uložená. Poběží, jakmile bude ZigDash Engine na vašem hubu.",
+  "engineWaitingTitle": "Uložené dříve, čekají na ZigDash Engine",
+  "engineWaitingRun": "Po instalaci poběží",
+  "engineWaitingPaused": "Zůstane pozastavená",
+  "autoNotRunTitle": "Žádná z nich zatím neběží",
+  "autoNotRunBody": "Neběží: ZigDash Engine není na vašem hubu. Do té doby je uchovává váš MQTT broker a broker bez persistence je při restartu ztratí.",
+  "autoNotRunning": "Neběží",
+  "historyUsePhoneInstead": "Použít raději tento telefon"
 }

@@ -1656,5 +1656,22 @@
   "proTrialYouUsed": "Hai usato {features}.",
   "proTrialAfterEnd": "Dopo, tutto ciò che hai configurato resta; le viste settimana e mese e le nuove automazioni oltre la terza richiedono Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Prova: 1 giorno rimasto} other{Prova: {days} giorni rimasti}}",
-  "proTrialEnded": "La prova è finita. Tutto ciò che hai configurato è ancora lì."
+  "proTrialEnded": "La prova è finita. Tutto ciò che hai configurato è ancora lì.",
+  "engineSlimCard": "Le automazioni girano sul tuo hub con ZigDash Engine. ZigDash lo installa lì quando salvi la prima.",
+  "engineSheetSource": "Vedi il codice sorgente su GitHub",
+  "engineSheetTitle": "ZigDash Engine esegue le tue automazioni",
+  "engineSheetBody": "ZigDash Engine è un singolo file open source che ZigDash aggiunge alla cartella di Zigbee2MQTT sul tuo hub. Esegue lì le tue automazioni, anche col telefono spento. Puoi rimuoverlo quando vuoi dalla scheda Automazioni.",
+  "engineSheetInstallSave": "Installa e salva",
+  "engineSheetSaveOnly": "Salva senza eseguire",
+  "engineSheetSave": "Salva",
+  "engineSheetAway": "Sei fuori casa, e ZigDash Engine si installa tramite la rete di casa. Salva ora. ZigDash ti chiederà di installare l'Engine la prossima volta che questo telefono sarà a casa.",
+  "engineSheetNoAnswer": "Zigbee2MQTT sul tuo hub non ha risposto in tempo, quindi ZigDash non può installare il suo Engine ora. Salva ora e installalo dalla scheda Automazioni quando l'hub risponde.",
+  "engineSheetSavedNotRunning": "La tua automazione è salvata. Verrà eseguita quando ZigDash Engine sarà sul tuo hub.",
+  "engineWaitingTitle": "Salvate prima, in attesa di ZigDash Engine",
+  "engineWaitingRun": "Partirà dopo l'installazione",
+  "engineWaitingPaused": "Resta in pausa",
+  "autoNotRunTitle": "Nessuna è ancora attiva",
+  "autoNotRunBody": "Non attiva: ZigDash Engine non è sul tuo hub. Fino ad allora le conserva il tuo broker MQTT, e un broker senza persistenza le perde al riavvio.",
+  "autoNotRunning": "Non attiva",
+  "historyUsePhoneInstead": "Usa invece questo telefono"
 }

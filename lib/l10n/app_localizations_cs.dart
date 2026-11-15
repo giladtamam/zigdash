@@ -5743,4 +5743,61 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Zkušební doba skončila. Vše, co jste nastavili, tam pořád je.';
+
+  @override
+  String get engineSlimCard =>
+      'Automatizace běží na vašem hubu díky ZigDash Engine. ZigDash ho tam nainstaluje, až uložíte první automatizaci.';
+
+  @override
+  String get engineSheetSource => 'Zdrojový kód na GitHubu';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine spouští vaše automatizace';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine je jeden open-source soubor, který ZigDash přidá do složky Zigbee2MQTT na vašem hubu. Spouští tam vaše automatizace, i když je telefon vypnutý. Kdykoli ho odeberete na kartě Automatizace.';
+
+  @override
+  String get engineSheetInstallSave => 'Nainstalovat a uložit';
+
+  @override
+  String get engineSheetSaveOnly => 'Uložit bez spuštění';
+
+  @override
+  String get engineSheetSave => 'Uložit';
+
+  @override
+  String get engineSheetAway =>
+      'Nejste doma a ZigDash Engine se instaluje přes domácí síť. Uložte teď. ZigDash vás požádá o instalaci, až bude tento telefon příště doma.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT na vašem hubu neodpověděl včas, takže ZigDash teď nemůže nainstalovat svůj Engine. Uložte teď a nainstalujte ho na kartě Automatizace, až hub odpoví.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Automatizace je uložená. Poběží, jakmile bude ZigDash Engine na vašem hubu.';
+
+  @override
+  String get engineWaitingTitle => 'Uložené dříve, čekají na ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Po instalaci poběží';
+
+  @override
+  String get engineWaitingPaused => 'Zůstane pozastavená';
+
+  @override
+  String get autoNotRunTitle => 'Žádná z nich zatím neběží';
+
+  @override
+  String get autoNotRunBody =>
+      'Neběží: ZigDash Engine není na vašem hubu. Do té doby je uchovává váš MQTT broker a broker bez persistence je při restartu ztratí.';
+
+  @override
+  String get autoNotRunning => 'Neběží';
+
+  @override
+  String get historyUsePhoneInstead => 'Použít raději tento telefon';
 }

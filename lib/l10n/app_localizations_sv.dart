@@ -5752,4 +5752,61 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Din provperiod är slut. Allt du ställt in finns kvar.';
+
+  @override
+  String get engineSlimCard =>
+      'Automationer körs på din hubb med ZigDash Engine. ZigDash lägger det där när du sparar din första.';
+
+  @override
+  String get engineSheetSource => 'Se källkoden på GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine kör dina automationer';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine är en enda fil med öppen källkod som ZigDash lägger i Zigbee2MQTT:s mapp på din hubb. Den kör dina automationer där, även med telefonen avstängd. Ta bort den när som helst från fliken Automationer.';
+
+  @override
+  String get engineSheetInstallSave => 'Installera och spara';
+
+  @override
+  String get engineSheetSaveOnly => 'Spara utan att köra';
+
+  @override
+  String get engineSheetSave => 'Spara';
+
+  @override
+  String get engineSheetAway =>
+      'Du är borta, och ZigDash Engine installeras via ditt hemnätverk. Spara nu. ZigDash ber dig installera Engine nästa gång den här telefonen är hemma.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT på din hubb svarade inte i tid, så ZigDash kan inte installera sin Engine nu. Spara nu och installera den från fliken Automationer när hubben svarar.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Din automation är sparad. Den körs när ZigDash Engine finns på din hubb.';
+
+  @override
+  String get engineWaitingTitle => 'Sparade tidigare, väntar på ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Körs efter installation';
+
+  @override
+  String get engineWaitingPaused => 'Förblir pausad';
+
+  @override
+  String get autoNotRunTitle => 'Ingen av dessa körs ännu';
+
+  @override
+  String get autoNotRunBody =>
+      'Körs inte: ZigDash Engine finns inte på din hubb. Till dess sparar din MQTT-broker dem, och en broker utan persistens tappar dem när den startar om.';
+
+  @override
+  String get autoNotRunning => 'Körs inte';
+
+  @override
+  String get historyUsePhoneInstead => 'Använd den här telefonen i stället';
 }

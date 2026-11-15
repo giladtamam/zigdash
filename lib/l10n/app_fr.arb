@@ -1666,5 +1666,22 @@
   "proTrialYouUsed": "Vous avez utilisé {features}.",
   "proTrialAfterEnd": "Ensuite, tout ce que vous avez configuré reste ; les vues semaine et mois et les nouvelles automatisations au-delà de trois demandent Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Essai : 1 jour restant} other{Essai : {days} jours restants}}",
-  "proTrialEnded": "Votre essai est terminé. Tout ce que vous avez configuré est toujours là."
+  "proTrialEnded": "Votre essai est terminé. Tout ce que vous avez configuré est toujours là.",
+  "engineSlimCard": "Les automatisations tournent sur votre hub avec ZigDash Engine. ZigDash l'y installe quand vous enregistrez la première.",
+  "engineSheetSource": "Voir son code source sur GitHub",
+  "engineSheetTitle": "ZigDash Engine exécute vos automatisations",
+  "engineSheetBody": "ZigDash Engine est un seul fichier open source que ZigDash ajoute au dossier de Zigbee2MQTT sur votre hub. Il y exécute vos automatisations, même téléphone éteint. Vous pouvez le retirer à tout moment depuis l'onglet Automatisations.",
+  "engineSheetInstallSave": "Installer et enregistrer",
+  "engineSheetSaveOnly": "Enregistrer sans exécuter",
+  "engineSheetSave": "Enregistrer",
+  "engineSheetAway": "Vous n'êtes pas chez vous, et ZigDash Engine s'installe par votre réseau domestique. Enregistrez maintenant. ZigDash vous proposera de l'installer la prochaine fois que ce téléphone sera à la maison.",
+  "engineSheetNoAnswer": "Zigbee2MQTT sur votre hub n'a pas répondu à temps, ZigDash ne peut donc pas installer son Engine maintenant. Enregistrez maintenant et installez-le depuis l'onglet Automatisations quand votre hub répondra.",
+  "engineSheetSavedNotRunning": "Votre automatisation est enregistrée. Elle s'exécutera dès que ZigDash Engine sera sur votre hub.",
+  "engineWaitingTitle": "Enregistrées plus tôt, en attente de ZigDash Engine",
+  "engineWaitingRun": "S'exécutera une fois installé",
+  "engineWaitingPaused": "Reste en pause",
+  "autoNotRunTitle": "Aucune ne s'exécute encore",
+  "autoNotRunBody": "Ne s'exécute pas : ZigDash Engine n'est pas sur votre hub. D'ici là, votre broker MQTT les conserve, et un broker sans persistance les perd à son redémarrage.",
+  "autoNotRunning": "Ne s'exécute pas",
+  "historyUsePhoneInstead": "Utiliser ce téléphone à la place"
 }

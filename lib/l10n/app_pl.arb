@@ -1736,5 +1736,22 @@
   "proTrialYouUsed": "Używałeś: {features}.",
   "proTrialAfterEnd": "Potem wszystko, co ustawiłeś, zostaje; widoki tygodnia i miesiąca oraz nowe automatyzacje powyżej trzech wymagają Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Okres próbny: został 1 dzień} few{Okres próbny: zostały {days} dni} other{Okres próbny: zostało {days} dni}}",
-  "proTrialEnded": "Okres próbny się skończył. Wszystko, co ustawiłeś, nadal jest."
+  "proTrialEnded": "Okres próbny się skończył. Wszystko, co ustawiłeś, nadal jest.",
+  "engineSlimCard": "Automatyzacje działają na Twoim hubie dzięki ZigDash Engine. ZigDash umieści go tam, gdy zapiszesz pierwszą.",
+  "engineSheetSource": "Zobacz kod źródłowy na GitHubie",
+  "engineSheetTitle": "ZigDash Engine uruchamia Twoje automatyzacje",
+  "engineSheetBody": "ZigDash Engine to jeden plik open source, który ZigDash dodaje do folderu Zigbee2MQTT na Twoim hubie. Uruchamia tam Twoje automatyzacje, nawet gdy telefon jest wyłączony. Możesz go usunąć w każdej chwili na karcie Automatyzacje.",
+  "engineSheetInstallSave": "Zainstaluj i zapisz",
+  "engineSheetSaveOnly": "Zapisz bez uruchamiania",
+  "engineSheetSave": "Zapisz",
+  "engineSheetAway": "Jesteś poza domem, a ZigDash Engine instaluje się przez sieć domową. Zapisz teraz. ZigDash poprosi o instalację, gdy ten telefon następnym razem będzie w domu.",
+  "engineSheetNoAnswer": "Zigbee2MQTT na Twoim hubie nie odpowiedział na czas, więc ZigDash nie może teraz zainstalować swojego Engine. Zapisz teraz i zainstaluj go na karcie Automatyzacje, gdy hub odpowie.",
+  "engineSheetSavedNotRunning": "Automatyzacja jest zapisana. Zadziała, gdy ZigDash Engine będzie na Twoim hubie.",
+  "engineWaitingTitle": "Zapisane wcześniej, czekają na ZigDash Engine",
+  "engineWaitingRun": "Ruszy po instalacji",
+  "engineWaitingPaused": "Pozostaje wstrzymana",
+  "autoNotRunTitle": "Żadna z nich jeszcze nie działa",
+  "autoNotRunBody": "Nie działa: ZigDash Engine nie ma na Twoim hubie. Do tego czasu przechowuje je Twój broker MQTT, a broker bez trwałego zapisu (persistence) traci je przy restarcie.",
+  "autoNotRunning": "Nie działa",
+  "historyUsePhoneInstead": "Użyj tego telefonu"
 }

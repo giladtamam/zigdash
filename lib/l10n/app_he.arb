@@ -1810,5 +1810,22 @@
   "proTrialYouUsed": "השתמשתם ב: {features}.",
   "proTrialAfterEnd": "אחרי שהוא מסתיים, כל מה שהגדרתם נשאר; תצוגות השבוע והחודש ואוטומציות חדשות מעבר לשלוש דורשות Pro.",
   "proTrialDaysLeft": "{days, plural, =1{ניסיון: נשאר יום אחד} other{ניסיון: נשארו {days} ימים}}",
-  "proTrialEnded": "הניסיון הסתיים. כל מה שהגדרתם עדיין שם."
+  "proTrialEnded": "הניסיון הסתיים. כל מה שהגדרתם עדיין שם.",
+  "engineSlimCard": "אוטומציות רצות ברכזת עם ZigDash Engine. ‏ZigDash מתקין אותו שם כשתשמרו את הראשונה.",
+  "engineSheetSource": "לקוד המקור ב-GitHub",
+  "engineSheetTitle": "ZigDash Engine מריץ את האוטומציות שלכם",
+  "engineSheetBody": "ZigDash Engine הוא קובץ קוד פתוח אחד ש-ZigDash מוסיף לתיקייה של Zigbee2MQTT ברכזת. הוא מריץ שם את האוטומציות, גם כשהטלפון כבוי. אפשר להסיר אותו בכל עת מלשונית האוטומציות.",
+  "engineSheetInstallSave": "להתקין ולשמור",
+  "engineSheetSaveOnly": "לשמור בלי להפעיל",
+  "engineSheetSave": "שמירה",
+  "engineSheetAway": "אתם מחוץ לבית, ו-ZigDash Engine מותקן דרך הרשת הביתית. שמרו עכשיו. ZigDash יבקש להתקין את ה-Engine בפעם הבאה שהטלפון הזה בבית.",
+  "engineSheetNoAnswer": "Zigbee2MQTT ברכזת לא ענה בזמן, ולכן ZigDash לא יכול להתקין את ה-Engine עכשיו. שמרו עכשיו והתקינו אותו מלשונית האוטומציות כשהרכזת תענה.",
+  "engineSheetSavedNotRunning": "האוטומציה נשמרה. היא תרוץ ברגע ש-ZigDash Engine יהיה ברכזת.",
+  "engineWaitingTitle": "נשמרו קודם, ממתינות ל-ZigDash Engine",
+  "engineWaitingRun": "תרוץ אחרי ההתקנה",
+  "engineWaitingPaused": "נשארת מושהית",
+  "autoNotRunTitle": "אף אחת מהן עוד לא רצה",
+  "autoNotRunBody": "לא רצה: ZigDash Engine לא נמצא ברכזת. עד שיהיה, ה-broker של MQTT שומר אותן, ו-broker בלי persistence מאבד אותן כשהוא מופעל מחדש.",
+  "autoNotRunning": "לא רצה",
+  "historyUsePhoneInstead": "להשתמש בטלפון הזה במקום"
 }

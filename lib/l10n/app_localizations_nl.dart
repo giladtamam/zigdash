@@ -5765,4 +5765,62 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Je proef is voorbij. Alles wat je instelde, is er nog.';
+
+  @override
+  String get engineSlimCard =>
+      'Automatiseringen draaien op je hub met ZigDash Engine. ZigDash zet het daar zodra je je eerste opslaat.';
+
+  @override
+  String get engineSheetSource => 'Bekijk de broncode op GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine voert je automatiseringen uit';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine is één opensourcebestand dat ZigDash in de map van Zigbee2MQTT op je hub zet. Het voert daar je automatiseringen uit, ook met je telefoon uit. Verwijder het wanneer je wilt via het tabblad Automatiseringen.';
+
+  @override
+  String get engineSheetInstallSave => 'Installeren en opslaan';
+
+  @override
+  String get engineSheetSaveOnly => 'Opslaan zonder uitvoeren';
+
+  @override
+  String get engineSheetSave => 'Opslaan';
+
+  @override
+  String get engineSheetAway =>
+      'Je bent niet thuis, en ZigDash Engine wordt via je thuisnetwerk geïnstalleerd. Sla nu op. ZigDash vraagt je de Engine te installeren zodra deze telefoon weer thuis is.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT op je hub antwoordde niet op tijd, dus ZigDash kan zijn Engine nu niet installeren. Sla nu op en installeer hem via het tabblad Automatiseringen zodra je hub antwoordt.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Je automatisering is opgeslagen. Hij draait zodra ZigDash Engine op je hub staat.';
+
+  @override
+  String get engineWaitingTitle =>
+      'Eerder opgeslagen, wachten op ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Draait na installatie';
+
+  @override
+  String get engineWaitingPaused => 'Blijft gepauzeerd';
+
+  @override
+  String get autoNotRunTitle => 'Geen hiervan draait nog';
+
+  @override
+  String get autoNotRunBody =>
+      'Draait niet: ZigDash Engine staat niet op je hub. Tot die tijd bewaart je MQTT-broker ze, en een broker zonder persistence verliest ze bij een herstart.';
+
+  @override
+  String get autoNotRunning => 'Draait niet';
+
+  @override
+  String get historyUsePhoneInstead => 'Deze telefoon gebruiken';
 }

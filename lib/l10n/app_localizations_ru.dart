@@ -5750,4 +5750,61 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Пробный период закончился. Всё, что вы настроили, на месте.';
+
+  @override
+  String get engineSlimCard =>
+      'Автоматизации работают на вашем хабе с ZigDash Engine. ZigDash установит его туда, когда вы сохраните первую.';
+
+  @override
+  String get engineSheetSource => 'Исходный код на GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine выполняет ваши автоматизации';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine — это один файл с открытым кодом, который ZigDash добавляет в папку Zigbee2MQTT на вашем хабе. Он выполняет там ваши автоматизации, даже когда телефон выключен. Удалить его можно в любой момент на вкладке «Автоматизации».';
+
+  @override
+  String get engineSheetInstallSave => 'Установить и сохранить';
+
+  @override
+  String get engineSheetSaveOnly => 'Сохранить без запуска';
+
+  @override
+  String get engineSheetSave => 'Сохранить';
+
+  @override
+  String get engineSheetAway =>
+      'Вы не дома, а ZigDash Engine устанавливается через домашнюю сеть. Сохраните сейчас. ZigDash предложит установить Engine, когда этот телефон в следующий раз будет дома.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT на вашем хабе не ответил вовремя, поэтому ZigDash не может сейчас установить свой Engine. Сохраните сейчас и установите его на вкладке «Автоматизации», когда хаб ответит.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Автоматизация сохранена. Она заработает, когда ZigDash Engine будет на вашем хабе.';
+
+  @override
+  String get engineWaitingTitle => 'Сохранены раньше, ждут ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Заработает после установки';
+
+  @override
+  String get engineWaitingPaused => 'Останется на паузе';
+
+  @override
+  String get autoNotRunTitle => 'Ни одна из них пока не работает';
+
+  @override
+  String get autoNotRunBody =>
+      'Не работает: ZigDash Engine нет на вашем хабе. До тех пор их хранит ваш MQTT-брокер, а брокер без сохранения (persistence) теряет их при перезапуске.';
+
+  @override
+  String get autoNotRunning => 'Не работает';
+
+  @override
+  String get historyUsePhoneInstead => 'Использовать этот телефон';
 }

@@ -5771,4 +5771,62 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Tu prueba terminó. Todo lo que configuraste sigue ahí.';
+
+  @override
+  String get engineSlimCard =>
+      'Las automatizaciones se ejecutan en tu hub con ZigDash Engine. ZigDash lo instala allí cuando guardas la primera.';
+
+  @override
+  String get engineSheetSource => 'Ver su código en GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine ejecuta tus automatizaciones';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine es un único archivo de código abierto que ZigDash añade a la carpeta de Zigbee2MQTT en tu hub. Ejecuta tus automatizaciones allí, con el teléfono apagado. Puedes quitarlo cuando quieras desde la pestaña Automatizaciones.';
+
+  @override
+  String get engineSheetInstallSave => 'Instalar y guardar';
+
+  @override
+  String get engineSheetSaveOnly => 'Guardar sin ejecutar';
+
+  @override
+  String get engineSheetSave => 'Guardar';
+
+  @override
+  String get engineSheetAway =>
+      'Estás fuera de casa, y ZigDash Engine se instala por tu red de casa. Guarda ahora. ZigDash te pedirá instalar el Engine la próxima vez que este teléfono esté en casa.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT en tu hub no respondió a tiempo, así que ZigDash no puede instalar su Engine ahora. Guarda ahora e instálalo desde la pestaña Automatizaciones cuando tu hub responda.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Tu automatización está guardada. Se ejecutará cuando ZigDash Engine esté en tu hub.';
+
+  @override
+  String get engineWaitingTitle =>
+      'Guardadas antes, esperando a ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Se ejecutará al instalar';
+
+  @override
+  String get engineWaitingPaused => 'Sigue en pausa';
+
+  @override
+  String get autoNotRunTitle => 'Ninguna se ejecuta todavía';
+
+  @override
+  String get autoNotRunBody =>
+      'No se ejecuta: ZigDash Engine no está en tu hub. Hasta entonces las guarda tu broker MQTT, y un broker sin persistencia las pierde al reiniciarse.';
+
+  @override
+  String get autoNotRunning => 'No se ejecuta';
+
+  @override
+  String get historyUsePhoneInstead => 'Usar este teléfono';
 }

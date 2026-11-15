@@ -10043,6 +10043,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your trial ended. Everything you set up is still there.'**
   String get proTrialEnded;
+
+  /// No description provided for @engineSlimCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations run on your hub with ZigDash Engine. ZigDash puts it there when you save your first one.'**
+  String get engineSlimCard;
+
+  /// No description provided for @engineSheetSource.
+  ///
+  /// In en, this message translates to:
+  /// **'See its source on GitHub'**
+  String get engineSheetSource;
+
+  /// No description provided for @engineSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine runs your automations'**
+  String get engineSheetTitle;
+
+  /// No description provided for @engineSheetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine is one open-source file that ZigDash adds to Zigbee2MQTT\'s folder on your hub. It runs your automations there, with your phone off. Remove it any time from the Automations tab.'**
+  String get engineSheetBody;
+
+  /// No description provided for @engineSheetInstallSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Install and save'**
+  String get engineSheetInstallSave;
+
+  /// No description provided for @engineSheetSaveOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Save without running'**
+  String get engineSheetSaveOnly;
+
+  /// No description provided for @engineSheetSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get engineSheetSave;
+
+  /// No description provided for @engineSheetAway.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re away from home, and ZigDash Engine is installed over your home network. Save now. ZigDash asks you to install the Engine the next time this phone is home.'**
+  String get engineSheetAway;
+
+  /// No description provided for @engineSheetNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT on your hub didn\'t answer in time, so ZigDash can\'t install its Engine now. Save now, and install it from the Automations tab when your hub answers.'**
+  String get engineSheetNoAnswer;
+
+  /// No description provided for @engineSheetSavedNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Your automation is saved. It runs once ZigDash Engine is on your hub.'**
+  String get engineSheetSavedNotRunning;
+
+  /// No description provided for @engineWaitingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved earlier, waiting for ZigDash Engine'**
+  String get engineWaitingTitle;
+
+  /// No description provided for @engineWaitingRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs once installed'**
+  String get engineWaitingRun;
+
+  /// No description provided for @engineWaitingPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays paused'**
+  String get engineWaitingPaused;
+
+  /// No description provided for @autoNotRunTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'None of these run yet'**
+  String get autoNotRunTitle;
+
+  /// No description provided for @autoNotRunBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not running: ZigDash Engine isn\'t on your hub. Until it is, your MQTT broker keeps these, and a broker without persistence loses them when it restarts.'**
+  String get autoNotRunBody;
+
+  /// No description provided for @autoNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Not running'**
+  String get autoNotRunning;
+
+  /// No description provided for @historyUsePhoneInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this phone instead'**
+  String get historyUsePhoneInstead;
 }
 
 class _AppLocalizationsDelegate

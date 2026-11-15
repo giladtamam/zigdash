@@ -5783,4 +5783,62 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Dein Test ist vorbei. Alles, was du eingerichtet hast, ist noch da.';
+
+  @override
+  String get engineSlimCard =>
+      'Automationen laufen mit ZigDash Engine auf Ihrem Hub. ZigDash legt es dort ab, wenn Sie Ihre erste speichern.';
+
+  @override
+  String get engineSheetSource => 'Quellcode auf GitHub ansehen';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine führt Ihre Automationen aus';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine ist eine einzelne Open-Source-Datei, die ZigDash in den Zigbee2MQTT-Ordner auf Ihrem Hub legt. Sie führt Ihre Automationen dort aus, auch bei ausgeschaltetem Telefon. Jederzeit im Tab Automationen entfernbar.';
+
+  @override
+  String get engineSheetInstallSave => 'Installieren und speichern';
+
+  @override
+  String get engineSheetSaveOnly => 'Speichern, ohne auszuführen';
+
+  @override
+  String get engineSheetSave => 'Speichern';
+
+  @override
+  String get engineSheetAway =>
+      'Sie sind unterwegs, und ZigDash Engine wird über Ihr Heimnetz installiert. Jetzt speichern. ZigDash fragt nach der Installation, wenn dieses Telefon das nächste Mal zu Hause ist.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT auf Ihrem Hub hat nicht rechtzeitig geantwortet, daher kann ZigDash seine Engine jetzt nicht installieren. Jetzt speichern und im Tab Automationen installieren, sobald der Hub antwortet.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Ihre Automation ist gespeichert. Sie läuft, sobald ZigDash Engine auf Ihrem Hub ist.';
+
+  @override
+  String get engineWaitingTitle =>
+      'Früher gespeichert, warten auf ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Läuft nach der Installation';
+
+  @override
+  String get engineWaitingPaused => 'Bleibt pausiert';
+
+  @override
+  String get autoNotRunTitle => 'Noch läuft keine davon';
+
+  @override
+  String get autoNotRunBody =>
+      'Läuft nicht: ZigDash Engine ist nicht auf Ihrem Hub. Bis dahin bewahrt Ihr MQTT-Broker sie auf, und ein Broker ohne Persistenz verliert sie beim Neustart.';
+
+  @override
+  String get autoNotRunning => 'Läuft nicht';
+
+  @override
+  String get historyUsePhoneInstead => 'Stattdessen dieses Telefon nutzen';
 }

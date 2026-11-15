@@ -5768,4 +5768,61 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get proTrialEnded =>
       'Seu teste terminou. Tudo o que você configurou continua lá.';
+
+  @override
+  String get engineSlimCard =>
+      'As automações rodam no seu hub com o ZigDash Engine. O ZigDash o coloca lá quando você salvar a primeira.';
+
+  @override
+  String get engineSheetSource => 'Ver o código-fonte no GitHub';
+
+  @override
+  String get engineSheetTitle => 'O ZigDash Engine executa suas automações';
+
+  @override
+  String get engineSheetBody =>
+      'O ZigDash Engine é um único arquivo de código aberto que o ZigDash adiciona à pasta do Zigbee2MQTT no seu hub. Ele executa suas automações lá, com o celular desligado. Remova quando quiser na aba Automações.';
+
+  @override
+  String get engineSheetInstallSave => 'Instalar e salvar';
+
+  @override
+  String get engineSheetSaveOnly => 'Salvar sem executar';
+
+  @override
+  String get engineSheetSave => 'Salvar';
+
+  @override
+  String get engineSheetAway =>
+      'Você está fora de casa, e o ZigDash Engine é instalado pela sua rede de casa. Salve agora. O ZigDash pedirá para instalar o Engine na próxima vez que este celular estiver em casa.';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'O Zigbee2MQTT no seu hub não respondeu a tempo, então o ZigDash não pode instalar o Engine agora. Salve agora e instale-o na aba Automações quando o hub responder.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Sua automação foi salva. Ela roda assim que o ZigDash Engine estiver no seu hub.';
+
+  @override
+  String get engineWaitingTitle => 'Salvas antes, aguardando o ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Roda após instalar';
+
+  @override
+  String get engineWaitingPaused => 'Fica pausada';
+
+  @override
+  String get autoNotRunTitle => 'Nenhuma delas roda ainda';
+
+  @override
+  String get autoNotRunBody =>
+      'Não roda: o ZigDash Engine não está no seu hub. Até lá, seu broker MQTT as guarda, e um broker sem persistência as perde ao reiniciar.';
+
+  @override
+  String get autoNotRunning => 'Não roda';
+
+  @override
+  String get historyUsePhoneInstead => 'Usar este celular';
 }

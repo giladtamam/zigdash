@@ -1741,5 +1741,22 @@
   "proTrialYouUsed": "Usaste {features}.",
   "proTrialAfterEnd": "Al terminar, todo lo que configuraste se queda; las vistas de semana y mes y las automatizaciones nuevas a partir de la cuarta necesitan Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Prueba: queda 1 día} other{Prueba: quedan {days} días}}",
-  "proTrialEnded": "Tu prueba terminó. Todo lo que configuraste sigue ahí."
+  "proTrialEnded": "Tu prueba terminó. Todo lo que configuraste sigue ahí.",
+  "engineSlimCard": "Las automatizaciones se ejecutan en tu hub con ZigDash Engine. ZigDash lo instala allí cuando guardas la primera.",
+  "engineSheetSource": "Ver su código en GitHub",
+  "engineSheetTitle": "ZigDash Engine ejecuta tus automatizaciones",
+  "engineSheetBody": "ZigDash Engine es un único archivo de código abierto que ZigDash añade a la carpeta de Zigbee2MQTT en tu hub. Ejecuta tus automatizaciones allí, con el teléfono apagado. Puedes quitarlo cuando quieras desde la pestaña Automatizaciones.",
+  "engineSheetInstallSave": "Instalar y guardar",
+  "engineSheetSaveOnly": "Guardar sin ejecutar",
+  "engineSheetSave": "Guardar",
+  "engineSheetAway": "Estás fuera de casa, y ZigDash Engine se instala por tu red de casa. Guarda ahora. ZigDash te pedirá instalar el Engine la próxima vez que este teléfono esté en casa.",
+  "engineSheetNoAnswer": "Zigbee2MQTT en tu hub no respondió a tiempo, así que ZigDash no puede instalar su Engine ahora. Guarda ahora e instálalo desde la pestaña Automatizaciones cuando tu hub responda.",
+  "engineSheetSavedNotRunning": "Tu automatización está guardada. Se ejecutará cuando ZigDash Engine esté en tu hub.",
+  "engineWaitingTitle": "Guardadas antes, esperando a ZigDash Engine",
+  "engineWaitingRun": "Se ejecutará al instalar",
+  "engineWaitingPaused": "Sigue en pausa",
+  "autoNotRunTitle": "Ninguna se ejecuta todavía",
+  "autoNotRunBody": "No se ejecuta: ZigDash Engine no está en tu hub. Hasta entonces las guarda tu broker MQTT, y un broker sin persistencia las pierde al reiniciarse.",
+  "autoNotRunning": "No se ejecuta",
+  "historyUsePhoneInstead": "Usar este teléfono"
 }

@@ -1741,5 +1741,22 @@
   "proTrialYouUsed": "Du hast {features} genutzt.",
   "proTrialAfterEnd": "Danach bleibt alles, was du eingerichtet hast; Wochen- und Monatsansicht und neue Automationen ab der vierten brauchen Pro.",
   "proTrialDaysLeft": "{days, plural, =1{Test: noch 1 Tag} other{Test: noch {days} Tage}}",
-  "proTrialEnded": "Dein Test ist vorbei. Alles, was du eingerichtet hast, ist noch da."
+  "proTrialEnded": "Dein Test ist vorbei. Alles, was du eingerichtet hast, ist noch da.",
+  "engineSlimCard": "Automationen laufen mit ZigDash Engine auf Ihrem Hub. ZigDash legt es dort ab, wenn Sie Ihre erste speichern.",
+  "engineSheetSource": "Quellcode auf GitHub ansehen",
+  "engineSheetTitle": "ZigDash Engine führt Ihre Automationen aus",
+  "engineSheetBody": "ZigDash Engine ist eine einzelne Open-Source-Datei, die ZigDash in den Zigbee2MQTT-Ordner auf Ihrem Hub legt. Sie führt Ihre Automationen dort aus, auch bei ausgeschaltetem Telefon. Jederzeit im Tab Automationen entfernbar.",
+  "engineSheetInstallSave": "Installieren und speichern",
+  "engineSheetSaveOnly": "Speichern, ohne auszuführen",
+  "engineSheetSave": "Speichern",
+  "engineSheetAway": "Sie sind unterwegs, und ZigDash Engine wird über Ihr Heimnetz installiert. Jetzt speichern. ZigDash fragt nach der Installation, wenn dieses Telefon das nächste Mal zu Hause ist.",
+  "engineSheetNoAnswer": "Zigbee2MQTT auf Ihrem Hub hat nicht rechtzeitig geantwortet, daher kann ZigDash seine Engine jetzt nicht installieren. Jetzt speichern und im Tab Automationen installieren, sobald der Hub antwortet.",
+  "engineSheetSavedNotRunning": "Ihre Automation ist gespeichert. Sie läuft, sobald ZigDash Engine auf Ihrem Hub ist.",
+  "engineWaitingTitle": "Früher gespeichert, warten auf ZigDash Engine",
+  "engineWaitingRun": "Läuft nach der Installation",
+  "engineWaitingPaused": "Bleibt pausiert",
+  "autoNotRunTitle": "Noch läuft keine davon",
+  "autoNotRunBody": "Läuft nicht: ZigDash Engine ist nicht auf Ihrem Hub. Bis dahin bewahrt Ihr MQTT-Broker sie auf, und ein Broker ohne Persistenz verliert sie beim Neustart.",
+  "autoNotRunning": "Läuft nicht",
+  "historyUsePhoneInstead": "Stattdessen dieses Telefon nutzen"
 }
