@@ -147,6 +147,23 @@ class RemoteSetup {
     return RemoteSetupResult.ready;
   }
 
+  /// A ticket for ZigDash Chat (chat-linking.md §2): the relay checks this
+  /// phone's login and asks Google Play about the Pro purchase again, and
+  /// signs what the chat service may do for this Home for 10 minutes.
+  /// [extra] names the Chat client being linked, when there is one. The
+  /// status is the relay's (401 a wrong login, 402 the purchase isn't valid
+  /// or isn't this Home's, 0 unreachable); the ticket is null unless 200.
+  Future<(int, String?)> chatTicket(String connectionId, {Map<String, Object?> extra = const {}}) async {
+    final home = await _store.read(connectionId);
+    if (home == null) return (401, null);
+    final token = await _purchaseToken() ?? (relayIsTest && kDebugMode ? 'test-pro-$connectionId' : null);
+    if (token == null) return (402, null);
+    final (status, body) = await _call('POST', '/v1/homes/${home.homeId}/chat-ticket',
+        body: {'purchase_token': token, ...extra}, auth: home);
+    final ticket = body?['ticket'];
+    return (status, status == 200 && ticket is String && ticket.isNotEmpty ? ticket : null);
+  }
+
   /// Keeps a login brought from another phone (QR code or backup file).
   Future<void> adopt(String connectionId, RemoteHome home) => _store.write(connectionId, home);
 

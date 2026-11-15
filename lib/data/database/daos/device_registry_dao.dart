@@ -76,6 +76,29 @@ class DeviceRegistryDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
+  /// Per device of [connectionId], the names of its tiles, their sections
+  /// and dashboards (ZigDash Chat checks them for gate and garage words).
+  Stream<Map<String, List<String>>> watchDeviceTags(String connectionId) {
+    final q = select(panels).join([
+      innerJoin(dashboards, dashboards.id.equalsExp(panels.dashboardId)),
+      leftOuterJoin(sections, sections.id.equalsExp(panels.sectionId)),
+    ])
+      ..where(dashboards.connectionId.equals(connectionId) &
+          panels.deviceIeee.isNotNull());
+    return q.watch().map((rows) {
+      final out = <String, List<String>>{};
+      for (final r in rows) {
+        final tile = r.readTable(panels);
+        (out[tile.deviceIeee!] ??= []).addAll([
+          tile.name,
+          r.readTable(dashboards).name,
+          ?r.readTableOrNull(sections)?.name,
+        ]);
+      }
+      return out;
+    });
+  }
+
   Stream<Set<String>> watchDismissed(String connectionId) =>
       (select(deviceDismissals)
             ..where((d) => d.connectionId.equals(connectionId)))

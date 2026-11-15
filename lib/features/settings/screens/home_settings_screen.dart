@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../remote/remote_setup.dart';
 
+import '../../chat/chat_screen.dart' show ChatSettingsRow;
 import '../../nfc/nfc_tags.dart' show NfcState, nfcStateProvider;
 import '../../../data/database/tables/connections.dart';
 import '../../ha_import/ha_auth.dart';
@@ -93,6 +94,8 @@ class HomeSettingsScreen extends ConsumerWidget {
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.push(Routes.homeRemote(home.id)),
                 ),
+              // 3.7.0: ZigDash Chat, Play build with Pro only.
+              ChatSettingsRow(connectionId: home.id),
               ListTile(
                 leading: const Icon(Icons.bolt_outlined),
                 title: Text(l10n.automationsTitle),

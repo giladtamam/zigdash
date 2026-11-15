@@ -73,6 +73,9 @@ class Routes {
   /// Share this home with another phone at home (3.1.7).
   static String homeShare(String connectionId) =>
       '/settings/home/$connectionId/share';
+  /// ZigDash Chat (3.7.0, chat-linking.md §3).
+  static String homeChat(String connectionId) =>
+      '/settings/home/$connectionId/chat';
   static String homeNfcTags(String connectionId) =>
       '/settings/home/$connectionId/nfc-tags';
   static String homeAlerts(String connectionId) =>

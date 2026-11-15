@@ -21,7 +21,7 @@ abstract final class ChatWire {
   static String answerTopic(String clientId) => 'zigdash/chat/res/$clientId';
 
   /// The request and answer topics through the relay: opaque ids under
-  /// homes/<home>/x/, made with the client's key (as `chatTopics` in wire.mjs).
+  /// `homes/<home>/x/`, made with the client's key (as `chatTopics` in wire.mjs).
   static ({String req, String res}) relayTopics(String homeId, String clientId, Uint8List key) => (
         req: 'homes/$homeId/x/${RemoteSeal.opaqueId(key, requestTopic(clientId))}',
         res: 'homes/$homeId/x/${RemoteSeal.opaqueId(key, answerTopic(clientId))}',
