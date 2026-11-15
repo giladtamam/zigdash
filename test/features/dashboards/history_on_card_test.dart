@@ -8,6 +8,8 @@ import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/engine/automation.dart';
+import 'package:zigdash/engine/automations_repo.dart';
 import 'package:zigdash/engine/engine_installer.dart';
 import 'package:zigdash/engine/engine_providers.dart';
 import 'package:zigdash/engine/engine_status.dart';
@@ -18,6 +20,7 @@ import 'package:zigdash/features/onboarding/setup/setup_completed_at.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 
+import '../../engine/engine_on_save_test.dart' show RecordingManager;
 import '../../engine/engine_test.dart' show FakeLink;
 
 class _Sink implements AnalyticsSink {
@@ -69,11 +72,12 @@ const _hub = HubInfo(version: '2.14.0', externalJsAllowed: true);
 const _title = 'See your home over days';
 
 class _Rig {
-  _Rig(this.prefs, this.sink, this.link, this.history);
+  _Rig(this.prefs, this.sink, this.link, this.history, this.mgr);
   final SharedPreferences prefs;
   final _Sink sink;
   final FakeLink link;
   final _History history;
+  final RecordingManager mgr;
 }
 
 Future<_Rig> _pump(
@@ -87,9 +91,12 @@ Future<_Rig> _pump(
   String host = '192.168.1.2',
   ConnectionTransport? transport,
   bool answerInstall = true,
+  List<Automation> rules = const [],
+  Stream<EngineView> Function()? views,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   final p = await SharedPreferences.getInstance();
+  final mgr = RecordingManager();
   final sink = _Sink();
   final link = FakeLink();
   final history = _History();
@@ -115,12 +122,19 @@ Future<_Rig> _pump(
           (ref, _) =>
               online == null ? const Stream.empty() : Stream.value(online),
         ),
-        engineViewProvider.overrideWith((ref, _) => Stream.value(view)),
+        engineViewProvider.overrideWith(
+          (ref, _) => views?.call() ?? Stream.value(view),
+        ),
         engineInstallerProvider.overrideWith(
           (ref, _) async => EngineInstaller(link, base: 'zigbee2mqtt'),
         ),
         engineSourceProvider.overrideWith((ref) async => '// engine'),
         historyServiceProvider.overrideWithValue(history),
+        // 3.6.2: rules waiting for the Engine are asked about first.
+        automationsProvider.overrideWith((ref, _) => Stream.value(rules)),
+        automationsRepoProvider.overrideWith(
+          (ref) => AutomationsRepo((_) async => mgr, p, timeZone: () async => 'UTC'),
+        ),
       ],
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -134,7 +148,7 @@ Future<_Rig> _pump(
   await tester.pump();
   await tester.pump(historyOnGrace);
   await tester.pump();
-  return _Rig(p, sink, link, history);
+  return _Rig(p, sink, link, history, mgr);
 }
 
 // 3.6: Turn on History, docs/design/pro-trial-360.md §2.
@@ -271,6 +285,139 @@ void main() {
     expect(find.text(_title), findsNothing);
     expect(rig.prefs.getString(historyOnDoneKey('c1')), '1');
     expect(rig.sink.sent.last, 'history_on {step: later, from: card}');
+  });
+
+  group('3.6.2: the hub check waits 20 s and says why', () {
+    Future<_Rig> silent(WidgetTester tester, EngineView view) async {
+      final rig = await _pump(tester, views: () => Stream.value(view));
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      await tester.pump();
+      expect(find.text('Checking your hub…'), findsOneWidget);
+      expect(find.byKey(const Key('history-on-use-phone')), findsOneWidget);
+      await tester.pump(const Duration(seconds: 19));
+      expect(find.byKey(const Key('history-on-phone')), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump();
+      expect(find.byKey(const Key('history-on-phone')), findsOneWidget);
+      return rig;
+    }
+
+    testWidgets('a silent hub: failed, why no_info; this phone offered', (
+      tester,
+    ) async {
+      final rig = await silent(
+        tester,
+        const EngineView(phase: HubEnginePhase.checking),
+      );
+      expect(
+        rig.sink.sent,
+        contains('history_setup {result: failed, from: card, why: no_info}'),
+      );
+    });
+
+    testWidgets('info without extensions: why no_extensions', (tester) async {
+      final rig = await silent(
+        tester,
+        const EngineView(phase: HubEnginePhase.checking, hub: _hub),
+      );
+      expect(
+        rig.sink.sent,
+        contains(
+          'history_setup {result: failed, from: card, why: no_extensions}',
+        ),
+      );
+    });
+
+    testWidgets('through the relay: why relay', (tester) async {
+      final rig = await _pump(
+        tester,
+        view: const EngineView(phase: HubEnginePhase.unreachable, away: true),
+      );
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('history-on-phone')), findsOneWidget);
+      expect(
+        rig.sink.sent,
+        contains('history_setup {result: failed, from: card, why: relay}'),
+      );
+    });
+
+    testWidgets('Use this phone instead while the hub is checked', (
+      tester,
+    ) async {
+      final rig = await _pump(
+        tester,
+        views: () =>
+            Stream.value(const EngineView(phase: HubEnginePhase.checking)),
+      );
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('history-on-use-phone')));
+      await tester.pump();
+      await tester.pump();
+      expect(rig.prefs.getBool('history_record_here_c1'), isTrue);
+      expect(find.textContaining('This device records history'), findsOneWidget);
+      // The check ends later: nothing else happens.
+      await tester.pump(const Duration(seconds: 21));
+      await tester.pump();
+      expect(find.textContaining('This device records history'), findsOneWidget);
+      expect(rig.link.published, isEmpty);
+      expect(
+        rig.sink.sent.where((e) => e.contains('result: failed')),
+        isEmpty,
+      );
+      expect(
+        rig.sink.sent,
+        contains('history_setup {result: this_device, from: card}'),
+      );
+    });
+
+    testWidgets('rules waiting for the Engine: asked about before the install', (
+      tester,
+    ) async {
+      final rig = await _pump(
+        tester,
+        rules: [
+          const Automation(
+            id: 'heater',
+            name: 'Heater at 7',
+            enabled: true,
+            trigger: TimeTrigger(at: '07:00'),
+            action: AutomationAction(
+              kind: ActionKind.device,
+              commands: [
+                EngineCommand(ieee: '0xh', payload: {'state': 'ON'}),
+              ],
+            ),
+          ),
+        ],
+      );
+      await tester.tap(find.byKey(const Key('history-on-turn-on')));
+      // The card's progress spins under the sheet: no pumpAndSettle.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('Heater at 7'), findsOneWidget);
+      expect(rig.link.published, isEmpty, reason: 'nothing before a tap');
+      await tester.tap(find.byKey(const Key('engine-waiting-heater')));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await tester.pump();
+      for (var i = 0; i < 10; i++) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 20)),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(rig.mgr.rules, [('heater', false)]);
+      expect(
+        rig.link.published.map((p) => p.$1),
+        contains('zigbee2mqtt/bridge/request/extension/save'),
+      );
+      expect(
+        rig.sink.sent,
+        contains('engine_setup {step: install_tapped, from: history_on, z2m: 2.14}'),
+      );
+    });
   });
 
   testWidgets('a Home already recording on this phone is not asked', (

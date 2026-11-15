@@ -1,0 +1,542 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mqtt_client/mqtt_client.dart' as mc;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zigdash/core/analytics/analytics.dart';
+import 'package:zigdash/data/database/database.dart' show Scene;
+import 'package:zigdash/data/database/tables/connections.dart';
+import 'package:zigdash/data/repositories/connection_repo.dart' show connectionsStreamProvider;
+import 'package:zigdash/engine/automation.dart';
+import 'package:zigdash/engine/automation_editor_screen.dart';
+import 'package:zigdash/engine/automations_repo.dart';
+import 'package:zigdash/engine/automations_screen.dart';
+import 'package:zigdash/engine/engine_installer.dart';
+import 'package:zigdash/engine/engine_providers.dart';
+import 'package:zigdash/engine/engine_setup.dart';
+import 'package:zigdash/engine/engine_status.dart';
+import 'package:zigdash/features/devices/devices_providers.dart' show homeBaseTopicProvider;
+import 'package:zigdash/features/discovery/models/z2m_device.dart';
+import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
+import 'package:zigdash/features/pro/pro.dart';
+import 'package:zigdash/features/scenes/scenes_providers.dart';
+import 'package:zigdash/features/settings/providers/settings_controller.dart';
+import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/mqtt/broker_config.dart';
+import 'package:zigdash/mqtt/mqtt_manager.dart';
+import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
+
+import 'engine_test.dart' show FakeLink;
+
+/// A connected broker that records what is published.
+class RecordingManager extends MqttManager {
+  RecordingManager()
+      : super(
+          config: const BrokerConfig(id: 'c1', host: 'localhost', port: 1883, protocol: MqttProtocol.tcp),
+          password: '',
+        );
+  final published = <(String, String, bool)>[];
+  @override
+  bool get isConnected => true;
+  @override
+  void publish(String topic, String template, Object value,
+      {mc.MqttQos qos = mc.MqttQos.atLeastOnce, bool retain = false}) {
+    published.add((topic, template, retain));
+  }
+
+  /// The rules published, in order: id and enabled.
+  List<(String, bool)> get rules => [
+        for (final p in published)
+          if (p.$1.startsWith('zigdash/automations/rules/'))
+            (p.$1.split('/').last, (jsonDecode(p.$2) as Map)['enabled'] as bool? ?? true),
+      ];
+}
+
+class _Sink implements AnalyticsSink {
+  final sent = <String>[];
+  @override
+  Future<void> start() async {}
+  @override
+  Future<void> stop() async {}
+  @override
+  void send(String name, Map<String, String> props) => sent.add('$name $props');
+}
+
+List<Z2mDevice> _devices() => parseBridgeDevices(jsonEncode([
+      {
+        'friendly_name': 'Hallway light',
+        'ieee_address': '0xlight',
+        'type': 'Router',
+        'supported': true,
+        'definition': {
+          'exposes': [
+            {
+              'type': 'light',
+              'features': [
+                {'type': 'binary', 'property': 'state', 'access': 7, 'value_on': 'ON', 'value_off': 'OFF'},
+              ],
+            },
+          ],
+        },
+      },
+    ]));
+
+Automation _rule(String id, {String name = 'Heater at 7', bool enabled = true}) => Automation(
+      id: id,
+      name: name,
+      enabled: enabled,
+      trigger: const TimeTrigger(at: '07:00'),
+      action: const AutomationAction(
+          kind: ActionKind.device, commands: [EngineCommand(ieee: '0xlight', payload: {'state': 'ON'})], label: 'Hallway light'),
+    );
+
+const _hub = HubInfo(version: '2.14.0', externalJsAllowed: true);
+
+class _Rig {
+  _Rig(this.prefs, this.mgr, this.link, this.sink);
+  final SharedPreferences prefs;
+  final RecordingManager mgr;
+  final FakeLink link;
+  final _Sink sink;
+
+  List<String> get requests => [
+        for (final p in link.published)
+          if (p.$1.contains('/bridge/request/')) p.$1.split('/bridge/request/').last,
+      ];
+}
+
+Future<_Rig> _pump(
+  WidgetTester tester,
+  Widget home, {
+  required Stream<EngineView> Function() view,
+  List<Automation> rules = const [],
+  Map<String, Object> prefs = const {},
+  List<Override> extra = const [],
+}) async {
+  tester.view.physicalSize = const Size(1080, 2400);
+  addTearDown(tester.view.reset);
+  SharedPreferences.setMockInitialValues({'analytics_consent': true, ...prefs});
+  final p = await SharedPreferences.getInstance();
+  final mgr = RecordingManager();
+  final link = FakeLink();
+  final sink = _Sink();
+  link.onPublish = (topic, payload) {
+    if (!topic.contains('/bridge/request/')) return;
+    final what = topic.split('/bridge/request/').last;
+    if (what == 'restart') {
+      scheduleMicrotask(() {
+        link.emit('zigbee2mqtt/bridge/state', '{"state":"offline"}');
+        link.emit('zigbee2mqtt/bridge/state', '{"state":"online"}');
+      });
+      return;
+    }
+    final tx = (jsonDecode(payload) as Map)['transaction'];
+    scheduleMicrotask(() =>
+        link.emit('zigbee2mqtt/bridge/response/$what', jsonEncode({'status': 'ok', 'transaction': tx})));
+  };
+  await tester.pumpWidget(ProviderScope(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(p),
+      analyticsAvailableProvider.overrideWithValue(true),
+      analyticsSinkProvider.overrideWithValue(sink),
+      mqttManagerProvider.overrideWith((ref, _) async => mgr),
+      homeBaseTopicProvider.overrideWith((ref, _) => 'zigbee2mqtt'),
+      bridgeDevicesStreamProvider.overrideWith((ref, _) => Stream.value(_devices())),
+      scenesForConnectionProvider.overrideWith((ref, _) => Stream.value(<Scene>[])),
+      automationsRepoProvider.overrideWith((ref) => AutomationsRepo((_) async => mgr, p, timeZone: () async => 'UTC')),
+      automationsProvider.overrideWith((ref, _) => Stream.value(rules)),
+      automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
+      engineViewProvider.overrideWith((ref, _) => view()),
+      engineInstallerProvider.overrideWith((ref, _) async => EngineInstaller(link, base: 'zigbee2mqtt')),
+      engineSourceProvider.overrideWith((ref) async => "const ENGINE_VERSION = '3.4.5';"),
+      connectionsStreamProvider.overrideWith((ref) => Stream.value(const [])),
+      ...extra,
+    ],
+    child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: home,
+    ),
+  ));
+  for (var i = 0; i < 4; i++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  return _Rig(p, mgr, link, sink);
+}
+
+/// A "07:00 → Hallway light on" rule in the editor, then Save.
+Future<void> _makeAndSave(WidgetTester tester) async {
+  await tester.tap(find.text('A time comes'));
+  await tester.pumpAndSettle();
+  await tester.scrollUntilVisible(find.byKey(const Key('auto-action-device')), 200,
+      scrollable: find.byType(Scrollable).first);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('auto-action-device')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Hallway light').last);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('auto-save')));
+  await tester.pumpAndSettle();
+}
+
+/// The install's futures run partly outside the test's fake clock.
+Future<void> _settle(WidgetTester tester) async {
+  for (var i = 0; i < 10; i++) {
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+}
+
+Future<void> _end(WidgetTester tester) async {
+  await tester.pumpWidget(const SizedBox());
+  await tester.pump(const Duration(seconds: 4)); // the manager's unsubscribe grace
+}
+
+const _editor = AutomationEditorScreen(connectionId: 'c1');
+Stream<EngineView> Function() _view(EngineView v) => () => Stream.value(v);
+
+// 3.6.2: the Engine when it's needed, docs/design/engine-on-save-362.md.
+void main() {
+  group('saving without the Engine', () {
+    testWidgets('the sheet says what the Engine is; Install and save installs, then the rule runs', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)));
+      await _makeAndSave(tester);
+      expect(find.textContaining('one open-source file'), findsOneWidget);
+      expect(find.byKey(const Key('engine-source')), findsOneWidget);
+      expect(rig.mgr.rules, isEmpty, reason: 'nothing saved before a choice');
+
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await _settle(tester);
+      expect(rig.mgr.rules.single.$2, isTrue);
+      expect(rig.requests, ['extension/save']);
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      expect(rig.sink.sent, containsAll([
+        'engine_setup {step: install_tapped, from: save, z2m: 2.14}',
+        'engine_setup {step: installed, from: save, z2m: 2.14}',
+      ]));
+      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: yes'));
+      await _end(tester);
+    });
+
+    testWidgets('Save without running keeps the rule on the broker, not running', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)));
+      await _makeAndSave(tester);
+      await tester.tap(find.byKey(const Key('engine-sheet-save')));
+      await tester.pumpAndSettle();
+      expect(rig.mgr.rules.single.$2, isTrue);
+      expect(rig.requests, isEmpty);
+      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: no'));
+      await _end(tester);
+    });
+
+    testWidgets('closing the sheet saves nothing and stays in the editor', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)));
+      await _makeAndSave(tester);
+      await tester.tapAt(const Offset(20, 20)); // the barrier
+      await tester.pumpAndSettle();
+      expect(rig.mgr.rules, isEmpty);
+      expect(find.byKey(const Key('auto-save')), findsOneWidget);
+      await _end(tester);
+    });
+
+    testWidgets('add-ons blocked: the consent screen first; Not now keeps the rule, not running', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(
+              phase: HubEnginePhase.needsConsent, hub: HubInfo(version: '2.14.0', externalJsAllowed: false))));
+      await _makeAndSave(tester);
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await tester.pumpAndSettle();
+      expect(find.text('Zigbee2MQTT needs one setting changed'), findsOneWidget);
+      expect(find.textContaining('30 seconds'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('engine-sheet-decline')));
+      await tester.pumpAndSettle();
+      expect(rig.mgr.rules.single.$2, isTrue);
+      expect(rig.requests, isEmpty);
+      expect(engineDeclined(rig.prefs, 'c1'), isTrue);
+      expect(rig.sink.sent, contains('engine_setup {step: declined, from: save, z2m: 2.14}'));
+      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: no'));
+      await _end(tester);
+    });
+
+    testWidgets('add-ons blocked: allowed, Zigbee2MQTT restarts, then the Engine goes on', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(
+              phase: HubEnginePhase.needsConsent, hub: HubInfo(version: '2.14.0', externalJsAllowed: false))));
+      await _makeAndSave(tester);
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-sheet-consent')));
+      await _settle(tester);
+      expect(rig.requests, ['options', 'restart', 'extension/save']);
+      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: yes'));
+      await _end(tester);
+    });
+
+    testWidgets('Zigbee2MQTT too old: the update message, the rule kept', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(
+              phase: HubEnginePhase.tooOld, hub: HubInfo(version: '2.3.0', externalJsAllowed: true))));
+      await _makeAndSave(tester);
+      expect(find.text('Zigbee2MQTT needs an update'), findsOneWidget);
+      expect(find.textContaining('version 2.3.0'), findsOneWidget);
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      await tester.tap(find.byKey(const Key('engine-sheet-save')));
+      await tester.pumpAndSettle();
+      expect(rig.mgr.rules, hasLength(1));
+      expect(rig.requests, isEmpty);
+      await _end(tester);
+    });
+
+    testWidgets('away (through the relay): Save only; this phone keeps the rule for home', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(phase: HubEnginePhase.unreachable, away: true)));
+      await _makeAndSave(tester);
+      expect(find.textContaining('the next time this phone is home'), findsOneWidget);
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      await tester.tap(find.byKey(const Key('engine-sheet-save')));
+      await tester.pumpAndSettle();
+      expect(rig.requests, isEmpty);
+      final kept = jsonDecode(rig.prefs.getString('automations.away.c1')!) as Map;
+      expect(kept, hasLength(1));
+      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: no'));
+      await _end(tester);
+    });
+
+    testWidgets('rules waiting from before: a switch each; paused ones saved disabled before the install',
+        (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)),
+          rules: [_rule('old'), _rule('kept', name: 'Porch at dusk')]);
+      await _makeAndSave(tester);
+      expect(find.text('Heater at 7'), findsOneWidget);
+      expect(find.text('Porch at dusk'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('engine-waiting-old')));
+      await tester.pumpAndSettle();
+      expect(find.text('Stays paused'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await _settle(tester);
+      expect(rig.mgr.rules.first, ('old', false));
+      expect(rig.mgr.rules.where((r) => r.$1 == 'kept'), isEmpty, reason: 'unchanged, not re-saved');
+      expect(rig.mgr.rules.last.$2, isTrue, reason: 'the new rule runs');
+      expect(rig.requests, ['extension/save']);
+      await _end(tester);
+    });
+
+    testWidgets('with the Engine running: saved straight away, running', (tester) async {
+      final rig = await _pump(tester, _editor,
+          view: _view(EngineView(
+            phase: HubEnginePhase.running,
+            hub: _hub,
+            report: EngineReport(
+                version: '3.4.5', runningOn: 'hub', rulesLoaded: 0, rulesUnknown: const [], stoppedSelf: false,
+                at: DateTime(2026)),
+          )));
+      await _makeAndSave(tester);
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      expect(rig.mgr.rules, hasLength(1));
+      expect(rig.sink.sent.where((e) => e.startsWith('automation_saved')).single, contains('running: yes'));
+      await _end(tester);
+    });
+  });
+
+  group('the Automations tab without the Engine', () {
+    const tab = AutomationsScreen(connectionId: 'c1');
+
+    testWidgets('the slim card and New automation, no install before there is a rule', (tester) async {
+      final rig = await _pump(tester, tab, view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)));
+      expect(find.byKey(const Key('engine-slim-card')), findsOneWidget);
+      expect(find.textContaining('when you save your first one'), findsOneWidget);
+      expect(find.byKey(const Key('engine-source')), findsOneWidget);
+      expect(find.byKey(const Key('auto-new')), findsOneWidget);
+      expect(find.byKey(const Key('engine-install')), findsNothing);
+      expect(rig.sink.sent, contains('engine_setup {step: offered, from: automations, z2m: 2.14}'));
+    });
+
+    testWidgets('saved rules are listed under "None of these run yet"; Install asks about each, then installs',
+        (tester) async {
+      final rig = await _pump(tester, tab,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)), rules: [_rule('old')]);
+      expect(find.text('NONE OF THESE RUN YET'), findsOneWidget);
+      expect(find.textContaining('a broker without persistence'), findsOneWidget);
+      expect(find.text('Not running'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('engine-install')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-waiting-old')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-sheet-install')));
+      await _settle(tester);
+      expect(rig.mgr.rules, [('old', false)]);
+      expect(rig.requests, ['extension/save']);
+      expect(rig.sink.sent, containsAll([
+        'engine_setup {step: install_tapped, from: automations, z2m: 2.14}',
+        'engine_setup {step: installed, from: automations, z2m: 2.14}',
+      ]));
+    });
+
+    testWidgets('Not now on the waiting rules installs nothing', (tester) async {
+      final rig = await _pump(tester, tab,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)), rules: [_rule('old')]);
+      await tester.tap(find.byKey(const Key('engine-install')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('engine-sheet-save')));
+      await tester.pumpAndSettle();
+      expect(rig.requests, isEmpty);
+      expect(rig.mgr.rules, isEmpty);
+    });
+
+    testWidgets('away, Engine never seen here: the list and New automation, no Install', (tester) async {
+      await _pump(tester, tab,
+          view: _view(const EngineView(phase: HubEnginePhase.unreachable, away: true)), rules: [_rule('old')]);
+      expect(find.byKey(const Key('auto-new')), findsOneWidget);
+      expect(find.text('NONE OF THESE RUN YET'), findsOneWidget);
+      expect(find.byKey(const Key('engine-install')), findsNothing);
+      expect(find.byKey(const Key('engine-away-unreachable')), findsNothing);
+    });
+
+    testWidgets('away, Engine seen here before: the hub is unreachable, as before', (tester) async {
+      await _pump(tester, tab,
+          view: _view(const EngineView(phase: HubEnginePhase.unreachable, away: true)),
+          prefs: {'engine.installed.c1': true});
+      expect(find.byKey(const Key('engine-away-unreachable')), findsOneWidget);
+      expect(find.byKey(const Key('auto-new')), findsNothing);
+    });
+
+    testWidgets('saved away, then the tab at home: the install sheet opens once; nothing installed untapped',
+        (tester) async {
+      final away = _rule('away1', name: 'Saved on the train');
+      final rig = await _pump(tester, tab,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)),
+          prefs: {'automations.away.c1': jsonEncode({away.id: away.encode()})});
+      await tester.pumpAndSettle();
+      expect(rig.mgr.rules, [('away1', true)], reason: 'now on the hub broker');
+      expect(rig.prefs.getString('automations.away.c1'), isNull);
+      expect(find.byKey(const Key('engine-sheet-install')), findsOneWidget);
+      expect(find.byKey(const Key('engine-waiting-away1')), findsOneWidget);
+      expect(rig.requests, isEmpty);
+
+      await tester.tap(find.byKey(const Key('engine-sheet-save'))); // Not now
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      expect(rig.requests, isEmpty);
+
+      // The next visit: the batch was asked about; no sheet by itself.
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(rig.prefs),
+          automationsProvider.overrideWith((ref, _) => Stream.value([away])),
+          automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
+          connectionsStreamProvider.overrideWith((ref) => Stream.value(const [])),
+          engineViewProvider.overrideWith(
+              (ref, _) => Stream.value(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub))),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: tab,
+        ),
+      ));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('engine-sheet-install')), findsNothing);
+      expect(find.byKey(const Key('engine-install')), findsOneWidget, reason: 'the Install button stays');
+    });
+
+    testWidgets('Zigbee2MQTT-page home: the broker step, no New automation', (tester) async {
+      await _pump(tester, tab, view: _view(const EngineView(phase: HubEnginePhase.needsBroker)));
+      expect(find.byKey(const Key('engine-needs-broker')), findsOneWidget);
+      expect(find.byKey(const Key('auto-new')), findsNothing);
+    });
+
+    testWidgets('the free three still stop a 4th automation before the editor, Engine or not', (tester) async {
+      await _pump(tester, tab,
+          view: _view(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub)),
+          rules: [_rule('a'), _rule('b'), _rule('c')],
+          extra: [proStatusProvider.overrideWithValue(ProStatus.locked)]);
+      expect(find.text('3 of 3 free automations'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('auto-new')));
+      await tester.pumpAndSettle();
+      expect(find.text('3 automations are free. Want more?'), findsOneWidget);
+      expect(find.text('New automation'), findsOneWidget, reason: 'the button, not the editor');
+    });
+  });
+
+  group('the hub check (20 s) and why', () {
+    Future<EngineCheck> check(WidgetTester tester, Stream<EngineView> Function() view) async {
+      late WidgetRef ref;
+      SharedPreferences.setMockInitialValues({});
+      final p = await SharedPreferences.getInstance();
+      await tester.pumpWidget(ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(p),
+          engineViewProvider.overrideWith((r, _) => view()),
+        ],
+        child: Consumer(builder: (_, r, __) {
+          ref = r;
+          return const SizedBox();
+        }),
+      ));
+      EngineCheck? out;
+      unawaited(checkEngine(ref, 'c1').then((c) => out = c));
+      await tester.pump(const Duration(seconds: 19));
+      expect(out, isNull, reason: 'still waiting at 19 s');
+      await tester.pump(const Duration(seconds: 2));
+      return out!;
+    }
+
+    testWidgets('a silent hub: no_info', (tester) async {
+      final c = await check(tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking)));
+      expect(c.view, isNull);
+      expect(engineWhy(c), EngineWhy.noInfo);
+    });
+
+    testWidgets('bridge/info but no bridge/extensions: no_extensions', (tester) async {
+      final c = await check(tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking, hub: _hub)));
+      expect(engineWhy(c), EngineWhy.noExtensions);
+    });
+
+    testWidgets('through the relay: unreachable after 15 s, inside the wait: relay', (tester) async {
+      late WidgetRef ref;
+      SharedPreferences.setMockInitialValues({});
+      final p = await SharedPreferences.getInstance();
+      final views = StreamController<EngineView>();
+      await tester.pumpWidget(ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(p),
+          engineViewProvider.overrideWith((r, _) => views.stream),
+        ],
+        child: Consumer(builder: (_, r, __) {
+          ref = r;
+          return const SizedBox();
+        }),
+      ));
+      EngineCheck? out;
+      unawaited(checkEngine(ref, 'c1').then((c) => out = c));
+      views.add(const EngineView(phase: HubEnginePhase.checking, away: true));
+      await tester.pump(const Duration(seconds: 15));
+      expect(out, isNull, reason: 'the old 8 s wait would have given up here');
+      views.add(const EngineView(phase: HubEnginePhase.unreachable, away: true));
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(out!.view?.phase, HubEnginePhase.unreachable);
+      expect(engineWhy(out!), EngineWhy.relay);
+      unawaited(views.close());
+    });
+
+    test('settled phases and install answers', () {
+      EngineWhy why(HubEnginePhase phase) => engineWhy((view: EngineView(phase: phase), last: null));
+      expect(why(HubEnginePhase.tooOld), EngineWhy.tooOld);
+      expect(why(HubEnginePhase.needsConsent), EngineWhy.blocked);
+      expect(installWhy(HubAnswer.refused), EngineWhy.refused);
+      expect(installWhy(HubAnswer.noAnswer), EngineWhy.blocked);
+    });
+
+    test('the source link names a release tag, never main', () {
+      expect(engineSourceUrl.toString(), 'https://github.com/giladtamam/zigdash/blob/v3.6.2/hub/zigdash-engine.js');
+    });
+  });
+}

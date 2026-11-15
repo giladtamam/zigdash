@@ -15,6 +15,7 @@ import 'automation_editor_screen.dart';
 import 'automation_text.dart';
 import 'automations_repo.dart';
 import 'engine_installer.dart';
+import 'engine_sheet.dart';
 import '../features/history/history_setup_flow.dart' show allowEngineAndRestart, installEngineOn;
 import '../features/pro/pro_trial.dart' show ProTrialUse, proAccessProvider, proTrialProvider;
 import 'engine_providers.dart';
@@ -116,6 +117,54 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     if (mounted) await _install();
   }
 
+  /// The Install button under "None of these run yet": the waiting rules'
+  /// switches, then install.
+  Future<void> _installTapped() async {
+    final rules = waitingRules(ref, widget.connectionId);
+    if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
+    _track(EngineStep.installTapped);
+    await _install();
+  }
+
+  /// The consent buttons: rules waiting for the Engine are asked about
+  /// first, as before any install.
+  Future<void> _consentTapped() async {
+    final rules = waitingRules(ref, widget.connectionId);
+    if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
+    await _consent();
+  }
+
+  bool _homeBatchSeen = false;
+
+  /// 3.6.2: rules saved away from home reach the hub's broker now, and the
+  /// install sheet opens by itself, once per batch (the batch is cleared
+  /// first, so a closed sheet doesn't come back). Never installs untapped.
+  Future<void> _savedAwayNowHome(EngineView v) async {
+    final batch = ref.read(awaySavedRulesProvider(widget.connectionId));
+    final repo = ref.read(automationsRepoProvider);
+    for (final r in batch) {
+      if (!await repo.save(widget.connectionId, r)) return;
+    }
+    if (!mounted) return;
+    await ref.read(awaySavedRulesProvider(widget.connectionId).notifier).clear();
+    if (!mounted) return;
+    if (v.phase != HubEnginePhase.notInstalled && v.phase != HubEnginePhase.needsConsent) return;
+    final rules = [...waitingRules(ref, widget.connectionId), ...batch];
+    if (!await confirmWaitingRules(context, ref, widget.connectionId, rules) || !mounted) return;
+    if (v.phase == HubEnginePhase.needsConsent) return _consent();
+    _track(EngineStep.installTapped);
+    await _install();
+  }
+
+  /// No Engine on the hub, but rules can be made (3.6.2): they wait for it.
+  bool _withoutEngine(EngineView v) => switch (v.phase) {
+        HubEnginePhase.notInstalled || HubEnginePhase.needsConsent || HubEnginePhase.tooOld => true,
+        // Away and the hub silent: unless this phone saw the Engine there.
+        HubEnginePhase.unreachable =>
+          !engineKnownInstalled(ref.read(sharedPreferencesProvider), widget.connectionId),
+        _ => false,
+      };
+
   Future<void> _decline() async {
     _track(EngineStep.declined);
     await setEngineDeclined(ref.read(sharedPreferencesProvider), widget.connectionId, true);
@@ -153,7 +202,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   }
 
   void _newAutomation() {
-    final count = ref.read(automationsProvider(widget.connectionId)).valueOrNull?.length ?? 0;
+    // 3.6.2: rules kept on this phone (saved away) count too.
+    final count = waitingRules(ref, widget.connectionId).length;
     if (count >= freeAutomations && !ref.read(proAccessProvider)) {
       showModalBottomSheet<void>(
         context: context,
@@ -185,8 +235,24 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     final l10n = context.l10n;
     final view = ref.watch(engineViewProvider(widget.connectionId));
     final installed = view.valueOrNull?.installed ?? false;
+    final v = view.valueOrNull;
+    final waiting = v != null && _withoutEngine(v);
+    final savedAway = ref.watch(awaySavedRulesProvider(widget.connectionId));
+    if (v != null &&
+        savedAway.isNotEmpty &&
+        !_homeBatchSeen &&
+        !v.away &&
+        v.phase != HubEnginePhase.checking &&
+        v.phase != HubEnginePhase.unreachable &&
+        v.phase != HubEnginePhase.needsBroker) {
+      // Not while building: it saves and may open a sheet.
+      _homeBatchSeen = true;
+      Future.microtask(() {
+        if (mounted) _savedAwayNowHome(v);
+      });
+    }
     return Scaffold(
-      floatingActionButton: installed && _busy == _Busy.none
+      floatingActionButton: (installed || waiting) && _busy == _Busy.none
           ? FloatingActionButton.extended(
               key: const Key('auto-new'),
               onPressed: _newAutomation,
@@ -220,6 +286,12 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           children: [
             ..._body(context, l10n, v),
             if (v.installed && _busy == _Busy.none) _AutomationsList(connectionId: widget.connectionId),
+            if (_withoutEngine(v) && _busy == _Busy.none)
+              _AutomationsList(
+                connectionId: widget.connectionId,
+                waiting: true,
+                onInstall: v.phase == HubEnginePhase.notInstalled && !v.away ? _installTapped : null,
+              ),
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
@@ -244,6 +316,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       case HubEnginePhase.checking:
         return [_Progress(text: l10n.engineChecking)];
       case HubEnginePhase.unreachable:
+        // 3.6.2: an Engine this phone never saw: rules can wait for it.
+        if (_withoutEngine(v)) return [const _SlimCard()];
         return [
           _Message(
             key: const Key('engine-away-unreachable'),
@@ -275,20 +349,9 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           ),
         ];
       case HubEnginePhase.notInstalled:
-        return [
-          _Message(title: l10n.engineIntroTitle, body: l10n.engineIntroBody),
-          _Bullets([
-            l10n.engineIntroNothingByHand,
-            l10n.engineIntroVersion(v.hub?.version ?? '?'),
-            l10n.engineIntroRemove,
-          ]),
-          const SizedBox(height: 16),
-          FilledButton(
-            key: const Key('engine-install'),
-            onPressed: _install,
-            child: Text(l10n.engineInstall),
-          ),
-        ];
+        // 3.6.2: make the automation first; saving it puts the Engine on
+        // the hub (engine_sheet.dart), so the full story moved there.
+        return [const _SlimCard()];
       case HubEnginePhase.needsConsent:
         if (v.declined) {
           return [
@@ -296,7 +359,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
             const SizedBox(height: 16),
             FilledButton.tonal(
               key: const Key('engine-allow-after-all'),
-              onPressed: _consent,
+              onPressed: _consentTapped,
               child: Text(l10n.engineAllowAfterAll),
             ),
           ];
@@ -307,7 +370,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           const SizedBox(height: 16),
           FilledButton(
             key: const Key('engine-consent'),
-            onPressed: _consent,
+            onPressed: _consentTapped,
             child: Text(l10n.engineConsentYes),
           ),
           TextButton(
@@ -465,24 +528,77 @@ class _Alert extends StatelessWidget {
 }
 
 
-/// The Home's Automations and Recent runs (zigdash-3.0.md §1).
+/// "Automations run on your hub with ZigDash Engine…" (3.6.2): the slim
+/// card above the list while the Engine isn't on the hub.
+class _SlimCard extends StatelessWidget {
+  const _SlimCard();
+
+  @override
+  Widget build(BuildContext context) => Card(
+        key: const Key('engine-slim-card'),
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(context.l10n.engineSlimCard),
+              const EngineSourceLink(),
+            ],
+          ),
+        ),
+      );
+}
+
+/// The Home's Automations and Recent runs (zigdash-3.0.md §1). With
+/// [waiting] (3.6.2), the Engine isn't on the hub: the rules are listed
+/// under "None of these run yet", with [onInstall] when it can go there.
 class _AutomationsList extends ConsumerWidget {
-  const _AutomationsList({required this.connectionId});
+  const _AutomationsList({required this.connectionId, this.waiting = false, this.onInstall});
   final String connectionId;
+  final bool waiting;
+  final VoidCallback? onInstall;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final ml = MaterialLocalizations.of(context);
     final theme = Theme.of(context);
-    final rules = ref.watch(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
-    final runs = ref.watch(automationRunsProvider(connectionId)).valueOrNull ?? const <AutomationRun>[];
+    ref.watch(awaySavedRulesProvider(connectionId));
+    final onBroker = ref.watch(automationsProvider(connectionId)).valueOrNull ?? const <Automation>[];
+    final rules = waiting ? waitingRules(ref, connectionId, onBroker: onBroker) : onBroker;
+    final runs = waiting
+        ? const <AutomationRun>[]
+        : ref.watch(automationRunsProvider(connectionId)).valueOrNull ?? const <AutomationRun>[];
     final pro = ref.watch(proAccessProvider);
     String time(DateTime t) => MaterialLocalizations.of(context).formatTimeOfDay(TimeOfDay.fromDateTime(t));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 8),
+        if (waiting && rules.isEmpty) ...[
+          const SizedBox(height: 8),
+          Text(l10n.autoEmptyBody, style: theme.textTheme.bodyLarge),
+        ],
+        if (waiting && rules.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(l10n.autoNotRunTitle.toUpperCase(), style: theme.textTheme.labelLarge),
+          const SizedBox(height: 4),
+          Text(l10n.autoNotRunBody, key: const Key('auto-not-running'), style: theme.textTheme.bodyMedium),
+          if (onInstall != null)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: FilledButton(
+                  key: const Key('engine-install'),
+                  onPressed: onInstall,
+                  child: Text(l10n.engineInstall),
+                ),
+              ),
+            ),
+          const SizedBox(height: 8),
+        ],
         for (final r in rules)
           Card(
             key: Key('auto-${r.id}'),
@@ -518,6 +634,7 @@ class _AutomationsList extends ConsumerWidget {
                     ),
                     const Spacer(),
                     () {
+                      if (waiting) return Chip(label: Text(l10n.autoNotRunning));
                       final last = runs.where((x) => x.id == r.id).firstOrNull;
                       return Chip(label: Text(last == null ? l10n.autoNeverRan : l10n.autoRanAt(time(last.at))));
                     }(),

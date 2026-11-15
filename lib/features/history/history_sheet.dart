@@ -106,6 +106,11 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   HistoryRange _range = HistoryRange.day;
   HistoryPoint? _scrub;
   bool _busy = false;
+
+  /// 3.6.2: the hub is being checked (up to 20 s); this phone can be
+  /// chosen meanwhile.
+  bool _checking = false;
+  bool _phoneChosen = false;
   bool _lockedSeen = false;
   bool _rangeDataSeen = false;
 
@@ -242,9 +247,10 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
       body = online != true
           ? _SetupCard(
               busy: _busy,
+              checking: _checking,
               notConnected: installed,
               onSetUp: () => _install(l10n),
-              onRecordHere: () => _recordHere(l10n),
+              onRecordHere: () => _checking ? _usePhone(l10n) : _recordHere(l10n),
             )
           : _Note(text: recorded ? l10n.historyEmpty : l10n.historyNotRecorded);
     } else {
@@ -343,9 +349,24 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   Future<void> _install(AppLocalizations l10n) async {
     final service = ref.read(historyServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
-    setState(() => _busy = true);
+    setState(() {
+      _busy = true;
+      _checking = true;
+      _phoneChosen = false;
+    });
+    EngineWhy? why;
     try {
-      final r = await ensureEngine(context, ref, widget.connectionId, from: EngineFrom.history);
+      final r = await ensureEngine(
+        context,
+        ref,
+        widget.connectionId,
+        from: EngineFrom.history,
+        onChecked: () {
+          if (mounted) setState(() => _checking = false);
+        },
+        abandoned: () => !mounted || _phoneChosen,
+        failedWhy: (w) => why = w,
+      );
       if (!mounted) return;
       switch (r) {
         case EngineSetup.ready:
@@ -356,9 +377,10 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
           // A happy moment (2.8.1): the review policy still decides.
           await ref.read(reviewPromptControllerProvider).recordSuccessfulSession();
         case EngineSetup.needsUser:
+        case EngineSetup.cancelled:
           break;
         case EngineSetup.failed:
-          _track(HistorySetupResult.failed);
+          _track(HistorySetupResult.failed, why: why);
           final here = await showDialog<bool>(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -378,8 +400,23 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
           if (here == true) await _recordHere(l10n);
       }
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted && !_phoneChosen) {
+        setState(() {
+          _busy = false;
+          _checking = false;
+        });
+      }
     }
+  }
+
+  /// 3.6.2: "Use this phone instead" while the hub is checked.
+  Future<void> _usePhone(AppLocalizations l10n) async {
+    setState(() {
+      _phoneChosen = true;
+      _busy = false;
+      _checking = false;
+    });
+    await _recordHere(l10n);
   }
 
   /// No Node-RED (2.9.1): this device records while ZigDash is open.
@@ -393,8 +430,8 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
     messenger.showSnackBar(SnackBar(content: Text(l10n.historyRecordingHere)));
   }
 
-  void _track(HistorySetupResult r) =>
-      ref.read(analyticsProvider).track(HistorySetup(r));
+  void _track(HistorySetupResult r, {EngineWhy? why}) =>
+      ref.read(analyticsProvider).track(HistorySetup(r, why: why));
 
 }
 
@@ -404,10 +441,14 @@ class _SetupCard extends StatelessWidget {
     required this.busy,
     required this.onSetUp,
     required this.onRecordHere,
+    this.checking = false,
     this.notConnected = false,
   });
 
   final bool busy;
+
+  /// The hub is being checked: says so, and offers this phone at once.
+  final bool checking;
 
   /// The recorder was installed but never came online.
   final bool notConnected;
@@ -451,6 +492,10 @@ class _SetupCard extends StatelessWidget {
                   : const Icon(Icons.timeline),
               label: Text(l10n.historySetupAction),
             ),
+            if (checking) ...[
+              const SizedBox(height: 8),
+              Text(l10n.engineChecking, style: theme.textTheme.bodyMedium),
+            ],
             const SizedBox(height: 12),
             Text(
               l10n.historyRecordHereHint,
@@ -459,9 +504,12 @@ class _SetupCard extends StatelessWidget {
               ),
             ),
             TextButton.icon(
-              onPressed: busy ? null : onRecordHere,
+              key: checking ? const Key('history-use-phone') : null,
+              onPressed: busy && !checking ? null : onRecordHere,
               icon: const Icon(Icons.tablet_android_outlined),
-              label: Text(l10n.historyRecordHere),
+              label: Text(
+                checking ? l10n.historyUsePhoneInstead : l10n.historyRecordHere,
+              ),
             ),
           ],
         ),

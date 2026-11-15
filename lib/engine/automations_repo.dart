@@ -168,6 +168,41 @@ final automationsProvider = StreamProvider.autoDispose.family<List<Automation>, 
   return ref.watch(automationsRepoProvider).watch(connectionId);
 });
 
+/// Automations saved away from home before ZigDash Engine is on the hub
+/// (3.6.2). The relay reaches the hub's broker only through the Engine, so
+/// this phone keeps them, saves them on the broker the next time the
+/// Automations tab opens at home, and asks once to install.
+class AwaySavedRules extends FamilyNotifier<List<Automation>, String> {
+  String get _key => 'automations.away.$arg';
+
+  @override
+  List<Automation> build(String arg) {
+    final raw = ref.read(sharedPreferencesProvider).getString(_key);
+    if (raw == null) return const [];
+    try {
+      return [
+        for (final e in (jsonDecode(raw) as Map).entries)
+          if (Automation.decode('${e.key}', '${e.value}') case final rule?) rule,
+      ];
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  Future<void> add(Automation rule) async {
+    state = [...state.where((r) => r.id != rule.id), rule];
+    await ref.read(sharedPreferencesProvider).setString(_key, jsonEncode({for (final r in state) r.id: r.encode()}));
+  }
+
+  Future<void> clear() async {
+    state = const [];
+    await ref.read(sharedPreferencesProvider).remove(_key);
+  }
+}
+
+final awaySavedRulesProvider =
+    NotifierProvider.family<AwaySavedRules, List<Automation>, String>(AwaySavedRules.new);
+
 final automationRunsProvider = StreamProvider.autoDispose.family<List<AutomationRun>, String>((ref, connectionId) {
   ref.watch(mqttManagerProvider(connectionId));
   return ref.watch(automationsRepoProvider).watchRuns(connectionId);
