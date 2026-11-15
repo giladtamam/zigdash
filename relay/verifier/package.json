@@ -8,7 +8,7 @@
   "engines": { "node": ">=22.13" },
   "scripts": {
     "start": "node server.mjs",
-    "test": "node --test test/apple.test.mjs test/verifier.test.mjs"
+    "test": "node --test test/apple.test.mjs test/verifier.test.mjs test/chat.test.mjs"
   },
   "dependencies": {
     "mqtt": "5.16.1"
