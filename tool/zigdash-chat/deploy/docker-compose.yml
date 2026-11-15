@@ -26,6 +26,7 @@ services:
       ZIGDASH_CHAT_KEYS: /run/zigdash/chat-keys.json
       ZIGDASH_CHAT_SECRETS: /run/zigdash-secrets/chat-secrets.json
       ZIGDASH_TRANSPORT: relay
+      ZIGDASH_HOME_ID: ${CHAT_HOME_ID:?the relay home id}
       ZIGDASH_MQTT_URL: mqtts://relay.zigdash.app:8883
       ZIGDASH_MQTT_USER: ${CHAT_RELAY_USER:?the service's relay login}
       ZIGDASH_MQTT_PASSWORD_FILE: /run/zigdash/relay_password
