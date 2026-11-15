@@ -1,0 +1,15 @@
+{
+  "name": "zigdash-chat",
+  "private": true,
+  "type": "module",
+  "description": "ZigDash Chat, milestone 1: talk to your own Zigbee home from Telegram, through the ZigDash Engine and Claude.",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node service.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.8.0",
+    "mqtt": "5.16.1"
+  }
+}
