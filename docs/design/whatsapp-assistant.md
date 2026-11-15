@@ -104,7 +104,7 @@ price Yes/Maybe, ~Jan 13), and no unlocking from a chat.
 
 ## Revision 6: decisions of 2026-11-15 (start now, Telegram first)
 
-Rev 6.1 after review (rev 6 scored 8/10): long polling for milestone 1, separate commands, the founders'
+Rev 6.1 (scored 9/10) after review (rev 6 scored 8/10): long polling for milestone 1, separate commands, the founders'
 in-app remote and timing, the card wording, a hand-set control list, exposes-based read-only kinds, the
 audit log and revoke test, a concrete replay test, keys protected from milestone 1, hand-installed tools.
 
@@ -148,8 +148,12 @@ months start at the invite. This gets its own short plan in phase 3.
 - Engine: the read and safe-control tools from `spike/mcp` built for real (`home_summary`, `list_devices`,
   `get_device`, `get_history`, `set_device`, `set_group`), one Chat client with its own token hash and
   per-client sealing key (both ways, replay window); Chat request and response topics added to the relay
-  forwarding under opaque ids. **Installed by hand on the owner's hub only** (a separate Engine file on
-  that hub); no app release ships these tools until phase 3.
+  forwarding under opaque ids. **Installed by hand on the owner's hub only**, by replacing
+  `zigdash-engine.js` itself with a build whose version is above any release (`9.0.0-chat`): a second file
+  would run two Engines and fire every automation and alert twice, and an ordinary version would be
+  overwritten by the app's silent update (`_updateIfOutdated`, lib/engine/engine_providers.dart). No app
+  release ships these tools until phase 3. Acceptance includes: after opening the app at home, the hub
+  still reports `9.0.0-chat`.
   - **Read-only kinds from Zigbee2MQTT's exposes**, not names: any device exposing a `lock`, a `valve`
     (or a `state` on a device whose definition is a valve), or `warning` / siren features is read-only,
     whatever it is called (replaces the POC's name regex, tool/chat-poc/home.mjs:5).
