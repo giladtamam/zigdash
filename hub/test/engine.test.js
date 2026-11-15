@@ -443,7 +443,8 @@ async function withRemote() {
 test('the Engine subscribes to everything the app sends it, the relay login included', async () => {
   const z = fakeZ2m();
   await z.engine.start();
-  assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/history/#', 'zigdash/remote/set']);
+  // 3.7.0: Chat, dormant, listens only for a client's config (hub/test/chat.test.js).
+  assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/chat/clients/+', 'zigdash/history/#', 'zigdash/remote/set']);
   await z.engine.stop();
 });
 

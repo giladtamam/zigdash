@@ -10,8 +10,7 @@ import { makeAgent, TEXT, costUsd } from '../agent.mjs';
 import { makeMetrics } from '../metrics.mjs';
 import { loadServiceKey, readKeys, writeKeys } from '../keystore.mjs';
 import { seal, unseal, opaqueId, chatTopics } from '../wire.mjs';
-import { startTelegram } from '../telegram.mjs';
-import { allowlist } from '../service.mjs';
+import { makeBot, startPolling } from '../telegram.mjs';
 import { fakeClaude, fakeTelegram, loadChatEngine, tmpDir } from './harness.mjs';
 
 /** A link that answers like the Engine would, without one. */
@@ -135,17 +134,6 @@ test('wire: the service and the Engine seal, open and name relay topics the same
   assert.deepEqual(chatTopics({ transport: 'relay', clientId: 'tg1', key, homeId: 'h1' }), Engine.chat.chatRelayTopics('homes/h1', 'tg1', key));
 });
 
-test('allowlist: one id per line from a file, comments ignored, read again when it changes', () => {
-  const file = path.join(tmpDir(), 'allowed');
-  fs.writeFileSync(file, '# owner\n424242\nnot-an-id\n');
-  const ids = allowlist(file);
-  assert.deepEqual([...ids()], ['424242']);
-  fs.writeFileSync(file, '424242\n-100777\n');
-  fs.utimesSync(file, new Date(), new Date(Date.now() + 2000));
-  assert.deepEqual([...ids()], ['424242', '-100777']);
-  assert.deepEqual([...allowlist(path.join(tmpDir(), 'none'))()], []);
-});
-
 test('telegram: a failing API never puts the token in a log line', async () => {
   const token = '7000000002:AAsecret';
   const lines = [];
@@ -153,7 +141,7 @@ test('telegram: a failing API never puts the token in a log line', async () => {
   console.error = (...a) => lines.push(a.join(' '));
   try {
     const failing = async (url) => { throw new Error(`request to ${url} failed`); };
-    const tg = startTelegram({ token, allowed: () => new Set(), onText: async () => '', metrics: makeMetrics((l) => lines.push(l)), fetchImpl: failing, retryMs: 10 });
+    const tg = startPolling({ token, onUpdate: async () => {}, metrics: makeMetrics((l) => lines.push(l)), fetchImpl: failing, retryMs: 10 });
     await new Promise((r) => setTimeout(r, 60));
     await tg.stop();
   } finally {
@@ -163,12 +151,30 @@ test('telegram: a failing API never puts the token in a log line', async () => {
   for (const l of lines) assert.ok(!l.includes(token) && !l.includes('AAsecret'), l);
 });
 
-test('telegram: long replies are split under Telegram\'s limit', async () => {
+test('telegram: long replies are split under Telegram\'s limit; the buttons go with the last part', async () => {
   const tg = fakeTelegram();
-  const bot = startTelegram({ token: 't', allowed: () => new Set(['5']), onText: async () => 'x'.repeat(9000), metrics: makeMetrics(() => {}), fetchImpl: tg.fetchImpl, pollSeconds: 1 });
-  tg.send('5', 'hi');
-  await tg.replyTo('5');
-  await new Promise((r) => setTimeout(r, 50));
-  await bot.stop();
+  const bot = makeBot({ token: 't', fetchImpl: tg.fetchImpl });
+  await bot.say('5', 'x'.repeat(9000), { inline_keyboard: [] });
   assert.deepEqual(tg.sent.map((s) => s.text.length), [4000, 4000, 1000]);
+  assert.deepEqual(tg.sent.map((s) => !!s.markup), [false, false, true]);
+});
+
+test('cli adopt: milestone 1\'s tg1 gets its chat and topics, and the verifier adds its ACL entries', async () => {
+  const { runCli } = await import('../cli.mjs');
+  const { configFromEnv } = await import('../service.mjs');
+  const dir = tmpDir();
+  fs.writeFileSync(path.join(dir, 'acl'), 'acl-secret\n', { mode: 0o600 });
+  const config = { ...configFromEnv({}), keysFile: path.join(dir, 'keys.json'), secretsFile: path.join(dir, 'secrets.json'), verifierUrl: 'http://verifier.test:8788', aclSecretFile: path.join(dir, 'acl') };
+  const serviceKey = loadServiceKey(config.secretsFile, { create: true });
+  const key = crypto.randomBytes(32).toString('base64');
+  writeKeys(config.keysFile, serviceKey, { clients: { tg1: { name: "Owner's Telegram", token: 't'.repeat(43), key, scope: 'control', controls: [], home_id: 'f3a2993b55c4ed99' } } });
+  const calls = [];
+  const fetchImpl = async (url, init) => { calls.push({ url, secret: init.headers['X-Chat-Acl-Secret'], body: JSON.parse(init.body) }); return { status: 200 }; };
+  const out = [];
+  await runCli(['adopt', 'tg1', '--chat', '424242'], { config, fetchImpl, print: (l) => out.push(l) });
+  const entry = readKeys(config.keysFile, serviceKey).clients.tg1;
+  const t = chatTopics({ transport: 'relay', clientId: 'tg1', key: Buffer.from(key, 'base64'), homeId: 'f3a2993b55c4ed99' });
+  assert.deepEqual([entry.chat_id, entry.client_id, entry.request_topic, entry.answer_topic, entry.telegram_name], ['424242', 'tg1', t.req, t.res, "Owner's Telegram"]);
+  assert.deepEqual(calls, [{ url: 'http://verifier.test:8788/v1/internal/chat-acl', secret: 'acl-secret', body: { home_id: 'f3a2993b55c4ed99', request_topic: t.req, answer_topic: t.res, op: 'add' } }]);
+  assert.ok(!out.join('\n').includes('acl-secret') && !out.join('\n').includes(key));
 });

@@ -1,16 +1,25 @@
-// ---------- ZigDash Chat, milestone 1 (the 9.0.0-chat build only) ----------
+// ---------- ZigDash Chat (release Engine, 3.7.0; dormant until linked) ----------
 //
-// Appended to hub/src/engine.js by `node hub/build.mjs --chat`; it shares that
-// file's scope (seal, unseal, opaqueId, localParts, ROOT, ZigDashEngine) and
-// adds itself by wrapping a few of the class's methods. The release build
-// never contains it. Plan: docs/design/whatsapp-assistant.md, revision 6.
+// Appended to hub/src/engine.js by hub/build.mjs; it shares that file's scope
+// (seal, unseal, opaqueId, localParts, ROOT, ZigDashEngine) and adds itself by
+// wrapping a few of the class's methods. Plans: docs/design/whatsapp-assistant.md
+// (revision 6) and docs/design/chat-linking.md (phase 3).
 //
-// A Chat client is one linked chat account (the zigdash-chat service, by hand
-// in milestone 1). It has a token (the Engine keeps only its sha256), its own
-// AES-256-GCM key, a scope and a control list. On the home broker:
-//   zigdash/chat/clients/<id>  CLI -> engine, retained:
-//                              {v:1, name, hash, key (base64), scope:'read'|'control', controls:[ieee]};
-//                              an empty payload deletes the client (revoke)
+// Dormant until a Chat client exists: the Engine then subscribes only to
+// zigdash/chat/clients/+, keeps no history copy, subscribes nothing on the
+// relay and answers nothing. Everything else behaves as the 3.4.5 Engine.
+//
+// A Chat client is one linked chat account (the zigdash-chat service). It has
+// a token (the Engine keeps only its sha256), its own AES-256-GCM key, a scope
+// and a control list. On the home broker:
+//   zigdash/chat/clients/<id>  app or CLI -> engine, published once (retained, so an Engine that is
+//                              restarting still gets it): {v:1, name, hash, key (base64),
+//                              scope:'read'|'control', controls:[ieee]}. The Engine keeps the client in
+//                              its data folder (zigdash-chat.json, mode 600, like zigdash-remote.json)
+//                              and clears the retained copy, so broker backups never hold the key.
+//                              {v:1, delete:true} deletes the client (retained: it waits for an Engine
+//                              that is off); an empty payload deletes it too, except the echo of the
+//                              Engine's own clear.
 //   zigdash/chat/req/<id>      service -> engine: base64 of seal(key, {id, at, token, tool, args})
 //   zigdash/chat/res/<id>      engine -> service: base64 of seal(key, {id, at, ok, result|error}),
 //                              or plain {"error":"not_linked"} for a client the Engine doesn't have
@@ -42,6 +51,15 @@ const CHAT_DEVICE_WRITES_PER_MINUTE = 3;
 const CHAT_ID_RE = /^[A-Za-z0-9_-]{1,40}$/;
 const CHAT_REQ_ID_RE = /^[A-Za-z0-9_-]{8,64}$/;
 const CHAT_OPEN_APP = 'Open ZigDash to do that.';
+const CHAT_FILE = 'zigdash-chat.json';
+// The Engine hears its own clear of a client's retained config (it must
+// publish it with skipReceive off, or Zigbee2MQTT would drop every later
+// message on that topic); within this window, that many empty payloads are
+// its own echo, not a delete.
+const CHAT_ECHO_MS = 30000;
+// After the first client appears at run time, the retained day records are
+// read again on an extra subscription, closed after this long.
+const CHAT_HISTORY_READ_MS = 15000;
 // Everyday controls only; a suffix covers multi-gang devices (state_l1).
 const CHAT_EVERYDAY = /^(state|brightness|color_temp|color|position|tilt|current_heating_setpoint|occupied_heating_setpoint|system_mode|fan_mode)(_[a-z0-9]+)?$/;
 const CHAT_NOISE = new Set(['linkquality', 'update', 'update_available', 'last_seen', 'elapsed']);
@@ -134,19 +152,21 @@ function chatCommandProblem(command, settable) {
   return null;
 }
 
-/** A Chat client from its retained config, or null when it is unusable. */
-function chatParseClient(text) {
-  const c = JSON.parse(text);
-  if (!c || c.v !== 1 || typeof c.hash !== 'string' || !/^[0-9a-f]{64}$/.test(c.hash) || typeof c.key !== 'string') return null;
+/** A Chat client from its config (an object), or null when it is unusable. */
+function chatParseClient(c) {
+  if (!c || typeof c !== 'object' || c.v !== 1 || typeof c.hash !== 'string' || !/^[0-9a-f]{64}$/.test(c.hash) || typeof c.key !== 'string') return null;
   const key = Buffer.from(c.key, 'base64');
   if (key.length !== 32) return null;
-  return {
+  const client = {
     name: chatText(c.name || 'Chat', 40),
     hash: c.hash,
     key,
     scope: c.scope === 'control' ? 'control' : 'read',
     controls: new Set((Array.isArray(c.controls) ? c.controls : []).filter((x) => typeof x === 'string')),
   };
+  // What the data folder keeps: the same format, nothing else.
+  client.saved = { v: 1, name: client.name, hash: client.hash, key: key.toString('base64'), scope: client.scope, controls: [...client.controls] };
+  return client;
 }
 
 /** Request and response topics of a client on the relay, under [prefix] (homes/<home>). */
@@ -171,7 +191,10 @@ const chatBase = {
 function chatState(engine) {
   if (!engine.chat) {
     engine.chat = {
+      active: false, // a client exists (or existed since start): requests, audit and history are handled
+      subscribed: [], // the filters this file subscribed, unsubscribed at stop
       clients: new Map(), // id -> parsed client
+      clearing: new Map(), // id -> { n, until }: the Engine's own clears still to come back
       relay: new Map(), // relay request topic -> { id, res, revoked }
       seen: new Set(),
       seenOrder: [],
@@ -185,21 +208,35 @@ function chatState(engine) {
 }
 
 ZigDashEngine.prototype.start = async function () {
-  chatState(this);
+  const chat = chatState(this);
+  // Clients kept in the data folder come back before anything is subscribed,
+  // so the retained day records and audit that arrive at start are kept.
+  for (const [id, saved] of Object.entries(this.chatReadFile())) {
+    const client = CHAT_ID_RE.test(id) ? chatParseClient(saved) : null;
+    if (client) chat.clients.set(id, client);
+  }
+  chat.active = chat.clients.size > 0;
   await chatBase.start.call(this);
-  const sub = this.mqtt.subscribe(`${CHAT_PREFIX}/#`);
-  if (sub && typeof sub.catch === 'function') sub.catch((e) => this.caught('subscribe', e));
+  this.chatSubscribe(`${CHAT_PREFIX}/clients/+`);
+  if (chat.active) {
+    this.chatSubscribe(`${CHAT_PREFIX}/req/+`);
+    this.chatSubscribe(`${CHAT_PREFIX}/audit`);
+    this.log('info', `chat: ${chat.clients.size} client(s)`);
+  }
 };
 
 ZigDashEngine.prototype.stop = async function () {
-  try { await this.mqtt.unsubscribe(`${CHAT_PREFIX}/#`); } catch (_) {}
+  const chat = chatState(this);
+  for (const filter of chat.subscribed.splice(0)) {
+    try { await this.mqtt.unsubscribe(filter); } catch (_) {}
+  }
   return chatBase.stop.call(this);
 };
 
 ZigDashEngine.prototype.onMqtt = function (data) {
   if (data && typeof data.topic === 'string') {
     if (data.topic.startsWith(`${CHAT_PREFIX}/`)) return this.chatOnMqtt(data.topic, data.message);
-    if (data.topic.startsWith(`${ROOT}/history/`)) {
+    if (chatState(this).active && data.topic.startsWith(`${ROOT}/history/`)) {
       try { this.chatKeepHistory(data.topic, data.message); } catch (_) { /* never stops the Engine */ }
     }
   }
@@ -222,12 +259,13 @@ ZigDashEngine.prototype.startRemote = function (cfg) {
 };
 
 Object.assign(ZigDashEngine.prototype, {
-  /** zigdash/chat/...: a client's config, a request, or the retained audit found at start. */
+  /** zigdash/chat/...: a client's config; once active, a request or the retained audit found at start. */
   chatOnMqtt(topic, message) {
     const chat = chatState(this);
     const sub = topic.slice(CHAT_PREFIX.length + 1);
     try {
       if (sub.startsWith('clients/')) return this.chatSetClient(sub.slice('clients/'.length), message);
+      if (!chat.active) return undefined;
       if (sub.startsWith('req/')) {
         const id = sub.slice('req/'.length);
         if (CHAT_ID_RE.test(id)) this.chatRequest(id, message, { relay: null });
@@ -249,26 +287,141 @@ Object.assign(ZigDashEngine.prototype, {
     return undefined;
   },
 
+  chatSubscribe(filter) {
+    const chat = chatState(this);
+    chat.subscribed.push(filter);
+    const sub = this.mqtt.subscribe(filter);
+    if (sub && typeof sub.catch === 'function') sub.catch((e) => this.caught('subscribe', e));
+  },
+
+  /** The first client of this run: requests and the audit from now on, and the recorded days once. */
+  chatActivate() {
+    const chat = chatState(this);
+    if (chat.active) return;
+    chat.active = true;
+    this.chatSubscribe(`${CHAT_PREFIX}/req/+`);
+    this.chatSubscribe(`${CHAT_PREFIX}/audit`);
+    // The retained day records came at start, before Chat kept them: a second,
+    // narrower subscription hands them over again, then closes.
+    const days = `${ROOT}/history/+/+/+`;
+    this.chatSubscribe(days);
+    this.timers.push(setTimeout(this.guard('chat history read', () => {
+      const i = chat.subscribed.indexOf(days);
+      if (i >= 0) chat.subscribed.splice(i, 1);
+      const p = this.mqtt.unsubscribe(days);
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    }), CHAT_HISTORY_READ_MS));
+  },
+
+  /**
+   * zigdash/chat/clients/<id>: a new or changed client is kept in the data
+   * folder and its retained copy cleared; {v:1, delete:true} or an empty
+   * payload (not the echo of our own clear) deletes it.
+   */
   chatSetClient(id, message) {
     if (!CHAT_ID_RE.test(id)) return;
+    const text = message === undefined || message === null ? '' : String(message);
+    if (!text) {
+      if (this.chatOwnClear(id)) return;
+      this.chatRemoveClient(id);
+      return;
+    }
+    let config = null;
+    try { config = JSON.parse(text); } catch (_) { config = null; }
+    if (config && config.v === 1 && config.delete === true) {
+      this.chatRemoveClient(id);
+    } else {
+      const client = chatParseClient(config);
+      if (!client) this.log('warning', `chat: client ${id} has an unusable config`);
+      else this.chatAddClient(id, client);
+    }
+    // Whatever it held, it doesn't stay on the broker: a key must not be retained.
+    this.chatClearRetained(id);
+  },
+
+  chatAddClient(id, client) {
     const chat = chatState(this);
     const old = chat.clients.get(id);
-    const client = message && String(message) ? chatParseClient(String(message)) : null;
-    if (message && String(message) && !client) this.log('warning', `chat: client ${id} has an unusable config`);
-    if (old && this.remote && this.remote.prefix) {
-      const t = chatRelayTopics(this.remote.prefix, id, old.key);
-      if (!client || !client.key.equals(old.key)) {
-        // Revoked (or a new key): the old relay topic only ever answers "not linked" now.
-        chat.relay.set(t.req, { id, res: t.res, revoked: true });
-      }
-    }
-    if (client) {
-      chat.clients.set(id, client);
-      this.log('info', `chat: client ${id} ready (${client.scope}, ${client.controls.size} on the control list)`);
-    } else if (chat.clients.delete(id)) {
-      this.log('info', `chat: client ${id} removed`);
-    }
+    if (old && !client.key.equals(old.key)) this.chatRevokeRelay(id, old);
+    chat.clients.set(id, client);
+    this.chatWriteFile();
+    this.chatActivate();
+    this.log('info', `chat: client ${id} ready (${client.scope}, ${client.controls.size} on the control list)`);
     this.chatRelaySubscribeAll();
+  },
+
+  chatRemoveClient(id) {
+    const chat = chatState(this);
+    const old = chat.clients.get(id);
+    if (!old) return;
+    this.chatRevokeRelay(id, old);
+    chat.clients.delete(id);
+    this.chatWriteFile();
+    this.log('info', `chat: client ${id} removed`);
+    this.chatRelaySubscribeAll();
+  },
+
+  /** Revoked (or a new key): the old relay topic only ever answers "not linked" now. */
+  chatRevokeRelay(id, old) {
+    if (!this.remote || !this.remote.prefix) return;
+    const t = chatRelayTopics(this.remote.prefix, id, old.key);
+    chatState(this).relay.set(t.req, { id, res: t.res, revoked: true });
+  },
+
+  chatClearRetained(id) {
+    const chat = chatState(this);
+    const now = Date.now();
+    const c = chat.clearing.get(id);
+    chat.clearing.set(id, { n: (c && c.until > now ? c.n : 0) + 1, until: now + CHAT_ECHO_MS });
+    // skipReceive off: with it on, Zigbee2MQTT would ignore this topic from now on.
+    this.publishFull(`${CHAT_PREFIX}/clients/${id}`, '', true, true);
+  },
+
+  /** True (once per clear) when an empty payload on clients/<id> is the echo of our own clear. */
+  chatOwnClear(id) {
+    const chat = chatState(this);
+    const c = chat.clearing.get(id);
+    if (!c || c.until < Date.now()) { chat.clearing.delete(id); return false; }
+    c.n -= 1;
+    if (c.n <= 0) chat.clearing.delete(id);
+    return true;
+  },
+
+  chatFilePath() {
+    const path = require('path');
+    return path.join(process.env.ZIGBEE2MQTT_DATA || path.join(__dirname, '..'), CHAT_FILE);
+  },
+
+  /** {id: config} from the data folder; {} when there is none or it can't be read. */
+  chatReadFile() {
+    try {
+      const fs = require('fs');
+      if (!fs.existsSync(this.chatFilePath())) return {};
+      const data = JSON.parse(fs.readFileSync(this.chatFilePath(), 'utf8'));
+      return data && data.v === 1 && data.clients && typeof data.clients === 'object' ? data.clients : {};
+    } catch (e) {
+      this.log('warning', `chat: ${CHAT_FILE} can't be read: ${e && e.message}`);
+      return {};
+    }
+  },
+
+  /** Writes the clients (mode 600, replaced at once); with none left, the file goes. */
+  chatWriteFile() {
+    const fs = require('fs');
+    const file = this.chatFilePath();
+    try {
+      const clients = chatState(this).clients;
+      if (!clients.size) {
+        if (fs.existsSync(file)) fs.unlinkSync(file);
+        return;
+      }
+      const tmp = `${file}.tmp`;
+      fs.writeFileSync(tmp, JSON.stringify({ v: 1, clients: Object.fromEntries([...clients].map(([id, c]) => [id, c.saved])) }), { mode: 0o600 });
+      fs.chmodSync(tmp, 0o600);
+      fs.renameSync(tmp, file);
+    } catch (e) {
+      this.log('warning', `chat: ${CHAT_FILE} can't be written: ${e && e.message}`);
+    }
   },
 
   /** Subscribes the relay topics of every client (and of revoked ones, to answer "not linked"). */
@@ -655,6 +808,6 @@ function chatTargetName(args) {
 }
 
 ZigDashEngine.chat = {
-  CHAT_WINDOW_MS, CHAT_SEEN_MAX, CHAT_AUDIT_MAX, chatReadOnlyKind, chatKindOf, chatSettable, chatCommandProblem,
+  CHAT_FILE, CHAT_ECHO_MS, CHAT_WINDOW_MS, CHAT_SEEN_MAX, CHAT_AUDIT_MAX, chatReadOnlyKind, chatKindOf, chatSettable, chatCommandProblem,
   chatRelayTopics, chatGroupMembers, chatSha256, chatText,
 };

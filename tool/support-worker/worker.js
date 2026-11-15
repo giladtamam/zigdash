@@ -13,9 +13,19 @@
 //   TELEGRAM_CHAT_ID          the developer's private chat with that bot
 //   ASSISTANT_BOT_TOKEN       @ZigDashHomeBot, the chat-with-your-home bot
 //   ASSISTANT_WEBHOOK_SECRET  path part and header secret of its webhook
+//   CHAT_SERVICE_SECRET       ZigDash Chat (tool/zigdash-chat, WORKER_SECRET_FILE there):
+//                             its header secret for /v1/early/tg and /v1/early/linked, and
+//                             the HMAC key of the linked chat ids
 // Bindings:
 //   RATE                a KV namespace for the per-address and daily counters
 //   EARLY               a KV namespace for the early-access list
+//
+// ZigDash Chat (docs/design/chat-linking.md §2): once @ZigDashHomeBot's webhook
+// points at zigdash-chat, that service passes the early-access updates here
+// (POST /v1/early/tg, the same handling as the webhook below) and keeps the
+// list of linked chats (POST /v1/early/linked, HMACs only, KV EARLY
+// "chat:linked"). If the webhook is rolled back to this Worker, a linked chat
+// gets "Chat is paused for maintenance" instead of the early-access reply.
 //
 // Answers: 200 sent, 400 bad body, 413 too large, 405 wrong method,
 // 503 over a limit or Telegram unreachable (the app then offers Share).
@@ -34,6 +44,8 @@ export default {
     if (request.method !== 'POST') return text(405, 'POST only');
     if (url.pathname === '/v1/early') return earlyJoin(request, env);
     if (url.pathname === '/v1/early/price') return earlyPrice(request, env);
+    if (url.pathname === '/v1/early/tg') return chatForwarded(request, env);
+    if (url.pathname === '/v1/early/linked') return chatLinked(request, env);
     if (env.ASSISTANT_WEBHOOK_SECRET &&
         url.pathname === `/v1/tg/${env.ASSISTANT_WEBHOOK_SECRET}`) {
       return botUpdate(request, env);
@@ -300,12 +312,88 @@ async function botUpdate(request, env) {
   const update = await readJson(request, 64 * 1024);
   if (!update) return text(200, 'ignored');
   try {
-    if (update.callback_query) await botCallback(env, update.callback_query);
-    else if (update.message) await botMessage(env, update.message);
+    // Rolled back from zigdash-chat: a linked chat is told Chat is paused,
+    // except for what was always the early-access list's.
+    const m = update.message;
+    if (m && m.chat?.type === 'private' && !earlyCommand(m.text) && (await chatIsLinked(env, m.chat.id))) {
+      await botSend(env, m.chat.id, CHAT_PAUSED);
+    } else {
+      await botDispatch(env, update);
+    }
   } catch {
     // Answer 200 anyway, or Telegram retries the same update for hours.
   }
   return text(200, 'ok');
+}
+
+async function botDispatch(env, update) {
+  if (update.callback_query) await botCallback(env, update.callback_query);
+  else if (update.message) await botMessage(env, update.message);
+}
+
+// ---------------------------------------------------------------------------
+// ZigDash Chat: the service holds the webhook and passes early access here.
+
+const CHAT_PAUSED = 'Chat is paused for maintenance; it will be back soon.';
+const CHAT_LINKED_KEY = 'chat:linked';
+const CHAT_LINKED_MAX = 10000;
+
+function earlyCommand(said) {
+  const t = String(said ?? '').trim();
+  return t === '/stop' || t === '/start early_c' || t === '/start early_n';
+}
+
+function sameSecret(a, b) {
+  const x = String(a ?? ''), y = String(b ?? '');
+  if (!x || x.length !== y.length) return false;
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x.charCodeAt(i) ^ y.charCodeAt(i);
+  return diff === 0;
+}
+
+function fromChatService(request, env) {
+  return !!env.CHAT_SERVICE_SECRET && sameSecret(request.headers.get('X-ZigDash-Chat-Secret'), env.CHAT_SERVICE_SECRET);
+}
+
+/// An update zigdash-chat passed on (chat id, type, language and a command
+/// only): handled exactly as the webhook handles it.
+async function chatForwarded(request, env) {
+  if (!fromChatService(request, env)) return text(401, 'no');
+  const update = await readJson(request, 16 * 1024);
+  if (!update) return text(400, 'bad body');
+  try {
+    await botDispatch(env, update);
+  } catch {
+    return text(503, 'failed');
+  }
+  return text(200, 'ok');
+}
+
+/// The whole list of linked chats, as HMAC-SHA256(CHAT_SERVICE_SECRET, chat id) hex (32), replaced each time.
+async function chatLinked(request, env) {
+  if (!fromChatService(request, env)) return text(401, 'no');
+  const body = await readJson(request, 512 * 1024);
+  const ids = body && Array.isArray(body.ids) ? body.ids : null;
+  if (!ids || ids.length > CHAT_LINKED_MAX || !ids.every((x) => typeof x === 'string' && /^[0-9a-f]{32}$/.test(x))) {
+    return text(400, 'bad body');
+  }
+  await env.EARLY.put(CHAT_LINKED_KEY, JSON.stringify(ids));
+  return text(200, 'ok');
+}
+
+async function chatIsLinked(env, chatId) {
+  if (!env.CHAT_SERVICE_SECRET || chatId === undefined) return false;
+  let ids;
+  try {
+    ids = await env.EARLY.get(CHAT_LINKED_KEY, 'json');
+  } catch {
+    return false;
+  }
+  if (!Array.isArray(ids) || !ids.length) return false;
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.CHAT_SERVICE_SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(String(chatId))));
+  const hex = [...mac].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+  return ids.includes(hex);
 }
 
 async function botMessage(env, m) {

@@ -8,11 +8,19 @@
 //
 //   node cli.mjs create [--id tg1] [--name "Owner's Telegram"] [--scope control|read]
 //                       [--controls "Office shutter,0x00158d0001a2b3c4"] [--home-id <relay home id>]
+//                       [--chat <telegram chat id>]
 //   node cli.mjs list
 //   node cli.mjs set-controls <id> "<name or ieee>,..." [--scope control|read]
 //   node cli.mjs revoke <id> [--hub-only]      (--hub-only keeps the local keys: the acceptance test)
 //   node cli.mjs audit [<id>] [--limit 50] [--retained]
 //   node cli.mjs topics <id>                   (the relay topics, for the service's broker role)
+//   node cli.mjs adopt <id> --chat <telegram chat id> [--home-id <relay home id>]
+//                       (phase 3: a hand-made client becomes a binding like an app link: its chat,
+//                        its topics recorded, and its ACL entries added through the verifier)
+//
+// Phase 3: the Engine (3.7.0) takes a client's config off the broker into its
+// data folder; revoke publishes {"v":1,"delete":true}, retained, which also
+// reaches an Engine that is off at the time.
 
 import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
@@ -66,7 +74,7 @@ function clientConfig(entry) {
   return JSON.stringify({ v: 1, name: entry.name, hash: sha256(entry.token), key: entry.key, scope: entry.scope, controls: entry.controls });
 }
 
-export async function runCli(argv, { config = configFromEnv(), mqtt, print = console.log, base = process.env.ZIGDASH_BASE_TOPIC || 'zigbee2mqtt' } = {}) {
+export async function runCli(argv, { config = configFromEnv(), mqtt, print = console.log, base = process.env.ZIGDASH_BASE_TOPIC || 'zigbee2mqtt', fetchImpl = fetch } = {}) {
   const args = parseArgs(argv);
   const cmd = args._[0];
   const serviceKey = loadServiceKey(config.secretsFile, { create: cmd === 'create' });
@@ -90,6 +98,7 @@ export async function runCli(argv, { config = configFromEnv(), mqtt, print = con
         scope: args.scope === 'read' ? 'read' : 'control',
         controls: await resolveControls(mqtt, base, args.controls),
         home_id: typeof args['home-id'] === 'string' ? args['home-id'] : null,
+        chat_id: /^-?\d{1,20}$/.test(String(args.chat ?? '')) ? String(args.chat) : null,
         created_at: new Date().toISOString(),
       };
       // Keys first: a client on the hub whose key we lost could never be used.
@@ -102,7 +111,7 @@ export async function runCli(argv, { config = configFromEnv(), mqtt, print = con
     case 'list': {
       const rows = Object.entries(keys.clients);
       if (!rows.length) print('no clients');
-      for (const [id, c] of rows) print(`${id}  ${c.name}  ${c.scope}  controls=${(c.controls || []).length}  home=${c.home_id || '-'}  created=${c.created_at}`);
+      for (const [id, c] of rows) print(`${id}  ${c.name || c.telegram_name || '-'}  ${c.scope}  controls=${(c.controls || []).length}  home=${c.home_id || '-'}  chat=${c.chat_id ? 'yes' : 'no'}  created=${c.created_at || new Date(c.linked_at || 0).toISOString()}`);
       return rows.length;
     }
     case 'set-controls': {
@@ -120,7 +129,7 @@ export async function runCli(argv, { config = configFromEnv(), mqtt, print = con
       atHome();
       const id = args._[1];
       if (!CLIENT_ID_RE.test(String(id || ''))) throw new Error('revoke <id>');
-      await publish(mqtt, `zigdash/chat/clients/${id}`, '');
+      await publish(mqtt, `zigdash/chat/clients/${id}`, JSON.stringify({ v: 1, delete: true }));
       if (!args['hub-only'] && keys.clients[id]) {
         delete keys.clients[id];
         writeKeys(config.keysFile, serviceKey, keys);
@@ -162,8 +171,31 @@ export async function runCli(argv, { config = configFromEnv(), mqtt, print = con
       print(`requests (service publishes): ${t.req}\nanswers  (service subscribes): ${t.res}`);
       return t;
     }
+    case 'adopt': {
+      const id = args._[1];
+      const entry = need(id);
+      const chat = String(args.chat ?? '');
+      if (!/^-?\d{1,20}$/.test(chat)) throw new Error('adopt <id> --chat <telegram chat id>');
+      const homeId = typeof args['home-id'] === 'string' ? args['home-id'] : entry.home_id || config.homeId;
+      if (!homeId) throw new Error('set --home-id (the relay home id)');
+      const t = chatTopics({ transport: 'relay', clientId: id, key: Buffer.from(entry.key, 'base64'), homeId });
+      Object.assign(entry, { client_id: id, home_id: homeId, chat_id: chat, telegram_name: entry.telegram_name || entry.name, request_topic: t.req, answer_topic: t.res, linked_at: entry.linked_at || Date.now() });
+      writeKeys(config.keysFile, serviceKey, keys);
+      let acl = 'skipped (no VERIFIER_INTERNAL_URL / CHAT_ACL_SECRET_FILE)';
+      if (config.verifierUrl && config.aclSecretFile) {
+        const res = await fetchImpl(`${config.verifierUrl.replace(/\/$/, '')}/v1/internal/chat-acl`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'X-Chat-Acl-Secret': readSecretFile(config.aclSecretFile) },
+          body: JSON.stringify({ home_id: homeId, request_topic: t.req, answer_topic: t.res, op: 'add' }),
+        });
+        if (res.status !== 200) throw new Error(`the verifier refused the ACL entries (${res.status}); the keys file is updated, run adopt again`);
+        acl = 'added on the chat role';
+      }
+      print(`${id}: linked to its chat, topics recorded, ACL entries ${acl}`);
+      return t;
+    }
     default:
-      throw new Error('usage: cli.mjs create|list|set-controls|revoke|audit|topics (see the top of cli.mjs)');
+      throw new Error('usage: cli.mjs create|list|set-controls|revoke|audit|topics|adopt (see the top of cli.mjs)');
   }
 }
 

@@ -1,10 +1,14 @@
 // Logs are counters only (plan revision 6): an event name from a fixed list
 // and numbers. Anything that isn't a finite number is dropped here, so no
-// message text, name, chat id or device name can reach a log line.
+// message text, name, chat id, home id or device name can reach a log line.
 
 const EVENTS = new Set([
   'started', 'telegram_ready', 'telegram_error', 'mqtt_connected', 'mqtt_closed', 'mqtt_error',
   'ignored', 'message', 'confirm_asked', 'confirm_done', 'confirm_expired', 'not_linked', 'home_offline', 'model_error',
+  // phase 3: linking, the webhook, the Worker, caps
+  'http', 'link_created', 'link_claimed', 'link_claim_refused', 'link_confirmed', 'link_wrong_code', 'link_cancelled',
+  'link_expired', 'unlinked', 'acl_error', 'webhook_refused', 'webhook_duplicate', 'forwarded', 'forward_error',
+  'worker_sync', 'worker_sync_error', 'cap_reached', 'budget_paused',
 ]);
 
 export function makeMetrics(sink = (line) => console.log(line)) {

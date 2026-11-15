@@ -2,7 +2,7 @@
   "name": "zigdash-chat",
   "private": true,
   "type": "module",
-  "description": "ZigDash Chat, milestone 1: talk to your own Zigbee home from Telegram, through the ZigDash Engine and Claude.",
+  "description": "ZigDash Chat: talk to your own Zigbee home from Telegram, through the ZigDash Engine and Claude; linked from the app.",
   "engines": { "node": ">=22.13" },
   "scripts": {
     "start": "node service.mjs",

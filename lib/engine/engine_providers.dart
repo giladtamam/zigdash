@@ -41,11 +41,11 @@ final engineSourceProvider =
     FutureProvider<String>((ref) => rootBundle.loadString(engineAsset));
 const engineAsset = 'hub/zigdash-engine.js';
 
-/// The Engine's source as this release ships it (3.6.2), never `main`: what
+/// The Engine's source as this release ships it (3.7.0), never `main`: what
 /// someone reads before installing is what ZigDash installs. Move the tag
 /// to the release that ships a changed `hub/zigdash-engine.js`.
 final engineSourceUrl =
-    Uri.parse('https://github.com/giladtamam/zigdash/blob/v3.6.2/hub/zigdash-engine.js');
+    Uri.parse('https://github.com/giladtamam/zigdash/blob/v3.7.0/hub/zigdash-engine.js');
 
 /// Everything the Automations screen and the dashboard banner show about a
 /// Home's Engine.

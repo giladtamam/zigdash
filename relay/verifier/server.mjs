@@ -12,6 +12,24 @@
 // Env: PORT, DB, MQTT_URL, ADMIN_USER, ADMIN_PASSWORD, HUB_URL, PHONE_URL,
 //      VERIFY (play | fake), PLAY_PACKAGE, PLAY_PRODUCT, GOOGLE_SA (path to JSON key),
 //      APPLE_BUNDLE, APPLE_ENVIRONMENTS (Production[,Sandbox]).
+//
+// ZigDash Chat (docs/design/chat-linking.md §2), off until both secrets are set:
+//   CHAT_TICKET_SECRET_FILE (or CHAT_TICKET_SECRET)  signs Chat tickets; the chat service holds it too
+//   CHAT_ACL_SECRET_FILE (or CHAT_ACL_SECRET)        the chat service's key to the internal ACL route
+//   CHAT_ROLE (zigdash-chat)                         the chat service's dynamic-security role
+//   INTERNAL_PORT (8788)                             the internal route's own port: Caddy never
+//                                                    proxies it, so only containers on the verifier's
+//                                                    Docker networks can reach it
+//   TICKETS_PER_HOUR (20)                            tickets per Home an hour (each one asks Play)
+//
+//   POST /v1/homes/<id>/chat-ticket   phone Basic login, {purchase_token, client_id?, request_topic?,
+//                                     answer_topic?} (topics only with client_id, both or neither)
+//                                     -> {ticket, home_id, client_id, request_topic,
+//                                     answer_topic, exp}; 401 wrong login, 402 purchase not valid or not
+//                                     this Home's, 400 bad body, 429, 503 (Chat off, or Play unreachable)
+//   POST /v1/internal/chat-acl        INTERNAL_PORT only, header X-Chat-Acl-Secret, no forwarding
+//                                     headers: {home_id, request_topic, answer_topic, op: add|remove}
+//                                     adds or removes the chat role's three ACL entries for one client
 
 import http from 'node:http';
 import crypto from 'node:crypto';
@@ -19,8 +37,22 @@ import fs from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import mqtt from 'mqtt';
 import { verifyAppleTransaction } from './apple.mjs';
+import { signTicket } from './ticket.mjs';
 
-export function createVerifier(env = process.env) {
+/** A secret from [name]_FILE (preferred; a missing file means not set) or [name]; null when neither is set. */
+function secretFrom(env, name) {
+  const file = env[`${name}_FILE`];
+  const value = file ? (fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim() : '') : env[name];
+  return value ? String(value) : null;
+}
+
+const sameSecret = (a, b) => {
+  const x = Buffer.from(String(a || '')), y = Buffer.from(String(b || ''));
+  return x.length === y.length && x.length > 0 && crypto.timingSafeEqual(x, y);
+};
+
+/** [hooks.purchaseValid]: tests only, stands in for Google Play (a refund, an outage). */
+export function createVerifier(env = process.env, hooks = {}) {
   const cfg = {
     port: Number(env.PORT || 8787),
     db: env.DB || ':memory:',
@@ -37,6 +69,11 @@ export function createVerifier(env = process.env) {
     appleEnvironments: (env.APPLE_ENVIRONMENTS || 'Production').split(','),
     maxPhones: Number(env.MAX_PHONES || 5),
     pairPerHour: Number(env.PAIR_PER_HOUR || 10),
+    chatTicketSecret: secretFrom(env, 'CHAT_TICKET_SECRET'),
+    chatAclSecret: secretFrom(env, 'CHAT_ACL_SECRET'),
+    chatRole: env.CHAT_ROLE || 'zigdash-chat',
+    internalPort: Number(env.INTERNAL_PORT ?? 8788),
+    ticketsPerHour: Number(env.TICKETS_PER_HOUR || 20),
   };
 
   // ---------- storage ----------
@@ -102,6 +139,27 @@ export function createVerifier(env = process.env) {
     await control([{ command: 'deleteClient', username }]);
   }
 
+  // A Chat client's two relay topics on the chat service's role: it may send
+  // requests on one and read answers on the other, nothing else of the Home.
+  const chatAcls = (req, ans) => [
+    { acltype: 'publishClientSend', topic: req },
+    { acltype: 'subscribeLiteral', topic: ans },
+    { acltype: 'publishClientReceive', topic: ans },
+  ];
+  async function chatAcl(op, req, ans) {
+    const rolename = cfg.chatRole;
+    if (op === 'add') {
+      const created = await control([{ command: 'createRole', rolename }]);
+      if (failed(created).length) throw new Error(failed(created)[0].error);
+      const r = await control(chatAcls(req, ans).map((a) => ({ command: 'addRoleACL', rolename, ...a, priority: 0, allow: true })));
+      if (failed(r).length) throw new Error(failed(r)[0].error);
+    } else {
+      const r = await control(chatAcls(req, ans).map((a) => ({ command: 'removeRoleACL', rolename, ...a })));
+      const bad = failed(r).filter((x) => !/not found/i.test(x.error));
+      if (bad.length) throw new Error(bad[0].error);
+    }
+  }
+
   // ---------- Google Play ----------
   let googleToken = null;
   async function googleAccessToken() {
@@ -127,6 +185,7 @@ export function createVerifier(env = process.env) {
 
   /** True when [purchaseToken] is a completed purchase of Pro. */
   async function purchaseValid(purchaseToken) {
+    if (hooks.purchaseValid) return hooks.purchaseValid(purchaseToken);
     if (cfg.verify === 'fake') return purchaseToken.startsWith('test-pro-');
     const url = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(cfg.playPackage)}` +
       `/purchases/productsv2/tokens/${encodeURIComponent(purchaseToken)}`;
@@ -163,6 +222,14 @@ export function createVerifier(env = process.env) {
     list.push(now);
     attempts.set(ip, list);
     return list.length > cfg.pairPerHour;
+  }
+  /** More than [limit] calls under [key] in the last hour. */
+  function overLimit(key, limit) {
+    const now = Date.now();
+    const list = (attempts.get(key) || []).filter((t) => now - t < 3600000);
+    list.push(now);
+    attempts.set(key, list);
+    return list.length > limit;
   }
   const send = (res, status, body) => {
     res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
@@ -251,12 +318,75 @@ export function createVerifier(env = process.env) {
         return send(res, 200, { removed: row.username });
       }
     }
+    // Chat: a phone of this Home with a Pro purchase that is still valid now
+    // gets a ticket for the chat service. Play only in this beta.
+    if (req.method === 'POST' && parts[0] === 'v1' && parts[1] === 'homes' && parts[2] && parts[3] === 'chat-ticket' && parts.length === 4) {
+      const homeId = parts[2];
+      if (!cfg.chatTicketSecret) return send(res, 503, { error: 'chat is off' });
+      if (!phoneOf(req, homeId)) return send(res, 401, { error: 'not a phone of this home' });
+      if (overLimit(`ticket:${homeId}`, cfg.ticketsPerHour)) return send(res, 429, { error: 'too many tickets' });
+      const body = await readJson(req);
+      // purchase_token as the app sends it; purchaseToken as /v1/homes takes it.
+      const raw = body && (body.purchase_token ?? body.purchaseToken);
+      const token = typeof raw === 'string' ? raw : '';
+      if (!token || token.length > 16384) return send(res, 400, { error: 'purchase_token missing' });
+      // A link names the client and its two topics; a removal only the client; a listing nothing.
+      const fields = { home_id: homeId, client_id: null, request_topic: null, answer_topic: null };
+      if (body.client_id !== undefined) {
+        if (typeof body.client_id !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(body.client_id)) return send(res, 400, { error: 'bad client_id' });
+        fields.client_id = body.client_id;
+      }
+      if (body.request_topic !== undefined || body.answer_topic !== undefined) {
+        const topic = new RegExp(`^homes/${homeId}/x/[0-9a-f]{24}$`);
+        if (!fields.client_id || !topic.test(String(body.request_topic)) || !topic.test(String(body.answer_topic)) ||
+            body.request_topic === body.answer_topic) {
+          return send(res, 400, { error: 'client_id, request_topic and answer_topic must name one Chat client of this home' });
+        }
+        Object.assign(fields, { request_topic: body.request_topic, answer_topic: body.answer_topic });
+      }
+      const home = db.prepare('select token_hash from homes where id = ?').get(homeId);
+      if (!home || home.token_hash !== sha(token)) return send(res, 402, { error: 'not the purchase of this home' });
+      let valid;
+      try { valid = await purchaseValid(token); } catch { return send(res, 503, { error: 'Play did not answer' }); }
+      if (!valid) return send(res, 402, { error: 'no Pro purchase' });
+      const { ticket, payload } = signTicket(cfg.chatTicketSecret, fields);
+      return send(res, 200, { ticket, ...fields, exp: payload.exp });
+    }
+
     if (req.method === 'GET' && url.pathname === '/v1/health') return send(res, 200, { ok: true });
     return send(res, 404, { error: 'not found' });
   }
 
+  /**
+   * The internal port: only the chat service, from the Docker network, with
+   * its secret. Anything that came through a proxy (Caddy adds forwarding
+   * headers) is refused, in case this port is ever proxied by mistake.
+   */
+  async function handleInternal(req, res) {
+    const url = new URL(req.url, 'http://x');
+    if (req.method !== 'POST' || url.pathname !== '/v1/internal/chat-acl') return send(res, 404, { error: 'not found' });
+    if (req.headers['x-forwarded-for'] || req.headers['x-forwarded-host'] || req.headers.forwarded || req.headers['x-real-ip']) {
+      return send(res, 403, { error: 'internal only' });
+    }
+    if (!cfg.chatAclSecret) return send(res, 503, { error: 'chat is off' });
+    if (!sameSecret(req.headers['x-chat-acl-secret'], cfg.chatAclSecret)) return send(res, 401, { error: 'no' });
+    const body = await readJson(req);
+    const homeId = body && typeof body.home_id === 'string' && /^[0-9a-f]{16}$/.test(body.home_id) ? body.home_id : null;
+    if (!homeId || !['add', 'remove'].includes(body.op)) return send(res, 400, { error: 'home_id and op (add or remove) needed' });
+    const topic = new RegExp(`^homes/${homeId}/x/[0-9a-f]{24}$`);
+    if (!topic.test(String(body.request_topic)) || !topic.test(String(body.answer_topic)) || body.request_topic === body.answer_topic) {
+      return send(res, 400, { error: 'request_topic and answer_topic must be two of this home\'s chat topics' });
+    }
+    if (body.op === 'add' && !db.prepare('select id from homes where id = ?').get(homeId)) return send(res, 404, { error: 'no such home' });
+    await chatAcl(body.op, body.request_topic, body.answer_topic);
+    return send(res, 200, { ok: true, op: body.op });
+  }
+
   const server = http.createServer((req, res) => {
     handle(req, res).catch((e) => send(res, 500, { error: String(e.message || e).slice(0, 120) }));
+  });
+  const internal = http.createServer((req, res) => {
+    handleInternal(req, res).catch((e) => send(res, 502, { error: String(e.message || e).slice(0, 120) }));
   });
 
   return {
@@ -271,9 +401,13 @@ export function createVerifier(env = process.env) {
       await admin.subscribeAsync('$CONTROL/dynamic-security/v1/response');
       admin.on('message', onControlResponse);
       await new Promise((r) => server.listen(cfg.port, r));
+      if (cfg.internalPort >= 0 && !Number.isNaN(cfg.internalPort)) await new Promise((r) => internal.listen(cfg.internalPort, r));
       return server.address().port;
     },
+    /** The internal route's port (INTERNAL_PORT, or the one picked for 0). */
+    internalPort: () => internal.address() && internal.address().port,
     async stop() {
+      if (internal.listening) await new Promise((r) => internal.close(r));
       await new Promise((r) => server.close(r));
       admin && admin.end(true);
       db.close();
@@ -283,5 +417,5 @@ export function createVerifier(env = process.env) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const v = createVerifier();
-  v.start().then((port) => console.log(`zigdash verifier on :${port}, verify=${v.cfg.verify}`));
+  v.start().then((port) => console.log(`zigdash verifier on :${port}, internal :${v.internalPort()}, verify=${v.cfg.verify}, chat=${v.cfg.chatTicketSecret && v.cfg.chatAclSecret ? 'on' : 'off'}`));
 }

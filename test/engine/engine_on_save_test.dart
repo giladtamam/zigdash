@@ -661,7 +661,7 @@ void main() {
     });
 
     test('the source link names a release tag, never main', () {
-      expect(engineSourceUrl.toString(), 'https://github.com/giladtamam/zigdash/blob/v3.6.2/hub/zigdash-engine.js');
+      expect(engineSourceUrl.toString(), 'https://github.com/giladtamam/zigdash/blob/v3.7.0/hub/zigdash-engine.js');
     });
   });
 }

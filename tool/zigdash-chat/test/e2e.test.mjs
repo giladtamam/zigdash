@@ -1,4 +1,4 @@
-// End to end: the zigdash-chat service and the 9.0.0-chat Engine over a broker
+// End to end: the zigdash-chat service and the release Engine (3.7.0) over a broker
 // (a local mosquitto when installed), with fake Telegram and fake Claude.
 // Run: env -u NODE_OPTIONS node --test test/*.test.mjs
 
@@ -49,15 +49,14 @@ async function world(t, { transport = 'broker' } = {}) {
     for (let i = 0; i < 100 && !(hub.engine.remote && hub.engine.remote.connected); i++) await new Promise((r) => setTimeout(r, 20));
     assert.ok(hub.engine.remote.connected, 'the Engine reached the relay');
   }
-  fs.writeFileSync(path.join(dir, 'allowed'), `# the owner\n${OWNER}\n`, { mode: 0o600 });
   const config = {
     ...configFromEnv({}),
-    keysFile: path.join(dir, 'keys.json'), secretsFile: path.join(dir, 'secrets.json'),
-    allowedFile: path.join(dir, 'allowed'), transport, homeId: transport === 'relay' ? 'h1' : null,
+    keysFile: path.join(dir, 'keys.json'), secretsFile: path.join(dir, 'secrets.json'), stateFile: path.join(dir, 'state.json'),
+    transport, homeId: transport === 'relay' ? 'h1' : null, httpPort: null,
   };
   const out = [];
   const cli = (...argv) => runCli(argv, { config: { ...config, transport: 'broker' }, mqtt: cliClient, print: (l) => out.push(l) });
-  await cli('create', '--id', 'tg1', '--name', 'Owner', '--controls', CONTROLS.join(','), '--home-id', 'h1');
+  await cli('create', '--id', 'tg1', '--name', 'Owner', '--controls', CONTROLS.join(','), '--home-id', 'h1', '--chat', OWNER);
   await new Promise((r) => setTimeout(r, 150)); // the Engine takes the retained config
   const tg = fakeTelegram();
   const claude = fakeClaude(SCRIPT);
@@ -189,11 +188,15 @@ test('e2e: revoke: after deleting the client on the Engine, "not linked", and th
   assert.equal(await w.say('close the office shutter'), TEXT.notLinked);
   assert.equal(w.hub.injected.length, 1);
   assert.equal(w.audit()[0].result, 'refused: not linked');
-  // Removing the local keys too: the service no longer has anything to send with.
+  // Removing the local keys too: the chat is now a stranger (no Worker here: nothing back).
   await w.cli('revoke', 'tg1');
-  assert.equal(await w.say('close the office shutter'), TEXT.notLinked);
-  assert.equal(w.metrics.totals.not_linked, 2);
   assert.deepEqual(readKeys(w.config.keysFile, loadServiceKey(w.config.secretsFile)).clients, {});
+  const ignored = w.metrics.totals.ignored || 0;
+  const calls = w.claude.calls.length;
+  w.tg.send(OWNER, 'close the office shutter');
+  await assert.rejects(w.tg.replyTo(OWNER, 600), /no reply/);
+  assert.equal(w.metrics.totals.ignored, ignored + 1);
+  assert.equal(w.claude.calls.length, calls, 'the model never saw it');
 });
 
 test('e2e: CLI: keys encrypted at rest, mode 600; the hub keeps only the token hash; nothing secret printed', async (t) => {
@@ -204,12 +207,17 @@ test('e2e: CLI: keys encrypted at rest, mode 600; the hub keeps only the token h
   const raw = fs.readFileSync(w.config.keysFile, 'utf8');
   assert.ok(!raw.includes(entry.token) && !raw.includes(entry.key), 'the keys file is encrypted');
   assert.deepEqual(entry.controls.sort(), [...CONTROLS].sort());
+  // The Engine took the config into its data folder and cleared the retained copy.
   const retainedConfig = await new Promise((resolve) => {
-    w.cliClient.on('message', (topic, p) => { if (topic === 'zigdash/chat/clients/tg1') resolve(JSON.parse(String(p))); });
+    const timer = setTimeout(() => resolve(null), 400);
+    w.cliClient.on('message', (topic, p) => { if (topic === 'zigdash/chat/clients/tg1' && p.length) { clearTimeout(timer); resolve(String(p)); } });
     w.cliClient.subscribe('zigdash/chat/clients/tg1');
   });
-  assert.equal(retainedConfig.hash.length, 64);
-  assert.ok(!JSON.stringify(retainedConfig).includes(entry.token), 'the hub never sees the token');
+  assert.equal(retainedConfig, null, 'nothing retained on the broker');
+  const onHub = JSON.parse(fs.readFileSync(w.hub.chatFile, 'utf8')).clients.tg1;
+  assert.equal(onHub.hash.length, 64);
+  assert.equal(fs.statSync(w.hub.chatFile).mode & 0o777, 0o600);
+  assert.ok(!JSON.stringify(onHub).includes(entry.token), 'the hub never sees the token');
   await w.cli('list');
   await w.cli('set-controls', 'tg1', 'Office shutter,Desk lamp');
   await new Promise((r) => setTimeout(r, 150));
