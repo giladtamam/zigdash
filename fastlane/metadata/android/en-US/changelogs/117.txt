@@ -1,1 +1,3 @@
 New for ZigDash Pro: Chat (beta). Link Telegram in Settings › Home › Chat and ask your home "is the back door open?" or tell it to close a shutter. Free during the beta.
+
+Also from 3.6.3: on Android 17, ZigDash no longer asks about nearby devices when it opens (it never needed that permission), and the wall display settings no longer hide behind a tablet's taskbar.
