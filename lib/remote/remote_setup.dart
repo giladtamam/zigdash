@@ -163,8 +163,15 @@ class RemoteSetup {
   /// At home: a founder's code instead of a Pro purchase. The relay admits
   /// the Home for the pass, and the rest is [setUp]'s. The `redeem_nonce`
   /// is kept until the relay says yes, so a retry after a lost answer gets
-  /// fresh logins for the same Home instead of "code already used".
-  Future<FounderRedeemResult> redeem(String connectionId, String code) async {
+  /// fresh logins for the same Home instead of "code already used". With
+  /// [FounderRedeemResult.ready], the day the pass ends.
+  Future<(FounderRedeemResult, DateTime?)> redeem(String connectionId, String code) async {
+    final r = await _redeem(connectionId, code);
+    if (r != FounderRedeemResult.ready) return (r, null);
+    return (r, (await _store.readFounder(connectionId))?.expiresAt);
+  }
+
+  Future<FounderRedeemResult> _redeem(String connectionId, String code) async {
     final mgr = await _managerOf(connectionId);
     if (!mgr.isConnected || mgr.activeEndpoint != MqttEndpoint.local) return FounderRedeemResult.notAtHome;
     var nonce = await _store.readRedeemNonce(connectionId);

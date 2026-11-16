@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/l10n/l10n_ext.dart';
 import '../core/router/routes.dart';
+import 'founder.dart';
 import 'remote_setup.dart';
 
 /// The door to remote control in the dashboard's top bar (3.4.4,
@@ -17,7 +18,7 @@ class RemoteDoor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(remoteSoldProvider) ||
+    if (!ref.watch(remoteSoldForProvider(connectionId)) ||
         !ref.watch(remoteFitsProvider(connectionId))) {
       return const SizedBox.shrink();
     }

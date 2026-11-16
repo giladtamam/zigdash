@@ -116,7 +116,7 @@ void main() {
 
   test('redeem: founder store, the code and a nonce; the hub gets its login, this phone keeps its own and the pass', () async {
     answers['POST /v1/homes'] = [(200, _admitted())];
-    expect(await setup.redeem('c1', 'zd-7k3m-q9ab-x2'), FounderRedeemResult.ready);
+    expect(await setup.redeem('c1', 'zd-7k3m-q9ab-x2'), (FounderRedeemResult.ready, _end.toLocal()));
     final (path, auth, body) = seen.single;
     expect(path, 'POST /v1/homes');
     expect(auth, isEmpty);
@@ -136,10 +136,10 @@ void main() {
 
   test('a lost answer: the retry sends the same nonce, a new redeem after success a new one', () async {
     answers['POST /v1/homes'] = [(0, null), (200, _admitted())];
-    expect(await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2'), FounderRedeemResult.unreachable);
+    expect((await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2')).$1, FounderRedeemResult.unreachable);
     expect(await store.read('c1'), isNull);
     expect(mgr.published, isEmpty);
-    expect(await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2'), FounderRedeemResult.ready);
+    expect((await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2')).$1, FounderRedeemResult.ready);
     expect([for (final s in seen) s.$3!['redeem_nonce']], ['nonce-1-abcdefghijkl', 'nonce-1-abcdefghijkl']);
     expect(nonces, 1);
 
@@ -156,9 +156,9 @@ void main() {
   });
 
   test('each refusal has its own answer, and nothing is written', () async {
-    Future<FounderRedeemResult> with_(int status, [String? error]) {
+    Future<FounderRedeemResult> with_(int status, [String? error]) async {
       answers['POST /v1/homes'] = [(status, {'error': ?error})];
-      return setup.redeem('c1', 'ZD-7K3M-Q9AB-X2');
+      return (await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2')).$1;
     }
 
     expect(await with_(402, 'no_pass'), FounderRedeemResult.wrongCode);
@@ -174,7 +174,7 @@ void main() {
     // Away: the hub's login travels over the home network only.
     mgr.home = false;
     final before = seen.length;
-    expect(await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2'), FounderRedeemResult.notAtHome);
+    expect((await setup.redeem('c1', 'ZD-7K3M-Q9AB-X2')).$1, FounderRedeemResult.notAtHome);
     expect(seen, hasLength(before));
   });
 

@@ -1249,6 +1249,11 @@ enum RemoteState {
   proOffline,
   unfit,
   notSold,
+
+  /// A founder's pass ended, or the relay deleted its Home
+  /// (founders-pass.md). Counted as [on]: the pass adds no analytics.
+  passEnded,
+  deleted,
 }
 
 class RemoteEvent extends AnalyticsEvent {
