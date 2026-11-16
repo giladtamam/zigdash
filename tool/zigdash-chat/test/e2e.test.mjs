@@ -63,6 +63,7 @@ async function world(t, { transport = 'broker' } = {}) {
   const serviceClient = await broker.connect();
   const metrics = makeMetrics((l) => lines.push(l));
   const service = await startService(config, { anthropic: claude, mqttClient: serviceClient, fetchImpl: tg.fetchImpl, metrics, telegramToken: BOT_TOKEN, pollSeconds: 1 });
+  assert.equal(service.internalPort, null, 'no ACL secret, no internal listener');
   const say = async (text) => { tg.send(OWNER, text); return tg.replyTo(OWNER); };
   const audit = () => hub.engine.chat.audit;
   t.after(async () => {

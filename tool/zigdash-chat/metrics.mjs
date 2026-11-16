@@ -9,6 +9,8 @@ const EVENTS = new Set([
   'http', 'link_created', 'link_claimed', 'link_claim_refused', 'link_confirmed', 'link_wrong_code', 'link_cancelled',
   'link_expired', 'unlinked', 'acl_error', 'webhook_refused', 'webhook_duplicate', 'forwarded', 'forward_error',
   'worker_sync', 'worker_sync_error', 'cap_reached', 'budget_paused',
+  // founder's passes: the Home's status, the verifier's pushes
+  'home_status', 'home_status_error', 'pass_ended', 'link_refused', 'home_changed', 'home_deleted', 'internal_refused', 'internal_http',
 ]);
 
 export function makeMetrics(sink = (line) => console.log(line)) {

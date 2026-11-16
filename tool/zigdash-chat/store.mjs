@@ -7,7 +7,8 @@
 //    request_topic, answer_topic, linked_at}
 // The state file (plain JSON, mode 600, no chat ids, names or keys): this
 // month's message counts per Home and the model spend, each binding's last
-// use, and ACL removals still to retry.
+// use, ACL removals still to retry, and when each binding's chat last heard
+// that its Home's founder's pass ended.
 
 import fs from 'node:fs';
 import { readKeys, writeKeys, writePrivate } from './keystore.mjs';
@@ -54,7 +55,7 @@ export function makeBindings(file, serviceKey) {
 }
 
 export function makeState(file, { now = Date.now } = {}) {
-  let s = { v: 1, month: month(now()), homes: {}, cost_usd: 0, last_used: {}, acl_retry: [] };
+  let s = { v: 1, month: month(now()), homes: {}, cost_usd: 0, last_used: {}, acl_retry: [], ended_notice: {} };
   try {
     const saved = JSON.parse(fs.readFileSync(file, 'utf8'));
     if (saved && saved.v === 1) s = { ...s, ...saved };
@@ -76,8 +77,17 @@ export function makeState(file, { now = Date.now } = {}) {
       save();
     },
     lastUsed: (bindingId) => s.last_used[bindingId] || null,
-    forget(bindingId) { delete s.last_used[bindingId]; save(); },
+    forget(bindingId) { delete s.last_used[bindingId]; delete s.ended_notice[bindingId]; save(); },
     retries: () => [...s.acl_retry],
     setRetries(list) { s.acl_retry = list; save(); },
+    /** When [bindingId]'s chat was last told its Home's pass ended (ms), or null. */
+    endedNotice: (bindingId) => s.ended_notice[bindingId] || null,
+    noteEnded(bindingId) { s.ended_notice[bindingId] = now(); save(); },
+    /** The Home changed (upgraded, extended): its chats may hear about a new end again. */
+    clearEnded(bindingIds) {
+      let changed = false;
+      for (const id of bindingIds) if (s.ended_notice[id]) { delete s.ended_notice[id]; changed = true; }
+      if (changed) save();
+    },
   };
 }

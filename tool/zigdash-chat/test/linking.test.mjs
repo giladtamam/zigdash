@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { loadChatEngine, startBroker, startHub, fakeTelegram, fakeClaude, tmpDir, CONTROLS } from './harness.mjs';
+import { loadChatEngine, startBroker, startHub, fakeTelegram, fakeClaude, fakeVerifier, tmpDir, CONTROLS } from './harness.mjs';
 import { startService, configFromEnv } from '../service.mjs';
 import { makeMetrics } from '../metrics.mjs';
 import { readKeys, loadServiceKey } from '../keystore.mjs';
@@ -64,17 +64,15 @@ async function world(t, { cap = 300, budgetUsd = 20 } = {}) {
   for (let i = 0; i < 100 && !(hub.engine.remote && hub.engine.remote.connected); i++) await sleep(20);
 
   const tg = fakeTelegram();
-  const acl = [];
+  const verifier = fakeVerifier({ secret: ACL_SECRET });
+  verifier.setHome(HOME, { entitled: true, ended_at: null });
+  verifier.setHome(OTHER_HOME, { entitled: true, ended_at: null });
+  const { acl } = verifier;
   const worker = { forwarded: [], linked: [] };
-  let aclStatus = 200;
   const fetchImpl = async (url, init) => {
     if (url.startsWith('https://api.telegram.org/')) return tg.fetchImpl(url, init);
+    if (verifier.handles(url)) return verifier.fetch(url, init);
     const body = JSON.parse(init.body);
-    if (url === 'http://verifier.test:8788/v1/internal/chat-acl') {
-      assert.equal(init.headers['X-Chat-Acl-Secret'], ACL_SECRET);
-      if (aclStatus === 200) acl.push(body);
-      return { status: aclStatus, json: async () => ({}) };
-    }
     if (url.startsWith('https://worker.test/v1/early/')) {
       assert.equal(init.headers['X-ZigDash-Chat-Secret'], WORKER_SECRET);
       if (url.endsWith('/tg')) worker.forwarded.push(body); else worker.linked.push(body.ids);
@@ -87,7 +85,7 @@ async function world(t, { cap = 300, budgetUsd = 20 } = {}) {
   const config = {
     ...configFromEnv({}),
     keysFile: path.join(dir, 'keys.json'), secretsFile: path.join(dir, 'secrets.json'), stateFile: path.join(dir, 'state.json'),
-    transport: 'relay', telegramMode: 'webhook', httpPort: 0, httpHost: '127.0.0.1',
+    transport: 'relay', telegramMode: 'webhook', httpPort: 0, httpHost: '127.0.0.1', internalPort: 0,
     verifierUrl: 'http://verifier.test:8788', workerUrl: 'https://worker.test', cap, budgetUsd,
   };
   loadServiceKey(config.secretsFile, { create: true });
@@ -134,9 +132,16 @@ async function world(t, { cap = 300, budgetUsd = 20 } = {}) {
     return { created, backCode, confirmed };
   };
   const keys = () => readKeys(config.keysFile, loadServiceKey(config.secretsFile)).clients;
+  /** The verifier's push to the service's internal port. */
+  const internal = async (p, body, { headers = {}, method = 'POST' } = {}) => {
+    const res = await fetch(`http://127.0.0.1:${service.internalPort}${p}`, {
+      method, headers: { 'content-type': 'application/json', 'X-Chat-Acl-Secret': ACL_SECRET, ...headers }, body: method === 'GET' ? undefined : JSON.stringify(body),
+    });
+    return { status: res.status, body: await res.json() };
+  };
   return {
-    broker, hub, tg, claude, service, api, hook, say, lastTo, link, keys, acl, worker, lines, metrics, phoneMqtt, config,
-    setAcl: (s) => { aclStatus = s; }, later: (ms) => { shift += ms; }, now,
+    broker, hub, tg, claude, service, api, hook, say, lastTo, link, keys, internal, acl, worker, lines, metrics, phoneMqtt, config, verifier,
+    setAcl: verifier.setAcl, later: (ms) => { shift += ms; }, now,
   };
 }
 
@@ -460,4 +465,213 @@ test('budget: when this month\'s model spend reaches the budget, Chat pauses wit
   assert.ok(state.cost_usd >= 0.0001);
   assert.equal(fs.statSync(w.config.stateFile).mode & 0o777, 0o600);
   assert.ok(!JSON.stringify(state).includes(OWNER), 'no chat ids in the state file');
+});
+
+// ---------- founder's passes (docs/design/founders-pass.md) ----------
+
+const ENDED_AT = Date.UTC(2027, 1, 14, 12); // 14 Feb 2027, noon UTC: the same date in every time zone
+const ENDED_TEXT = LINK_TEXT.ended('14 Feb 2027');
+const textsTo = (w, chatId) => w.tg.sent.filter((s) => s.chatId === String(chatId)).map((s) => s.text);
+
+test('pass ended: one notice (kept in the state file), no model call; a "no" is cached 1 minute; then at most daily', async (t) => {
+  const w = await world(t);
+  const c = newClient();
+  await w.link(c);
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, 'All quiet at home.');
+  assert.deepEqual(w.verifier.statusCalls, [HOME]);
+  // Entitled is cached 10 minutes: the end shows once that runs out.
+  w.verifier.setHome(HOME, { entitled: false, ended_at: ENDED_AT });
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.verifier.statusCalls.length, 1);
+  w.later(10 * 60000 + 1000);
+  const calls = w.claude.calls.length;
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, ENDED_TEXT);
+  assert.equal(ENDED_TEXT, "This Home's founder's pass ended on 14 Feb 2027. ZigDash Pro keeps Chat: open ZigDash to get it.");
+  await w.say(OWNER, 'how are things?');
+  await w.say(OWNER, '/start');
+  assert.equal(w.claude.calls.length, calls, 'no model call');
+  assert.equal(textsTo(w, OWNER).filter((x) => x === ENDED_TEXT).length, 1, 'once');
+  assert.equal(w.verifier.statusCalls.length, 2, 'the "no" is cached');
+  w.later(61000);
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.verifier.statusCalls.length, 3, 'asked again after a minute');
+  assert.equal(textsTo(w, OWNER).filter((x) => x === ENDED_TEXT).length, 1, 'and still quiet');
+  // Survives a restart: the state file says when, by binding (no chat id).
+  const state = JSON.parse(fs.readFileSync(w.config.stateFile, 'utf8'));
+  assert.deepEqual(Object.keys(state.ended_notice), [`${HOME}.${c.clientId}`]);
+  assert.ok(!JSON.stringify(state).includes(OWNER));
+  // A day later, one reminder.
+  w.later(24 * 3600000);
+  await w.say(OWNER, 'how are things?');
+  await w.say(OWNER, 'how are things?');
+  assert.equal(textsTo(w, OWNER).filter((x) => x === ENDED_TEXT).length, 2);
+  assert.equal(w.claude.calls.length, calls);
+  // /unlink still works.
+  await w.say(OWNER, '/unlink');
+  assert.equal(w.lastTo(OWNER).text, LINK_TEXT.askUnlink);
+  assert.equal(w.metrics.totals.pass_ended, 6);
+  noSecretsInLogs(w.lines, OWNER, HOME, c.clientId, ACL_SECRET, '14 Feb');
+});
+
+test('pass ended: the notice survives a restart of the service (same state file)', async (t) => {
+  const w = await world(t);
+  const c = newClient();
+  await w.link(c);
+  w.verifier.setHome(HOME, { entitled: false, ended_at: ENDED_AT });
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, ENDED_TEXT);
+  const { makeState } = await import('../store.mjs');
+  const again = makeState(w.config.stateFile, { now: w.now });
+  assert.ok(again.endedNotice(`${HOME}.${c.clientId}`) > 0);
+});
+
+test('home-changed: drops the cached status and the notice; the next message asks the verifier again', async (t) => {
+  const w = await world(t);
+  const c = newClient();
+  await w.link(c);
+  w.verifier.setHome(HOME, { entitled: false, ended_at: ENDED_AT });
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, ENDED_TEXT);
+  // Upgraded: the verifier re-enables the Home and says so.
+  w.verifier.setHome(HOME, { entitled: true, ended_at: null });
+  assert.deepEqual(await w.internal('/v1/internal/home-changed', { home_id: HOME }), { status: 200, body: { ok: true } });
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, 'All quiet at home.');
+  assert.equal(w.verifier.statusCalls.length, 2);
+  assert.deepEqual(JSON.parse(fs.readFileSync(w.config.stateFile, 'utf8')).ended_notice, {});
+  // Ended again later (a revoke): told again, once.
+  w.verifier.setHome(HOME, { entitled: false, ended_at: ENDED_AT });
+  await w.internal('/v1/internal/home-changed', { home_id: HOME });
+  await w.say(OWNER, 'how are things?');
+  await w.say(OWNER, 'how are things?');
+  assert.equal(textsTo(w, OWNER).filter((x) => x === ENDED_TEXT).length, 2);
+  assert.equal(w.metrics.totals.home_changed, 2);
+});
+
+test('home-deleted: 200 at once, then every link of that Home is removed with one message per chat', async (t) => {
+  const w = await world(t);
+  const a = newClient();
+  const b = newClient(HOME, { scope: 'read' });
+  const other = newClient(OTHER_HOME);
+  await w.link(a, OWNER);
+  await w.link(b, DANA, { firstName: 'Dana' });
+  await w.link(other, '616161');
+  // The ACL removals wait until the answer is in.
+  let release;
+  const gate = new Promise((r) => { release = r; });
+  const real = w.verifier.fetch;
+  w.verifier.fetch = async (u, init) => { if (u.endsWith('/chat-acl')) await gate; return real(u, init); };
+  const res = await w.internal('/v1/internal/home-deleted', { home_id: HOME });
+  assert.deepEqual(res, { status: 200, body: { ok: true } });
+  release();
+  await w.service.chat.idle();
+  assert.deepEqual(Object.values(w.keys()).map((e) => e.home_id), [OTHER_HOME]);
+  assert.deepEqual(w.acl.filter((x) => x.op === 'remove').map((x) => x.request_topic).sort(), [a.topics.request_topic, b.topics.request_topic].sort());
+  for (const chat of [OWNER, DANA]) {
+    assert.equal(w.lastTo(chat).text, LINK_TEXT.passEnded);
+    assert.equal(textsTo(w, chat).filter((x) => x === LINK_TEXT.passEnded || x === LINK_TEXT.unlinked || x === LINK_TEXT.unlinkedInApp).length, 1, 'one message');
+  }
+  assert.equal(w.lastTo('616161').text, LINK_TEXT.linked, 'another Home is untouched');
+  assert.deepEqual((await w.api('GET', '/v1/links', undefined, a.ticket())).body.links, []);
+  // Repeated (a later sweep's retry): nothing more.
+  assert.equal((await w.internal('/v1/internal/home-deleted', { home_id: HOME })).status, 200);
+  await w.service.chat.idle();
+  assert.equal(textsTo(w, OWNER).filter((x) => x === LINK_TEXT.passEnded).length, 1);
+  // The chat is a stranger now: early access, no model.
+  const calls = w.claude.calls.length;
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.claude.calls.length, calls);
+  noSecretsInLogs(w.lines, OWNER, DANA, HOME, ACL_SECRET, a.clientId);
+});
+
+test('410 from the status route: the same removal, caught up on the next message', async (t) => {
+  const w = await world(t);
+  await w.link(newClient(), OWNER);
+  await w.link(newClient(), DANA, { firstName: 'Dana' });
+  w.verifier.setHome(HOME, 410);
+  const calls = w.claude.calls.length;
+  await w.say(OWNER, 'how are things?');
+  await w.service.chat.idle();
+  assert.equal(w.claude.calls.length, calls);
+  assert.deepEqual(textsTo(w, OWNER).slice(-1), [LINK_TEXT.passEnded]);
+  assert.equal(textsTo(w, OWNER).filter((x) => x === LINK_TEXT.passEnded).length, 1);
+  assert.equal(w.lastTo(DANA).text, LINK_TEXT.passEnded);
+  assert.deepEqual(w.keys(), {});
+  assert.equal(w.acl.filter((x) => x.op === 'remove').length, 2);
+});
+
+test('an unknown Home (404) is no reason to act: the message is answered, nothing unlinked', async (t) => {
+  const w = await world(t);
+  const c = newClient();
+  await w.link(c);
+  w.verifier.setHome(HOME, 404);
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, 'All quiet at home.');
+  assert.equal(Object.keys(w.keys()).length, 1);
+  assert.equal((await w.internal('/v1/internal/home-deleted', { home_id: 'ffffffffffffffff' })).status, 200);
+  await w.service.chat.idle();
+  assert.equal(Object.keys(w.keys()).length, 1);
+});
+
+test('verifier unreachable: the last answer however old, else entitled; counted in the logs', async (t) => {
+  const w = await world(t);
+  await w.link(newClient());
+  w.verifier.setHome(HOME, 'down');
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, 'All quiet at home.', 'nothing cached yet: entitled (the broker still enforces the end)');
+  w.verifier.setHome(HOME, 503);
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, 'All quiet at home.');
+  assert.equal(w.metrics.totals.home_status_error, 2);
+  w.verifier.setHome(HOME, { entitled: false, ended_at: ENDED_AT });
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, ENDED_TEXT);
+  w.later(5 * 60000);
+  w.verifier.setHome(HOME, 'down');
+  const calls = w.claude.calls.length;
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.claude.calls.length, calls, 'the last answer (ended) holds while the verifier is down');
+  assert.equal(w.metrics.totals.home_status_error, 3);
+});
+
+test('confirm: a 402 from the verifier\'s ACL add is final: 402 pass_ended, the link dropped', async (t) => {
+  const w = await world(t);
+  const c = newClient();
+  const { body } = await w.api('POST', '/v1/link', { ticket: c.ticket(), token: c.token, key: c.key.toString('base64'), scope: 'read' });
+  await w.say(OWNER, `/start ${body.code}`);
+  const code = /code: (\d{4})/.exec(w.lastTo(OWNER).text)[1];
+  w.setAcl(402);
+  assert.deepEqual(await w.api('POST', '/v1/link/confirm', { ticket: c.ticket(), code_back: code }), { status: 402, body: { error: 'pass_ended' } });
+  w.setAcl(200);
+  assert.deepEqual(await w.api('POST', '/v1/link/confirm', { ticket: c.ticket(), code_back: code }), { status: 404, body: { error: 'unknown_code' } });
+  assert.deepEqual(w.keys(), {});
+  assert.deepEqual(w.acl, []);
+  assert.equal(w.service.chat.pendingCount(), 0);
+});
+
+test('internal port: forwarding headers, a missing or wrong secret, other routes and bad bodies are refused; the public API has no internal routes', async (t) => {
+  const w = await world(t);
+  await w.link(newClient());
+  for (const h of [{ 'X-Forwarded-For': '203.0.113.9' }, { Forwarded: 'for=203.0.113.9' }, { 'X-Real-IP': '203.0.113.9' }, { 'X-Forwarded-Host': 'chat.zigdash.app' }]) {
+    assert.deepEqual(await w.internal('/v1/internal/home-deleted', { home_id: HOME }, { headers: h }), { status: 403, body: { error: 'internal_only' } });
+  }
+  assert.equal((await w.internal('/v1/internal/home-deleted', { home_id: HOME }, { headers: { 'X-Chat-Acl-Secret': '' } })).status, 401);
+  assert.equal((await w.internal('/v1/internal/home-deleted', { home_id: HOME }, { headers: { 'X-Chat-Acl-Secret': 'wrong' } })).status, 401);
+  const res = await fetch(`http://127.0.0.1:${w.service.internalPort}/v1/internal/home-deleted`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ home_id: HOME }) });
+  assert.equal(res.status, 401, 'no secret header at all');
+  assert.equal((await w.internal('/v1/internal/home-changed', null, { method: 'GET' })).status, 404);
+  assert.equal((await w.internal('/v1/internal/chat-acl', { home_id: HOME })).status, 404);
+  assert.equal((await w.internal('/v1/internal/home-deleted', { home_id: 'not-a-home' })).status, 400);
+  assert.equal((await w.api('POST', '/v1/internal/home-deleted', { home_id: HOME })).status, 404, 'not on the proxied port');
+  await w.service.chat.idle();
+  assert.equal(Object.keys(w.keys()).length, 1, 'nothing was removed');
+  assert.equal(w.metrics.totals.internal_refused, 7);
+});
+
+test('internal port: INTERNAL_PORT defaults to 8791; "off" turns it off', () => {
+  assert.equal(configFromEnv({}).internalPort, 8791);
+  assert.equal(configFromEnv({ INTERNAL_PORT: 'off' }).internalPort, null);
+  assert.equal(configFromEnv({ INTERNAL_PORT: '9000' }).internalPort, 9000);
 });
