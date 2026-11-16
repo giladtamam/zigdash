@@ -1,4 +1,4 @@
-// Test harness: the release Engine (3.7.0, with Chat) on a fake Zigbee2MQTT, a broker (a real
+// Test harness: the release Engine (3.7.0 and later, with Chat) on a fake Zigbee2MQTT, a broker (a real
 // local mosquitto when installed, otherwise an in-process fake), a fake
 // Telegram and a scripted fake Claude. Nothing here talks to the internet.
 
@@ -259,6 +259,46 @@ export function fakeTelegram() {
         await new Promise((r) => setTimeout(r, 20));
       }
       throw new Error('no reply');
+    },
+  };
+}
+
+// ---------- the relay verifier's internal routes ----------
+
+/**
+ * A fake verifier at [url]: the chat-ACL route (status set with setAcl) and
+ * the Home-status route, GET /v1/internal/home/<id>: setHome(id, {entitled,
+ * ended_at}) answers 200 with it, setHome(id, 410|404|503) that status,
+ * setHome(id, 'down') throws as a timeout would. A Home never set is 404.
+ * Both routes check [secret]. [statusCalls] lists the Homes asked about.
+ */
+export function fakeVerifier({ url = 'http://verifier.test:8788', secret }) {
+  const acl = [];
+  const statusCalls = [];
+  const homes = new Map();
+  let aclStatus = 200;
+  const answer = (status, body = {}) => ({ status, json: async () => body });
+  return {
+    url, acl, statusCalls,
+    setAcl: (s) => { aclStatus = s; },
+    setHome: (id, v) => { homes.set(id, v); },
+    handles: (u) => u.startsWith(`${url}/v1/internal/`),
+    async fetch(u, init) {
+      if (init.headers['X-Chat-Acl-Secret'] !== secret) return answer(401, { error: 'no' });
+      if (u === `${url}/v1/internal/chat-acl` && init.method === 'POST') {
+        const body = JSON.parse(init.body);
+        if (aclStatus === 200) acl.push(body);
+        return answer(aclStatus, aclStatus === 402 ? { error: 'pass_ended' } : aclStatus === 200 ? { ok: true, op: body.op } : {});
+      }
+      const m = new RegExp(`^${url}/v1/internal/home/([0-9a-f]{16})$`).exec(u);
+      if (m && init.method === 'GET') {
+        statusCalls.push(m[1]);
+        const v = homes.has(m[1]) ? homes.get(m[1]) : 404;
+        if (v === 'down') throw Object.assign(new Error('The operation was aborted due to timeout'), { name: 'TimeoutError' });
+        if (typeof v === 'number') return answer(v, { error: v === 410 ? 'deleted' : v === 404 ? 'unknown' : 'failed' });
+        return answer(200, v);
+      }
+      throw new Error(`unexpected verifier call ${init.method} ${u}`);
     },
   };
 }

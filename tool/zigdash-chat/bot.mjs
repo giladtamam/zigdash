@@ -21,6 +21,15 @@
 // /stop always stays the early-access "take me off the list": it is passed to
 // the support Worker, and never unlinks. So are /start early_c|early_n, the
 // early-access buttons, and anything from a chat that isn't linked.
+//
+// Founder's passes (docs/design/founders-pass.md): before the model answers a
+// linked chat, the verifier says whether its Home is still entitled (cached
+// 10 minutes, a "no" 1 minute; unreachable: the last answer, else yes, since
+// the broker enforces the end anyway). An ended Home's chat hears once that
+// the pass ended (then at most daily) and the model is not called. The
+// verifier tells the service (internal port, http.mjs) when a Home changes
+// (cache and notices dropped) or is deleted (its links removed, each chat told
+// once); a 410 from the status route does the same.
 
 import crypto from 'node:crypto';
 import { HomeLink } from './link.mjs';
@@ -37,6 +46,11 @@ const BACK_CODE_TRIES = 3;
 const UNLINK_ASK_MS = 60000;
 const SEEN_UPDATES = 1000;
 const ACL_RETRY_MS = 10 * 60000;
+const STATUS_OK_MS = 10 * 60000;
+const STATUS_ENDED_MS = 60000;
+const STATUS_TIMEOUT_MS = 5000;
+const ENDED_REMIND_MS = 24 * 3600000;
+const HOME_ID_RE = /^[0-9a-f]{16}$/;
 
 export const LINK_TEXT = {
   backCode: (code) => `Your ZigDash code: ${code}\n\nType it in the app to finish linking. Didn't start this in ZigDash? Ignore this message: nothing is linked without the code.`,
@@ -53,6 +67,8 @@ export const LINK_TEXT = {
   textOnly: 'I can only read text messages.',
   cap: (cap) => `Your home has used this month's ${cap} Chat messages (free beta). Chat works again on the 1st.`,
   paused: "Chat is paused until the 1st: this month's beta budget is used up. Sorry!",
+  passEnded: "This chat was unlinked: the founder's pass ended.",
+  ended: (date) => `This Home's founder's pass ended${date ? ` on ${date}` : ''}. ZigDash Pro keeps Chat: open ZigDash to get it.`,
 };
 
 const hourAgo = (list, now) => list.filter((t) => now - t < 3600000);
@@ -68,10 +84,12 @@ export const linkedId = (secret, chatId) => crypto.createHmac('sha256', secret).
 /**
  * [deps]: bindings, state (store.mjs), bot (telegram.mjs makeBot), agent
  * (made with onCost from costSink), metrics, mqtt, fetchImpl, now, and config:
- * {transport, botUsername, cap, budgetUsd, ticketSecret, verifier: {url, secret}|null,
+ * {transport, botUsername, cap, budgetUsd, timeZone, ticketSecret, verifier: {url, secret}|null,
  *  worker: {url, secret}|null}.
  */
 export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl = fetch, now = Date.now, config }) {
+  const statuses = new Map(); // home id -> {entitled, ended_at, until}: the verifier's last answer
+  const background = new Set(); // work started by the internal routes, for idle()
   const pending = new Map(); // code -> pending link (token and key in memory only)
   const linkTries = new Map(); // home id -> [times]
   const claimFails = new Map(); // chat id -> [times]
@@ -104,24 +122,133 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
     return res.status;
   }
 
-  /** The verifier adds or removes a client's two topics on the service's broker role. */
+  /**
+   * The verifier adds or removes a client's two topics on the service's broker
+   * role. Returns its HTTP status (0: unreachable); 402 on an add is final (the
+   * Home's founder's pass ended).
+   */
   async function acl(op, b) {
-    if (!config.verifier) return true; // at home, on the hub's own broker: nothing to open
+    if (!config.verifier) return 200; // at home, on the hub's own broker: nothing to open
     try {
       const status = await post(`${config.verifier.url}/v1/internal/chat-acl`, { 'X-Chat-Acl-Secret': config.verifier.secret },
         { home_id: b.home_id, request_topic: b.request_topic, answer_topic: b.answer_topic, op });
-      if (status === 200) return true;
+      if (status === 200) return 200;
       metrics.count('acl_error', { status });
+      return status;
     } catch (e) {
       metrics.count('acl_error', { status: 0 });
+      return 0;
     }
-    return false;
   }
 
   async function retryAcl() {
     const left = [];
-    for (const r of state.retries()) if (!(await acl(r.op, r))) left.push(r);
+    for (const r of state.retries()) if ((await acl(r.op, r)) !== 200) left.push(r);
     state.setRetries(left);
+  }
+
+  // ---------- the Home's status (founder's passes) ----------
+
+  /** Runs [work] after whatever [chatId]'s queue holds, so it never interleaves with a message. */
+  function enqueue(chatId, work) {
+    const key = String(chatId);
+    const run = (queues.get(key) || Promise.resolve())
+      .then(work)
+      .catch((e) => console.error(`chat: update failed (${errorCode(e)})`));
+    queues.set(key, run);
+    run.then(() => { if (queues.get(key) === run) queues.delete(key); });
+    return run;
+  }
+
+  /** Forgets the cached status of [homeId] and the "ended" notices of its chats. */
+  function homeChanged(homeId) {
+    statuses.delete(homeId);
+    state.clearEnded(bindings.forHome(homeId).map((b) => b.id));
+    metrics.count('home_changed');
+  }
+
+  /** The Home is gone (deleted by the verifier): each of its chats is unlinked and told once. */
+  async function homeDeleted(homeId) {
+    homeChanged(homeId);
+    const all = bindings.forHome(homeId);
+    metrics.count('home_deleted', { links: all.length });
+    // Each on its chat's queue, so it never interleaves with a message; gone already (an /unlink meanwhile): skipped.
+    const remove = (b) => async () => { if (bindings.byClient(b.home_id, b.client_id)) await removeBinding(b, { reason: 'pass_ended' }); };
+    await Promise.all(all.map((b) => (b.chat_id !== undefined && b.chat_id !== null ? enqueue(b.chat_id, remove(b)) : remove(b)())));
+  }
+
+  /** Starts [work] in the background (the internal routes answer first); idle() waits for it. */
+  function later(work) {
+    const run = new Promise((r) => setImmediate(r)).then(work).catch((e) => console.error(`chat: background work failed (${errorCode(e)})`));
+    background.add(run);
+    run.then(() => background.delete(run));
+    return run;
+  }
+
+  /**
+   * The verifier's word on [homeId]: {entitled, ended_at} or {deleted: true}.
+   * An unknown Home (404) is no reason to act. Unreachable (timeout, 5xx or
+   * anything unexpected): the last answer however old, else entitled.
+   */
+  async function homeStatus(homeId) {
+    if (!config.verifier || !homeId || !HOME_ID_RE.test(homeId)) return { entitled: true, ended_at: null };
+    const t = now();
+    const have = statuses.get(homeId);
+    if (have && have.until > t) return have;
+    let status = 0, body = null;
+    try {
+      const res = await fetchImpl(`${config.verifier.url}/v1/internal/home/${homeId}`, {
+        method: 'GET', headers: { 'X-Chat-Acl-Secret': config.verifier.secret }, signal: AbortSignal.timeout(STATUS_TIMEOUT_MS),
+      });
+      status = res.status;
+      if (status === 200) body = await res.json().catch(() => null);
+    } catch { status = 0; }
+    if (status === 200 && body && typeof body.entitled === 'boolean') {
+      const entry = { entitled: body.entitled, ended_at: Number.isFinite(body.ended_at) ? body.ended_at : null, until: t + (body.entitled ? STATUS_OK_MS : STATUS_ENDED_MS) };
+      statuses.set(homeId, entry);
+      return entry;
+    }
+    if (status === 410) { metrics.count('home_status', { status }); return { deleted: true }; }
+    if (status === 404) {
+      metrics.count('home_status', { status });
+      const entry = { entitled: true, ended_at: null, until: t + STATUS_OK_MS };
+      statuses.set(homeId, entry);
+      return entry;
+    }
+    metrics.count('home_status_error', { status });
+    return have || { entitled: true, ended_at: null };
+  }
+
+  const endedDate = (ms) => {
+    if (!ms) return null;
+    try {
+      return new Date(ms).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: config.timeZone || undefined });
+    } catch {
+      return new Date(ms).toISOString().slice(0, 10);
+    }
+  };
+
+  /**
+   * True when [b]'s Home may use the model now. Otherwise it has answered the
+   * chat itself: the notice (once, then at most daily), or the unlink of a
+   * deleted Home.
+   */
+  async function mayAnswer(b) {
+    const s = await homeStatus(b.home_id);
+    if (s.deleted) {
+      // This chat now (its queue is running), the Home's other chats on their own queues.
+      await removeBinding(b, { reason: 'pass_ended' });
+      later(() => homeDeleted(b.home_id));
+      return false;
+    }
+    if (s.entitled) return true;
+    metrics.count('pass_ended');
+    const last = state.endedNotice(b.id);
+    if (!last || now() - last >= ENDED_REMIND_MS) {
+      state.noteEnded(b.id);
+      await say(b.chat_id, LINK_TEXT.ended(endedDate(s.ended_at)));
+    }
+    return false;
   }
 
   /** The support Worker's list of linked chats, for its "paused for maintenance" reply after a rollback. */
@@ -175,7 +302,8 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
     return link;
   }
 
-  async function removeBinding(b, { fromApp }) {
+  /** [reason] 'pass_ended': the Home's founder's pass ended and it was deleted; one message says so. */
+  async function removeBinding(b, { fromApp = false, reason = null } = {}) {
     bindings.remove(b.id);
     state.forget(b.id);
     const have = links.get(b.id);
@@ -185,12 +313,14 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
       unlinkAsks.delete(String(b.chat_id));
     }
     // Milestone 1's hand-made client has no recorded topics: its role is removed by hand.
-    if (b.request_topic && b.answer_topic && !(await acl('remove', b))) {
+    if (b.request_topic && b.answer_topic && (await acl('remove', b)) !== 200) {
       state.setRetries([...state.retries(), { op: 'remove', home_id: b.home_id, request_topic: b.request_topic, answer_topic: b.answer_topic }]);
     }
-    metrics.count('unlinked', { from_app: fromApp ? 1 : 0 });
+    metrics.count('unlinked', { from_app: fromApp ? 1 : 0, pass_ended: reason === 'pass_ended' ? 1 : 0 });
     await syncWorker();
-    if (b.chat_id !== undefined && b.chat_id !== null) await say(b.chat_id, fromApp ? LINK_TEXT.unlinkedInApp : LINK_TEXT.unlinked);
+    if (b.chat_id !== undefined && b.chat_id !== null) {
+      await say(b.chat_id, reason === 'pass_ended' ? LINK_TEXT.passEnded : fromApp ? LINK_TEXT.unlinkedInApp : LINK_TEXT.unlinked);
+    }
   }
 
   // ---------- the HTTP API (http.mjs maps these to routes) ----------
@@ -251,7 +381,14 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
     }
     if (bindings.byChat(p.chatId)) { pending.delete(p.code); return { status: 409, body: { error: 'already_linked' } }; }
     // The broker opens these two topics to the service only now.
-    if (!(await acl('add', p))) return { status: 503, body: { error: 'try_again' } };
+    const added = await acl('add', p);
+    if (added === 402) {
+      // The Home's founder's pass ended: final, the link is dropped.
+      pending.delete(p.code);
+      metrics.count('link_refused', { pass_ended: 1 });
+      return { status: 402, body: { error: 'pass_ended' } };
+    }
+    if (added !== 200) return { status: 503, body: { error: 'try_again' } };
     pending.delete(p.code);
     bindings.add({
       client_id: p.client_id, home_id: p.home_id, chat_id: String(p.chatId), telegram_name: p.telegramName, scope: p.scope,
@@ -344,6 +481,7 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
       return undefined;
     }
     if (!text) { await say(chatId, LINK_TEXT.textOnly); return undefined; }
+    if (!(await mayAnswer(b))) return undefined;
     const command = text.startsWith('/');
     if (!command) {
       if (state.messages(b.home_id) >= config.cap) { metrics.count('cap_reached'); await say(chatId, LINK_TEXT.cap(config.cap)); return undefined; }
@@ -384,13 +522,7 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
       work = () => onMessage(update);
     }
     if (!work || chatId === undefined || chatId === null) { metrics.count('ignored'); return Promise.resolve(); }
-    const key = String(chatId);
-    const run = (queues.get(key) || Promise.resolve())
-      .then(work)
-      .catch((e) => console.error(`chat: update failed (${errorCode(e)})`));
-    queues.set(key, run);
-    run.then(() => { if (queues.get(key) === run) queues.delete(key); });
-    return run;
+    return enqueue(chatId, work);
   }
 
   timers.push(setInterval(sweep, 60000));
@@ -398,11 +530,17 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
   for (const t of timers) t.unref?.();
 
   return {
-    onUpdate, linkFor, createLink, confirmLink, deleteLink, listLinks, syncWorker, retryAcl,
+    onUpdate, linkFor, createLink, confirmLink, deleteLink, listLinks, syncWorker, retryAcl, homeStatus,
+    /** POST /v1/internal/home-changed (http.mjs, internal port). */
+    homeChanged,
+    /** POST /v1/internal/home-deleted: answered at once; the links go in the background. */
+    homeDeleted: (homeId) => later(() => homeDeleted(homeId)),
     /** For the agent's onCost: what the current message of [chatId] cost. */
     costSink: (chatId, usd) => costs.set(String(chatId), usd),
     pendingCount: () => pending.size,
-    async idle() { await Promise.all([...queues.values()]); },
+    async idle() {
+      while (background.size || queues.size) await Promise.all([...background, ...queues.values()]);
+    },
     stop() {
       for (const t of timers) clearInterval(t);
       for (const { link } of links.values()) link.stop();

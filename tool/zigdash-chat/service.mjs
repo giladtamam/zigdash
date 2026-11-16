@@ -18,7 +18,10 @@
 //   ZIGDASH_MQTT_USER, ZIGDASH_MQTT_PASSWORD_FILE   the service's MQTT login
 //   HTTP_PORT, HTTP_HOST       the API                                          (8790, 0.0.0.0; HTTP_PORT=off: none)
 //   CHAT_TICKET_SECRET_FILE    checks the verifier's tickets (the API is off without it)
-//   VERIFIER_INTERNAL_URL, CHAT_ACL_SECRET_FILE   the verifier's internal ACL route (http://zigdash-relay-verifier-1:8788)
+//   VERIFIER_INTERNAL_URL, CHAT_ACL_SECRET_FILE   the verifier's internal routes: ACL entries and a Home's
+//                              founder's-pass status (http://zigdash-relay-verifier-1:8788)
+//   INTERNAL_PORT              the verifier's pushes to the service (home-changed, home-deleted), with the
+//                              same ACL secret; never published or proxied   (8791; off: none; on HTTP_HOST)
 //   WORKER_URL, WORKER_SECRET_FILE   the support Worker: early access and the linked list (https://support.giladha.com)
 //   MONTHLY_CAP                messages a Home a month                          (300)
 //   MONTHLY_BUDGET_USD         model spend a month, all Homes, then Chat pauses (20)
@@ -32,7 +35,7 @@ import { makeBot, startPolling } from './telegram.mjs';
 import { makeMetrics } from './metrics.mjs';
 import { makeBindings, makeState } from './store.mjs';
 import { makeChat } from './bot.mjs';
-import { makeHttp } from './http.mjs';
+import { makeHttp, makeInternalHttp } from './http.mjs';
 
 export function configFromEnv(env = process.env) {
   const path = (name, fallback) => expandHome(env[name] || fallback);
@@ -53,6 +56,7 @@ export function configFromEnv(env = process.env) {
     homeId: env.ZIGDASH_HOME_ID || null, // the CLI's default for milestone 1's hand-made client
     httpPort: env.HTTP_PORT === 'off' ? null : Number(env.HTTP_PORT || 8790),
     httpHost: env.HTTP_HOST || '0.0.0.0',
+    internalPort: env.INTERNAL_PORT === 'off' ? null : Number(env.INTERNAL_PORT || 8791),
     ticketSecretFile: optional('CHAT_TICKET_SECRET_FILE'),
     verifierUrl: env.VERIFIER_INTERNAL_URL || null,
     aclSecretFile: optional('CHAT_ACL_SECRET_FILE'),
@@ -102,7 +106,7 @@ export async function startService(config, { anthropic, mqttClient, fetchImpl = 
   chat = makeChat({
     bindings, state, bot, agent, metrics, mqtt: mqttClient, fetchImpl, now,
     config: {
-      transport: config.transport, botUsername: config.botUsername, cap: config.cap, budgetUsd: config.budgetUsd,
+      transport: config.transport, botUsername: config.botUsername, cap: config.cap, budgetUsd: config.budgetUsd, timeZone: config.timeZone,
       ticketSecret: secret('ticket', config.ticketSecretFile),
       verifier: config.verifierUrl && verifierSecret ? { url: config.verifierUrl.replace(/\/$/, ''), secret: verifierSecret } : null,
       worker: config.workerUrl && workerSecret ? { url: config.workerUrl.replace(/\/$/, ''), secret: workerSecret } : null,
@@ -118,6 +122,13 @@ export async function startService(config, { anthropic, mqttClient, fetchImpl = 
     api = makeHttp({ chat, metrics, webhookSecret });
     port = await api.listen(config.httpPort, config.httpHost);
   }
+  // The verifier's pushes: only with the ACL secret they share.
+  let internal = null;
+  let internalPort = null;
+  if (config.internalPort !== null && config.internalPort !== undefined && verifierSecret) {
+    internal = makeInternalHttp({ chat, metrics, secret: verifierSecret });
+    internalPort = await internal.listen(config.internalPort, config.httpHost);
+  }
   const polling = config.telegramMode === 'polling'
     ? startPolling({ token, onUpdate: (u) => chat.onUpdate(u), metrics, fetchImpl, pollSeconds })
     : null;
@@ -125,10 +136,11 @@ export async function startService(config, { anthropic, mqttClient, fetchImpl = 
   chat.retryAcl().catch(() => {});
   metrics.count('started', { webhook: webhookSecret ? 1 : 0, linked: bindings.list().length });
   return {
-    agent, chat, port,
+    agent, chat, port, internalPort,
     async stop() {
       if (polling) await polling.stop();
       if (api) await api.close();
+      if (internal) await internal.close();
       await chat.idle();
       chat.stop();
     },

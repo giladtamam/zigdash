@@ -1,10 +1,12 @@
 # ZigDash Chat
 
-A linked Telegram chat talks to its own Home: @ZigDashHomeBot, Claude Haiku, and the ZigDash Engine (3.7.0 and later carry Chat, dormant until a client is linked), through the ZigDash relay. Pro owners link from the app (Home settings › Chat). Plans: [docs/design/chat-linking.md](../../docs/design/chat-linking.md) (phase 3) and [docs/design/whatsapp-assistant.md](../../docs/design/whatsapp-assistant.md) (revision 6).
+A linked Telegram chat talks to its own Home: @ZigDashHomeBot, Claude Haiku, and the ZigDash Engine (3.7.0 and later carry Chat, dormant until a client is linked), through the ZigDash relay. Pro owners and founder's-pass Homes link from the app (Home settings › Chat). Plans: [docs/design/chat-linking.md](../../docs/design/chat-linking.md) (phase 3), [docs/design/whatsapp-assistant.md](../../docs/design/whatsapp-assistant.md) (revision 6) and [docs/design/founders-pass.md](../../docs/design/founders-pass.md).
 
 Files: `service.mjs` (start, configuration), `bot.mjs` (linking, unlinking, every Telegram update, caps, the Worker passthrough), `http.mjs` (the app's API and the webhook), `agent.mjs` (Claude loop, confirmations, memory), `link.mjs` + `wire.mjs` (sealed requests to the Engine), `telegram.mjs` (Bot API, long polling), `store.mjs` (bindings in the encrypted keys file, the state file), `keystore.mjs`, `ticket.mjs`, `metrics.mjs` (counters-only logs), `cli.mjs`, `replay-test.mjs`, `deploy/` (Compose, `webhook.sh`). The Engine side is `hub/src/chat.js`; tickets and ACL entries come from `relay/verifier`; early access stays in `tool/support-worker/worker.js`.
 
 What it does in code, whatever the model says: changes only devices on the client's control list, never locks, valves or sirens (the Engine checks both); asks "Reply yes within 60 seconds" before anything touching more than 5 devices; stops at 6 tool calls or 20 s; answers only chats a finished link names; 300 messages a Home a month and a $20 monthly model budget, each with a friendly line; logs counters only (no text, names, chat ids, home ids or codes).
+
+Founder's passes: before the model answers, the verifier's internal `GET /v1/internal/home/<id>` says whether the Home is still entitled (a yes cached 10 minutes, a no 1 minute; verifier unreachable: the last answer, else yes, counted as `home_status_error`; the broker enforces the end anyway). An ended Home's chat hears once "This Home's founder's pass ended on <date>. ZigDash Pro keeps Chat: open ZigDash to get it." (then at most once a day; recorded per binding in `chat-state.json`) and the model is not called; `/unlink` still works. A 410 from that route, or the verifier's `home-deleted` push, removes every link of the Home with one message each ("This chat was unlinked: the founder's pass ended."). An unknown Home (404) changes nothing.
 
 Tests (fake Telegram, Claude, verifier and Worker; a local mosquitto when installed, otherwise an in-process broker):
 
@@ -29,10 +31,17 @@ All JSON; failures are `{error}`. A ticket comes from the relay verifier and is 
 | Call | Body | 200 | Errors |
 |---|---|---|---|
 | `POST /v1/link` | `{ticket, token, key, scope}` | `{code, expires_in: 600, bot, url}` | 401 `bad_ticket` / `ticket_expired`; 400 `ticket_without_client`, `bad_body`, `topics_mismatch` (the ticket's topics aren't the ones this key makes); 409 `already_linked`; 429 `too_many` (5 a Home an hour) |
-| `POST /v1/link/confirm` | `{ticket, code_back}` | `{linked: true, client_id, telegram_name, scope}` | 401 ticket; 404 `unknown_code` (no link waiting: never made, expired, cancelled or done); 409 `not_claimed` (nobody sent the code to the bot yet), `already_linked`; 400 `wrong_code` with `tries_left`; 410 `cancelled` (third wrong code); 503 `try_again` (the verifier didn't add the ACL entries; the same code works again) |
+| `POST /v1/link/confirm` | `{ticket, code_back}` | `{linked: true, client_id, telegram_name, scope}` | 401 ticket; 404 `unknown_code` (no link waiting: never made, expired, cancelled or done); 409 `not_claimed` (nobody sent the code to the bot yet), `already_linked`; 400 `wrong_code` with `tries_left`; 410 `cancelled` (third wrong code); 402 `pass_ended` (the Home's founder's pass ended: the verifier refused the ACL entries; final, the link is dropped); 503 `try_again` (the verifier didn't add the ACL entries for any other reason; the same code works again) |
 | `GET /v1/links` | – | `{links: [{client_id, telegram_name, scope, last_used (epoch ms or null), linked_at (epoch ms)}]}` | 401 |
 | `DELETE /v1/link/<client_id>` | – | `{removed: true}` (a link still waiting is cancelled too) | 401; 403 `wrong_client` (a ticket for another client); 404 `not_linked` (gone already) |
 | `GET /v1/health` | – | `{ok: true}` | |
+
+**Internal port** `INTERNAL_PORT` (8791), for the relay verifier only: on the Docker network, never published on the host and never proxied by Caddy (which proxies only 8790); a request with `X-Forwarded-For`, `X-Forwarded-Host`, `Forwarded` or `X-Real-IP` gets 403 `internal_only`, and every request needs the header `X-Chat-Acl-Secret` (the chat-ACL secret, the other direction; 401 `no` without it). Off without `CHAT_ACL_SECRET_FILE`, or with `INTERNAL_PORT=off`.
+
+| Call | Body | 200 | Errors |
+|---|---|---|---|
+| `POST /v1/internal/home-changed` | `{home_id}` | `{ok: true}`: the cached status and the chats' "ended" notices are dropped | 400 `bad_body`; 401; 403 |
+| `POST /v1/internal/home-deleted` | `{home_id}` | `{ok: true}` at once; every link of the Home is removed afterwards, one message each | 400 `bad_body`; 401; 403 |
 
 Link codes are `L` + 6 characters from `ABCDEFGHJKLMNPQRSTUVWXYZ23456789`, kept 10 minutes unclaimed and 10 more after the claim; the bot answers `/start <code>` in a private chat with a 4-digit back-code. Nothing reaches the broker's ACL or the keys file before the back-code is confirmed; a link never finished is forgotten when it expires. `/unlink` in the linked chat asks first (Unlink / Keep, 60 s) and does what DELETE does; the hub's client config stays until the app deletes it at home. `/stop` stays the early-access "take me off the list" and never unlinks.
 
@@ -80,7 +89,7 @@ Also in `config/`: `bot_token` (@ZigDashHomeBot's token; the dev bot's while tes
 
 ### The verifier
 
-Env (`relay/deploy/docker-compose.yml`, already set): `CHAT_TICKET_SECRET_FILE=/secrets/chat-ticket-secret`, `CHAT_ACL_SECRET_FILE=/secrets/chat-acl-secret`, `CHAT_ROLE=zigdash-chat` (the service's dynamic-security role), `INTERNAL_PORT=8788` (the internal ACL route; not published, not proxied), optional `TICKETS_PER_HOUR` (20). Chat stays off while the secret files are missing.
+Env (`relay/deploy/docker-compose.yml`, already set): `CHAT_TICKET_SECRET_FILE=/secrets/chat-ticket-secret`, `CHAT_ACL_SECRET_FILE=/secrets/chat-acl-secret`, `CHAT_ROLE=zigdash-chat` (the service's dynamic-security role), `INTERNAL_PORT=8788` (the internal ACL and Home-status routes; not published, not proxied), optional `TICKETS_PER_HOUR` (20). Chat stays off while the secret files are missing. For founder's passes the verifier also gets `CHAT_INTERNAL_URL=http://zigdash-chat-chat-1:8791` (the service's internal port, on the edge network; unset: no pushes). **Deploy order:** the chat service first, then the verifier.
 
 ```sh
 cd relay/deploy
@@ -114,6 +123,8 @@ chat.zigdash.app {
 	respond 404
 }
 ```
+
+Only 8790 is proxied. The internal port 8791 must never appear in a Caddyfile: the verifier reaches it directly on the edge network (and the service refuses any request carrying forwarding headers there).
 
 ### The service
 
