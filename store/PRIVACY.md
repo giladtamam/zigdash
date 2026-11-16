@@ -289,9 +289,6 @@ the whole list is deleted and everyone on it gets one message saying so.
 
 ## ZigDash Chat (beta)
 
-<!-- OWNER: before 3.7.0 goes to production, re-confirm the netcup
-     order-processing agreement is still listed in the customer panel. -->
-
 From 3.7.0, in the Google Play build, owners of ZigDash Pro or a founder's
 pass can link a Telegram account to a Home and talk to it from Telegram ("is
 the back door open?", "close the office shutter"). It is a free beta: up to 300 messages a
