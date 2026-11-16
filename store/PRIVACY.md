@@ -20,8 +20,8 @@ account.
 
 The developer runs these servers: a small service on Cloudflare that
 passes support messages on and keeps the early-access list; the ZigDash
-relay, used only if you turn on **Remote control** (part of ZigDash Pro),
-which carries your home's data
+relay, used only if you turn on **Remote control** (part of ZigDash Pro or
+a founder's pass), which carries your home's data
 encrypted so the developer cannot read it (see
 [Remote control](#remote-control-from-31)); from 3.4.7 the usage-data
 server described next; and from 3.7.0 the ZigDash Chat service at
@@ -73,6 +73,13 @@ All data stays on your device:
   While it shows, your dashboards wait on your own home broker under a
   one-time code and are removed when the code hides. Nothing goes to the
   developer or crosses the internet. Show the code only to people you trust.
+- **Founder's pass** (from 3.7.0) — for a Home with remote control through a
+  founder's pass, what the relay last said about it (the day it ends,
+  whether it has ended or the Home was deleted, and when it was asked), kept
+  with the Home's remote login in secure storage and deleted with it. The
+  code itself is not kept. Until the relay accepts a code, the app also
+  keeps a random number it sends with it, so a retry after a lost answer
+  reaches the same Home.
 - **Finding Home Assistant** (from 3.1.8) — when you connect through Home
   Assistant without typing an address, ZigDash looks for Home Assistant on
   your local network (the name and addresses it announces there) to fill in
@@ -257,6 +264,16 @@ unless you join the list:
   card with usage data on. The same service keeps them with the date, your
   place on the list and your answer to the price question.
 
+**The invitation** (from 3.7.0). If you are one of the first 20 on the list,
+the developer sends you a founder's code once: by Telegram through the bot,
+or, if you joined by email, by email through
+[Resend](https://resend.com/legal/privacy-policy) (as for support answers
+below), which keeps a copy of sent emails under its terms. The code is not
+stored in your entry; the entry records the date you were invited and is
+deleted under the rule below. Questions about the invitation go through Get
+help in the app, or by replying to the email, and are handled like
+[support messages](#support-messages).
+
 **Why:** only to invite you to the beta of "Chat with your home" and to tell
 you its price. The developer is told that someone joined (place, Telegram or
 email, language), never your address. Nothing is shared or sold, and nothing
@@ -276,9 +293,9 @@ the whole list is deleted and everyone on it gets one message saying so.
      (2) the netcup order-processing agreement is still listed in the
      customer panel, (3) the legal basis for linked family members. -->
 
-From 3.7.0, in the Google Play build, owners of ZigDash Pro can link a
-Telegram account to a Home and talk to it from Telegram ("is the back door
-open?", "close the office shutter"). It is a free beta: up to 300 messages a
+From 3.7.0, in the Google Play build, owners of ZigDash Pro or a founder's
+pass can link a Telegram account to a Home and talk to it from Telegram ("is
+the back door open?", "close the office shutter"). It is a free beta: up to 300 messages a
 month for each Home. Nothing about it runs until someone links an account in
 **Settings › Home › Chat**. The App Store version is not in this beta.
 
@@ -296,10 +313,11 @@ says about the devices it asks about. Link it only if that is fine for you.
   only its SHA-256 hash), a key made on your phone for this link only (not
   the Home's remote key), the scope and the list of devices it may switch.
   ZigDash Engine takes them into its data folder and clears the copy on your
-  broker. The relay checks this phone's remote login and asks Google Play
-  again whether the Pro purchase is valid and belongs to this Home, and signs
-  a ticket valid for 10 minutes. The app sends the ticket, the token, the key
-  and the scope to the Chat service, which gives back a code; Telegram opens
+  broker. The relay checks this phone's remote login and checks the purchase
+  or the pass again (for Pro, it asks Google Play whether the purchase is
+  valid and belongs to this Home; for a founder's pass, whether it is still
+  running), and signs a ticket valid for 10 minutes. The app sends the
+  ticket, the token, the key and the scope to the Chat service, which gives back a code; Telegram opens
   with it, and the bot sends a 4-digit code that you type into the app to
   finish. A link that is never finished is deleted.
 - **What the Chat service reads and keeps.** The service runs at
@@ -345,6 +363,12 @@ says about the devices it asks about. Link it only if that is fine for you.
   for a copy of what the service holds about your Telegram account, or for
   its deletion, email the address under [Contact](#contact) with your
   Telegram chat ID or the Home ID.
+- **After a founder's pass ends.** The Home's links can still be listed and
+  removed in the app, but no new one made, and the Chat service answers a
+  linked chat only with a note that the pass ended (its record of that note
+  is kept until the pass is extended or the Home moves to Pro). If the Home
+  is deleted (see [Remote control](#remote-control-from-31)), its links are
+  deleted with it, and each linked chat gets one message saying so.
 - **Why we may process it:** to provide the feature you linked
   (Art. 6(1)(b) GDPR). The usage counters are kept to run the beta's limits
   and its costs.
@@ -497,7 +521,7 @@ stay on your phone, in a file that is not included in Android backups.
 
 Remote control is off until you turn it on for a Home (Settings › Home ›
 Remote control). It is part of ZigDash Pro in the Google Play and App Store
-versions. When
+versions, or of a founder's pass (below). When
 you turn it on:
 
 - **How it works.** ZigDash Engine on your hub keeps one connection open to
@@ -527,6 +551,21 @@ you turn it on:
   hashes, and the date each phone was added); and the latest sealed state of
   each device, of your automations and of ZigDash Engine, and whether the hub
   is online, so a phone sees them at once.
+- **A founder's pass** (from 3.7.0, Google Play version) gives one Home
+  remote control and Chat for 90 days from the day its code is entered.
+  The app sends the code in place of the purchase, at home, and the relay
+  keeps, instead of a purchase hash, a keyed hash of the code (never the
+  code itself), its dates (made, deadline to enter it, entered, end, and
+  withdrawn if it was), the Home it was used for, and for Chat the topics it
+  allowed each linked account. When the pass ends, the Home is switched off
+  on the relay: the hub's and phones' logins are disabled and Chat access is
+  removed. Unless it moves to a Pro purchase, the Home is deleted 90 days
+  later with its relay data (the sealed copies and online flag, the logins
+  and the Chat access), leaving only a note that the Home existed and was
+  deleted, kept for a year. The pass's own record (the hash and dates) is
+  deleted a year after the code was made, or a year after its Home was
+  deleted if that is later. Your hub keeps its relay login and key until
+  remote control is turned off on it.
 - **Your IP address** reaches the relay while your hub or phone is connected,
   as with any internet connection. It is not stored. The relay keeps no
   connection or access logs, only its own error messages, which are capped
@@ -542,9 +581,10 @@ you turn it on:
   purchase-token hash and the hub's login stay, so you can turn remote
   control on again with the same purchase. Email us to have them deleted
   too; we do so within 30 days.
-- **Why we may process it:** to provide the feature you bought (Art. 6(1)(b)
-  GDPR). It is shared with no one; only the Google Play purchase check goes
-  to Google, under Google's privacy policy.
+- **Why we may process it:** to provide the feature you bought or were
+  given with a founder's pass (Art. 6(1)(b) GDPR). It is shared with no
+  one; only the Google Play purchase check goes to Google, under Google's
+  privacy policy.
 - **Fair use.** Remote control is included with Pro while the relay runs, for
   one Home, up to five phones and normal household use. It may change or end
   with notice.
