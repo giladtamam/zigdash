@@ -100,7 +100,7 @@ String _fail(AppLocalizations l10n, ChatFail why, int? triesLeft) => switch (why
       ChatFail.engineOld => l10n.chatEngineOld,
       ChatFail.unreachable => l10n.chatFailUnreachable,
       ChatFail.login => l10n.chatFailLogin,
-      ChatFail.purchase => l10n.chatFailPurchase,
+      ChatFail.purchase || ChatFail.passEnded => l10n.chatFailPurchase,
       ChatFail.tooMany => l10n.chatFailTooMany,
       ChatFail.expired || ChatFail.ticket => l10n.chatFailExpired,
       ChatFail.wrongCode => triesLeft == null ? l10n.chatFailWrongCode : l10n.chatFailWrongCodeLeft(triesLeft),

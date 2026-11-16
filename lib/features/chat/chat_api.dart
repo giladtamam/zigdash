@@ -28,6 +28,10 @@ enum ChatFail {
   /// Google Play says the purchase isn't valid, or isn't this Home's (402).
   purchase('purchase'),
 
+  /// The Home's founder's pass ended (402 `pass_ended`): links can be
+  /// listed and removed, not made (founders-pass.md).
+  passEnded('pass_ended'),
+
   /// Too many tries this hour.
   tooMany('too_many'),
 
@@ -127,6 +131,8 @@ ChatFail _failOf(int status, Object? body) {
       return ChatFail.ticket;
     case 'too_many':
       return ChatFail.tooMany;
+    case 'pass_ended':
+      return ChatFail.passEnded;
     // The same code works again.
     case 'try_again':
       return ChatFail.unreachable;
@@ -175,12 +181,12 @@ class HttpChatApi implements ChatApi {
 
   @override
   Future<String> ticket(String connectionId, {String? clientId, String? requestTopic, String? answerTopic}) async {
-    final (status, ticket) = await _remote.chatTicket(connectionId, extra: {
+    final (status, ticket, error) = await _remote.chatTicket(connectionId, extra: {
       'client_id': ?clientId,
       'request_topic': ?requestTopic,
       'answer_topic': ?answerTopic,
     });
-    if (ticket == null) throw ChatException(_failOf(status, null));
+    if (ticket == null) throw ChatException(_failOf(status, {'error': ?error}));
     return ticket;
   }
 
