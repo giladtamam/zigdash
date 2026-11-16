@@ -2,9 +2,11 @@
 # Compose project, apart from the relay's verifier and broker admin. It reaches
 # Homes through the relay with its own limited broker login, serves the app's
 # link API and the live bot's webhook at https://chat.zigdash.app (Caddy, on
-# the edge network), and calls the verifier's internal ACL route on that
-# network. Nothing secret is baked in; three host folders are mounted
-# (README.md, "Deploy"):
+# the edge network), and calls the verifier's internal ACL and Home-status
+# routes on that network. The verifier pushes Home changes to the service's
+# internal port 8791, on that network only: never published on the host, never
+# in Caddy (http://zigdash-chat-chat-1:8791). Nothing secret is baked in; three
+# host folders are mounted (README.md, "Deploy"):
 #   CHAT_CONFIG_DIR   read-only: bot_token, anthropic_key, relay_password,
 #                     webhook_secret, chat_ticket_secret, chat_acl_secret, worker_secret
 #   CHAT_SECRETS_DIR  read-only: chat-secrets.json (the service key)
@@ -39,6 +41,7 @@ services:
       ZIGDASH_MQTT_USER: ${CHAT_RELAY_USER:?the service's relay login}
       ZIGDASH_MQTT_PASSWORD_FILE: /run/zigdash/relay_password
       HTTP_PORT: "8790"
+      INTERNAL_PORT: "8791"
       CHAT_TICKET_SECRET_FILE: /run/zigdash/chat_ticket_secret
       VERIFIER_INTERNAL_URL: http://zigdash-relay-verifier-1:8788
       CHAT_ACL_SECRET_FILE: /run/zigdash/chat_acl_secret
@@ -51,7 +54,8 @@ services:
       - ${CHAT_CONFIG_DIR:?a host folder}:/run/zigdash:ro
       - ${CHAT_SECRETS_DIR:?another host folder}:/run/zigdash-secrets:ro
       - ${CHAT_DATA_DIR:?a third, writable host folder}:/var/lib/zigdash-chat
-    networks: [edge]     # no host ports: Caddy reaches :8790 here, and the service the verifier's :8788
+    expose: ["8790", "8791"]   # on the Docker network only; no "ports:", nothing on the host
+    networks: [edge]     # Caddy reaches :8790 here, the verifier :8791, and the service the verifier's :8788
 
 networks:
   edge:
