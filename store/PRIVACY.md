@@ -289,10 +289,8 @@ the whole list is deleted and everyone on it gets one message saying so.
 
 ## ZigDash Chat (beta)
 
-<!-- OWNER: before 3.7.0 is published, confirm (1) Anthropic's API retention
-     wording below against Anthropic's commercial terms and DPA on that day,
-     (2) the netcup order-processing agreement is still listed in the
-     customer panel, (3) the legal basis for linked family members. -->
+<!-- OWNER: before 3.7.0 goes to production, re-confirm the netcup
+     order-processing agreement is still listed in the customer panel. -->
 
 From 3.7.0, in the Google Play build, owners of ZigDash Pro or a founder's
 pass can link a Telegram account to a Home and talk to it from Telegram ("is
@@ -346,8 +344,10 @@ says about the devices it asks about. Link it only if that is fine for you.
   recent conversation and what your hub returned to Anthropic's Claude API
   (Anthropic, PBC, in the United States), which processes them for us. The
   transfer to the US relies on the Standard Contractual Clauses in
-  Anthropic's data processing terms. Anthropic keeps API inputs and outputs
-  only as its commercial API terms allow and does not train on them; see
+  Anthropic's data processing terms. Anthropic deletes API inputs and
+  outputs within 30 days by default (longer only if they are flagged for
+  breaking its Usage Policy, up to 2 years, or where the law requires) and
+  does not train on them; see
   [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
 - **On your hub.** ZigDash Engine keeps a list of the last 200 Chat actions,
   refusals and rejected requests (time, client, what, which device, result)
@@ -371,8 +371,10 @@ says about the devices it asks about. Link it only if that is fine for you.
   is deleted (see [Remote control](#remote-control-from-31)), its links are
   deleted with it, and each linked chat gets one message saying so.
 - **Why we may process it:** to provide the feature you linked
-  (Art. 6(1)(b) GDPR). The usage counters are kept to run the beta's limits
-  and its costs.
+  (Art. 6(1)(b) GDPR): each person who links their own Telegram account
+  asks for the service for themselves, including family members the owner
+  lets link. The usage counters are kept to run the beta's limits and its
+  costs (Art. 6(1)(f) GDPR).
 
 ## The assistant on Get help and the help bubble (from 3.5.1)
 
