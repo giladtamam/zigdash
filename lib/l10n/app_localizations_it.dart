@@ -5592,7 +5592,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Invia un messaggio come «chiudi la tapparella dell\'ufficio» o «la porta sul retro è aperta?» e la tua casa risponde. Lo stiamo realizzando. I primi $count iscritti lo avranno gratis per 3 mesi, accesso remoto incluso.';
+    return 'Invia un messaggio come «chiudi la tapparella dell\'ufficio» o «la porta sul retro è aperta?» e la tua casa risponde. Ora è disponibile per chi ha ZigDash Pro. I primi $count iscritti ricevono un codice fondatore: gratis per 3 mesi, accesso remoto incluso.';
   }
 
   @override
@@ -5629,12 +5629,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Sei il n. $position della lista: tra i primi $count. Quando sarà pronto, lo avrai gratis per 3 mesi.';
+    return 'Sei il n. $position della lista: tra i primi $count. Riceverai un codice fondatore: chat e accesso remoto, gratis per 3 mesi.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'Sei il n. $position della lista. I primi $count posti sono presi; lo saprai per primo quando sarà pronto.';
+    return 'Sei il n. $position della lista. I primi $count posti sono presi. La chat è ora disponibile per chi ha ZigDash Pro.';
   }
 
   @override

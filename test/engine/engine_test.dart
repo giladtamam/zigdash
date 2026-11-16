@@ -119,7 +119,7 @@ void main() {
 
   test('the bundled engine source carries its version', () {
     final source = File('hub/zigdash-engine.js').readAsStringSync();
-    expect(bundledEngineVersion(source), '3.7.0');
+    expect(bundledEngineVersion(source), '3.7.1');
   });
 
   group('EngineInstaller', () {

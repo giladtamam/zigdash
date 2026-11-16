@@ -5566,7 +5566,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Send en melding som «lukk persiennen på kontoret» eller «er bakdøren åpen?», så svarer hjemmet ditt. Vi lager det nå. De første $count som melder seg på, får det gratis i 3 måneder, fjerntilgang inkludert.';
+    return 'Send en melding som «lukk persiennen på kontoret» eller «er bakdøren åpen?», så svarer hjemmet ditt. Nå tilgjengelig for dem som har ZigDash Pro. De første $count som melder seg på, får en grunnleggerkode: gratis i 3 måneder, fjerntilgang inkludert.';
   }
 
   @override
@@ -5603,12 +5603,12 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Du er nr. $position på listen: blant de første $count. Når det er klart, får du det gratis i 3 måneder.';
+    return 'Du er nr. $position på listen: blant de første $count. Du får en grunnleggerkode: chat og fjerntilgang, gratis i 3 måneder.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'Du er nr. $position på listen. De første $count plassene er tatt; du får vite det først når det er klart.';
+    return 'Du er nr. $position på listen. De første $count plassene er tatt. Chat er nå tilgjengelig for dem som har ZigDash Pro.';
   }
 
   @override

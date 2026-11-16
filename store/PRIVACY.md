@@ -250,8 +250,9 @@ under 48 hours old, otherwise by hand, and in any case within 6 months.
 ## Chat with your home: early access
 
 From 3.5.4 the Google Play build asks whether you'd like to control your home
-by sending chat messages, a feature that is not built yet. Nothing is sent
-unless you join the list:
+by sending chat messages (ZigDash Chat, out from 3.7.0 for Pro owners; the
+first 20 on the list get a founder's pass). Nothing is sent unless you join
+the list:
 
 - **Join on Telegram** opens the ZigDash Home bot (@ZigDashHomeBot) in
   Telegram. If you start it, the developer's service on Cloudflare keeps the

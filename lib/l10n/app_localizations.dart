@@ -9747,7 +9747,7 @@ abstract class AppLocalizations {
   /// No description provided for @chatEarlyBody.
   ///
   /// In en, this message translates to:
-  /// **'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. We\'re building it. The first {count} to join get it free for 3 months, remote access included.'**
+  /// **'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. It\'s out now for ZigDash Pro owners. The first {count} to join get a founder\'s code: free for 3 months, remote access included.'**
   String chatEarlyBody(int count);
 
   /// No description provided for @chatEarlyTelegram.
@@ -9813,13 +9813,13 @@ abstract class AppLocalizations {
   /// No description provided for @chatEarlyInFirst.
   ///
   /// In en, this message translates to:
-  /// **'You\'re #{position} on the list: one of the first {count}. When it\'s ready, you get it free for 3 months.'**
+  /// **'You\'re #{position} on the list: one of the first {count}. You\'ll get a founder\'s code: Chat and remote access, free for 3 months.'**
   String chatEarlyInFirst(int position, int count);
 
   /// No description provided for @chatEarlyAfterFirst.
   ///
   /// In en, this message translates to:
-  /// **'You\'re #{position} on the list. The first {count} places are taken; you\'ll hear first when it\'s ready.'**
+  /// **'You\'re #{position} on the list. The first {count} places are taken. Chat is out now for ZigDash Pro owners.'**
   String chatEarlyAfterFirst(int position, int count);
 
   /// No description provided for @chatEarlyListed.

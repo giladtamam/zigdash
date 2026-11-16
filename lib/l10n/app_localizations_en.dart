@@ -5563,7 +5563,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. We\'re building it. The first $count to join get it free for 3 months, remote access included.';
+    return 'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. It\'s out now for ZigDash Pro owners. The first $count to join get a founder\'s code: free for 3 months, remote access included.';
   }
 
   @override
@@ -5599,12 +5599,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'You\'re #$position on the list: one of the first $count. When it\'s ready, you get it free for 3 months.';
+    return 'You\'re #$position on the list: one of the first $count. You\'ll get a founder\'s code: Chat and remote access, free for 3 months.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'You\'re #$position on the list. The first $count places are taken; you\'ll hear first when it\'s ready.';
+    return 'You\'re #$position on the list. The first $count places are taken. Chat is out now for ZigDash Pro owners.';
   }
 
   @override

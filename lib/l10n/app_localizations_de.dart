@@ -5601,7 +5601,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Schreib etwa „Schließ den Rollladen im Büro“ oder „Ist die Hintertür offen?“, und dein Zuhause antwortet. Wir bauen es gerade. Die ersten $count, die sich eintragen, bekommen es 3 Monate kostenlos, Fernzugriff inklusive.';
+    return 'Schreib etwa „Schließ den Rollladen im Büro“ oder „Ist die Hintertür offen?“, und dein Zuhause antwortet. Jetzt verfügbar für Besitzer von ZigDash Pro. Die ersten $count, die sich eintragen, bekommen einen Gründer-Code: 3 Monate kostenlos, Fernzugriff inklusive.';
   }
 
   @override
@@ -5639,12 +5639,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Du bist Nr. $position auf der Liste: einer der ersten $count. Sobald es fertig ist, bekommst du es 3 Monate kostenlos.';
+    return 'Du bist Nr. $position auf der Liste: einer der ersten $count. Du bekommst einen Gründer-Code: Chat und Fernzugriff, 3 Monate kostenlos.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'Du bist Nr. $position auf der Liste. Die ersten $count Plätze sind vergeben; du erfährst als Erstes, wenn es fertig ist.';
+    return 'Du bist Nr. $position auf der Liste. Die ersten $count Plätze sind vergeben. Chat gibt es jetzt für Besitzer von ZigDash Pro.';
   }
 
   @override
@@ -6045,7 +6045,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get founderCodeAsk => 'Haben Sie einen Gründer-Code?';
+  String get founderCodeAsk => 'Hast du einen Gründer-Code?';
 
   @override
   String get founderCodeLabel => 'Gründer-Code';
@@ -6055,11 +6055,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get founderCodeAtHome =>
-      'Geben Sie ihn zu Hause ein, mit ZigDash Engine auf Ihrem Hub: ZigDash richtet die Fernsteuerung über Ihr Heimnetz ein.';
+      'Gib ihn zu Hause ein, mit ZigDash Engine auf deinem Hub: ZigDash richtet die Fernsteuerung über dein Heimnetz ein.';
 
   @override
   String get founderCodeWrong =>
-      'Das ist kein Gründer-Code. Prüfen Sie ihn und versuchen Sie es erneut.';
+      'Das ist kein Gründer-Code. Prüf ihn und versuch es noch einmal.';
 
   @override
   String get founderCodeUsed =>
@@ -6067,19 +6067,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get founderCodeDeadline =>
-      'Die Frist für diesen Code ist abgelaufen. Bitten Sie über „Hilfe holen“ um mehr Zeit.';
+      'Die Frist für diesen Code ist abgelaufen. Bitte über „Hilfe holen“ um mehr Zeit.';
 
   @override
   String get founderCodeRevoked => 'Dieser Code wurde zurückgezogen.';
 
   @override
   String founderCodeDone(String date) {
-    return 'Ihr Gründer-Pass ist aktiv: Fernsteuerung und Chat für dieses Zuhause bis $date.';
+    return 'Dein Gründer-Pass ist aktiv: Fernsteuerung und Chat für dieses Zuhause bis $date.';
   }
 
   @override
   String founderEndsOn(String date) {
-    return 'Ihr Gründer-Pass endet am $date. Mit ZigDash Pro bleiben Fernsteuerung und Chat, ohne etwas neu einzurichten.';
+    return 'Dein Gründer-Pass endet am $date. Mit ZigDash Pro bleiben Fernsteuerung und Chat, ohne etwas neu einzurichten.';
   }
 
   @override
@@ -6087,12 +6087,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String founderEnded(String date) {
-    return 'Ihr Gründer-Pass ist am $date abgelaufen. ZigDash Pro bringt Fernsteuerung und Chat zurück, ohne etwas neu einzurichten.';
+    return 'Dein Gründer-Pass ist am $date abgelaufen. ZigDash Pro bringt Fernsteuerung und Chat zurück, ohne etwas neu einzurichten.';
   }
 
   @override
   String get founderEndedNoDate =>
-      'Ihr Gründer-Pass ist abgelaufen. ZigDash Pro bringt Fernsteuerung und Chat zurück, ohne etwas neu einzurichten.';
+      'Dein Gründer-Pass ist abgelaufen. ZigDash Pro bringt Fernsteuerung und Chat zurück, ohne etwas neu einzurichten.';
 
   @override
   String get founderDeleted =>
@@ -6107,18 +6107,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get founderUseProTitle =>
-      'Ihren Pro-Kauf für dieses Zuhause verwenden?';
+      'Deinen Pro-Kauf für dieses Zuhause verwenden?';
 
   @override
   String get founderUseProBody =>
-      'Fernsteuerung und Chat dieses Zuhauses gehen auf Ihren Pro-Kauf über: dieselben Telefone und Chat-Verknüpfungen, nichts neu einzurichten. Ein Kauf gilt für ein Zuhause.';
+      'Fernsteuerung und Chat dieses Zuhauses gehen auf deinen Pro-Kauf über: dieselben Telefone und Chat-Verknüpfungen, nichts neu einzurichten. Ein Kauf gilt für ein Zuhause.';
 
   @override
   String get founderUsePro => 'Pro für dieses Zuhause verwenden';
 
   @override
   String get founderUpgraded =>
-      'Dieses Zuhause läuft jetzt mit Ihrem Pro-Kauf.';
+      'Dieses Zuhause läuft jetzt mit deinem Pro-Kauf.';
 
   @override
   String get founderUpgradeTaken =>
@@ -6126,7 +6126,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get founderUpgradeFailed =>
-      'Das Zuhause konnte nicht auf Ihren Pro-Kauf umgestellt werden. Versuchen Sie es später erneut.';
+      'Das Zuhause konnte nicht auf deinen Pro-Kauf umgestellt werden. Versuch es später noch einmal.';
 
   @override
   String get remoteHubRefused =>

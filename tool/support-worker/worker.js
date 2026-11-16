@@ -532,7 +532,7 @@ async function botMessage(env, m) {
   if (entry) return botSend(env, chat, listedReply(entry));
   return botSend(env, chat,
     "This is ZigDash's chat with your home: send a message like \"close the office shutter\" and your home answers. " +
-    "It isn't built yet. Join the early-access list?\n\nPrivacy: " + POLICY_URL,
+    "It's out now for ZigDash Pro owners; the first 20 on the list get a founder's code. Join the early-access list?\n\nPrivacy: " + POLICY_URL,
     { inline_keyboard: [[{ text: 'Join the list', callback_data: 'join' }]] });
 }
 
@@ -891,7 +891,7 @@ const INVITE_TEXT = {
     locale: 'he',
     paragraphs: [
       'אתה בין 20 הראשונים ברשימה של ZigDash Chat, אז הנה קוד המייסד שלך: {code}. הוא נותן לבית אחד שליטה מרחוק ו-Chat למשך 3 חודשים, בחינם, מהיום שבו תזין אותו.',
-      'צריך ZigDash 3.7 ומעלה מ-Google Play, בית שמחובר לברוקר ה-MQTT שלו, ו-ZigDash Engine ברכזת. פתח הגדרות › בית › שליטה מרחוק, הקש על "יש לך קוד מייסד?" והזן אותו עד {date}.',
+      'צריך ZigDash 3.7 ומעלה מ-Google Play, בית שמחובר לברוקר ה-MQTT שלו, ו-ZigDash Engine ברכזת. פתח הגדרות › בית › שליטה מרחוק, הקש על "יש לכם קוד מייסדים?" והזן אותו עד {date}.',
       'יש שאלות או שצריך עוד זמן? כתוב דרך קבלת עזרה באפליקציה והוסף את האימייל שלך כדי שאוכל לענות{end}',
     ],
     tg: '.', email: ', או השב למייל הזה.',

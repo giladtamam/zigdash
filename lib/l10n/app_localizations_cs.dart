@@ -5563,7 +5563,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Stavíme to. Prvních $count přihlášených to dostane na 3 měsíce zdarma, včetně vzdáleného přístupu.';
+    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Už je k dispozici pro majitele ZigDash Pro. Prvních $count přihlášených dostane zakladatelský kód: 3 měsíce zdarma, včetně vzdáleného přístupu.';
   }
 
   @override
@@ -5600,12 +5600,12 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Jste č. $position na seznamu: mezi prvními $count. Až to bude hotové, dostanete to na 3 měsíce zdarma.';
+    return 'Jste č. $position na seznamu: mezi prvními $count. Dostanete zakladatelský kód: chat a vzdálený přístup, 3 měsíce zdarma.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'Jste č. $position na seznamu. Prvních $count míst je obsazeno; dozvíte se to jako první, až to bude hotové.';
+    return 'Jste č. $position na seznamu. Prvních $count míst je obsazeno. Chat je už k dispozici pro majitele ZigDash Pro.';
   }
 
   @override
