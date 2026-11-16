@@ -252,6 +252,16 @@ void main() {
     expect(seen.last.$3, {'purchase_token': 'play-token'});
   });
 
+  test("a phone that never asked the relay asks before its first Chat ticket", () async {
+    await store.write('c1', _login);
+    answers['GET /v1/homes/h0me1d'] = [(200, {'kind': 'founder', 'expires_at': _end.millisecondsSinceEpoch, 'ended': false})];
+    answers['POST /v1/homes/h0me1d/chat-ticket'] = [(200, {'ticket': 'tk'})];
+    final api = HttpChatApi(setup, base: 'http://127.0.0.1:${server.port}');
+    expect(await api.ticket('c1'), 'tk');
+    expect([for (final s in seen) s.$1], ['GET /v1/homes/h0me1d', 'POST /v1/homes/h0me1d/chat-ticket']);
+    expect(seen.last.$3, isEmpty);
+  });
+
   test('pass_ended from the chat service on confirm is final', () async {
     answers['POST /v1/link/confirm'] = [(402, {'error': 'pass_ended'})];
     final api = HttpChatApi(setup, base: 'http://127.0.0.1:${server.port}');

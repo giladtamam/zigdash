@@ -34,6 +34,9 @@ class _Sink implements AnalyticsSink {
 }
 
 final _now = DateTime(2026, 11, 16, 12);
+
+/// The Home's Chat row, changed by a test as a late founder status would.
+final _row = StateProvider<ChatRowState>((ref) => ChatRowState.ready);
 final _end = DateTime(2027, 2, 14, 12);
 
 class _Page {
@@ -105,7 +108,8 @@ Future<_Page> _open(
       sharedPreferencesProvider.overrideWithValue(p),
       analyticsAvailableProvider.overrideWithValue(true),
       analyticsSinkProvider.overrideWithValue(sink),
-      chatRowStateProvider.overrideWith((ref, _) => state),
+      _row.overrideWith((ref) => state),
+      chatRowStateProvider.overrideWith((ref, _) => ref.watch(_row)),
       founderStatusProvider.overrideWith((ref, _) async => founder),
       founderRefreshProvider.overrideWithValue((id) async => refreshed.add(id)),
       founderNowProvider.overrideWithValue(() => _now),
@@ -489,6 +493,16 @@ void main() {
       expect(find.textContaining("Your founder's pass ends on Nov 19, 2026."), findsOneWidget);
       expect(find.byKey(const Key('founder-get-pro')), findsOneWidget);
       expect(find.byKey(const Key('chat-link')), findsOneWidget);
+    });
+
+    testWidgets('a status that arrives after the screen opened: the list loads then', (tester) async {
+      final page = await _open(tester, state: ChatRowState.noPro, founder: pass());
+      expect(page.log, isEmpty);
+      final container = ProviderScope.containerOf(tester.element(find.byType(ChatScreen)));
+      container.read(_row.notifier).state = ChatRowState.ready;
+      await tester.pumpAndSettle();
+      expect(page.log, ['ticket', 'links']);
+      expect(find.byKey(const Key('chat-links-none')), findsOneWidget);
     });
 
     testWidgets('earlier in the pass: Chat as usual', (tester) async {

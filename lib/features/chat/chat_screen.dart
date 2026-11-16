@@ -366,6 +366,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final state = ref.watch(chatRowStateProvider(_id));
+    // The founder status can come a moment after the screen opened (a
+    // phone that never asked the relay): the list loads once it is known.
+    ref.listen(chatRowStateProvider(_id), (prev, next) {
+      if (prev != next && (next == ChatRowState.ready || next == ChatRowState.passEnded)) unawaited(_load());
+    });
     final theme = Theme.of(context);
     final founder = ref.watch(founderStatusProvider(_id)).valueOrNull;
     final now = ref.read(founderNowProvider)();

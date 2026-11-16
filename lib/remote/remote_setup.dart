@@ -342,7 +342,9 @@ class RemoteSetup {
     if (home == null) return (401, null, null);
     FounderStatus? founder;
     try {
-      founder = await _store.readFounder(connectionId);
+      // A phone that never asked (a second phone, a restored login) asks
+      // now: a founder's Home sends no purchase.
+      founder = await _store.readFounder(connectionId) ?? await founderStatus(connectionId);
     } catch (_) {}
     String? token;
     if (founder?.founder != true) {

@@ -317,9 +317,9 @@ says about the devices it asks about. Link it only if that is fine for you.
   or the pass again (for Pro, it asks Google Play whether the purchase is
   valid and belongs to this Home; for a founder's pass, whether it is still
   running), and signs a ticket valid for 10 minutes. The app sends the
-  ticket, the token, the key and the scope to the Chat service, which gives back a code; Telegram opens
-  with it, and the bot sends a 4-digit code that you type into the app to
-  finish. A link that is never finished is deleted.
+  ticket, the token, the key and the scope to the Chat service, which gives
+  back a code; Telegram opens with it, and the bot sends a 4-digit code that
+  you type into the app to finish. A link that is never finished is deleted.
 - **What the Chat service reads and keeps.** The service runs at
   chat.zigdash.app on a server the developer rents from netcup in Vienna,
   Austria (EU), under netcup's data processing agreement. For each linked
