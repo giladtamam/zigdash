@@ -128,11 +128,11 @@ async function home(t, over) {
 
 // ---------- the build ----------
 
-test('release build: version 3.7.0, with the chat code, as the app reads it', () => {
-  assert.equal(Engine.ENGINE_VERSION, '3.7.0');
+test('release build: version 3.7.1, with the chat code, as the app reads it', () => {
+  assert.equal(Engine.ENGINE_VERSION, '3.7.1');
   const release = fs.readFileSync(path.join(__dirname, '..', 'zigdash-engine.js'), 'utf8');
   // The app reads the version with this exact pattern (lib/engine/engine_status.dart).
-  assert.equal(/const ENGINE_VERSION = '([^']+)'/.exec(release)[1], '3.7.0');
+  assert.equal(/const ENGINE_VERSION = '([^']+)'/.exec(release)[1], '3.7.1');
   assert.ok(release.includes('zigdash/chat') || release.includes('chatRequest'));
   assert.equal(typeof Engine.prototype.chatRequest, 'function');
 });
@@ -144,7 +144,7 @@ test('legacy --chat build: the same Engine as 9.0.0-chat', () => {
   const legacy = fs.readFileSync(out, 'utf8');
   const release = fs.readFileSync(path.join(__dirname, '..', 'zigdash-engine.js'), 'utf8');
   assert.equal(/const ENGINE_VERSION = '([^']+)'/.exec(legacy)[1], '9.0.0-chat');
-  assert.equal(legacy.replace("'9.0.0-chat'", "'3.7.0'"), release);
+  assert.equal(legacy.replace("'9.0.0-chat'", "'3.7.1'"), release);
 });
 
 // ---------- dormant until linked ----------
@@ -154,7 +154,7 @@ test('dormant: subscribes only to the client config topic, beside everything the
   await z.engine.start();
   t.after(() => z.engine.stop());
   assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/chat/clients/+', 'zigdash/history/#', 'zigdash/remote/set']);
-  assert.equal(JSON.parse(z.at('zigdash/automations/state')).engine, '3.7.0');
+  assert.equal(JSON.parse(z.at('zigdash/automations/state')).engine, '3.7.1');
   assert.equal(z.engine.chat.active, false);
 });
 
