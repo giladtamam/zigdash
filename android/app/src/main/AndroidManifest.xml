@@ -5,9 +5,10 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- The setup reminder (2.9.7) survives a restart of the phone. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <!-- Android 17 (targetSdk 37) needs this to reach the hub on the LAN;
-         asked for at start on phones that enforce it (alerts-2.3.md §3). -->
-    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK"/>
+    <!-- No ACCESS_LOCAL_NETWORK while targetSdk is 36: Android 17 grants local
+         network access with INTERNET to apps below 37, and Google asks such apps
+         not to declare or request it (3.6.3, docs/design/android17-lan-363.md).
+         It comes back, asked at Find my setup, with the move to targetSdk 37. -->
     <!-- NFC tags (3.3): tap one to run a scene or toggle a device. -->
     <uses-permission android:name="android.permission.NFC"/>
     <!-- A short buzz when a ZigDash NFC tag is read. -->

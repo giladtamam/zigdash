@@ -1567,7 +1567,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'מוסיפים את התוספים Mosquitto broker ו-Zigbee2MQTT, ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.';
+      'מוסיפים את היישומים Mosquitto broker ו-Zigbee2MQTT (הגדרות › יישומים), ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.';
 
   @override
   String get noHubRadio =>

@@ -1590,7 +1590,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'Добавьте дополнения Mosquitto broker и Zigbee2MQTT, затем войдите из ZigDash со своим логином Home Assistant.';
+      'Добавьте приложения Mosquitto broker и Zigbee2MQTT (Настройки › Приложения), затем войдите из ZigDash со своим логином Home Assistant.';
 
   @override
   String get noHubRadio =>

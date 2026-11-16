@@ -542,7 +542,7 @@
   "noHubPi": "En Raspberry Pi eller en annen Linux-maskin",
   "noHubPiBody": "Installer Zigbee2MQTT og Mosquitto-brokeren selv. Omtrent en time, med Zigbee2MQTTs egen veiledning.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Legg til tilleggene Mosquitto broker og Zigbee2MQTT, og logg deretter inn fra ZigDash med Home Assistant-påloggingen din.",
+  "noHubHaBody": "Legg til appene Mosquitto broker og Zigbee2MQTT (Innstillinger › Apper), og logg deretter inn fra ZigDash med Home Assistant-påloggingen din.",
   "noHubRadio": "En Pi eller Home Assistant trenger også en Zigbee-adapter, som en SLZB-06 eller en Sonoff-dongle. SMHUB har en innebygd.",
   "noHubDemoNote": "Se i mellomtiden hvordan ZigDash fungerer, med et eksempelhjem.",
   "noHubRemind": "Minn meg på om en uke",

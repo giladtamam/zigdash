@@ -1589,7 +1589,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'Voeg de add-ons Mosquitto broker en Zigbee2MQTT toe en meld je daarna vanuit ZigDash aan met je Home Assistant-login.';
+      'Voeg de apps Mosquitto broker en Zigbee2MQTT toe (Instellingen › Apps) en meld je daarna vanuit ZigDash aan met je Home Assistant-login.';
 
   @override
   String get noHubRadio =>

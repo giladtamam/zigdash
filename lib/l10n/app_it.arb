@@ -467,7 +467,7 @@
   "noHubPi": "Un Raspberry Pi o qualsiasi macchina Linux",
   "noHubPiBody": "Installa da solo Zigbee2MQTT e il broker Mosquitto. Circa un'ora, con la guida di Zigbee2MQTT.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Aggiungi i componenti aggiuntivi Mosquitto broker e Zigbee2MQTT, poi accedi da ZigDash con il tuo utente Home Assistant.",
+  "noHubHaBody": "Aggiungi le applicazioni Mosquitto broker e Zigbee2MQTT (Impostazioni › Applicazioni), poi accedi da ZigDash con il tuo utente Home Assistant.",
   "noHubRadio": "Un Pi o Home Assistant ha bisogno anche di un adattatore Zigbee, come un SLZB-06 o una chiavetta Sonoff. L'SMHUB ne ha uno integrato.",
   "noHubDemoNote": "Nel frattempo guarda come funziona ZigDash, con una casa di prova.",
   "noHubRemind": "Ricordamelo tra una settimana",

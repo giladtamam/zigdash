@@ -109,8 +109,9 @@ passes through it is encrypted (see [Remote control](#remote-control-from-31)).
 
 The app requests the **INTERNET** permission to connect to your broker and,
 unless you opt out, to send the anonymous usage events described below. On
-Android 17 it also asks for the **local network** permission, which Android
-requires for talking to a hub on your home network. On iPhone and iPad, iOS
+Android, that permission also lets it talk to a hub on your home network; from
+3.6.3 it no longer asks for Android 17's separate **local network**
+permission, which Android gives apps like ZigDash with it. On iPhone and iPad, iOS
 asks for **Local Network** access the first time ZigDash looks for your hub,
 for the same reason.
 

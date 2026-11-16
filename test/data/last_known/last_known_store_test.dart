@@ -110,6 +110,26 @@ void main() {
     expect(LastKnownStore.keeps(m('zigbee2mqtt/bridge/extensions', '[]')), isFalse);
   });
 
+  // 3.6.3: the demo never connects, so its device list counts as live and
+  // reaches screens that read bridge/devices (the wall display's sensors).
+  test('a demo device list seeded as live is replayed', () async {
+    final mgr = MqttManager(
+      config: const BrokerConfig(
+          id: 'c1', host: 'h', port: 1883, protocol: MqttProtocol.tcp),
+      password: '',
+    );
+    addTearDown(mgr.dispose);
+    mgr.seedLastKnown([
+      MqttRxMessage(
+          topic: 'zigbee2mqtt/bridge/devices',
+          payload: '[]',
+          receivedAt: now,
+          connectionGeneration: -2),
+    ], asLive: true);
+    final first = await mgr.subscribe('zigbee2mqtt/bridge/devices').first;
+    expect(first.payload, '[]');
+  });
+
   test('a saved device list is not replayed at home', () async {
     final mgr = MqttManager(
       config: const BrokerConfig(
