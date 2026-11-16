@@ -4139,6 +4139,20 @@ class AppLocalizationsIt extends AppLocalizations {
       'Un solo pagamento, nessun abbonamento. L\'hai acquistato su un altro telefono con lo stesso account Google? Si sblocca da solo.';
 
   @override
+  String get proRestore => 'Ripristina acquisto';
+
+  @override
+  String get proRestored => 'Pro è sbloccato su questo telefono.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play non ha acquisti di Pro per questo account Google. L\'hai acquistato con un altro account? Cambia account nel Play Store e riprova.';
+
+  @override
+  String get proRestoreFailed =>
+      'Impossibile raggiungere Google Play. Riprova tra un momento.';
+
+  @override
   String get historyNotRecorded =>
       'Vengono registrati solo i numeri mostrati su una dashboard. Aggiungi questo come riquadro per iniziare la sua cronologia.';
 

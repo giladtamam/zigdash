@@ -4134,6 +4134,20 @@ class AppLocalizationsPl extends AppLocalizations {
       'Jedna płatność, bez subskrypcji. Kupione na innym telefonie z tym samym kontem Google? Odblokuje się automatycznie.';
 
   @override
+  String get proRestore => 'Przywróć zakup';
+
+  @override
+  String get proRestored => 'Pro jest odblokowane na tym telefonie.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play nie ma zakupu Pro na tym koncie Google. Kupione na innym koncie? Zmień konto w Sklepie Play i spróbuj ponownie.';
+
+  @override
+  String get proRestoreFailed =>
+      'Nie udało się połączyć z Google Play. Spróbuj ponownie za chwilę.';
+
+  @override
   String get historyNotRecorded =>
       'Zapisywane są tylko liczby widoczne na pulpicie. Dodaj tę wartość jako kafelek, aby zacząć jej historię.';
 

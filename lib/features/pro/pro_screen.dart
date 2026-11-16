@@ -83,6 +83,23 @@ class _ProScreenState extends ConsumerState<ProScreen>
     if (state == AppLifecycleState.resumed) ref.invalidate(proOfferProvider);
   }
 
+  bool _restoring = false;
+
+  Future<void> _restore() async {
+    setState(() => _restoring = true);
+    final answer = await ref.read(proBillingProvider.notifier).refresh();
+    if (!mounted) return;
+    setState(() => _restoring = false);
+    final l10n = context.l10n;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(switch (answer) {
+        'unlocked' => l10n.proRestored,
+        'locked' || 'pending' || 'changed' => l10n.proRestoreNone,
+        _ => l10n.proRestoreFailed,
+      }),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -218,6 +235,13 @@ class _ProScreenState extends ConsumerState<ProScreen>
                 l10n.proOnce,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall,
+              ),
+              const SizedBox(height: 8),
+              // Bought before (a reinstall, a new phone): Play is asked again.
+              TextButton(
+                key: const Key('pro-restore'),
+                onPressed: _restoring ? null : _restore,
+                child: Text(l10n.proRestore),
               ),
             ],
           ],

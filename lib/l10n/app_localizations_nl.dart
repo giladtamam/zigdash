@@ -4136,6 +4136,20 @@ class AppLocalizationsNl extends AppLocalizations {
       'Eén betaling, geen abonnement. Gekocht op een andere telefoon met hetzelfde Google-account? Het wordt automatisch ontgrendeld.';
 
   @override
+  String get proRestore => 'Aankoop herstellen';
+
+  @override
+  String get proRestored => 'Pro is ontgrendeld op deze telefoon.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play heeft geen Pro-aankoop voor dit Google-account. Met een ander account gekocht? Wissel van account in de Play Store en probeer het opnieuw.';
+
+  @override
+  String get proRestoreFailed =>
+      'Google Play was niet bereikbaar. Probeer het zo opnieuw.';
+
+  @override
   String get historyNotRecorded =>
       'Alleen getallen die op een dashboard staan worden opgenomen. Voeg deze toe als tegel om de geschiedenis te starten.';
 

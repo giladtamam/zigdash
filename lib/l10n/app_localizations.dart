@@ -7320,6 +7320,30 @@ abstract class AppLocalizations {
   /// **'One payment, no subscription. Bought on another phone with the same Google account? It unlocks automatically.'**
   String get proOnce;
 
+  /// No description provided for @proRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchase'**
+  String get proRestore;
+
+  /// No description provided for @proRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro is unlocked on this phone.'**
+  String get proRestored;
+
+  /// No description provided for @proRestoreNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play has no Pro purchase for this Google account. Bought it with another account? Switch accounts in the Play Store, then try again.'**
+  String get proRestoreNone;
+
+  /// No description provided for @proRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach Google Play. Try again in a moment.'**
+  String get proRestoreFailed;
+
   /// No description provided for @historyNotRecorded.
   ///
   /// In en, this message translates to:

@@ -4147,6 +4147,20 @@ class AppLocalizationsDe extends AppLocalizations {
       'Eine Zahlung, kein Abo. Auf einem anderen Telefon mit demselben Google-Konto gekauft? Es wird automatisch freigeschaltet.';
 
   @override
+  String get proRestore => 'Kauf wiederherstellen';
+
+  @override
+  String get proRestored => 'Pro ist auf diesem Telefon freigeschaltet.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play hat für dieses Google-Konto keinen Pro-Kauf. Mit einem anderen Konto gekauft? Wechsle im Play Store das Konto und versuch es noch einmal.';
+
+  @override
+  String get proRestoreFailed =>
+      'Google Play war nicht erreichbar. Versuch es gleich noch einmal.';
+
+  @override
   String get historyNotRecorded =>
       'Aufgezeichnet werden nur Zahlen, die auf einem Dashboard stehen. Füge diesen Wert als Kachel hinzu, um seinen Verlauf zu starten.';
 

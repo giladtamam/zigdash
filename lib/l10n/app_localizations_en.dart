@@ -4116,6 +4116,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'One payment, no subscription. Bought on another phone with the same Google account? It unlocks automatically.';
 
   @override
+  String get proRestore => 'Restore purchase';
+
+  @override
+  String get proRestored => 'Pro is unlocked on this phone.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play has no Pro purchase for this Google account. Bought it with another account? Switch accounts in the Play Store, then try again.';
+
+  @override
+  String get proRestoreFailed =>
+      'Couldn\'t reach Google Play. Try again in a moment.';
+
+  @override
   String get historyNotRecorded =>
       'Only numbers shown on a dashboard are recorded. Add this one as a tile to start its history.';
 

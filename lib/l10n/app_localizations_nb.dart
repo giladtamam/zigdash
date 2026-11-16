@@ -4120,6 +4120,20 @@ class AppLocalizationsNb extends AppLocalizations {
       'Én betaling, ikke abonnement. Kjøpt på en annen telefon med samme Google-konto? Det låses opp automatisk.';
 
   @override
+  String get proRestore => 'Gjenopprett kjøp';
+
+  @override
+  String get proRestored => 'Pro er låst opp på denne telefonen.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play har ikke noe Pro-kjøp for denne Google-kontoen. Kjøpt med en annen konto? Bytt konto i Play Butikk og prøv igjen.';
+
+  @override
+  String get proRestoreFailed =>
+      'Fikk ikke kontakt med Google Play. Prøv igjen om litt.';
+
+  @override
   String get historyNotRecorded =>
       'Bare tall som vises på et dashbord tas opp. Legg til denne som en flis for å starte historikken.';
 

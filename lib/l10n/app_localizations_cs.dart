@@ -4120,6 +4120,20 @@ class AppLocalizationsCs extends AppLocalizations {
       'Jedna platba, žádné předplatné. Koupil jsi to na jiném telefonu se stejným účtem Google? Odemkne se automaticky.';
 
   @override
+  String get proRestore => 'Obnovit nákup';
+
+  @override
+  String get proRestored => 'Pro je na tomto telefonu odemčené.';
+
+  @override
+  String get proRestoreNone =>
+      'Google Play nemá pro tento účet Google žádný nákup Pro. Koupili jste ho na jiném účtu? Přepněte účet v Obchodě Play a zkuste to znovu.';
+
+  @override
+  String get proRestoreFailed =>
+      'Nepodařilo se spojit s Google Play. Zkuste to za chvíli znovu.';
+
+  @override
   String get historyNotRecorded =>
       'Zaznamenávají se jen čísla zobrazená na nástěnce. Přidej tohle jako dlaždici a začne se zaznamenávat jeho historie.';
 

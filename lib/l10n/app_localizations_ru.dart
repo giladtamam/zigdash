@@ -4125,6 +4125,20 @@ class AppLocalizationsRu extends AppLocalizations {
       'Один платёж, без подписки. Купили на другом телефоне с тем же аккаунтом Google? Pro откроется автоматически.';
 
   @override
+  String get proRestore => 'Восстановить покупку';
+
+  @override
+  String get proRestored => 'Pro разблокирован на этом телефоне.';
+
+  @override
+  String get proRestoreNone =>
+      'В Google Play нет покупки Pro для этого аккаунта Google. Покупали с другого аккаунта? Смените аккаунт в Play Маркете и попробуйте снова.';
+
+  @override
+  String get proRestoreFailed =>
+      'Не удалось связаться с Google Play. Попробуйте ещё раз через минуту.';
+
+  @override
   String get historyNotRecorded =>
       'Записываются только числа, показанные на панели. Добавьте это значение плиткой, чтобы начать его историю.';
 

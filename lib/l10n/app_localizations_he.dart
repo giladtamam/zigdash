@@ -4077,6 +4077,20 @@ class AppLocalizationsHe extends AppLocalizations {
       'תשלום אחד, בלי מנוי. קניתם בטלפון אחר עם אותו חשבון Google? זה נפתח אוטומטית.';
 
   @override
+  String get proRestore => 'שחזור רכישה';
+
+  @override
+  String get proRestored => 'Pro פתוח בטלפון הזה.';
+
+  @override
+  String get proRestoreNone =>
+      'ל-Google Play אין רכישת Pro בחשבון Google הזה. קניתם בחשבון אחר? החליפו חשבון בחנות Play ונסו שוב.';
+
+  @override
+  String get proRestoreFailed =>
+      'לא הצלחנו להגיע ל-Google Play. נסו שוב בעוד רגע.';
+
+  @override
   String get historyNotRecorded =>
       'מוקלטים רק מספרים שמוצגים בלוח בקרה. הוסיפו את הערך הזה כאריח כדי להתחיל את ההיסטוריה שלו.';
 

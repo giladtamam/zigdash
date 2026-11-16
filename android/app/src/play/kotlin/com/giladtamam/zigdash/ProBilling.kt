@@ -22,7 +22,9 @@ import io.flutter.plugin.common.MethodChannel
  * the Play build only: the foss build has a stub and no billing library.
  *
  * Channel "zigdash/billing":
- *  - status -> "unlocked" | "locked" | "pending" | "unavailable"
+ *  - status -> "unlocked" | "locked" | "pending" | "unavailable" (no Play
+ *              billing here, or Pro isn't sold) | "error" (Play didn't answer
+ *              this time: the app keeps what it knew and asks again)
  *  - offer  -> what Play sells Pro for now: price, priceMicros, currency,
  *              and during a discount offer fullPriceMicros, percent, endMs
  *              and offerId (3.4.4); null when unknown
@@ -66,18 +68,42 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
     private fun reply(result: MethodChannel.Result, value: String) =
         main.post { result.success(value) }
 
+    /** Play's answer to the last connection attempt (OK when [connected] said yes). */
+    private var lastSetupCode = BillingClient.BillingResponseCode.OK
+
+    /**
+     * Runs [block] once with whether Play is connected. A service that drops
+     * before setup finishes answers false too: a request never waits for ever.
+     */
     private fun connected(block: (Boolean) -> Unit) {
         if (client.isReady) {
             block(true)
             return
         }
+        var answered = false
+        fun once(ok: Boolean) {
+            if (answered) return
+            answered = true
+            block(ok)
+        }
         client.startConnection(object : BillingClientStateListener {
-            override fun onBillingSetupFinished(r: BillingResult) =
-                block(r.responseCode == BillingClient.BillingResponseCode.OK)
+            override fun onBillingSetupFinished(r: BillingResult) {
+                lastSetupCode = r.responseCode
+                once(r.responseCode == BillingClient.BillingResponseCode.OK)
+            }
 
-            override fun onBillingServiceDisconnected() {}
+            override fun onBillingServiceDisconnected() {
+                lastSetupCode = BillingClient.BillingResponseCode.SERVICE_DISCONNECTED
+                once(false)
+            }
         })
     }
+
+    /** "unavailable" when this phone has no Play billing at all, else "error" (try again). */
+    private fun failure(code: Int) =
+        if (code == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE ||
+            code == BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED
+        ) "unavailable" else "error"
 
     private fun product(block: (ProductDetails?) -> Unit) {
         val params = QueryProductDetailsParams.newBuilder().setProductList(
@@ -149,7 +175,7 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
     /** Owned (and acknowledged), pending, or for sale. */
     private fun status(done: (String) -> Unit) = connected { ok ->
         if (!ok) {
-            done("unavailable")
+            done(failure(lastSetupCode))
             return@connected
         }
         client.queryPurchasesAsync(
@@ -157,7 +183,7 @@ class ProBilling(private val activity: Activity, messenger: BinaryMessenger) :
                 .setProductType(BillingClient.ProductType.INAPP).build()
         ) { r, purchases ->
             if (r.responseCode != BillingClient.BillingResponseCode.OK) {
-                done("unavailable")
+                done(failure(r.responseCode))
                 return@queryPurchasesAsync
             }
             val own = purchases.filter { PRODUCT in it.products }
