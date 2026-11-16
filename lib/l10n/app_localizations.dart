@@ -10260,6 +10260,18 @@ abstract class AppLocalizations {
   /// **'Your hub didn\'t answer. Try again later.'**
   String get chatAuditFailed;
 
+  /// No description provided for @chatAuditSent.
+  ///
+  /// In en, this message translates to:
+  /// **'set {what}'**
+  String chatAuditSent(String what);
+
+  /// No description provided for @chatAuditNotSent.
+  ///
+  /// In en, this message translates to:
+  /// **'couldn\'t send'**
+  String get chatAuditNotSent;
+
   /// No description provided for @chatHereTitle.
   ///
   /// In en, this message translates to:

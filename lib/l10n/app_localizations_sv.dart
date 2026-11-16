@@ -5875,6 +5875,14 @@ class AppLocalizationsSv extends AppLocalizations {
   String get chatAuditFailed => 'Din hubb svarade inte. Försök igen senare.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'ställt in: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'skickades inte';
+
+  @override
   String get chatHereTitle => 'Chatt med ditt hem är här';
 
   @override

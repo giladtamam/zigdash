@@ -5915,6 +5915,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Votre hub n\'a pas répondu. Réessayez plus tard.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'réglé : $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'pas envoyé';
+
+  @override
   String get chatHereTitle => 'Le chat avec votre maison est là';
 
   @override

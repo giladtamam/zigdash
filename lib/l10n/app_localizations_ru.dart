@@ -5873,6 +5873,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatAuditFailed => 'Ваш хаб не ответил. Попробуйте позже.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'установлено: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'не отправлено';
+
+  @override
   String get chatHereTitle => 'Чат с домом уже здесь';
 
   @override

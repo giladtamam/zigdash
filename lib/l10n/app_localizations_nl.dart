@@ -5891,6 +5891,14 @@ class AppLocalizationsNl extends AppLocalizations {
       'Je hub antwoordde niet. Probeer het later opnieuw.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'ingesteld: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'niet verzonden';
+
+  @override
   String get chatHereTitle => 'Chatten met je huis is er';
 
   @override

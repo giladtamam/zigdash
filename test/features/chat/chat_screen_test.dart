@@ -8,6 +8,7 @@ import 'package:zigdash/engine/engine_providers.dart';
 import 'package:zigdash/engine/engine_status.dart';
 import 'package:zigdash/features/chat/chat_api.dart';
 import 'package:zigdash/features/chat/chat_linker.dart';
+import 'package:zigdash/features/chat/chat_hub.dart' show ChatAuditEntry;
 import 'package:zigdash/features/chat/chat_screen.dart';
 import 'package:zigdash/features/chat/chat_store.dart';
 import 'package:zigdash/features/devices/device_registry.dart';
@@ -139,6 +140,7 @@ Future<void> _tap(WidgetTester tester, Finder f) async {
 }
 
 void main() {
+  _auditLines();
   testWidgets('the intro says what it does, never does, costs and who reads it; Read is pre-selected', (tester) async {
     final page = await _open(tester);
     expect(find.text('Talk to your home from Telegram'), findsOneWidget);
@@ -401,5 +403,19 @@ void main() {
         expect(find.text(text), findsOneWidget);
       });
     }
+  });
+}
+
+void _auditLines() {
+  test('What Chat did reads like words, not the Engine\'s JSON', () async {
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    ChatAuditEntry e(String result, {String? device = 'Office shutter'}) =>
+        ChatAuditEntry(at: DateTime.utc(2026, 11, 16), client: 'tg-a', tool: 'set_device', device: device, result: result);
+    expect(auditLine(l10n, e('sent {"position":50}')), 'Office shutter: set position 50');
+    expect(auditLine(l10n, e('sent {"state":"ON","brightness":120}')), 'Office shutter: set state ON, brightness 120');
+    expect(auditLine(l10n, e('sent {"occupied_heating_setpoint":21}')), 'Office shutter: set occupied heating setpoint 21');
+    expect(auditLine(l10n, e('failed')), "Office shutter: couldn't send");
+    expect(auditLine(l10n, e('refused: read only: not on the control list')), 'Office shutter: refused: read only: not on the control list');
+    expect(auditLine(l10n, e('refused: not linked', device: null)), 'set_device: refused: not linked');
   });
 }

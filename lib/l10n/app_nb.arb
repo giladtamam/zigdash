@@ -1778,6 +1778,8 @@
   "chatAuditShow": "Vis",
   "chatAuditEmpty": "Ingenting ennå.",
   "chatAuditFailed": "Huben svarte ikke. Prøv igjen senere.",
+  "chatAuditSent": "satt: {what}",
+  "chatAuditNotSent": "ikke sendt",
   "chatHereTitle": "Chat med hjemmet ditt er her",
   "chatHereBody": "Koble til Telegram-kontoen din og spør hjemmet ditt «er bakdøren åpen?» eller be det lukke en rullegardin. Del av Pro, gratis i betaen.",
   "chatHereSetUp": "Sett opp",

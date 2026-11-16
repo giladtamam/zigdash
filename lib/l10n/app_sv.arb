@@ -1778,6 +1778,8 @@
   "chatAuditShow": "Visa",
   "chatAuditEmpty": "Inget än.",
   "chatAuditFailed": "Din hubb svarade inte. Försök igen senare.",
+  "chatAuditSent": "ställt in: {what}",
+  "chatAuditNotSent": "skickades inte",
   "chatHereTitle": "Chatt med ditt hem är här",
   "chatHereBody": "Länka ditt Telegram-konto och fråga ditt hem \"är bakdörren öppen?\" eller be det stänga en rullgardin. Ingår i Pro, gratis under betan.",
   "chatHereSetUp": "Konfigurera",

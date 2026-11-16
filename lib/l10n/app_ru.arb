@@ -1773,6 +1773,8 @@
   "chatAuditShow": "Показать",
   "chatAuditEmpty": "Пока ничего.",
   "chatAuditFailed": "Ваш хаб не ответил. Попробуйте позже.",
+  "chatAuditSent": "установлено: {what}",
+  "chatAuditNotSent": "не отправлено",
   "chatHereTitle": "Чат с домом уже здесь",
   "chatHereBody": "Привяжите аккаунт Telegram и спросите дом «открыта ли задняя дверь?» или попросите закрыть штору. Входит в Pro, бесплатно во время беты.",
   "chatHereSetUp": "Настроить",

@@ -1847,6 +1847,8 @@
   "chatAuditShow": "הצגה",
   "chatAuditEmpty": "עדיין כלום.",
   "chatAuditFailed": "הרכזת לא ענתה. אפשר לנסות שוב מאוחר יותר.",
+  "chatAuditSent": "הוגדר: {what}",
+  "chatAuditNotSent": "לא נשלח",
   "chatHereTitle": "צ'אט עם הבית כבר כאן",
   "chatHereBody": "קשרו את חשבון הטלגרם שלכם, ואז שאלו את הבית \"האם הדלת האחורית פתוחה?\" או בקשו ממנו לסגור תריס. חלק מ-Pro, בחינם בתקופת הבטא.",
   "chatHereSetUp": "להגדרה",

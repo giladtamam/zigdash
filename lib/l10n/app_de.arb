@@ -1778,6 +1778,8 @@
   "chatAuditShow": "Anzeigen",
   "chatAuditEmpty": "Noch nichts.",
   "chatAuditFailed": "Dein Hub hat nicht geantwortet. Versuch es später noch einmal.",
+  "chatAuditSent": "gesetzt: {what}",
+  "chatAuditNotSent": "nicht gesendet",
   "chatHereTitle": "Chat mit deinem Zuhause ist da",
   "chatHereBody": "Verknüpfe dein Telegram-Konto und frag dein Zuhause „Ist die Hintertür offen?“ oder lass es einen Rollladen schließen. Teil von Pro, während der Beta kostenlos.",
   "chatHereSetUp": "Einrichten",

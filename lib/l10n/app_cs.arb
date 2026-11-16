@@ -1693,6 +1693,8 @@
   "chatAuditShow": "Zobrazit",
   "chatAuditEmpty": "Zatím nic.",
   "chatAuditFailed": "Váš hub neodpověděl. Zkuste to později.",
+  "chatAuditSent": "nastaveno: {what}",
+  "chatAuditNotSent": "neodesláno",
   "chatHereTitle": "Chat s vaší domácností je tady",
   "chatHereBody": "Propojte svůj účet Telegram a zeptejte se domu „jsou zadní dveře otevřené?“ nebo ho požádejte, ať zavře roletu. Součást Pro, během bety zdarma.",
   "chatHereSetUp": "Nastavit",

@@ -5866,6 +5866,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatAuditFailed => 'Your hub didn\'t answer. Try again later.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'set $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'couldn\'t send';
+
+  @override
   String get chatHereTitle => 'Chat with your home is here';
 
   @override

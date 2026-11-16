@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +44,22 @@ String chatRowReason(AppLocalizations l10n, ChatRowState state) => switch (state
       ChatRowState.noEngine => l10n.chatRowNoEngine,
       _ => l10n.chatRowReady,
     };
+
+/// One line of What Chat did: the Engine's `sent {"position":50}` read as
+/// "set position 50"; refusals keep the Engine's reason.
+String auditLine(AppLocalizations l10n, ChatAuditEntry e) {
+  final who = e.device ?? e.tool;
+  final sent = RegExp(r'^sent (\{.*\})$').firstMatch(e.result);
+  if (sent != null) {
+    try {
+      final command = jsonDecode(sent[1]!) as Map<String, dynamic>;
+      final what = [for (final c in command.entries) '${c.key.replaceAll('_', ' ')} ${c.value}'].join(', ');
+      return '$who: ${l10n.chatAuditSent(what)}';
+    } catch (_) {}
+  }
+  if (e.result == 'failed') return '$who: ${l10n.chatAuditNotSent}';
+  return '$who: ${e.result}';
+}
 
 /// Where the Chat row (and the dashboard's "Chat is here" card) goes: the
 /// Chat screen, or what the Home still needs first.
@@ -449,7 +466,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
                   for (final e in _audit!.take(50))
                     ListTile(
                       dense: true,
-                      title: Text([e.device ?? e.tool, e.result].join(': ')),
+                      title: Text(auditLine(l10n, e)),
                       subtitle: Text(when(e.at)),
                     ),
               ],

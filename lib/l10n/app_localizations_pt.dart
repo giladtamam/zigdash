@@ -5892,6 +5892,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get chatAuditFailed => 'Seu hub não respondeu. Tente mais tarde.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'definido: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'não enviado';
+
+  @override
   String get chatHereTitle => 'O chat com a sua casa chegou';
 
   @override

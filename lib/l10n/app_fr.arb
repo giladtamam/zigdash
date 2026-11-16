@@ -1703,6 +1703,8 @@
   "chatAuditShow": "Afficher",
   "chatAuditEmpty": "Rien pour le moment.",
   "chatAuditFailed": "Votre hub n'a pas répondu. Réessayez plus tard.",
+  "chatAuditSent": "réglé : {what}",
+  "chatAuditNotSent": "pas envoyé",
   "chatHereTitle": "Le chat avec votre maison est là",
   "chatHereBody": "Associez votre compte Telegram, puis demandez à votre maison « la porte de derrière est-elle ouverte ? » ou de fermer un volet. Inclus dans Pro, gratuit pendant la bêta.",
   "chatHereSetUp": "Configurer",

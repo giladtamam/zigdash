@@ -5870,6 +5870,14 @@ class AppLocalizationsNb extends AppLocalizations {
   String get chatAuditFailed => 'Huben svarte ikke. Prøv igjen senere.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'satt: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'ikke sendt';
+
+  @override
   String get chatHereTitle => 'Chat med hjemmet ditt er her';
 
   @override

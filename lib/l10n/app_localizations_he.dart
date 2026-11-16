@@ -5801,6 +5801,14 @@ class AppLocalizationsHe extends AppLocalizations {
   String get chatAuditFailed => 'הרכזת לא ענתה. אפשר לנסות שוב מאוחר יותר.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'הוגדר: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'לא נשלח';
+
+  @override
   String get chatHereTitle => 'צ\'אט עם הבית כבר כאן';
 
   @override

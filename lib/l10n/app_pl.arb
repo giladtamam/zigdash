@@ -1773,6 +1773,8 @@
   "chatAuditShow": "Pokaż",
   "chatAuditEmpty": "Na razie nic.",
   "chatAuditFailed": "Twój hub nie odpowiedział. Spróbuj później.",
+  "chatAuditSent": "ustawiono: {what}",
+  "chatAuditNotSent": "nie wysłano",
   "chatHereTitle": "Czat z domem już jest",
   "chatHereBody": "Połącz konto Telegram i zapytaj dom „czy tylne drzwi są otwarte?” albo każ mu zamknąć roletę. Część Pro, za darmo w czasie bety.",
   "chatHereSetUp": "Skonfiguruj",

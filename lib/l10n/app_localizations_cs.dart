@@ -5868,6 +5868,14 @@ class AppLocalizationsCs extends AppLocalizations {
   String get chatAuditFailed => 'Váš hub neodpověděl. Zkuste to později.';
 
   @override
+  String chatAuditSent(String what) {
+    return 'nastaveno: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'neodesláno';
+
+  @override
   String get chatHereTitle => 'Chat s vaší domácností je tady';
 
   @override

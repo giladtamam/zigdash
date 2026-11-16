@@ -1738,6 +1738,8 @@
   "chatAuditShow": "Mostrar",
   "chatAuditEmpty": "Nada ainda.",
   "chatAuditFailed": "Seu hub não respondeu. Tente mais tarde.",
+  "chatAuditSent": "definido: {what}",
+  "chatAuditNotSent": "não enviado",
   "chatHereTitle": "O chat com a sua casa chegou",
   "chatHereBody": "Ligue a sua conta do Telegram e pergunte à sua casa \"a porta das traseiras está aberta?\" ou peça-lhe para fechar um estore. Incluído no Pro, grátis durante a beta.",
   "chatHereSetUp": "Configurar",
