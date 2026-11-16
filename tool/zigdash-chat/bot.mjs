@@ -84,7 +84,7 @@ export const linkedId = (secret, chatId) => crypto.createHmac('sha256', secret).
 /**
  * [deps]: bindings, state (store.mjs), bot (telegram.mjs makeBot), agent
  * (made with onCost from costSink), metrics, mqtt, fetchImpl, now, and config:
- * {transport, botUsername, cap, budgetUsd, ticketSecret, verifier: {url, secret}|null,
+ * {transport, botUsername, cap, budgetUsd, timeZone, ticketSecret, verifier: {url, secret}|null,
  *  worker: {url, secret}|null}.
  */
 export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl = fetch, now = Date.now, config }) {

@@ -50,7 +50,7 @@ function newClient(homeId = HOME, { scope = 'control' } = {}) {
   };
 }
 
-async function world(t, { cap = 300, budgetUsd = 20 } = {}) {
+async function world(t, { cap = 300, budgetUsd = 20, timeZone } = {}) {
   const broker = await startBroker();
   const dir = tmpDir();
   const lines = [];
@@ -86,7 +86,7 @@ async function world(t, { cap = 300, budgetUsd = 20 } = {}) {
     ...configFromEnv({}),
     keysFile: path.join(dir, 'keys.json'), secretsFile: path.join(dir, 'secrets.json'), stateFile: path.join(dir, 'state.json'),
     transport: 'relay', telegramMode: 'webhook', httpPort: 0, httpHost: '127.0.0.1', internalPort: 0,
-    verifierUrl: 'http://verifier.test:8788', workerUrl: 'https://worker.test', cap, budgetUsd,
+    verifierUrl: 'http://verifier.test:8788', workerUrl: 'https://worker.test', cap, budgetUsd, timeZone,
   };
   loadServiceKey(config.secretsFile, { create: true });
   const claude = fakeClaude(SCRIPT);
@@ -525,6 +525,15 @@ test('pass ended: the notice survives a restart of the service (same state file)
   const { makeState } = await import('../store.mjs');
   const again = makeState(w.config.stateFile, { now: w.now });
   assert.ok(again.endedNotice(`${HOME}.${c.clientId}`) > 0);
+});
+
+test('pass ended: the date is the service\'s TIME_ZONE date', async (t) => {
+  // UTC+14: noon UTC is already the next day there, and in no host's own zone.
+  const w = await world(t, { timeZone: 'Pacific/Kiritimati' });
+  await w.link(newClient());
+  w.verifier.setHome(HOME, { entitled: false, ended_at: ENDED_AT });
+  await w.say(OWNER, 'how are things?');
+  assert.equal(w.lastTo(OWNER).text, LINK_TEXT.ended('15 Feb 2027'));
 });
 
 test('home-changed: drops the cached status and the notice; the next message asks the verifier again', async (t) => {

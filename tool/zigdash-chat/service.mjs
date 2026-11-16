@@ -106,7 +106,7 @@ export async function startService(config, { anthropic, mqttClient, fetchImpl = 
   chat = makeChat({
     bindings, state, bot, agent, metrics, mqtt: mqttClient, fetchImpl, now,
     config: {
-      transport: config.transport, botUsername: config.botUsername, cap: config.cap, budgetUsd: config.budgetUsd,
+      transport: config.transport, botUsername: config.botUsername, cap: config.cap, budgetUsd: config.budgetUsd, timeZone: config.timeZone,
       ticketSecret: secret('ticket', config.ticketSecretFile),
       verifier: config.verifierUrl && verifierSecret ? { url: config.verifierUrl.replace(/\/$/, ''), secret: verifierSecret } : null,
       worker: config.workerUrl && workerSecret ? { url: config.workerUrl.replace(/\/$/, ''), secret: workerSecret } : null,
