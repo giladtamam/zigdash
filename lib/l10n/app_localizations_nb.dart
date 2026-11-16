@@ -6001,4 +6001,97 @@ class AppLocalizationsNb extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'Det er ikke koden boten sendte. Gjenstående forsøk: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Har du en grunnleggerkode?';
+
+  @override
+  String get founderCodeLabel => 'Grunnleggerkode';
+
+  @override
+  String get founderCodeUse => 'Bruk koden';
+
+  @override
+  String get founderCodeAtHome =>
+      'Skriv den inn hjemme, med ZigDash Engine på huben: ZigDash setter opp fjernstyring over hjemmenettet.';
+
+  @override
+  String get founderCodeWrong =>
+      'Det er ikke en grunnleggerkode. Sjekk den og prøv igjen.';
+
+  @override
+  String get founderCodeUsed =>
+      'Den koden er allerede brukt. Hver kode virker én gang.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Fristen for å skrive inn koden har gått ut. Be om mer tid via Få hjelp.';
+
+  @override
+  String get founderCodeRevoked => 'Den koden er trukket tilbake.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Grunnleggerpasset ditt er på: fjernstyring og Chat for dette hjemmet til $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Grunnleggerpasset ditt slutter $date. Med ZigDash Pro beholder du fjernstyring og Chat, uten å sette opp noe på nytt.';
+  }
+
+  @override
+  String get founderGetPro => 'Skaff Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Grunnleggerpasset ditt sluttet $date. ZigDash Pro gir deg fjernstyring og Chat tilbake, uten å sette opp noe på nytt.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Grunnleggerpasset ditt er slutt. ZigDash Pro gir deg fjernstyring og Chat tilbake, uten å sette opp noe på nytt.';
+
+  @override
+  String get founderDeleted =>
+      'Grunnleggerpasset for dette hjemmet er slutt, og fjernstyringen er fjernet.';
+
+  @override
+  String get remoteRemoved =>
+      'Fjernstyringen for dette hjemmet er fjernet fra reléet.';
+
+  @override
+  String get founderSetUpWithPro => 'Sett opp med Pro';
+
+  @override
+  String get founderUseProTitle => 'Bruke Pro-kjøpet ditt for dette hjemmet?';
+
+  @override
+  String get founderUseProBody =>
+      'Fjernstyring og Chat for dette hjemmet flyttes til Pro-kjøpet ditt: de samme telefonene og Chat-koblingene, ingenting å sette opp på nytt. Ett kjøp dekker ett hjem.';
+
+  @override
+  String get founderUsePro => 'Bruk Pro for dette hjemmet';
+
+  @override
+  String get founderUpgraded => 'Dette hjemmet bruker nå Pro-kjøpet ditt.';
+
+  @override
+  String get founderUpgradeTaken =>
+      'Det kjøpet hører allerede til et annet hjem.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Kunne ikke flytte hjemmet til Pro-kjøpet ditt. Prøv igjen senere.';
+
+  @override
+  String get remoteHubRefused => 'Reléet avviste innloggingen til huben';
+
+  @override
+  String get chatRowPassEnded =>
+      'Grunnleggerpasset er slutt: koblinger kan fortsatt fjernes';
+
+  @override
+  String get chatFailPassEnded =>
+      'Grunnleggerpasset for dette hjemmet er slutt, så ingen nye Telegram-kontoer kan kobles til.';
 }

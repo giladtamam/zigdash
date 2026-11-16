@@ -6005,4 +6005,97 @@ class AppLocalizationsRu extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'Это не тот код, который прислал бот. Осталось попыток: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Есть код основателя?';
+
+  @override
+  String get founderCodeLabel => 'Код основателя';
+
+  @override
+  String get founderCodeUse => 'Применить код';
+
+  @override
+  String get founderCodeAtHome =>
+      'Введите его дома, когда на хабе есть ZigDash Engine: ZigDash настроит удалённое управление через домашнюю сеть.';
+
+  @override
+  String get founderCodeWrong =>
+      'Это не код основателя. Проверьте его и попробуйте снова.';
+
+  @override
+  String get founderCodeUsed =>
+      'Этот код уже использован. Каждый код действует один раз.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Срок для ввода этого кода истёк. Попросите больше времени через «Получить помощь».';
+
+  @override
+  String get founderCodeRevoked => 'Этот код отозван.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Пропуск основателя активен: удалённое управление и Chat для этого дома до $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Пропуск основателя заканчивается $date. С ZigDash Pro удалённое управление и Chat останутся, ничего не нужно настраивать заново.';
+  }
+
+  @override
+  String get founderGetPro => 'Получить Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Пропуск основателя закончился $date. ZigDash Pro вернёт удалённое управление и Chat, ничего не нужно настраивать заново.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Пропуск основателя закончился. ZigDash Pro вернёт удалённое управление и Chat, ничего не нужно настраивать заново.';
+
+  @override
+  String get founderDeleted =>
+      'Пропуск основателя для этого дома закончился, и его удалённое управление удалено.';
+
+  @override
+  String get remoteRemoved =>
+      'Удалённое управление этого дома удалено с ретранслятора.';
+
+  @override
+  String get founderSetUpWithPro => 'Настроить с Pro';
+
+  @override
+  String get founderUseProTitle => 'Использовать покупку Pro для этого дома?';
+
+  @override
+  String get founderUseProBody =>
+      'Удалённое управление и Chat этого дома перейдут на вашу покупку Pro: те же телефоны и привязки Chat, ничего не нужно настраивать заново. Одна покупка — один дом.';
+
+  @override
+  String get founderUsePro => 'Использовать Pro для этого дома';
+
+  @override
+  String get founderUpgraded =>
+      'Этот дом теперь работает по вашей покупке Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'Эта покупка уже принадлежит другому дому.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Не удалось перевести дом на покупку Pro. Попробуйте позже.';
+
+  @override
+  String get remoteHubRefused => 'Ретранслятор отклонил вход хаба';
+
+  @override
+  String get chatRowPassEnded =>
+      'Пропуск основателя закончился: привязки ещё можно удалить';
+
+  @override
+  String get chatFailPassEnded =>
+      'Пропуск основателя для этого дома закончился, поэтому новый аккаунт Telegram привязать нельзя.';
 }

@@ -6000,4 +6000,96 @@ class AppLocalizationsCs extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'To není kód, který poslal bot. Zbývající pokusy: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Máte zakladatelský kód?';
+
+  @override
+  String get founderCodeLabel => 'Zakladatelský kód';
+
+  @override
+  String get founderCodeUse => 'Použít kód';
+
+  @override
+  String get founderCodeAtHome =>
+      'Zadejte ho doma, s ZigDash Engine na hubu: ZigDash nastaví dálkové ovládání přes domácí síť.';
+
+  @override
+  String get founderCodeWrong =>
+      'To není zakladatelský kód. Zkontrolujte ho a zkuste to znovu.';
+
+  @override
+  String get founderCodeUsed =>
+      'Tento kód už byl použit. Každý kód platí jednou.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Lhůta pro zadání tohoto kódu uplynula. O další čas požádejte přes Získat pomoc.';
+
+  @override
+  String get founderCodeRevoked => 'Tento kód byl zrušen.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Zakladatelská propustka je aktivní: dálkové ovládání a Chat pro tento domov do $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Zakladatelská propustka končí $date. Se ZigDash Pro dálkové ovládání a Chat zůstanou, bez nového nastavování.';
+  }
+
+  @override
+  String get founderGetPro => 'Získat Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Zakladatelská propustka skončila $date. ZigDash Pro vrátí dálkové ovládání a Chat, bez nového nastavování.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Zakladatelská propustka skončila. ZigDash Pro vrátí dálkové ovládání a Chat, bez nového nastavování.';
+
+  @override
+  String get founderDeleted =>
+      'Zakladatelská propustka tohoto domova skončila a jeho dálkové ovládání bylo odstraněno.';
+
+  @override
+  String get remoteRemoved =>
+      'Dálkové ovládání tohoto domova bylo z relé odstraněno.';
+
+  @override
+  String get founderSetUpWithPro => 'Nastavit s Pro';
+
+  @override
+  String get founderUseProTitle => 'Použít nákup Pro pro tento domov?';
+
+  @override
+  String get founderUseProBody =>
+      'Dálkové ovládání a Chat tohoto domova přejdou na váš nákup Pro: stejné telefony i propojení Chatu, nic se znovu nenastavuje. Jeden nákup platí pro jeden domov.';
+
+  @override
+  String get founderUsePro => 'Použít Pro pro tento domov';
+
+  @override
+  String get founderUpgraded => 'Tento domov teď běží na vašem nákupu Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'Tento nákup už patří jinému domovu.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Domov se nepodařilo převést na nákup Pro. Zkuste to později.';
+
+  @override
+  String get remoteHubRefused => 'Relé odmítlo přihlášení hubu';
+
+  @override
+  String get chatRowPassEnded =>
+      'Zakladatelská propustka skončila: propojení lze stále odebrat';
+
+  @override
+  String get chatFailPassEnded =>
+      'Zakladatelská propustka tohoto domova skončila, nový účet Telegram proto nelze propojit.';
 }

@@ -6024,4 +6024,96 @@ class AppLocalizationsNl extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'Dat is niet de code van de bot. Pogingen over: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Heb je een oprichterscode?';
+
+  @override
+  String get founderCodeLabel => 'Oprichterscode';
+
+  @override
+  String get founderCodeUse => 'Code gebruiken';
+
+  @override
+  String get founderCodeAtHome =>
+      'Voer hem thuis in, met ZigDash Engine op je hub: ZigDash zet bediening op afstand op via je thuisnetwerk.';
+
+  @override
+  String get founderCodeWrong =>
+      'Dat is geen oprichterscode. Controleer hem en probeer opnieuw.';
+
+  @override
+  String get founderCodeUsed =>
+      'Die code is al gebruikt. Elke code werkt één keer.';
+
+  @override
+  String get founderCodeDeadline =>
+      'De datum om die code in te voeren is voorbij. Vraag meer tijd via Hulp krijgen.';
+
+  @override
+  String get founderCodeRevoked => 'Die code is ingetrokken.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Je oprichterspas is actief: bediening op afstand en Chat voor dit huis tot $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Je oprichterspas loopt af op $date. Met ZigDash Pro houd je bediening op afstand en Chat, zonder iets opnieuw in te stellen.';
+  }
+
+  @override
+  String get founderGetPro => 'Pro nemen';
+
+  @override
+  String founderEnded(String date) {
+    return 'Je oprichterspas is afgelopen op $date. ZigDash Pro brengt bediening op afstand en Chat terug, zonder iets opnieuw in te stellen.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Je oprichterspas is afgelopen. ZigDash Pro brengt bediening op afstand en Chat terug, zonder iets opnieuw in te stellen.';
+
+  @override
+  String get founderDeleted =>
+      'De oprichterspas van dit huis is afgelopen en de bediening op afstand is verwijderd.';
+
+  @override
+  String get remoteRemoved =>
+      'De bediening op afstand van dit huis is van de relay verwijderd.';
+
+  @override
+  String get founderSetUpWithPro => 'Instellen met Pro';
+
+  @override
+  String get founderUseProTitle => 'Je Pro-aankoop voor dit huis gebruiken?';
+
+  @override
+  String get founderUseProBody =>
+      'Bediening op afstand en Chat van dit huis gaan over op je Pro-aankoop: dezelfde telefoons en Chat-koppelingen, niets opnieuw in te stellen. Eén aankoop dekt één huis.';
+
+  @override
+  String get founderUsePro => 'Pro voor dit huis gebruiken';
+
+  @override
+  String get founderUpgraded => 'Dit huis draait nu op je Pro-aankoop.';
+
+  @override
+  String get founderUpgradeTaken => 'Die aankoop hoort al bij een ander huis.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Kon dit huis niet overzetten naar je Pro-aankoop. Probeer het later opnieuw.';
+
+  @override
+  String get remoteHubRefused => 'De relay weigerde de login van de hub';
+
+  @override
+  String get chatRowPassEnded =>
+      'Oprichterspas afgelopen: koppelingen kun je nog verwijderen';
+
+  @override
+  String get chatFailPassEnded =>
+      'De oprichterspas van dit huis is afgelopen, dus er kan geen nieuw Telegram-account worden gekoppeld.';
 }

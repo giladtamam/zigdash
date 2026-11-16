@@ -6015,4 +6015,96 @@ class AppLocalizationsPl extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'To nie jest kod wysłany przez bota. Pozostałe próby: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Masz kod założyciela?';
+
+  @override
+  String get founderCodeLabel => 'Kod założyciela';
+
+  @override
+  String get founderCodeUse => 'Użyj kodu';
+
+  @override
+  String get founderCodeAtHome =>
+      'Wpisz go w domu, z ZigDash Engine na hubie: ZigDash ustawi sterowanie zdalne przez sieć domową.';
+
+  @override
+  String get founderCodeWrong =>
+      'To nie jest kod założyciela. Sprawdź go i spróbuj ponownie.';
+
+  @override
+  String get founderCodeUsed =>
+      'Ten kod został już użyty. Każdy kod działa raz.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Termin na wpisanie tego kodu minął. Poproś o więcej czasu w Uzyskaj pomoc.';
+
+  @override
+  String get founderCodeRevoked => 'Ten kod został wycofany.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Przepustka założyciela jest aktywna: sterowanie zdalne i Chat dla tego domu do $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Przepustka założyciela kończy się $date. Z ZigDash Pro zachowasz sterowanie zdalne i Chat, bez ponownej konfiguracji.';
+  }
+
+  @override
+  String get founderGetPro => 'Kup Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Przepustka założyciela skończyła się $date. ZigDash Pro przywróci sterowanie zdalne i Chat, bez ponownej konfiguracji.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Przepustka założyciela się skończyła. ZigDash Pro przywróci sterowanie zdalne i Chat, bez ponownej konfiguracji.';
+
+  @override
+  String get founderDeleted =>
+      'Przepustka założyciela tego domu się skończyła, a jego sterowanie zdalne zostało usunięte.';
+
+  @override
+  String get remoteRemoved =>
+      'Sterowanie zdalne tego domu zostało usunięte z przekaźnika.';
+
+  @override
+  String get founderSetUpWithPro => 'Skonfiguruj z Pro';
+
+  @override
+  String get founderUseProTitle => 'Użyć zakupu Pro dla tego domu?';
+
+  @override
+  String get founderUseProBody =>
+      'Sterowanie zdalne i Chat tego domu przejdą na Twój zakup Pro: te same telefony i powiązania Chatu, nic do ponownej konfiguracji. Jeden zakup obejmuje jeden dom.';
+
+  @override
+  String get founderUsePro => 'Użyj Pro dla tego domu';
+
+  @override
+  String get founderUpgraded => 'Ten dom działa teraz na Twoim zakupie Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'Ten zakup należy już do innego domu.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Nie udało się przenieść domu na Twój zakup Pro. Spróbuj później.';
+
+  @override
+  String get remoteHubRefused => 'Przekaźnik odrzucił logowanie huba';
+
+  @override
+  String get chatRowPassEnded =>
+      'Przepustka założyciela się skończyła: powiązania można nadal usunąć';
+
+  @override
+  String get chatFailPassEnded =>
+      'Przepustka założyciela tego domu się skończyła, więc nie można powiązać nowego konta Telegram.';
 }

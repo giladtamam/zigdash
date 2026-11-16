@@ -6029,4 +6029,96 @@ class AppLocalizationsEs extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'Ese no es el código que envió el bot. Intentos restantes: $count.';
   }
+
+  @override
+  String get founderCodeAsk => '¿Tienes un código de fundador?';
+
+  @override
+  String get founderCodeLabel => 'Código de fundador';
+
+  @override
+  String get founderCodeUse => 'Usar el código';
+
+  @override
+  String get founderCodeAtHome =>
+      'Introdúcelo en casa, con ZigDash Engine en tu hub: ZigDash configura el control remoto por tu red doméstica.';
+
+  @override
+  String get founderCodeWrong =>
+      'Ese no es un código de fundador. Revísalo e inténtalo de nuevo.';
+
+  @override
+  String get founderCodeUsed =>
+      'Ese código ya se usó. Cada código vale una vez.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Ya pasó la fecha para introducir ese código. Pide más tiempo desde Obtener ayuda.';
+
+  @override
+  String get founderCodeRevoked => 'Ese código se retiró.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Tu pase de fundador está activo: control remoto y Chat para esta casa hasta el $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Tu pase de fundador termina el $date. Con ZigDash Pro conservas el control remoto y Chat, sin volver a configurar nada.';
+  }
+
+  @override
+  String get founderGetPro => 'Obtener Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Tu pase de fundador terminó el $date. ZigDash Pro recupera el control remoto y Chat, sin volver a configurar nada.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Tu pase de fundador terminó. ZigDash Pro recupera el control remoto y Chat, sin volver a configurar nada.';
+
+  @override
+  String get founderDeleted =>
+      'El pase de fundador de esta casa terminó y su control remoto se eliminó.';
+
+  @override
+  String get remoteRemoved =>
+      'El control remoto de esta casa se eliminó del relé.';
+
+  @override
+  String get founderSetUpWithPro => 'Configurar con Pro';
+
+  @override
+  String get founderUseProTitle => '¿Usar tu compra de Pro para esta casa?';
+
+  @override
+  String get founderUseProBody =>
+      'El control remoto y Chat de esta casa pasan a tu compra de Pro: los mismos teléfonos y vínculos de Chat, sin volver a configurar nada. Una compra cubre una casa.';
+
+  @override
+  String get founderUsePro => 'Usar Pro para esta casa';
+
+  @override
+  String get founderUpgraded => 'Esta casa ya funciona con tu compra de Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'Esa compra ya pertenece a otra casa.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'No se pudo pasar esta casa a tu compra de Pro. Inténtalo más tarde.';
+
+  @override
+  String get remoteHubRefused => 'El relé rechazó el inicio de sesión del hub';
+
+  @override
+  String get chatRowPassEnded =>
+      'El pase de fundador terminó: aún puedes quitar vínculos';
+
+  @override
+  String get chatFailPassEnded =>
+      'El pase de fundador de esta casa terminó, así que no se pueden vincular cuentas de Telegram nuevas.';
 }
