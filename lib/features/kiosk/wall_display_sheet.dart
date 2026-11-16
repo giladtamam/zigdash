@@ -71,7 +71,14 @@ class WallDisplaySheet extends ConsumerWidget {
       maxChildSize: 0.95,
       builder: (_, controller) => ListView(
         controller: controller,
-        padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
+        // 3.6.3: clear of the system bars below, such as One UI's tablet
+        // taskbar, which a bottom sheet doesn't pad for.
+        padding: EdgeInsets.fromLTRB(
+          0,
+          16,
+          0,
+          24 + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           ListTile(
             title: Text(l10n.wallSheetTitle, style: theme.textTheme.titleLarge),

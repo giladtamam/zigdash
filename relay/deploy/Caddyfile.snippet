@@ -3,6 +3,10 @@ relay.zigdash.app {
 	handle /mqtt* {
 		reverse_proxy zigdash-relay-mosquitto-1:9001
 	}
+	# The verifier's internal routes live on another port (8788); never here.
+	handle /v1/internal/* {
+		respond 404
+	}
 	handle /v1/* {
 		reverse_proxy zigdash-relay-verifier-1:8787
 	}

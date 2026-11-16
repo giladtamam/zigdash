@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -52,6 +55,14 @@ ProStatus _parse(Object? s) => switch (s) {
 /// only exist where Pro is sold use this instead of popping in (3.4.4).
 const proOfferedKey = 'pro_offered';
 
+/// "1" once Play said Pro is owned on this phone, removed when Play says it
+/// isn't: a moment without Play (offline, the billing service restarting,
+/// a fresh install before Play has synced) then can't hide what was bought.
+const proOwnedKey = 'pro_owned';
+
+/// Waits before asking Play again after it didn't answer.
+const proRetryDelays = [Duration(seconds: 3), Duration(seconds: 10), Duration(seconds: 30)];
+
 /// Where the Pro screen was opened from, for the purchase events: set by
 /// `openPro`, read when Unlock is tapped.
 final proFromProvider = StateProvider<ProFrom?>((ref) => null);
@@ -60,29 +71,80 @@ final proFromProvider = StateProvider<ProFrom?>((ref) => null);
 /// so, and shows the price Play charges now.
 final proSaleEndedProvider = StateProvider<bool>((ref) => false);
 
-/// Play's answer: asked once at start, and again after a purchase.
+/// Play's answer: asked at start, again whenever the app comes back while
+/// Pro isn't unlocked, after a purchase, and from Restore purchase. When Play
+/// doesn't answer, the last known answer stands and Play is asked again after
+/// [proRetryDelays].
 class ProBilling extends Notifier<ProStatus> {
+  Timer? _retry;
+  int _tries = 0;
+
   @override
   ProStatus build() {
-    _ask('status');
-    return ProStatus.unavailable;
+    AppLifecycleListener? life;
+    try {
+      life = AppLifecycleListener(onResume: () {
+        if (state != ProStatus.unlocked) unawaited(refresh());
+      });
+    } catch (_) {
+      // No Flutter binding (plain unit tests): no resume to listen to.
+    }
+    ref.onDispose(() {
+      _retry?.cancel();
+      life?.dispose();
+    });
+    unawaited(Future.microtask(() => _ask('status')));
+    bool owned;
+    try {
+      owned = ref.read(sharedPreferencesProvider).getString(proOwnedKey) == '1';
+    } catch (_) {
+      owned = false;
+    }
+    return owned ? ProStatus.unlocked : ProStatus.unavailable;
   }
 
-  /// Play's raw answer, or null where there is no Play to ask.
+  /// Asks Play again now (Restore purchase, the app coming back) and returns
+  /// its raw answer ("error" when it didn't answer; the status then stays).
+  Future<String?> refresh() async {
+    _retry?.cancel();
+    _tries = 0;
+    return _ask('status');
+  }
+
+  /// Play's raw answer, or null where there is no Play to ask. "error" (and
+  /// a timeout or a channel error) leaves the status as it was and tries
+  /// again later.
   Future<String?> _ask(String method, [Object? arguments]) async {
     String? answer;
     try {
-      answer = await _billing.invokeMethod<String>(method, arguments);
-      state = _parse(answer);
-    } on PlatformException {
-      state = ProStatus.unavailable;
+      answer = await _billing
+          .invokeMethod<String>(method, arguments)
+          .timeout(const Duration(seconds: 20));
     } on MissingPluginException {
-      state = ProStatus.unavailable;
+      answer = 'unavailable';
+    } on PlatformException {
+      answer = 'error';
+    } on TimeoutException {
+      answer = 'error';
     }
+    if (answer == 'error') {
+      if (method == 'status' && _tries < proRetryDelays.length) {
+        _retry?.cancel();
+        _retry = Timer(proRetryDelays[_tries++], () => unawaited(_ask('status')));
+      }
+      return answer;
+    }
+    if (method == 'status') _tries = 0;
+    state = _parse(answer);
     try {
-      await ref
-          .read(sharedPreferencesProvider)
-          .setString(proOfferedKey, state == ProStatus.unavailable ? '0' : '1');
+      final prefs = ref.read(sharedPreferencesProvider);
+      await prefs.setString(proOfferedKey, state == ProStatus.unavailable ? '0' : '1');
+      if (state == ProStatus.unlocked) {
+        await prefs.setString(proOwnedKey, '1');
+      } else if (answer == 'locked') {
+        // Play says it isn't owned (a refund, another account): forget it.
+        await prefs.remove(proOwnedKey);
+      }
     } catch (_) {
       // Preferences are a convenience here; Play's answer stands without.
     }

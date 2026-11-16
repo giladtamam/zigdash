@@ -1,6 +1,6 @@
 # Your home in a chat: a messaging assistant for ZigDash Pro (plan)
 
-Drafted 2026-11-12, revision 4 after three independent reviews (revisions 1–4 scored 5, 7, 8 and 9 out of 10). Revision 5.1 (2026-11-15, scored 9/10) adds the Shelly AI Assistant as the first big competitor and a proposed change of shape (a small free cap in the app for everyone, the bigger cap in Plus); see [Competitor: Shelly](#competitor-shelly-ai-assistant-2026-11-15). Status: plan, not built; the early-access read ([assistant-early-access.md](assistant-early-access.md), ~Jan 13) still decides whether it is built. Working name **ZigDash Chat** ("Chat with your home" in the app).
+Drafted 2026-11-12, revision 4 after three independent reviews (revisions 1–4 scored 5, 7, 8 and 9 out of 10). Revision 6 (2026-11-15) records the owner's decisions: start now, Telegram first, Pro owners as a free beta; see [Revision 6](#revision-6-decisions-of-2026-11-15-start-now-telegram-first). Revision 5.1 (2026-11-15, scored 9/10) adds the Shelly AI Assistant as the first big competitor and a proposed change of shape (a small free cap in the app for everyone, the bigger cap in Plus); see [Competitor: Shelly](#competitor-shelly-ai-assistant-2026-11-15). Status: plan, not built; the early-access read ([assistant-early-access.md](assistant-early-access.md), ~Jan 13) still decides whether it is built. Working name **ZigDash Chat** ("Chat with your home" in the app).
 Words follow [CONTEXT.md](../../CONTEXT.md): **Home**, **Engine**, **Automation**, **Alert**, **AI client** (from `docs/design/mcp-engine.md` on the local branch `docs/mcp-engine`).
 
 ## The idea in one paragraph
@@ -101,6 +101,90 @@ interactions", bundled with a longer event log, failure detection, statistics, m
 
 **What does not change:** no build before the early-access read (≥ 20 counted joins, ≥ 10% of shown, ≥ 40%
 price Yes/Maybe, ~Jan 13), and no unlocking from a chat.
+
+## Revision 6: decisions of 2026-11-15 (start now, Telegram first)
+
+Rev 6.1 (scored 9/10) after review (rev 6 scored 8/10): long polling for milestone 1, separate commands, the founders'
+in-app remote and timing, the card wording, a hand-set control list, exposes-based read-only kinds, the
+audit log and revoke test, a concrete replay test, keys protected from milestone 1, hand-installed tools.
+
+
+The owner answered open questions 0 and 1 on 2026-11-15:
+- **Start now.** The build no longer waits for February or for the early-access read (~Jan 13); the read
+  still runs and is reported, but it doesn't gate the start.
+- **Telegram first**, on **@ZigDashHomeBot** (created 2026-11-14 for early access). WhatsApp stays phase 5,
+  after Meta business verification, which needs a registered business the owner doesn't have yet.
+- **Who:** Pro owners, as a **free beta** ("free during the beta", 300 messages a Home a month). Plus, the
+  paid tier, stays phase 6; earlier Pro buyers get Plus free, as the profit plan (§5) promises. The in-app
+  shape of rev 5.1 stays an option for after the read; it shares the tools and the chat core with this.
+
+**One bot, one webhook.** Telegram delivers a bot's updates to one webhook. Today the support Worker holds
+@ZigDashHomeBot's webhook (`/v1/tg/<secret>`, tool/support-worker/worker.js) for the early-access
+`/start early_c|early_n` flow. So:
+- **Milestone 1 uses a separate development bot** (a second bot the owner creates in BotFather, e.g.
+  `@ZigDashHomeDevBot`); the live bot and the early-access list are untouched.
+- **Milestone 1 uses long polling** (`getUpdates`, as tool/chat-poc/telegram.mjs does), so a slow tool
+  loop can never make Telegram resend an update.
+- **When the beta reaches users (phase 2/3),** the webhook moves to `zigdash-chat`, which handles
+  `/start early_c|early_n` by calling the Worker's early-access logic over HTTPS with a server secret, so
+  joining the list behaves exactly as today. The webhook answers 200 at once, does the work in the
+  background and drops repeated `update_id`s, so a resent update can't repeat an action. **Separate
+  commands:** `/stop` keeps meaning "take me off the early-access list"; unlinking a Home is `/unlink`
+  (with a confirm), and a test checks that `/stop` never unlinks. Switched only after both flows pass on
+  the dev bot.
+
+**The 20 early-access founders.** They were promised "free for 3 months, remote access included" if it is
+built. They may not own Pro, and the relay verifier accepts only a Pro purchase
+(relay/verifier/server.mjs `purchaseValid`). The beta opens to Pro owners first; founders are invited when
+a founder entitlement exists (a one-time invite code from the early-access list, bound to a Home at link
+time, valid 3 months from the invite, checked by the verifier next to Pro). "Remote access included" means
+**remote in the app too**: the founder pass unlocks the dashboard's remote control for those 3 months, not
+only chat over the relay. **Founders are invited at the same time as Pro owners**, not after. Their 3
+months start at the invite. This gets its own short plan in phase 3.
+- **The card's wording changes now:** "We're deciding whether to build it" becomes "We're building it" in
+  the next app release (3.6.3 or the one after), 13 languages, since the build has started.
+
+**Milestone 1: the owner's home, end to end, nobody else.**
+- Engine: the read and safe-control tools from `spike/mcp` built for real (`home_summary`, `list_devices`,
+  `get_device`, `get_history`, `set_device`, `set_group`), one Chat client with its own token hash and
+  per-client sealing key (both ways, replay window); Chat request and response topics added to the relay
+  forwarding under opaque ids. **Installed by hand on the owner's hub only**, by replacing
+  `zigdash-engine.js` itself with a build whose version is above any release (`9.0.0-chat`): a second file
+  would run two Engines and fire every automation and alert twice, and an ordinary version would be
+  overwritten by the app's silent update (`_updateIfOutdated`, lib/engine/engine_providers.dart). No app
+  release ships these tools until phase 3. Acceptance includes: after opening the app at home, the hub
+  still reports `9.0.0-chat`.
+  - **Read-only kinds from Zigbee2MQTT's exposes**, not names: any device exposing a `lock`, a `valve`
+    (or a `state` on a device whose definition is a valve), or `warning` / siren features is read-only,
+    whatever it is called (replaces the POC's name regex, tool/chat-poc/home.mjs:5).
+  - **A control list set by hand** on the hub for this milestone (the app screen comes in phase 3): only
+    the devices on it can be changed; everything else, including plugs not on it, is read-only. A plug on
+    a freezer or a heater is simply left off the list.
+  - **Audit log** on the Engine: every Chat action and every refused or rejected request (time, tool,
+    device, result), retained on the hub's broker, readable from the server CLI.
+  - **Revoke:** deleting the Chat client on the Engine refuses every later request.
+- `zigdash-chat` in its own container on grocery-vps: Telegram adapter (dev bot), Claude Haiku with
+  prompt caching, 6 tool calls / 20 s cap, confirmations for actions touching more than 5 devices in code,
+  answers only the owner's chat id; **anyone else gets nothing back and nothing of theirs is logged**.
+  The Home is linked by hand for this milestone (a CLI on the server writes the token and key).
+- **Keys from day one:** the Chat token and sealing key live in a file outside the container image, mode
+  600, encrypted with a service key kept in a separate secrets file; never in logs, never in the image,
+  never in git.
+- **Acceptance, from Telegram on mobile data (away from home):** "close the office shutter" closes it
+  through the relay; "is the front door closed?" answers from live state; "turn off the valve" (or a lock)
+  is refused with "Open ZigDash to do that"; a plug left off the control list is refused; "turn off
+  everything" asks first, touches only listed devices, and only "yes" in that chat runs it; **replay:** a
+  script on the server resends a captured sealed request after 5 s and after 3 minutes, and the Engine
+  rejects both and writes them to the audit log; **revoke:** after deleting the Chat client on the
+  Engine, a message gets "not linked" and the Engine refuses the request; a message from another
+  Telegram account gets no reply and leaves no log line; median reply under 8 s over 20 messages; model
+  cost per message logged (counter only).
+- Not in milestone 1: the app's Chat screen, linking codes, family members, the control list UI, Alerts,
+  the policy text. They follow in phases 1–3 as planned.
+
+**Before anyone but the owner links:** the privacy section above (policy, Data Safety, DPIA) and relay
+ticket 11 (hoster DPA, EU representative, the owner's work with lead time). Milestone 1 sends only the
+owner's own home data.
 
 ## Step 0: demand test (in a regular release, ~1 day, can run now)
 

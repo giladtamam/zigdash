@@ -1588,7 +1588,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'Adicione os complementos Mosquitto broker e Zigbee2MQTT, depois entre pelo ZigDash com seu login do Home Assistant.';
+      'Adicione os aplicativos Mosquitto broker e Zigbee2MQTT (Configurações › Aplicativos), depois entre pelo ZigDash com seu login do Home Assistant.';
 
   @override
   String get noHubRadio =>
@@ -4136,6 +4136,20 @@ class AppLocalizationsPt extends AppLocalizations {
       'Um só pagamento, sem subscrição. Comprou noutro telemóvel com a mesma conta Google? Desbloqueia-se automaticamente.';
 
   @override
+  String get proRestore => 'Restaurar compra';
+
+  @override
+  String get proRestored => 'O Pro está desbloqueado neste telefone.';
+
+  @override
+  String get proRestoreNone =>
+      'O Google Play não tem nenhuma compra do Pro nesta conta Google. Comprou com outra conta? Troque de conta na Play Store e tente novamente.';
+
+  @override
+  String get proRestoreFailed =>
+      'Não foi possível contactar o Google Play. Tente novamente daqui a pouco.';
+
+  @override
   String get historyNotRecorded =>
       'Só são gravados os números que aparecem num painel. Adicione este como bloco para começar o histórico.';
 
@@ -5587,7 +5601,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'Envie uma mensagem como \"fecha a persiana do escritório\" ou \"a porta dos fundos está aberta?\" e a sua casa responde. Estamos decidindo se vamos criar isto. Se sim, os primeiros $count inscritos terão grátis por 3 meses, com acesso remoto incluído.';
+    return 'Envie uma mensagem como \"fecha a persiana do escritório\" ou \"a porta dos fundos está aberta?\" e a sua casa responde. Já está disponível para quem tem ZigDash Pro. Os primeiros $count inscritos recebem um código de fundador: grátis por 3 meses, com acesso remoto incluído.';
   }
 
   @override
@@ -5624,12 +5638,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'Você é o nº $position da lista: um dos primeiros $count. Se criarmos, você terá grátis por 3 meses.';
+    return 'Você é o n.º $position da lista: entre os primeiros $count. Vai receber um código de fundador: chat e acesso remoto, grátis por 3 meses.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'Você é o nº $position da lista. As primeiras $count vagas já foram preenchidas; você saberá primeiro quando estiver pronto.';
+    return 'Você é o n.º $position da lista. Os primeiros $count lugares estão ocupados. O chat já está disponível para quem tem ZigDash Pro.';
   }
 
   @override
@@ -5805,4 +5819,315 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get historyUsePhoneInstead => 'Usar este celular';
+
+  @override
+  String get chatTitle => 'Chat (beta)';
+
+  @override
+  String get chatRowReady => 'Converse com sua casa pelo Telegram';
+
+  @override
+  String get chatRowNoPro => 'Parte do ZigDash Pro (não incluído no teste)';
+
+  @override
+  String get chatRowNoRemote => 'Ative o controle remoto primeiro';
+
+  @override
+  String get chatRowNoEngine => 'Precisa do ZigDash Engine no seu hub';
+
+  @override
+  String get chatIntroTitle => 'Converse com sua casa pelo Telegram';
+
+  @override
+  String get chatIntroBody =>
+      'Envie ao bot ZigDash Home no Telegram uma mensagem como \"a porta dos fundos está aberta?\" ou \"fecha a persiana do escritório\", e sua casa responde. Ele lê o que seus dispositivos informam e o histórico deles; com Ler e controlar, também pode acionar as luzes, persianas, interruptores, tomadas e termostatos que você escolher.';
+
+  @override
+  String get chatIntroNever =>
+      'Ele nunca abre, fecha ou altera fechaduras, válvulas ou sirenes, e nunca muda automações ou configurações: para isso, ele pede que você abra o ZigDash.';
+
+  @override
+  String get chatIntroBeta =>
+      'Grátis durante o beta: até 300 mensagens por mês para esta casa.';
+
+  @override
+  String get chatIntroWho =>
+      'Quem lê as mensagens: o Telegram, que as transporta; nosso servidor na UE, que guarda a conversa por 24 horas; e a Anthropic (Claude) nos EUA, que escreve as respostas. O que o Chat lê sobre sua casa segue o mesmo caminho.';
+
+  @override
+  String get chatPolicy => 'Como o Chat trata seus dados';
+
+  @override
+  String get chatLinkedTitle => 'Contas vinculadas';
+
+  @override
+  String get chatLinkedNone => 'Nenhuma conta do Telegram vinculada ainda.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'Não foi possível carregar as contas vinculadas. Verifique a conexão com a internet.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · último uso $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · ainda não usado';
+  }
+
+  @override
+  String get chatRemove => 'Remover';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'Remover $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'Esta conta do Telegram não poderá mais acessar sua casa, e a conversa dela é apagada.';
+
+  @override
+  String get chatRemovedLater =>
+      'Removida. Seu hub a esquece na próxima vez que o ZigDash estiver aberto em casa.';
+
+  @override
+  String get chatAuditTitle => 'O que o Chat fez';
+
+  @override
+  String get chatAuditShow => 'Mostrar';
+
+  @override
+  String get chatAuditEmpty => 'Nada ainda.';
+
+  @override
+  String get chatAuditFailed => 'Seu hub não respondeu. Tente mais tarde.';
+
+  @override
+  String chatAuditSent(String what) {
+    return 'definido: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'não enviado';
+
+  @override
+  String get chatHereTitle => 'O chat com a sua casa chegou';
+
+  @override
+  String get chatHereBody =>
+      'Ligue a sua conta do Telegram e pergunte à sua casa \"a porta das traseiras está aberta?\" ou peça-lhe para fechar um estore. Incluído no Pro, grátis durante a beta.';
+
+  @override
+  String get chatHereSetUp => 'Configurar';
+
+  @override
+  String get chatHereNotNow => 'Agora não';
+
+  @override
+  String get chatLinkNew => 'Vincular uma conta do Telegram';
+
+  @override
+  String get chatLinkAnother => 'Vincular outra conta do Telegram';
+
+  @override
+  String get chatScopeRead => 'Ler';
+
+  @override
+  String get chatScopeReadHelp => 'Responde perguntas. Não muda nada.';
+
+  @override
+  String get chatScopeControl => 'Ler e controlar';
+
+  @override
+  String get chatScopeControlHelp =>
+      'Também aciona os dispositivos que você escolher abaixo.';
+
+  @override
+  String get chatControlsTitle => 'O que o Chat pode acionar';
+
+  @override
+  String get chatControlsHelp =>
+      'Ligados no início: luzes e persianas dos seus painéis. Desligados no início: interruptores e tomadas (podem alimentar um aquecedor, um boiler ou uma bomba), termostatos, portões e portas de garagem. Fechaduras, válvulas e sirenes nunca aparecem.';
+
+  @override
+  String get chatControlsEmpty => 'Ainda não há dispositivos para escolher.';
+
+  @override
+  String get chatKindLight => 'Luz';
+
+  @override
+  String get chatKindCover => 'Persiana';
+
+  @override
+  String get chatKindSwitch => 'Interruptor ou tomada';
+
+  @override
+  String get chatKindThermostat => 'Termostato';
+
+  @override
+  String get chatGateNote => 'portão ou porta, desligado no início';
+
+  @override
+  String get chatAgeAndAccount =>
+      'Cada pessoa vincula sua própria conta do Telegram, com seu próprio alcance. Pessoas vinculadas devem ter 16 anos ou mais. Quem usar uma conta do Telegram vinculada pode fazer o que o alcance dela permite. Até Ler mostra se há alguém em casa e quais portas e janelas estão abertas.';
+
+  @override
+  String get chatEngineOld =>
+      'O ZigDash Engine no seu hub está sendo atualizado para a versão com Chat. Tente de novo em um minuto.';
+
+  @override
+  String get chatLinkButton => 'Vincular Telegram';
+
+  @override
+  String get chatLinkAway =>
+      'Vincule em casa: o ZigDash configura isso no seu hub pela sua rede doméstica.';
+
+  @override
+  String get chatCodeTitle => 'Conclua no Telegram';
+
+  @override
+  String get chatCodeBody =>
+      'No Telegram, toque em Iniciar no bot ZigDash Home. Ele envia um código de 4 dígitos: digite-o aqui em até 10 minutos.';
+
+  @override
+  String get chatCodeHint => 'Código de 4 dígitos';
+
+  @override
+  String get chatCodeConfirm => 'Confirmar';
+
+  @override
+  String get chatOpenTelegram => 'Abrir o Telegram de novo';
+
+  @override
+  String get chatLinkedDone =>
+      'Vinculada. Envie uma mensagem ao bot para testar.';
+
+  @override
+  String get chatFailUnreachable =>
+      'Não foi possível acessar os servidores do ZigDash. Verifique a conexão com a internet e tente de novo.';
+
+  @override
+  String get chatFailLogin =>
+      'O relay não aceitou o acesso remoto deste telefone. Abra Controle remoto, desative e ative de novo.';
+
+  @override
+  String get chatFailPurchase =>
+      'O Google Play não confirma uma compra do ZigDash Pro para esta casa.';
+
+  @override
+  String get chatFailTooMany => 'Tentativas demais. Tente de novo em uma hora.';
+
+  @override
+  String get chatFailExpired => 'O código expirou. Comece de novo.';
+
+  @override
+  String get chatFailWrongCode =>
+      'Esse não é o código que o bot enviou. Confira e tente de novo.';
+
+  @override
+  String get chatFailRefused => 'Não funcionou. Tente mais tarde.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'O bot ainda não recebeu o código. Abra o Telegram, toque em Iniciar no bot ZigDash Home e digite o código que ele enviar.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'Esse não é o código que o bot enviou. Tentativas restantes: $count.';
+  }
+
+  @override
+  String get founderCodeAsk => 'Tem um código de fundador?';
+
+  @override
+  String get founderCodeLabel => 'Código de fundador';
+
+  @override
+  String get founderCodeUse => 'Usar o código';
+
+  @override
+  String get founderCodeAtHome =>
+      'Digite-o em casa, com o ZigDash Engine no seu hub: o ZigDash configura o controle remoto pela sua rede doméstica.';
+
+  @override
+  String get founderCodeWrong =>
+      'Esse não é um código de fundador. Confira e tente de novo.';
+
+  @override
+  String get founderCodeUsed =>
+      'Esse código já foi usado. Cada código vale uma vez.';
+
+  @override
+  String get founderCodeDeadline =>
+      'O prazo para digitar esse código já passou. Peça mais tempo em Obter ajuda.';
+
+  @override
+  String get founderCodeRevoked => 'Esse código foi retirado.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Seu passe de fundador está ativo: controle remoto e Chat para esta casa até $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Seu passe de fundador termina em $date. Com o ZigDash Pro você mantém o controle remoto e o Chat, sem configurar nada de novo.';
+  }
+
+  @override
+  String get founderGetPro => 'Obter o Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Seu passe de fundador terminou em $date. O ZigDash Pro traz de volta o controle remoto e o Chat, sem configurar nada de novo.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Seu passe de fundador terminou. O ZigDash Pro traz de volta o controle remoto e o Chat, sem configurar nada de novo.';
+
+  @override
+  String get founderDeleted =>
+      'O passe de fundador desta casa terminou e o controle remoto dela foi removido.';
+
+  @override
+  String get remoteRemoved =>
+      'O controle remoto desta casa foi removido do relay.';
+
+  @override
+  String get founderSetUpWithPro => 'Configurar com o Pro';
+
+  @override
+  String get founderUseProTitle => 'Usar sua compra do Pro para esta casa?';
+
+  @override
+  String get founderUseProBody =>
+      'O controle remoto e o Chat desta casa passam para sua compra do Pro: os mesmos telefones e vínculos do Chat, nada para configurar de novo. Uma compra cobre uma casa.';
+
+  @override
+  String get founderUsePro => 'Usar o Pro para esta casa';
+
+  @override
+  String get founderUpgraded => 'Esta casa agora usa sua compra do Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'Essa compra já pertence a outra casa.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Não foi possível passar esta casa para sua compra do Pro. Tente mais tarde.';
+
+  @override
+  String get remoteHubRefused => 'O relay recusou o login do hub';
+
+  @override
+  String get chatRowPassEnded =>
+      'Passe de fundador terminado: ainda dá para remover vínculos';
+
+  @override
+  String get chatFailPassEnded =>
+      'O passe de fundador desta casa terminou, então não é possível vincular uma nova conta do Telegram.';
 }

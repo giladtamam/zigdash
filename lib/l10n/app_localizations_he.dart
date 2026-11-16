@@ -1567,7 +1567,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'מוסיפים את התוספים Mosquitto broker ו-Zigbee2MQTT, ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.';
+      'מוסיפים את היישומים Mosquitto broker ו-Zigbee2MQTT (הגדרות › יישומים), ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.';
 
   @override
   String get noHubRadio =>
@@ -4077,6 +4077,20 @@ class AppLocalizationsHe extends AppLocalizations {
       'תשלום אחד, בלי מנוי. קניתם בטלפון אחר עם אותו חשבון Google? זה נפתח אוטומטית.';
 
   @override
+  String get proRestore => 'שחזור רכישה';
+
+  @override
+  String get proRestored => 'Pro פתוח בטלפון הזה.';
+
+  @override
+  String get proRestoreNone =>
+      'ל-Google Play אין רכישת Pro בחשבון Google הזה. קניתם בחשבון אחר? החליפו חשבון בחנות Play ונסו שוב.';
+
+  @override
+  String get proRestoreFailed =>
+      'לא הצלחנו להגיע ל-Google Play. נסו שוב בעוד רגע.';
+
+  @override
   String get historyNotRecorded =>
       'מוקלטים רק מספרים שמוצגים בלוח בקרה. הוסיפו את הערך הזה כאריח כדי להתחיל את ההיסטוריה שלו.';
 
@@ -5500,7 +5514,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String chatEarlyBody(int count) {
-    return 'שלחו הודעה כמו \"תסגור את התריס במשרד\" או \"הדלת האחורית פתוחה?\" והבית עונה. אנחנו עוד מחליטים אם לבנות את זה. אם כן, $count הראשונים שנרשמים יקבלו את זה בחינם ל-3 חודשים, כולל גישה מרחוק.';
+    return 'שלחו הודעה כמו \"תסגור את התריס במשרד\" או \"הדלת האחורית פתוחה?\" והבית עונה. זה כבר זמין לבעלי ZigDash Pro. $count הראשונים שנרשמים יקבלו קוד מייסדים: בחינם ל-3 חודשים, כולל גישה מרחוק.';
   }
 
   @override
@@ -5536,12 +5550,12 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String chatEarlyInFirst(int position, int count) {
-    return 'את/ה מספר $position ברשימה: מתוך $count הראשונים. אם נבנה את זה, תקבלו את זה בחינם ל-3 חודשים.';
+    return 'את/ה מספר $position ברשימה: מתוך $count הראשונים. תקבלו קוד מייסדים: צ\'אט וגישה מרחוק, בחינם ל-3 חודשים.';
   }
 
   @override
   String chatEarlyAfterFirst(int position, int count) {
-    return 'את/ה מספר $position ברשימה. $count המקומות הראשונים תפוסים; תשמעו ראשונים כשזה יהיה מוכן.';
+    return 'את/ה מספר $position ברשימה. $count המקומות הראשונים תפוסים. הצ\'אט כבר זמין לבעלי ZigDash Pro.';
   }
 
   @override
@@ -5715,4 +5729,308 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get historyUsePhoneInstead => 'להשתמש בטלפון הזה במקום';
+
+  @override
+  String get chatTitle => 'צ\'אט (בטא)';
+
+  @override
+  String get chatRowReady => 'לדבר עם הבית מטלגרם';
+
+  @override
+  String get chatRowNoPro => 'חלק מ-ZigDash Pro (לא כלול בתקופת הניסיון)';
+
+  @override
+  String get chatRowNoRemote => 'קודם צריך להפעיל שליטה מרחוק';
+
+  @override
+  String get chatRowNoEngine => 'דורש את ZigDash Engine ברכזת';
+
+  @override
+  String get chatIntroTitle => 'לדבר עם הבית מטלגרם';
+
+  @override
+  String get chatIntroBody =>
+      'שלחו לבוט ZigDash Home בטלגרם הודעה כמו \"הדלת האחורית פתוחה?\" או \"תסגור את התריס במשרד\", והבית עונה. הוא קורא מה המכשירים מדווחים ואת ההיסטוריה שלהם; עם \"קריאה ושליטה\" הוא יכול גם להפעיל ולכבות את התאורה, התריסים, המתגים, השקעים והתרמוסטטים שתבחרו.';
+
+  @override
+  String get chatIntroNever =>
+      'הוא אף פעם לא פותח, סוגר או משנה מנעולים, ברזים או סירנות, ואף פעם לא משנה אוטומציות או הגדרות: בשביל אלה הוא יגיד לכם לפתוח את ZigDash.';
+
+  @override
+  String get chatIntroBeta => 'בחינם בזמן הבטא: עד 300 הודעות בחודש לבית הזה.';
+
+  @override
+  String get chatIntroWho =>
+      'מי קורא את ההודעות: טלגרם, שמעבירה אותן; השרת שלנו באיחוד האירופי, ששומר את השיחה 24 שעות; ו-Anthropic (Claude) בארה\"ב, שכותבת את התשובות. מה שהצ\'אט קורא על הבית עובר באותה דרך.';
+
+  @override
+  String get chatPolicy => 'איך הצ\'אט מטפל במידע שלכם';
+
+  @override
+  String get chatLinkedTitle => 'חשבונות מקושרים';
+
+  @override
+  String get chatLinkedNone => 'עדיין לא קושר אף חשבון טלגרם.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'לא הצלחנו לטעון את החשבונות המקושרים. כדאי לבדוק את החיבור לאינטרנט.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · שימוש אחרון $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · עוד לא היה בשימוש';
+  }
+
+  @override
+  String get chatRemove => 'הסרה';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'להסיר את $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'חשבון הטלגרם הזה לא יוכל עוד לגשת לבית, והשיחה שלו נמחקת.';
+
+  @override
+  String get chatRemovedLater =>
+      'הוסר. הרכזת תשכח אותו בפעם הבאה ש-ZigDash פתוח בבית.';
+
+  @override
+  String get chatAuditTitle => 'מה הצ\'אט עשה';
+
+  @override
+  String get chatAuditShow => 'הצגה';
+
+  @override
+  String get chatAuditEmpty => 'עדיין כלום.';
+
+  @override
+  String get chatAuditFailed => 'הרכזת לא ענתה. אפשר לנסות שוב מאוחר יותר.';
+
+  @override
+  String chatAuditSent(String what) {
+    return 'הוגדר: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'לא נשלח';
+
+  @override
+  String get chatHereTitle => 'צ\'אט עם הבית כבר כאן';
+
+  @override
+  String get chatHereBody =>
+      'קשרו את חשבון הטלגרם שלכם, ואז שאלו את הבית \"האם הדלת האחורית פתוחה?\" או בקשו ממנו לסגור תריס. חלק מ-Pro, בחינם בתקופת הבטא.';
+
+  @override
+  String get chatHereSetUp => 'להגדרה';
+
+  @override
+  String get chatHereNotNow => 'לא עכשיו';
+
+  @override
+  String get chatLinkNew => 'קישור חשבון טלגרם';
+
+  @override
+  String get chatLinkAnother => 'קישור חשבון טלגרם נוסף';
+
+  @override
+  String get chatScopeRead => 'קריאה';
+
+  @override
+  String get chatScopeReadHelp => 'עונה על שאלות. לא משנה כלום.';
+
+  @override
+  String get chatScopeControl => 'קריאה ושליטה';
+
+  @override
+  String get chatScopeControlHelp => 'גם מפעיל ומכבה את המכשירים שתבחרו למטה.';
+
+  @override
+  String get chatControlsTitle => 'מה הצ\'אט רשאי להפעיל';
+
+  @override
+  String get chatControlsHelp =>
+      'פעילים בהתחלה: תאורה ותריסים שבלוחות שלכם. כבויים בהתחלה: מתגים ושקעים (הם יכולים להפעיל תנור, דוד או משאבה), תרמוסטטים, שערים ודלתות חניה. מנעולים, ברזים וסירנות אף פעם לא מופיעים.';
+
+  @override
+  String get chatControlsEmpty => 'עדיין אין מכשירים לבחירה.';
+
+  @override
+  String get chatKindLight => 'תאורה';
+
+  @override
+  String get chatKindCover => 'תריס';
+
+  @override
+  String get chatKindSwitch => 'מתג או שקע';
+
+  @override
+  String get chatKindThermostat => 'תרמוסטט';
+
+  @override
+  String get chatGateNote => 'שער או דלת, כבוי בהתחלה';
+
+  @override
+  String get chatAgeAndAccount =>
+      'כל אחד מקשר את חשבון הטלגרם שלו, עם הרשאות משלו. אנשים מקושרים חייבים להיות בני 16 ומעלה. כל מי שמשתמש בחשבון טלגרם מקושר יכול לעשות מה שההרשאות שלו מאפשרות. גם \"קריאה\" מראה אם מישהו בבית ואילו דלתות וחלונות פתוחים.';
+
+  @override
+  String get chatEngineOld =>
+      'ZigDash Engine ברכזת מתעדכן לגרסה עם הצ\'אט. אפשר לנסות שוב בעוד דקה.';
+
+  @override
+  String get chatLinkButton => 'קישור טלגרם';
+
+  @override
+  String get chatLinkAway =>
+      'מקשרים בבית: ZigDash מגדיר את זה ברכזת דרך הרשת הביתית.';
+
+  @override
+  String get chatCodeTitle => 'מסיימים בטלגרם';
+
+  @override
+  String get chatCodeBody =>
+      'בטלגרם, הקישו \"התחל\" בבוט ZigDash Home. הוא שולח קוד בן 4 ספרות: הקלידו אותו כאן תוך 10 דקות.';
+
+  @override
+  String get chatCodeHint => 'קוד בן 4 ספרות';
+
+  @override
+  String get chatCodeConfirm => 'אישור';
+
+  @override
+  String get chatOpenTelegram => 'לפתוח שוב את טלגרם';
+
+  @override
+  String get chatLinkedDone => 'קושר. שלחו לבוט הודעה כדי לנסות.';
+
+  @override
+  String get chatFailUnreachable =>
+      'לא הצלחנו להגיע לשרתים של ZigDash. כדאי לבדוק את החיבור לאינטרנט ולנסות שוב.';
+
+  @override
+  String get chatFailLogin =>
+      'הממסר לא קיבל את פרטי הגישה מרחוק של הטלפון הזה. פתחו את \"שליטה מרחוק\", כבו והפעילו שוב.';
+
+  @override
+  String get chatFailPurchase =>
+      'Google Play לא מאשר רכישה של ZigDash Pro לבית הזה.';
+
+  @override
+  String get chatFailTooMany => 'יותר מדי ניסיונות. אפשר לנסות שוב בעוד שעה.';
+
+  @override
+  String get chatFailExpired => 'תוקף הקוד פג. צריך להתחיל מחדש.';
+
+  @override
+  String get chatFailWrongCode => 'זה לא הקוד שהבוט שלח. בדקו ונסו שוב.';
+
+  @override
+  String get chatFailRefused => 'זה לא עבד. אפשר לנסות שוב מאוחר יותר.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'הבוט עוד לא קיבל את הקוד. פתחו את טלגרם, הקישו \"התחל\" בבוט ZigDash Home, ואז הקלידו את הקוד שהוא שולח.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'זה לא הקוד שהבוט שלח. ניסיונות שנשארו: $count.';
+  }
+
+  @override
+  String get founderCodeAsk => 'יש לכם קוד מייסדים?';
+
+  @override
+  String get founderCodeLabel => 'קוד מייסדים';
+
+  @override
+  String get founderCodeUse => 'שימוש בקוד';
+
+  @override
+  String get founderCodeAtHome =>
+      'יש להזין אותו בבית, כש-ZigDash Engine מותקן ברכזת: ZigDash מגדיר את השליטה מרחוק דרך הרשת הביתית.';
+
+  @override
+  String get founderCodeWrong => 'זה לא קוד מייסדים. כדאי לבדוק ולנסות שוב.';
+
+  @override
+  String get founderCodeUsed => 'הקוד הזה כבר נוצל. כל קוד עובד פעם אחת.';
+
+  @override
+  String get founderCodeDeadline =>
+      'המועד להזנת הקוד הזה עבר. אפשר לבקש עוד זמן דרך קבלת עזרה.';
+
+  @override
+  String get founderCodeRevoked => 'הקוד הזה בוטל.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'כרטיס המייסדים פעיל: שליטה מרחוק וצ\'אט לבית הזה עד $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'כרטיס המייסדים מסתיים ב-$date. עם ZigDash Pro השליטה מרחוק והצ\'אט נשארים, בלי להגדיר שום דבר מחדש.';
+  }
+
+  @override
+  String get founderGetPro => 'לקבלת Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'כרטיס המייסדים הסתיים ב-$date. ZigDash Pro מחזיר את השליטה מרחוק ואת הצ\'אט, בלי להגדיר שום דבר מחדש.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'כרטיס המייסדים הסתיים. ZigDash Pro מחזיר את השליטה מרחוק ואת הצ\'אט, בלי להגדיר שום דבר מחדש.';
+
+  @override
+  String get founderDeleted =>
+      'כרטיס המייסדים של הבית הזה הסתיים והשליטה מרחוק שלו הוסרה.';
+
+  @override
+  String get remoteRemoved => 'השליטה מרחוק של הבית הזה הוסרה מהממסר.';
+
+  @override
+  String get founderSetUpWithPro => 'הגדרה עם Pro';
+
+  @override
+  String get founderUseProTitle => 'להשתמש ברכישת ה-Pro לבית הזה?';
+
+  @override
+  String get founderUseProBody =>
+      'השליטה מרחוק והצ\'אט של הבית הזה יעברו לרכישת ה-Pro: אותם טלפונים ואותם קישורי צ\'אט, בלי להגדיר שום דבר מחדש. רכישה אחת מכסה בית אחד.';
+
+  @override
+  String get founderUsePro => 'שימוש ב-Pro לבית הזה';
+
+  @override
+  String get founderUpgraded => 'הבית הזה פועל עכשיו עם רכישת ה-Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'הרכישה הזו כבר שייכת לבית אחר.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'לא ניתן היה להעביר את הבית לרכישת ה-Pro. כדאי לנסות שוב מאוחר יותר.';
+
+  @override
+  String get remoteHubRefused => 'הממסר סירב להתחברות של הרכזת';
+
+  @override
+  String get chatRowPassEnded =>
+      'כרטיס המייסדים הסתיים: עדיין אפשר להסיר קישורים';
+
+  @override
+  String get chatFailPassEnded =>
+      'כרטיס המייסדים של הבית הזה הסתיים, ולכן אי אפשר לקשר חשבון טלגרם חדש.';
 }

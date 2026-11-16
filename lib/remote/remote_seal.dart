@@ -12,8 +12,9 @@ import 'package:pointycastle/export.dart';
 abstract final class RemoteSeal {
   static final _random = Random.secure();
 
-  static Uint8List seal(Uint8List key, Map<String, Object?> message) {
-    final iv = Uint8List.fromList(List<int>.generate(12, (_) => _random.nextInt(256)));
+  /// [iv] is for tests only (fixed vectors); every real seal gets a fresh one.
+  static Uint8List seal(Uint8List key, Map<String, Object?> message, {Uint8List? iv}) {
+    iv ??= Uint8List.fromList(List<int>.generate(12, (_) => _random.nextInt(256)));
     final cipher = GCMBlockCipher(AESEngine())
       ..init(true, AEADParameters(KeyParameter(key), 128, iv, Uint8List(0)));
     final sealed = cipher.process(Uint8List.fromList(utf8.encode(jsonEncode(message))));

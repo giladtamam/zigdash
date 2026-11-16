@@ -17,6 +17,8 @@ import '../features/settings/providers/settings_controller.dart'
 import '../mqtt/endpoint.dart';
 import '../mqtt/mqtt_status.dart';
 import '../mqtt/providers/mqtt_manager_provider.dart';
+import 'founder.dart';
+import 'founder_ui.dart';
 import 'remote_phones.dart';
 import 'remote_setup.dart';
 
@@ -63,7 +65,10 @@ RemoteEngineStep remoteEngineStep({
 }
 
 /// What the Remote control page shows (3.4.4, docs/design/remote-tab.md).
-/// Every state is decided before anything is tapped.
+/// Every state is decided before anything is tapped. A founder's pass
+/// (founders-pass.md) counts as Pro while it runs; once it ends the page
+/// says so ([RemoteState.passEnded]), and once the relay deleted the Home,
+/// that ([RemoteState.deleted]).
 RemoteState remoteStateOf({
   required bool fits,
   required bool sold,
@@ -72,11 +77,16 @@ RemoteState remoteStateOf({
   required bool connected,
   required bool atHome,
   required RemoteEngineStep engine,
+  bool founder = false,
+  bool passEnded = false,
+  bool deleted = false,
 }) {
   if (!fits) return RemoteState.unfit;
+  if (on && deleted) return RemoteState.deleted;
+  if (on && passEnded) return RemoteState.passEnded;
   if (on) return RemoteState.on;
   if (!sold) return RemoteState.notSold;
-  if (!pro) return connected ? RemoteState.noPro : RemoteState.noProOffline;
+  if (!pro && !founder) return connected ? RemoteState.noPro : RemoteState.noProOffline;
   if (!connected) return RemoteState.proOffline;
   if (engine != RemoteEngineStep.installed) return RemoteState.noEngine;
   return atHome ? RemoteState.ready : RemoteState.away;
@@ -116,15 +126,33 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
   String? _error;
   bool _counted = false;
 
+  /// The founder's code field is open.
+  bool _codeOpen = false;
+  final _code = TextEditingController();
+
+  /// Said once remote control is on: the pass's end date.
+  String? _notice;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // The founder status is asked again whenever the page opens; an upgrade
+    // a lost connection left half done goes on.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final l10n = context.l10n;
+      final messenger = ScaffoldMessenger.of(context);
+      await ref.read(founderRefreshProvider)(widget.connectionId);
+      if (!mounted) return;
+      await resumeFounderUpgrade(ref, widget.connectionId, messenger, l10n);
+    });
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _code.dispose();
     super.dispose();
   }
 
@@ -159,6 +187,53 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
     });
   }
 
+  /// A founder's code, at home: the relay admits the Home for the pass and
+  /// the rest is the same as turning it on with Pro.
+  Future<void> _redeem() async {
+    final l10n = context.l10n;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    final (r, ends) = await ref.read(remoteSetupProvider).redeem(widget.connectionId, _code.text);
+    if (!mounted) return;
+    if (r == FounderRedeemResult.ready) {
+      ref.invalidate(remoteHomeProvider(widget.connectionId));
+      ref.invalidate(founderStatusProvider(widget.connectionId));
+      ref.invalidate(mqttManagerProvider(widget.connectionId)); // the relay joins the endpoints
+      _code.clear();
+    }
+    setState(() {
+      _busy = false;
+      _codeOpen = r != FounderRedeemResult.ready;
+      _notice = ends == null ? null : l10n.founderCodeDone(founderDate(context, ends));
+      _error = switch (r) {
+        FounderRedeemResult.ready => null,
+        FounderRedeemResult.wrongCode => l10n.founderCodeWrong,
+        FounderRedeemResult.used => l10n.founderCodeUsed,
+        FounderRedeemResult.deadline => l10n.founderCodeDeadline,
+        FounderRedeemResult.revoked => l10n.founderCodeRevoked,
+        FounderRedeemResult.tooMany => l10n.chatFailTooMany,
+        FounderRedeemResult.notAtHome => l10n.remoteNotAtHome,
+        FounderRedeemResult.unreachable => l10n.remoteUnreachable,
+        FounderRedeemResult.refused => l10n.remoteRefused,
+      };
+    });
+  }
+
+  /// The relay deleted this Home: its login here is dead. Forgotten on
+  /// this phone, and the page offers remote control with Pro again.
+  Future<void> _setUpAgain() async {
+    setState(() => _busy = true);
+    await ref.read(remoteSetupProvider).turnOff(widget.connectionId, everywhere: false);
+    if (!mounted) return;
+    ref.invalidate(remoteHomeProvider(widget.connectionId));
+    ref.invalidate(founderStatusProvider(widget.connectionId));
+    ref.invalidate(mqttManagerProvider(widget.connectionId));
+    setState(() => _busy = false);
+    if (ref.read(proStatusProvider) != ProStatus.unlocked) _seePro();
+  }
+
   Future<void> _reconnectHub() async {
     final l10n = context.l10n;
     setState(() {
@@ -167,6 +242,8 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
     });
     final r = await ref.read(remoteSetupProvider).reconnectHub(widget.connectionId);
     if (!mounted) return;
+    // A 402 pass_ended or a 410 was kept: the page shows it.
+    ref.invalidate(founderStatusProvider(widget.connectionId));
     setState(() {
       _busy = false;
       _error = switch (r) {
@@ -208,6 +285,11 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
     _counted = true;
     if (!ref.read(remoteOpenedThisLaunchProvider).add(widget.connectionId)) {
       return;
+    }
+    // A founder's pass adds no analytics (founders-pass.md): its ended
+    // and deleted pages count as "on", as before.
+    if (state == RemoteState.passEnded || state == RemoteState.deleted) {
+      state = RemoteState.on;
     }
     // Called while building: the event goes out after the frame.
     final analytics = ref.read(analyticsProvider);
@@ -284,8 +366,10 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
     final viaRelay = connected && endpoint == MqttEndpoint.relay;
     final engineAsync = ref.watch(engineViewProvider(id));
     final engine = engineAsync.valueOrNull;
-    final sold = ref.watch(remoteSoldProvider) || relayIsTest;
+    final sold = ref.watch(remoteSoldForProvider(id)) || relayIsTest;
     final pro = ref.watch(proStatusProvider) == ProStatus.unlocked || relayIsTest;
+    final founder = on ? ref.watch(founderStatusProvider(id)).valueOrNull : null;
+    final now = ref.read(founderNowProvider)();
     final step1 = remoteEngineStep(
       connected: connected,
       phase: engine?.phase,
@@ -299,6 +383,9 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
       connected: connected,
       atHome: ref.watch(atHomeProvider(id)),
       engine: step1,
+      founder: founder?.activeAt(now) ?? false,
+      passEnded: founder?.endedAt(now) ?? false,
+      deleted: founder?.deleted ?? false,
     );
     // Counted once the page knows its state: the home and its login are
     // read, and a connected hub has said whether the Engine is there.
@@ -325,15 +412,71 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
               z2mVersion: connected ? engine?.hub?.version : null,
             ),
           const SizedBox(height: 16),
-          Text(on ? l10n.remoteOnTitle : l10n.remoteIntroTitle, style: theme.textTheme.headlineSmall),
-          const SizedBox(height: 8),
-          Text(on ? l10n.remoteOnBody : l10n.remoteIntroBody, style: theme.textTheme.bodyLarge),
-          const SizedBox(height: 16),
-          if (state == RemoteState.on) ...[
+          // Ended or deleted: the founder line says what is true instead.
+          if (state != RemoteState.passEnded && state != RemoteState.deleted) ...[
+            Text(on ? l10n.remoteOnTitle : l10n.remoteIntroTitle, style: theme.textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            Text(on ? l10n.remoteOnBody : l10n.remoteIntroBody, style: theme.textTheme.bodyLarge),
+            const SizedBox(height: 16),
+          ],
+          if (state == RemoteState.deleted) ...[
+            Text(
+              founder?.founder == false ? l10n.remoteRemoved : l10n.founderDeleted,
+              key: const Key('remote-deleted'),
+              style: theme.textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              key: const Key('remote-set-up-with-pro'),
+              onPressed: _busy ? null : _setUpAgain,
+              child: Text(l10n.founderSetUpWithPro),
+            ),
+          ] else if (state == RemoteState.passEnded) ...[
+            // Reconnect hub and Phones are gone: the relay refuses both
+            // until the Home moves to Pro.
+            FounderProLine(
+              key: const Key('remote-pass-ended'),
+              connectionId: id,
+              text: founder?.expiresAt == null
+                  ? l10n.founderEndedNoDate
+                  : l10n.founderEnded(founderDate(context, founder!.expiresAt!)),
+              from: _proFrom,
+            ),
+            const SizedBox(height: 8),
+            SelectableText(l10n.remoteHomeId(login.value!.homeId), style: theme.textTheme.bodySmall),
+            const SizedBox(height: 16),
+            OutlinedButton(
+              key: const Key('remote-off'),
+              onPressed: _busy ? null : _turnOff,
+              child: Text(l10n.remoteTurnOff),
+            ),
+          ] else if (state == RemoteState.on) ...[
+            if (_notice != null) ...[
+              Text(_notice!, key: const Key('remote-notice'), style: TextStyle(color: theme.colorScheme.primary)),
+              const SizedBox(height: 8),
+            ],
+            // 7 days before the end, or Pro bought elsewhere: the date and
+            // the way on.
+            if (founder != null && founder.activeAt(now) && (founder.endsSoonAt(now) || pro) && founder.expiresAt != null) ...[
+              FounderProLine(
+                key: const Key('remote-founder-line'),
+                connectionId: id,
+                text: founder.endsSoonAt(now)
+                    ? l10n.founderEndsOn(founderDate(context, founder.expiresAt!))
+                    : l10n.founderCodeDone(founderDate(context, founder.expiresAt!)),
+                from: _proFrom,
+              ),
+              const SizedBox(height: 8),
+            ],
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(engine?.report?.remoteConnected == true ? Icons.cloud_done_outlined : Icons.cloud_off_outlined),
-              title: Text(engine?.report?.remoteConnected == true ? l10n.remoteHubOnline : l10n.remoteHubOffline),
+              title: Text(engine?.report?.remoteConnected == true
+                  ? l10n.remoteHubOnline
+                  : engine?.report?.remoteRefused == true
+                      ? l10n.remoteHubRefused
+                      : l10n.remoteHubOffline,
+                  key: const Key('remote-hub-status')),
             ),
             if (engine?.report != null && engine!.report!.remoteConnected != true && !viaRelay)
               Align(
@@ -358,9 +501,9 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
           ] else ...[
             if (home != null) _Ways(home: home),
             const SizedBox(height: 16),
-            if (state == RemoteState.notSold)
+            if (state == RemoteState.notSold && !ref.watch(founderCodeOfferedProvider))
               Text(l10n.remotePlayOnly, key: const Key('remote-play-only'))
-            else ...[
+            else if (state != RemoteState.notSold) ...[
               _Steps(
                 engine: step1,
                 pro: pro,
@@ -369,6 +512,10 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
               const SizedBox(height: 16),
               ..._action(context, state, step1),
             ],
+            // A founder's code instead of Pro: the Play build, even where
+            // Play billing isn't available.
+            if (!pro && ref.watch(founderCodeOfferedProvider))
+              ..._founderCode(context, ready: ref.watch(atHomeProvider(id)) && step1 == RemoteEngineStep.installed),
           ],
           if (_error != null) ...[
             const SizedBox(height: 12),
@@ -378,6 +525,58 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
         ),
       ),
     );
+  }
+
+  ProFrom get _proFrom => widget.from == RemoteFrom.door ? ProFrom.remoteDoor : ProFrom.remoteSettings;
+
+  /// "Have a founder's code?": a field that ignores case, spaces and
+  /// dashes. It sets remote control up at home, like the Pro way.
+  List<Widget> _founderCode(BuildContext context, {required bool ready}) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    if (!_codeOpen) {
+      return [
+        const SizedBox(height: 8),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton.icon(
+            key: const Key('founder-code-ask'),
+            onPressed: () => setState(() => _codeOpen = true),
+            icon: const Icon(Icons.confirmation_number_outlined),
+            label: Text(l10n.founderCodeAsk),
+          ),
+        ),
+      ];
+    }
+    return [
+      const SizedBox(height: 16),
+      TextField(
+        key: const Key('founder-code'),
+        controller: _code,
+        autofocus: true,
+        autocorrect: false,
+        enableSuggestions: false,
+        textCapitalization: TextCapitalization.characters,
+        decoration: InputDecoration(labelText: l10n.founderCodeLabel, hintText: 'ZD-XXXX-XXXX-XX'),
+        onChanged: (_) => setState(() {}),
+        onSubmitted: (_) => ready && !_busy && _code.text.trim().isNotEmpty ? _redeem() : null,
+      ),
+      if (!ready) ...[
+        const SizedBox(height: 8),
+        Text(l10n.founderCodeAtHome, key: const Key('founder-code-at-home'), style: theme.textTheme.bodyMedium),
+      ],
+      const SizedBox(height: 8),
+      Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: FilledButton.tonal(
+          key: const Key('founder-code-use'),
+          onPressed: ready && !_busy && _code.text.trim().isNotEmpty ? _redeem : null,
+          child: _busy
+              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+              : Text(l10n.founderCodeUse),
+        ),
+      ),
+    ];
   }
 
   /// The one thing to do next, for a home where remote control is off.
@@ -431,7 +630,11 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
           const SizedBox(height: 8),
           restore(),
         ];
-      case RemoteState.on || RemoteState.unfit || RemoteState.notSold:
+      case RemoteState.on ||
+            RemoteState.unfit ||
+            RemoteState.notSold ||
+            RemoteState.passEnded ||
+            RemoteState.deleted:
         return const [];
     }
   }

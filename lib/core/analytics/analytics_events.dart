@@ -1249,6 +1249,11 @@ enum RemoteState {
   proOffline,
   unfit,
   notSold,
+
+  /// A founder's pass ended, or the relay deleted its Home
+  /// (founders-pass.md). Counted as [on]: the pass adds no analytics.
+  passEnded,
+  deleted,
 }
 
 class RemoteEvent extends AnalyticsEvent {
@@ -1454,6 +1459,26 @@ class ChatEarly extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// ZigDash Chat (3.7.0, chat-linking.md §4): the Chat screen was opened on
+/// a Home that can link (intro), a Telegram account was linked or removed,
+/// or a step failed, and why (not at home, Engine too old, unreachable,
+/// login, purchase, too many tries, code expired, wrong code, refused).
+/// Counts only: never a name, a code or the Telegram account.
+enum ChatLinkStep { intro, linked, removed, failed }
+
+class ChatLinkEvent extends AnalyticsEvent {
+  const ChatLinkEvent(this.step, {this.why});
+
+  final ChatLinkStep step;
+  final String? why;
+
+  @override
+  String get name => 'chat_link';
+
+  @override
+  Map<String, String> get props => {'step': step.name, if (why != null) 'why': why!};
 }
 
 /// The "Turn on History" card (3.6, pro-trial-360.md §2): shown (once per

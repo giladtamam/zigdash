@@ -1,0 +1,63 @@
+# ZigDash Chat on grocery-vps (phase 3, docs/design/chat-linking.md): its own
+# Compose project, apart from the relay's verifier and broker admin. It reaches
+# Homes through the relay with its own limited broker login, serves the app's
+# link API and the live bot's webhook at https://chat.zigdash.app (Caddy, on
+# the edge network), and calls the verifier's internal ACL and Home-status
+# routes on that network. The verifier pushes Home changes to the service's
+# internal port 8791, on that network only: never published on the host, never
+# in Caddy (http://zigdash-chat-chat-1:8791). Nothing secret is baked in; three
+# host folders are mounted (README.md, "Deploy"):
+#   CHAT_CONFIG_DIR   read-only: bot_token, anthropic_key, relay_password,
+#                     webhook_secret, chat_ticket_secret, chat_acl_secret, worker_secret
+#   CHAT_SECRETS_DIR  read-only: chat-secrets.json (the service key)
+#   CHAT_DATA_DIR     read-write: chat-keys.json (the encrypted bindings) and
+#                     chat-state.json (counters, last use, ACL retries)
+# Every file mode 600, owned by CHAT_UID (the container runs as that user).
+name: zigdash-chat
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "5m", max-file: "3" }
+
+services:
+  chat:
+    build: ..
+    restart: unless-stopped
+    logging: *logging
+    user: "${CHAT_UID:-1000}:${CHAT_GID:-1000}"
+    read_only: true
+    environment:
+      TELEGRAM_TOKEN_FILE: /run/zigdash/bot_token
+      TELEGRAM_MODE: ${TELEGRAM_MODE:-webhook}
+      TELEGRAM_WEBHOOK_SECRET_FILE: /run/zigdash/webhook_secret
+      BOT_USERNAME: ${BOT_USERNAME:-ZigDashHomeBot}
+      ANTHROPIC_KEY_FILE: /run/zigdash/anthropic_key
+      ZIGDASH_CHAT_KEYS: /var/lib/zigdash-chat/chat-keys.json
+      ZIGDASH_CHAT_STATE: /var/lib/zigdash-chat/chat-state.json
+      ZIGDASH_CHAT_SECRETS: /run/zigdash-secrets/chat-secrets.json
+      ZIGDASH_TRANSPORT: relay
+      ZIGDASH_HOME_ID: ${CHAT_HOME_ID:-}
+      ZIGDASH_MQTT_URL: mqtts://relay.zigdash.app:8883
+      ZIGDASH_MQTT_USER: ${CHAT_RELAY_USER:?the service's relay login}
+      ZIGDASH_MQTT_PASSWORD_FILE: /run/zigdash/relay_password
+      HTTP_PORT: "8790"
+      INTERNAL_PORT: "8791"
+      CHAT_TICKET_SECRET_FILE: /run/zigdash/chat_ticket_secret
+      VERIFIER_INTERNAL_URL: http://zigdash-relay-verifier-1:8788
+      CHAT_ACL_SECRET_FILE: /run/zigdash/chat_acl_secret
+      WORKER_URL: ${WORKER_URL:-https://support.giladha.com}
+      WORKER_SECRET_FILE: /run/zigdash/worker_secret
+      MONTHLY_CAP: ${MONTHLY_CAP:-300}
+      MONTHLY_BUDGET_USD: ${MONTHLY_BUDGET_USD:-20}
+      TIME_ZONE: ${TIME_ZONE:-Asia/Jerusalem}
+    volumes:
+      - ${CHAT_CONFIG_DIR:?a host folder}:/run/zigdash:ro
+      - ${CHAT_SECRETS_DIR:?another host folder}:/run/zigdash-secrets:ro
+      - ${CHAT_DATA_DIR:?a third, writable host folder}:/var/lib/zigdash-chat
+    expose: ["8790", "8791"]   # on the Docker network only; no "ports:", nothing on the host
+    networks: [edge]     # Caddy reaches :8790 here, the verifier :8791, and the service the verifier's :8788
+
+networks:
+  edge:
+    external: true
+    name: ${EDGE_NETWORK:?the Docker network Caddy is on}

@@ -30,7 +30,7 @@ test('verifier against a real broker', { skip }, async (t) => {
   await new Promise((r) => setTimeout(r, 600));
 
   const url = `mqtt://127.0.0.1:${port}`;
-  const v = createVerifier({ VERIFY: 'fake', PORT: '0', MQTT_URL: url, ADMIN_USER: 'admin', ADMIN_PASSWORD: adminPw, HUB_URL: url, PHONE_URL: url });
+  const v = createVerifier({ VERIFY: 'fake', PORT: '0', INTERNAL_PORT: '0', MQTT_URL: url, ADMIN_USER: 'admin', ADMIN_PASSWORD: adminPw, HUB_URL: url, PHONE_URL: url });
   const httpPort = await v.start();
   t.after(() => v.stop());
   const api = async (method, p, body, auth) => {

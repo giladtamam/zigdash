@@ -14,14 +14,15 @@ import 'pro_trial_card.dart' show proTrialDaysLeftText;
 /// Opens the Pro screen. Settings and every Unlock lead here first, so
 /// nobody meets Play's purchase sheet before knowing what Pro adds and what
 /// stays free (2.9.6).
-void openPro(BuildContext context, {required ProFrom from}) {
+/// Completes when the Pro screen is closed.
+Future<void> openPro(BuildContext context, {required ProFrom from}) {
   // Kept for the purchase events: a tap on the price says where it began.
   final scope = ProviderScope.containerOf(context, listen: false);
   scope.read(proFromProvider.notifier).state = from;
   // "The sale has ended" belongs to the visit in which the tap found it
   // gone, not to every later one.
   scope.read(proSaleEndedProvider.notifier).state = false;
-  Navigator.of(context).push(
+  return Navigator.of(context).push(
     MaterialPageRoute<void>(builder: (_) => ProScreen(from: from)),
   );
 }
@@ -80,6 +81,23 @@ class _ProScreenState extends ConsumerState<ProScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) ref.invalidate(proOfferProvider);
+  }
+
+  bool _restoring = false;
+
+  Future<void> _restore() async {
+    setState(() => _restoring = true);
+    final answer = await ref.read(proBillingProvider.notifier).refresh();
+    if (!mounted) return;
+    setState(() => _restoring = false);
+    final l10n = context.l10n;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(switch (answer) {
+        'unlocked' => l10n.proRestored,
+        'locked' || 'pending' || 'changed' => l10n.proRestoreNone,
+        _ => l10n.proRestoreFailed,
+      }),
+    ));
   }
 
   @override
@@ -217,6 +235,13 @@ class _ProScreenState extends ConsumerState<ProScreen>
                 l10n.proOnce,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall,
+              ),
+              const SizedBox(height: 8),
+              // Bought before (a reinstall, a new phone): Play is asked again.
+              TextButton(
+                key: const Key('pro-restore'),
+                onPressed: _restoring ? null : _restore,
+                child: Text(l10n.proRestore),
               ),
             ],
           ],

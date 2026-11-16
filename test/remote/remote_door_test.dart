@@ -9,6 +9,7 @@ import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/features/onboarding/demo_service.dart' show demoHost;
 import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/remote/founder.dart';
 import 'package:zigdash/remote/pair_phone_screen.dart';
 import 'package:zigdash/remote/remote_door.dart';
 import 'package:zigdash/remote/remote_home.dart';
@@ -46,6 +47,7 @@ Future<void> _bar(
   Connection? home,
   bool sold = true,
   RemoteHome? login,
+  FounderStatus? founder,
 }) async {
   final router = GoRouter(
     routes: [
@@ -67,6 +69,7 @@ Future<void> _bar(
       overrides: [
         remoteSoldProvider.overrideWithValue(sold),
         remoteHomeProvider.overrideWith((ref, _) async => login),
+        founderStatusProvider.overrideWith((ref, _) async => founder),
         connectionByIdProvider.overrideWith((ref, _) async => home ?? _home()),
       ],
       child: MaterialApp.router(
@@ -97,6 +100,16 @@ void main() {
   testWidgets('says so while remote control is on', (tester) async {
     await _bar(tester, login: _login);
     expect(find.byTooltip('Remote control is on'), findsOneWidget);
+  });
+
+  testWidgets("a founder's Home keeps its door where Play billing isn't available", (tester) async {
+    await _bar(
+      tester,
+      sold: false,
+      login: _login,
+      founder: FounderStatus(kind: 'founder', expiresAt: DateTime(2027, 2, 14), fetchedAt: DateTime(2026, 11, 16)),
+    );
+    expect(find.byKey(const Key('remote-door')), findsOneWidget);
   });
 
   testWidgets('not where Pro is not sold', (tester) async {

@@ -138,7 +138,20 @@ void main() {
         ),
       );
 
-  testWidgets('devices not on a dashboard come first; custom stays below',
+  testWidgets('Reading and Custom MQTT tile come first, above a long device list',
+      (tester) async {
+    await tester.pumpWidget(app([
+      for (var i = 0; i < 54; i++) _dev('device $i', '0x${i + 100}'),
+    ]));
+    await tester.pumpAndSettle();
+    // Visible without scrolling, and above the first device.
+    expect(find.text('Custom MQTT tile').hitTestable(), findsOneWidget);
+    expect(find.text('Reading').hitTestable(), findsOneWidget);
+    expect(tester.getTopLeft(find.text('Custom MQTT tile')).dy,
+        lessThan(tester.getTopLeft(find.text('device 0').first).dy));
+  });
+
+  testWidgets('devices not on a dashboard come first; custom stays visible',
       (tester) async {
     await tester.pumpWidget(app(
       [_dev('desk_lamp', '0x1'), _dev('hall', '0x2')],
@@ -151,8 +164,6 @@ void main() {
     expect(find.text('hall'), findsNWidgets(2), reason: 'listed in both');
     expect(find.text('desk_lamp'), findsOneWidget);
     expect(y(find.text('hall').first), lessThan(y(find.text('All devices'))));
-    await tester.scrollUntilVisible(find.text('Custom MQTT tile'), 100,
-        scrollable: find.byType(Scrollable).first);
     expect(find.text('Custom MQTT tile'), findsOneWidget);
   });
 

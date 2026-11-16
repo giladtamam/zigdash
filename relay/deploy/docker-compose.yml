@@ -38,6 +38,20 @@ services:
       GOOGLE_SA: /secrets/play-service-account.json
       # App Store purchases (apple.mjs): add Sandbox for TestFlight testers.
       APPLE_ENVIRONMENTS: ${APPLE_ENVIRONMENTS:-Production}
+      # ZigDash Chat (tool/zigdash-chat/README.md): off while these files are missing.
+      CHAT_TICKET_SECRET_FILE: /secrets/chat-ticket-secret
+      CHAT_ACL_SECRET_FILE: /secrets/chat-acl-secret
+      CHAT_ROLE: zigdash-chat
+      # The internal ACL route, for the chat service on the edge network only:
+      # not published on the host and never proxied by Caddy (only :8787 is).
+      INTERNAL_PORT: "8788"
+      # Founders' passes (docs/design/founders-pass.md): off while this file is missing.
+      PASS_SECRET_FILE: /secrets/pass-secret
+      # The chat service's internal listener (not published, edge network), told of
+      # changed and deleted Homes. Set CHAT_INTERNAL_URL= (empty) for no pushes.
+      CHAT_INTERNAL_URL: ${CHAT_INTERNAL_URL-http://zigdash-chat-chat-1:8791}
+      # The owner's commands (cli.mjs) reach the verifier here, inside the container only.
+      ADMIN_SOCKET: /tmp/zigdash-verifier.sock
     volumes:
       - ./verifier-data:/data
       - ./secrets:/secrets:ro

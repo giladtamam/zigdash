@@ -32,8 +32,15 @@
 // inside the seal; bridge topics never leave. Down: commands arrive sealed on
 // homes/<id>/c and are accepted only for <base>/.../set|get and automation rules,
 // within five minutes of being sealed. Presence: homes/<id>/hub online/offline.
+// A refused login (3.7.1, docs/design/founders-pass.md: a founder's pass that
+// ended, a disabled client) retries 15 s, then doubling to 5 minutes, back to
+// 15 s once connected; the state says remote.error "refused".
 //
-// This file is BUILT from hub/src/engine.js by hub/build.mjs. Edit the source.
+// Chat (3.7.0, docs/design/chat-linking.md): hub/src/chat.js is appended by the
+// build. It stays dormant, subscribed to zigdash/chat/clients/+ only, until a
+// Chat client is linked; see the top of that part.
+//
+// This file is BUILT from hub/src/engine.js and hub/src/chat.js by hub/build.mjs. Edit the sources.
 //
 // Safety: Zigbee2MQTT has no crash guard, so every callback and timer here is wrapped.
 // After three caught errors within an hour the engine stops running rules (a flag file
@@ -41,9 +48,14 @@
 
 'use strict';
 
-const ENGINE_VERSION = '3.4.5';
+const ENGINE_VERSION = '3.7.1';
 const ROOT = 'zigdash';
 const PREFIX = 'automations';
+const REMOTE_RETRY_MS = 15000;
+const REMOTE_RETRY_MAX_MS = 5 * 60000;
+// CONNACK refusals of the login: MQTT 5 134 (bad user name or password) and
+// 135 (not authorized); MQTT 3.1.1 4 and 5. mqtt.js gives them as error.code.
+const REFUSED = new Set([134, 135, 4, 5]);
 const STATE_EVERY_MS = 30000;
 const TICK_MS = 20000;
 const RECENT_MAX = 20;
@@ -690,24 +702,38 @@ class ZigDashEngine {
       password: cfg.password,
       clientId: `hub-${cfg.homeId}`,
       protocolVersion: 5,
-      reconnectPeriod: 15000,
+      reconnectPeriod: REMOTE_RETRY_MS,
+      // mqtt.js 5.x stops retrying after a refused CONNACK unless asked to;
+      // older versions retry anyway and ignore this.
+      reconnectOnConnackError: true,
       connectTimeout: 20000,
       clean: true,
       will: { topic: `${prefix}/hub`, payload: Buffer.from('offline'), qos: 1, retain: true },
     });
-    const remote = { config: cfg, key, client, prefix, connected: false, error: undefined, sent: new Set(), pending: new Map() };
+    const remote = { config: cfg, key, client, prefix, connected: false, error: undefined, sent: new Set(), pending: new Map(), retryMs: 0 };
     this.remote = remote;
     // An mqtt client without an error listener would crash Zigbee2MQTT.
     const current = () => this.remote === remote;
     client.on('error', this.guard('remote error', (e) => {
       if (!current()) return;
-      remote.error = String((e && (e.code || e.message)) || 'error').slice(0, 60);
+      if (e && REFUSED.has(e.code)) {
+        // Set before mqtt.js arms its next retry, which reads it.
+        remote.retryMs = remote.retryMs ? Math.min(remote.retryMs * 2, REMOTE_RETRY_MAX_MS) : REMOTE_RETRY_MS;
+        if (client.options) client.options.reconnectPeriod = remote.retryMs;
+        remote.error = 'refused';
+      } else {
+        remote.error = String((e && (e.code || e.message)) || 'error').slice(0, 60);
+      }
       this.publishState();
     }));
     client.on('connect', this.guard('remote connect', () => {
       if (!current()) return;
       remote.connected = true;
       remote.error = undefined;
+      if (remote.retryMs) {
+        remote.retryMs = 0;
+        if (client.options) client.options.reconnectPeriod = REMOTE_RETRY_MS;
+      }
       client.publish(`${prefix}/hub`, 'online', { qos: 1, retain: true });
       client.subscribe(`${prefix}/c`, { qos: 1, nl: true });
       const missed = new Map(remote.pending);
