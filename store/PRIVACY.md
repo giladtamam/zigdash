@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.6.2 is published (replaces the policy published with ZigDash 3.6.1)
+**Effective date:** 16 November 2026 (replaces the policy published with ZigDash 3.6.2)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -211,16 +211,27 @@ events on request. To stop sending, turn the switch off.
 From 3.5.1, Get help has a Send button. Only when you tap it, what you typed,
 the email you may have given and the Support details are sent to a small
 service the developer runs on Cloudflare, which passes the message straight
-on to the developer's Telegram account and keeps nothing; it does not log the
-message. Telegram (Telegram FZ-LLC) therefore stores the message as part of
-that chat, under [its privacy policy](https://telegram.org/privacy). If Send
-fails, nothing is sent; the app offers Android's share sheet instead, and
-where the message goes is then your choice.
+on to the developer's Telegram account; it does not log the message. Telegram
+(Telegram FZ-LLC) stores the message as part of that chat, under
+[its privacy policy](https://telegram.org/privacy). If Send fails, nothing is
+sent; the app offers Android's share sheet instead, and where the message goes
+is then your choice.
+
+If you gave an email, the developer may answer from Telegram. The answer is
+emailed to that address through [Resend](https://resend.com/legal/privacy-policy)
+(Plus Five Five, Inc., USA; sent from its EU region in Ireland, under the
+EU-US Data Privacy Framework and standard contractual clauses), which keeps a
+sending log for 30 days. While the answer is being written, the service keeps
+a draft (your address, the answer and your message) for at most one hour, and
+it counts how many answers are sent each month, with nothing about who. A copy
+of the answer goes to the developer's support inbox.
 
 Whatever way you contact support, your email and the Support details you
-chose to include are used only to help you, are never shared, and are
-deleted within 6 months after the issue is closed; a Telegram message is
-deleted from the chat once answered.
+chose to include are used only to help you, are not shared with anyone beyond
+the services named here, and are deleted within 6 months after the issue is
+closed. The Telegram copy (your message, the answer and a note that it was
+sent) is deleted when the conversation is over: by the service while it is
+under 48 hours old, otherwise by hand, and in any case within 6 months.
 
 ## Chat with your home: early access
 
