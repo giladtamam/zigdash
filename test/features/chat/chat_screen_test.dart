@@ -17,6 +17,7 @@ import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
 import 'package:zigdash/features/pro/pro.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/remote/founder.dart';
 import 'package:zigdash/remote/remote_setup.dart';
 
 import 'chat_controls_test.dart' as fx;
@@ -32,8 +33,16 @@ class _Sink implements AnalyticsSink {
   void send(String name, Map<String, String> props) => sent.add('$name $props');
 }
 
+final _now = DateTime(2026, 11, 16, 12);
+
+/// The Home's Chat row, changed by a test as a late founder status would.
+final _row = StateProvider<ChatRowState>((ref) => ChatRowState.ready);
+final _end = DateTime(2027, 2, 14, 12);
+
 class _Page {
-  _Page(this.sink, this.api, this.hub, this.store, this.launched, this.log);
+  _Page(this.sink, this.api, this.hub, this.store, this.launched, this.log, [this.refreshed = const []]);
+  /// Founder status asks of the relay.
+  final List<String> refreshed;
   final _Sink sink;
   final FakeChatApi api;
   final FakeChatHub hub;
@@ -69,6 +78,8 @@ Future<_Page> _open(
   ChatFail? ticketFails,
   Widget? child,
   _Page? reuse,
+  FounderStatus? founder,
+  ProStatus pro = ProStatus.locked,
 }) async {
   tester.view.physicalSize = const Size(1080, 6000);
   tester.view.devicePixelRatio = 2.5;
@@ -83,6 +94,7 @@ Future<_Page> _open(
   final store = reuse?.store ?? MemoryChatStore();
   final launched = reuse?.launched ?? <Uri>[];
   final sink = reuse?.sink ?? _Sink();
+  final refreshed = <String>[];
   final router = GoRouter(
     initialLocation: '/chat',
     routes: [
@@ -96,7 +108,13 @@ Future<_Page> _open(
       sharedPreferencesProvider.overrideWithValue(p),
       analyticsAvailableProvider.overrideWithValue(true),
       analyticsSinkProvider.overrideWithValue(sink),
-      chatRowStateProvider.overrideWith((ref, _) => state),
+      _row.overrideWith((ref) => state),
+      chatRowStateProvider.overrideWith((ref, _) => ref.watch(_row)),
+      founderStatusProvider.overrideWith((ref, _) async => founder),
+      founderRefreshProvider.overrideWithValue((id) async => refreshed.add(id)),
+      founderNowProvider.overrideWithValue(() => _now),
+      proStatusProvider.overrideWithValue(pro),
+      proPurchaseProvider.overrideWithValue(() {}),
       atHomeProvider.overrideWith((ref, _) => atHome),
       engineViewProvider.overrideWith((ref, _) => Stream.value(_engine(engine))),
       homeBaseTopicProvider.overrideWith((ref, _) => 'zigbee2mqtt'),
@@ -119,7 +137,7 @@ Future<_Page> _open(
     ),
   ));
   await tester.pumpAndSettle();
-  return _Page(sink, api, hub, store, launched, log);
+  return _Page(sink, api, hub, store, launched, log, refreshed);
 }
 
 /// The Chat screen opened again later, with the same service, hub and phone.
@@ -253,6 +271,38 @@ void main() {
 
     expect(await row(HubEnginePhase.running), ChatRowState.ready);
     expect(await row(HubEnginePhase.notInstalled), ChatRowState.noEngine);
+  });
+
+  test("the row from a founder's status: running is ready, ended is manage-only, deleted leads to Remote", () async {
+    SharedPreferences.setMockInitialValues({'engine.installed.c1': true});
+    final p = await SharedPreferences.getInstance();
+    Future<ChatRowState> row(FounderStatus status, {ProStatus pro = ProStatus.unavailable}) async {
+      final box = ProviderContainer(overrides: [
+        sharedPreferencesProvider.overrideWithValue(p),
+        chatOfferedProvider.overrideWithValue(true),
+        remoteFitsProvider.overrideWith((ref, _) => true),
+        // By default Play billing isn't available on this phone.
+        proStatusProvider.overrideWithValue(pro),
+        remoteHomeProvider.overrideWith((ref, _) async => relayLogin),
+        founderStatusProvider.overrideWith((ref, _) async => status),
+        founderNowProvider.overrideWithValue(() => _now),
+      ]);
+      addTearDown(box.dispose);
+      box.listen(chatRowStateProvider('c1'), (_, _) {});
+      await box.read(remoteHomeProvider('c1').future);
+      await box.read(founderStatusProvider('c1').future);
+      return box.read(chatRowStateProvider('c1'));
+    }
+
+    FounderStatus pass({bool ended = false, bool deleted = false}) =>
+        FounderStatus(kind: 'founder', expiresAt: _end, ended: ended, deleted: deleted, fetchedAt: _now);
+    expect(await row(pass()), ChatRowState.ready);
+    expect(await row(pass(ended: true)), ChatRowState.passEnded);
+    // Deleted: no Chat to manage; with Pro, the row leads to the Remote
+    // page (which says the Home was removed); without, to Pro.
+    expect(await row(pass(ended: true, deleted: true), pro: ProStatus.unlocked), ChatRowState.noRemote);
+    expect(await row(pass(ended: true, deleted: true), pro: ProStatus.locked), ChatRowState.noPro);
+    expect(await row(pass(ended: true, deleted: true)), ChatRowState.hidden);
   });
 
   testWidgets('cancel while waiting takes the hub client back', (tester) async {
@@ -393,6 +443,13 @@ void main() {
       expect(find.text('chat page'), findsOneWidget);
     });
 
+    testWidgets("a founder's Home after the pass opens the Chat screen to manage links", (tester) async {
+      await _open(tester, state: ChatRowState.passEnded, child: row());
+      expect(find.text('Founder\'s pass ended: links can still be removed'), findsOneWidget);
+      await _tap(tester, find.byKey(const Key('home-chat')));
+      expect(find.text('chat page'), findsOneWidget);
+    });
+
     for (final (state, text) in [
       (ChatRowState.noRemote, 'Turn on remote control first'),
       (ChatRowState.noPro, 'Part of ZigDash Pro (not included in the trial)'),
@@ -403,6 +460,89 @@ void main() {
         expect(find.text(text), findsOneWidget);
       });
     }
+  });
+
+  group("founder's pass", () {
+    FounderStatus pass({DateTime? ends, bool ended = false}) =>
+        FounderStatus(kind: 'founder', expiresAt: ends ?? _end, ended: ended, fetchedAt: _now);
+
+    testWidgets('after the end: links listed and removable, Link replaced by the Pro line', (tester) async {
+      final page = await _open(
+        tester,
+        state: ChatRowState.passEnded,
+        founder: pass(ended: true),
+        listed: [const ChatLinkInfo(clientId: 'tg-bbbbbb', telegramName: 'Noa', scope: 'read')],
+      );
+      expect(find.text('Noa'), findsOneWidget);
+      expect(find.byKey(const Key('chat-link')), findsNothing);
+      expect(find.byKey(const Key('chat-scope-read')), findsNothing);
+      expect(find.text("Your founder's pass ended on Feb 14, 2027. ZigDash Pro brings remote control and Chat back, "
+          'with nothing to set up again.'), findsOneWidget);
+      expect(find.byKey(const Key('founder-get-pro')), findsOneWidget);
+      // No intro count for a Home that can't link.
+      expect(page.sink.sent, isEmpty);
+      expect(page.refreshed, ['c1']);
+
+      page.hub.configs['tg-bbbbbb'] = {'v': 1};
+      await _tap(tester, find.byKey(const Key('chat-remove-tg-bbbbbb')));
+      await _tap(tester, find.byKey(const Key('chat-remove-ok')));
+      expect(page.log.skip(2), ['ticket tg-bbbbbb', 'service unlink tg-bbbbbb', 'hub revoke tg-bbbbbb']);
+      expect(find.text('Noa'), findsNothing);
+    });
+
+    testWidgets('after the end with Pro bought elsewhere: asked first, not moved', (tester) async {
+      await _open(tester, state: ChatRowState.passEnded, founder: pass(ended: true), pro: ProStatus.unlocked);
+      expect(find.byKey(const Key('founder-use-pro')), findsOneWidget);
+      expect(find.byKey(const Key('founder-get-pro')), findsNothing);
+    });
+
+    testWidgets('the pass ending on confirm is final: the link is dropped and the screen asks the relay', (tester) async {
+      final page = await _open(tester, founder: pass());
+      await _tap(tester, find.byKey(const Key('chat-link')));
+      expect(page.hub.configs, hasLength(1));
+      page.api.confirmFails.add(const ChatException(ChatFail.passEnded));
+      await _code(tester, '4821');
+      await _tap(tester, find.byKey(const Key('chat-confirm')));
+      expect(find.byKey(const Key('chat-finish')), findsNothing);
+      expect(page.hub.configs, isEmpty);
+      expect(page.log.last, startsWith('hub revoke'));
+      expect(find.text("This Home's founder's pass ended, so no new Telegram account can be linked."), findsOneWidget);
+      // Counted as the purchase gate: no new analytics value.
+      expect(page.sink.sent.last, 'chat_link {step: failed, why: purchase}');
+      expect(page.refreshed, ['c1', 'c1']);
+    });
+
+    testWidgets("a refused ticket on a founder's Home speaks of the pass, not of Google Play", (tester) async {
+      final page = await _open(tester, founder: pass());
+      page.api.ticketFails = ChatFail.purchase;
+      await _tap(tester, find.byKey(const Key('chat-link')));
+      expect(find.text("This Home's founder's pass ended, so no new Telegram account can be linked."), findsOneWidget);
+      expect(find.textContaining('Google Play'), findsNothing);
+      expect(page.hub.configs, isEmpty);
+    });
+
+    testWidgets('the last 7 days: the date and Get Pro above Link', (tester) async {
+      await _open(tester, founder: pass(ends: _now.add(const Duration(days: 3))));
+      expect(find.textContaining("Your founder's pass ends on Nov 19, 2026."), findsOneWidget);
+      expect(find.byKey(const Key('founder-get-pro')), findsOneWidget);
+      expect(find.byKey(const Key('chat-link')), findsOneWidget);
+    });
+
+    testWidgets('a status that arrives after the screen opened: the list loads then', (tester) async {
+      final page = await _open(tester, state: ChatRowState.noPro, founder: pass());
+      expect(page.log, isEmpty);
+      final container = ProviderScope.containerOf(tester.element(find.byType(ChatScreen)));
+      container.read(_row.notifier).state = ChatRowState.ready;
+      await tester.pumpAndSettle();
+      expect(page.log, ['ticket', 'links']);
+      expect(find.byKey(const Key('chat-links-none')), findsOneWidget);
+    });
+
+    testWidgets('earlier in the pass: Chat as usual', (tester) async {
+      await _open(tester, founder: pass());
+      expect(find.byKey(const Key('founder-pro-line')), findsNothing);
+      expect(find.byKey(const Key('chat-link')), findsOneWidget);
+    });
   });
 }
 

@@ -5930,4 +5930,93 @@ class AppLocalizationsHe extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'זה לא הקוד שהבוט שלח. ניסיונות שנשארו: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'יש לכם קוד מייסדים?';
+
+  @override
+  String get founderCodeLabel => 'קוד מייסדים';
+
+  @override
+  String get founderCodeUse => 'שימוש בקוד';
+
+  @override
+  String get founderCodeAtHome =>
+      'יש להזין אותו בבית, כש-ZigDash Engine מותקן ברכזת: ZigDash מגדיר את השליטה מרחוק דרך הרשת הביתית.';
+
+  @override
+  String get founderCodeWrong => 'זה לא קוד מייסדים. כדאי לבדוק ולנסות שוב.';
+
+  @override
+  String get founderCodeUsed => 'הקוד הזה כבר נוצל. כל קוד עובד פעם אחת.';
+
+  @override
+  String get founderCodeDeadline =>
+      'המועד להזנת הקוד הזה עבר. אפשר לבקש עוד זמן דרך קבלת עזרה.';
+
+  @override
+  String get founderCodeRevoked => 'הקוד הזה בוטל.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'כרטיס המייסדים פעיל: שליטה מרחוק וצ\'אט לבית הזה עד $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'כרטיס המייסדים מסתיים ב-$date. עם ZigDash Pro השליטה מרחוק והצ\'אט נשארים, בלי להגדיר שום דבר מחדש.';
+  }
+
+  @override
+  String get founderGetPro => 'לקבלת Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'כרטיס המייסדים הסתיים ב-$date. ZigDash Pro מחזיר את השליטה מרחוק ואת הצ\'אט, בלי להגדיר שום דבר מחדש.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'כרטיס המייסדים הסתיים. ZigDash Pro מחזיר את השליטה מרחוק ואת הצ\'אט, בלי להגדיר שום דבר מחדש.';
+
+  @override
+  String get founderDeleted =>
+      'כרטיס המייסדים של הבית הזה הסתיים והשליטה מרחוק שלו הוסרה.';
+
+  @override
+  String get remoteRemoved => 'השליטה מרחוק של הבית הזה הוסרה מהממסר.';
+
+  @override
+  String get founderSetUpWithPro => 'הגדרה עם Pro';
+
+  @override
+  String get founderUseProTitle => 'להשתמש ברכישת ה-Pro לבית הזה?';
+
+  @override
+  String get founderUseProBody =>
+      'השליטה מרחוק והצ\'אט של הבית הזה יעברו לרכישת ה-Pro: אותם טלפונים ואותם קישורי צ\'אט, בלי להגדיר שום דבר מחדש. רכישה אחת מכסה בית אחד.';
+
+  @override
+  String get founderUsePro => 'שימוש ב-Pro לבית הזה';
+
+  @override
+  String get founderUpgraded => 'הבית הזה פועל עכשיו עם רכישת ה-Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'הרכישה הזו כבר שייכת לבית אחר.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'לא ניתן היה להעביר את הבית לרכישת ה-Pro. כדאי לנסות שוב מאוחר יותר.';
+
+  @override
+  String get remoteHubRefused => 'הממסר סירב להתחברות של הרכזת';
+
+  @override
+  String get chatRowPassEnded =>
+      'כרטיס המייסדים הסתיים: עדיין אפשר להסיר קישורים';
+
+  @override
+  String get chatFailPassEnded =>
+      'כרטיס המייסדים של הבית הזה הסתיים, ולכן אי אפשר לקשר חשבון טלגרם חדש.';
 }

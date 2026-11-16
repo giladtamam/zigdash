@@ -70,7 +70,9 @@ class _ChatEarlyCardState extends ConsumerState<ChatEarlyCard> {
     // 3.7: Chat exists for Pro owners, so they hear it's here (once),
     // not "we're building it", whatever they answered to the list.
     final chat = ref.watch(chatRowStateProvider(widget.connectionId));
-    if (chat != ChatRowState.hidden && chat != ChatRowState.noPro) {
+    if (chat != ChatRowState.hidden &&
+        chat != ChatRowState.noPro &&
+        chat != ChatRowState.passEnded) {
       return _ChatHereCard(connectionId: widget.connectionId, state: chat);
     }
     final prefs = ref.watch(sharedPreferencesProvider);

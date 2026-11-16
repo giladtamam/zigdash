@@ -6043,4 +6043,100 @@ class AppLocalizationsDe extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'Das ist nicht der Code vom Bot. Verbleibende Versuche: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Haben Sie einen Gründer-Code?';
+
+  @override
+  String get founderCodeLabel => 'Gründer-Code';
+
+  @override
+  String get founderCodeUse => 'Code verwenden';
+
+  @override
+  String get founderCodeAtHome =>
+      'Geben Sie ihn zu Hause ein, mit ZigDash Engine auf Ihrem Hub: ZigDash richtet die Fernsteuerung über Ihr Heimnetz ein.';
+
+  @override
+  String get founderCodeWrong =>
+      'Das ist kein Gründer-Code. Prüfen Sie ihn und versuchen Sie es erneut.';
+
+  @override
+  String get founderCodeUsed =>
+      'Dieser Code wurde schon verwendet. Jeder Code gilt einmal.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Die Frist für diesen Code ist abgelaufen. Bitten Sie über „Hilfe holen“ um mehr Zeit.';
+
+  @override
+  String get founderCodeRevoked => 'Dieser Code wurde zurückgezogen.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Ihr Gründer-Pass ist aktiv: Fernsteuerung und Chat für dieses Zuhause bis $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Ihr Gründer-Pass endet am $date. Mit ZigDash Pro bleiben Fernsteuerung und Chat, ohne etwas neu einzurichten.';
+  }
+
+  @override
+  String get founderGetPro => 'Pro holen';
+
+  @override
+  String founderEnded(String date) {
+    return 'Ihr Gründer-Pass ist am $date abgelaufen. ZigDash Pro bringt Fernsteuerung und Chat zurück, ohne etwas neu einzurichten.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Ihr Gründer-Pass ist abgelaufen. ZigDash Pro bringt Fernsteuerung und Chat zurück, ohne etwas neu einzurichten.';
+
+  @override
+  String get founderDeleted =>
+      'Der Gründer-Pass dieses Zuhauses ist abgelaufen und seine Fernsteuerung wurde entfernt.';
+
+  @override
+  String get remoteRemoved =>
+      'Die Fernsteuerung dieses Zuhauses wurde vom Relay entfernt.';
+
+  @override
+  String get founderSetUpWithPro => 'Mit Pro einrichten';
+
+  @override
+  String get founderUseProTitle =>
+      'Ihren Pro-Kauf für dieses Zuhause verwenden?';
+
+  @override
+  String get founderUseProBody =>
+      'Fernsteuerung und Chat dieses Zuhauses gehen auf Ihren Pro-Kauf über: dieselben Telefone und Chat-Verknüpfungen, nichts neu einzurichten. Ein Kauf gilt für ein Zuhause.';
+
+  @override
+  String get founderUsePro => 'Pro für dieses Zuhause verwenden';
+
+  @override
+  String get founderUpgraded =>
+      'Dieses Zuhause läuft jetzt mit Ihrem Pro-Kauf.';
+
+  @override
+  String get founderUpgradeTaken =>
+      'Dieser Kauf gehört schon zu einem anderen Zuhause.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Das Zuhause konnte nicht auf Ihren Pro-Kauf umgestellt werden. Versuchen Sie es später erneut.';
+
+  @override
+  String get remoteHubRefused =>
+      'Das Relay hat die Anmeldung des Hubs abgelehnt';
+
+  @override
+  String get chatRowPassEnded =>
+      'Gründer-Pass abgelaufen: Verknüpfungen lassen sich noch entfernen';
+
+  @override
+  String get chatFailPassEnded =>
+      'Der Gründer-Pass dieses Zuhauses ist abgelaufen, daher kann kein neues Telegram-Konto verknüpft werden.';
 }

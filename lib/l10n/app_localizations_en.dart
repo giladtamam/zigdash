@@ -5997,4 +5997,97 @@ class AppLocalizationsEn extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'That isn\'t the code the bot sent. Tries left: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Have a founder\'s code?';
+
+  @override
+  String get founderCodeLabel => 'Founder\'s code';
+
+  @override
+  String get founderCodeUse => 'Use the code';
+
+  @override
+  String get founderCodeAtHome =>
+      'Enter it at home, with ZigDash Engine on your hub: ZigDash sets remote control up over your home network.';
+
+  @override
+  String get founderCodeWrong =>
+      'That isn\'t a founder\'s code. Check it and try again.';
+
+  @override
+  String get founderCodeUsed =>
+      'That code was already used. Each code works once.';
+
+  @override
+  String get founderCodeDeadline =>
+      'The date to enter that code has passed. Ask for more time from Get help.';
+
+  @override
+  String get founderCodeRevoked => 'That code was withdrawn.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Your founder\'s pass is on: remote control and Chat for this Home until $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Your founder\'s pass ends on $date. ZigDash Pro keeps remote control and Chat, with nothing to set up again.';
+  }
+
+  @override
+  String get founderGetPro => 'Get Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Your founder\'s pass ended on $date. ZigDash Pro brings remote control and Chat back, with nothing to set up again.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Your founder\'s pass ended. ZigDash Pro brings remote control and Chat back, with nothing to set up again.';
+
+  @override
+  String get founderDeleted =>
+      'This Home\'s founder\'s pass ended and its remote control was removed.';
+
+  @override
+  String get remoteRemoved =>
+      'This Home\'s remote control was removed from the relay.';
+
+  @override
+  String get founderSetUpWithPro => 'Set up with Pro';
+
+  @override
+  String get founderUseProTitle => 'Use your Pro purchase for this Home?';
+
+  @override
+  String get founderUseProBody =>
+      'Remote control and Chat for this Home move to your Pro purchase: the same phones and Chat links, nothing to set up again. A purchase covers one Home.';
+
+  @override
+  String get founderUsePro => 'Use Pro for this Home';
+
+  @override
+  String get founderUpgraded => 'This Home now runs on your Pro purchase.';
+
+  @override
+  String get founderUpgradeTaken =>
+      'That purchase already belongs to another Home.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Couldn\'t move this Home to your Pro purchase. Try again later.';
+
+  @override
+  String get remoteHubRefused => 'The relay refused this hub\'s login';
+
+  @override
+  String get chatRowPassEnded =>
+      'Founder\'s pass ended: links can still be removed';
+
+  @override
+  String get chatFailPassEnded =>
+      'This Home\'s founder\'s pass ended, so no new Telegram account can be linked.';
 }

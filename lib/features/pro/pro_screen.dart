@@ -14,14 +14,15 @@ import 'pro_trial_card.dart' show proTrialDaysLeftText;
 /// Opens the Pro screen. Settings and every Unlock lead here first, so
 /// nobody meets Play's purchase sheet before knowing what Pro adds and what
 /// stays free (2.9.6).
-void openPro(BuildContext context, {required ProFrom from}) {
+/// Completes when the Pro screen is closed.
+Future<void> openPro(BuildContext context, {required ProFrom from}) {
   // Kept for the purchase events: a tap on the price says where it began.
   final scope = ProviderScope.containerOf(context, listen: false);
   scope.read(proFromProvider.notifier).state = from;
   // "The sale has ended" belongs to the visit in which the tap found it
   // gone, not to every later one.
   scope.read(proSaleEndedProvider.notifier).state = false;
-  Navigator.of(context).push(
+  return Navigator.of(context).push(
     MaterialPageRoute<void>(builder: (_) => ProScreen(from: from)),
   );
 }

@@ -10493,6 +10493,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That isn\'t the code the bot sent. Tries left: {count}.'**
   String chatFailWrongCodeLeft(int count);
+
+  /// Founder's pass (docs/design/founders-pass.md): Remote control page, Chat screen and Home settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a founder\'s code?'**
+  String get founderCodeAsk;
+
+  /// No description provided for @founderCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Founder\'s code'**
+  String get founderCodeLabel;
+
+  /// No description provided for @founderCodeUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the code'**
+  String get founderCodeUse;
+
+  /// No description provided for @founderCodeAtHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter it at home, with ZigDash Engine on your hub: ZigDash sets remote control up over your home network.'**
+  String get founderCodeAtHome;
+
+  /// No description provided for @founderCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That isn\'t a founder\'s code. Check it and try again.'**
+  String get founderCodeWrong;
+
+  /// No description provided for @founderCodeUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'That code was already used. Each code works once.'**
+  String get founderCodeUsed;
+
+  /// No description provided for @founderCodeDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'The date to enter that code has passed. Ask for more time from Get help.'**
+  String get founderCodeDeadline;
+
+  /// No description provided for @founderCodeRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'That code was withdrawn.'**
+  String get founderCodeRevoked;
+
+  /// No description provided for @founderCodeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass is on: remote control and Chat for this Home until {date}.'**
+  String founderCodeDone(String date);
+
+  /// No description provided for @founderEndsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass ends on {date}. ZigDash Pro keeps remote control and Chat, with nothing to set up again.'**
+  String founderEndsOn(String date);
+
+  /// No description provided for @founderGetPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Pro'**
+  String get founderGetPro;
+
+  /// No description provided for @founderEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass ended on {date}. ZigDash Pro brings remote control and Chat back, with nothing to set up again.'**
+  String founderEnded(String date);
+
+  /// No description provided for @founderEndedNoDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass ended. ZigDash Pro brings remote control and Chat back, with nothing to set up again.'**
+  String get founderEndedNoDate;
+
+  /// No description provided for @founderDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home\'s founder\'s pass ended and its remote control was removed.'**
+  String get founderDeleted;
+
+  /// No description provided for @remoteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home\'s remote control was removed from the relay.'**
+  String get remoteRemoved;
+
+  /// No description provided for @founderSetUpWithPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up with Pro'**
+  String get founderSetUpWithPro;
+
+  /// No description provided for @founderUseProTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your Pro purchase for this Home?'**
+  String get founderUseProTitle;
+
+  /// No description provided for @founderUseProBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote control and Chat for this Home move to your Pro purchase: the same phones and Chat links, nothing to set up again. A purchase covers one Home.'**
+  String get founderUseProBody;
+
+  /// No description provided for @founderUsePro.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Pro for this Home'**
+  String get founderUsePro;
+
+  /// No description provided for @founderUpgraded.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home now runs on your Pro purchase.'**
+  String get founderUpgraded;
+
+  /// No description provided for @founderUpgradeTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'That purchase already belongs to another Home.'**
+  String get founderUpgradeTaken;
+
+  /// No description provided for @founderUpgradeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t move this Home to your Pro purchase. Try again later.'**
+  String get founderUpgradeFailed;
+
+  /// No description provided for @remoteHubRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The relay refused this hub\'s login'**
+  String get remoteHubRefused;
+
+  /// No description provided for @chatRowPassEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Founder\'s pass ended: links can still be removed'**
+  String get chatRowPassEnded;
+
+  /// No description provided for @chatFailPassEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home\'s founder\'s pass ended, so no new Telegram account can be linked.'**
+  String get chatFailPassEnded;
 }
 
 class _AppLocalizationsDelegate

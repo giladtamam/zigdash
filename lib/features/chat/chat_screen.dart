@@ -13,6 +13,8 @@ import '../../core/l10n/l10n_ext.dart';
 import '../../core/router/routes.dart';
 import '../../engine/engine_providers.dart';
 import '../../l10n/app_localizations.dart';
+import '../../remote/founder.dart';
+import '../../remote/founder_ui.dart';
 import '../../remote/remote_setup.dart';
 import '../devices/device_registry.dart' show linkedIeeesProvider;
 import '../devices/devices_providers.dart' show homeBaseTopicProvider;
@@ -42,6 +44,7 @@ String chatRowReason(AppLocalizations l10n, ChatRowState state) => switch (state
       ChatRowState.noPro => l10n.chatRowNoPro,
       ChatRowState.noRemote => l10n.chatRowNoRemote,
       ChatRowState.noEngine => l10n.chatRowNoEngine,
+      ChatRowState.passEnded => l10n.chatRowPassEnded,
       _ => l10n.chatRowReady,
     };
 
@@ -64,7 +67,7 @@ String auditLine(AppLocalizations l10n, ChatAuditEntry e) {
 /// Where the Chat row (and the dashboard's "Chat is here" card) goes: the
 /// Chat screen, or what the Home still needs first.
 VoidCallback? chatRowAction(BuildContext context, ChatRowState state, String connectionId) => switch (state) {
-      ChatRowState.ready => () => context.push(Routes.homeChat(connectionId)),
+      ChatRowState.ready || ChatRowState.passEnded => () => context.push(Routes.homeChat(connectionId)),
       ChatRowState.noRemote => () => context.push(Routes.homeRemote(connectionId)),
       ChatRowState.noEngine => () => context.go(Routes.homeAutomations(connectionId)),
       ChatRowState.noPro => () => openPro(context, from: ProFrom.settings),
@@ -95,12 +98,14 @@ class ChatSettingsRow extends ConsumerWidget {
   }
 }
 
-String _fail(AppLocalizations l10n, ChatFail why, int? triesLeft) => switch (why) {
+/// [founder]: a founder's Home, whose 402 is the pass, not a purchase.
+String _fail(AppLocalizations l10n, ChatFail why, int? triesLeft, {bool founder = false}) => switch (why) {
       ChatFail.notAtHome => l10n.chatLinkAway,
       ChatFail.engineOld => l10n.chatEngineOld,
       ChatFail.unreachable => l10n.chatFailUnreachable,
       ChatFail.login => l10n.chatFailLogin,
-      ChatFail.purchase => l10n.chatFailPurchase,
+      ChatFail.purchase => founder ? l10n.chatFailPassEnded : l10n.chatFailPurchase,
+      ChatFail.passEnded => l10n.chatFailPassEnded,
       ChatFail.tooMany => l10n.chatFailTooMany,
       ChatFail.expired || ChatFail.ticket => l10n.chatFailExpired,
       ChatFail.wrongCode => triesLeft == null ? l10n.chatFailWrongCode : l10n.chatFailWrongCodeLeft(triesLeft),
@@ -156,6 +161,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
     // Never while building: the first frame decides whether the Home is ready.
     Future.microtask(_load);
     WidgetsBinding.instance.addObserver(this);
+    // The founder status is asked again whenever the screen opens; an
+    // upgrade a lost connection left half done goes on.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final l10n = context.l10n;
+      final messenger = ScaffoldMessenger.of(context);
+      await ref.read(founderRefreshProvider)(_id);
+      if (!mounted) return;
+      await resumeFounderUpgrade(ref, _id, messenger, l10n);
+    });
   }
 
   /// Back from Telegram (a link, or /unlink there): the list may have changed.
@@ -175,8 +190,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
   }
 
   Future<void> _load() async {
-    if (!mounted || ref.read(chatRowStateProvider(_id)) != ChatRowState.ready) return;
-    if (!_counted) {
+    if (!mounted) return;
+    final row = ref.read(chatRowStateProvider(_id));
+    if (row != ChatRowState.ready && row != ChatRowState.passEnded) return;
+    if (!_counted && row == ChatRowState.ready) {
       _counted = true;
       _analytics.track(const ChatLinkEvent(ChatLinkStep.intro));
     }
@@ -200,7 +217,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
   }
 
   void _failed(ChatFail why, {int? triesLeft}) {
-    _analytics.track(ChatLinkEvent(ChatLinkStep.failed, why: why.wire));
+    // The pass ending is counted as the relay's purchase gate it is: no
+    // new analytics value (founders-pass.md).
+    _analytics.track(ChatLinkEvent(ChatLinkStep.failed,
+        why: (why == ChatFail.passEnded ? ChatFail.purchase : why).wire));
+    // The pass ended under the screen: the relay is asked, and the screen
+    // turns manage-only.
+    if (why == ChatFail.passEnded) unawaited(ref.read(founderRefreshProvider)(_id));
     setState(() {
       _error = why;
       _triesLeft = triesLeft;
@@ -264,8 +287,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
       unawaited(_load());
     } on ChatException catch (e) {
       if (!mounted) return;
-      // Wrong, not claimed yet or try again: the same link waits.
-      if (e.why == ChatFail.expired || e.why == ChatFail.ticket) {
+      // Wrong, not claimed yet or try again: the same link waits. The pass
+      // ending is final: the service dropped the link.
+      if (e.why == ChatFail.expired || e.why == ChatFail.ticket || e.why == ChatFail.passEnded) {
         unawaited(_linker.abandon(_id, pending));
         setState(() => _pending = null);
       }
@@ -345,8 +369,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final state = ref.watch(chatRowStateProvider(_id));
+    // The founder status can come a moment after the screen opened (a
+    // phone that never asked the relay): the list loads once it is known.
+    ref.listen(chatRowStateProvider(_id), (prev, next) {
+      if (prev != next && (next == ChatRowState.ready || next == ChatRowState.passEnded)) unawaited(_load());
+    });
     final theme = Theme.of(context);
-    if (state != ChatRowState.ready) {
+    final founder = ref.watch(founderStatusProvider(_id)).valueOrNull;
+    final now = ref.read(founderNowProvider)();
+    final isFounder = founder?.founder ?? false;
+    final ended = state == ChatRowState.passEnded;
+    if (state != ChatRowState.ready && !ended) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.chatTitle)),
         body: ListView(children: [
@@ -431,7 +464,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
                     key: const Key('chat-links-failed'),
                     // The relay's login or the purchase says what to fix; only
                     // a network failure is about the connection.
-                    title: Text(_linksFail == ChatFail.unreachable ? l10n.chatLinkedLoadFailed : _fail(l10n, _linksFail!, null)))
+                    title: Text(_linksFail == ChatFail.unreachable
+                        ? l10n.chatLinkedLoadFailed
+                        : _fail(l10n, _linksFail!, null, founder: isFounder)))
               else if (links.isEmpty)
                 ListTile(key: const Key('chat-links-none'), title: Text(l10n.chatLinkedNone))
               else
@@ -471,11 +506,45 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
                     ),
               ],
               const Divider(height: 32),
-              if (_pending == null)
+              // After the pass: list and remove only; Link gives way to Pro.
+              if (ended) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: FounderProLine(
+                    key: const Key('chat-pass-ended'),
+                    connectionId: _id,
+                    text: founder?.expiresAt == null
+                        ? l10n.founderEndedNoDate
+                        : l10n.founderEnded(founderDate(context, founder!.expiresAt!)),
+                    from: ProFrom.settings,
+                  ),
+                ),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: Text(_fail(l10n, _error!, _triesLeft, founder: isFounder),
+                        key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
+                  ),
+              ] else if (_pending == null) ...[
+                // The last 7 days of a founder's pass: the date and Get Pro.
+                if (founder != null && founder.endsSoonAt(now) && founder.expiresAt != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    child: FounderProLine(
+                      key: const Key('chat-founder-line'),
+                      connectionId: _id,
+                      text: l10n.founderEndsOn(founderDate(context, founder.expiresAt!)),
+                      from: ProFrom.settings,
+                    ),
+                  ),
                 ..._newLink(l10n, theme, items,
-                    atHome: atHome, engineReady: engineReady, engineOld: engineOld, another: links?.isNotEmpty ?? false)
-              else
-                ..._finish(l10n, theme, _pending!),
+                    atHome: atHome,
+                    engineReady: engineReady,
+                    engineOld: engineOld,
+                    another: links?.isNotEmpty ?? false,
+                    founder: isFounder),
+              ] else
+                ..._finish(l10n, theme, _pending!, founder: isFounder),
             ],
           ),
         ),
@@ -491,6 +560,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
     required bool engineReady,
     required bool engineOld,
     required bool another,
+    required bool founder,
   }) =>
       [
         ListTile(title: Text(another ? l10n.chatLinkAnother : l10n.chatLinkNew, style: theme.textTheme.titleMedium)),
@@ -545,7 +615,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
         if (_error != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(_fail(l10n, _error!, _triesLeft), key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
+            child: Text(_fail(l10n, _error!, _triesLeft, founder: founder),
+                key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
           ),
         // 4. Linking writes to the hub over the home network.
         Padding(
@@ -561,7 +632,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
         ),
       ];
 
-  List<Widget> _finish(AppLocalizations l10n, ThemeData theme, PendingChatLink pending) => [
+  List<Widget> _finish(AppLocalizations l10n, ThemeData theme, PendingChatLink pending, {required bool founder}) => [
         ListTile(
           key: const Key('chat-finish'),
           title: Text(l10n.chatCodeTitle, style: theme.textTheme.titleMedium),
@@ -583,7 +654,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
         if (_error != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(_fail(l10n, _error!, _triesLeft), key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
+            child: Text(_fail(l10n, _error!, _triesLeft, founder: founder),
+                key: const Key('chat-error'), style: TextStyle(color: theme.colorScheme.error)),
           ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),

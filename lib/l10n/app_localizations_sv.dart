@@ -6007,4 +6007,96 @@ class AppLocalizationsSv extends AppLocalizations {
   String chatFailWrongCodeLeft(int count) {
     return 'Det är inte koden som boten skickade. Försök kvar: $count.';
   }
+
+  @override
+  String get founderCodeAsk => 'Har du en grundarkod?';
+
+  @override
+  String get founderCodeLabel => 'Grundarkod';
+
+  @override
+  String get founderCodeUse => 'Använd koden';
+
+  @override
+  String get founderCodeAtHome =>
+      'Ange den hemma, med ZigDash Engine på hubben: ZigDash ställer in fjärrstyrning via hemnätverket.';
+
+  @override
+  String get founderCodeWrong =>
+      'Det är ingen grundarkod. Kontrollera den och försök igen.';
+
+  @override
+  String get founderCodeUsed =>
+      'Den koden har redan använts. Varje kod fungerar en gång.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Sista dagen att ange koden har passerat. Be om mer tid via Få hjälp.';
+
+  @override
+  String get founderCodeRevoked => 'Den koden har dragits tillbaka.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Ditt grundarpass är på: fjärrstyrning och Chat för det här hemmet till $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Ditt grundarpass slutar $date. Med ZigDash Pro behåller du fjärrstyrning och Chat, utan att ställa in något igen.';
+  }
+
+  @override
+  String get founderGetPro => 'Skaffa Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Ditt grundarpass slutade $date. ZigDash Pro ger tillbaka fjärrstyrning och Chat, utan att ställa in något igen.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Ditt grundarpass har slutat. ZigDash Pro ger tillbaka fjärrstyrning och Chat, utan att ställa in något igen.';
+
+  @override
+  String get founderDeleted =>
+      'Grundarpasset för det här hemmet har slutat och dess fjärrstyrning har tagits bort.';
+
+  @override
+  String get remoteRemoved =>
+      'Fjärrstyrningen för det här hemmet har tagits bort från reläet.';
+
+  @override
+  String get founderSetUpWithPro => 'Ställ in med Pro';
+
+  @override
+  String get founderUseProTitle => 'Använda ditt Pro-köp för det här hemmet?';
+
+  @override
+  String get founderUseProBody =>
+      'Fjärrstyrning och Chat för det här hemmet flyttas till ditt Pro-köp: samma telefoner och Chat-länkar, inget att ställa in igen. Ett köp gäller ett hem.';
+
+  @override
+  String get founderUsePro => 'Använd Pro för det här hemmet';
+
+  @override
+  String get founderUpgraded => 'Det här hemmet använder nu ditt Pro-köp.';
+
+  @override
+  String get founderUpgradeTaken => 'Det köpet hör redan till ett annat hem.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Kunde inte flytta hemmet till ditt Pro-köp. Försök igen senare.';
+
+  @override
+  String get remoteHubRefused => 'Reläet nekade hubbens inloggning';
+
+  @override
+  String get chatRowPassEnded =>
+      'Grundarpasset har slutat: länkar kan fortfarande tas bort';
+
+  @override
+  String get chatFailPassEnded =>
+      'Grundarpasset för det här hemmet har slutat, så inga nya Telegram-konton kan länkas.';
 }
