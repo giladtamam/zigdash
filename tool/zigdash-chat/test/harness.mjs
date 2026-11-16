@@ -212,6 +212,7 @@ export function fakeTelegram() {
   const waiters = [];
   let updateId = 100;
   const calls = [];
+  const cleared = [];
   const fetchImpl = async (url, init) => {
     const method = url.slice(url.lastIndexOf('/') + 1);
     calls.push({ url, method });
@@ -221,6 +222,7 @@ export function fakeTelegram() {
     if (method === 'sendChatAction') return reply(true);
     if (method === 'sendMessage') { sent.push({ chatId: String(body.chat_id), text: body.text, markup: body.reply_markup }); waiters.splice(0).forEach((w) => w()); return reply({}); }
     if (method === 'answerCallbackQuery') return reply(true);
+    if (method === 'editMessageReplyMarkup') { cleared.push({ chatId: String(body.chat_id), messageId: body.message_id, markup: body.reply_markup }); return reply(true); }
     if (method === 'getUpdates') {
       for (;;) {
         const ready = queue.filter((u) => u.update_id >= body.offset);
@@ -234,7 +236,7 @@ export function fakeTelegram() {
     return reply({});
   };
   return {
-    fetchImpl, sent, calls,
+    fetchImpl, sent, calls, cleared,
     send(chatId, text, { type = 'private', firstName = 'Owner' } = {}) {
       queue.push(this.update(chatId, text, { type, firstName }));
     },

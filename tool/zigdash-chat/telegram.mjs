@@ -29,6 +29,8 @@ export function makeBot({ token, fetchImpl = fetch, signal }) {
     },
     typing: (chatId) => api('sendChatAction', { chat_id: chatId, action: 'typing' }).catch(() => {}),
     answerCallback: (id) => api('answerCallbackQuery', { callback_query_id: id }).catch(() => {}),
+    /** Takes the buttons off a message once they were answered. */
+    clearButtons: (chatId, messageId) => api('editMessageReplyMarkup', { chat_id: chatId, message_id: messageId, reply_markup: { inline_keyboard: [] } }).catch(() => {}),
   };
 }
 

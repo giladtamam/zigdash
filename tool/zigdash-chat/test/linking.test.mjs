@@ -406,6 +406,7 @@ test('/unlink: asks first; Keep keeps; Unlink within 60 s removes the binding, k
   assert.deepEqual(w.lastTo(OWNER).markup.inline_keyboard[0].map((b) => b.callback_data), ['unlink:yes', 'unlink:no']);
   await w.hook(w.tg.callback(OWNER, 'unlink:no'));
   assert.equal(w.lastTo(OWNER).text, LINK_TEXT.kept);
+  assert.deepEqual(w.tg.cleared.at(-1), { chatId: OWNER, messageId: 1, markup: { inline_keyboard: [] } }, 'Keep takes the buttons off');
   await w.hook(w.tg.callback(OWNER, 'unlink:yes'));
   assert.equal(w.lastTo(OWNER).text, LINK_TEXT.unlinkExpired, 'the question was answered already');
   await w.say(OWNER, '/unlink');
@@ -416,6 +417,7 @@ test('/unlink: asks first; Keep keeps; Unlink within 60 s removes the binding, k
   await w.say(OWNER, '/unlink');
   await w.hook(w.tg.callback(OWNER, 'unlink:yes'));
   assert.equal(w.lastTo(OWNER).text, LINK_TEXT.unlinked);
+  assert.equal(w.tg.cleared.length, 4, 'every answer takes the buttons off');
   assert.deepEqual(w.keys(), {});
   assert.deepEqual(w.acl.at(-1), { home_id: HOME, ...c.topics, op: 'remove' });
   assert.deepEqual((await w.api('GET', '/v1/links', undefined, c.ticket())).body.links, []);

@@ -317,6 +317,8 @@ export function makeChat({ bindings, state, bot, agent, metrics, mqtt, fetchImpl
     if (!chatId) return;
     if (q.data !== 'unlink:yes' && q.data !== 'unlink:no') { await forward(update); return; }
     await bot.answerCallback(q.id);
+    // Unlink and Keep stay tappable otherwise, long after the answer.
+    if (q.message?.message_id !== undefined) await bot.clearButtons(chatId, q.message.message_id);
     const asked = unlinkAsks.get(chatId);
     unlinkAsks.delete(chatId);
     const b = bindings.byChat(chatId);
