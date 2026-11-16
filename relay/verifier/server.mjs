@@ -941,17 +941,18 @@ export function createVerifier(env = process.env, hooks = {}) {
       });
       await admin.subscribeAsync('$CONTROL/dynamic-security/v1/response');
       admin.on('message', onControlResponse);
-      await sweep().catch((e) => log(`verifier: sweep: ${e.message}`));
-      if (cfg.sweepMs > 0) {
-        sweepTimer = setInterval(() => sweep().catch((e) => log(`verifier: sweep: ${e.message}`)), cfg.sweepMs);
-        sweepTimer.unref();
-      }
       await new Promise((r) => server.listen(cfg.port, r));
       if (cfg.internalPort >= 0 && !Number.isNaN(cfg.internalPort)) await new Promise((r) => internal.listen(cfg.internalPort, r));
       if (cfg.adminSocket) {
         fs.rmSync(cfg.adminSocket, { force: true });
         await new Promise((r) => adminServer.listen(cfg.adminSocket, r));
         fs.chmodSync(cfg.adminSocket, 0o600);
+      }
+      // The first sweep once serving (a deletion's clearing can take minutes).
+      await sweep().catch((e) => log(`verifier: sweep: ${e.message}`));
+      if (cfg.sweepMs > 0) {
+        sweepTimer = setInterval(() => sweep().catch((e) => log(`verifier: sweep: ${e.message}`)), cfg.sweepMs);
+        sweepTimer.unref();
       }
       return server.address().port;
     },

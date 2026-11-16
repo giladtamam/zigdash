@@ -78,6 +78,10 @@ test('a database from before the founders\' pass opens, keeps its Homes and gain
     assert.equal(v.entitled('00112233445566aa'), true, 'a purchase Home stays entitled');
     for (const t of ['passes', 'chat_acls', 'tombstones']) assert.ok(v.db.prepare('select name from sqlite_master where name = ?').get(t), t);
     assert.equal(v.db.prepare('select count(*) as n from phones').get().n, 1);
+    // The inserts the verifier makes, by column name, on the migrated table.
+    v.db.prepare('insert into homes (id, token_hash, created) values (?, ?, ?)').run(`aa${i}`, `purchase-${i}`, 1);
+    v.db.prepare('insert into homes (id, token_hash, created, kind, expires_at) values (?, ?, ?, ?, ?)').run(`bb${i}`, `founder-${i}`, 1, 'founder', 2);
+    assert.equal(v.db.prepare('select kind from homes where id = ?').get(`bb${i}`).kind, 'founder');
     await v.stop();
   }
 });
