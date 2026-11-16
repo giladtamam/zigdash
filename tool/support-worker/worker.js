@@ -14,6 +14,12 @@
 // itself; the only thing kept is the draft (address, answer, the person's
 // message) in KV RATE for at most an hour, plus monthly counts.
 //
+// Founders' pass invites (docs/design/founders-pass.md, Invites): the owner
+// POSTs /v1/early/invite with codes made by the relay's `passes new`; each
+// list entry at position <= 20 not yet invited gets one code, by Telegram
+// (@ZigDashHomeBot) or by email (Resend), in its language. The entry keeps
+// only the invite date (`invited`), never the code.
+//
 // Secrets (set in the Worker's settings, never in this file):
 //   SUPPORT_BOT_TOKEN         the support bot's token; its webhook answers
 //   SUPPORT_WEBHOOK_SECRET    path part and header secret of that webhook
@@ -26,6 +32,9 @@
 //   CHAT_SERVICE_SECRET       ZigDash Chat (tool/zigdash-chat, WORKER_SECRET_FILE there):
 //                             its header secret for /v1/early/tg and /v1/early/linked, and
 //                             the HMAC key of the linked chat ids
+//   EARLY_ADMIN_SECRET        the owner's header secret (X-ZigDash-Admin) for
+//                             /v1/early/invite, and the HMAC key of the invite
+//                             emails' idempotency keys
 // Bindings:
 //   RATE                a KV namespace for the per-address and daily counters,
 //                       and the answer drafts (personal data, 1 hour)
@@ -38,8 +47,16 @@
 // "chat:linked"). If the webhook is rolled back to this Worker, a linked chat
 // gets "Chat is paused for maintenance" instead of the early-access reply.
 //
-// Answers: 200 sent, 400 bad body, 413 too large, 405 wrong method,
+// Routes (POST only): /v1/message (support, from the app), /v1/early and
+// /v1/early/price (the early-access card), /v1/early/tg and /v1/early/linked
+// (zigdash-chat), /v1/early/invite (the owner), /v1/tg/<secret> and
+// /v1/support-tg/<secret> (the two bots' webhooks).
+//
+// /v1/message answers: 200 sent, 400 bad body, 413 too large, 405 wrong method,
 // 503 over a limit or Telegram unreachable (the app then offers Share).
+// /v1/early/invite answers: 401 wrong or no admin secret, 400 bad body,
+// 409 fewer codes than eligible entries (nothing sent), 200 {eligible} on a
+// dry run, else 200 {sent, failed: [{position, why}], unused}.
 // No CORS: the caller is the app, not a web page.
 
 const MAX_BODY = 8 * 1024;
@@ -57,6 +74,7 @@ export default {
     if (url.pathname === '/v1/early/price') return earlyPrice(request, env);
     if (url.pathname === '/v1/early/tg') return chatForwarded(request, env);
     if (url.pathname === '/v1/early/linked') return chatLinked(request, env);
+    if (url.pathname === '/v1/early/invite') return earlyInvite(request, env);
     if (env.ASSISTANT_WEBHOOK_SECRET &&
         url.pathname === `/v1/tg/${env.ASSISTANT_WEBHOOK_SECRET}`) {
       return botUpdate(request, env);
@@ -383,6 +401,20 @@ function placeLine(position) {
     : `You're #${position} on the list. The first ${EARLY_FREE} places are taken; you'll hear first when it's ready.`;
 }
 
+/// What a listed chat hears (founders-pass.md, Replies). Chat is out; the
+/// first 20 get a founder's code, and once it is sent, questions go through
+/// Get help in the app (the webhook passes no free text on).
+function listedReply(entry) {
+  const p = entry.position;
+  const leave = 'Send /stop to leave the list.';
+  if (entry.invited) {
+    return `Your founder's code was sent on ${formatDay(entry.invited, 'en')}. Questions or need more time? ` +
+      `Write from Get help in the ZigDash app (Settings › Get help) and add your email so I can answer. ${leave}`;
+  }
+  if (p <= EARLY_FREE) return `${placeLine(p)} Chat is out for Pro owners; you'll get your founder's code soon. ${leave}`;
+  return `You're #${p} on the list. Chat is out now for ZigDash Pro owners. ${leave}`;
+}
+
 // The bot (@ZigDashHomeBot): Telegram calls this webhook. No IP limit
 // (these are Telegram's servers); the header secret proves the caller.
 async function botUpdate(request, env) {
@@ -470,10 +502,14 @@ async function chatIsLinked(env, chatId) {
     return false;
   }
   if (!Array.isArray(ids) || !ids.length) return false;
-  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.CHAT_SERVICE_SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const mac = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(String(chatId))));
-  const hex = [...mac].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
-  return ids.includes(hex);
+  return ids.includes((await hmacHex(env.CHAT_SERVICE_SECRET, String(chatId))).slice(0, 32));
+}
+
+/// HMAC-SHA256(secret, message) as hex.
+async function hmacHex(secret, message) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message)));
+  return [...mac].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 async function botMessage(env, m) {
@@ -493,9 +529,7 @@ async function botMessage(env, m) {
     return botJoin(env, chat, key, lang, payload === 'early_c');
   }
   const entry = await env.EARLY.get(key, 'json');
-  if (entry) {
-    return botSend(env, chat, `Chat with your home isn't ready yet. ${placeLine(entry.position)} Send /stop to leave the list.`);
-  }
+  if (entry) return botSend(env, chat, listedReply(entry));
   return botSend(env, chat,
     "This is ZigDash's chat with your home: send a message like \"close the office shutter\" and your home answers. " +
     "It isn't built yet. Join the early-access list?\n\nPrivacy: " + POLICY_URL,
@@ -757,16 +791,20 @@ function quoteOriginal(original) {
   return s;
 }
 
-async function resendSend(env, draft, id) {
+function resendSend(env, draft, id) {
+  return resendPost(env, answerEmail(draft), `reply-${id}`);
+}
+
+async function resendPost(env, email, idempotencyKey) {
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         authorization: `Bearer ${env.RESEND_API_KEY}`,
         'content-type': 'application/json',
-        'idempotency-key': `reply-${id}`,
+        'idempotency-key': idempotencyKey,
       },
-      body: JSON.stringify(answerEmail(draft)),
+      body: JSON.stringify(email),
       signal: AbortSignal.timeout(10000),
     });
     if (r.ok) return { ok: true, status: r.status };
@@ -777,5 +815,295 @@ async function resendSend(env, draft, id) {
     return { ok: false, status: r.status, name: String(e.name ?? e.type ?? ''), message: String(e.message ?? '') };
   } catch {
     return { ok: false, status: 0, name: '', message: '' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Founders' pass invites (docs/design/founders-pass.md, Invites)
+//
+// The owner runs a dry run, makes exactly that many codes with the relay's
+// `passes new`, then posts them here. Entries are listed under early:email:
+// and early:tg: only; every entry at position <= 20 is eligible whatever
+// `counted` says (it is only the analytics flag), duplicated positions too,
+// unless already invited. Codes are paired in order with the entries sorted
+// by position. Fewer codes than entries sends nothing (409): a rerun of an
+// old file would otherwise give one code to two people. A failed send is
+// not marked invited, so a rerun (with new codes) tries it again; the code
+// it was paired with should then be revoked, since a timeout may have
+// delivered it.
+
+const INVITE_PREFIXES = ['early:email:', 'early:tg:'];
+const INVITE_SUBJECT = "Your ZigDash founder's code";
+const CROCKFORD = '[0-9A-HJKMNP-TV-Z]';
+const CODE_RE = new RegExp(`^ZD-${CROCKFORD}{4}-${CROCKFORD}{4}-${CROCKFORD}{2}$`);
+const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+// The invite in the app's 13 languages: {code} and {date} are filled in,
+// and {end} closes the last sentence (Telegram: a full stop; email: "or
+// reply to this email" too). The menu names follow the app's own strings.
+const INVITE_TEXT = {
+  en: {
+    locale: 'en-GB',
+    paragraphs: [
+      "You're one of the first 20 on the ZigDash Chat list, so here is your founder's code: {code}. It gives one Home remote control and Chat for 3 months, free, from the day you enter it.",
+      'You need ZigDash 3.7 or later from Google Play, a Home connected to its MQTT broker, and ZigDash Engine on your hub. Open Settings › Home › Remote control, tap "Have a founder\'s code?" and enter it by {date}.',
+      'Questions or need more time? Write from Get help in the app and add your email so I can answer{end}',
+    ],
+    tg: '.', email: ', or reply to this email.',
+  },
+  cs: {
+    locale: 'cs',
+    paragraphs: [
+      'Jste mezi prvními 20 na seznamu ZigDash Chat, takže tady je váš zakladatelský kód: {code}. Dává jedné domácnosti dálkové ovládání a Chat na 3 měsíce, zdarma, ode dne, kdy ho zadáte.',
+      'Potřebujete ZigDash 3.7 nebo novější z Google Play, domácnost připojenou k jejímu MQTT brokeru a ZigDash Engine na hubu. Otevřete Nastavení › Domácnost › Dálkové ovládání, klepněte na „Máte zakladatelský kód?“ a zadejte ho do {date}.',
+      'Máte otázky nebo potřebujete víc času? Napište přes Získat pomoc v aplikaci a uveďte svůj e-mail, abych vám mohl odpovědět{end}',
+    ],
+    tg: '.', email: ', nebo odpovězte na tento e-mail.',
+  },
+  de: {
+    locale: 'de',
+    paragraphs: [
+      'Du bist unter den ersten 20 auf der ZigDash-Chat-Liste, deshalb hier dein Gründer-Code: {code}. Er gibt einem Zuhause Fernsteuerung und Chat für 3 Monate, kostenlos, ab dem Tag, an dem du ihn eingibst.',
+      'Du brauchst ZigDash 3.7 oder neuer aus Google Play, ein Zuhause, das mit seinem MQTT-Broker verbunden ist, und ZigDash Engine auf deinem Hub. Öffne Einstellungen › Zuhause › Fernsteuerung, tippe auf „Hast du einen Gründer-Code?“ und gib ihn bis zum {date} ein.',
+      'Fragen, oder brauchst du mehr Zeit? Schreib über Hilfe holen in der App und gib deine E-Mail an, damit ich antworten kann{end}',
+    ],
+    tg: '.', email: ', oder antworte auf diese E-Mail.',
+  },
+  es: {
+    locale: 'es',
+    paragraphs: [
+      'Estás entre los 20 primeros de la lista de ZigDash Chat, así que aquí tienes tu código de fundador: {code}. Le da a un hogar control remoto y Chat durante 3 meses, gratis, desde el día en que lo introduzcas.',
+      'Necesitas ZigDash 3.7 o posterior de Google Play, un hogar conectado a su bróker MQTT y ZigDash Engine en tu hub. Abre Ajustes › Hogar › Control remoto, toca «¿Tienes un código de fundador?» e introdúcelo a más tardar el {date}.',
+      '¿Preguntas o necesitas más tiempo? Escribe desde Obtener ayuda en la app y añade tu correo para que pueda responderte{end}',
+    ],
+    tg: '.', email: ', o responde a este correo.',
+  },
+  fr: {
+    locale: 'fr',
+    paragraphs: [
+      'Vous faites partie des 20 premiers de la liste ZigDash Chat, voici donc votre code fondateur : {code}. Il donne à un domicile le contrôle à distance et Chat pendant 3 mois, gratuitement, à partir du jour où vous le saisissez.',
+      "Il vous faut ZigDash 3.7 ou plus récent depuis Google Play, un domicile connecté à son broker MQTT et ZigDash Engine sur votre hub. Ouvrez Paramètres › Domicile › Contrôle à distance, touchez « Vous avez un code fondateur ? » et saisissez-le au plus tard le {date}.",
+      "Des questions ou besoin de plus de temps ? Écrivez depuis Obtenir de l'aide dans l'application et indiquez votre e-mail pour que je puisse répondre{end}",
+    ],
+    tg: '.', email: ', ou répondez à cet e-mail.',
+  },
+  he: {
+    locale: 'he',
+    paragraphs: [
+      'אתה בין 20 הראשונים ברשימה של ZigDash Chat, אז הנה קוד המייסד שלך: {code}. הוא נותן לבית אחד שליטה מרחוק ו-Chat למשך 3 חודשים, בחינם, מהיום שבו תזין אותו.',
+      'צריך ZigDash 3.7 ומעלה מ-Google Play, בית שמחובר לברוקר ה-MQTT שלו, ו-ZigDash Engine ברכזת. פתח הגדרות › בית › שליטה מרחוק, הקש על "יש לך קוד מייסד?" והזן אותו עד {date}.',
+      'יש שאלות או שצריך עוד זמן? כתוב דרך קבלת עזרה באפליקציה והוסף את האימייל שלך כדי שאוכל לענות{end}',
+    ],
+    tg: '.', email: ', או השב למייל הזה.',
+  },
+  it: {
+    locale: 'it',
+    paragraphs: [
+      'Sei tra i primi 20 della lista di ZigDash Chat, quindi ecco il tuo codice fondatore: {code}. Dà a una casa il controllo remoto e Chat per 3 mesi, gratis, dal giorno in cui lo inserisci.',
+      'Ti servono ZigDash 3.7 o successivo da Google Play, una casa collegata al suo broker MQTT e ZigDash Engine sul tuo hub. Apri Impostazioni › Casa › Controllo remoto, tocca «Hai un codice fondatore?» e inseriscilo entro il {date}.',
+      'Domande o ti serve più tempo? Scrivi da Ottieni aiuto nell\'app e aggiungi la tua email così posso risponderti{end}',
+    ],
+    tg: '.', email: ', oppure rispondi a questa email.',
+  },
+  nb: {
+    locale: 'nb',
+    paragraphs: [
+      'Du er blant de 20 første på ZigDash Chat-listen, så her er grunnleggerkoden din: {code}. Den gir ett hjem fjernstyring og Chat i 3 måneder, gratis, fra dagen du skriver den inn.',
+      'Du trenger ZigDash 3.7 eller nyere fra Google Play, et hjem koblet til MQTT-brokeren sin og ZigDash Engine på huben din. Åpne Innstillinger › Hjem › Fjernstyring, trykk på «Har du en grunnleggerkode?» og skriv den inn innen {date}.',
+      'Spørsmål, eller trenger du mer tid? Skriv via Få hjelp i appen og legg til e-posten din, så jeg kan svare{end}',
+    ],
+    tg: '.', email: ', eller svar på denne e-posten.',
+  },
+  nl: {
+    locale: 'nl',
+    paragraphs: [
+      'Je bent een van de eerste 20 op de ZigDash Chat-lijst, dus hier is je oprichterscode: {code}. Die geeft één huis 3 maanden bediening op afstand en Chat, gratis, vanaf de dag dat je hem invoert.',
+      "Je hebt ZigDash 3.7 of nieuwer uit Google Play nodig, een huis dat met zijn MQTT-broker verbonden is, en ZigDash Engine op je hub. Open Instellingen › Huis › Bediening op afstand, tik op 'Heb je een oprichterscode?' en voer hem uiterlijk {date} in.",
+      'Vragen of meer tijd nodig? Schrijf via Hulp krijgen in de app en vul je e-mailadres in, zodat ik kan antwoorden{end}',
+    ],
+    tg: '.', email: ', of beantwoord deze e-mail.',
+  },
+  pl: {
+    locale: 'pl',
+    paragraphs: [
+      'Jesteś wśród pierwszych 20 osób na liście ZigDash Chat, więc oto Twój kod założyciela: {code}. Daje jednemu domowi sterowanie zdalne i Chat na 3 miesiące, za darmo, od dnia, w którym go wpiszesz.',
+      'Potrzebujesz ZigDash 3.7 lub nowszego z Google Play, domu połączonego z jego brokerem MQTT oraz ZigDash Engine na hubie. Otwórz Ustawienia › Dom › Sterowanie zdalne, stuknij „Masz kod założyciela?” i wpisz go do {date}.',
+      'Masz pytania albo potrzebujesz więcej czasu? Napisz przez Uzyskaj pomoc w aplikacji i podaj swój e-mail, żebym mógł odpowiedzieć{end}',
+    ],
+    tg: '.', email: ' albo odpowiedz na tego e-maila.',
+  },
+  pt: {
+    locale: 'pt-BR',
+    paragraphs: [
+      'Você está entre os 20 primeiros da lista do ZigDash Chat, então aqui está seu código de fundador: {code}. Ele dá a uma casa controle remoto e Chat por 3 meses, grátis, a partir do dia em que você o inserir.',
+      'Você precisa do ZigDash 3.7 ou mais recente do Google Play, de uma casa conectada ao seu broker MQTT e do ZigDash Engine no seu hub. Abra Configurações › Casa › Controle remoto, toque em "Tem um código de fundador?" e insira-o até {date}.',
+      'Dúvidas ou precisa de mais tempo? Escreva pelo Obter ajuda no app e informe seu e-mail para que eu possa responder{end}',
+    ],
+    tg: '.', email: ', ou responda a este e-mail.',
+  },
+  ru: {
+    locale: 'ru',
+    paragraphs: [
+      'Вы среди первых 20 в списке ZigDash Chat, поэтому вот ваш код основателя: {code}. Он даёт одному дому удалённое управление и Chat на 3 месяца, бесплатно, со дня, когда вы его введёте.',
+      'Нужны ZigDash 3.7 или новее из Google Play, дом, подключённый к своему MQTT-брокеру, и ZigDash Engine на хабе. Откройте Настройки › Дом › Удалённое управление, нажмите «Есть код основателя?» и до {date} введите его.',
+      'Есть вопросы или нужно больше времени? Напишите через «Получить помощь» в приложении и укажите свой e-mail, чтобы я мог ответить{end}',
+    ],
+    tg: '.', email: ', или ответьте на это письмо.',
+  },
+  sv: {
+    locale: 'sv',
+    paragraphs: [
+      'Du är en av de 20 första på ZigDash Chat-listan, så här är din grundarkod: {code}. Den ger ett hem fjärrstyrning och Chat i 3 månader, gratis, från dagen du anger den.',
+      'Du behöver ZigDash 3.7 eller senare från Google Play, ett hem anslutet till sin MQTT-broker och ZigDash Engine på din hubb. Öppna Inställningar › Hem › Fjärrstyrning, tryck på ”Har du en grundarkod?” och ange den senast {date}.',
+      'Frågor, eller behöver du mer tid? Skriv via Få hjälp i appen och ange din e-post så att jag kan svara{end}',
+    ],
+    tg: '.', email: ', eller svara på det här mejlet.',
+  },
+};
+
+/// A YYYY-MM-DD day as the language writes it ("15 January 2027"); the day
+/// itself if the runtime can't.
+function formatDay(day, lang) {
+  try {
+    const locale = (INVITE_TEXT[lang] ?? INVITE_TEXT.en).locale;
+    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+      .format(new Date(`${day}T00:00:00Z`));
+  } catch {
+    return day;
+  }
+}
+
+/// The invite's text for one channel ('tg' or 'email').
+function inviteText(lang, code, redeemBy, channel) {
+  const t = INVITE_TEXT[lang] ?? INVITE_TEXT.en;
+  const fill = { code, date: formatDay(redeemBy, lang), end: t[channel] };
+  return t.paragraphs.map((p) => p.replace(/\{(code|date|end)\}/g, (_, k) => fill[k])).join('\n\n');
+}
+
+/// The invite email: no BCC (the owner gets nothing back but the counts);
+/// a reply goes to the support inbox, as with answers.
+function inviteEmail(to, lang, code, redeemBy) {
+  return {
+    from: SUPPORT_FROM,
+    to: [to],
+    reply_to: SUPPORT_INBOX,
+    subject: INVITE_SUBJECT,
+    text: inviteText(lang, code, redeemBy, 'email'),
+  };
+}
+
+function realDay(s) {
+  if (typeof s !== 'string' || !DAY_RE.test(s)) return false;
+  const d = new Date(`${s}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+}
+
+async function earlyInvite(request, env) {
+  if (!env.EARLY_ADMIN_SECRET || !sameSecret(request.headers.get('X-ZigDash-Admin'), env.EARLY_ADMIN_SECRET)) {
+    return text(401, 'no');
+  }
+  const body = await readJson(request, 16 * 1024);
+  if (!body) return text(400, 'bad body');
+  const dryRun = body.dry_run === true;
+  const codes = body.codes;
+  const redeemBy = body.redeem_by;
+  if (!dryRun) {
+    if (!Array.isArray(codes) || !codes.length || !codes.every((c) => typeof c === 'string' && CODE_RE.test(c)) ||
+        new Set(codes).size !== codes.length) {
+      return text(400, 'bad codes');
+    }
+    if (!realDay(redeemBy) || redeemBy < new Date().toISOString().slice(0, 10)) return text(400, 'bad redeem_by');
+  }
+
+  let eligible;
+  try {
+    eligible = await inviteEligible(env);
+  } catch {
+    return text(503, 'list failed');
+  }
+  if (dryRun) return json(200, { eligible: eligible.length });
+  if (codes.length < eligible.length) return json(409, { error: 'too_few_codes', eligible: eligible.length });
+
+  const today = new Date().toISOString().slice(0, 10);
+  let sent = 0;
+  const failed = [];
+  for (const [i, e] of eligible.entries()) {
+    const why = await inviteSend(env, e, codes[i], redeemBy);
+    if (why) {
+      failed.push({ position: e.position, why });
+      continue;
+    }
+    sent++;
+    if (!(await markInvited(env, e, today))) failed.push({ position: e.position, why: 'sent, not recorded' });
+  }
+  return json(200, { sent, failed, unused: codes.length - eligible.length });
+}
+
+/// Every entry to invite, by position (a duplicated position in key order).
+/// `expiration` is the entry's own, from the listing, so marking it invited
+/// keeps its remaining time rather than starting a new 180 days.
+async function inviteEligible(env) {
+  const out = [];
+  for (const prefix of INVITE_PREFIXES) {
+    let cursor;
+    do {
+      const page = await env.EARLY.list({ prefix, ...(cursor ? { cursor } : {}) });
+      for (const k of page.keys ?? []) {
+        const entry = await env.EARLY.get(k.name, 'json');
+        if (!entry || typeof entry !== 'object' || entry.invited) continue;
+        const position = Number(entry.position);
+        if (!Number.isInteger(position) || position < 1 || position > EARLY_FREE) continue;
+        const created = Math.floor(Date.parse(entry.at) / 1000);
+        const expiration = Number(k.expiration) ||
+          (Number.isFinite(created) ? created + EARLY_TTL : Math.floor(Date.now() / 1000) + EARLY_TTL);
+        out.push({
+          key: k.name,
+          channel: prefix === 'early:tg:' ? 'tg' : 'email',
+          to: k.name.slice(prefix.length),
+          position,
+          lang: LOCALES.has(entry.lang) ? entry.lang : 'en',
+          expiration,
+        });
+      }
+      cursor = page.list_complete ? undefined : page.cursor;
+    } while (cursor);
+  }
+  return out.sort((a, b) => a.position - b.position || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+}
+
+/// Sends one invite: null when the channel accepted it, else why not (no
+/// address, no code: this goes back to the owner).
+async function inviteSend(env, e, code, redeemBy) {
+  if (e.channel === 'tg') {
+    if (!/^-?\d{1,20}$/.test(e.to)) return 'bad chat id';
+    if (!env.ASSISTANT_BOT_TOKEN) return 'no bot token';
+    const r = await tgCall(env.ASSISTANT_BOT_TOKEN, 'sendMessage', {
+      chat_id: e.to,
+      text: inviteText(e.lang, code, redeemBy, 'tg'),
+      disable_web_page_preview: true,
+    });
+    if (r.ok) return null;
+    return `telegram ${r.timeout ? 'timeout' : r.status || 'unreachable'}`;
+  }
+  const to = cleanEmail(e.to);
+  if (!to) return 'bad address';
+  if (!env.RESEND_API_KEY) return 'no resend key';
+  const key = `invite-${e.position}-${(await hmacHex(env.EARLY_ADMIN_SECRET, code)).slice(0, 12)}`;
+  const r = await resendPost(env, inviteEmail(to, e.lang, code, redeemBy), key);
+  if (r.ok) return null;
+  return `resend ${r.status || 'unreachable'}${r.name ? ` ${r.name}` : ''}`;
+}
+
+/// Records the invite date on the entry, keeping its remaining time. An
+/// entry deleted since (/stop) is not brought back.
+async function markInvited(env, e, day) {
+  try {
+    const entry = await env.EARLY.get(e.key, 'json');
+    if (!entry) return false;
+    const expiration = Math.max(e.expiration, Math.floor(Date.now() / 1000) + 60);
+    await env.EARLY.put(e.key, JSON.stringify({ ...entry, invited: day }), { expiration });
+    return true;
+  } catch {
+    return false;
   }
 }
