@@ -104,6 +104,19 @@ void main() {
     expect(EngineHealth.clockOff(r, DateTime.utc(2026, 10, 22, 15, 50)), isTrue);
   });
 
+  test("the relay's refusal of the hub's login is read from remote.error", () {
+    final refused = EngineReport.decode('{"engine":"3.7.1","remote":{"connected":false,"error":"refused"}}')!;
+    expect(refused.remoteConnected, isFalse);
+    expect(refused.remoteError, 'refused');
+    expect(refused.remoteRefused, isTrue);
+    final other = EngineReport.decode('{"engine":"3.7.1","remote":{"connected":false,"error":"timeout"}}')!;
+    expect(other.remoteRefused, isFalse);
+    expect(other.remoteError, 'timeout');
+    final online = EngineReport.decode('{"engine":"3.7.0","remote":{"connected":true}}')!;
+    expect([online.remoteConnected, online.remoteError], [true, null]);
+    expect(EngineReport.decode('{"engine":"3.7.0"}')!.remoteError, isNull);
+  });
+
   test('the bundled engine source carries its version', () {
     final source = File('hub/zigdash-engine.js').readAsStringSync();
     expect(bundledEngineVersion(source), '3.7.0');
