@@ -217,7 +217,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObse
   }
 
   void _failed(ChatFail why, {int? triesLeft}) {
-    _analytics.track(ChatLinkEvent(ChatLinkStep.failed, why: why.wire));
+    // The pass ending is counted as the relay's purchase gate it is: no
+    // new analytics value (founders-pass.md).
+    _analytics.track(ChatLinkEvent(ChatLinkStep.failed,
+        why: (why == ChatFail.passEnded ? ChatFail.purchase : why).wire));
     // The pass ended under the screen: the relay is asked, and the screen
     // turns manage-only.
     if (why == ChatFail.passEnded) unawaited(ref.read(founderRefreshProvider)(_id));

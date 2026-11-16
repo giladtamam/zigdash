@@ -273,6 +273,38 @@ void main() {
     expect(await row(HubEnginePhase.notInstalled), ChatRowState.noEngine);
   });
 
+  test("the row from a founder's status: running is ready, ended is manage-only, deleted leads to Remote", () async {
+    SharedPreferences.setMockInitialValues({'engine.installed.c1': true});
+    final p = await SharedPreferences.getInstance();
+    Future<ChatRowState> row(FounderStatus status, {ProStatus pro = ProStatus.unavailable}) async {
+      final box = ProviderContainer(overrides: [
+        sharedPreferencesProvider.overrideWithValue(p),
+        chatOfferedProvider.overrideWithValue(true),
+        remoteFitsProvider.overrideWith((ref, _) => true),
+        // By default Play billing isn't available on this phone.
+        proStatusProvider.overrideWithValue(pro),
+        remoteHomeProvider.overrideWith((ref, _) async => relayLogin),
+        founderStatusProvider.overrideWith((ref, _) async => status),
+        founderNowProvider.overrideWithValue(() => _now),
+      ]);
+      addTearDown(box.dispose);
+      box.listen(chatRowStateProvider('c1'), (_, _) {});
+      await box.read(remoteHomeProvider('c1').future);
+      await box.read(founderStatusProvider('c1').future);
+      return box.read(chatRowStateProvider('c1'));
+    }
+
+    FounderStatus pass({bool ended = false, bool deleted = false}) =>
+        FounderStatus(kind: 'founder', expiresAt: _end, ended: ended, deleted: deleted, fetchedAt: _now);
+    expect(await row(pass()), ChatRowState.ready);
+    expect(await row(pass(ended: true)), ChatRowState.passEnded);
+    // Deleted: no Chat to manage; with Pro, the row leads to the Remote
+    // page (which says the Home was removed); without, to Pro.
+    expect(await row(pass(ended: true, deleted: true), pro: ProStatus.unlocked), ChatRowState.noRemote);
+    expect(await row(pass(ended: true, deleted: true), pro: ProStatus.locked), ChatRowState.noPro);
+    expect(await row(pass(ended: true, deleted: true)), ChatRowState.hidden);
+  });
+
   testWidgets('cancel while waiting takes the hub client back', (tester) async {
     final page = await _open(tester);
     await _tap(tester, find.byKey(const Key('chat-link')));
@@ -475,7 +507,8 @@ void main() {
       expect(page.hub.configs, isEmpty);
       expect(page.log.last, startsWith('hub revoke'));
       expect(find.text("This Home's founder's pass ended, so no new Telegram account can be linked."), findsOneWidget);
-      expect(page.sink.sent.last, 'chat_link {step: failed, why: pass_ended}');
+      // Counted as the purchase gate: no new analytics value.
+      expect(page.sink.sent.last, 'chat_link {step: failed, why: purchase}');
       expect(page.refreshed, ['c1', 'c1']);
     });
 

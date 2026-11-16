@@ -77,15 +77,12 @@ class _FounderProLineState extends ConsumerState<FounderProLine> {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final upgrader = ref.read(founderUpgraderProvider);
-    await upgrader.remember(_id);
-    if (!mounted) return;
     await openPro(context, from: widget.from);
-    if (!mounted) return;
-    if (ref.read(proStatusProvider) != ProStatus.unlocked) {
-      // Back without buying: a later purchase elsewhere asks first.
-      await upgrader.forget(_id);
-      return;
-    }
+    // Back without buying: nothing is remembered, so a later purchase
+    // elsewhere asks first.
+    if (!mounted || ref.read(proStatusProvider) != ProStatus.unlocked) return;
+    // Bought from this line: "for this Home", kept until the relay answers.
+    await upgrader.remember(_id);
     setState(() => _busy = true);
     await runFounderUpgrade(ref, _id, messenger, l10n);
     if (mounted) setState(() => _busy = false);

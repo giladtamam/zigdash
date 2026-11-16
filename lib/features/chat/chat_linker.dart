@@ -298,11 +298,14 @@ ChatRowState chatRowStateOf({
 final chatRowStateProvider = Provider.autoDispose.family<ChatRowState, String>((ref, connectionId) {
   final founder = ref.watch(founderStatusProvider(connectionId)).valueOrNull;
   final now = ref.read(founderNowProvider)();
+  // A Home the relay deleted has no remote control left: the row leads to
+  // the Remote page, which says so and offers Pro.
+  final deleted = founder?.deleted ?? false;
   ChatRowState of(bool engineInstalled) => chatRowStateOf(
         offered: ref.watch(chatOfferedProvider),
         fits: ref.watch(remoteFitsProvider(connectionId)),
         pro: ref.watch(proStatusProvider),
-        remoteOn: ref.watch(remoteHomeProvider(connectionId)).valueOrNull != null,
+        remoteOn: !deleted && ref.watch(remoteHomeProvider(connectionId)).valueOrNull != null,
         engineInstalled: engineInstalled,
         founder: founder?.activeAt(now) ?? false,
         passEnded: founder?.endedAt(now) ?? false,
