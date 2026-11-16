@@ -7,6 +7,7 @@ import '../../data/database/database.dart';
 import '../../engine/engine_providers.dart';
 import '../../engine/engine_status.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
+import '../../remote/founder.dart';
 import '../../remote/remote_home.dart';
 import '../../remote/remote_setup.dart';
 import '../pro/pro.dart';
@@ -265,29 +266,46 @@ enum ChatRowState {
   /// ZigDash Engine was never seen on the hub.
   noEngine,
   ready,
+
+  /// The Home's founder's pass ended (founders-pass.md): its links can be
+  /// listed and removed, not made, until the Home moves to Pro.
+  passEnded,
 }
 
+/// A running founder's pass counts as Pro, even where Play billing isn't
+/// available; once it ends, the Home's Chat is manage-only, Pro or not,
+/// until the Home itself moves to a purchase.
 ChatRowState chatRowStateOf({
   required bool offered,
   required bool fits,
   required ProStatus pro,
   required bool remoteOn,
   required bool engineInstalled,
+  bool founder = false,
+  bool passEnded = false,
 }) {
-  if (!offered || !fits || pro == ProStatus.unavailable) return ChatRowState.hidden;
-  if (pro != ProStatus.unlocked) return ChatRowState.noPro;
+  if (!offered || !fits) return ChatRowState.hidden;
+  if (remoteOn && passEnded) return ChatRowState.passEnded;
+  if (!founder) {
+    if (pro == ProStatus.unavailable) return ChatRowState.hidden;
+    if (pro != ProStatus.unlocked) return ChatRowState.noPro;
+  }
   if (!remoteOn) return ChatRowState.noRemote;
   if (!engineInstalled) return ChatRowState.noEngine;
   return ChatRowState.ready;
 }
 
 final chatRowStateProvider = Provider.autoDispose.family<ChatRowState, String>((ref, connectionId) {
+  final founder = ref.watch(founderStatusProvider(connectionId)).valueOrNull;
+  final now = ref.read(founderNowProvider)();
   ChatRowState of(bool engineInstalled) => chatRowStateOf(
         offered: ref.watch(chatOfferedProvider),
         fits: ref.watch(remoteFitsProvider(connectionId)),
         pro: ref.watch(proStatusProvider),
         remoteOn: ref.watch(remoteHomeProvider(connectionId)).valueOrNull != null,
         engineInstalled: engineInstalled,
+        founder: founder?.activeAt(now) ?? false,
+        passEnded: founder?.endedAt(now) ?? false,
       );
   final state = of(engineKnownInstalled(ref.watch(sharedPreferencesProvider), connectionId));
   if (state != ChatRowState.noEngine) return state;

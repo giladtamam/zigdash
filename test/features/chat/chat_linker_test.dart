@@ -82,8 +82,17 @@ void main() {
       ProStatus pro = ProStatus.unlocked,
       bool remoteOn = true,
       bool engine = true,
+      bool founder = false,
+      bool passEnded = false,
     }) =>
-        chatRowStateOf(offered: offered, fits: fits, pro: pro, remoteOn: remoteOn, engineInstalled: engine);
+        chatRowStateOf(
+            offered: offered,
+            fits: fits,
+            pro: pro,
+            remoteOn: remoteOn,
+            engineInstalled: engine,
+            founder: founder,
+            passEnded: passEnded);
     expect(of(), ChatRowState.ready);
     expect(of(remoteOn: false), ChatRowState.noRemote);
     expect(of(engine: false), ChatRowState.noEngine);
@@ -95,6 +104,18 @@ void main() {
     expect(of(pro: ProStatus.unavailable), ChatRowState.hidden);
     // Home Assistant or Zigbee2MQTT's page: the relay can't serve it.
     expect(of(fits: false), ChatRowState.hidden);
+
+    // A running founder's pass counts as Pro, even without Play billing.
+    expect(of(founder: true, pro: ProStatus.locked), ChatRowState.ready);
+    expect(of(founder: true, pro: ProStatus.unavailable), ChatRowState.ready);
+    expect(of(founder: true, pro: ProStatus.unavailable, engine: false), ChatRowState.noEngine);
+    expect(of(founder: true, pro: ProStatus.unavailable, offered: false), ChatRowState.hidden);
+    // After it: manage-only, Pro or not, until the Home moves to Pro; no
+    // Engine needed to remove a link.
+    expect(of(passEnded: true, pro: ProStatus.locked), ChatRowState.passEnded);
+    expect(of(passEnded: true, pro: ProStatus.unavailable, engine: false), ChatRowState.passEnded);
+    expect(of(passEnded: true), ChatRowState.passEnded);
+    expect(of(passEnded: true, fits: false), ChatRowState.hidden);
   });
 
   test('only an Engine with Chat (3.7.0 or the 9.0.0-chat build) takes a client', () {
