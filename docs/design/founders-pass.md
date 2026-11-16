@@ -213,3 +213,36 @@ Three people are on the list today. This plan keeps the promise without giving a
    `passes extend --days 0` + `passes sweep` → passEnded, Chat notice → licence-test purchase from the
    founder line → upgrade → remote and Chat back.
 4. With 3.7.0 on production: invite dry run, `passes new --count <eligible>`, run the invite.
+
+## Appendix: the wire contract (binding for all parts)
+Times are milliseconds since the epoch. Errors are `{"error": "<code>"}` with the status shown.
+
+**Verifier, public (relay.zigdash.app, phone routes use HTTP Basic phone login as today)**
+- `POST /v1/homes` `{store:"founder", purchaseToken:<code>, redeem_nonce:<16-64 [A-Za-z0-9_-]>}` →
+  200 `{homeId, hub, phone, kind:"founder", expires_at}` (hub/phone as for purchases);
+  402 `no_pass` (unknown or wrong code) | 402 `deadline` | 402 `revoked` | 409 `code_used` | 429.
+  Purchases unchanged (`kind` absent or null in their answer).
+- `GET /v1/homes/<id>` (phone) → 200 `{kind:"founder"|null, expires_at:<ms>|null, ended:<bool>}`;
+  410 `deleted` (tombstone, no auth needed); 401 as today.
+- `POST /v1/homes/<id>/upgrade` (phone) `{purchaseToken, store:"play"|"apple"}` → 200 `{kind:null}`;
+  402 `no_purchase`; 409 `purchase_has_home`; 410 `deleted`.
+- `POST /v1/homes/<id>/hub`, `POST /v1/homes/<id>/phones` on an ended founder Home → 402 `pass_ended`.
+- `POST /v1/homes/<id>/chat-ticket` on a founder Home: `purchase_token` not needed (ignored if sent);
+  with `request_topic`/`answer_topic` while not entitled → 402 `pass_ended`; without topics → a ticket
+  as today (list/remove).
+
+**Verifier, internal (INTERNAL_PORT 8788, header `X-Chat-Acl-Secret`)**
+- `POST /v1/internal/chat-acl` `op:"add"` on a not-entitled Home → 402 `pass_ended`.
+- `GET /v1/internal/home/<id>` → 200 `{entitled:<bool>, ended_at:<ms>|null}`; 410 `deleted`; 404 `unknown`.
+
+**Chat service, internal (INTERNAL_PORT 8791, header `X-Chat-Acl-Secret`, no forwarding headers)**
+- `POST /v1/internal/home-changed` `{home_id}` → 200 `{ok:true}` (drops the cached status and the ended notice).
+- `POST /v1/internal/home-deleted` `{home_id}` → 200 `{ok:true}` at once; bindings removed afterwards
+  with the reason `pass_ended` (one message per chat).
+- Verifier env `CHAT_INTERNAL_URL` (default unset = no pushes); chat service env `INTERNAL_PORT`,
+  `VERIFIER_INTERNAL_URL` (e.g. `http://zigdash-verifier-1:8788`, its status route).
+
+**Chat service, app-facing (existing routes)**
+- `POST /v1/link/confirm` when the verifier's ACL add answers 402 → 402 `pass_ended` (final).
+
+**Engine status**: `remote: {connected:<bool>, error:"refused"|<existing>}`; ENGINE_VERSION 3.7.1.
