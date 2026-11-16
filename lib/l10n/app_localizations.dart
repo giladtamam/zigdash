@@ -10260,6 +10260,30 @@ abstract class AppLocalizations {
   /// **'Your hub didn\'t answer. Try again later.'**
   String get chatAuditFailed;
 
+  /// No description provided for @chatHereTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with your home is here'**
+  String get chatHereTitle;
+
+  /// No description provided for @chatHereBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Link your Telegram account, then ask your home \"is the back door open?\" or tell it to close a shutter. Part of Pro, free during the beta.'**
+  String get chatHereBody;
+
+  /// No description provided for @chatHereSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up'**
+  String get chatHereSetUp;
+
+  /// No description provided for @chatHereNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get chatHereNotNow;
+
   /// No description provided for @chatLinkNew.
   ///
   /// In en, this message translates to:

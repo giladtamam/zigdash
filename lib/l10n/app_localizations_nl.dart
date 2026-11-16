@@ -5891,6 +5891,19 @@ class AppLocalizationsNl extends AppLocalizations {
       'Je hub antwoordde niet. Probeer het later opnieuw.';
 
   @override
+  String get chatHereTitle => 'Chatten met je huis is er';
+
+  @override
+  String get chatHereBody =>
+      'Koppel je Telegram-account en vraag je huis \"staat de achterdeur open?\" of laat het een rolluik sluiten. Onderdeel van Pro, gratis tijdens de bèta.';
+
+  @override
+  String get chatHereSetUp => 'Instellen';
+
+  @override
+  String get chatHereNotNow => 'Niet nu';
+
+  @override
   String get chatLinkNew => 'Een Telegram-account koppelen';
 
   @override

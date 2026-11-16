@@ -5873,6 +5873,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatAuditFailed => 'Ваш хаб не ответил. Попробуйте позже.';
 
   @override
+  String get chatHereTitle => 'Чат с домом уже здесь';
+
+  @override
+  String get chatHereBody =>
+      'Привяжите аккаунт Telegram и спросите дом «открыта ли задняя дверь?» или попросите закрыть штору. Входит в Pro, бесплатно во время беты.';
+
+  @override
+  String get chatHereSetUp => 'Настроить';
+
+  @override
+  String get chatHereNotNow => 'Не сейчас';
+
+  @override
   String get chatLinkNew => 'Привязать аккаунт Telegram';
 
   @override

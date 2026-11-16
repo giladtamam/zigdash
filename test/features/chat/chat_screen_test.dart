@@ -286,6 +286,18 @@ void main() {
     expect(page.sink.sent.last, 'chat_link {step: removed}');
   });
 
+  testWidgets('back from Telegram (an /unlink there): the list is read again', (tester) async {
+    final page = await _open(tester, listed: [
+      const ChatLinkInfo(clientId: 'tg-bbbbbb', telegramName: 'Noa', scope: 'read'),
+    ]);
+    expect(find.text('Noa'), findsOneWidget);
+    page.api.listed = [];
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(find.text('Noa'), findsNothing);
+  });
+
   testWidgets('removed while away: the hub forgets it at home', (tester) async {
     final page = await _open(tester, atHome: false, listed: [
       const ChatLinkInfo(clientId: 'tg-bbbbbb', telegramName: 'Noa', scope: 'read'),

@@ -5875,6 +5875,19 @@ class AppLocalizationsSv extends AppLocalizations {
   String get chatAuditFailed => 'Din hubb svarade inte. Försök igen senare.';
 
   @override
+  String get chatHereTitle => 'Chatt med ditt hem är här';
+
+  @override
+  String get chatHereBody =>
+      'Länka ditt Telegram-konto och fråga ditt hem \"är bakdörren öppen?\" eller be det stänga en rullgardin. Ingår i Pro, gratis under betan.';
+
+  @override
+  String get chatHereSetUp => 'Konfigurera';
+
+  @override
+  String get chatHereNotNow => 'Inte nu';
+
+  @override
   String get chatLinkNew => 'Länka ett Telegram-konto';
 
   @override

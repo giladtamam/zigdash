@@ -282,6 +282,12 @@ void main() {
     expect(await linker.audit('c1'), isNull);
   });
 
+  test('What Chat did with no link made on this phone: empty, not "the hub didn\'t answer"', () async {
+    hub.audits = null;
+    expect(await linker.audit('c1'), isEmpty);
+    expect(log, isNot(contains(startsWith('audit'))));
+  });
+
   group('a sealed request, as link.mjs sends it', () {
     final key = Uint8List.fromList(List<int>.generate(32, (i) => i));
     const token = 'tok_ABC-123';

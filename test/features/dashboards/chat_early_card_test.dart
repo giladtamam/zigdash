@@ -6,6 +6,7 @@ import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/data/database/database.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/features/chat/chat_linker.dart' show ChatRowState, chatRowStateProvider;
 import 'package:zigdash/features/dashboards/widgets/chat_early_card.dart';
 import 'package:zigdash/features/onboarding/demo_service.dart' show demoHost;
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
@@ -68,6 +69,7 @@ Future<(SharedPreferences, _Sink, _Worker)> _pump(
   Map<String, Object> prefs = const {},
   String host = '192.168.1.2',
   bool offered = true,
+  ChatRowState chat = ChatRowState.hidden,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   final p = await SharedPreferences.getInstance();
@@ -81,6 +83,7 @@ Future<(SharedPreferences, _Sink, _Worker)> _pump(
         analyticsSinkProvider.overrideWithValue(sink),
         connectionByIdProvider.overrideWith((ref, _) async => _home(host)),
         chatEarlyOfferedProvider.overrideWithValue(offered),
+        chatRowStateProvider.overrideWith((ref, _) => chat),
         earlyJoinerProvider.overrideWithValue(worker.join),
         earlyPricerProvider.overrideWithValue(worker.price),
       ],
@@ -100,12 +103,14 @@ Future<(SharedPreferences, _Sink, _Worker)> _card(
   Map<String, Object> prefs = const {},
   String host = '192.168.1.2',
   bool offered = true,
+  ChatRowState chat = ChatRowState.hidden,
 }) => _pump(
   tester,
   const ChatEarlyCard(connectionId: 'c1'),
   prefs: prefs,
   host: host,
   offered: offered,
+  chat: chat,
 );
 
 Future<void> _joinByEmail(WidgetTester tester, String email) async {
@@ -122,6 +127,43 @@ Future<void> _joinByEmail(WidgetTester tester, String email) async {
 // 3.5.4: "Chat with your home" early access, docs/design/assistant-early-access.md.
 void main() {
   const sharing = {'analytics_consent': true, 'review_sessions': 2};
+
+  group('3.7: a Pro owner hears Chat is here, not the list', () {
+    const here = 'Chat with your home is here';
+
+    testWidgets('instead of the early-access pitch, even after joining', (tester) async {
+      await _card(tester, prefs: {...sharing, chatEarlyDoneKey: '1'}, chat: ChatRowState.ready);
+      expect(find.text(here), findsOneWidget);
+      expect(find.byKey(const Key('chat-early-telegram')), findsNothing);
+      expect(find.byKey(const Key('chat-here-set-up')), findsOneWidget);
+    });
+
+    testWidgets('also when the Home still needs remote control or the Engine', (tester) async {
+      await _card(tester, prefs: sharing, chat: ChatRowState.noRemote);
+      expect(find.text(here), findsOneWidget);
+    });
+
+    testWidgets('not without Pro: the early-access card stays', (tester) async {
+      await _card(tester, prefs: sharing, chat: ChatRowState.noPro);
+      expect(find.text(here), findsNothing);
+      expect(find.text(_title), findsOneWidget);
+    });
+
+    testWidgets('Not now hides it for good', (tester) async {
+      final (p, _, _) = await _card(tester, prefs: sharing, chat: ChatRowState.ready);
+      await tester.tap(find.byKey(const Key('chat-here-not-now')));
+      await tester.pumpAndSettle();
+      expect(find.text(here), findsNothing);
+      expect(p.getString(chatHereDoneKey), '1');
+    });
+
+    testWidgets('not on the demo Home, nor before the usage-data question', (tester) async {
+      await _card(tester, prefs: sharing, host: demoHost, chat: ChatRowState.ready);
+      expect(find.text(here), findsNothing);
+      await _card(tester, prefs: {'review_sessions': 2}, chat: ChatRowState.ready);
+      expect(find.text(here), findsNothing);
+    });
+  });
 
   test('only the Play build offers it', () {
     expect(chatEarlyOfferedFor('play'), isTrue);

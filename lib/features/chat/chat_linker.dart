@@ -218,9 +218,13 @@ class ChatLinker {
   /// newest first; null when the hub didn't answer for any of them.
   Future<List<ChatAuditEntry>?> audit(String connectionId) async {
     final record = await _store.read(connectionId);
+    final mine = record.clients.where((c) => c.confirmed).toList();
+    // Links made elsewhere (another phone, or by hand) have no keys here:
+    // nothing to show is not the hub failing to answer.
+    if (mine.isEmpty) return const [];
     final relay = await _relayOf(connectionId);
     List<ChatAuditEntry>? all;
-    for (final c in record.clients.where((c) => c.confirmed)) {
+    for (final c in mine) {
       final entries = await _hub.audit(connectionId, clientId: c.clientId, token: c.token, key: c.key, relay: relay);
       if (entries != null) (all ??= []).addAll(entries);
     }

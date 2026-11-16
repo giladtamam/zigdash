@@ -5870,6 +5870,19 @@ class AppLocalizationsNb extends AppLocalizations {
   String get chatAuditFailed => 'Huben svarte ikke. Prøv igjen senere.';
 
   @override
+  String get chatHereTitle => 'Chat med hjemmet ditt er her';
+
+  @override
+  String get chatHereBody =>
+      'Koble til Telegram-kontoen din og spør hjemmet ditt «er bakdøren åpen?» eller be det lukke en rullegardin. Del av Pro, gratis i betaen.';
+
+  @override
+  String get chatHereSetUp => 'Sett opp';
+
+  @override
+  String get chatHereNotNow => 'Ikke nå';
+
+  @override
   String get chatLinkNew => 'Koble til en Telegram-konto';
 
   @override

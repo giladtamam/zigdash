@@ -5883,6 +5883,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get chatAuditFailed => 'Twój hub nie odpowiedział. Spróbuj później.';
 
   @override
+  String get chatHereTitle => 'Czat z domem już jest';
+
+  @override
+  String get chatHereBody =>
+      'Połącz konto Telegram i zapytaj dom „czy tylne drzwi są otwarte?” albo każ mu zamknąć roletę. Część Pro, za darmo w czasie bety.';
+
+  @override
+  String get chatHereSetUp => 'Skonfiguruj';
+
+  @override
+  String get chatHereNotNow => 'Nie teraz';
+
+  @override
   String get chatLinkNew => 'Połącz konto Telegram';
 
   @override

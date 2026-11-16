@@ -7,6 +7,8 @@ import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/review/review_prompt_controller.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../chat/chat_linker.dart' show ChatRowState, chatRowStateProvider;
+import '../../chat/chat_screen.dart' show chatRowAction;
 import '../../onboarding/demo_service.dart' show isDemoConnection;
 import '../../pro/pro.dart' show proFlavor;
 import '../../settings/providers/settings_controller.dart'
@@ -16,6 +18,9 @@ import 'poll_card.dart' show pollAfterSessions;
 
 /// "1" once the person joined or said "Not for me": the card asks once.
 const chatEarlyDoneKey = 'chat_early_done';
+
+/// "1" once a Pro owner tapped Set up or Not now on "Chat is here" (3.7).
+const chatHereDoneKey = 'chat_here_done';
 
 /// "1" once `chat_early shown` was sent: the read's denominator is
 /// installs, not sessions (assistant-early-access.md §6).
@@ -62,6 +67,12 @@ class _ChatEarlyCardState extends ConsumerState<ChatEarlyCard> {
 
   @override
   Widget build(BuildContext context) {
+    // 3.7: Chat exists for Pro owners, so they hear it's here (once),
+    // not "we're building it", whatever they answered to the list.
+    final chat = ref.watch(chatRowStateProvider(widget.connectionId));
+    if (chat != ChatRowState.hidden && chat != ChatRowState.noPro) {
+      return _ChatHereCard(connectionId: widget.connectionId, state: chat);
+    }
     final prefs = ref.watch(sharedPreferencesProvider);
     final consent = ref.watch(analyticsConsentProvider);
     final available = ref.watch(analyticsAvailableProvider);
@@ -96,6 +107,89 @@ class _ChatEarlyCardState extends ConsumerState<ChatEarlyCard> {
           onJoined: () => ref
               .read(sharedPreferencesProvider)
               .setString(chatEarlyDoneKey, '1'),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Chat with your home is here": for a Pro owner, once, on a real Home.
+/// Set up goes where the Chat row goes (the Chat screen, or what the Home
+/// still needs first).
+class _ChatHereCard extends ConsumerStatefulWidget {
+  const _ChatHereCard({required this.connectionId, required this.state});
+
+  final String connectionId;
+  final ChatRowState state;
+
+  @override
+  ConsumerState<_ChatHereCard> createState() => _ChatHereCardState();
+}
+
+class _ChatHereCardState extends ConsumerState<_ChatHereCard> {
+  bool _done = false;
+
+  void _finish() {
+    setState(() => _done = true);
+    ref.read(sharedPreferencesProvider).setString(chatHereDoneKey, '1');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final prefs = ref.watch(sharedPreferencesProvider);
+    final consent = ref.watch(analyticsConsentProvider);
+    final available = ref.watch(analyticsAvailableProvider);
+    final host = ref.watch(connectionByIdProvider(widget.connectionId)).valueOrNull?.host;
+    if (_done ||
+        prefs.getString(chatHereDoneKey) != null ||
+        host == null ||
+        isDemoConnection(host) ||
+        (available && consent == AnalyticsConsent.unasked)) {
+      return const SizedBox.shrink();
+    }
+    final setUp = chatRowAction(context, widget.state, widget.connectionId);
+    final theme = Theme.of(context);
+    return Card(
+      key: const Key('chat-here-card'),
+      margin: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 8, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.chatHereTitle, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8),
+              child: Text(l10n.chatHereBody, style: theme.textTheme.bodyMedium),
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 8,
+                children: [
+                  TextButton(
+                    key: const Key('chat-here-not-now'),
+                    onPressed: _finish,
+                    child: Text(l10n.chatHereNotNow),
+                  ),
+                  FilledButton(
+                    key: const Key('chat-here-set-up'),
+                    onPressed: setUp == null
+                        ? null
+                        : () {
+                            _finish();
+                            setUp();
+                          },
+                    child: Text(l10n.chatHereSetUp),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

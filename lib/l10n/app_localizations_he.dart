@@ -5801,6 +5801,19 @@ class AppLocalizationsHe extends AppLocalizations {
   String get chatAuditFailed => 'הרכזת לא ענתה. אפשר לנסות שוב מאוחר יותר.';
 
   @override
+  String get chatHereTitle => 'צ\'אט עם הבית כבר כאן';
+
+  @override
+  String get chatHereBody =>
+      'קשרו את חשבון הטלגרם שלכם, ואז שאלו את הבית \"האם הדלת האחורית פתוחה?\" או בקשו ממנו לסגור תריס. חלק מ-Pro, בחינם בתקופת הבטא.';
+
+  @override
+  String get chatHereSetUp => 'להגדרה';
+
+  @override
+  String get chatHereNotNow => 'לא עכשיו';
+
+  @override
   String get chatLinkNew => 'קישור חשבון טלגרם';
 
   @override

@@ -5866,6 +5866,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatAuditFailed => 'Your hub didn\'t answer. Try again later.';
 
   @override
+  String get chatHereTitle => 'Chat with your home is here';
+
+  @override
+  String get chatHereBody =>
+      'Link your Telegram account, then ask your home \"is the back door open?\" or tell it to close a shutter. Part of Pro, free during the beta.';
+
+  @override
+  String get chatHereSetUp => 'Set up';
+
+  @override
+  String get chatHereNotNow => 'Not now';
+
+  @override
   String get chatLinkNew => 'Link a Telegram account';
 
   @override

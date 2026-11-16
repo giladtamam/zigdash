@@ -5868,6 +5868,19 @@ class AppLocalizationsCs extends AppLocalizations {
   String get chatAuditFailed => 'Váš hub neodpověděl. Zkuste to později.';
 
   @override
+  String get chatHereTitle => 'Chat s vaší domácností je tady';
+
+  @override
+  String get chatHereBody =>
+      'Propojte svůj účet Telegram a zeptejte se domu „jsou zadní dveře otevřené?“ nebo ho požádejte, ať zavře roletu. Součást Pro, během bety zdarma.';
+
+  @override
+  String get chatHereSetUp => 'Nastavit';
+
+  @override
+  String get chatHereNotNow => 'Teď ne';
+
+  @override
   String get chatLinkNew => 'Propojit účet Telegram';
 
   @override

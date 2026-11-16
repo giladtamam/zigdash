@@ -5897,6 +5897,19 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il tuo hub non ha risposto. Riprova più tardi.';
 
   @override
+  String get chatHereTitle => 'La chat con la tua casa è arrivata';
+
+  @override
+  String get chatHereBody =>
+      'Collega il tuo account Telegram e chiedi alla tua casa \"la porta sul retro è aperta?\" o falle chiudere una tapparella. Inclusa in Pro, gratis durante la beta.';
+
+  @override
+  String get chatHereSetUp => 'Configura';
+
+  @override
+  String get chatHereNotNow => 'Non ora';
+
+  @override
   String get chatLinkNew => 'Collega un account Telegram';
 
   @override

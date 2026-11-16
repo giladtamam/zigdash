@@ -44,6 +44,16 @@ String chatRowReason(AppLocalizations l10n, ChatRowState state) => switch (state
       _ => l10n.chatRowReady,
     };
 
+/// Where the Chat row (and the dashboard's "Chat is here" card) goes: the
+/// Chat screen, or what the Home still needs first.
+VoidCallback? chatRowAction(BuildContext context, ChatRowState state, String connectionId) => switch (state) {
+      ChatRowState.ready => () => context.push(Routes.homeChat(connectionId)),
+      ChatRowState.noRemote => () => context.push(Routes.homeRemote(connectionId)),
+      ChatRowState.noEngine => () => context.go(Routes.homeAutomations(connectionId)),
+      ChatRowState.noPro => () => openPro(context, from: ProFrom.settings),
+      ChatRowState.hidden => null,
+    };
+
 /// Home settings › Chat (beta): only on the Play build, and only says why
 /// when the Home can't link yet (chat-linking.md §3).
 class ChatSettingsRow extends ConsumerWidget {
@@ -56,13 +66,7 @@ class ChatSettingsRow extends ConsumerWidget {
     final l10n = context.l10n;
     final state = ref.watch(chatRowStateProvider(connectionId));
     if (state == ChatRowState.hidden) return const SizedBox.shrink();
-    final VoidCallback? onTap = switch (state) {
-      ChatRowState.ready => () => context.push(Routes.homeChat(connectionId)),
-      ChatRowState.noRemote => () => context.push(Routes.homeRemote(connectionId)),
-      ChatRowState.noEngine => () => context.go(Routes.homeAutomations(connectionId)),
-      ChatRowState.noPro => () => openPro(context, from: ProFrom.settings),
-      ChatRowState.hidden => null,
-    };
+    final onTap = chatRowAction(context, state, connectionId);
     return ListTile(
       key: const Key('home-chat'),
       leading: const Icon(Icons.chat_outlined),
@@ -103,7 +107,7 @@ class ChatScreen extends ConsumerStatefulWidget {
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> {
+class _ChatScreenState extends ConsumerState<ChatScreen> with WidgetsBindingObserver {
   late final ChatLinker _linker;
   late final Analytics _analytics;
   final _code = TextEditingController();
@@ -134,10 +138,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     _analytics = ref.read(analyticsProvider);
     // Never while building: the first frame decides whether the Home is ready.
     Future.microtask(_load);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  /// Back from Telegram (a link, or /unlink there): the list may have changed.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_load());
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     // Left before the code came back: the hub client goes (now, or at home).
     final pending = _pending;
     if (pending != null) unawaited(_linker.abandon(_id, pending));
