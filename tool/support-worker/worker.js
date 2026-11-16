@@ -397,8 +397,8 @@ async function notifyDeveloper(env, e) {
 
 function placeLine(position) {
   return position <= EARLY_FREE
-    ? `You're #${position} on the list: one of the first ${EARLY_FREE}. If we build it, you get it free for 3 months, remote access included.`
-    : `You're #${position} on the list. The first ${EARLY_FREE} places are taken; you'll hear first when it's ready.`;
+    ? `You're #${position} on the list: one of the first ${EARLY_FREE}. You'll get a founder's code: Chat and remote access, free for 3 months.`
+    : `You're #${position} on the list. The first ${EARLY_FREE} places are taken. Chat is out now for ZigDash Pro owners.`;
 }
 
 /// What a listed chat hears (founders-pass.md, Replies). Chat is out; the
@@ -411,7 +411,7 @@ function listedReply(entry) {
     return `Your founder's code was sent on ${formatDay(entry.invited, 'en')}. Questions or need more time? ` +
       `Write from Get help in the ZigDash app (Settings › Get help) and add your email so I can answer. ${leave}`;
   }
-  if (p <= EARLY_FREE) return `${placeLine(p)} Chat is out for Pro owners; you'll get your founder's code soon. ${leave}`;
+  if (p <= EARLY_FREE) return `${placeLine(p)} It's on its way soon. ${leave}`;
   return `You're #${p} on the list. Chat is out now for ZigDash Pro owners. ${leave}`;
 }
 

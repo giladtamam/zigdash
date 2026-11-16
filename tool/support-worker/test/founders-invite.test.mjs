@@ -291,7 +291,7 @@ test('bot replies to a listed chat: invited, waiting for a code, past 20; same t
   assert.equal(w.toChat(901)[0],
     "Your founder's code was sent on 20 November 2026. Questions or need more time? Write from Get help in the ZigDash app (Settings › Get help) and add your email so I can answer. Send /stop to leave the list.");
   assert.equal(w.toChat(902)[0],
-    "You're #5 on the list: one of the first 20. If we build it, you get it free for 3 months, remote access included. Chat is out for Pro owners; you'll get your founder's code soon. Send /stop to leave the list.");
+    "You're #5 on the list: one of the first 20. You'll get a founder's code: Chat and remote access, free for 3 months. It's on its way soon. Send /stop to leave the list.");
   assert.equal(w.toChat(903)[0], "You're #25 on the list. Chat is out now for ZigDash Pro owners. Send /stop to leave the list.");
   assert.ok(!w.toChat(901)[0].includes('ZD-'));
   // zigdash-chat passes no free text: an empty text gets the same reply.
