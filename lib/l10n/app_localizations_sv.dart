@@ -1910,6 +1910,37 @@ class AppLocalizationsSv extends AppLocalizations {
   String get haConnectNoAppsGuide => 'Så ansluter du';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash fungerar med Zigbee2MQTT. Att flytta innebär att para dina enheter igen. Home Assistant kan fortsätta använda dem när du lägger till dess MQTT-integration.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Andra adaptern: rum för rum, ZHA fortsätter att köra';
+
+  @override
+  String get zhaMoveWaySame => 'Samma adapter: gratis, allt på en gång';
+
+  @override
+  String get zhaMoveReadSteps => 'Läs stegen';
+
+  @override
+  String get zhaMoveImMoving => 'Jag flyttar';
+
+  @override
+  String get zhaMoveNotNow => 'Inte nu';
+
+  @override
+  String get zhaMovingNoted =>
+      'Noterat. När Zigbee2MQTT körs, öppna konfigurationen: ZigDash hittar det och erbjuder dina namn och rum från Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'Anslut till ditt nya Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Flyttar du från ZHA? När Zigbee2MQTT körs letar ZigDash efter det i ditt nätverk.';
+
+  @override
   String get haConnectSignInFailed =>
       'Inloggningen slutfördes inte. Försök igen, eller använd en långlivad token.';
 
@@ -4312,6 +4343,14 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get haImportOfferBody =>
       'Home Assistant finns på ditt nätverk. ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, så som du har satt upp dem där.';
+
+  @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, med namnen och rummen för dina enheter i Home Assistant, även de från ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT har inga enheter än. Para dina enheter där först och öppna sedan Importera från Home Assistant i det här hemmets inställningar.';
 
   @override
   String get haImportOfferLater => 'Inte nu';

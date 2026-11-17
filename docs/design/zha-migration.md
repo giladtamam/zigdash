@@ -169,6 +169,21 @@ evening / day / weekend only after that.
 
 ## Phase 1: Moving from ZHA (3.8.0)
 
+**Built 2026-11-17** on feat/zha-phase1 (3.8.0+122), on the owner's word
+("Phase 1 now"; 2 and 3 keep their gate). The pilot's registry checks were
+done on the Pi rig with Home Assistant 2026.11.2 instead: after ZHA is
+disabled its devices stay in `config/device_registry/list` with
+`name_by_user` and `area_id` (`disabled_by: config_entry`), and their
+entities drop out of `entity_registry/list_for_display`, so a room set
+only on entities is lost (device rooms survive). Built as planned, plus:
+the 3.7.1 button now opens the sheet (Phase 0's `setup_step zha_move` is
+replaced by `zha_move` with `from: no_mqtt|not_admin`); the sheet is also
+under the ZHA answer's dialog; the demo banner shows it as an icon after a
+ZHA answer (`setup_answer_zha` pref); the broker form offers the import
+when moving (Container users connect there); `ha_import` preview gains
+`from_zha` (names or rooms taken from ZHA); "Ask an AI" mentions ZHA and no
+apps. Guide in 13 languages at zigdash.app/zha/<code>/.
+
 1. **zigdash.app/zha**, the guide, in the app's 13 languages (AI
    translations, as for the listing) so the read measures the idea, not
    the language: the two ways table,
@@ -241,6 +256,9 @@ people gave a ZHA answer on 3.8.0+, wait 2 more weeks and read then.
 
 - **Phase 2 goes ahead** if at least 15 people tapped "I'm moving" **and**
   at least 3 setups completed with `from_zha` (`moving` or `devices`).
+  Count people, not events, and only `complete` events with `devices`
+  other than 0 and `via` other than `shared`: a broker-form connection to
+  an empty Zigbee2MQTT also sends `complete` (the move goes on after it).
 - **Otherwise Phase 0 and 1 stay as they are** (small, and correct
   advice); no Phase 2.
 - **Separately**, if fewer than 10% of ZHA answerers open the sheet, the

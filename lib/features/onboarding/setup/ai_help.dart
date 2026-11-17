@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../mqtt/ha_mqtt_client.dart' show HaFacts;
 import '../../../shortcuts/shortcut_service.dart' show appChannel;
 import '../../connections/discovery/hub_probe.dart';
 import '../../support/support_details.dart';
@@ -38,6 +39,7 @@ class AiHelpFacts {
     this.loginRejected = false,
     this.baseTopic,
     this.haProblem,
+    this.haFacts,
   });
 
   final AiHelpFrom from;
@@ -52,6 +54,9 @@ class AiHelpFacts {
   final bool loginRejected;
   final String? baseTopic;
   final HaConnectProblem? haProblem;
+
+  /// What the Home Assistant check read (3.7.1): apps or not, ZHA devices.
+  final HaFacts? haFacts;
 }
 
 const _languages = {
@@ -201,9 +206,11 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     HaConnectProblem.certificate =>
       "My phone doesn't trust my Home Assistant's certificate.",
     HaConnectProblem.notAdmin =>
-      "ZigDash says my Home Assistant user isn't an administrator.",
+      "ZigDash says my Home Assistant user isn't an administrator."
+          '${_haFactsLine(f.haFacts)}',
     HaConnectProblem.noMqtt =>
-      'ZigDash says my Home Assistant has no MQTT integration.',
+      'ZigDash says my Home Assistant has no MQTT integration.'
+          '${_haFactsLine(f.haFacts)}',
     HaConnectProblem.signInRefused || HaConnectProblem.signInFailed =>
       "Signing in with Home Assistant didn't complete.",
     HaConnectProblem.badToken ||
@@ -211,6 +218,22 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     null => "I can't get connected through Home Assistant.",
   },
 };
+
+/// What the check read, for the write-up (3.8): ZHA comes first, since
+/// neither an admin sign-in nor Mosquitto reaches ZHA devices.
+String _haFactsLine(HaFacts? facts) {
+  final zha = facts?.zhaDevices ?? 0;
+  if (zha > 0) {
+    return ' It also found that my Zigbee runs in ZHA, Home Assistant\'s own '
+        'Zigbee ($zha devices), not in Zigbee2MQTT. ZigDash only works with '
+        'Zigbee2MQTT, so I would have to move my devices to it.';
+  }
+  if (facts?.apps == false) {
+    return ' My Home Assistant has no apps (it runs in Docker or as Core), '
+        'so Mosquitto and Zigbee2MQTT would run as their own containers.';
+  }
+  return '';
+}
 
 /// The "Ask your AI" card on a screen where setup is stuck (3.1.5).
 class AiHelpCard extends ConsumerWidget {

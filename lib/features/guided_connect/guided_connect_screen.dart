@@ -42,6 +42,8 @@ import '../onboarding/setup/setup_coordinator.dart' show Z2mFetchResult;
 import '../onboarding/setup/setup_creator.dart';
 import '../onboarding/setup/z2m_probe.dart';
 import '../connections/discovery/z2m_frontend_fetch.dart';
+import '../ha_import/ha_import_offer.dart';
+import '../zha_move/zha_move.dart';
 
 enum _Phase { form, running, failed, success }
 
@@ -640,8 +642,25 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                           aiHelped: ref.read(aiHelpUsedProvider),
                           helpSeen: assistantHelpedRecently(
                               ref.read(sharedPreferencesProvider)),
+                          fromZha: fromZhaOrNull(
+                              () => ref.read(sharedPreferencesProvider)),
                         ),
                       );
+                  // 3.8: a Container user moving from ZHA connects here,
+                  // straight to Mosquitto; their names and rooms are in
+                  // Home Assistant's old ZHA entries.
+                  // The offer comes either way: this home is where devices
+                  // will arrive, and an import before any are paired says
+                  // to pair first. With nothing paired yet (the second
+                  // adapter, room by room) the move goes on.
+                  if (zhaMoving(ref.read(sharedPreferencesProvider))) {
+                    await ref
+                        .read(haImportOfferProvider.notifier)
+                        .offer(id, fromZha: true);
+                  }
+                  if (count > 0) {
+                    await ref.read(zhaMovingProvider.notifier).end();
+                  }
                   ref.read(aiHelpUsedProvider.notifier).state = false;
                   // 3.4.8: the review prompt keeps quiet for a while after this.
                   await markSetupCompleted(

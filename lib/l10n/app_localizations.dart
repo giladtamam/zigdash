@@ -3474,6 +3474,60 @@ abstract class AppLocalizations {
   /// **'How to connect'**
   String get haConnectNoAppsGuide;
 
+  /// No description provided for @zhaMoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash works with Zigbee2MQTT. Moving means pairing your devices again. Home Assistant can keep using them once you add its MQTT integration.'**
+  String get zhaMoveBody;
+
+  /// No description provided for @zhaMoveWaySecond.
+  ///
+  /// In en, this message translates to:
+  /// **'Second adapter: room by room, ZHA keeps running'**
+  String get zhaMoveWaySecond;
+
+  /// No description provided for @zhaMoveWaySame.
+  ///
+  /// In en, this message translates to:
+  /// **'Same adapter: free, all at once'**
+  String get zhaMoveWaySame;
+
+  /// No description provided for @zhaMoveReadSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the steps'**
+  String get zhaMoveReadSteps;
+
+  /// No description provided for @zhaMoveImMoving.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m moving'**
+  String get zhaMoveImMoving;
+
+  /// No description provided for @zhaMoveNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get zhaMoveNotNow;
+
+  /// No description provided for @zhaMovingNoted.
+  ///
+  /// In en, this message translates to:
+  /// **'Noted. When Zigbee2MQTT runs, open setup: ZigDash finds it, then offers your names and rooms from Home Assistant.'**
+  String get zhaMovingNoted;
+
+  /// No description provided for @setupMovingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to your new Zigbee2MQTT'**
+  String get setupMovingTitle;
+
+  /// No description provided for @setupMovingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving from ZHA? Once Zigbee2MQTT runs, ZigDash looks for it on your network.'**
+  String get setupMovingBody;
+
   /// No description provided for @haConnectSignInFailed.
   ///
   /// In en, this message translates to:
@@ -7613,6 +7667,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.'**
   String get haImportOfferBody;
+
+  /// No description provided for @haImportOfferBodyZha.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA\'s included.'**
+  String get haImportOfferBodyZha;
+
+  /// No description provided for @haImportNoZ2mDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home\'s settings.'**
+  String get haImportNoZ2mDevices;
 
   /// No description provided for @haImportOfferLater.
   ///

@@ -1,6 +1,7 @@
 import '../../../core/analytics/analytics_events.dart';
 import '../../connections/discovery/address_check.dart';
 import 'setup_coordinator.dart';
+import 'setup_error_guidance.dart' show SetupErrorKind;
 
 /// The `setup_step` event for a setup state change, or null when the change
 /// is not a step (more candidates arriving, say). Recorded only with
@@ -14,6 +15,7 @@ SetupStep? setupStepFor(
   SetupPlatform? platform,
   bool aiHelped = false,
   bool? helpSeen,
+  FromZha? fromZha,
 }) => switch (next) {
   SetupScanning() when previous is! SetupScanning => const SetupStep(
     SetupStepKind.started,
@@ -92,6 +94,9 @@ SetupStep? setupStepFor(
     SetupStepKind.failed,
     error: kind,
     noNetwork: noNetwork,
+    // 3.8.1: Home Assistant without Zigbee2MQTT, told apart when its
+    // Zigbee is in ZHA (or a move is under way).
+    fromZha: kind == SetupErrorKind.haNoZigbee2Mqtt ? fromZha : null,
   ),
   SetupReview(:final rows) when previous is! SetupReview => SetupStep(
     SetupStepKind.review,
@@ -106,6 +111,7 @@ SetupStep? setupStepFor(
     via: via,
     aiHelped: aiHelped,
     helpSeen: helpSeen,
+    fromZha: fromZha,
   ),
   _ => null,
 };

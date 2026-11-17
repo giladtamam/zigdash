@@ -1920,6 +1920,37 @@ class AppLocalizationsNl extends AppLocalizations {
   String get haConnectNoAppsGuide => 'Zo verbind je';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash werkt met Zigbee2MQTT. Overstappen betekent je apparaten opnieuw koppelen. Home Assistant kan ze blijven gebruiken zodra je de MQTT-integratie toevoegt.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Tweede adapter: kamer voor kamer, ZHA blijft draaien';
+
+  @override
+  String get zhaMoveWaySame => 'Zelfde adapter: gratis, alles in één keer';
+
+  @override
+  String get zhaMoveReadSteps => 'Lees de stappen';
+
+  @override
+  String get zhaMoveImMoving => 'Ik stap over';
+
+  @override
+  String get zhaMoveNotNow => 'Niet nu';
+
+  @override
+  String get zhaMovingNoted =>
+      'Genoteerd. Als Zigbee2MQTT draait, open dan de installatie: ZigDash vindt het en biedt je namen en kamers uit Home Assistant aan.';
+
+  @override
+  String get setupMovingTitle => 'Verbind met je nieuwe Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Overstappen van ZHA? Zodra Zigbee2MQTT draait, zoekt ZigDash het op je netwerk.';
+
+  @override
   String get haConnectSignInFailed =>
       'De aanmelding is niet voltooid. Probeer het opnieuw, of gebruik een langdurig token.';
 
@@ -4327,6 +4358,14 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get haImportOfferBody =>
       'Home Assistant staat op je netwerk. ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, zoals je ze daar hebt ingesteld.';
+
+  @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, met de namen en ruimtes van je apparaten in Home Assistant, ook die uit ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT heeft nog geen apparaten. Koppel je apparaten daar eerst en open dan Importeren uit Home Assistant in de instellingen van dit huis.';
 
   @override
   String get haImportOfferLater => 'Niet nu';

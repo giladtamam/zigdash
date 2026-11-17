@@ -1918,6 +1918,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get haConnectNoAppsGuide => 'Come collegarsi';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash funziona con Zigbee2MQTT. Passare significa associare di nuovo i dispositivi. Home Assistant può continuare a usarli dopo che aggiungi la sua integrazione MQTT.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Secondo adattatore: stanza per stanza, ZHA continua a funzionare';
+
+  @override
+  String get zhaMoveWaySame => 'Stesso adattatore: gratis, tutto in una volta';
+
+  @override
+  String get zhaMoveReadSteps => 'Leggi i passaggi';
+
+  @override
+  String get zhaMoveImMoving => 'Sto passando';
+
+  @override
+  String get zhaMoveNotNow => 'Non ora';
+
+  @override
+  String get zhaMovingNoted =>
+      'Fatto. Quando Zigbee2MQTT è attivo, apri la configurazione: ZigDash lo trova e ti propone nomi e stanze da Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'Collegati al tuo nuovo Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Stai lasciando ZHA? Quando Zigbee2MQTT è attivo, ZigDash lo cerca nella tua rete.';
+
+  @override
   String get haConnectSignInFailed =>
       'L\'accesso non è stato completato. Riprova, oppure usa un token a lunga durata.';
 
@@ -4332,6 +4363,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get haImportOfferBody =>
       'Home Assistant è nella tua rete. ZigDash può dare un nome ai tuoi riquadri e aggiungere una dashboard per ogni piano e stanza, come li hai impostati lì.';
+
+  @override
+  String get haImportOfferBodyZha =>
+      'ZigDash può dare un nome ai riquadri e aggiungere una dashboard per piano e stanza, con i nomi e le stanze dei dispositivi in Home Assistant, compresi quelli di ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT non ha ancora dispositivi. Associa prima lì i dispositivi, poi apri Importa da Home Assistant nelle impostazioni di questa casa.';
 
   @override
   String get haImportOfferLater => 'Non ora';

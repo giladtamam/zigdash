@@ -1907,6 +1907,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get haConnectNoAppsGuide => 'How to connect';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash works with Zigbee2MQTT. Moving means pairing your devices again. Home Assistant can keep using them once you add its MQTT integration.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Second adapter: room by room, ZHA keeps running';
+
+  @override
+  String get zhaMoveWaySame => 'Same adapter: free, all at once';
+
+  @override
+  String get zhaMoveReadSteps => 'Read the steps';
+
+  @override
+  String get zhaMoveImMoving => 'I\'m moving';
+
+  @override
+  String get zhaMoveNotNow => 'Not now';
+
+  @override
+  String get zhaMovingNoted =>
+      'Noted. When Zigbee2MQTT runs, open setup: ZigDash finds it, then offers your names and rooms from Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'Connect to your new Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Moving from ZHA? Once Zigbee2MQTT runs, ZigDash looks for it on your network.';
+
+  @override
   String get haConnectSignInFailed =>
       'The sign-in didn\'t complete. Try again, or use a long-lived token.';
 
@@ -4308,6 +4339,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get haImportOfferBody =>
       'Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.';
+
+  @override
+  String get haImportOfferBodyZha =>
+      'ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA\'s included.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home\'s settings.';
 
   @override
   String get haImportOfferLater => 'Not now';

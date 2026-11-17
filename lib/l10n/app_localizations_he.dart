@@ -1892,6 +1892,36 @@ class AppLocalizationsHe extends AppLocalizations {
   String get haConnectNoAppsGuide => 'איך להתחבר';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash עובד עם Zigbee2MQTT. מעבר פירושו לצמד מחדש את המכשירים. Home Assistant יכול להמשיך להשתמש בהם אחרי שתוסיפו את אינטגרציית MQTT.';
+
+  @override
+  String get zhaMoveWaySecond => 'מתאם שני: חדר אחרי חדר, ZHA ממשיך לפעול';
+
+  @override
+  String get zhaMoveWaySame => 'אותו מתאם: בחינם, הכול בבת אחת';
+
+  @override
+  String get zhaMoveReadSteps => 'לקריאת השלבים';
+
+  @override
+  String get zhaMoveImMoving => 'אני עובר';
+
+  @override
+  String get zhaMoveNotNow => 'לא עכשיו';
+
+  @override
+  String get zhaMovingNoted =>
+      'נרשם. כש‑Zigbee2MQTT רץ, פתחו את ההגדרה: ZigDash ימצא אותו ויציע את השמות והחדרים מ‑Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'התחברות ל‑Zigbee2MQTT החדש';
+
+  @override
+  String get setupMovingBody =>
+      'עוברים מ‑ZHA? כש‑Zigbee2MQTT ירוץ, ZigDash יחפש אותו ברשת שלכם.';
+
+  @override
   String get haConnectSignInFailed =>
       'הכניסה לא הושלמה. נסו שוב, או השתמשו באסימון ארוך טווח.';
 
@@ -4264,6 +4294,14 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get haImportOfferBody =>
       'Home Assistant נמצא ברשת שלכם. ‏ZigDash יכול לתת לאריחים את השמות ולהוסיף לוח לכל קומה וחדר, כמו שהגדרתם שם.';
+
+  @override
+  String get haImportOfferBodyZha =>
+      '‏ZigDash יכול לתת לאריחים שמות ולהוסיף לוח לכל קומה וחדר, לפי השמות והחדרים של המכשירים ב‑Home Assistant, כולל אלה מ‑ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'ב‑Zigbee2MQTT עדיין אין מכשירים. צמדו אליו קודם את המכשירים, ואז פתחו את הייבוא מ‑Home Assistant בהגדרות של הבית הזה.';
 
   @override
   String get haImportOfferLater => 'לא עכשיו';

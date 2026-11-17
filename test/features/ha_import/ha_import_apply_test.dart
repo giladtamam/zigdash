@@ -56,6 +56,7 @@ ImportPlan _realPlan() => ImportPlan(
     ),
   ],
   zhaDevices: 0,
+  z2mDevices: 3,
 );
 
 void main() {
@@ -197,6 +198,7 @@ void main() {
             ),
           ],
           zhaDevices: 0,
+          z2mDevices: 3,
         ),
         makeDashboards: true,
         homeName: 'Home',
@@ -223,6 +225,7 @@ void main() {
           ),
         ],
         zhaDevices: 0,
+        z2mDevices: 3,
       ),
     );
     expect(r.dashboardIds, isEmpty);
@@ -258,6 +261,7 @@ void main() {
             ),
           ],
           zhaDevices: 0,
+          z2mDevices: 3,
         ),
         make: false,
       );

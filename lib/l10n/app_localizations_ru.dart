@@ -1920,6 +1920,37 @@ class AppLocalizationsRu extends AppLocalizations {
   String get haConnectNoAppsGuide => 'Как подключиться';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash работает с Zigbee2MQTT. Переход означает заново подключить устройства. Home Assistant сможет и дальше ими пользоваться, когда вы добавите интеграцию MQTT.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Второй адаптер: комната за комнатой, ZHA продолжает работать';
+
+  @override
+  String get zhaMoveWaySame => 'Тот же адаптер: бесплатно, всё сразу';
+
+  @override
+  String get zhaMoveReadSteps => 'Читать шаги';
+
+  @override
+  String get zhaMoveImMoving => 'Я переезжаю';
+
+  @override
+  String get zhaMoveNotNow => 'Не сейчас';
+
+  @override
+  String get zhaMovingNoted =>
+      'Отмечено. Когда Zigbee2MQTT заработает, откройте настройку: ZigDash найдёт его и предложит названия и комнаты из Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'Подключиться к новому Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Уходите с ZHA? Когда Zigbee2MQTT заработает, ZigDash поищет его в вашей сети.';
+
+  @override
   String get haConnectSignInFailed =>
       'Вход не завершился. Попробуйте снова или используйте долгосрочный токен.';
 
@@ -4312,6 +4343,14 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get haImportOfferBody =>
       'Home Assistant есть в вашей сети. ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату, как вы настроили их там.';
+
+  @override
+  String get haImportOfferBodyZha =>
+      'ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату по названиям и комнатам ваших устройств в Home Assistant, включая устройства из ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'В Zigbee2MQTT пока нет устройств. Сначала подключите устройства в нём, затем откройте «Импорт из Home Assistant» в настройках этого дома.';
 
   @override
   String get haImportOfferLater => 'Не сейчас';

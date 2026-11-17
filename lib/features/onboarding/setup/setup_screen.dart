@@ -21,6 +21,7 @@ import '../../settings/providers/settings_controller.dart'
 import '../../support/assistant_panel.dart' show assistantHelpedRecently;
 import '../../support/get_help_screen.dart'
     show GetHelpLink, GetHelpWarmButton;
+import '../../zha_move/zha_move.dart';
 import 'setup_completed_at.dart';
 import '../first_run.dart';
 import 'recommendation_policy.dart';
@@ -89,6 +90,11 @@ class SetupScreen extends ConsumerWidget {
         helpSeen: s is SetupComplete
             ? assistantHelpedRecently(ref.read(sharedPreferencesProvider))
             : null,
+        fromZha:
+            s is SetupComplete ||
+                (s is SetupFailed && s.kind == SetupErrorKind.haNoZigbee2Mqtt)
+            ? fromZhaOrNull(() => ref.read(sharedPreferencesProvider))
+            : null,
       );
       if (step != null) ref.read(analyticsProvider).track(step);
       // 3.3.2: the guide on an empty result starts over with setup.
@@ -100,6 +106,8 @@ class SetupScreen extends ConsumerWidget {
         markSetupCompleted(() => ref.read(sharedPreferencesProvider));
         // 3.1.5: the next setup starts without "Ask your AI" behind it.
         ref.read(aiHelpUsedProvider.notifier).state = false;
+        // 3.8: a move from ZHA ends with a working home.
+        ref.read(zhaMovingProvider.notifier).end();
         ref.read(setupReminderProvider).cancel();
         context.go(Routes.homeDashboards(s.result.connectionId));
       }
@@ -150,6 +158,13 @@ class SetupScreen extends ConsumerWidget {
             .track(SetupStep(SetupStepKind.platformChosen, platform: platform));
       }
       coordinator.setPlatform(platform);
+      // 3.8: the demo home offers Moving from ZHA after a ZHA answer.
+      if (platform != null) {
+        noteZhaAnswer(
+          () => ref.read(sharedPreferencesProvider),
+          platform == SetupPlatform.zha,
+        );
+      }
     }
 
     // Which way into the Home Assistant sign-in people take (3.1.3).
@@ -260,6 +275,18 @@ class SetupScreen extends ConsumerWidget {
               state: state,
               onRetry: coordinator.retry,
               onManual: manual,
+              // 3.8.1: signed in, MQTT works, and the Zigbee is in ZHA.
+              onZhaMove: state.kind == SetupErrorKind.haNoZigbee2Mqtt &&
+                      fromZhaOrNull(
+                            () => ref.read(sharedPreferencesProvider),
+                          ) !=
+                          null
+                  ? () => showZhaMoveSheet(
+                      context,
+                      ref,
+                      ZhaMoveFrom.noZigbee2Mqtt,
+                    )
+                  : null,
             ),
             SetupReview() => _Review(
               state: state,
@@ -457,6 +484,14 @@ class _WelcomeState extends ConsumerState<_Welcome> {
         content: Text(l10n.setupZhaNote),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
+          TextButton(
+            key: const Key('setup-zha-move'),
+            onPressed: () {
+              Navigator.pop(context);
+              showZhaMoveSheet(this.context, ref, ZhaMoveFrom.answer);
+            },
+            child: Text(l10n.haConnectZhaMove),
+          ),
           FilledButton(
             onPressed: () {
               Navigator.pop(context);
@@ -580,6 +615,29 @@ class _WelcomeState extends ConsumerState<_Welcome> {
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 20),
+        // 3.8: after "I'm moving", the new Zigbee2MQTT comes first.
+        if (ref.watch(zhaMovingProvider))
+          Card.filled(
+            key: const Key('setup-zha-moving'),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.setupMovingTitle, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(l10n.setupMovingBody),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: () => _then(widget.onFind),
+                    icon: const Icon(Icons.wifi_find),
+                    label: Text(l10n.setupFindMySetup),
+                  ),
+                ],
+              ),
+            ),
+          ),
         // 3.2: one question first. Two thirds of setups never answered it
         // under a running scan, and half of them had something to connect.
         Text(l10n.setupAsk, style: theme.textTheme.titleMedium),
@@ -816,10 +874,27 @@ class _PlatformChips extends StatelessWidget {
                 children: [
                   Text(l10n.setupZhaNote),
                   const SizedBox(height: 12),
-                  FilledButton.tonalIcon(
-                    onPressed: onDemo,
-                    icon: const Icon(Icons.play_circle_outline),
-                    label: Text(l10n.onboardingDemo),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      FilledButton.tonalIcon(
+                        onPressed: onDemo,
+                        icon: const Icon(Icons.play_circle_outline),
+                        label: Text(l10n.onboardingDemo),
+                      ),
+                      Consumer(
+                        builder: (context, ref, _) => OutlinedButton(
+                          key: const Key('setup-zha-note-move'),
+                          onPressed: () => showZhaMoveSheet(
+                            context,
+                            ref,
+                            ZhaMoveFrom.answer,
+                          ),
+                          child: Text(l10n.haConnectZhaMove),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -1534,10 +1609,14 @@ class _Failure extends StatelessWidget {
     required this.state,
     required this.onRetry,
     required this.onManual,
+    this.onZhaMove,
   });
   final SetupFailed state;
   final VoidCallback onRetry;
   final VoidCallback onManual;
+
+  /// Moving from ZHA, when Home Assistant's check found ZHA devices.
+  final VoidCallback? onZhaMove;
 
   @override
   Widget build(BuildContext context) {
@@ -1569,6 +1648,15 @@ class _Failure extends StatelessWidget {
           icon: const Icon(Icons.refresh),
           label: Text(_guidanceText(l10n, guidance.actionKey)),
         ),
+        if (onZhaMove != null) ...[
+          const SizedBox(height: 12),
+          FilledButton.tonalIcon(
+            key: const Key('setup-failed-zha-move'),
+            onPressed: onZhaMove,
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: Text(l10n.haConnectZhaMove),
+          ),
+        ],
         if (state.kind != SetupErrorKind.saveFailed) ...[
           const SizedBox(height: 16),
           AiHelpCard(

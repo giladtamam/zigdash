@@ -26,6 +26,7 @@ import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_providers.dart';
 import 'package:zigdash/features/onboarding/setup/setup_reminder.dart';
 import 'package:zigdash/features/onboarding/setup/setup_screen.dart';
+import 'package:zigdash/features/zha_move/zha_move.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 
@@ -1500,7 +1501,86 @@ void main() {
     expect(find.textContaining('port=1884'), findsOneWidget);
   });
 
+  // 3.8.1: signed in to Home Assistant, MQTT works, the Zigbee is in ZHA.
+  group('3.8.1: Home Assistant without Zigbee2MQTT', () {
+    Future<List<(String, Map<String, String>)>> fail(
+      WidgetTester tester,
+    ) async {
+      final sent = <(String, Map<String, String>)>[];
+      final coordinator = await _pump(
+        tester,
+        fetch: const Z2mFetchResult(detected: false, devices: []),
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      );
+      await coordinator.adoptHomeAssistant(
+        address: Uri.parse('http://192.168.68.52:8123'),
+        signIn: 'eyJ.long.lived',
+      );
+      await tester.pumpAndSettle();
+      return sent;
+    }
+
+    testWidgets('ZHA found: Moving from ZHA, and from_zha on failed', (
+      tester,
+    ) async {
+      await _prefs.setInt(
+        zhaFoundAtKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
+      final sent = await fail(tester);
+      final failed = sent.singleWhere((e) => e.$2['step'] == 'failed').$2;
+      expect(failed['error'], 'ha_no_zigbee2_mqtt');
+      expect(failed['from_zha'], 'devices');
+      await tester.tap(find.byKey(const Key('setup-failed-zha-move')));
+      await tester.pumpAndSettle();
+      final opened = sent.singleWhere((e) => e.$1 == 'zha_move').$2;
+      expect(opened, {'step': 'opened', 'from': 'no_zigbee2_mqtt'});
+    });
+
+    testWidgets('no ZHA found: no button, no from_zha', (tester) async {
+      final sent = await fail(tester);
+      final failed = sent.singleWhere((e) => e.$2['step'] == 'failed').$2;
+      expect(failed['error'], 'ha_no_zigbee2_mqtt');
+      expect(failed.containsKey('from_zha'), isFalse);
+      expect(find.byKey(const Key('setup-failed-zha-move')), findsNothing);
+    });
+  });
+
   // 2.10.2: a list with nothing preselected (only "other" or unsupported
+  // 3.8: a finished setup says it came from ZHA, then ends the move.
+  testWidgets('3.8: complete carries from_zha, then the move ends', (
+    tester,
+  ) async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    await _prefs.setInt(zhaMovingAtKey, now);
+    await _prefs.setInt(zhaFoundAtKey, now);
+    final sent = <(String, Map<String, String>)>[];
+    await _pump(
+      tester,
+      extra: [
+        analyticsProvider.overrideWithValue(
+          Analytics(_RecordingSink(sent), enabled: true),
+        ),
+      ],
+    );
+    expect(find.byKey(const Key('setup-zha-moving')), findsOneWidget);
+    await tester.tap(find.text('Find my setup').first);
+    for (var i = 0; i < 4; i++) {
+      await tester.pump();
+    }
+    await tester.tap(find.text('Create dashboard with 1'));
+    await tester.pumpAndSettle();
+    expect(find.text('dashboards of c1'), findsOneWidget);
+    final complete = sent.singleWhere((e) => e.$2['step'] == 'complete').$2;
+    expect(complete['from_zha'], 'moving');
+    expect(_prefs.getInt(zhaMovingAtKey), isNull);
+    expect(_prefs.getInt(zhaFoundAtKey), isNull);
+  });
+
   // devices) says so and still creates the home, with an empty dashboard.
   testWidgets('nothing preselected: says so, creates an empty dashboard', (
     tester,
@@ -1697,6 +1777,33 @@ void main() {
       expect(find.text('dashboards of demo1'), findsOneWidget);
       expect(coordinator.state, isA<SetupIdle>());
       expect(steps(), ['platform_chosen', 'demo']);
+    });
+
+    // 3.8: the ZHA answer offers Moving from ZHA too, and remembers the
+    // answer for the demo banner; I'm moving puts the new Zigbee2MQTT first.
+    testWidgets('3.8: ZHA answer › Moving from ZHA › I\'m moving leads setup', (
+      tester,
+    ) async {
+      await _pump(tester, extra: analytics);
+      expect(find.byKey(const Key('setup-zha-moving')), findsNothing);
+      await tester.tap(find.byKey(const Key('ask-ha')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ZHA, Home Assistant\'s own Zigbee'));
+      await tester.pumpAndSettle();
+      expect(_prefs.getBool(zhaAnsweredKey), isTrue);
+      await tester.tap(find.byKey(const Key('setup-zha-move')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('zha-move-sheet')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('zha-move-moving')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('setup-zha-moving')), findsOneWidget);
+      expect(
+        [
+          for (final (name, props) in sent)
+            if (name == 'zha_move') props['step'],
+        ],
+        ['opened', 'moving'],
+      );
     });
 
     // 3.2.7: SMLIGHT was 0 of 20; most were SLZB adapters, which don't

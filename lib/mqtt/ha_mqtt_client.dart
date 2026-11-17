@@ -82,11 +82,13 @@ class HaMqttClient extends mc.MqttClient {
   bool? isAdmin;
   HaClientProblem? problem;
 
-  /// Set only by setup's check: when the MQTT probe fails as [noMqtt] or
-  /// [notAdmin], read [facts] before closing. Live homes never read them.
+  /// Set only by setup's check: read [facts] before closing, whether the
+  /// MQTT probe worked or failed as [noMqtt] or [notAdmin]. 3.8.1: a Home
+  /// Assistant with the MQTT integration can still keep its Zigbee in ZHA.
+  /// Live homes never read them.
   bool readFacts = false;
 
-  /// What the failed check read, when [readFacts] is set.
+  /// What the check read, when [readFacts] is set.
   HaFacts? facts;
 
   @override
@@ -187,6 +189,11 @@ class HaMqttClient extends mc.MqttClient {
       );
     }
     _send({'type': 'unsubscribe_events', 'subscription': probe!['id']});
+    if (readFacts) {
+      final read = await _readFacts();
+      if (attempt != _attempt) return _abandoned(socket);
+      facts = read;
+    }
 
     _status
       ..state = mc.MqttConnectionState.connected

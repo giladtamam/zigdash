@@ -210,6 +210,33 @@ void main() {
       expect(found, 0);
     });
 
+    // 3.8.1: MQTT works in Home Assistant, the Zigbee is in ZHA.
+    test('connected: ZHA noted and counted, then adopted', () async {
+      var found = 0;
+      final c = make(
+        facts: const HaFacts(apps: true, zhaDevices: 4),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      expect(adopted, hasLength(1));
+      expect(found, 1);
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e['result'], 'ok');
+      expect(e['install'], 'apps');
+      expect(e['zha'], '1-10');
+    });
+
+    test('connected with no ZHA devices: not noted', () async {
+      var found = 0;
+      final c = make(
+        facts: const HaFacts(apps: true, zhaDevices: 0),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      expect(adopted, hasLength(1));
+      expect(found, 0);
+    });
+
     test('device groups and the zha_move step', () {
       String zha(int n) =>
           SetupStep(SetupStepKind.haConnect, zhaDevices: n).props['zha']!;
