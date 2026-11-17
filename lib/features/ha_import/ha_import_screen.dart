@@ -9,6 +9,7 @@ import '../../core/review/review_prompt_controller.dart';
 import '../../core/router/routes.dart';
 import '../../data/database/daos/device_registry_dao.dart';
 import '../../data/database/database.dart';
+import '../../data/database/tables/connections.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../data/repositories/dashboard_repo.dart';
 import '../../data/repositories/panel_repo.dart';
@@ -27,6 +28,16 @@ import 'ha_import_controller.dart';
 /// (docs/design/ha-import.md): where Home Assistant is and a token, then a
 /// preview, then the import. The token lives in its text field and is
 /// handed to Home Assistant once; nothing keeps it.
+/// Where the import first looks for Home Assistant. A home reached through
+/// Home Assistant keeps its full address (`http://…:8123`, `http://…` on
+/// port 80, `https://…`), used as it is: 3.8.1, appending `:8123` made
+/// `http://…:8123:8123`, which no sign-in could read. A broker's address is
+/// only a guess that Home Assistant runs on the same machine.
+String haImportAddressOf(Connection home) =>
+    transportOf(home.transport) == ConnectionTransport.homeAssistant
+    ? home.host
+    : '${home.host}:8123';
+
 class HaImportScreen extends ConsumerStatefulWidget {
   const HaImportScreen({
     super.key,
@@ -119,8 +130,8 @@ class _HaImportScreenState extends ConsumerState<HaImportScreen> {
     );
   }
 
-  HaImportController _own(String host) =>
-      _make('$host:8123')..addListener(_track);
+  HaImportController _own(Connection home) =>
+      _make(haImportAddressOf(home))..addListener(_track);
 
   /// The `ha_import` event for each step that counts: counts only.
   void _track() {
@@ -168,7 +179,7 @@ class _HaImportScreenState extends ConsumerState<HaImportScreen> {
         body: const Center(child: CircularProgressIndicator()),
       );
     }
-    final controller = _controller ??= widget.controller ?? _own(home.host);
+    final controller = _controller ??= widget.controller ?? _own(home);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.haImportTitle)),
       body: Center(

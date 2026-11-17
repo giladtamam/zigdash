@@ -562,7 +562,7 @@ class SetupStep extends AnalyticsEvent {
 enum FromZha { moving, devices }
 
 /// Where the Moving from ZHA sheet was opened (3.8).
-enum ZhaMoveFrom { answer, demo, noMqtt, notAdmin, help }
+enum ZhaMoveFrom { answer, demo, noMqtt, notAdmin, help, noZigbee2Mqtt }
 
 /// What happened on the Moving from ZHA sheet (3.8).
 enum ZhaMoveStep { opened, guide, moving, notNow }

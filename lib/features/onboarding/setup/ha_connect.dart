@@ -555,7 +555,10 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
       );
       return _ask(address, problem, shape, read);
     }
-    _count(HaConnectOutcome.ok, shape, base);
+    // 3.8.1: MQTT works, and the Zigbee may still be in ZHA; setup's
+    // failure then offers Moving from ZHA.
+    if ((facts?.zhaDevices ?? 0) > 0) onZhaFound?.call();
+    _count(HaConnectOutcome.ok, shape, base, facts);
     value = const HaConnectDone();
     await _adopt(base, stored);
   }

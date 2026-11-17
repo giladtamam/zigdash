@@ -90,7 +90,9 @@ class SetupScreen extends ConsumerWidget {
         helpSeen: s is SetupComplete
             ? assistantHelpedRecently(ref.read(sharedPreferencesProvider))
             : null,
-        fromZha: s is SetupComplete
+        fromZha:
+            s is SetupComplete ||
+                (s is SetupFailed && s.kind == SetupErrorKind.haNoZigbee2Mqtt)
             ? fromZhaOrNull(() => ref.read(sharedPreferencesProvider))
             : null,
       );
@@ -273,6 +275,18 @@ class SetupScreen extends ConsumerWidget {
               state: state,
               onRetry: coordinator.retry,
               onManual: manual,
+              // 3.8.1: signed in, MQTT works, and the Zigbee is in ZHA.
+              onZhaMove: state.kind == SetupErrorKind.haNoZigbee2Mqtt &&
+                      fromZhaOrNull(
+                            () => ref.read(sharedPreferencesProvider),
+                          ) !=
+                          null
+                  ? () => showZhaMoveSheet(
+                      context,
+                      ref,
+                      ZhaMoveFrom.noZigbee2Mqtt,
+                    )
+                  : null,
             ),
             SetupReview() => _Review(
               state: state,
@@ -1595,10 +1609,14 @@ class _Failure extends StatelessWidget {
     required this.state,
     required this.onRetry,
     required this.onManual,
+    this.onZhaMove,
   });
   final SetupFailed state;
   final VoidCallback onRetry;
   final VoidCallback onManual;
+
+  /// Moving from ZHA, when Home Assistant's check found ZHA devices.
+  final VoidCallback? onZhaMove;
 
   @override
   Widget build(BuildContext context) {
@@ -1630,6 +1648,15 @@ class _Failure extends StatelessWidget {
           icon: const Icon(Icons.refresh),
           label: Text(_guidanceText(l10n, guidance.actionKey)),
         ),
+        if (onZhaMove != null) ...[
+          const SizedBox(height: 12),
+          FilledButton.tonalIcon(
+            key: const Key('setup-failed-zha-move'),
+            onPressed: onZhaMove,
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: Text(l10n.haConnectZhaMove),
+          ),
+        ],
         if (state.kind != SetupErrorKind.saveFailed) ...[
           const SizedBox(height: 16),
           AiHelpCard(

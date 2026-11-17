@@ -349,10 +349,21 @@ void main() {
       expect(types, isNot(contains('config/device_registry/list')));
     });
 
-    test('never read when MQTT works', () async {
+    // 3.8.1: MQTT in Home Assistant, the Zigbee in ZHA (one user, 8 hours).
+    test('MQTT works: read too, still connected', () async {
       ha = _FakeHa(devices: registry);
       await ha.start();
       final client = await check();
+      expect(client.connectionStatus?.state, mc.MqttConnectionState.connected);
+      expect(client.facts?.apps, isTrue);
+      expect(client.facts?.zhaDevices, 2);
+      client.disconnect();
+    });
+
+    test('MQTT works, live home: never read', () async {
+      ha = _FakeHa(devices: registry);
+      await ha.start();
+      final client = await connect('access');
       expect(client.connectionStatus?.state, mc.MqttConnectionState.connected);
       expect(client.facts, isNull);
       expect(ha.received.map((m) => m['type']), isNot(contains('get_config')));

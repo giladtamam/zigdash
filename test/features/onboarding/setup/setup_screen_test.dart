@@ -1501,6 +1501,55 @@ void main() {
     expect(find.textContaining('port=1884'), findsOneWidget);
   });
 
+  // 3.8.1: signed in to Home Assistant, MQTT works, the Zigbee is in ZHA.
+  group('3.8.1: Home Assistant without Zigbee2MQTT', () {
+    Future<List<(String, Map<String, String>)>> fail(
+      WidgetTester tester,
+    ) async {
+      final sent = <(String, Map<String, String>)>[];
+      final coordinator = await _pump(
+        tester,
+        fetch: const Z2mFetchResult(detected: false, devices: []),
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      );
+      await coordinator.adoptHomeAssistant(
+        address: Uri.parse('http://192.168.68.52:8123'),
+        signIn: 'eyJ.long.lived',
+      );
+      await tester.pumpAndSettle();
+      return sent;
+    }
+
+    testWidgets('ZHA found: Moving from ZHA, and from_zha on failed', (
+      tester,
+    ) async {
+      await _prefs.setInt(
+        zhaFoundAtKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
+      final sent = await fail(tester);
+      final failed = sent.singleWhere((e) => e.$2['step'] == 'failed').$2;
+      expect(failed['error'], 'ha_no_zigbee2_mqtt');
+      expect(failed['from_zha'], 'devices');
+      await tester.tap(find.byKey(const Key('setup-failed-zha-move')));
+      await tester.pumpAndSettle();
+      final opened = sent.singleWhere((e) => e.$1 == 'zha_move').$2;
+      expect(opened, {'step': 'opened', 'from': 'no_zigbee2_mqtt'});
+    });
+
+    testWidgets('no ZHA found: no button, no from_zha', (tester) async {
+      final sent = await fail(tester);
+      final failed = sent.singleWhere((e) => e.$2['step'] == 'failed').$2;
+      expect(failed['error'], 'ha_no_zigbee2_mqtt');
+      expect(failed.containsKey('from_zha'), isFalse);
+      expect(find.byKey(const Key('setup-failed-zha-move')), findsNothing);
+    });
+  });
+
   // 2.10.2: a list with nothing preselected (only "other" or unsupported
   // 3.8: a finished setup says it came from ZHA, then ends the move.
   testWidgets('3.8: complete carries from_zha, then the move ends', (
