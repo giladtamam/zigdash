@@ -45,8 +45,8 @@
 <h2 id="before">Before you start</h2>
 <ul>
   <li><strong>Which installation?</strong> If Home Assistant's Settings menu shows <strong>Apps</strong> (Add-ons on older versions), you have Home Assistant OS: see <a href="#apps">with apps</a>. If it doesn't, Home Assistant runs in Docker (Container): see <a href="#docker">Docker</a>.</li>
-  <li><strong>Which adapter?</strong> In Home Assistant, open Settings › Devices &amp; services › Devices and find the device called <strong>Zigbee Coordinator</strong>. Its page shows the model. Then check <a href="#adapter">your adapter</a>.</li>
-  <li><strong>Back up ZHA.</strong> Settings › Devices &amp; services › Zigbee Home Automation › Configure; under the network settings, <strong>Download backup</strong>. Keep the file; you need it to go back.</li>
+  <li><strong>Which adapter?</strong> Open Settings › Devices &amp; services › Zigbee Home Automation. Under Hubs, the adapter is listed by its model, for example <strong>SONOFF ZBDongle-E</strong>. Then check <a href="#adapter">your adapter</a>.</li>
+  <li><strong>Back up ZHA.</strong> On that page, tap the ⚙ next to Zigbee Home Automation, then <strong>Download backup</strong>. Keep the file. The same page's <strong>Network information</strong> shows the channel, radio type and serial port.</li>
   <li><strong>What changes in Home Assistant.</strong> Your devices come back as new MQTT devices with new entity IDs. Automations, scripts and dashboards that use them must be pointed at the new ones, and their history starts again. Groups and bindings made in ZHA are made again in Zigbee2MQTT.</li>
   <li><strong>Time.</strong> Each device is reset and paired again, one by one. We don't have honest timings yet; plan an evening for a small home and more for a big one.</li>
 </ul>
@@ -69,7 +69,7 @@
   <li>Set up Zigbee2MQTT on the new adapter (<a href="#apps">with apps</a> or <a href="#docker">Docker</a>) with its own network. Choose all of this <strong>before Zigbee2MQTT's first start</strong>, since changing the channel later can mean pairing again:
     <ul>
       <li>leave the network key and PAN ID on <code>GENERATE</code> (the default);</li>
-      <li>pick a channel different from ZHA's. ZHA's Configure page shows its channel; Home Assistant advises 15, 20 or 25.</li>
+      <li>pick a channel different from ZHA's (ZHA's ⚙ › Network information shows it); Home Assistant advises 15, 20 or 25.</li>
     </ul></li>
   <li>Keep the two adapters apart, each on a USB extension cable.</li>
   <li>On Home Assistant OS, when you plug in the new adapter, Home Assistant may offer to set it up for ZHA or Thread. Ignore that: the adapter is for Zigbee2MQTT.</li>
@@ -80,7 +80,7 @@
 <h3>Same adapter</h3>
 <ol>
   <li>Download the ZHA backup (see <a href="#before">Before you start</a>), right before you begin.</li>
-  <li>Disable ZHA: Settings › Devices &amp; services › Zigbee Home Automation › ⋮ › <strong>Disable</strong>. Not Delete. Then restart Home Assistant.</li>
+  <li>Disable ZHA: Settings › Devices &amp; services › Zigbee Home Automation, the ⋮ next to Zigbee Home Automation › <strong>Disable</strong>. Not Delete.</li>
   <li>Set up Zigbee2MQTT on the same adapter (<a href="#apps">with apps</a> or <a href="#docker">Docker</a>), leaving the network key and PAN ID on <code>GENERATE</code>.</li>
   <li>Switch off your mains-powered Zigbee devices at the wall or the breaker. Otherwise they keep looking for the old network.</li>
   <li>Switch them back on one by one, and <a href="#pair">pair</a> each as it comes on. Then pair the battery devices.</li>
@@ -141,8 +141,9 @@ allow_anonymous false
 password_file /mosquitto/config/passwd
 persistence true
 persistence_location /mosquitto/data/</code></pre>
-<p>Make the MQTT user (it asks for a password twice):</p>
-<pre><code>docker run -it --rm -v "$PWD/mosquitto/config:/mosquitto/config" eclipse-mosquitto:2 mosquitto_passwd -c /mosquitto/config/passwd zigbee</code></pre>
+<p>Make the MQTT user (it asks for a password twice; the file must belong to Mosquitto's own user, or Mosquitto won't start):</p>
+<pre><code>docker run -it --rm -v "$PWD/mosquitto/config:/mosquitto/config" eclipse-mosquitto:2 \
+  sh -c "mosquitto_passwd -c /mosquitto/config/passwd zigbee &amp;&amp; chown mosquitto:mosquitto /mosquitto/config/passwd"</code></pre>
 <p><strong>3. <code>zigbee2mqtt/configuration.yaml</code></strong> (the adapter lines from <a href="#adapter">your adapter</a>):</p>
 <pre><code>homeassistant:
   enabled: true
@@ -183,9 +184,9 @@ advanced:
 <h2 id="back">Going back</h2>
 <ul>
   <li><strong>Second adapter:</strong> stop Zigbee2MQTT and unplug the new adapter. ZHA never stopped. Devices you already moved need pairing to ZHA again.</li>
-  <li><strong>Same adapter:</strong> stop Zigbee2MQTT and enable ZHA. The adapter now holds Zigbee2MQTT's network, so restore the ZHA backup you downloaded first (ZHA's network settings: migrate or restore a backup). Devices you hadn't paired again come back; devices you had paired to Zigbee2MQTT need pairing to ZHA again.</li>
+  <li><strong>Same adapter:</strong> stop Zigbee2MQTT, then on ZHA's page tap <strong>Enable</strong>. ZHA says "Network settings do not match most recent backup", because the adapter now holds Zigbee2MQTT's network. Open Settings › <strong>Repairs</strong> › "Zigbee network settings have changed" and choose <strong>Restore backup (recommended)</strong>. ZHA's network comes back as it was. Devices you had paired to Zigbee2MQTT need pairing to ZHA again. If no repair appears, use ⚙ › Migrate adapter with the backup you downloaded.</li>
 </ul>
-<div class="tip"><strong>Not tested yet:</strong> we haven't tried going back on the same adapter ourselves. If you need a sure way back, use the second-adapter way.</div>
+<div class="tip"><strong>Tested:</strong> on 17 November 2026, with Home Assistant 2026.11 and a Sonoff ZBDongle-E, ZHA's network came back exactly (channel, PAN ID and network key). We haven't yet checked it with devices paired, so keep the backup file.</div>
 
 <h2 id="keep">Keeping the network without pairing again</h2>
 <p>There is a third way: copying ZHA's network into Zigbee2MQTT so devices don't need pairing again. Zigbee2MQTT doesn't support it, a wrong value can wipe the network, and it only makes sense for big homes (say, over 60 devices). If you want to read about it: <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/16739">the Zigbee2MQTT maintainer's answer</a>, and community reports in <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/24478">discussion 24478</a> and <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/26716">discussion 26716</a>.</p>
