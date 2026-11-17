@@ -156,7 +156,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nepřipojí. Chceš-li používat ZigDash, přejdi na Zigbee2MQTT (k dispozici jako aplikace Home Assistantu nebo kontejner Docker), který MQTT broker poskytuje.';
+      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nepřipojí. Chceš-li používat ZigDash, přejdi na Zigbee2MQTT (k dispozici jako aplikace Home Assistantu nebo kontejner Docker), který běží s MQTT brokerem, například Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1889,6 +1889,28 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Tento Home Assistant nemá integraci MQTT. Zigbee2MQTT ji potřebuje také: v Home Assistantu přidej aplikaci Mosquitto broker (Nastavení › Aplikace) a integraci MQTT, pak to zkus znovu.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zařízení',
+      few: '$count zařízení',
+      one: '1 zařízení',
+    );
+    return 'Tvoje Zigbee běží v ZHA, vlastním Zigbee Home Assistantu ($_temp0). ZigDash pracuje se Zigbee2MQTT, takže je nemůže zobrazit. Přechod na Zigbee2MQTT znamená znovu spárovat zařízení; průvodce ukazuje dva způsoby.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Přechod ze ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Tento Home Assistant nemá integraci MQTT ani aplikace (běží jako kontejner), takže Mosquitto a Zigbee2MQTT běží vedle něj jako vlastní kontejnery. Pokud už běží, připoj ZigDash přímo k Mosquittu. Nebo v Home Assistantu přidej integraci MQTT a zkus to znovu.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Jak se připojit';
 
   @override
   String get haConnectSignInFailed =>

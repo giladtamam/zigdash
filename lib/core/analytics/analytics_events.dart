@@ -202,6 +202,12 @@ enum SetupStepKind {
   /// link ([welcomeDemo]) are gone with it; the ZHA note's demo counts as
   /// [demo].
   noHub,
+
+  /// "Moving from ZHA" was tapped where the Home Assistant check found
+  /// devices in ZHA (3.7.1, zha-migration.md), with [SetupStep.choice]
+  /// saying after which outcome (a `HaConnectOutcome`: no_mqtt or
+  /// not_admin).
+  zhaMove,
 }
 
 /// Where the "Nothing yet" screen was opened from (3.4): the first
@@ -367,9 +373,19 @@ class SetupStep extends AnalyticsEvent {
     this.helpSeen,
     this.shape,
     this.addressFrom,
+    this.haApps,
+    this.zhaDevices,
   });
 
   final SetupStepKind step;
+
+  /// Whether the Home Assistant has apps, on [SetupStepKind.haConnect]
+  /// after no_mqtt or not_admin (3.7.1, zha-migration.md); sent as
+  /// `install`.
+  final bool? haApps;
+
+  /// Devices in ZHA, in broad groups, on the same tries; sent as `zha`.
+  final int? zhaDevices;
 
   /// The kind of address a Home Assistant try went to (an
   /// [HaAddressShape]), on [SetupStepKind.haConnect] (3.1.12). Never the
@@ -516,6 +532,14 @@ class SetupStep extends AnalyticsEvent {
     if (addressFrom != null) 'from': _snake(addressFrom!.name),
     if (addressFrom != null && result != null)
       'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
+    if (haApps != null) 'install': haApps! ? 'apps' : 'no_apps',
+    if (zhaDevices != null)
+      'zha': bucket(
+        zhaDevices!,
+        const [0],
+        ranges: const [(1, 10), (11, 30), (31, 60)],
+        top: '61+',
+      ),
   };
 
   /// The interface kind as a fixed label: wifi, ethernet or other.
@@ -1019,7 +1043,11 @@ enum HistorySetupFrom { sheet, finish, card }
 /// The history recorder was set up from a history sheet or, from 3.6, the
 /// "Turn on History" card.
 class HistorySetup extends AnalyticsEvent {
-  const HistorySetup(this.result, {this.from = HistorySetupFrom.sheet, this.why});
+  const HistorySetup(
+    this.result, {
+    this.from = HistorySetupFrom.sheet,
+    this.why,
+  });
 
   final HistorySetupResult result;
   final HistorySetupFrom from;
@@ -1329,10 +1357,25 @@ enum EngineFrom { automations, alerts, history, historyOn, save }
 /// no broker connection, no `bridge/info`, info but no `bridge/extensions`,
 /// Zigbee2MQTT too old, add-ons blocked, Zigbee2MQTT refused, no answer to
 /// the install, or anything else.
-enum EngineWhy { relay, noConnection, noInfo, noExtensions, tooOld, blocked, refused, noAnswer, other }
+enum EngineWhy {
+  relay,
+  noConnection,
+  noInfo,
+  noExtensions,
+  tooOld,
+  blocked,
+  refused,
+  noAnswer,
+  other,
+}
 
 class EngineEvent extends AnalyticsEvent {
-  const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations, this.why});
+  const EngineEvent(
+    this.step, {
+    this.z2m,
+    this.from = EngineFrom.automations,
+    this.why,
+  });
 
   final EngineStep step;
 
@@ -1478,7 +1521,10 @@ class ChatLinkEvent extends AnalyticsEvent {
   String get name => 'chat_link';
 
   @override
-  Map<String, String> get props => {'step': step.name, if (why != null) 'why': why!};
+  Map<String, String> get props => {
+    'step': step.name,
+    if (why != null) 'why': why!,
+  };
 }
 
 /// The "Turn on History" card (3.6, pro-trial-360.md §2): shown (once per

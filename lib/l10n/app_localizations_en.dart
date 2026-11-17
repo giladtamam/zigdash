@@ -156,7 +156,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which provides an MQTT broker.';
+      'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which runs with an MQTT broker such as Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1884,6 +1884,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker app (Settings › Apps) and the MQTT integration, then try again.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devices',
+      one: '1 device',
+    );
+    return 'Your Zigbee runs in ZHA, Home Assistant\'s own Zigbee ($_temp0). ZigDash works with Zigbee2MQTT, so it can\'t show them. Moving to Zigbee2MQTT means pairing your devices again; the guide shows two ways.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Moving from ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'This Home Assistant has no MQTT integration, and no apps (it runs as a container), so Mosquitto and Zigbee2MQTT run as their own containers next to it. If they already run, connect ZigDash to Mosquitto directly. Or add the MQTT integration in Home Assistant, then try again.';
+
+  @override
+  String get haConnectNoAppsGuide => 'How to connect';
 
   @override
   String get haConnectSignInFailed =>

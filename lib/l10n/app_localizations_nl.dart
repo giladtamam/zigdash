@@ -156,7 +156,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA heeft geen MQTT-broker — het praat rechtstreeks met Home Assistant, dus ZigDash kan er niet mee verbinden. Wil je ZigDash gebruiken, stap dan over op Zigbee2MQTT (beschikbaar als Home Assistant-app of Docker-container), dat een MQTT-broker meebrengt.';
+      'ZHA heeft geen MQTT-broker — het praat rechtstreeks met Home Assistant, dus ZigDash kan er niet mee verbinden. Wil je ZigDash gebruiken, stap dan over op Zigbee2MQTT (beschikbaar als Home Assistant-app of Docker-container), dat werkt met een MQTT-broker zoals Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1897,6 +1897,27 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Deze Home Assistant heeft geen MQTT-integratie. Zigbee2MQTT heeft er ook een nodig: voeg in Home Assistant de app Mosquitto broker (Instellingen › Apps) en de MQTT-integratie toe en probeer het opnieuw.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count apparaten',
+      one: '1 apparaat',
+    );
+    return 'Je Zigbee draait in ZHA, de eigen Zigbee van Home Assistant ($_temp0). ZigDash werkt met Zigbee2MQTT en kan ze dus niet tonen. Overstappen naar Zigbee2MQTT betekent je apparaten opnieuw koppelen; de handleiding toont twee manieren.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Overstappen van ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Deze Home Assistant heeft geen MQTT-integratie en geen apps (hij draait als container), dus Mosquitto en Zigbee2MQTT draaien als eigen containers ernaast. Draaien ze al, verbind ZigDash dan direct met Mosquitto. Of voeg in Home Assistant de MQTT-integratie toe en probeer het opnieuw.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Zo verbind je';
 
   @override
   String get haConnectSignInFailed =>

@@ -25,7 +25,7 @@ void main() {
       final base = haBaseUri(url)!;
       final stored = tokenFile.readAsStringSync().trim();
       final sw = Stopwatch()..start();
-      final problem = await probeHomeAssistant(base, stored);
+      final (:problem, facts: _) = await probeHomeAssistant(base, stored);
       // ignore: avoid_print
       print('probe: ${problem ?? 'usable'} in ${sw.elapsedMilliseconds} ms');
       expect(problem, isNull);

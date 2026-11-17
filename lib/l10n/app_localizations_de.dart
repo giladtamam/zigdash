@@ -156,7 +156,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA hat keinen MQTT-Broker – es spricht direkt mit Home Assistant, daher kann ZigDash sich nicht verbinden. Um ZigDash zu nutzen, wechsle zu Zigbee2MQTT (als Home-Assistant-App oder Docker-Container verfügbar), das einen MQTT-Broker mitbringt.';
+      'ZHA hat keinen MQTT-Broker – es spricht direkt mit Home Assistant, daher kann ZigDash sich nicht verbinden. Um ZigDash zu nutzen, wechsle zu Zigbee2MQTT (als Home-Assistant-App oder Docker-Container verfügbar), das mit einem MQTT-Broker wie Mosquitto läuft.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1903,6 +1903,27 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Dieses Home Assistant hat keine MQTT-Integration. Zigbee2MQTT braucht auch eine: Füge in Home Assistant die App Mosquitto broker (Einstellungen › Apps) und die MQTT-Integration hinzu und versuche es dann erneut.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Geräte',
+      one: '1 Gerät',
+    );
+    return 'Dein Zigbee läuft in ZHA, dem eigenen Zigbee von Home Assistant ($_temp0). ZigDash arbeitet mit Zigbee2MQTT und kann sie daher nicht anzeigen. Der Umzug zu Zigbee2MQTT bedeutet, deine Geräte neu zu koppeln; die Anleitung zeigt zwei Wege.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Umzug von ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Dieses Home Assistant hat keine MQTT-Integration und keine Apps (es läuft als Container), daher laufen Mosquitto und Zigbee2MQTT als eigene Container daneben. Wenn sie schon laufen, verbinde ZigDash direkt mit Mosquitto. Oder füge in Home Assistant die MQTT-Integration hinzu und versuche es dann erneut.';
+
+  @override
+  String get haConnectNoAppsGuide => 'So verbindest du';
 
   @override
   String get haConnectSignInFailed =>

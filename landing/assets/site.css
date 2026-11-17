@@ -82,6 +82,8 @@
   .compare thead th:last-child, .compare td:last-child { background: var(--card); }
   .compare thead th:last-child { color: var(--accent); }
   .compare tbody th { color: var(--muted); font-weight: 600; width: 22%; }
+  .compare table.even thead th:last-child, .compare table.even td:last-child { background: none; }
+  .compare table.even thead th:last-child { color: var(--muted); }
   .video { margin: 16px auto 24px; max-width: 860px; }
   .video video { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--border); background: var(--card); display: block; }
   .video figcaption { text-align: center; color: var(--muted); font-size: .9rem; margin-top: 8px; }

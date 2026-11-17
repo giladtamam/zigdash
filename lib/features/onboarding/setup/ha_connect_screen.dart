@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../mqtt/ha_token.dart';
 import '../../../mqtt/ha_address.dart';
+import '../../../mqtt/ha_mqtt_client.dart' show HaFacts;
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../core/analytics/analytics.dart';
@@ -26,9 +27,14 @@ import 'ha_address_shape.dart';
 import 'ha_connect.dart';
 import 'ha_discovery.dart';
 import 'ha_handover.dart';
+import 'no_hub_screen.dart' show haGuideUrl;
 import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
+import 'setup_screen.dart' show openSetupLink;
 import 'setup_waiting.dart';
+
+/// The web guide to moving from ZHA to Zigbee2MQTT (zha-migration.md).
+final zhaGuideUrl = Uri.parse('https://zigdash.app/zha/');
 
 /// "Connect through Home Assistant" (docs/design/ha-route.md): the address,
 /// a sign-in (Home Assistant's login page, or a pasted token), a check,
@@ -240,6 +246,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
   HaConnectController _make() => HaConnectController(
     address: widget.initialHost ?? '',
     onEvent: (event) => ref.read(analyticsProvider).track(event),
+    onZhaFound: () => markZhaFound(ref.read(sharedPreferencesProvider)),
     adopt: (address, signIn) => widget.again == null
         ? ref
               .read(setupCoordinatorProvider)
@@ -276,6 +283,22 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     }
     await repo.setHomeAssistantSignIn(id, address: address, signIn: signIn);
     ref.invalidate(mqttManagerProvider(id));
+  }
+
+  /// "Moving from ZHA" (3.7.1): the web guide, counted with the outcome
+  /// that showed it.
+  void _zhaMove(HaConnectProblem after) {
+    ref
+        .read(analyticsProvider)
+        .track(
+          SetupStep(
+            SetupStepKind.zhaMove,
+            choice: after == HaConnectProblem.notAdmin
+                ? HaConnectOutcome.notAdmin
+                : HaConnectOutcome.noMqtt,
+          ),
+        );
+    openSetupLink(zhaGuideUrl);
   }
 
   void _onState() {
@@ -379,6 +402,8 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
             onSignIn: () => _controller.signInAndConnect(_address.text),
             onToken: () =>
                 _controller.connectWithToken(_address.text, _token.text),
+            onZhaMove: _zhaMove,
+            onHaGuide: () => openSetupLink(haGuideUrl),
           ),
           HaConnectChecking() => SetupWaiting(
             title: l10n.haConnectChecking,
@@ -420,8 +445,16 @@ class _Ask extends StatefulWidget {
     this.highlightPaste = false,
     this.shared,
     this.shareTarget = false,
+    this.onZhaMove,
+    this.onHaGuide,
   });
   final HaConnectAsk state;
+
+  /// "Moving from ZHA", when the check found devices in ZHA, with the
+  /// problem it followed; and the Home Assistant guide, for an
+  /// installation with no apps.
+  final ValueChanged<HaConnectProblem>? onZhaMove;
+  final VoidCallback? onHaGuide;
 
   /// The Paste button (ha-share-paste.md), and whether its last tap found
   /// no address in what was copied.
@@ -682,11 +715,34 @@ class _AskState extends State<_Ask> {
               problem,
               shape: widget.state.shape,
               phoneIp: widget.phoneIp,
+              facts: widget.state.facts,
             ),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.error,
             ),
           ),
+          if (zhaFound(widget.state.facts) && widget.onZhaMove != null) ...[
+            const SizedBox(height: 8),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: FilledButton.tonalIcon(
+                key: const Key('ha-zha-move'),
+                onPressed: () => widget.onZhaMove!(problem),
+                icon: const Icon(Icons.open_in_new, size: 18),
+                label: Text(l10n.haConnectZhaMove),
+              ),
+            ),
+          ] else if (noApps(problem, widget.state.facts) &&
+              widget.onHaGuide != null)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                key: const Key('ha-no-apps-guide'),
+                onPressed: widget.onHaGuide,
+                icon: const Icon(Icons.open_in_new, size: 18),
+                label: Text(l10n.haConnectNoAppsGuide),
+              ),
+            ),
         ],
         if (widget.canSignIn) ...[
           const SizedBox(height: 24),
@@ -914,14 +970,29 @@ String _hostOf(HaFound found) {
   return base == null ? found.address : '${base.host}:${base.port}';
 }
 
+/// Whether the check found devices in ZHA (zha-migration.md, Phase 0).
+bool zhaFound(HaFacts? facts) => (facts?.zhaDevices ?? 0) > 0;
+
+/// No MQTT integration on a Home Assistant without apps (Container or
+/// Core), and nothing in ZHA: Mosquitto can't be added under Settings ›
+/// Apps there.
+bool noApps(HaConnectProblem p, HaFacts? facts) =>
+    p == HaConnectProblem.noMqtt && facts?.apps == false && !zhaFound(facts);
+
 /// What a failed try says, visible for tests. Nothing answering is told by
-/// the [shape] of the address it went to (3.1.12).
+/// the [shape] of the address it went to (3.1.12). After no MQTT or no
+/// admin, devices found in ZHA come first: neither Mosquitto nor an admin
+/// sign-in gets ZigDash to them (3.7.1).
 String problemText(
   AppLocalizations l10n,
   HaConnectProblem p, {
   HaAddressShape? shape,
   String? phoneIp,
+  HaFacts? facts,
 }) => switch (p) {
+  HaConnectProblem.noMqtt || HaConnectProblem.notAdmin when zhaFound(facts) =>
+    l10n.haConnectZhaFound(facts!.zhaDevices!),
+  HaConnectProblem.noMqtt when noApps(p, facts) => l10n.haConnectNoMqttNoApps,
   HaConnectProblem.noAddress => l10n.haImportNoAddress,
   HaConnectProblem.noToken => l10n.haImportNoToken,
   HaConnectProblem.unreachable => _unreachableText(l10n, shape, phoneIp),
@@ -982,6 +1053,14 @@ class _ScrollIntoViewState extends State<_ScrollIntoView> {
 /// When the Home Assistant app was opened from setup (3.6), so a restart
 /// soon after (Android may close ZigDash meanwhile) comes back here.
 const haAppLeftAtKey = 'ha_app_left_at_ms';
+
+/// When setup's check last found devices in ZHA (3.7.1), on the phone
+/// only: lets a setup that completes later say it came from ZHA
+/// (`from_zha`, zha-migration.md Phase 1).
+const zhaFoundAtKey = 'zha_found_at';
+
+Future<void> markZhaFound(SharedPreferences prefs) =>
+    prefs.setInt(zhaFoundAtKey, DateTime.now().millisecondsSinceEpoch);
 
 /// How long after leaving a restart still counts as coming back.
 const haAppReturnWindow = Duration(minutes: 30);
