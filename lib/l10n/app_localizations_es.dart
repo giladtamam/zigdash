@@ -4365,6 +4365,14 @@ class AppLocalizationsEs extends AppLocalizations {
       'Home Assistant está en tu red. ZigDash puede nombrar tus mosaicos y añadir un panel por planta y estancia, tal como los configuraste allí.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash puede nombrar tus mosaicos y añadir un panel por planta y estancia, con los nombres y estancias de tus dispositivos en Home Assistant, también los de ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT aún no tiene dispositivos. Empareja primero tus dispositivos allí y luego abre Importar desde Home Assistant en los ajustes de esta casa.';
+
+  @override
   String get haImportOfferLater => 'Ahora no';
 
   @override

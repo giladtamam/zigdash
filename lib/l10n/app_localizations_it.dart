@@ -4365,6 +4365,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Home Assistant è nella tua rete. ZigDash può dare un nome ai tuoi riquadri e aggiungere una dashboard per ogni piano e stanza, come li hai impostati lì.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash può dare un nome ai riquadri e aggiungere una dashboard per piano e stanza, con i nomi e le stanze dei dispositivi in Home Assistant, compresi quelli di ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT non ha ancora dispositivi. Associa prima lì i dispositivi, poi apri Importa da Home Assistant nelle impostazioni di questa casa.';
+
+  @override
   String get haImportOfferLater => 'Non ora';
 
   @override

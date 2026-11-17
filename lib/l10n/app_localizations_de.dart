@@ -4371,6 +4371,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Home Assistant ist in deinem Netzwerk. ZigDash kann deine Kacheln benennen und ein Dashboard pro Etage und Raum anlegen, so wie du sie dort eingerichtet hast.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kann deine Kacheln benennen und ein Dashboard pro Etage und Raum anlegen, mit den Namen und Räumen deiner Geräte in Home Assistant, auch denen aus ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT hat noch keine Geräte. Kopple deine Geräte zuerst dort, dann öffne „Aus Home Assistant importieren“ in den Einstellungen dieses Zuhauses.';
+
+  @override
   String get haImportOfferLater => 'Nicht jetzt';
 
   @override

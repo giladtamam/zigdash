@@ -14,6 +14,7 @@ import '../onboarding/first_run.dart';
 import '../onboarding/setup/setup_completed_at.dart';
 import '../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
+import '../zha_move/zha_move.dart';
 import 'home_share.dart';
 
 /// Opened by the camera app from another phone's "Share this home" code
@@ -52,8 +53,15 @@ class _JoinHomeScreenState extends ConsumerState<JoinHomeScreen> {
         );
     analytics.track(const HomeShareEvent(HomeShareStep.joined));
     analytics.track(
-      const SetupStep(SetupStepKind.complete, via: SetupVia.shared),
+      SetupStep(
+        SetupStepKind.complete,
+        via: SetupVia.shared,
+        fromZha: fromZhaOrNull(() => ref.read(sharedPreferencesProvider)),
+      ),
     );
+    // 3.8: a finished setup ends a move from ZHA, joined homes included
+    // (the read tells them apart by via=shared).
+    await ref.read(zhaMovingProvider.notifier).end();
     // 3.4.8: the review prompt keeps quiet for a while after this.
     await markSetupCompleted(() => ref.read(sharedPreferencesProvider));
     var imported = false;

@@ -4342,6 +4342,14 @@ class AppLocalizationsNb extends AppLocalizations {
       'Home Assistant er på nettverket ditt. ZigDash kan gi flisene navn og legge til et dashbord per etasje og rom, slik du har satt dem opp der.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kan gi flisene navn og legge til et dashbord per etasje og rom, med navnene og rommene til enhetene dine i Home Assistant, også de fra ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT har ingen enheter ennå. Par enhetene dine der først, og åpne deretter Importer fra Home Assistant i innstillingene for dette hjemmet.';
+
+  @override
   String get haImportOfferLater => 'Ikke nå';
 
   @override

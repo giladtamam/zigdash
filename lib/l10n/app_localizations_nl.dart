@@ -4360,6 +4360,14 @@ class AppLocalizationsNl extends AppLocalizations {
       'Home Assistant staat op je netwerk. ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, zoals je ze daar hebt ingesteld.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, met de namen en ruimtes van je apparaten in Home Assistant, ook die uit ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT heeft nog geen apparaten. Koppel je apparaten daar eerst en open dan Importeren uit Home Assistant in de instellingen van dit huis.';
+
+  @override
   String get haImportOfferLater => 'Niet nu';
 
   @override

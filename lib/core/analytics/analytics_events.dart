@@ -203,8 +203,9 @@ enum SetupStepKind {
   /// [demo].
   noHub,
 
-  /// "Moving from ZHA" was tapped where the Home Assistant check found
-  /// devices in ZHA (3.7.1, zha-migration.md), with [SetupStep.choice]
+  /// 3.7.1 only (3.8 counts the sheet as `zha_move`): "Moving from ZHA"
+  /// was tapped where the Home Assistant check found
+  /// devices in ZHA (zha-migration.md), with [SetupStep.choice]
   /// saying after which outcome (a `HaConnectOutcome`: no_mqtt or
   /// not_admin).
   zhaMove,
@@ -561,7 +562,7 @@ class SetupStep extends AnalyticsEvent {
 enum FromZha { moving, devices }
 
 /// Where the Moving from ZHA sheet was opened (3.8).
-enum ZhaMoveFrom { answer, demo, noMqtt, notAdmin, help, guide }
+enum ZhaMoveFrom { answer, demo, noMqtt, notAdmin, help }
 
 /// What happened on the Moving from ZHA sheet (3.8).
 enum ZhaMoveStep { opened, guide, moving, notNow }

@@ -1341,6 +1341,8 @@
   "haImportOpen": "Открыть дашборды",
   "haImportOfferTitle": "Перенести имена и комнаты из Home Assistant?",
   "haImportOfferBody": "Home Assistant есть в вашей сети. ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату, как вы настроили их там.",
+  "haImportOfferBodyZha": "ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату по названиям и комнатам ваших устройств в Home Assistant, включая устройства из ZHA.",
+  "haImportNoZ2mDevices": "В Zigbee2MQTT пока нет устройств. Сначала подключите устройства в нём, затем откройте «Импорт из Home Assistant» в настройках этого дома.",
   "haImportOfferLater": "Не сейчас",
   "haImportOfferGo": "Импортировать",
   "haImportSignIn": "Войти через Home Assistant",

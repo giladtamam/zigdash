@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../mqtt/ha_mqtt_client.dart' show HaFacts;
 import '../../../shortcuts/shortcut_service.dart' show appChannel;
 import '../../connections/discovery/hub_probe.dart';
 import '../../support/support_details.dart';
-import '../../../mqtt/ha_mqtt_client.dart' show HaFacts;
 import 'ha_connect.dart';
 import 'setup_coordinator.dart';
 import 'setup_error_guidance.dart';

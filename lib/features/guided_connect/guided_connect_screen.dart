@@ -649,10 +649,17 @@ class _GuidedConnectScreenState extends ConsumerState<GuidedConnectScreen> {
                   // 3.8: a Container user moving from ZHA connects here,
                   // straight to Mosquitto; their names and rooms are in
                   // Home Assistant's old ZHA entries.
-                  if (ref.read(zhaMovingProvider)) {
-                    await ref.read(haImportOfferProvider.notifier).offer(id);
+                  // With nothing paired yet (the second-adapter way, room
+                  // by room) the move goes on: the offer waits for a
+                  // setup with devices.
+                  if (count > 0) {
+                    if (zhaMoving(ref.read(sharedPreferencesProvider))) {
+                      await ref
+                          .read(haImportOfferProvider.notifier)
+                          .offer(id, fromZha: true);
+                    }
+                    await ref.read(zhaMovingProvider.notifier).end();
                   }
-                  await ref.read(zhaMovingProvider.notifier).end();
                   ref.read(aiHelpUsedProvider.notifier).state = false;
                   // 3.4.8: the review prompt keeps quiet for a while after this.
                   await markSetupCompleted(

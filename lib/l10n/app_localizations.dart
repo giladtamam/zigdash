@@ -7668,6 +7668,18 @@ abstract class AppLocalizations {
   /// **'Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.'**
   String get haImportOfferBody;
 
+  /// No description provided for @haImportOfferBodyZha.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA\'s included.'**
+  String get haImportOfferBodyZha;
+
+  /// No description provided for @haImportNoZ2mDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home\'s settings.'**
+  String get haImportNoZ2mDevices;
+
   /// No description provided for @haImportOfferLater.
   ///
   /// In en, this message translates to:

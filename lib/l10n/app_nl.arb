@@ -1346,6 +1346,8 @@
   "haImportOpen": "Dashboards openen",
   "haImportOfferTitle": "Namen en ruimtes uit Home Assistant overnemen?",
   "haImportOfferBody": "Home Assistant staat op je netwerk. ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, zoals je ze daar hebt ingesteld.",
+  "haImportOfferBodyZha": "ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, met de namen en ruimtes van je apparaten in Home Assistant, ook die uit ZHA.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT heeft nog geen apparaten. Koppel je apparaten daar eerst en open dan Importeren uit Home Assistant in de instellingen van dit huis.",
   "haImportOfferLater": "Niet nu",
   "haImportOfferGo": "Importeren",
   "haImportSignIn": "Inloggen met Home Assistant",

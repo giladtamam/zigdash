@@ -21,6 +21,7 @@ import '../../settings/providers/settings_controller.dart'
 import '../../support/assistant_panel.dart' show assistantHelpedRecently;
 import '../../support/get_help_screen.dart'
     show GetHelpLink, GetHelpWarmButton;
+import '../../zha_move/zha_move.dart';
 import 'setup_completed_at.dart';
 import '../first_run.dart';
 import 'recommendation_policy.dart';
@@ -32,7 +33,6 @@ import 'setup_analytics.dart';
 import 'setup_providers.dart';
 import 'ha_connect_screen.dart' show takeHaAppColdReturn;
 import 'setup_waiting.dart';
-import '../../zha_move/zha_move.dart';
 import 'setup_reminder.dart';
 
 part 'setup_guide.dart';
@@ -158,10 +158,10 @@ class SetupScreen extends ConsumerWidget {
       coordinator.setPlatform(platform);
       // 3.8: the demo home offers Moving from ZHA after a ZHA answer.
       if (platform != null) {
-        final prefs = ref.read(sharedPreferencesProvider);
-        platform == SetupPlatform.zha
-            ? prefs.setBool(zhaAnsweredKey, true)
-            : prefs.remove(zhaAnsweredKey);
+        noteZhaAnswer(
+          () => ref.read(sharedPreferencesProvider),
+          platform == SetupPlatform.zha,
+        );
       }
     }
 

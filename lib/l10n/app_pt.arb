@@ -1306,6 +1306,8 @@
   "haImportOpen": "Abrir painéis",
   "haImportOfferTitle": "Trazer os nomes e as divisões do Home Assistant?",
   "haImportOfferBody": "O Home Assistant está na sua rede. O ZigDash pode dar nome aos mosaicos e adicionar um painel por piso e divisão, como os configurou lá.",
+  "haImportOfferBodyZha": "O ZigDash pode dar nome aos mosaicos e adicionar um painel por andar e cômodo, com os nomes e cômodos dos seus dispositivos no Home Assistant, inclusive os do ZHA.",
+  "haImportNoZ2mDevices": "O Zigbee2MQTT ainda não tem dispositivos. Pareie seus dispositivos lá primeiro e depois abra Importar do Home Assistant nas configurações desta casa.",
   "haImportOfferLater": "Agora não",
   "haImportOfferGo": "Importar",
   "haImportSignIn": "Iniciar sessão com o Home Assistant",

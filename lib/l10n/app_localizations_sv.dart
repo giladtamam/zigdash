@@ -4345,6 +4345,14 @@ class AppLocalizationsSv extends AppLocalizations {
       'Home Assistant finns på ditt nätverk. ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, så som du har satt upp dem där.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, med namnen och rummen för dina enheter i Home Assistant, även de från ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT har inga enheter än. Para dina enheter där först och öppna sedan Importera från Home Assistant i det här hemmets inställningar.';
+
+  @override
   String get haImportOfferLater => 'Inte nu';
 
   @override

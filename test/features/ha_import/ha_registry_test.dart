@@ -345,5 +345,26 @@ void main() {
         ]),
       );
     });
+    test('a name given in Zigbee2MQTT since the move wins over ZHA\'s', () {
+      final renamed = Z2mDevice(
+        friendlyName: 'Couch sensor',
+        type: 'EndDevice',
+        ieeeAddress: '0xa4c13836276df66f',
+        model: 'ZG-204Z',
+        description: 'Motion sensor',
+      );
+      final plan = planImport(registry, [renamed]);
+      final device = plan.dashboards.single.rooms.single;
+      expect(device.name, 'Living Room', reason: 'the room still comes');
+      expect(device.devices.single.name, 'Couch sensor');
+      expect(plan.fromZha, 1);
+    });
+
+    test('nothing paired in Zigbee2MQTT yet is not "ZHA only"', () {
+      final plan = planImport(registry, const []);
+      expect(plan.matched, 0);
+      expect(plan.zhaOnly, isFalse);
+      expect(plan.z2mEmpty, isTrue);
+    });
   });
 }

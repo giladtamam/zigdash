@@ -4377,6 +4377,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Home Assistant est sur votre réseau. ZigDash peut nommer vos tuiles et ajouter un tableau de bord par étage et par pièce, comme vous les avez définis là-bas.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash peut nommer vos tuiles et ajouter un tableau de bord par étage et par pièce, d\'après les noms et pièces de vos appareils dans Home Assistant, ceux de ZHA compris.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT n\'a pas encore d\'appareils. Appairez d\'abord vos appareils, puis ouvrez Importer depuis Home Assistant dans les réglages de cette maison.';
+
+  @override
   String get haImportOfferLater => 'Pas maintenant';
 
   @override

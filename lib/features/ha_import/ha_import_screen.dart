@@ -390,7 +390,11 @@ class _Preview extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            plan.zhaOnly ? l10n.haImportZhaOnly : l10n.haImportNothing,
+            plan.z2mEmpty
+                ? l10n.haImportNoZ2mDevices
+                : plan.zhaOnly
+                ? l10n.haImportZhaOnly
+                : l10n.haImportNothing,
             style: theme.textTheme.bodyLarge,
           ),
           const SizedBox(height: 24),

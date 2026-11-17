@@ -1520,6 +1520,8 @@
   "haImportOpen": "Open dashboards",
   "haImportOfferTitle": "Bring your names and rooms from Home Assistant?",
   "haImportOfferBody": "Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.",
+  "haImportOfferBodyZha": "ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA's included.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home's settings.",
   "haImportOfferLater": "Not now",
   "haImportOfferGo": "Import",
   "haImportSignIn": "Sign in with Home Assistant",

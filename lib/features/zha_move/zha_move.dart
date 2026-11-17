@@ -48,10 +48,24 @@ FromZha? fromZhaOf(SharedPreferences prefs, {DateTime? now}) {
   return null;
 }
 
-/// A setup finished: the move is over, as far as ZigDash can tell.
+/// A setup finished: the move is over, as far as ZigDash can tell. Best
+/// effort: a working home must never hang on this.
 Future<void> endZhaMove(SharedPreferences prefs) async {
-  await prefs.remove(zhaMovingAtKey);
-  await prefs.remove(zhaFoundAtKey);
+  try {
+    await prefs.remove(zhaMovingAtKey);
+    await prefs.remove(zhaFoundAtKey);
+  } catch (_) {}
+}
+
+/// The last answer to "What runs your Zigbee?" (3.8), best effort.
+Future<void> noteZhaAnswer(SharedPreferences Function() prefs, bool zha) async {
+  try {
+    if (zha) {
+      await prefs().setBool(zhaAnsweredKey, true);
+    } else {
+      await prefs().remove(zhaAnsweredKey);
+    }
+  } catch (_) {}
 }
 
 /// Best effort for screens shown without preferences (golden tests).
@@ -84,7 +98,9 @@ class ZhaMovingNotifier extends Notifier<bool> {
   }
 
   Future<void> end() async {
-    await endZhaMove(ref.read(sharedPreferencesProvider));
+    try {
+      await endZhaMove(ref.read(sharedPreferencesProvider));
+    } catch (_) {}
     state = false;
   }
 }

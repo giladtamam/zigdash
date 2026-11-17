@@ -4355,6 +4355,14 @@ class AppLocalizationsPl extends AppLocalizations {
       'Home Assistant jest w twojej sieci. ZigDash może nazwać kafelki i dodać dashboard na każde piętro i pomieszczenie, tak jak je tam ustawiłeś.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash może nazwać kafelki i dodać dashboard na każde piętro i pomieszczenie, według nazw i pomieszczeń urządzeń w Home Assistancie, także tych z ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT nie ma jeszcze urządzeń. Najpierw sparuj w nim urządzenia, potem otwórz Import z Home Assistanta w ustawieniach tego domu.';
+
+  @override
   String get haImportOfferLater => 'Nie teraz';
 
   @override

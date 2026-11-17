@@ -101,11 +101,11 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
       // Home Assistant nearby, or a move from ZHA (3.8; Home Assistant may
       // be out of the scan's sight, in Docker): the new dashboard offers
       // its names and rooms.
-      if (zhaMoving(ref.read(sharedPreferencesProvider)) ||
-          await coordinator.homeAssistantSeen()) {
+      final moving = zhaMoving(ref.read(sharedPreferencesProvider));
+      if (moving || await coordinator.homeAssistantSeen()) {
         await ref
             .read(haImportOfferProvider.notifier)
-            .offer(result.connectionId);
+            .offer(result.connectionId, fromZha: moving);
       }
     },
   );

@@ -1502,6 +1502,36 @@ void main() {
   });
 
   // 2.10.2: a list with nothing preselected (only "other" or unsupported
+  // 3.8: a finished setup says it came from ZHA, then ends the move.
+  testWidgets('3.8: complete carries from_zha, then the move ends', (
+    tester,
+  ) async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    await _prefs.setInt(zhaMovingAtKey, now);
+    await _prefs.setInt(zhaFoundAtKey, now);
+    final sent = <(String, Map<String, String>)>[];
+    await _pump(
+      tester,
+      extra: [
+        analyticsProvider.overrideWithValue(
+          Analytics(_RecordingSink(sent), enabled: true),
+        ),
+      ],
+    );
+    expect(find.byKey(const Key('setup-zha-moving')), findsOneWidget);
+    await tester.tap(find.text('Find my setup').first);
+    for (var i = 0; i < 4; i++) {
+      await tester.pump();
+    }
+    await tester.tap(find.text('Create dashboard with 1'));
+    await tester.pumpAndSettle();
+    expect(find.text('dashboards of c1'), findsOneWidget);
+    final complete = sent.singleWhere((e) => e.$2['step'] == 'complete').$2;
+    expect(complete['from_zha'], 'moving');
+    expect(_prefs.getInt(zhaMovingAtKey), isNull);
+    expect(_prefs.getInt(zhaFoundAtKey), isNull);
+  });
+
   // devices) says so and still creates the home, with an empty dashboard.
   testWidgets('nothing preselected: says so, creates an empty dashboard', (
     tester,

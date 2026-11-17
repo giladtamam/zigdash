@@ -4296,6 +4296,14 @@ class AppLocalizationsHe extends AppLocalizations {
       'Home Assistant נמצא ברשת שלכם. ‏ZigDash יכול לתת לאריחים את השמות ולהוסיף לוח לכל קומה וחדר, כמו שהגדרתם שם.';
 
   @override
+  String get haImportOfferBodyZha =>
+      '‏ZigDash יכול לתת לאריחים שמות ולהוסיף לוח לכל קומה וחדר, לפי השמות והחדרים של המכשירים ב‑Home Assistant, כולל אלה מ‑ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'ב‑Zigbee2MQTT עדיין אין מכשירים. צמדו אליו קודם את המכשירים, ואז פתחו את הייבוא מ‑Home Assistant בהגדרות של הבית הזה.';
+
+  @override
   String get haImportOfferLater => 'לא עכשיו';
 
   @override

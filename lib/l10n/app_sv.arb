@@ -1346,6 +1346,8 @@
   "haImportOpen": "Öppna dashboards",
   "haImportOfferTitle": "Hämta namn och rum från Home Assistant?",
   "haImportOfferBody": "Home Assistant finns på ditt nätverk. ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, så som du har satt upp dem där.",
+  "haImportOfferBodyZha": "ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, med namnen och rummen för dina enheter i Home Assistant, även de från ZHA.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT har inga enheter än. Para dina enheter där först och öppna sedan Importera från Home Assistant i det här hemmets inställningar.",
   "haImportOfferLater": "Inte nu",
   "haImportOfferGo": "Importera",
   "haImportSignIn": "Logga in med Home Assistant",

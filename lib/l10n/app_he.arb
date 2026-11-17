@@ -1415,6 +1415,8 @@
   "haImportOpen": "פתיחת הלוחות",
   "haImportOfferTitle": "להביא את השמות והחדרים מ-Home Assistant?",
   "haImportOfferBody": "Home Assistant נמצא ברשת שלכם. ‏ZigDash יכול לתת לאריחים את השמות ולהוסיף לוח לכל קומה וחדר, כמו שהגדרתם שם.",
+  "haImportOfferBodyZha": "‏ZigDash יכול לתת לאריחים שמות ולהוסיף לוח לכל קומה וחדר, לפי השמות והחדרים של המכשירים ב‑Home Assistant, כולל אלה מ‑ZHA.",
+  "haImportNoZ2mDevices": "ב‑Zigbee2MQTT עדיין אין מכשירים. צמדו אליו קודם את המכשירים, ואז פתחו את הייבוא מ‑Home Assistant בהגדרות של הבית הזה.",
   "haImportOfferLater": "לא עכשיו",
   "haImportOfferGo": "ייבוא",
   "haImportSignIn": "התחברות עם Home Assistant",

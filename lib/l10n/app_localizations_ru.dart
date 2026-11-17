@@ -4345,6 +4345,14 @@ class AppLocalizationsRu extends AppLocalizations {
       'Home Assistant есть в вашей сети. ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату, как вы настроили их там.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату по названиям и комнатам ваших устройств в Home Assistant, включая устройства из ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'В Zigbee2MQTT пока нет устройств. Сначала подключите устройства в нём, затем откройте «Импорт из Home Assistant» в настройках этого дома.';
+
+  @override
   String get haImportOfferLater => 'Не сейчас';
 
   @override

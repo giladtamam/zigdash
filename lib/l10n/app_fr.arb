@@ -1271,6 +1271,8 @@
   "haImportOpen": "Ouvrir les tableaux de bord",
   "haImportOfferTitle": "Récupérer vos noms et pièces depuis Home Assistant ?",
   "haImportOfferBody": "Home Assistant est sur votre réseau. ZigDash peut nommer vos tuiles et ajouter un tableau de bord par étage et par pièce, comme vous les avez définis là-bas.",
+  "haImportOfferBodyZha": "ZigDash peut nommer vos tuiles et ajouter un tableau de bord par étage et par pièce, d'après les noms et pièces de vos appareils dans Home Assistant, ceux de ZHA compris.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT n'a pas encore d'appareils. Appairez d'abord vos appareils, puis ouvrez Importer depuis Home Assistant dans les réglages de cette maison.",
   "haImportOfferLater": "Pas maintenant",
   "haImportOfferGo": "Importer",
   "haImportSignIn": "Se connecter avec Home Assistant",

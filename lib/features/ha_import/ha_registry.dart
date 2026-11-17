@@ -201,11 +201,16 @@ class ImportPlan {
     required this.dashboards,
     required this.zhaDevices,
     this.fromZha = 0,
+    this.z2mDevices = 1,
   });
   final List<ImportDashboard> dashboards;
 
   /// Devices whose name or room came from their old ZHA entry (3.8).
   final int fromZha;
+
+  /// Devices Zigbee2MQTT has. None during a move (nothing paired yet) is
+  /// not "ZHA only" (3.8).
+  final int z2mDevices;
 
   /// Devices ZHA runs. ZigDash cannot show them; when nothing matched and
   /// these exist, Zigbee2MQTT is not in use and the import says so.
@@ -222,7 +227,10 @@ class ImportPlan {
         if (r.name != null) r,
   ].length;
 
-  bool get zhaOnly => matched == 0 && zhaDevices > 0;
+  bool get zhaOnly => matched == 0 && zhaDevices > 0 && z2mDevices > 0;
+
+  /// Nothing paired in Zigbee2MQTT yet, often mid-move from ZHA (3.8).
+  bool get z2mEmpty => matched == 0 && z2mDevices == 0;
 }
 
 /// Matches Home Assistant's devices to the Zigbee2MQTT devices ZigDash sees,
@@ -269,7 +277,7 @@ ImportPlan planImport(HaRegistry registry, List<Z2mDevice> z2m) {
     if (device == null || !seen.add(ieee!)) continue;
     final zha = zhaByIeee[ieee];
     final room = _roomOf(ha, registry.entityAreas[ha.id], areas);
-    final name = ha.userName ?? zha?.userName;
+    final name = ha.userName ?? (_unnamed(device) ? zha?.userName : null);
     final areaId = room ?? zhaRoom(zha);
     if ((ha.userName == null && name != null) ||
         (room == null && areaId != null)) {
@@ -283,8 +291,9 @@ ImportPlan planImport(HaRegistry registry, List<Z2mDevice> z2m) {
     final device = byIeee[ieee];
     if (device == null || !seen.add(ieee)) continue;
     final areaId = zhaRoom(zha);
-    if (zha.userName != null || areaId != null) fromZha++;
-    add(device, areaId, zha.userName);
+    final name = _unnamed(device) ? zha.userName : null;
+    if (name != null || areaId != null) fromZha++;
+    add(device, areaId, name);
   }
 
   int byName(String? a, String? b) {
@@ -319,8 +328,14 @@ ImportPlan planImport(HaRegistry registry, List<Z2mDevice> z2m) {
     ],
     zhaDevices: registry.devices.where((d) => d.isZha).length,
     fromZha: fromZha,
+    z2mDevices: byIeee.length,
   );
 }
+
+/// Still called by its address in Zigbee2MQTT: a name given there since the
+/// move wins over the old ZHA one.
+bool _unnamed(Z2mDevice d) =>
+    d.friendlyName.toLowerCase() == d.ieeeAddress?.toLowerCase();
 
 String? _roomOf(
   HaDevice device,

@@ -22,6 +22,7 @@ import '../../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../../connections/discovery/network_info.dart';
 import '../../connections/discovery/subnet.dart';
+import '../../zha_move/zha_move.dart';
 import 'ai_help.dart';
 import 'ha_address_shape.dart';
 import 'ha_connect.dart';
@@ -32,7 +33,6 @@ import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
 import 'setup_screen.dart' show openSetupLink;
 import 'setup_waiting.dart';
-import '../../zha_move/zha_move.dart';
 
 /// "Connect through Home Assistant" (docs/design/ha-route.md): the address,
 /// a sign-in (Home Assistant's login page, or a pasted token), a check,

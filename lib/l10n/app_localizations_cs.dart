@@ -4347,6 +4347,14 @@ class AppLocalizationsCs extends AppLocalizations {
       'Home Assistant je ve tvé síti. ZigDash může pojmenovat tvoje dlaždice a přidat nástěnku pro každé podlaží a místnost tak, jak je tam máš nastavené.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash může pojmenovat tvoje dlaždice a přidat nástěnku pro každé podlaží a místnost podle názvů a místností zařízení v Home Assistantu, včetně těch ze ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT zatím nemá žádná zařízení. Nejdřív v něm spáruj zařízení, potom otevři Import z Home Assistantu v nastavení této domácnosti.';
+
+  @override
   String get haImportOfferLater => 'Teď ne';
 
   @override

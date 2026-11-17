@@ -4341,6 +4341,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA\'s included.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home\'s settings.';
+
+  @override
   String get haImportOfferLater => 'Not now';
 
   @override
