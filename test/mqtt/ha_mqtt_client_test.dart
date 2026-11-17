@@ -19,7 +19,19 @@ class _FakeHa {
     this.mqtt = true,
     this.refreshWorks = true,
     this.refreshDelay = Duration.zero,
+    this.hassio = true,
+    this.devices = const [],
+    this.answerFacts = true,
   });
+
+  /// Whether `get_config` lists `hassio` (an installation with apps).
+  final bool hassio;
+
+  /// What `config/device_registry/list` returns.
+  final List<Map<String, Object?>> devices;
+
+  /// False: the two reads never answer.
+  final bool answerFacts;
 
   final String accessToken;
   final String refreshToken;
@@ -42,7 +54,8 @@ class _FakeHa {
     server.listen((request) async {
       if (request.uri.path == '/auth/token') {
         refreshCalls++;
-        if (refreshDelay > Duration.zero) await Future<void>.delayed(refreshDelay);
+        if (refreshDelay > Duration.zero)
+          await Future<void>.delayed(refreshDelay);
         final body = Uri.splitQueryString(await utf8.decodeStream(request));
         final ok =
             refreshWorks &&
@@ -133,6 +146,26 @@ class _FakeHa {
                   );
                 }
               }
+            case 'get_config' when answerFacts:
+              socket.add(
+                jsonEncode({
+                  'id': m['id'],
+                  'type': 'result',
+                  'success': true,
+                  'result': {
+                    'components': ['mqtt', 'zha', if (hassio) 'hassio'],
+                  },
+                }),
+              );
+            case 'config/device_registry/list' when answerFacts:
+              socket.add(
+                jsonEncode({
+                  'id': m['id'],
+                  'type': 'result',
+                  'success': true,
+                  'result': devices,
+                }),
+              );
             case 'ping':
               socket.add(jsonEncode({'id': m['id'], 'type': 'pong'}));
             case 'call_service' || 'unsubscribe_events':
@@ -244,6 +277,100 @@ void main() {
     );
   });
 
+  group('3.7.1: facts for setup\'s check (zha-migration.md)', () {
+    const registry = [
+      // The coordinator: the only ZHA entry with no parent.
+      {
+        'id': 'c',
+        'identifiers': [
+          ['zha', '00:12:4b:00:11:22:33:44'],
+        ],
+        'via_device_id': null,
+      },
+      {
+        'id': 'd1',
+        'identifiers': [
+          ['zha', 'a4:c1:38:00:00:00:00:01'],
+        ],
+        'via_device_id': 'c',
+      },
+      {
+        'id': 'd2',
+        'identifiers': [
+          ['zha', 'a4:c1:38:00:00:00:00:02'],
+        ],
+        'via_device_id': 'c',
+      },
+      // Not ZHA, though it has a parent.
+      {
+        'id': 'h',
+        'identifiers': [
+          ['hue', 'x'],
+        ],
+        'via_device_id': 'bridge',
+      },
+    ];
+
+    Future<HaMqttClient> check() async {
+      final client = HaMqttClient(ha.wsUri, 'zd-check')
+        ..connectTimeoutPeriod = 6000
+        ..keepAlivePeriod = 0
+        ..readFacts = true;
+      await client.connect(null, 'access');
+      return client;
+    }
+
+    test('no MQTT: apps and ZHA devices read before closing', () async {
+      ha = _FakeHa(mqtt: false, hassio: false, devices: registry);
+      await ha.start();
+      final client = await check();
+      expect(client.problem, HaClientProblem.noMqtt);
+      expect(client.facts?.apps, isFalse);
+      expect(client.facts?.zhaDevices, 2);
+    });
+
+    test('not an admin: read too', () async {
+      ha = _FakeHa(admin: false, devices: registry);
+      await ha.start();
+      final client = await check();
+      expect(client.problem, HaClientProblem.notAdmin);
+      expect(client.facts?.apps, isTrue);
+      expect(client.facts?.zhaDevices, 2);
+    });
+
+    test('never read without readFacts (live homes)', () async {
+      ha = _FakeHa(mqtt: false, devices: registry);
+      await ha.start();
+      final client = await connect('access');
+      expect(client.problem, HaClientProblem.noMqtt);
+      expect(client.facts, isNull);
+      final types = ha.received.map((m) => m['type']);
+      expect(types, isNot(contains('get_config')));
+      expect(types, isNot(contains('config/device_registry/list')));
+    });
+
+    test('never read when MQTT works', () async {
+      ha = _FakeHa(devices: registry);
+      await ha.start();
+      final client = await check();
+      expect(client.connectionStatus?.state, mc.MqttConnectionState.connected);
+      expect(client.facts, isNull);
+      expect(ha.received.map((m) => m['type']), isNot(contains('get_config')));
+      client.disconnect();
+    });
+
+    test('reads that never answer: nulls after 3 s, still noMqtt', () async {
+      ha = _FakeHa(mqtt: false, answerFacts: false);
+      await ha.start();
+      final sw = Stopwatch()..start();
+      final client = await check();
+      expect(client.problem, HaClientProblem.noMqtt);
+      expect(client.facts?.apps, isNull);
+      expect(client.facts?.zhaDevices, isNull);
+      expect(sw.elapsed, lessThan(const Duration(seconds: 5)));
+    });
+  });
+
   test(
     'subscribes, delivers events with retain, publishes as mqtt.publish',
     () async {
@@ -325,7 +452,10 @@ void main() {
       expect(ha.sockets, isEmpty);
       expect(ha.received, isEmpty);
       expect(dropped, 0);
-      expect(client.connectionStatus?.state, mc.MqttConnectionState.disconnected);
+      expect(
+        client.connectionStatus?.state,
+        mc.MqttConnectionState.disconnected,
+      );
     },
   );
 

@@ -393,7 +393,7 @@ abstract class AppLocalizations {
   /// No description provided for @connHelpZhaBody.
   ///
   /// In en, this message translates to:
-  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which provides an MQTT broker.'**
+  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which runs with an MQTT broker such as Mosquitto.'**
   String get connHelpZhaBody;
 
   /// No description provided for @connHelpSameNetwork.
@@ -3449,6 +3449,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker app (Settings › Apps) and the MQTT integration, then try again.'**
   String get haConnectNoMqtt;
+
+  /// Setup's Home Assistant check found devices in ZHA (3.7.1, zha-migration.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Your Zigbee runs in ZHA, Home Assistant\'s own Zigbee ({count, plural, =1{1 device} other{{count} devices}}). ZigDash works with Zigbee2MQTT, so it can\'t show them. Moving to Zigbee2MQTT means pairing your devices again; the guide shows two ways.'**
+  String haConnectZhaFound(int count);
+
+  /// No description provided for @haConnectZhaMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving from ZHA'**
+  String get haConnectZhaMove;
+
+  /// No description provided for @haConnectNoMqttNoApps.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home Assistant has no MQTT integration, and no apps (it runs as a container), so Mosquitto and Zigbee2MQTT run as their own containers next to it. If they already run, connect ZigDash to Mosquitto directly. Or add the MQTT integration in Home Assistant, then try again.'**
+  String get haConnectNoMqttNoApps;
+
+  /// No description provided for @haConnectNoAppsGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'How to connect'**
+  String get haConnectNoAppsGuide;
 
   /// No description provided for @haConnectSignInFailed.
   ///

@@ -11,9 +11,12 @@ import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/core/router/routes.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect.dart';
+import 'package:zigdash/mqtt/ha_mqtt_client.dart' show HaFacts;
 import 'package:zigdash/features/onboarding/setup/ha_connect_screen.dart';
 import 'package:zigdash/features/onboarding/setup/ha_discovery.dart';
 import 'package:zigdash/features/onboarding/setup/ha_handover.dart';
+import 'package:zigdash/features/onboarding/setup/setup_screen.dart'
+    show openSetupLink;
 import 'package:zigdash/l10n/app_localizations.dart';
 
 void main() {
@@ -21,6 +24,7 @@ void main() {
     WidgetTester tester, {
     HaSignInResult? signIn,
     HaConnectProblem? problem,
+    HaFacts? facts,
     List<(Uri, String)>? adopted,
     String? initialHost,
     String? again,
@@ -39,7 +43,10 @@ void main() {
     final controller = HaConnectController(
       address: initialHost ?? '',
       adopt: (a, s) async => adopted?.add((a, s)),
-      probe: (_, __) async => slowProbe != null ? await slowProbe : problem,
+      probe: (_, __) async => (
+        problem: slowProbe != null ? await slowProbe : problem,
+        facts: facts,
+      ),
       signIn: signIn == null ? null : (_) async => signIn,
       find: findHa,
       reach: reach,
@@ -179,6 +186,81 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(find.textContaining('no MQTT integration'), findsOneWidget);
+  });
+
+  Future<void> tryToken(WidgetTester tester) async {
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Home Assistant address'),
+      '192.168.68.52',
+    );
+    await tester.pump();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Long-lived access token'),
+      'eyJ.tok',
+    );
+    await tester.tap(find.text('Connect with token'));
+    await tester.pump();
+    await tester.pump();
+  }
+
+  testWidgets('3.7.1: devices in ZHA come first, Moving from ZHA opens the '
+      'guide and is counted', (tester) async {
+    final sent = <(String, Map<String, String>)>[];
+    final opened = <Uri>[];
+    final original = openSetupLink;
+    addTearDown(() => openSetupLink = original);
+    openSetupLink = (url) async {
+      opened.add(url);
+      return true;
+    };
+    await pump(
+      tester,
+      problem: HaConnectProblem.noMqtt,
+      facts: const HaFacts(apps: false, zhaDevices: 23),
+      overrides: [
+        analyticsProvider.overrideWithValue(
+          Analytics(_PropsSink(sent), enabled: true),
+        ),
+      ],
+    );
+    await tryToken(tester);
+    expect(find.textContaining('runs in ZHA'), findsOneWidget);
+    expect(find.textContaining('23 devices'), findsOneWidget);
+    expect(find.textContaining('Settings › Apps'), findsNothing);
+    expect(find.byKey(const Key('ha-no-apps-guide')), findsNothing);
+    await tester.tap(find.byKey(const Key('ha-zha-move')));
+    await tester.pump();
+    expect(opened, [zhaGuideUrl]);
+    expect(sent.where((e) => e.$2['step'] == 'zha_move').map((e) => e.$2), [
+      {'step': 'zha_move', 'choice': 'no_mqtt'},
+    ]);
+  });
+
+  testWidgets('3.7.1: no apps and no ZHA: containers, not Settings › Apps', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      problem: HaConnectProblem.noMqtt,
+      facts: const HaFacts(apps: false, zhaDevices: 0),
+    );
+    await tryToken(tester);
+    expect(find.textContaining('runs as a container'), findsOneWidget);
+    expect(find.textContaining('Settings › Apps'), findsNothing);
+    expect(find.byKey(const Key('ha-no-apps-guide')), findsOneWidget);
+    expect(find.byKey(const Key('ha-zha-move')), findsNothing);
+  });
+
+  testWidgets('3.7.1: with apps, or when the reads timed out: as before', (
+    tester,
+  ) async {
+    for (final facts in const [HaFacts(apps: true, zhaDevices: 0), HaFacts()]) {
+      await pump(tester, problem: HaConnectProblem.noMqtt, facts: facts);
+      await tryToken(tester);
+      expect(find.textContaining('Settings › Apps'), findsOneWidget);
+      expect(find.byKey(const Key('ha-zha-move')), findsNothing);
+      expect(find.byKey(const Key('ha-no-apps-guide')), findsNothing);
+    }
   });
 
   testWidgets('signing in again for a home returns to where it came from', (
@@ -466,12 +548,7 @@ void main() {
     testWidgets('3.5.2: signing in again for a home never shows the card', (
       tester,
     ) async {
-      await pump(
-        tester,
-        signIn: signIn,
-        findHa: () async => [],
-        again: 'c1',
-      );
+      await pump(tester, signIn: signIn, findHa: () async => [], again: 'c1');
       expect(find.byKey(const Key('ha-none-card')), findsNothing);
     });
 
@@ -494,7 +571,9 @@ void main() {
       await tester.pump();
       expect(find.textContaining('Remote access'), findsOneWidget);
       expect(field(tester).decoration?.hintText, contains('ui.nabu.casa'));
-      expect(sent.where((e) => e.contains('ha_where')), ['setup_step {step: ha_where, choice: nabu_casa}']);
+      expect(sent.where((e) => e.contains('ha_where')), [
+        'setup_step {step: ha_where, choice: nabu_casa}',
+      ]);
 
       await tester.tap(find.byKey(const Key('ha-where-duckDns')));
       await tester.pump();
@@ -762,7 +841,10 @@ void main() {
       tester,
     ) async {
       await pump(tester, signIn: ok, shared: true);
-      expect(find.textContaining("That didn't hold an address"), findsOneWidget);
+      expect(
+        find.textContaining("That didn't hold an address"),
+        findsOneWidget,
+      );
       expect(find.text(sharedNote), findsNothing);
     });
 
@@ -855,7 +937,6 @@ void main() {
       expect(wire(HaNoneChoice.returnedCold), 'returned_cold');
     });
   });
-
 }
 
 class _Sink implements AnalyticsSink {

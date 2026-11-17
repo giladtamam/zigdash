@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -156,7 +157,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'O ZHA não tem broker MQTT — ele fala direto com o Home Assistant, então o ZigDash não consegue se conectar a ele. Para usar o ZigDash, mude para o Zigbee2MQTT (disponível como aplicativo do Home Assistant ou contêiner Docker), que fornece um broker MQTT.';
+      'O ZHA não tem broker MQTT — ele fala direto com o Home Assistant, então o ZigDash não consegue se conectar a ele. Para usar o ZigDash, mude para o Zigbee2MQTT (disponível como aplicativo do Home Assistant ou contêiner Docker), que funciona com um broker MQTT como o Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1896,6 +1897,27 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Este Home Assistant não tem a integração MQTT. O Zigbee2MQTT também precisa dela: no Home Assistant, adicione o aplicativo Mosquitto broker (Configurações › Aplicativos) e a integração MQTT, e tente de novo.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivos',
+      one: '1 dispositivo',
+    );
+    return 'Seu Zigbee roda no ZHA, o Zigbee próprio do Home Assistant ($_temp0). O ZigDash funciona com o Zigbee2MQTT, então não consegue mostrá-los. Mudar para o Zigbee2MQTT significa parear os dispositivos de novo; o guia mostra duas formas.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Mudar do ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Este Home Assistant não tem a integração MQTT nem aplicativos (ele roda como contêiner), então o Mosquitto e o Zigbee2MQTT rodam como contêineres próprios ao lado dele. Se já estiverem rodando, conecte o ZigDash direto ao Mosquitto. Ou adicione a integração MQTT no Home Assistant e tente de novo.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Como conectar';
 
   @override
   String get haConnectSignInFailed =>

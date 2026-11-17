@@ -58,12 +58,20 @@ sealed class HaConnectState {
 }
 
 /// Waiting for the address and a sign-in; [problem] after a failed try,
-/// and the [shape] of the address it went to (3.1.12).
+/// and the [shape] of the address it went to (3.1.12). After [noMqtt] or
+/// [notAdmin], what the check read about that Home Assistant ([facts],
+/// zha-migration.md).
 class HaConnectAsk extends HaConnectState {
-  const HaConnectAsk({required this.address, this.problem, this.shape});
+  const HaConnectAsk({
+    required this.address,
+    this.problem,
+    this.shape,
+    this.facts,
+  });
   final String address;
   final HaConnectProblem? problem;
   final HaAddressShape? shape;
+  final HaFacts? facts;
 }
 
 /// Signing in, or checking Home Assistant.
@@ -77,9 +85,14 @@ class HaConnectDone extends HaConnectState {
   const HaConnectDone();
 }
 
+/// What a check found: the [problem], null when Home Assistant is usable,
+/// and on [HaConnectProblem.noMqtt] or [HaConnectProblem.notAdmin] what it
+/// read about the installation.
+typedef HaCheck = ({HaConnectProblem? problem, HaFacts? facts});
+
 /// Connects once to Home Assistant with [stored] (the stored form of the
-/// sign-in) and says what is wrong, or null when it is usable.
-typedef HaProbe = Future<HaConnectProblem?> Function(Uri base, String stored);
+/// sign-in) and says what is wrong.
+typedef HaProbe = Future<HaCheck> Function(Uri base, String stored);
 
 /// Looks for Home Assistant on the network (3.1.8); see [findHomeAssistant].
 typedef HaFind = Future<List<HaFound>> Function();
@@ -133,32 +146,38 @@ Future<HaConnectProblem?> reachHomeAssistant(Uri base) async {
   }
 }
 
-/// The real probe: a [HaMqttClient] connect, then disconnect.
-Future<HaConnectProblem?> probeHomeAssistant(Uri base, String stored) async {
+/// The real probe: a [HaMqttClient] connect, then disconnect. The only
+/// client that reads the installation's facts when MQTT can't be used.
+Future<HaCheck> probeHomeAssistant(Uri base, String stored) async {
   final client = HaMqttClient(haWebSocketUri(base), 'zd-check')
     ..connectTimeoutPeriod = 12000
-    ..keepAlivePeriod = 0;
+    ..keepAlivePeriod = 0
+    ..readFacts = true;
+  HaCheck only(HaConnectProblem problem) => (problem: problem, facts: null);
   try {
     await client.connect(null, stored);
   } on TimeoutException {
-    return HaConnectProblem.unreachable;
+    return only(HaConnectProblem.unreachable);
   } on HandshakeException {
-    return HaConnectProblem.certificate;
+    return only(HaConnectProblem.certificate);
   } on WebSocketException {
     // Something answered HTTP but refused the upgrade: not Home Assistant.
-    return HaConnectProblem.notHomeAssistant;
+    return only(HaConnectProblem.notHomeAssistant);
   } catch (_) {
-    return HaConnectProblem.unreachable;
+    return only(HaConnectProblem.unreachable);
   } finally {
     client.disconnect();
   }
-  return switch (client.problem) {
-    null => null,
-    HaClientProblem.signInRejected => HaConnectProblem.badToken,
-    HaClientProblem.notAdmin => HaConnectProblem.notAdmin,
-    HaClientProblem.noMqtt => HaConnectProblem.noMqtt,
-    HaClientProblem.unreachable => HaConnectProblem.unreachable,
-  };
+  return (
+    problem: switch (client.problem) {
+      null => null,
+      HaClientProblem.signInRejected => HaConnectProblem.badToken,
+      HaClientProblem.notAdmin => HaConnectProblem.notAdmin,
+      HaClientProblem.noMqtt => HaConnectProblem.noMqtt,
+      HaClientProblem.unreachable => HaConnectProblem.unreachable,
+    },
+    facts: client.facts,
+  );
 }
 
 class HaConnectController extends ValueNotifier<HaConnectState> {
@@ -172,6 +191,7 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     HaFind? find,
     HaPhoneIp? phoneIp,
     this.onEvent,
+    this.onZhaFound,
   }) : _adopt = adopt,
        _confirm = confirm,
        _phoneIpOf = phoneIp,
@@ -228,6 +248,10 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
   /// Usage events: how each try ended. Never the address or a token.
   final void Function(AnalyticsEvent event)? onEvent;
 
+  /// A failed check found devices in ZHA: the screen notes when, on the
+  /// phone only, for `from_zha` later (zha-migration.md).
+  final void Function()? onZhaFound;
+
   /// How the address now in the field got there (ha-share-paste.md): the
   /// screen says so when it fills the field, and takes it back to typed
   /// when the user edits it. Counted with each try.
@@ -247,9 +271,15 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     String address,
     HaConnectProblem? problem, [
     HaAddressShape? shape,
+    HaFacts? facts,
   ]) {
     if (_disposed) return;
-    value = HaConnectAsk(address: address, problem: problem, shape: shape);
+    value = HaConnectAsk(
+      address: address,
+      problem: problem,
+      shape: shape,
+      facts: facts,
+    );
   }
 
   void _checking(String address) {
@@ -257,16 +287,22 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     value = const HaConnectChecking();
   }
 
-  void _count(HaConnectOutcome outcome, HaAddressShape shape, [Uri? base]) =>
-      onEvent?.call(
-        SetupStep(
-          SetupStepKind.haConnect,
-          result: outcome,
-          shape: shape,
-          portClass: base == null ? null : haPortClassOf(base),
-          addressFrom: _tryFrom ?? addressFrom,
-        ),
-      );
+  void _count(
+    HaConnectOutcome outcome,
+    HaAddressShape shape, [
+    Uri? base,
+    HaFacts? facts,
+  ]) => onEvent?.call(
+    SetupStep(
+      SetupStepKind.haConnect,
+      result: outcome,
+      shape: shape,
+      portClass: base == null ? null : haPortClassOf(base),
+      addressFrom: _tryFrom ?? addressFrom,
+      haApps: facts?.apps,
+      zhaDevices: facts?.zhaDevices,
+    ),
+  );
 
   /// Looks for Home Assistant on the network (3.1.8), once; the screen
   /// fills the address with what it finds.
@@ -492,19 +528,32 @@ class HaConnectController extends ValueNotifier<HaConnectState> {
     String stored,
     HaAddressShape shape,
   ) async {
-    final problem = await _probe(base, stored);
+    final (:problem, :facts) = await _probe(base, stored);
     if (t != _try) return;
     if (problem != null) {
-      _count(switch (problem) {
-        HaConnectProblem.unreachable => HaConnectOutcome.unreachable,
-        HaConnectProblem.notHomeAssistant => HaConnectOutcome.notHomeAssistant,
-        HaConnectProblem.certificate => HaConnectOutcome.certificate,
-        HaConnectProblem.badToken => HaConnectOutcome.badToken,
-        HaConnectProblem.notAdmin => HaConnectOutcome.notAdmin,
-        HaConnectProblem.noMqtt => HaConnectOutcome.noMqtt,
-        _ => HaConnectOutcome.unreachable,
-      }, shape, base);
-      return _ask(address, problem, shape);
+      // Facts only ever explain these two (zha-migration.md, Phase 0).
+      final read =
+          problem == HaConnectProblem.noMqtt ||
+              problem == HaConnectProblem.notAdmin
+          ? facts
+          : null;
+      if ((read?.zhaDevices ?? 0) > 0) onZhaFound?.call();
+      _count(
+        switch (problem) {
+          HaConnectProblem.unreachable => HaConnectOutcome.unreachable,
+          HaConnectProblem.notHomeAssistant =>
+            HaConnectOutcome.notHomeAssistant,
+          HaConnectProblem.certificate => HaConnectOutcome.certificate,
+          HaConnectProblem.badToken => HaConnectOutcome.badToken,
+          HaConnectProblem.notAdmin => HaConnectOutcome.notAdmin,
+          HaConnectProblem.noMqtt => HaConnectOutcome.noMqtt,
+          _ => HaConnectOutcome.unreachable,
+        },
+        shape,
+        base,
+        read,
+      );
+      return _ask(address, problem, shape, read);
     }
     _count(HaConnectOutcome.ok, shape, base);
     value = const HaConnectDone();

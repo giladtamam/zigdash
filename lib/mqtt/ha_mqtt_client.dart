@@ -40,6 +40,21 @@ enum HaClientProblem {
   unreachable,
 }
 
+/// What setup's check read from a Home Assistant it can't use
+/// (zha-migration.md, Phase 0), for advice that fits it. Nothing is stored.
+class HaFacts {
+  const HaFacts({this.apps, this.zhaDevices});
+
+  /// Whether the installation has apps (Home Assistant OS or Supervised):
+  /// `hassio` is among its components. Null when the read didn't answer.
+  final bool? apps;
+
+  /// Devices in ZHA, Home Assistant's own Zigbee, not counting the
+  /// coordinator (the only ZHA entry with no parent device). Null when the
+  /// read didn't answer.
+  final int? zhaDevices;
+}
+
 class HaMqttClient extends mc.MqttClient {
   HaMqttClient(this.uri, String clientId) : super(uri.host, clientId);
 
@@ -67,6 +82,13 @@ class HaMqttClient extends mc.MqttClient {
   bool? isAdmin;
   HaClientProblem? problem;
 
+  /// Set only by setup's check: when the MQTT probe fails as [noMqtt] or
+  /// [notAdmin], read [facts] before closing. Live homes never read them.
+  bool readFacts = false;
+
+  /// What the failed check read, when [readFacts] is set.
+  HaFacts? facts;
+
   @override
   mc.MqttClientConnectionStatus? get connectionStatus => _status;
 
@@ -93,6 +115,7 @@ class HaMqttClient extends mc.MqttClient {
       ..state = mc.MqttConnectionState.connecting
       ..returnCode = mc.MqttConnectReturnCode.noneSpecified;
     problem = null;
+    facts = null;
     final base = uri.replace(
       scheme: uri.scheme == 'wss' ? 'https' : 'http',
       path: '/',
@@ -110,9 +133,8 @@ class HaMqttClient extends mc.MqttClient {
     }
     final WebSocket socket;
     try {
-      socket = await WebSocket.connect(
-        uri.toString(),
-      ).timeout(Duration(milliseconds: connectTimeoutPeriod));
+      socket = await WebSocket.connect(uri.toString())
+          .timeout(Duration(milliseconds: connectTimeoutPeriod));
     } on TimeoutException {
       rethrow;
     } catch (e) {
@@ -152,6 +174,11 @@ class HaMqttClient extends mc.MqttClient {
     if (attempt != _attempt) return _abandoned(socket);
     if (probe?['success'] != true) {
       final code = ((probe?['error'] as Map?)?['code']).toString();
+      if (readFacts) {
+        final read = await _readFacts();
+        if (attempt != _attempt) return _abandoned(socket);
+        facts = read;
+      }
       await socket.close();
       return _fail(
         code == 'unauthorized' || isAdmin == false
@@ -202,19 +229,49 @@ class HaMqttClient extends mc.MqttClient {
     return _status;
   }
 
+  /// Two reads that need no admin, side by side, 3 s for both.
+  Future<HaFacts> _readFacts() async {
+    const limit = Duration(seconds: 3);
+    final (config, registry) = await (
+      _call({'type': 'get_config'}, limit),
+      _call({'type': 'config/device_registry/list'}, limit),
+    ).wait;
+    bool? apps;
+    if (config?['success'] == true) {
+      final components = (config!['result'] as Map?)?['components'];
+      if (components is List) apps = components.contains('hassio');
+    }
+    int? zha;
+    if (registry?['success'] == true) {
+      final devices = registry!['result'];
+      if (devices is List) {
+        zha = devices.where((d) {
+          if (d is! Map || d['via_device_id'] == null) return false;
+          final ids = d['identifiers'];
+          return ids is List &&
+              ids.any((i) => i is List && i.isNotEmpty && i.first == 'zha');
+        }).length;
+      }
+    }
+    return HaFacts(apps: apps, zhaDevices: zha);
+  }
+
   int _send(Map<String, Object?> command) {
     final id = ++_id;
     _socket?.add(jsonEncode({'id': id, ...command}));
     return id;
   }
 
-  Future<Map<String, Object?>?> _call(Map<String, Object?> command) {
+  Future<Map<String, Object?>?> _call(
+    Map<String, Object?> command, [
+    Duration limit = const Duration(seconds: 10),
+  ]) {
     if (_socket == null) return Future.value(null);
     final completer = Completer<Map<String, Object?>>();
     final id = _send(command);
     _pending[id] = completer;
     return completer.future.timeout(
-      const Duration(seconds: 10),
+      limit,
       onTimeout: () => <String, Object?>{},
     );
   }

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -157,7 +158,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA har ingen MQTT-broker – den snakker direkte med Home Assistant, så ZigDash kan ikke koble til. For å bruke ZigDash, bytt til Zigbee2MQTT (tilgjengelig som Home Assistant-app eller Docker-container), som gir en MQTT-broker.';
+      'ZHA har ingen MQTT-broker – den snakker direkte med Home Assistant, så ZigDash kan ikke koble til. For å bruke ZigDash, bytt til Zigbee2MQTT (tilgjengelig som Home Assistant-app eller Docker-container), som kjører med en MQTT-broker som Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1888,6 +1889,27 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Denne Home Assistant-en har ingen MQTT-integrasjon. Zigbee2MQTT trenger også en: legg til appen Mosquitto broker (Innstillinger › Apper) og MQTT-integrasjonen i Home Assistant, og prøv igjen.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter',
+      one: '1 enhet',
+    );
+    return 'Zigbee-en din kjører i ZHA, Home Assistants egen Zigbee ($_temp0). ZigDash fungerer med Zigbee2MQTT og kan derfor ikke vise dem. Å flytte til Zigbee2MQTT betyr å pare enhetene på nytt; veiledningen viser to måter.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Flytte fra ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Denne Home Assistant har ingen MQTT-integrasjon og ingen apper (den kjører som container), så Mosquitto og Zigbee2MQTT kjører som egne containere ved siden av. Hvis de allerede kjører, koble ZigDash direkte til Mosquitto. Eller legg til MQTT-integrasjonen i Home Assistant og prøv igjen.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Slik kobler du til';
 
   @override
   String get haConnectSignInFailed =>

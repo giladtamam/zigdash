@@ -1,0 +1,3 @@
+Using Home Assistant's own Zigbee (ZHA)? Setup now says so when you sign in to Home Assistant, counts your ZHA devices, and opens a guide to moving them to Zigbee2MQTT.
+
+Home Assistant running as a container gets advice that fits it, instead of pointing at an Apps page it doesn't have.

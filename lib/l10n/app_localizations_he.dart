@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -156,7 +157,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ל‑ZHA אין ברוקר MQTT — הוא מדבר ישירות עם Home Assistant, ולכן ZigDash לא יכול להתחבר אליו. כדי להשתמש ב‑ZigDash, עברו ל‑Zigbee2MQTT (זמין כיישום של Home Assistant או כקונטיינר Docker), שמספק ברוקר MQTT.';
+      'ל‑ZHA אין ברוקר MQTT — הוא מדבר ישירות עם Home Assistant, ולכן ZigDash לא יכול להתחבר אליו. כדי להשתמש ב‑ZigDash, עברו ל‑Zigbee2MQTT (זמין כיישום של Home Assistant או כקונטיינר Docker), שעובד עם ברוקר MQTT כמו Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1869,6 +1870,27 @@ class AppLocalizationsHe extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'ל‑Home Assistant הזה אין אינטגרציית MQTT. גם Zigbee2MQTT צריך אחת: ב‑Home Assistant הוסיפו את היישום Mosquitto broker (הגדרות › יישומים) ואת אינטגרציית MQTT, ונסו שוב.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count מכשירים',
+      one: 'מכשיר אחד',
+    );
+    return 'ה‑Zigbee שלכם רץ ב‑ZHA, ה‑Zigbee המובנה של Home Assistant ($_temp0). ZigDash עובד עם Zigbee2MQTT, ולכן לא יכול להציג אותם. מעבר ל‑Zigbee2MQTT פירושו לצמד מחדש את המכשירים; המדריך מציג שתי דרכים.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'מעבר מ‑ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'ל‑Home Assistant הזה אין אינטגרציית MQTT ואין יישומים (הוא רץ כקונטיינר), ולכן Mosquitto ו‑Zigbee2MQTT רצים לידו כקונטיינרים נפרדים. אם הם כבר רצים, חברו את ZigDash ישירות ל‑Mosquitto. או הוסיפו ב‑Home Assistant את אינטגרציית MQTT ונסו שוב.';
+
+  @override
+  String get haConnectNoAppsGuide => 'איך להתחבר';
 
   @override
   String get haConnectSignInFailed =>

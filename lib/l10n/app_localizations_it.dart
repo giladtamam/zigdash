@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -156,7 +157,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA non ha un broker MQTT: parla direttamente con Home Assistant, quindi ZigDash non può collegarsi. Per usare ZigDash, passa a Zigbee2MQTT (disponibile come applicazione di Home Assistant o container Docker), che fornisce un broker MQTT.';
+      'ZHA non ha un broker MQTT: parla direttamente con Home Assistant, quindi ZigDash non può collegarsi. Per usare ZigDash, passa a Zigbee2MQTT (disponibile come applicazione di Home Assistant o container Docker), che funziona con un broker MQTT come Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1895,6 +1896,27 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Questo Home Assistant non ha l\'integrazione MQTT. Serve anche a Zigbee2MQTT: in Home Assistant aggiungi l\'applicazione Mosquitto broker (Impostazioni › Applicazioni) e l\'integrazione MQTT, poi riprova.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivi',
+      one: '1 dispositivo',
+    );
+    return 'Il tuo Zigbee funziona in ZHA, lo Zigbee integrato di Home Assistant ($_temp0). ZigDash funziona con Zigbee2MQTT, quindi non può mostrarli. Passare a Zigbee2MQTT significa associare di nuovo i dispositivi; la guida mostra due modi.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Passare da ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Questo Home Assistant non ha l\'integrazione MQTT né app (funziona come container), quindi Mosquitto e Zigbee2MQTT girano come container propri accanto a esso. Se girano già, collega ZigDash direttamente a Mosquitto. Oppure aggiungi l\'integrazione MQTT in Home Assistant e riprova.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Come collegarsi';
 
   @override
   String get haConnectSignInFailed =>

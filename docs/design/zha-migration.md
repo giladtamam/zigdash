@@ -1,7 +1,8 @@
 # Moving from ZHA: helping ZHA homes reach Zigbee2MQTT (3.7.1–3.8)
 
-Status: plan, 2026-11-16, draft 3, **scored 9** (independent reviewer;
-five small fixes applied after). Draft 2 scored 8 (multiprotocol note,
+Status: **approved by the owner 2026-11-17** (plan, Phase 0 privacy
+wording). Draft 3, **scored 9** (independent reviewer; five small fixes
+applied after). Phase 0 built on feat/zha-phase0 (3.7.1+121). Draft 2 scored 8 (multiprotocol note,
 `from_zha` definition, reads on live reconnects, English-only guide,
 untested rollback, import gaps, adapter settings). Draft 1 scored 6 (rollback for the
 same-adapter way could lose a network; Phase 0 assumed knowledge the code
@@ -135,10 +136,14 @@ evening / day / weekend only after that.
    - ZHA devices found: lead with "Your Zigbee runs in ZHA, Home
      Assistant's own Zigbee (N devices). ZigDash works with Zigbee2MQTT."
      and a **Moving from ZHA** button (Phase 1; in 3.7.1 it opens the web
-     guide).
-   - no apps (Container/Core): "This Home Assistant has no apps (Container),
-     so Mosquitto and Zigbee2MQTT run as their own containers next to it."
-     plus the guide's Docker link, instead of the Settings › Apps advice.
+     guide). **So zigdash.app/zha must be live before 3.7.1 goes to Play:**
+     an English first version of 1c ships with 3.7.1; its 12 translations
+     come with 3.8.0.
+   - no apps (Container/Core), no ZHA devices, no MQTT: "This Home
+     Assistant has no apps (Container), so Mosquitto and Zigbee2MQTT run as
+     their own containers next to it." plus a link to
+     zigdash.app/home-assistant/ (connect to the broker directly), instead
+     of the Settings › Apps advice. ZHA devices found win over this.
    - apps: today's text.
    - Known gap: a ZHA user whose Home Assistant already has an MQTT
      integration passes the check and later sees the fixed
@@ -152,7 +157,7 @@ evening / day / weekend only after that.
    guide's ZHA section gain the Moving from ZHA button.
 5. **Measured:** `setup_step` step `ha_connect` with `result: no_mqtt` or
    `not_admin` gains `install: apps|no_apps` and
-   `zha: 0|1-10|11-30|31-60|60+`. The Moving from ZHA button in 3.7.1
+   `zha: 0|1-10|11-30|31-60|61+`. The Moving from ZHA button in 3.7.1
    (which opens the web guide) sends `setup_step` step `zha_move`, so
    Phase 0 has its own count before `zha_move` arrives in 3.8.0.
 6. **Local:** ZHA devices found by the check store `zha_found_at` on the

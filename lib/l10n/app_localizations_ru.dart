@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -156,7 +157,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'У ZHA нет MQTT-брокера — он работает напрямую с Home Assistant, поэтому ZigDash не может к нему подключиться. Чтобы пользоваться ZigDash, перейдите на Zigbee2MQTT (доступен как приложение Home Assistant или Docker-контейнер), в котором есть MQTT-брокер.';
+      'У ZHA нет MQTT-брокера — он работает напрямую с Home Assistant, поэтому ZigDash не может к нему подключиться. Чтобы пользоваться ZigDash, перейдите на Zigbee2MQTT (доступен как приложение Home Assistant или Docker-контейнер), который работает с MQTT-брокером, например Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -1895,6 +1896,29 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'В этом Home Assistant нет интеграции MQTT. Zigbee2MQTT она тоже нужна: в Home Assistant добавьте приложение Mosquitto broker (Настройки › Приложения) и интеграцию MQTT, затем попробуйте снова.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count устройства',
+      many: '$count устройств',
+      few: '$count устройства',
+      one: '1 устройство',
+    );
+    return 'Ваш Zigbee работает в ZHA, собственном Zigbee Home Assistant ($_temp0). ZigDash работает с Zigbee2MQTT, поэтому не может их показать. Переход на Zigbee2MQTT означает заново подключить устройства; в руководстве два способа.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Переход с ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'В этом Home Assistant нет интеграции MQTT и нет приложений (он работает в контейнере), поэтому Mosquitto и Zigbee2MQTT работают рядом в собственных контейнерах. Если они уже запущены, подключите ZigDash напрямую к Mosquitto. Или добавьте интеграцию MQTT в Home Assistant и попробуйте снова.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Как подключиться';
 
   @override
   String get haConnectSignInFailed =>
