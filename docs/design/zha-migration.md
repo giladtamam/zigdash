@@ -148,6 +148,9 @@ evening / day / weekend only after that.
    - Known gap: a ZHA user whose Home Assistant already has an MQTT
      integration passes the check and later sees the fixed
      `setupErrHaNoZ2mBody` text, which already mentions ZHA.
+   - Known gap: the "Ask an AI" write-up on that screen still says only
+     "no MQTT integration" (neutral, no Mosquitto advice); it doesn't
+     mention ZHA. Phase 1 can pass the facts into it.
 3. **Fix a false sentence:** `connHelpZhaBody` says Zigbee2MQTT "provides
    an MQTT broker"; it doesn't (Mosquitto does). New text: "...switch to
    Zigbee2MQTT, which runs with an MQTT broker such as Mosquitto."
