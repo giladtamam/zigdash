@@ -575,7 +575,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Continue to dashboard'));
     await tester.pumpAndSettle();
-    expect(_prefs.getString(HaImportOffer.key), isNull);
+    // Offered all the same (devices will arrive in this home); the move
+    // is not over.
+    expect(_prefs.getString(HaImportOffer.key), isNotNull);
+    expect(_prefs.getBool(HaImportOffer.zhaKey), isTrue);
     expect(_prefs.getInt(zhaMovingAtKey), isNotNull);
     await tester.pumpWidget(const SizedBox());
     await tester.pump();

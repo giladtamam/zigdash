@@ -256,6 +256,9 @@ people gave a ZHA answer on 3.8.0+, wait 2 more weeks and read then.
 
 - **Phase 2 goes ahead** if at least 15 people tapped "I'm moving" **and**
   at least 3 setups completed with `from_zha` (`moving` or `devices`).
+  Count people, not events, and only `complete` events with `devices`
+  other than 0 and `via` other than `shared`: a broker-form connection to
+  an empty Zigbee2MQTT also sends `complete` (the move goes on after it).
 - **Otherwise Phase 0 and 1 stay as they are** (small, and correct
   advice); no Phase 2.
 - **Separately**, if fewer than 10% of ZHA answerers open the sheet, the

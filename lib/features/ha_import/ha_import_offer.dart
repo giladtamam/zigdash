@@ -26,7 +26,11 @@ class HaImportOffer extends Notifier<String?> {
   Future<void> offer(String connectionId, {bool fromZha = false}) async {
     final prefs = ref.read(sharedPreferencesProvider);
     await prefs.setString(key, connectionId);
-    fromZha ? await prefs.setBool(zhaKey, true) : await prefs.remove(zhaKey);
+    if (fromZha) {
+      await prefs.setBool(zhaKey, true);
+    } else {
+      await prefs.remove(zhaKey);
+    }
     state = connectionId;
   }
 

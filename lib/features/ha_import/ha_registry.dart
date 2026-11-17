@@ -201,7 +201,7 @@ class ImportPlan {
     required this.dashboards,
     required this.zhaDevices,
     this.fromZha = 0,
-    this.z2mDevices = 1,
+    required this.z2mDevices,
   });
   final List<ImportDashboard> dashboards;
 
