@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מעבר מ-ZHA · ZigDash</title>
+<meta name="description" content="איך להעביר רשת Zigbee של ZHA ב-Home Assistant אל Zigbee2MQTT: עם מתאם שני, חדר אחרי חדר, או עם אותו מתאם, הכול בבת אחת. כולל ההגדרות לכל מתאם והדרך חזרה.">
+<link rel="canonical" href="https://zigdash.app/zha/he/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zha/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zha/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zha/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zha/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zha/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zha/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zha/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zha/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zha/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zha/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zha/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zha/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zha/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zha/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="מעבר מ-ZHA · ZigDash">
+<meta property="og:description" content="איך להעביר רשת Zigbee של ZHA ב-Home Assistant אל Zigbee2MQTT: עם מתאם שני, חדר אחרי חדר, או עם אותו מתאם, הכול בבת אחת. כולל ההגדרות לכל מתאם והדרך חזרה.">
+<meta property="og:url" content="https://zigdash.app/zha/he/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">התקנה</a>
+    <a href="../../hubs/">רכזות</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">עזרה</a>
+    <a href="https://t.me/zigdash_app">קהילה</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>מעבר מ-ZHA ל-Zigbee2MQTT</h1>
+<p class="lead">ZHA הוא ה-Zigbee המובנה של Home Assistant. ZigDash עובדת עם Zigbee2MQTT, ולכן היא לא יכולה להציג מכשירים שנמצאים ב-ZHA. מעבר פירושו לצמד מחדש את המכשירים שלכם עם Zigbee2MQTT. אחר כך Home Assistant ממשיך להשתמש בהם, דרך שילוב ה-MQTT שלו.</p>
+
+<div class="toc"><strong>בעמוד הזה</strong>
+<ul>
+  <li><a href="#before">לפני שמתחילים</a></li>
+  <li><a href="#ways">שתי דרכים לעבור</a></li>
+  <li><a href="#adapter">המתאם שלכם</a></li>
+  <li><a href="#apps">Home Assistant עם אפליקציות</a></li>
+  <li><a href="#docker">Home Assistant ב-Docker (בלי אפליקציות)</a></li>
+  <li><a href="#pair">צימוד המכשירים</a></li>
+  <li><a href="#after">אחרי המעבר</a></li>
+  <li><a href="#back">חזרה אחורה</a></li>
+  <li><a href="#keep">שמירת הרשת בלי צימוד מחדש</a></li>
+</ul></div>
+
+<h2 id="before">לפני שמתחילים</h2>
+<ul>
+  <li><strong>איזו התקנה?</strong> אם בתפריט הגדרות של Home Assistant מופיע <strong>Apps</strong> (Add-ons בגרסאות ישנות), יש לכם Home Assistant OS: ראו <a href="#apps">עם אפליקציות</a>. אם לא, Home Assistant רץ ב-Docker (Container): ראו <a href="#docker">Docker</a>.</li>
+  <li><strong>איזה מתאם?</strong> פתחו את הגדרות › מכשירים ושירותים › Zigbee Home Automation. תחת Hubs, המתאם מופיע לפי הדגם שלו, למשל <strong>SONOFF ZBDongle-E</strong>. אחר כך בדקו את <a href="#adapter">המתאם שלכם</a>.</li>
+  <li><strong>גבו את ZHA.</strong> באותו עמוד, הקישו על ⚙ ליד Zigbee Home Automation, ואז על <strong>Download backup</strong>. שמרו את הקובץ. ב-<strong>Network information</strong> באותו עמוד מופיעים הערוץ, סוג הרדיו והיציאה הטורית.</li>
+  <li><strong>מה משתנה ב-Home Assistant.</strong> המכשירים שלכם חוזרים כמכשירי MQTT חדשים, עם מזהי ישויות (entity IDs) חדשים. צריך לכוון אל המכשירים החדשים את האוטומציות, הסקריפטים ולוחות המחוונים שמשתמשים בהם, וההיסטוריה שלהם מתחילה מחדש. קבוצות וקישורים (bindings) שנוצרו ב-ZHA יוצרים מחדש ב-Zigbee2MQTT.</li>
+  <li><strong>זמן.</strong> כל מכשיר מאופס ומצומד מחדש, אחד אחרי השני. עדיין אין לנו הערכות זמן אמינות; תכננו ערב לבית קטן, ויותר לבית גדול.</li>
+</ul>
+
+<h2 id="ways">שתי דרכים לעבור</h2>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>מתאם שני</th><th>אותו מתאם</th></tr></thead>
+  <tbody>
+    <tr><th>עלות</th><td>מתאם חדש, בערך 30–60 אירו (למשל Home Assistant Connect ZBT-2, או SMLIGHT SLZB-06M או SLZB-07)</td><td>חינם</td></tr>
+    <tr><th>בזמן המעבר</th><td>הכול ממשיך לעבוד: ZHA נשאר עם המתאם הישן</td><td>Zigbee כבוי עד שכל מכשיר מצומד מחדש</td></tr>
+    <tr><th>קצב</th><td>חדר אחרי חדר, גם על פני כמה ימים אם רוצים</td><td>הכול בבת אחת</td></tr>
+    <tr><th>חזרה אחורה</th><td>קל: מנתקים את המתאם החדש, ZHA אף פעם לא הפסיק לעבוד</td><td>משחזרים את הגיבוי של ZHA (ראו <a href="#back">חזרה אחורה</a>)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>מתאם שני</h3>
+<ol>
+  <li>התקינו את Zigbee2MQTT על המתאם החדש (<a href="#apps">עם אפליקציות</a> או <a href="#docker">Docker</a>) עם רשת משלו. בחרו את כל זה <strong>לפני ההפעלה הראשונה של Zigbee2MQTT</strong>, כי שינוי הערוץ מאוחר יותר עלול לחייב צימוד מחדש:
+    <ul>
+      <li>השאירו את מפתח הרשת ואת ה-PAN ID על <code>GENERATE</code> (ברירת המחדל);</li>
+      <li>בחרו ערוץ שונה מזה של ZHA (הוא מופיע ב-⚙ של ZHA › Network information); Home Assistant ממליץ על 15, 20 או 25.</li>
+    </ul></li>
+  <li>הרחיקו את שני המתאמים זה מזה, כל אחד על כבל מאריך USB.</li>
+  <li>ב-Home Assistant OS, כשמחברים את המתאם החדש, Home Assistant עשוי להציע להגדיר אותו ל-ZHA או ל-Thread. התעלמו מזה: המתאם מיועד ל-Zigbee2MQTT.</li>
+  <li>העבירו חדר אחד בכל פעם: <a href="#pair">צמדו</a> קודם את המכשירים שמחוברים לחשמל (נורות, שקעים, מתגים בקיר: הם נתבים), ואחר כך את המכשירים על סוללה.</li>
+  <li>כשכל המכשירים הועברו, השביתו את ZHA (ראו בהמשך) ושמרו את המתאם הישן כרזרבה.</li>
+</ol>
+
+<h3>אותו מתאם</h3>
+<ol>
+  <li>הורידו את הגיבוי של ZHA (ראו <a href="#before">לפני שמתחילים</a>), ממש לפני שמתחילים.</li>
+  <li>השביתו את ZHA: הגדרות › מכשירים ושירותים › Zigbee Home Automation, ה-⋮ ליד Zigbee Home Automation › <strong>Disable</strong>. לא Delete.</li>
+  <li>התקינו את Zigbee2MQTT על אותו מתאם (<a href="#apps">עם אפליקציות</a> או <a href="#docker">Docker</a>), והשאירו את מפתח הרשת ואת ה-PAN ID על <code>GENERATE</code>.</li>
+  <li>כבו את מכשירי ה-Zigbee שמחוברים לחשמל, במתג שבקיר או בלוח החשמל. אחרת הם ממשיכים לחפש את הרשת הישנה.</li>
+  <li>הדליקו אותם בחזרה אחד אחד, ו<a href="#pair">צמדו</a> כל אחד כשהוא נדלק. אחר כך צמדו את המכשירים על סוללה.</li>
+</ol>
+
+<h2 id="adapter">המתאם שלכם</h2>
+<ul>
+  <li><strong>Silicon Labs</strong> (Home Assistant Connect ZBT-1 ו-ZBT-2, Home Assistant Yellow, Sonoff ZBDongle-E, SMLIGHT SLZB-06M ו-SLZB-07): <code>adapter: ember</code>. ה-ZBT-2 צריך גם <code>baudrate: 460800</code>; ה-ZBDongle-E צריך <code>rtscts: false</code>; ה-SLZB-06M צריך קושחה 20240510 או חדשה יותר.</li>
+  <li><strong>Texas Instruments</strong> (Sonoff ZBDongle-P, SMLIGHT SLZB-06 ו-SLZB-06P7): <code>adapter: zstack</code>.</li>
+  <li><strong>ConBee או RaspBee</strong>: <code>adapter: deconz</code>.</li>
+  <li><strong>CC2531 או ZiGate</strong>: ישנים מדי, או שכבר לא מתוחזקים, בשביל רשת Zigbee2MQTT טובה. השתמשו בדרך של מתאם שני, עם מתאם חדש.</li>
+  <li><strong>מתאם רשת</strong> (SMLIGHT SLZB-06, SLZB-06M, SLZB-07, MR series): ZHA מציג אותו כ-<code>socket://IP:6638</code>; ב-Zigbee2MQTT הוא <code>tcp://IP:6638</code>, וב-Docker אין צורך בשורת USB.</li>
+  <li><strong>Multiprotocol</strong> (ZBT-1 או Yellow שמריצים Zigbee ו-Thread יחד; עמוד החומרה ב-Home Assistant מציין את זה): Zigbee2MQTT לא יכול להשתמש בקושחת multiprotocol. בדרך של אותו מתאם, כבו את ה-multiprotocol <strong>כשעדיין נמצאים ב-ZHA</strong>, לפי הנוהל של Home Assistant עצמו (<a href="https://connectzbt1.home-assistant.io/procedures/disable-multiprotocol">ZBT-1</a>, <a href="https://yellow.home-assistant.io/guides/disable-multiprotocol">Yellow</a>). מכשירי Thread שהשתמשו בו מפסיקים לעבוד עד שנתב גבול (border router) אחר של Thread לוקח אותם. בדרך של מתאם שני, אל תיגעו בו, וקנו את המתאם החדש כ-Zigbee בלבד.</li>
+</ul>
+<p>ב<a href="https://www.zigbee2mqtt.io/guide/adapters/">עמודי המתאמים</a> של Zigbee2MQTT יש את כל הפרטים.</p>
+
+<h2 id="apps">Home Assistant עם אפליקציות (Home Assistant OS)</h2>
+<ol>
+  <li>בתפריט הגדרות › Apps, התקינו והפעילו את <strong>Mosquitto broker</strong>. אז Home Assistant מציע את שילוב ה-MQTT תחת הגדרות › מכשירים ושירותים: אשרו אותו.</li>
+  <li>הוסיפו את המאגר של Zigbee2MQTT (בחנות האפליקציות, ⋮ › Repositories: <code>https://github.com/zigbee2mqtt/hassio-zigbee2mqtt</code>), ואז התקינו את <strong>Zigbee2MQTT</strong>.</li>
+  <li>בלשונית Configuration שלו, הגדירו את היציאה הטורית ואת המתאם לפי <a href="#adapter">המתאם שלכם</a>, למשל:
+<pre><code>port: /dev/serial/by-id/usb-...
+adapter: ember</code></pre>
+    בדרך של מתאם שני, הגדירו גם את הערוץ (ראו <a href="#ways">למעלה</a>) לפני ההפעלה הראשונה.</li>
+  <li>הפעילו את Zigbee2MQTT ופתחו את דף האינטרנט שלו מהעמוד של האפליקציה. ואז <a href="#pair">צמדו</a>.</li>
+</ol>
+
+<h2 id="docker">Home Assistant ב-Docker (בלי אפליקציות)</h2>
+<p>בלי אפליקציות, Mosquitto ו-Zigbee2MQTT רצים כקונטיינרים נפרדים לצד Home Assistant. בתיקייה חדשה:</p>
+<p><strong>1. <code>compose.yaml</code></strong> (שימו את הנתיב של המתאם שלכם ב-<code>devices</code>; <code>ls /dev/serial/by-id/</code> מציג אותו):</p>
+<pre><code>services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+  zigbee2mqtt:
+    image: ghcr.io/koenkk/zigbee2mqtt
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    ports:
+      - 8080:8080
+    volumes:
+      - ./zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    environment:
+      - TZ=Europe/Berlin
+    devices:
+      - /dev/serial/by-id/usb-...:/dev/ttyACM0</code></pre>
+<p>עם מתאם רשת, השמיטו את <code>devices</code> ואת שורת ה-udev.</p>
+<p><strong>2. <code>mosquitto/config/mosquitto.conf</code></strong>:</p>
+<pre><code>listener 1883
+allow_anonymous false
+password_file /mosquitto/config/passwd
+persistence true
+persistence_location /mosquitto/data/</code></pre>
+<p>צרו את משתמש ה-MQTT (תתבקשו להזין סיסמה פעמיים; הקובץ חייב להיות שייך למשתמש של Mosquitto עצמו, אחרת Mosquitto לא יעלה):</p>
+<pre><code>docker run -it --rm -v "$PWD/mosquitto/config:/mosquitto/config" eclipse-mosquitto:2 \
+  sh -c "mosquitto_passwd -c /mosquitto/config/passwd zigbee &amp;&amp; chown mosquitto:mosquitto /mosquitto/config/passwd"</code></pre>
+<p><strong>3. <code>zigbee2mqtt/configuration.yaml</code></strong> (שורות המתאם לפי <a href="#adapter">המתאם שלכם</a>):</p>
+<pre><code>homeassistant:
+  enabled: true
+frontend:
+  enabled: true
+  port: 8080
+mqtt:
+  server: mqtt://mosquitto:1883
+  user: zigbee
+  password: your-password
+serial:
+  port: /dev/ttyACM0          # a network adapter: tcp://IP:6638
+  adapter: ember
+advanced:
+  network_key: GENERATE
+  pan_id: GENERATE
+  ext_pan_id: GENERATE
+  channel: 20                 # second adapter: not ZHA's channel</code></pre>
+<p><strong>4.</strong> בדרך של אותו מתאם, ZHA כבר מושבת עכשיו (ראו <a href="#ways">למעלה</a>). אם הקונטיינר של Home Assistant עצמו ממפה את המתאם, הסירו את השורה הזו מקובץ ה-compose שלו או מ-<code>docker run</code>: רק קונטיינר אחד יכול להשתמש במתאם.</p>
+<p><strong>5.</strong> <code>docker compose up -d</code>, ואז פתחו את <code>http://the-machine:8080</code>: דף האינטרנט של Zigbee2MQTT.</p>
+<p><strong>6.</strong> ב-Home Assistant: הגדרות › מכשירים ושירותים › Add integration › <strong>MQTT</strong>. Broker: כתובת ה-IP של המחשב, פורט 1883, משתמש <code>zigbee</code> והסיסמה.</p>
+
+<h2 id="pair">צימוד המכשירים</h2>
+<ol>
+  <li>בדף האינטרנט של Zigbee2MQTT, הקישו על <strong>Permit join</strong> (פתוח לכארבע דקות). כדי לצמד דרך נתב שקרוב למכשיר, בחרו את הנתב הזה בתפריט של permit join: שימושי ל-Aqara ולמכשירים בררניים אחרים.</li>
+  <li>אפסו את המכשיר למצב צימוד, כמו שהיצרן מורה: לחיצה ארוכה ברוב החיישנים, כמה מחזורי הדלקה וכיבוי בנורות, סדרה של הקשות על המתג בחלק מהמתגים שבקיר.</li>
+  <li>כשהוא מופיע, תנו לו שם וחדר ב-Zigbee2MQTT. ואז עברו לבא בתור.</li>
+</ol>
+<p>קודם המכשירים שמחוברים לחשמל, אחר כך המכשירים על סוללה, כדי שלרשת החדשה יהיו מסלולים.</p>
+
+<h2 id="after">אחרי המעבר</h2>
+<ul>
+  <li><strong>ZigDash:</strong> פתחו אותה והקישו על <strong>מצאו את ההתקנה שלי</strong>. היא מוצאת את Mosquitto ברשת שלכם; התחברו עם משתמש ה-MQTT. או בחרו Home Assistant והתחברו: גם זה עובד עכשיו, כי ל-Home Assistant יש את שילוב ה-MQTT.</li>
+  <li><strong>שמות וחדרים:</strong> ב-ZigDash, הגדרות › ייבוא מ-Home Assistant מביא את השמות והחדרים שנתתם למכשירים החדשים ב-Home Assistant.</li>
+  <li><strong>Home Assistant:</strong> כוונו את האוטומציות, הסקריפטים ולוחות המחוונים אל המכשירים החדשים. כשאתם בטוחים, מחקו את שילוב ה-ZHA.</li>
+</ul>
+
+<h2 id="back">חזרה אחורה</h2>
+<ul>
+  <li><strong>מתאם שני:</strong> עצרו את Zigbee2MQTT ונתקו את המתאם החדש. ZHA אף פעם לא הפסיק לעבוד. מכשירים שכבר העברתם צריך לצמד מחדש ל-ZHA.</li>
+  <li><strong>אותו מתאם:</strong> עצרו את Zigbee2MQTT, ואז בעמוד של ZHA הקישו על <strong>Enable</strong>. ZHA מציג "Network settings do not match most recent backup" (הגדרות הרשת לא תואמות לגיבוי האחרון), כי המתאם מחזיק עכשיו את הרשת של Zigbee2MQTT. פתחו את הגדרות › <strong>Repairs</strong> › "Zigbee network settings have changed" (הגדרות רשת ה-Zigbee השתנו) ובחרו <strong>Restore backup (recommended)</strong>. הרשת של ZHA חוזרת כמו שהייתה. מכשירים שצימדתם ל-Zigbee2MQTT צריך לצמד מחדש ל-ZHA. אם לא מופיע תיקון, השתמשו ב-⚙ › Migrate adapter עם הגיבוי שהורדתם.</li>
+</ul>
+<div class="tip"><strong>נבדק:</strong> ב-17 בנובמבר 2026, עם Home Assistant 2026.11 ו-Sonoff ZBDongle-E, הרשת של ZHA חזרה בדיוק כמו שהייתה (ערוץ, PAN ID ומפתח רשת). עדיין לא בדקנו את זה עם מכשירים מצומדים, אז שמרו את קובץ הגיבוי.</div>
+
+<h2 id="keep">שמירת הרשת בלי צימוד מחדש</h2>
+<p>יש דרך שלישית: להעתיק את הרשת של ZHA אל Zigbee2MQTT, כך שלא צריך לצמד מחדש את המכשירים. Zigbee2MQTT לא תומך בזה, ערך שגוי עלול למחוק את הרשת, וזה הגיוני רק בבתים גדולים (נגיד, מעל 60 מכשירים). אם תרצו לקרוא על זה: <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/16739">התשובה של המתחזק של Zigbee2MQTT</a>, ודיווחים מהקהילה ב<a href="https://github.com/Koenkk/zigbee2mqtt/discussions/24478">דיון 24478</a> וב<a href="https://github.com/Koenkk/zigbee2mqtt/discussions/26716">דיון 26716</a>.</p>
+
+<div class="tip"><strong>ספרו לנו איך הלך.</strong> המדריך הזה חדש. אם שלב היה שגוי או חסר, כתבו ל-<a href="mailto:support@zigdash.app">support@zigdash.app</a> או ל<a href="https://t.me/zigdash_app">קהילה</a>.</div>
+
+<div class="next"><a class="btn" href="../../home-assistant/">ZigDash עם Home Assistant</a><a class="btn" href="../../help/">משהו לא עובד?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">קוד מקור</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">מדיניות פרטיות</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../../de/" hreflang="de" lang="de">Deutsch</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

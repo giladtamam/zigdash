@@ -375,7 +375,13 @@ class SetupStep extends AnalyticsEvent {
     this.addressFrom,
     this.haApps,
     this.zhaDevices,
+    this.fromZha,
   });
+
+  /// On [SetupStepKind.complete] (3.8): whether this setup followed "I'm
+  /// moving" or a Home Assistant check that found ZHA devices, within 60
+  /// days. Sent as `from_zha`.
+  final FromZha? fromZha;
 
   final SetupStepKind step;
 
@@ -533,6 +539,7 @@ class SetupStep extends AnalyticsEvent {
     if (addressFrom != null && result != null)
       'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
     if (haApps != null) 'install': haApps! ? 'apps' : 'no_apps',
+    if (fromZha != null) 'from_zha': fromZha!.name,
     if (zhaDevices != null)
       'zha': bucket(
         zhaDevices!,
@@ -547,6 +554,33 @@ class SetupStep extends AnalyticsEvent {
     'Wi-Fi' => 'wifi',
     'Ethernet' => 'ethernet',
     _ => 'other',
+  };
+}
+
+/// Why a finished setup counts as a move from ZHA (3.8, zha-migration.md).
+enum FromZha { moving, devices }
+
+/// Where the Moving from ZHA sheet was opened (3.8).
+enum ZhaMoveFrom { answer, demo, noMqtt, notAdmin, help, guide }
+
+/// What happened on the Moving from ZHA sheet (3.8).
+enum ZhaMoveStep { opened, guide, moving, notNow }
+
+/// The Moving from ZHA sheet (3.8, zha-migration.md): opened (with where
+/// from), Read the steps, I'm moving, Not now. No names, addresses or
+/// identifiers.
+class ZhaMoveEvent extends AnalyticsEvent {
+  const ZhaMoveEvent(this.step, this.from);
+  final ZhaMoveStep step;
+  final ZhaMoveFrom from;
+
+  @override
+  String get name => 'zha_move';
+
+  @override
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    'from': _snake(from.name),
   };
 }
 
@@ -1098,9 +1132,14 @@ class HaImportEvent extends AnalyticsEvent {
     this.zhaOnly,
     this.method,
     this.outcome,
+    this.fromZha,
   });
 
   final HaImportStep step;
+
+  /// At the preview (3.8): devices whose name or room came from their old
+  /// ZHA entry, in the same groups as [devices].
+  final int? fromZha;
   final HaSignInMethod? method;
   final HaSignInOutcome? outcome;
 
@@ -1127,6 +1166,7 @@ class HaImportEvent extends AnalyticsEvent {
       if (renamed != null) 'renamed': count(renamed!),
       if (dashboards != null) 'dashboards': count(dashboards!),
       if (zhaOnly != null) 'zha_only': zhaOnly! ? 'yes' : 'no',
+      if (fromZha != null) 'from_zha': count(fromZha!),
       if (method != null) 'method': method!.name,
       if (outcome != null) 'outcome': outcome!.name,
     };

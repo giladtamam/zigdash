@@ -32,9 +32,7 @@ import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
 import 'setup_screen.dart' show openSetupLink;
 import 'setup_waiting.dart';
-
-/// The web guide to moving from ZHA to Zigbee2MQTT (zha-migration.md).
-final zhaGuideUrl = Uri.parse('https://zigdash.app/zha/');
+import '../../zha_move/zha_move.dart';
 
 /// "Connect through Home Assistant" (docs/design/ha-route.md): the address,
 /// a sign-in (Home Assistant's login page, or a pasted token), a check,
@@ -285,21 +283,15 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     ref.invalidate(mqttManagerProvider(id));
   }
 
-  /// "Moving from ZHA" (3.7.1): the web guide, counted with the outcome
-  /// that showed it.
-  void _zhaMove(HaConnectProblem after) {
-    ref
-        .read(analyticsProvider)
-        .track(
-          SetupStep(
-            SetupStepKind.zhaMove,
-            choice: after == HaConnectProblem.notAdmin
-                ? HaConnectOutcome.notAdmin
-                : HaConnectOutcome.noMqtt,
-          ),
-        );
-    openSetupLink(zhaGuideUrl);
-  }
+  /// "Moving from ZHA": the sheet (3.8; 3.7.1 opened the web guide),
+  /// counted with the outcome that showed it.
+  void _zhaMove(HaConnectProblem after) => showZhaMoveSheet(
+    context,
+    ref,
+    after == HaConnectProblem.notAdmin
+        ? ZhaMoveFrom.notAdmin
+        : ZhaMoveFrom.noMqtt,
+  );
 
   void _onState() {
     if (!mounted) return;
@@ -806,6 +798,7 @@ class _AskState extends State<_Ask> {
               from: AiHelpFrom.haConnect,
               platform: SetupPlatform.homeAssistant,
               haProblem: problem,
+              haFacts: widget.state.facts,
             ),
           ),
         ],
@@ -1054,11 +1047,7 @@ class _ScrollIntoViewState extends State<_ScrollIntoView> {
 /// soon after (Android may close ZigDash meanwhile) comes back here.
 const haAppLeftAtKey = 'ha_app_left_at_ms';
 
-/// When setup's check last found devices in ZHA (3.7.1), on the phone
-/// only: lets a setup that completes later say it came from ZHA
-/// (`from_zha`, zha-migration.md Phase 1).
-const zhaFoundAtKey = 'zha_found_at';
-
+/// The date is kept under [zhaFoundAtKey] (zha_move.dart).
 Future<void> markZhaFound(SharedPreferences prefs) =>
     prefs.setInt(zhaFoundAtKey, DateTime.now().millisecondsSinceEpoch);
 

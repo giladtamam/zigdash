@@ -1926,6 +1926,37 @@ class AppLocalizationsPl extends AppLocalizations {
   String get haConnectNoAppsGuide => 'Jak się połączyć';
 
   @override
+  String get zhaMoveBody =>
+      'ZigDash działa z Zigbee2MQTT. Przejście oznacza ponowne sparowanie urządzeń. Home Assistant może dalej ich używać, gdy dodasz jego integrację MQTT.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Drugi adapter: pokój po pokoju, ZHA dalej działa';
+
+  @override
+  String get zhaMoveWaySame => 'Ten sam adapter: za darmo, wszystko naraz';
+
+  @override
+  String get zhaMoveReadSteps => 'Przeczytaj kroki';
+
+  @override
+  String get zhaMoveImMoving => 'Przechodzę';
+
+  @override
+  String get zhaMoveNotNow => 'Nie teraz';
+
+  @override
+  String get zhaMovingNoted =>
+      'Zapisane. Gdy Zigbee2MQTT będzie działać, otwórz konfigurację: ZigDash je znajdzie i zaproponuje nazwy oraz pokoje z Home Assistanta.';
+
+  @override
+  String get setupMovingTitle => 'Połącz z nowym Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Przechodzisz z ZHA? Gdy Zigbee2MQTT zacznie działać, ZigDash poszuka go w Twojej sieci.';
+
+  @override
   String get haConnectSignInFailed =>
       'Logowanie nie zostało ukończone. Spróbuj ponownie albo użyj długoterminowego tokenu.';
 

@@ -25,6 +25,7 @@ import '../providers/settings_controller.dart';
 import '../../pro/pro.dart';
 import '../../pro/pro_screen.dart';
 import '../../pro/pro_trial_card.dart' show proTrialDaysLeftText;
+import '../../zha_move/zha_move.dart';
 import 'language_screen.dart';
 
 /// App version + build number, e.g. "1.3.2 (10)".
@@ -209,6 +210,14 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => context.push(
                   Routes.getHelpFrom(HelpFrom.settings.name, home: current),
                 ),
+              ),
+              // 3.8: Home Assistant's own Zigbee to Zigbee2MQTT.
+              ListTile(
+                key: const Key('settings-zha-move'),
+                leading: const Icon(Icons.swap_horiz),
+                title: Text(l10n.haConnectZhaMove),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => showZhaMoveSheet(context, ref, ZhaMoveFrom.help),
               ),
               // 3.5.0: the help bubble on a home's dashboard; off after a
               // long-press › Hide, back on from here.

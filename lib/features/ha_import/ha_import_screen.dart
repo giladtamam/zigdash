@@ -137,6 +137,7 @@ class _HaImportScreenState extends ConsumerState<HaImportScreen> {
           devices: plan.matched,
           rooms: plan.rooms,
           zhaOnly: plan.zhaOnly,
+          fromZha: plan.fromZha,
         ),
       HaImportDone(:final result) => HaImportEvent(
         HaImportStep.imported,

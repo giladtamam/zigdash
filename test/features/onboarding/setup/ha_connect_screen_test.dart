@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +16,9 @@ import 'package:zigdash/features/onboarding/setup/ha_discovery.dart';
 import 'package:zigdash/features/onboarding/setup/ha_handover.dart';
 import 'package:zigdash/features/onboarding/setup/setup_screen.dart'
     show openSetupLink;
+import 'package:zigdash/features/settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
+import 'package:zigdash/features/zha_move/zha_move.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 
 void main() {
@@ -203,8 +205,8 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('3.7.1: devices in ZHA come first, Moving from ZHA opens the '
-      'guide and is counted', (tester) async {
+  testWidgets('3.7.1: devices in ZHA come first; 3.8: Moving from ZHA opens '
+      'the sheet, its guide, and I\'m moving is kept', (tester) async {
     final sent = <(String, Map<String, String>)>[];
     final opened = <Uri>[];
     final original = openSetupLink;
@@ -213,6 +215,8 @@ void main() {
       opened.add(url);
       return true;
     };
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
     await pump(
       tester,
       problem: HaConnectProblem.noMqtt,
@@ -221,6 +225,7 @@ void main() {
         analyticsProvider.overrideWithValue(
           Analytics(_PropsSink(sent), enabled: true),
         ),
+        sharedPreferencesProvider.overrideWithValue(prefs),
       ],
     );
     await tryToken(tester);
@@ -229,10 +234,18 @@ void main() {
     expect(find.textContaining('Settings › Apps'), findsNothing);
     expect(find.byKey(const Key('ha-no-apps-guide')), findsNothing);
     await tester.tap(find.byKey(const Key('ha-zha-move')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('zha-move-sheet')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('zha-move-guide')));
     await tester.pump();
-    expect(opened, [zhaGuideUrl]);
-    expect(sent.where((e) => e.$2['step'] == 'zha_move').map((e) => e.$2), [
-      {'step': 'zha_move', 'choice': 'no_mqtt'},
+    expect(opened, [Uri.parse('https://zigdash.app/zha/')]);
+    await tester.tap(find.byKey(const Key('zha-move-moving')));
+    await tester.pumpAndSettle();
+    expect(prefs.getInt(zhaMovingAtKey), isNotNull);
+    expect(sent.where((e) => e.$1 == 'zha_move').map((e) => e.$2), [
+      {'step': 'opened', 'from': 'no_mqtt'},
+      {'step': 'guide', 'from': 'no_mqtt'},
+      {'step': 'moving', 'from': 'no_mqtt'},
     ]);
   });
 

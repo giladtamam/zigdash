@@ -232,4 +232,118 @@ void main() {
     expect(registry.areas, isEmpty);
     expect(planImport(registry, _z2mDevices).dashboards, isEmpty);
   });
+
+  group('3.8: names and rooms from the old ZHA entries', () {
+    Map<String, Object?> zha(
+      String id,
+      String ieee, {
+      String? byUser,
+      String? area,
+      String? via = 'coord',
+    }) => {
+      ..._dev(id, ieee, byUser: byUser, area: area, domain: 'zha'),
+      'name': 'TS0601',
+      'via_device_id': via,
+      'disabled_by': 'config_entry',
+    };
+
+    final registry = HaRegistry.fromLists(
+      devices: [
+        // ZHA's coordinator: no parent device; never a tile.
+        zha('coord', '00:be:44:ff:fe:70:c4:27', byUser: 'Stick', via: null),
+        zha(
+          'z-living',
+          'a4:c1:38:36:27:6d:f6:6f',
+          byUser: 'Sofa motion',
+          area: 'living_room',
+        ),
+        zha(
+          'z-kitchen',
+          'a4:c1:38:28:d7:b8:e8:a1',
+          byUser: 'Old kitchen',
+          area: 'bedroom',
+        ),
+        zha('z-bedroom', 'a4:c1:38:63:52:1b:cd:41'),
+        // The same kitchen sensor, now in Zigbee2MQTT, named and placed.
+        _dev(
+          'kitchen',
+          'zigbee2mqtt_0xa4c13828d7b8e8a1',
+          byUser: 'Kitchen motion',
+          area: 'kitchen',
+        ),
+        // The living-room sensor in Zigbee2MQTT, not yet named or placed.
+        _dev(
+          'living',
+          'zigbee2mqtt_0xa4c13836276df66f',
+          name: '0xa4c13836276df66f',
+        ),
+      ],
+      areas: [
+        {'area_id': 'living_room', 'name': 'Living Room'},
+        {'area_id': 'kitchen', 'name': 'Kitchen'},
+        {'area_id': 'bedroom', 'name': 'Bedroom'},
+      ],
+    );
+
+    test('ZHA addresses become Zigbee2MQTT ones; the coordinator has none', () {
+      final ieee = {for (final d in registry.devices) d.id: d.zhaIeee};
+      expect(ieee['z-living'], '0xa4c13836276df66f');
+      expect(ieee['coord'], isNull);
+      expect(ieee['kitchen'], isNull);
+    });
+
+    test('an unnamed Zigbee2MQTT entry takes the ZHA name and room; a named '
+        'one keeps its own', () {
+      final plan = planImport(registry, [
+        ..._z2mDevices,
+        _z2m('0x00be44fffe70c427'),
+      ]);
+      final rooms = {
+        for (final d in plan.dashboards)
+          for (final r in d.rooms) r.name: [for (final x in r.devices) x.name],
+      };
+      expect(rooms['Living Room'], ['Sofa motion']);
+      expect(rooms['Kitchen'], ['Kitchen motion']);
+      // No MQTT entry: ZHA's alone; nothing to give, so the device's own.
+      expect(rooms[null], ['Motion sensor cd41']);
+      expect(plan.matched, 3, reason: 'the stick is never a device');
+      expect(plan.fromZha, 1);
+      expect(plan.zhaOnly, isFalse);
+    });
+
+    test('no MQTT entries at all (no MQTT integration): ZHA alone', () {
+      final zhaOnly = HaRegistry.fromLists(
+        devices: [
+          for (final d in registry.devices.where((d) => d.isZha))
+            zha(
+              d.id,
+              d.identifiers.single.$2,
+              byUser: d.nameByUser,
+              area: d.areaId,
+              via: d.viaId,
+            ),
+        ],
+        areas: [
+          {'area_id': 'living_room', 'name': 'Living Room'},
+          {'area_id': 'bedroom', 'name': 'Bedroom'},
+        ],
+      );
+      final plan = planImport(zhaOnly, _z2mDevices);
+      expect(plan.matched, 3);
+      expect(plan.fromZha, 2);
+      final names = [
+        for (final d in plan.dashboards)
+          for (final r in d.rooms)
+            for (final x in r.devices) '${r.name}/${x.name}',
+      ];
+      expect(
+        names,
+        containsAll([
+          'Bedroom/Old kitchen',
+          'Living Room/Sofa motion',
+          'null/Motion sensor cd41',
+        ]),
+      );
+    });
+  });
 }

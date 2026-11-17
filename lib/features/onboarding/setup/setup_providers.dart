@@ -21,6 +21,7 @@ import '../../support/support_details.dart';
 import '../../support/support_log.dart';
 import '../first_run.dart';
 import '../../ha_import/ha_import_offer.dart';
+import '../../zha_move/zha_move.dart';
 import 'setup_analytics.dart';
 import 'setup_coordinator.dart';
 import 'setup_creator.dart';
@@ -97,8 +98,11 @@ final setupCoordinatorProvider = Provider.autoDispose<SetupCoordinator>((ref) {
     ),
     onCreated: (result) async {
       await ref.read(firstRunProvider).finish(result.connectionId);
-      // Home Assistant nearby: the new dashboard offers its names and rooms.
-      if (await coordinator.homeAssistantSeen()) {
+      // Home Assistant nearby, or a move from ZHA (3.8; Home Assistant may
+      // be out of the scan's sight, in Docker): the new dashboard offers
+      // its names and rooms.
+      if (zhaMoving(ref.read(sharedPreferencesProvider)) ||
+          await coordinator.homeAssistantSeen()) {
         await ref
             .read(haImportOfferProvider.notifier)
             .offer(result.connectionId);

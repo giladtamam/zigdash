@@ -26,6 +26,7 @@ import 'package:zigdash/features/onboarding/setup/setup_creator.dart';
 import 'package:zigdash/features/onboarding/setup/setup_providers.dart';
 import 'package:zigdash/features/onboarding/setup/setup_reminder.dart';
 import 'package:zigdash/features/onboarding/setup/setup_screen.dart';
+import 'package:zigdash/features/zha_move/zha_move.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 
@@ -1697,6 +1698,33 @@ void main() {
       expect(find.text('dashboards of demo1'), findsOneWidget);
       expect(coordinator.state, isA<SetupIdle>());
       expect(steps(), ['platform_chosen', 'demo']);
+    });
+
+    // 3.8: the ZHA answer offers Moving from ZHA too, and remembers the
+    // answer for the demo banner; I'm moving puts the new Zigbee2MQTT first.
+    testWidgets('3.8: ZHA answer › Moving from ZHA › I\'m moving leads setup', (
+      tester,
+    ) async {
+      await _pump(tester, extra: analytics);
+      expect(find.byKey(const Key('setup-zha-moving')), findsNothing);
+      await tester.tap(find.byKey(const Key('ask-ha')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ZHA, Home Assistant\'s own Zigbee'));
+      await tester.pumpAndSettle();
+      expect(_prefs.getBool(zhaAnsweredKey), isTrue);
+      await tester.tap(find.byKey(const Key('setup-zha-move')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('zha-move-sheet')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('zha-move-moving')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('setup-zha-moving')), findsOneWidget);
+      expect(
+        [
+          for (final (name, props) in sent)
+            if (name == 'zha_move') props['step'],
+        ],
+        ['opened', 'moving'],
+      );
     });
 
     // 3.2.7: SMLIGHT was 0 of 20; most were SLZB adapters, which don't
