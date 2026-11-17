@@ -28,7 +28,7 @@ class DemoBanner extends ConsumerWidget {
     }
     final l10n = context.l10n;
     final scheme = Theme.of(context).colorScheme;
-    return Material(
+    final banner = Material(
       color: scheme.secondaryContainer,
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 8, 4),
@@ -52,18 +52,35 @@ class DemoBanner extends ConsumerWidget {
               onPressed: () => context.push(Routes.setup),
               child: Text(l10n.demoBannerAction),
             ),
-            // 3.8: after a ZHA answer, the way from ZHA (zha-migration.md).
-            if (_answeredZha(ref))
-              IconButton(
-                key: const Key('demo-zha-move'),
-                tooltip: l10n.haConnectZhaMove,
-                onPressed: () =>
-                    showZhaMoveSheet(context, ref, ZhaMoveFrom.demo),
-                icon: Icon(Icons.swap_horiz, color: scheme.onSecondaryContainer),
-              ),
           ],
         ),
       ),
+    );
+    // 3.8: after a ZHA answer, the way from ZHA (zha-migration.md), on its
+    // own line: the row above is already full on a small phone.
+    if (!_answeredZha(ref)) return banner;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        banner,
+        Material(
+          color: scheme.secondaryContainer,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 4),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                key: const Key('demo-zha-move'),
+                onPressed: () =>
+                    showZhaMoveSheet(context, ref, ZhaMoveFrom.demo),
+                icon: const Icon(Icons.swap_horiz, size: 18),
+                label: Text(l10n.haConnectZhaMove),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
