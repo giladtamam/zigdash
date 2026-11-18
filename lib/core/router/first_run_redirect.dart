@@ -15,6 +15,8 @@ const _firstRunLocations = {
   Routes.setupNoHub,
   Routes.help,
   Routes.getHelp,
+  // ha-link.md: a connect link waits on the Welcome question.
+  Routes.haLink,
 };
 
 /// Router redirect for first run: one door, no carousel.

@@ -1865,6 +1865,39 @@ class AppLocalizationsRu extends AppLocalizations {
       'Там не было адреса. В приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху.';
 
   @override
+  String get haLinkNote =>
+      'Это адрес из вашей ссылки. Войдите, чтобы подключиться.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Это адрес из ссылки, которую вы открыли до установки ZigDash. Войдите, чтобы подключиться.';
+
+  @override
+  String get haLinkNothing =>
+      'В этой ссылке не было адреса Home Assistant. Создайте новую на zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Через компьютер';
+
+  @override
+  String get haComputerTitle => 'Через компьютер';
+
+  @override
+  String get haComputerBody =>
+      'На компьютере, где открыт Home Assistant, откройте эту страницу и вставьте туда адрес Home Assistant. Затем отсканируйте код камерой этого телефона.';
+
+  @override
+  String get haComputerCopy => 'Скопировать ссылку';
+
+  @override
+  String get setupLinkPending =>
+      'Ваша ссылка принесла адрес Home Assistant. Нажмите Home Assistant, чтобы его использовать.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'В вашей ссылке не было адреса Home Assistant. Создайте новую на zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и выберите ZigDash. Из браузера поделитесь страницей с ZigDash.';
 

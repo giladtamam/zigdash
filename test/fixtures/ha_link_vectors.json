@@ -1,0 +1,14 @@
+[
+  {"params": "ha=http%3A%2F%2F192.168.1.20%3A8123", "addresses": ["http://192.168.1.20:8123"], "src": "site"},
+  {"params": "ha=http%3A%2F%2F192.168.1.20%3A8123&src=ha_integration", "addresses": ["http://192.168.1.20:8123"], "src": "ha_integration"},
+  {"params": "ha=http%3A%2F%2Fhomeassistant.local%3A8123&ha=http%3A%2F%2F192.168.1.20%3A8123&ha=https%3A%2F%2Fabc.ui.nabu.casa&src=ha_integration", "addresses": ["http://homeassistant.local:8123", "http://192.168.1.20:8123", "https://abc.ui.nabu.casa"], "src": "ha_integration"},
+  {"params": "ha=http%3A%2F%2F192.168.1.20%3A8123&ha=http%3A%2F%2F192.168.1.20%3A8123", "addresses": ["http://192.168.1.20:8123"], "src": "site"},
+  {"params": "ha=http%3A%2F%2Fuser%3Apass%40192.168.1.20%3A8123%2Flovelace%3Ftoken%3Dabc", "addresses": ["http://192.168.1.20:8123"], "src": "site"},
+  {"params": "ha=192.168.1.20%3A8123&src=other", "addresses": ["192.168.1.20:8123"], "src": "site"},
+  {"params": "ha=javascript%3Aalert(1)", "addresses": [], "src": "site"},
+  {"params": "ha=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.abc", "addresses": [], "src": "site"},
+  {"params": "ha=", "addresses": [], "src": "site"},
+  {"params": "", "addresses": [], "src": "site"},
+  {"params": "src=ha_integration&token=abc", "addresses": [], "src": "ha_integration"},
+  {"params": "ha=%E0%A4%A", "addresses": [], "src": "site"}
+]

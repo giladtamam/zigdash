@@ -105,6 +105,8 @@ dependencies {
     "playImplementation"("com.android.billingclient:billing-ktx:8.0.0")
     // In-app updates (3.2.3), Play build only: Play offers a newer version inside ZigDash.
     "playImplementation"("com.google.android.play:app-update:2.1.0")
+    // A connect link opened before installing (ha-link.md), Play build only.
+    "playImplementation"("com.android.installreferrer:installreferrer:2.2")
 }
 
 kotlin {

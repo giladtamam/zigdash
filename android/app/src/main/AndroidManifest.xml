@@ -58,6 +58,16 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="zigdash" android:host="home" />
             </intent-filter>
+            <!-- A ZigDash connect link (docs/design/ha-link.md):
+                 https://zigdash.app/c#ha=… from zigdash.app/connect or the
+                 Home Assistant integration. Only /c; the rest of the site
+                 stays in the browser. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="zigdash.app" android:path="/c" />
+            </intent-filter>
         </activity>
         <!-- The shutter pop-up, opened by a shutter's tile or widget. -->
         <activity
