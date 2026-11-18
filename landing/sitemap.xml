@@ -90,4 +90,18 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/de/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/"/>
   </url>
+  <url>
+    <loc>https://zigdash.app/gate/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/he/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
 </urlset>

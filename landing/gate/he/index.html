@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>איך החלפתי את המנוי של פלגייט בממסר Zigbee ב-37 ₪ · ZigDash</title>
+<meta name="description" content="השער שלי נפתח דרך PalGate Spider-50 במנוי של 300 ₪ בשנה. החלפתי אותו בממסר Zigbee עם מגע יבש, בתשלום חד-פעמי של כ-37 ₪, ועכשיו אני פותח את השער מ-ZigDash, בבית ומכל מקום. רכיבים, חיווט וצימוד.">
+<link rel="canonical" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="איך החלפתי את המנוי של פלגייט בממסר Zigbee ב-37 ₪">
+<meta property="og:description" content="300 ₪ בשנה לפותחן שער, או 37 ₪ פעם אחת. רכיבים, חיווט וצימוד, עם אפליקציית ZigDash.">
+<meta property="og:url" content="https://zigdash.app/gate/he/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">התקנה</a>
+    <a href="../../hubs/">רכזות</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">עזרה</a>
+    <a href="https://t.me/zigdash_app">קהילה</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>איך החלפתי את המנוי של פלגייט בממסר Zigbee ב-37 ₪</h1>
+<p class="byline">גלעד תמם, המפתח של ZigDash · 18 בנובמבר 2026 · <a href="../" hreflang="en" lang="en">English</a></p>
+<p class="lead">שער החניה שלי נפתח מהטלפון דרך PalGate Spider-50: קופסת 4G עם כרטיס SIM משלה, ומנוי של 300 ₪ בשנה. הוצאתי אותה, ובמקומה שמתי ממסר Zigbee שעלה 10 דולר (כ-37 ₪), פעם אחת. היום אני פותח את השער בלחיצה על אריח ב-ZigDash, בבית ומכל מקום.</p>
+
+<p class="cost"><strong>300 ₪ כל שנה</strong> על המנוי, או <strong>כ-37 ₪ פעם אחת</strong> על הממסר. הממסר החזיר את עצמו בערך תוך שישה שבועות.</p>
+
+<div class="toc"><strong>בעמוד הזה</strong>
+<ul>
+  <li><a href="#how">איך טלפון פותח שער</a></li>
+  <li><a href="#need">מה צריך</a></li>
+  <li><a href="#pair">1. צימוד הממסר ב-ZigDash</a></li>
+  <li><a href="#spider">2. הוצאת הספיידר</a></li>
+  <li><a href="#wire">3. חיווט הממסר</a></li>
+  <li><a href="#tile">4. אריח "שער" ב-ZigDash</a></li>
+  <li><a href="#trade">על מה מוותרים</a></li>
+</ul></div>
+
+<h2 id="how">איך טלפון פותח שער</h2>
+<p>לבקר של השער יש כניסת <strong>פתיחה</strong> (START): שני מגעים שכשמחברים אותם זה לזה, השער נפתח, בדיוק כמו הכפתור בשלט. הספיידר הוא ממסר עם כרטיס SIM: כשאפליקציית פלגייט או שיחת טלפון מבקשות, הוא מחבר את שני המגעים לרגע.</p>
+<p>ממסר Zigbee עושה בדיוק את אותה עבודה. ההבדל היחיד הוא מי אומר לו להיסגר: רכזת ה-Zigbee שלכם בבית, במקום שירות סלולרי שמשלמים עליו כל שנה.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="קופסת PalGate Spider-50 ביד, ליד הבקר של השער" loading="lazy" width="675" height="900"><figcaption>ה-PalGate Spider-50 שיצא.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="כרטיס הבקר של השער עם פס המהדקים והחוטים" loading="lazy" width="675" height="900"><figcaption>הבקר של השער. שניים מהחוטים האלה הם כניסת הפתיחה.</figcaption></figure>
+</div>
+
+<h2 id="need">מה צריך</h2>
+<ul>
+  <li><strong>ממסר Zigbee עם מגע יבש.</strong> שלי הוא "1 Channel Zigbee/WiFi Tuya Smart Relay, Dry Contact NO/NC/COM" מ-AliExpress, בערך 10 דולר. הוא נמכר בגרסת WiFi ובגרסת Zigbee: בחרו <strong>Zigbee</strong> (על הכרטיס יש מודול ZT3L). הוא נמכר גם למתחי הזנה שונים; אני לקחתי את גרסת <strong>AC 85–250V</strong>.</li>
+  <li><strong>מגע יבש זה החלק החשוב.</strong> מגע יבש הוא מתג פשוט בלי מתח משלו: הוא רק מחבר את COM ל-NO, בדיוק כמו הכפתור בשלט. ממסר שמוציא מתח על המהדקים שלו (כמו אלה שמיועדים להדלקת מנורה) עלול להזיק לכניסה של הבקר. חפשו "dry contact" ומהדקים שמסומנים <strong>COM</strong>, <strong>NO</strong> ו-<strong>NC</strong>.</li>
+  <li><strong>רכזת Zigbee2MQTT בבית</strong> שמגיעה עד השער. לי כבר הייתה אחת (SMLIGHT SMHUB) לשאר הבית. אם אין לכם, ראו <a href="../../hubs/">רכזות</a>.</li>
+  <li><strong>ZigDash</strong> בטלפון (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate-he">Google Play</a>). פתיחת השער בבית בחינם. פתיחה מכל מקום משתמשת בשליטה מרחוק של ZigDash Pro: רכישה חד-פעמית, בלי מנוי.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="כרטיס ממסר ה-Zigbee: מהדקי ההזנה משמאל, מודול ה-Zigbee ZT3L באמצע, הממסר ומהדקי COM/NO/NC מימין" loading="lazy" width="675" height="900"><figcaption>ממסר ה-Zigbee מחוץ לקופסה: הזנה משמאל, מודול ה-Zigbee ZT3L, כפתור הצימוד, ומהדקי המגע היבש של הממסר מימין.</figcaption></figure>
+
+<h2 id="pair">1. צימוד הממסר ב-ZigDash</h2>
+<p>קודם מצמדים אותו בבית, על השולחן, לפני שהוא נכנס לקופסת השער.</p>
+<ol>
+  <li>חברו את הממסר לחשמל.</li>
+  <li>ב-ZigDash, פתחו את <strong>מכשירים</strong> והקישו על <strong>התחלת שיוך</strong>.</li>
+  <li>לחצו לחיצה ארוכה על <strong>הכפתור</strong> של הממסר עד שהנורית מהבהבת. כך הוא נכנס למצב צימוד.</li>
+  <li>ZigDash מציגה <strong>מוכן</strong> עם המכשיר החדש. שנו את השם שלו ל<strong>שער</strong>.</li>
+</ol>
+<p>הדליקו וכבו אותו כמה פעמים ותקשיבו לנקישה של הממסר.</p>
+
+<h2 id="spider">2. הוצאת הספיידר</h2>
+<div class="tip"><strong>קודם כול, נתקו את החשמל של השער בלוח החשמל.</strong> בקופסת השער יש 230V. אם אתם לא מרגישים בנוח לעבוד עם מתח רשת, תנו לחשמלאי לעשות את שלבים 2 ו-3. אל תגעו בחיישני הבטיחות של השער (פוטוסל) או במפסקי הגבול.</div>
+<ol>
+  <li>מצאו את שני החוטים שיוצאים מיציאת הממסר של הספיידר (<strong>COM1</strong> ו-<strong>N.O.1</strong>) אל כניסת הפתיחה של הבקר. סמנו אותם.</li>
+  <li>שחררו את פס המהדקים של הספיידר, ונתקו את ההזנה שלו.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="פס המהדקים הירוק של הספיידר עם החוטים החום, הכחול והשחור" loading="lazy" width="675" height="900"><figcaption>פס המהדקים של הספיידר, מנותק. הזוג החום-כחול הולך לכניסת הפתיחה של השער.</figcaption></figure>
+
+<h2 id="wire">3. חיווט הממסר</h2>
+<ol>
+  <li><strong>יציאה:</strong> שני החוטים של כניסת הפתיחה נכנסים ל-<strong>COM</strong> ול-<strong>NO</strong> של הממסר. את NC משאירים ריק. במגע יבש הסדר לא משנה.</li>
+  <li><strong>הזנה:</strong> גרסת AC 85–250V מתחברת ישר לחשמל, כמו מטען של טלפון: שני חוטים, פאזה ואפס, מאספקת ה-230V של השער.</li>
+  <li>סגרו את הקופסה של הממסר, שימו אותו במקום יבש, והחזירו את החשמל בלוח.</li>
+</ol>
+<div class="tip"><strong>קליטה:</strong> השער הוא בדרך כלל הנקודה הכי רחוקה מהרכזת. ב-ZigDash, פתחו את עמוד המכשיר של הממסר ובדקו את הקליטה. אם היא חלשה, מכשיר Zigbee שמחובר לחשמל בין הבית לשער (למשל שקע חכם) מרחיב את הרשת.</div>
+
+<h2 id="tile">4. אריח "שער" ב-ZigDash</h2>
+<ol>
+  <li>בלוח הבקרה, הקישו על <strong>הוספה מהתקן</strong> ובחרו <strong>שער</strong>.</li>
+  <li>הקישו על האריח: הממסר נסגר והשער מתחיל לזוז, כמו עם השלט.</li>
+  <li>כניסת הפתיחה של השער מצפה ללחיצה על כפתור, ולכן מגע שנשאר סגור עלול להיחשב כלחיצה ארוכה. בדקו איך השער שלכם מגיב, וכבו את האריח שוב אם צריך.</li>
+  <li><strong>מכל מקום:</strong> עם ZigDash Pro, הפעילו שליטה מרחוק, ואותו אריח עובד גם מחוץ לבית, בלי לפתוח פורט בנתב ובלי תשלום חודשי. זה עובד עם עד חמישה טלפונים; <strong>שיתוף עם טלפון נוסף</strong> מוסיף את הטלפונים של המשפחה בקוד QR אחד.</li>
+</ol>
+
+<h2 id="trade">על מה מוותרים</h2>
+<p>כדי להיות הוגן כלפי הספיידר, הוא עושה דברים שממסר Zigbee לא עושה:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>ממסר Zigbee + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>עלות</th><td>300 ₪ בשנה (המסלול שלי)</td><td>כ-37 ₪ פעם אחת; שליטה מרחוק היא רכישה חד-פעמית של ZigDash Pro</td></tr>
+    <tr><th>חיבור</th><td>כרטיס SIM של 4G משלו: עובד גם כשאין אינטרנט בבית</td><td>רכזת ה-Zigbee שלכם בבית; מחוץ לבית צריך את האינטרנט של הבית</td></tr>
+    <tr><th>מי יכול לפתוח</th><td>משתמשים ואורחים שמנוהלים באפליקציית פלגייט, ופתיחה בשיחת טלפון</td><td>הטלפונים שאיתם שיתפתם את הבית (עד חמישה מרחוק)</td></tr>
+    <tr><th>ענן</th><td>השירות של פלגייט</td><td>אין בבית; מרחוק עובר דרך הממסר של ZigDash, בהצפנה מקצה לקצה</td></tr>
+  </tbody>
+</table>
+</div>
+<p>לבית פרטי שבו המשפחה פותחת שער אחד, הממסר עושה כל מה שהייתי צריך. לבניין עם הרבה דיירים ואורחים, שירות מנוהל כמו פלגייט עדיין הגיוני.</p>
+
+<div class="tip">PalGate הוא סימן מסחרי של בעליו. ZigDash לא קשורה ל-PalGate או ל-PAL Electronics Systems. המחירים הם מה ששילמתי בנובמבר 2026.</div>
+
+<div class="tip"><strong>עשיתם את זה גם?</strong> ספרו לי איך הלך, או מה היה שונה בשער שלכם: <a href="mailto:support@zigdash.app">support@zigdash.app</a> או <a href="https://t.me/zigdash_app">הקהילה</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate-he" data-goatcounter-click="play-gate-he">הורידו את ZigDash</a><a class="btn" href="../../hubs/">בחירת רכזת</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">קוד מקור</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">מדיניות פרטיות</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../" hreflang="en" lang="en">English</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
