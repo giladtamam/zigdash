@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starting Home Assistant with Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Starting Home Assistant with Zigbee: which hardware to get, why Zigbee2MQTT instead of ZHA if you want ZigDash, and the steps from an empty Home Assistant to your devices on your phone.">
+<link rel="canonical" href="https://zigdash.app/start-home-assistant-zigbee/">
+<link rel="icon" href="../assets/icon.png">
+<meta property="og:title" content="Starting Home Assistant with Zigbee2MQTT">
+<meta property="og:description" content="Starting Home Assistant with Zigbee: which hardware to get, why Zigbee2MQTT instead of ZHA if you want ZigDash, and the steps from an empty Home Assistant to your devices on your phone.">
+<meta property="og:url" content="https://zigdash.app/start-home-assistant-zigbee/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../"><img src="../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../setup/">Setup</a>
+    <a href="../hubs/">Hubs</a>
+    <a href="../home-assistant/">Home Assistant</a>
+    <a href="../help/">Help</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Starting Home Assistant with Zigbee</h1>
+<p class="lead">You want Home Assistant, Zigbee lights and sensors, and your home on your phone. This page covers the hardware, and the steps from an empty Home Assistant to your devices in ZigDash.</p>
+
+<div class="toc"><strong>On this page</strong>
+<ul>
+  <li><a href="#choice">ZHA or Zigbee2MQTT?</a></li>
+  <li><a href="#hardware">What to get</a></li>
+  <li><a href="#steps">From an empty Home Assistant to ZigDash</a></li>
+  <li><a href="#without">Without Home Assistant</a></li>
+</ul></div>
+
+<h2 id="choice">ZHA or Zigbee2MQTT?</h2>
+<p>Home Assistant can run Zigbee in two ways, and you choose once, when you plug in the Zigbee adapter. Changing later means pairing every device again.</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>ZHA</th><th>Zigbee2MQTT</th></tr></thead>
+  <tbody>
+    <tr><th>What it is</th><td>Home Assistant's own Zigbee, built in</td><td>A separate app, connected through MQTT</td></tr>
+    <tr><th>Setting up</th><td>A few taps</td><td>Two apps to install: Mosquitto and Zigbee2MQTT</td></tr>
+    <tr><th>Devices</th><td>Many</td><td>A very long supported-device list, and more settings per device</td></tr>
+    <tr><th>Without Home Assistant</th><td>No</td><td>Yes: your Zigbee keeps its own web page</td></tr>
+    <tr><th>ZigDash</th><td>Doesn't work</td><td>Works</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Both are good. If you want ZigDash on your phone or a wall tablet, choose Zigbee2MQTT. Already on ZHA? See <a href="../zha/">Moving from ZHA</a>.</p>
+
+<h2 id="hardware">What to get</h2>
+<ul>
+  <li><strong>Something to run Home Assistant:</strong> a Home Assistant Green (ready to plug in), or a Raspberry Pi 4 or 5, or a small PC you install Home Assistant OS on.</li>
+  <li><strong>A Zigbee adapter</strong> (also called a coordinator):
+    <ul>
+      <li>Home Assistant Connect ZBT-2 or ZBT-1: Home Assistant's own USB adapters.</li>
+      <li>Sonoff ZBDongle-E or ZBDongle-P: cheap and widely used USB adapters.</li>
+      <li>SMLIGHT <a href="../hubs/#slzb-06">SLZB-06</a>: a network adapter that sits on your router, so you can place it in the middle of the house.</li>
+    </ul>
+  The settings for each are on <a href="../zha/#adapter">this list</a>.</li>
+  <li><strong>For a USB adapter, a USB extension cable</strong> of a metre or so. USB 3 ports, SSDs and Wi-Fi disturb Zigbee when the adapter is plugged in right next to them.</li>
+</ul>
+
+<h2 id="steps">From an empty Home Assistant to ZigDash</h2>
+<p>These steps are for Home Assistant OS, where Settings shows <strong>Apps</strong> (Add-ons on older versions). Home Assistant Green and the Pi image are Home Assistant OS. In Docker, see <a href="../zha/#docker">Home Assistant in Docker</a>.</p>
+<ol>
+  <li>Set up Home Assistant and make your user.</li>
+  <li>Plug in the Zigbee adapter on its extension cable. Home Assistant may find it and offer to set it up for ZHA or Thread. Choose <strong>Ignore</strong>: the adapter is for Zigbee2MQTT.</li>
+  <li>In Settings › Apps, install and start <strong>Mosquitto broker</strong>. Home Assistant then offers the MQTT integration under Settings › Devices &amp; services: accept it.</li>
+  <li>Zigbee2MQTT isn't in the default app store. In the app store, open ⋮ › Repositories and add <code>https://github.com/zigbee2mqtt/hassio-zigbee2mqtt</code>, then install <strong>Zigbee2MQTT</strong>.</li>
+  <li>In its Configuration tab, set the serial port and the adapter type from <a href="../zha/#adapter">the adapter list</a>, then start it and open its web page.</li>
+  <li>Pair your devices: in Zigbee2MQTT's web page, turn on <strong>Permit join</strong>, then put each device in pairing mode (usually a long press, or switching a bulb on and off a few times). Mains-powered devices first, then battery ones.</li>
+  <li>On your phone, install ZigDash, tap <strong>Find my setup</strong>, choose <strong>Home Assistant</strong>, and sign in with Home Assistant. The dashboard builds itself from your devices. More detail: <a href="../home-assistant/">ZigDash with Home Assistant</a>.</li>
+</ol>
+<div class="tip">ZigDash's sign-in needs a Home Assistant <strong>administrator</strong>, because Home Assistant only lets administrators use its MQTT. The user you made in step 1 is one.</div>
+
+<div class="buttons" style="margin-top:20px"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dstartha" data-goatcounter-click="play-startha">Get ZigDash on Google Play</a></div>
+
+<h2 id="without">Without Home Assistant</h2>
+<p>If you only want Zigbee devices on your phone, you don't need Home Assistant: an SMLIGHT SMHUB runs Zigbee2MQTT itself. See <a href="../hubs/">Hubs we recommend</a>. You can add Home Assistant later; it connects to the same Zigbee2MQTT.</p>
+
+<div class="next"><a class="btn" href="../home-assistant/">ZigDash with Home Assistant</a><a class="btn" href="../help/">Something not working?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

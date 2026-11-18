@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A Zigbee2MQTT wall tablet with ZigDash</title>
-<meta name="description" content="Turn an old Android tablet into a Zigbee2MQTT wall display: a dashboard that stays on, a clock when no one touches it, a kiosk lock, and alarms that take over the screen.">
+<title>Home Assistant and Zigbee2MQTT wall tablet · ZigDash</title>
+<meta name="description" content="Turn an old Android tablet into a wall display for Zigbee2MQTT, with or without Home Assistant: a dashboard that stays on, a clock when no one touches it, a kiosk lock, and alarms that take over the screen.">
 <link rel="canonical" href="https://zigdash.app/wall-tablet/">
 <link rel="icon" href="../assets/icon.png">
-<meta property="og:title" content="A Zigbee2MQTT wall tablet with ZigDash">
-<meta property="og:description" content="Turn an old Android tablet into a Zigbee2MQTT wall display: a dashboard that stays on, a clock when no one touches it, a kiosk lock, and alarms that take over the screen.">
+<meta property="og:title" content="Home Assistant and Zigbee2MQTT wall tablet · ZigDash">
+<meta property="og:description" content="Turn an old Android tablet into a wall display for Zigbee2MQTT, with or without Home Assistant: a dashboard that stays on, a clock when no one touches it, a kiosk lock, and alarms that take over the screen.">
 <meta property="og:url" content="https://zigdash.app/wall-tablet/">
 <meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
 <link rel="stylesheet" href="../assets/site.css">
@@ -26,14 +26,21 @@
 </header>
 <main>
 <article class="doc">
-<h1>A Zigbee2MQTT wall tablet</h1>
+<h1>A wall tablet for Zigbee2MQTT and Home Assistant</h1>
 <p class="lead">An Android tablet on the wall, by the door or in the kitchen, showing your lights, shutters and sensors. ZigDash has a wall display mode for exactly that. Most of it is free.</p>
 
 <h2>What you need</h2>
 <ul>
   <li>An Android tablet. An older one is fine: ZigDash is light.</li>
   <li>A way to keep it charged: a long USB cable along the wall, or a slim angled cable behind a mount.</li>
-  <li>ZigDash connected to your Zigbee2MQTT, the same way as on your phone. See <a href="../zigbee2mqtt-android/">Zigbee2MQTT on Android</a>.</li>
+  <li>ZigDash connected to your Zigbee2MQTT, the same way as on your phone. See <a href="../zigbee2mqtt-android/">Zigbee2MQTT on Android</a>, or <a href="../home-assistant/">ZigDash with Home Assistant</a>.</li>
+</ul>
+
+<h2 id="home-assistant">Using Home Assistant?</h2>
+<p>If Zigbee2MQTT runs as an app in your Home Assistant, the tablet signs in with Home Assistant once and shows your Zigbee devices with their Home Assistant names and rooms. Your automations stay in Home Assistant.</p>
+<ul>
+  <li><strong>What it shows:</strong> the devices in Zigbee2MQTT. ZigDash builds the dashboard from them, so there is no YAML or card setup.</li>
+  <li><strong>What it doesn't:</strong> devices in ZHA, cameras, or anything that isn't Zigbee. If you want those on the wall, a Home Assistant dashboard in a kiosk browser is the better tool.</li>
 </ul>
 
 <h2>Set it up</h2>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Moving from ZHA · ZigDash</title>
-<meta name="description" content="How to move a Home Assistant ZHA Zigbee network to Zigbee2MQTT: a second adapter room by room, or the same adapter all at once, with the settings for each adapter and the way back.">
+<title>ZHA to Zigbee2MQTT: how to move, with or without re-pairing</title>
+<meta name="description" content="How to move a Home Assistant ZHA Zigbee network to Zigbee2MQTT, and whether you can skip pairing the devices again: a second adapter room by room, or the same adapter at once, with settings per adapter and the way back.">
 <link rel="canonical" href="https://zigdash.app/zha/">
 <link rel="alternate" hreflang="en" href="https://zigdash.app/zha/">
 <link rel="alternate" hreflang="cs" href="https://zigdash.app/zha/cs/">
@@ -21,8 +21,8 @@
 <link rel="alternate" hreflang="sv" href="https://zigdash.app/zha/sv/">
 <link rel="alternate" hreflang="x-default" href="https://zigdash.app/zha/">
 <link rel="icon" href="../assets/icon.png">
-<meta property="og:title" content="Moving from ZHA · ZigDash">
-<meta property="og:description" content="How to move a Home Assistant ZHA Zigbee network to Zigbee2MQTT: a second adapter room by room, or the same adapter all at once, with the settings for each adapter and the way back.">
+<meta property="og:title" content="ZHA to Zigbee2MQTT: how to move, with or without re-pairing">
+<meta property="og:description" content="How to move a Home Assistant ZHA Zigbee network to Zigbee2MQTT, and whether you can skip pairing the devices again: a second adapter room by room, or the same adapter at once, with settings per adapter and the way back.">
 <meta property="og:url" content="https://zigdash.app/zha/">
 <meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
 <link rel="stylesheet" href="../assets/site.css">
@@ -42,6 +42,8 @@
 <article class="doc">
 <h1>Moving from ZHA to Zigbee2MQTT</h1>
 <p class="lead">ZHA is Home Assistant's own Zigbee. ZigDash works with Zigbee2MQTT, so it can't show devices that are in ZHA. Moving means pairing your devices again with Zigbee2MQTT. Home Assistant keeps using them afterwards, through its MQTT integration.</p>
+
+<div class="tip"><strong>Can I move without pairing every device again?</strong> Not in a supported way. Zigbee2MQTT and ZHA keep their own records of each device, and there is no official tool that carries them across. The ways below pair each device again; with a second adapter you can do it room by room while everything keeps working. For big networks there is an unsupported community method, with real risks: see <a href="#keep">Keeping the network without pairing again</a>.</div>
 
 <div class="toc"><strong>On this page</strong>
 <ul>
