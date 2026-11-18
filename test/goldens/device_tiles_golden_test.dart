@@ -321,13 +321,16 @@ final _panels = [
 ];
 
 Object? _valueFor(PanelStreamKey key) {
-  if (key.topic == 'zigbee2mqtt/washer')
+  if (key.topic == 'zigbee2mqtt/washer') {
     return key.jsonPath == 'power' ? 1200 : null;
-  if (key.topic == 'zigbee2mqtt/climate' && key.jsonPath == 'humidity')
+  }
+  if (key.topic == 'zigbee2mqtt/climate' && key.jsonPath == 'humidity') {
     return 48;
+  }
   for (final (id, _, _, _, _, state) in _tiles) {
-    if (key.topic == 'zigbee2mqtt/$id')
+    if (key.topic == 'zigbee2mqtt/$id') {
       return state == null ? null : json.encode(state);
+    }
   }
   return null;
 }

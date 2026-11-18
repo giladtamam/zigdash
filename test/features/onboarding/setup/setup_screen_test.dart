@@ -819,22 +819,6 @@ void main() {
 
   // 2.9.6: the empty result with no hub found offers three ways out.
   group('the empty result\'s choices', () {
-    late List<(String, Map<String, String>)> sent;
-    late List<Override> analytics;
-    setUp(() {
-      sent = [];
-      analytics = [
-        analyticsProvider.overrideWithValue(
-          Analytics(_RecordingSink(sent), enabled: true),
-        ),
-      ];
-    });
-    List<String?> choices() => [
-      for (final (name, props) in sent)
-        if (name == 'setup_step' && props['step'] == 'empty_choice')
-          props['choice'],
-    ];
-
     testWidgets('a hub found: no choices', (tester) async {
       await _pump(
         tester,
@@ -2019,15 +2003,13 @@ void main() {
 }
 
 class _FakeReminder implements SetupReminder {
-  _FakeReminder({this.allowed = true});
-  final bool allowed;
   int scheduled = 0;
   int cancelled = 0;
 
   @override
   Future<bool> schedule(Locale locale, {ReminderKind kind = ReminderKind.setup}) async {
     scheduled++;
-    return allowed;
+    return true;
   }
 
   @override

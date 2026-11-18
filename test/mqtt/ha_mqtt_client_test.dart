@@ -13,8 +13,6 @@ import 'package:zigdash/mqtt/ha_token.dart';
 /// What the fake Home Assistant does.
 class _FakeHa {
   _FakeHa({
-    this.accessToken = 'access',
-    this.refreshToken = 'refresh',
     this.admin = true,
     this.mqtt = true,
     this.refreshWorks = true,
@@ -33,8 +31,8 @@ class _FakeHa {
   /// False: the two reads never answer.
   final bool answerFacts;
 
-  final String accessToken;
-  final String refreshToken;
+  final String accessToken = 'access';
+  final String refreshToken = 'refresh';
   final bool admin;
   final bool mqtt;
   final bool refreshWorks;
@@ -54,8 +52,9 @@ class _FakeHa {
     server.listen((request) async {
       if (request.uri.path == '/auth/token') {
         refreshCalls++;
-        if (refreshDelay > Duration.zero)
+        if (refreshDelay > Duration.zero) {
           await Future<void>.delayed(refreshDelay);
+        }
         final body = Uri.splitQueryString(await utf8.decodeStream(request));
         final ok =
             refreshWorks &&
