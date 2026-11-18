@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open in ZigDash</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="A ZigDash connect link: opens ZigDash at the Home Assistant sign-in with the address filled in.">
+<link rel="icon" href="/assets/icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  .handoff { max-width: 34rem; }
+  .handoff .btn { display: block; text-align: center; margin: 0.6rem 0; }
+  .qr { display: inline-block; background: #fff; padding: 12px; border-radius: 8px; }
+  .qr svg { display: block; width: 220px; height: 220px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/"><img src="/assets/icon.png" alt=""> ZigDash</a>
+</header>
+<main>
+<article class="doc handoff">
+<h1>Connect ZigDash to Home Assistant</h1>
+
+<!-- The address is read here, in your browser, from the part of the link
+     after "#". It is never sent to zigdash.app or anywhere else. -->
+
+<section id="android" hidden>
+  <p class="lead">This link holds your Home Assistant's address. ZigDash opens at its Home Assistant sign-in with the address filled in.</p>
+  <a class="btn primary" id="open" href="#" data-goatcounter-click="c-open">Open in ZigDash</a>
+  <a class="btn" id="play" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash" data-goatcounter-click="c-play">Get ZigDash on Google Play</a>
+  <p>No ZigDash yet? Install it with the button above: when it starts the first time, it already has this address.</p>
+</section>
+
+<section id="computer" hidden>
+  <p class="lead">Open this on your Android phone: scan the code with its camera.</p>
+  <div class="qr" id="qr"></div>
+  <p>ZigDash opens at its Home Assistant sign-in with the address filled in, or offers to install it first.</p>
+</section>
+
+<section id="iphone" hidden>
+  <p class="lead">ZigDash for iPhone is coming. For now, ZigDash runs on Android phones and tablets.</p>
+</section>
+
+<section id="empty" hidden>
+  <p class="lead">This link holds no Home Assistant address.</p>
+  <p><a class="btn primary" href="/connect/">Make a new link</a></p>
+</section>
+
+<div class="tip">ZigDash works with <strong>Zigbee2MQTT</strong>. Using ZHA, Home Assistant's own Zigbee? See <a href="/zha/">Moving from ZHA</a>.</div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script src="/assets/halink.js"></script>
+<script src="/assets/qrcode.min.js"></script>
+<script>
+(function () {
+  var hash = location.hash.replace(/^#/, '');
+  var link = ZigDashLink.fromParams(hash.indexOf('ha=') >= 0 ? hash : location.search.replace(/^\?/, ''));
+  var ua = navigator.userAgent;
+  var show = function (id) { document.getElementById(id).hidden = false; };
+  if (!link.addresses.length) return show('empty');
+  if (/iPhone|iPad|iPod/.test(ua)) return show('iphone');
+  if (/Android/.test(ua)) {
+    var params = ZigDashLink.toParams(link.addresses, link.src);
+    // Google Play hands this to ZigDash once, on its first start: the home
+    // address only, never an outside one.
+    var play = 'https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&referrer=' +
+      encodeURIComponent(ZigDashLink.toParams([link.addresses[0]], link.src));
+    document.getElementById('play').href = play;
+    // For phones where the link didn't open ZigDash by itself. The "#" in an
+    // intent:// link belongs to Android, so the address rides in the query;
+    // Chrome hands it to the app without fetching it.
+    document.getElementById('open').href = 'intent://zigdash.app/c?' + params +
+      '#Intent;scheme=https;package=com.giladtamam.zigdash;S.browser_fallback_url=' +
+      encodeURIComponent(play) + ';end';
+    return show('android');
+  }
+  var qr = qrcode(0, 'M');
+  qr.addData(location.href);
+  qr.make();
+  document.getElementById('qr').innerHTML = qr.createSvgTag(4, 0);
+  show('computer');
+})();
+</script>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
