@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect ZigDash to Home Assistant · ZigDash</title>
+<meta name="description" content="Can't type Home Assistant's address on your phone? Paste it here on a computer and scan the code: ZigDash opens with the address filled in.">
+<link rel="canonical" href="https://zigdash.app/connect/">
+<link rel="icon" href="../assets/icon.png">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  .maker { display: grid; gap: 0.6rem; max-width: 34rem; }
+  .maker input { font: inherit; padding: 0.6rem 0.7rem; border: 1px solid currentColor; border-radius: 6px; width: 100%; box-sizing: border-box; }
+  .maker .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .maker .row .btn { flex: 1 1 10rem; text-align: center; }
+  .error { color: #b3261e; }
+  .qr { display: inline-block; background: #fff; padding: 12px; border-radius: 8px; }
+  .qr svg { display: block; width: 240px; height: 240px; }
+  .made code { overflow-wrap: anywhere; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="../"><img src="../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../setup/">Setup</a>
+    <a href="../hubs/">Hubs</a>
+    <a href="../home-assistant/">Home Assistant</a>
+    <a href="../help/">Help</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Connect ZigDash to Home Assistant</h1>
+<p class="lead">Your phone can't find Home Assistant, or its address is hard to type? Make a code here on a computer and scan it with your Android phone's camera. ZigDash opens at its Home Assistant sign-in with the address filled in.</p>
+
+<ol class="steps">
+  <li>In another tab, open Home Assistant the way you usually do.</li>
+  <li>Copy the address from that tab's address bar, for example <code>http://192.168.1.20:8123</code>.</li>
+  <li>Paste it below and scan the code with your phone.</li>
+</ol>
+
+<form class="maker" id="maker" novalidate>
+  <label for="address"><strong>Home Assistant's address</strong></label>
+  <input id="address" name="address" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="http://192.168.1.20:8123">
+  <div class="row">
+    <button class="btn" type="button" id="paste">Paste</button>
+    <button class="btn primary" type="submit" data-goatcounter-click="connect-make">Make the code</button>
+  </div>
+  <p class="error" id="error" role="alert" hidden>That doesn't look like a Home Assistant address. Copy it from the address bar of the tab where Home Assistant is open, for example http://192.168.1.20:8123.</p>
+</form>
+
+<section class="made" id="made" hidden>
+  <h2>Scan this with your phone</h2>
+  <div class="qr" id="qr"></div>
+  <p>No ZigDash yet? The code offers to install it first; when it starts, it already has the address.</p>
+  <p>Or send yourself this link and open it on the phone: <code id="link"></code> <button class="btn" type="button" id="copy">Copy</button></p>
+  <div class="tip" id="local-tip" hidden><code>.local</code> names don't open on every Android phone. If ZigDash can't reach it, use the number address: Home Assistant shows it under Settings › System › Network.</div>
+</section>
+
+<div class="tip">ZigDash works with <strong>Zigbee2MQTT</strong>. Using ZHA, Home Assistant's own Zigbee? See <a href="../zha/">Moving from ZHA</a>.</div>
+<div class="note">The address stays in this page and in the code. Nothing is sent to zigdash.app or anywhere else; the link keeps it after a <code>#</code>, which browsers never send to a server. Signing in stays Home Assistant's own.</div>
+
+<div class="next"><a class="btn" href="../home-assistant/">ZigDash with Home Assistant</a><a class="btn" href="../help/">Something not working?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script src="../assets/halink.js"></script>
+<script src="../assets/qrcode.min.js"></script>
+<script>
+(function () {
+  var input = document.getElementById('address');
+  var error = document.getElementById('error');
+  var made = document.getElementById('made');
+  document.getElementById('paste').addEventListener('click', function () {
+    if (!navigator.clipboard || !navigator.clipboard.readText) { input.focus(); return; }
+    navigator.clipboard.readText().then(function (t) { input.value = t.trim(); }, function () { input.focus(); });
+  });
+  document.getElementById('maker').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var address = ZigDashLink.cleanAddress(input.value);
+    error.hidden = address !== null;
+    made.hidden = address === null;
+    if (address === null) return;
+    input.value = address;
+    var url = 'https://zigdash.app/c#' + ZigDashLink.toParams([address], 'site');
+    var qr = qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+    document.getElementById('qr').innerHTML = qr.createSvgTag(4, 0);
+    document.getElementById('link').textContent = url;
+    document.getElementById('local-tip').hidden = !/\.local(:|\/|$)/i.test(address);
+    made.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  document.getElementById('copy').addEventListener('click', function () {
+    var text = document.getElementById('link').textContent;
+    if (navigator.clipboard) navigator.clipboard.writeText(text).catch(function () {});
+  });
+})();
+</script>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

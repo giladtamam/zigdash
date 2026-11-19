@@ -1,0 +1,5 @@
+# Cloudflare Pages headers (docs/design/ha-link.md): Android reads this to
+# let ZigDash open https://zigdash.app/c links.
+/.well-known/assetlinks.json
+  Content-Type: application/json
+  Access-Control-Allow-Origin: *
