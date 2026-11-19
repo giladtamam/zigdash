@@ -38,6 +38,7 @@ void main() {
     String? phoneIp,
     List<Override> overrides = const [],
     bool shared = false,
+    HaAddressFrom? arrivedFrom,
     bool shareTarget = false,
     bool highlightPaste = false,
     void Function(AnalyticsEvent event)? onEvent,
@@ -67,7 +68,8 @@ void main() {
           path: Routes.haConnect,
           builder: (_, __) => HaConnectScreen(
             initialHost: initialHost,
-            shared: shared,
+            arrivedFrom:
+                arrivedFrom ?? (shared ? HaAddressFrom.shared : null),
             controller: controller,
             again: again,
             offWifi: offWifi,
@@ -446,6 +448,58 @@ void main() {
             .widget<FilledButton>(find.byKey(const Key('ha-sign-in')))
             .onPressed,
         isNull,
+      );
+    });
+
+    testWidgets('ha-link.md: Use a computer names the page and copies its '
+        'link', (tester) async {
+      final sent = <String>[];
+      String? copied;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.setData') {
+            copied = (call.arguments as Map)['text'] as String?;
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      await pump(
+        tester,
+        signIn: signIn,
+        findHa: () async => [],
+        overrides: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_Sink(sent), enabled: true),
+          ),
+        ],
+      );
+      await tester.tap(find.byKey(const Key('ha-none-computer')));
+      await tester.pumpAndSettle();
+      expect(find.text('zigdash.app/connect'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('ha-computer-copy')));
+      await tester.pumpAndSettle();
+      expect(copied, 'https://zigdash.app/connect');
+      expect(
+        sent.where((e) => e.contains('ha_none') && e.contains('computer')),
+        hasLength(1),
+      );
+    });
+
+    testWidgets('ha-link.md: a link\'s address says where it came from', (
+      tester,
+    ) async {
+      await pump(tester, signIn: signIn, initialHost: 'http://192.168.1.20:8123',
+          arrivedFrom: HaAddressFrom.link);
+      expect(
+        find.text('This is the address from your link. Sign in to connect.'),
+        findsOneWidget,
       );
     });
 

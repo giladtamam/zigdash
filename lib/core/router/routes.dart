@@ -1,3 +1,5 @@
+import '../analytics/analytics_events.dart' show HaAddressFrom;
+
 class Routes {
   Routes._();
 
@@ -37,10 +39,18 @@ class Routes {
   /// The Home Assistant sign-in opened by text shared to ZigDash from
   /// another app (ha-share-paste.md), with the address it held, or with
   /// none when it held no address.
-  static String haConnectShared(String? host) => Uri(
+  static String haConnectShared(String? host) =>
+      haConnectFrom(host, HaAddressFrom.shared);
+
+  /// The Home Assistant sign-in with an address handed to ZigDash: shared
+  /// from another app, or brought by a ZigDash connect link (ha-link.md).
+  static String haConnectFrom(String? host, HaAddressFrom from) => Uri(
     path: haConnect,
-    queryParameters: {'host': ?host, 'from': 'shared'},
+    queryParameters: {'host': ?host, 'from': from.name},
   ).toString();
+
+  /// A ZigDash connect link, `https://zigdash.app/c#ha=…` (ha-link.md).
+  static const haLink = '/c';
 
   /// Connecting through Home Assistant from the no-Wi-Fi screen (3.1.9):
   /// no network to look on, so the address (a remote one) is typed.

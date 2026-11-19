@@ -1839,6 +1839,39 @@ class AppLocalizationsHe extends AppLocalizations {
       'לא הייתה שם כתובת. באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם ואז על אייקון השיתוף למעלה.';
 
   @override
+  String get haLinkNote =>
+      'זו הכתובת מהקישור שלכם. התחברו כדי להשלים את החיבור.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'זו הכתובת מהקישור שפתחתם לפני התקנת ZigDash. התחברו כדי להשלים את החיבור.';
+
+  @override
+  String get haLinkNothing =>
+      'הקישור הזה לא הכיל כתובת של Home Assistant. אפשר ליצור חדש ב-zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'שימוש במחשב';
+
+  @override
+  String get haComputerTitle => 'שימוש במחשב';
+
+  @override
+  String get haComputerBody =>
+      'במחשב שבו Home Assistant פתוח, היכנסו לעמוד הזה והדביקו שם את הכתובת של Home Assistant. אחר כך סרקו את הקוד עם המצלמה של הטלפון הזה.';
+
+  @override
+  String get haComputerCopy => 'העתקת קישור';
+
+  @override
+  String get setupLinkPending =>
+      'הקישור שלכם הביא כתובת של Home Assistant. הקישו על Home Assistant כדי להשתמש בה.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'הקישור שלכם לא הכיל כתובת של Home Assistant. אפשר ליצור חדש ב-zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה, ובחרו ב-ZigDash. מדפדפן, שתפו את הדף עם ZigDash.';
 

@@ -3402,6 +3402,60 @@ abstract class AppLocalizations {
   /// **'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.'**
   String get haShareNothing;
 
+  /// No description provided for @haLinkNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address from your link. Sign in to connect.'**
+  String get haLinkNote;
+
+  /// No description provided for @haLinkReferrerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address from the link you opened before installing ZigDash. Sign in to connect.'**
+  String get haLinkReferrerNote;
+
+  /// No description provided for @haLinkNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'That link didn\'t hold a Home Assistant address. Make a new one at zigdash.app/connect.'**
+  String get haLinkNothing;
+
+  /// No description provided for @haNoneComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a computer'**
+  String get haNoneComputer;
+
+  /// No description provided for @haComputerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a computer'**
+  String get haComputerTitle;
+
+  /// No description provided for @haComputerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'On a computer where Home Assistant is open, go to this page and paste Home Assistant\'s address there. Then scan the code with this phone\'s camera.'**
+  String get haComputerBody;
+
+  /// No description provided for @haComputerCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get haComputerCopy;
+
+  /// No description provided for @setupLinkPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your link brought a Home Assistant address. Tap Home Assistant to use it.'**
+  String get setupLinkPending;
+
+  /// No description provided for @setupLinkPendingNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your link didn\'t hold a Home Assistant address. Make a new one at zigdash.app/connect.'**
+  String get setupLinkPendingNothing;
+
   /// The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do.
   ///
   /// In en, this message translates to:

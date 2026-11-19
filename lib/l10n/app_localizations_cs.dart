@@ -1859,6 +1859,39 @@ class AppLocalizationsCs extends AppLocalizations {
       'V tom nebyla adresa. V aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server a pak nahoře na ikonu sdílení.';
 
   @override
+  String get haLinkNote =>
+      'Toto je adresa z vašeho odkazu. Přihlaste se a připojte.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Toto je adresa z odkazu, který jste otevřeli před instalací ZigDash. Přihlaste se a připojte.';
+
+  @override
+  String get haLinkNothing =>
+      'Tento odkaz neobsahoval adresu Home Assistant. Vytvořte nový na zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Použít počítač';
+
+  @override
+  String get haComputerTitle => 'Použít počítač';
+
+  @override
+  String get haComputerBody =>
+      'Na počítači s otevřeným Home Assistant přejděte na tuto stránku a vložte tam adresu Home Assistant. Pak naskenujte kód fotoaparátem tohoto telefonu.';
+
+  @override
+  String get haComputerCopy => 'Kopírovat odkaz';
+
+  @override
+  String get setupLinkPending =>
+      'Váš odkaz přinesl adresu Home Assistant. Klepněte na Home Assistant a použijte ji.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Váš odkaz neobsahoval adresu Home Assistant. Vytvořte nový na zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Nejrychleji: v aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server, pak nahoře na ikonu sdílení a vyberte ZigDash. Z prohlížeče sdílejte stránku do ZigDash.';
 

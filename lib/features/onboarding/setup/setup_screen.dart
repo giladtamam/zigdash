@@ -32,6 +32,7 @@ import 'ai_help.dart';
 import 'setup_analytics.dart';
 import 'setup_providers.dart';
 import 'ha_connect_screen.dart' show takeHaAppColdReturn;
+import 'ha_link.dart';
 import 'setup_waiting.dart';
 import 'setup_reminder.dart';
 
@@ -95,7 +96,17 @@ class SetupScreen extends ConsumerWidget {
                 (s is SetupFailed && s.kind == SetupErrorKind.haNoZigbee2Mqtt)
             ? fromZhaOrNull(() => ref.read(sharedPreferencesProvider))
             : null,
+        // ha-link.md: the link's address, unchanged, made this home.
+        linkSrc: s is SetupComplete
+            ? takeHaLinkSrc(
+                ref.read(sharedPreferencesProvider),
+                viaHa: s.via == SetupVia.homeAssistant,
+              )
+            : null,
       );
+      if (s is SetupComplete) {
+        ref.read(pendingHaLinkProvider.notifier).set(null);
+      }
       if (step != null) ref.read(analyticsProvider).track(step);
       // 3.3.2: the guide on an empty result starts over with setup.
       if (s is SetupIdle || s is SetupComplete) {
@@ -436,7 +447,20 @@ class _WelcomeState extends ConsumerState<_Welcome> {
     if (_asking) {
       await ref.read(analyticsConsentProvider.notifier).set(_share);
     }
+    // ha-link.md: a link's event waited for the answer just given.
+    await ref.read(pendingHaLinkProvider.notifier).countHeld();
     next();
+  }
+
+  /// Home Assistant, with an address a link brought (ha-link.md): the
+  /// link only comes from pages that already say Zigbee2MQTT is needed,
+  /// so both "which way" sheets are skipped.
+  void _fromLink(PendingHaLink link) {
+    widget.onPlatform(SetupPlatform.homeAssistant);
+    ref.read(pendingHaLinkProvider.notifier).set(null);
+    context.push(
+      Routes.haConnectFrom(link.address, addressFromOf(link.opened)),
+    );
   }
 
   /// 3.2: Home Assistant runs Zigbee one of two ways; only one works here.
@@ -593,6 +617,7 @@ class _WelcomeState extends ConsumerState<_Welcome> {
       widget.onFind();
     });
     void onManual() => _then(widget.onManual);
+    final pending = ref.watch(pendingHaLinkProvider);
     void onNothing() => _then(widget.onNothing);
     Widget answer(IconData icon, String title, String subtitle, VoidCallback onTap, {Key? key}) => Card.outlined(
       key: key,
@@ -638,13 +663,41 @@ class _WelcomeState extends ConsumerState<_Welcome> {
               ),
             ),
           ),
+        // ha-link.md: a link opened before the first home waits here.
+        if (pending != null)
+          Card.filled(
+            key: const Key('setup-link-pending'),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.link, color: theme.colorScheme.primary),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      pending.address == null
+                          ? l10n.setupLinkPendingNothing
+                          : l10n.setupLinkPending,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         // 3.2: one question first. Two thirds of setups never answered it
         // under a running scan, and half of them had something to connect.
         Text(l10n.setupAsk, style: theme.textTheme.titleMedium),
         const SizedBox(height: 12),
         answer(Icons.memory, l10n.setupAskZ2m, l10n.setupAskZ2mSub, () => find(SetupPlatform.piOrDocker),
             key: const Key('ask-z2m')),
-        answer(Icons.home_outlined, l10n.setupAskHa, l10n.setupAskHaSub, () => _then(_homeAssistant),
+        answer(
+            Icons.home_outlined,
+            l10n.setupAskHa,
+            l10n.setupAskHaSub,
+            () => pending?.address != null
+                ? _then(() => _fromLink(pending!))
+                : _then(_homeAssistant),
             key: const Key('ask-ha')),
         answer(Icons.router_outlined, l10n.setupAskSmlight, l10n.setupAskSmlightSub, () => _then(_smlight),
             key: const Key('ask-smlight')),

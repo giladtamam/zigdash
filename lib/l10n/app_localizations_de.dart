@@ -1873,6 +1873,39 @@ class AppLocalizationsDe extends AppLocalizations {
       'Darin war keine Adresse. Öffne in der Home-Assistant-App Einstellungen › Companion App, tippe auf deinen Server und dann oben auf das Teilen-Symbol.';
 
   @override
+  String get haLinkNote =>
+      'Das ist die Adresse aus deinem Link. Melde dich an, um zu verbinden.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Das ist die Adresse aus dem Link, den du vor der Installation von ZigDash geöffnet hast. Melde dich an, um zu verbinden.';
+
+  @override
+  String get haLinkNothing =>
+      'Dieser Link enthielt keine Home-Assistant-Adresse. Erstelle einen neuen auf zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Einen Computer nutzen';
+
+  @override
+  String get haComputerTitle => 'Einen Computer nutzen';
+
+  @override
+  String get haComputerBody =>
+      'Öffne auf einem Computer, auf dem Home Assistant geöffnet ist, diese Seite und füge dort die Adresse von Home Assistant ein. Scanne dann den Code mit der Kamera dieses Handys.';
+
+  @override
+  String get haComputerCopy => 'Link kopieren';
+
+  @override
+  String get setupLinkPending =>
+      'Dein Link hat eine Home-Assistant-Adresse mitgebracht. Tippe auf Home Assistant, um sie zu verwenden.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Dein Link enthielt keine Home-Assistant-Adresse. Erstelle einen neuen auf zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Am schnellsten: Öffne in der Home-Assistant-App Einstellungen › Companion App, tippe auf deinen Server, dann oben auf das Teilen-Symbol und wähle ZigDash. Im Browser teilst du die Seite mit ZigDash.';
 

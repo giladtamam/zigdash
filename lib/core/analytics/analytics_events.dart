@@ -203,6 +203,13 @@ enum SetupStepKind {
   /// [demo].
   noHub,
 
+  /// A ZigDash connect link brought a Home Assistant address
+  /// (docs/design/ha-link.md): [SetupStep.choice] says how it opened (a
+  /// [HaLinkOpened]), [SetupStep.result] whether it held an address (a
+  /// [HaHandover]) and [SetupStep.linkSrc] where the link came from. Never
+  /// the address. On first run it waits for the usage-data answer.
+  haLink,
+
   /// 3.7.1 only (3.8 counts the sheet as `zha_move`): "Moving from ZHA"
   /// was tapped where the Home Assistant check found
   /// devices in ZHA (zha-migration.md), with [SetupStep.choice]
@@ -290,7 +297,18 @@ enum HaWhere { home, nabuCasa, duckDns, ownDomain }
 /// (ha-share-paste.md): typed by hand, filled in by the look or the scan,
 /// pasted with the Paste button, or shared from another app. Never the
 /// address.
-enum HaAddressFrom { typed, found, pasted, shared }
+/// From ha-link.md also from a ZigDash connect link ([link]) or the link
+/// opened before installing, through Google Play ([referrer]).
+enum HaAddressFrom { typed, found, pasted, shared, link, referrer }
+
+/// How a ZigDash connect link reached the app (ha-link.md): the link
+/// itself (an App Link), the zigdash.app page's "Open in ZigDash" button,
+/// or Google Play's install referrer on first start.
+enum HaLinkOpened { appLink, intent, referrer }
+
+/// Where a ZigDash connect link was made (ha-link.md): zigdash.app, or
+/// the ZigDash integration in Home Assistant.
+enum HaLinkSrc { site, haIntegration }
 
 /// Whether pasted or shared text held a Home Assistant address.
 enum HaHandover { address, noAddress }
@@ -377,7 +395,13 @@ class SetupStep extends AnalyticsEvent {
     this.haApps,
     this.zhaDevices,
     this.fromZha,
+    this.linkSrc,
   });
+
+  /// Where the connect link came from (ha-link.md), on
+  /// [SetupStepKind.haLink], and on [SetupStepKind.complete] when setup
+  /// finished with the link's address unchanged. Sent as `link_src`.
+  final HaLinkSrc? linkSrc;
 
   /// On [SetupStepKind.complete] (3.8): whether this setup followed "I'm
   /// moving" or a Home Assistant check that found ZHA devices, within 60
@@ -541,6 +565,7 @@ class SetupStep extends AnalyticsEvent {
       'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
     if (haApps != null) 'install': haApps! ? 'apps' : 'no_apps',
     if (fromZha != null) 'from_zha': fromZha!.name,
+    if (linkSrc != null) 'link_src': _snake(linkSrc!.name),
     if (zhaDevices != null)
       'zha': bucket(
         zhaDevices!,
@@ -597,6 +622,9 @@ enum HaNoneChoice {
   openAppFailed,
   returned,
   returnedCold,
+
+  /// "Use a computer" (ha-link.md): zigdash.app/connect makes a code there.
+  computer,
 }
 
 enum Feature {

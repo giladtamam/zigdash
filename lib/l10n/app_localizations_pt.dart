@@ -1866,6 +1866,39 @@ class AppLocalizationsPt extends AppLocalizations {
       'Isso não continha um endereço. Na app Home Assistant, abra Definições › App complementar, toque no seu servidor e depois no ícone de compartilhar no topo.';
 
   @override
+  String get haLinkNote =>
+      'Este é o endereço do seu link. Inicie sessão para conectar.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Este é o endereço do link que abriu antes de instalar o ZigDash. Inicie sessão para conectar.';
+
+  @override
+  String get haLinkNothing =>
+      'Esse link não tinha um endereço do Home Assistant. Crie um novo em zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Usar um computador';
+
+  @override
+  String get haComputerTitle => 'Usar um computador';
+
+  @override
+  String get haComputerBody =>
+      'Num computador com o Home Assistant aberto, vá a esta página e cole lá o endereço do Home Assistant. Depois leia o código com a câmara deste telemóvel.';
+
+  @override
+  String get haComputerCopy => 'Copiar link';
+
+  @override
+  String get setupLinkPending =>
+      'O seu link trouxe um endereço do Home Assistant. Toque em Home Assistant para o usar.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'O seu link não tinha um endereço do Home Assistant. Crie um novo em zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'O mais rápido: na app Home Assistant, abra Definições › App complementar, toque no seu servidor, depois no ícone de compartilhar no topo, e escolha o ZigDash. Num navegador, compartilhe a página com o ZigDash.';
 

@@ -28,6 +28,7 @@ import 'ha_address_shape.dart';
 import 'ha_connect.dart';
 import 'ha_discovery.dart';
 import 'ha_handover.dart';
+import 'ha_link.dart';
 import 'no_hub_screen.dart' show haGuideUrl;
 import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
@@ -41,7 +42,7 @@ class HaConnectScreen extends ConsumerStatefulWidget {
   const HaConnectScreen({
     super.key,
     this.initialHost,
-    this.shared = false,
+    this.arrivedFrom,
     this.controller,
     this.again,
     this.offWifi = false,
@@ -52,10 +53,11 @@ class HaConnectScreen extends ConsumerStatefulWidget {
   /// (3.6): Paste is pointed out at once.
   final bool highlightPaste;
 
-  /// Opened by text shared to ZigDash from another app
-  /// (ha-share-paste.md): [initialHost] is the address it held, or null
-  /// when it held none.
-  final bool shared;
+  /// Opened with an address handed to ZigDash: text shared from another
+  /// app (ha-share-paste.md), or a ZigDash connect link (ha-link.md).
+  /// [initialHost] is the address it held, or null when it held none.
+  /// Null when the screen was opened any other way.
+  final HaAddressFrom? arrivedFrom;
 
   /// The Home Assistant the scan saw, if any.
   final String? initialHost;
@@ -161,6 +163,13 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     if (mounted) setState(() => _retrying = false);
   }
 
+  /// "Use a computer" (ha-link.md): zigdash.app/connect, on a computer
+  /// where Home Assistant is open, makes a code this phone's camera opens.
+  void _useComputer() {
+    _none(HaNoneChoice.computer);
+    showUseComputerSheet(context);
+  }
+
   void _askAssistant() {
     _none(HaNoneChoice.assistant);
     context.push(
@@ -224,10 +233,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     };
     if (initial.isNotEmpty) {
       // Shared from another app, or seen by the scan.
-      _fill(
-        initial,
-        widget.shared ? HaAddressFrom.shared : HaAddressFrom.found,
-      );
+      _fill(initial, widget.arrivedFrom ?? HaAddressFrom.found);
     }
     _address.addListener(_edited);
     _controller.addListener(_onState);
@@ -243,7 +249,17 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
 
   HaConnectController _make() => HaConnectController(
     address: widget.initialHost ?? '',
-    onEvent: (event) => ref.read(analyticsProvider).track(event),
+    onEvent: (event) {
+      ref.read(analyticsProvider).track(event);
+      // ha-link.md: the link's address worked, as it came.
+      if (event is SetupStep &&
+          event.step == SetupStepKind.haConnect &&
+          event.result == HaConnectOutcome.ok &&
+          (event.addressFrom == HaAddressFrom.link ||
+              event.addressFrom == HaAddressFrom.referrer)) {
+        markHaLinkUsed(ref.read(sharedPreferencesProvider));
+      }
+    },
     onZhaFound: () => markZhaFound(ref.read(sharedPreferencesProvider)),
     adopt: (address, signIn) => widget.again == null
         ? ref
@@ -367,6 +383,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
                     onOpenApp: _openHaApp,
                     onLookAgain: _lookAgain,
                     onAssistant: _askAssistant,
+                    onComputer: _useComputer,
                   )
                 : null,
             found: _controller.found,
@@ -378,7 +395,8 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
             highlightPaste: _highlightPaste,
             // What a share brought: its address, still in the field, or
             // nothing usable.
-            shared: !widget.shared
+            handedFrom: widget.arrivedFrom,
+            shared: widget.arrivedFrom == null
                 ? null
                 : widget.initialHost == null
                 // Said only while the field is still empty: the look may
@@ -436,6 +454,7 @@ class _Ask extends StatefulWidget {
     this.pasteNothing = false,
     this.highlightPaste = false,
     this.shared,
+    this.handedFrom,
     this.shareTarget = false,
     this.onZhaMove,
     this.onHaGuide,
@@ -460,6 +479,9 @@ class _Ask extends StatefulWidget {
   /// What a share from another app brought, while it is still what the
   /// field says; null when the screen was opened another way.
   final HaHandover? shared;
+
+  /// How the handed-over address came: shared, or from a link.
+  final HaAddressFrom? handedFrom;
 
   /// Whether ZigDash is in other apps' share sheets now: the help then
   /// says to share, otherwise to copy and paste.
@@ -589,11 +611,21 @@ class _AskState extends State<_Ask> {
           ),
         if (widget.shared == HaHandover.address) ...[
           const SizedBox(height: 4),
-          Text(l10n.haSharedNote, style: theme.textTheme.bodyMedium),
+          Text(
+            switch (widget.handedFrom) {
+              HaAddressFrom.link => l10n.haLinkNote,
+              HaAddressFrom.referrer => l10n.haLinkReferrerNote,
+              _ => l10n.haSharedNote,
+            },
+            key: const Key('ha-handed-note'),
+            style: theme.textTheme.bodyMedium,
+          ),
         ] else if (widget.shared == HaHandover.noAddress) ...[
           const SizedBox(height: 4),
           Text(
-            l10n.haShareNothing,
+            widget.handedFrom == HaAddressFrom.shared
+                ? l10n.haShareNothing
+                : l10n.haLinkNothing,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.error,
             ),
@@ -818,6 +850,7 @@ class _NothingFound {
     required this.onOpenApp,
     required this.onLookAgain,
     required this.onAssistant,
+    required this.onComputer,
   });
 
   /// Null until checked.
@@ -827,6 +860,7 @@ class _NothingFound {
   final VoidCallback onOpenApp;
   final VoidCallback onLookAgain;
   final VoidCallback onAssistant;
+  final VoidCallback onComputer;
 }
 
 /// The look found nothing (ha-nothing-found.md): why, in one line; how to
@@ -919,6 +953,12 @@ class _NothingFoundCard extends StatelessWidget {
                         )
                       : const Icon(Icons.refresh),
                   label: Text(l10n.haNoneLookAgain),
+                ),
+                TextButton.icon(
+                  key: const Key('ha-none-computer'),
+                  onPressed: card.onComputer,
+                  icon: const Icon(Icons.computer),
+                  label: Text(l10n.haNoneComputer),
                 ),
                 TextButton.icon(
                   key: const Key('ha-none-assistant'),

@@ -1867,6 +1867,39 @@ class AppLocalizationsNl extends AppLocalizations {
       'Daar stond geen adres in. Open in de Home Assistant-app Instellingen › Companion-app, tik op je server en dan bovenaan op het deelpictogram.';
 
   @override
+  String get haLinkNote =>
+      'Dit is het adres uit je link. Log in om te verbinden.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Dit is het adres uit de link die je opende voordat je ZigDash installeerde. Log in om te verbinden.';
+
+  @override
+  String get haLinkNothing =>
+      'Die link bevatte geen Home Assistant-adres. Maak een nieuwe op zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Een computer gebruiken';
+
+  @override
+  String get haComputerTitle => 'Een computer gebruiken';
+
+  @override
+  String get haComputerBody =>
+      'Ga op een computer waarop Home Assistant open is naar deze pagina en plak daar het adres van Home Assistant. Scan daarna de code met de camera van deze telefoon.';
+
+  @override
+  String get haComputerCopy => 'Link kopiëren';
+
+  @override
+  String get setupLinkPending =>
+      'Je link bracht een Home Assistant-adres mee. Tik op Home Assistant om het te gebruiken.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Je link bevatte geen Home Assistant-adres. Maak een nieuwe op zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Het snelst: open in de Home Assistant-app Instellingen › Companion-app, tik op je server, dan bovenaan op het deelpictogram, en kies ZigDash. Deel vanuit een browser de pagina met ZigDash.';
 

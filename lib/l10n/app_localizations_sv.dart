@@ -1857,6 +1857,39 @@ class AppLocalizationsSv extends AppLocalizations {
       'Det innehöll ingen adress. I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server och sedan på delningsikonen högst upp.';
 
   @override
+  String get haLinkNote =>
+      'Det här är adressen från din länk. Logga in för att ansluta.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Det här är adressen från länken du öppnade innan du installerade ZigDash. Logga in för att ansluta.';
+
+  @override
+  String get haLinkNothing =>
+      'Länken innehöll ingen Home Assistant-adress. Skapa en ny på zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Använd en dator';
+
+  @override
+  String get haComputerTitle => 'Använd en dator';
+
+  @override
+  String get haComputerBody =>
+      'Gå till den här sidan på en dator där Home Assistant är öppet och klistra in Home Assistants adress där. Skanna sedan koden med den här telefonens kamera.';
+
+  @override
+  String get haComputerCopy => 'Kopiera länk';
+
+  @override
+  String get setupLinkPending =>
+      'Din länk tog med en Home Assistant-adress. Tryck på Home Assistant för att använda den.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Din länk innehöll ingen Home Assistant-adress. Skapa en ny på zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Snabbast: I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server, sedan på delningsikonen högst upp, och väljer ZigDash. Från en webbläsare delar du sidan med ZigDash.';
 
