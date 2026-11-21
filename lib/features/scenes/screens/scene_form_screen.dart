@@ -218,11 +218,9 @@ class _State extends ConsumerState<SceneFormScreen> {
     ref.invalidate(discoveredDevicesProvider(args));
     ref.invalidate(deviceStatesProvider(args));
     setState(() {
-      // Pending actions were stored under the old base: a new device list
-      // doesn't move them (3.8.7). Tiles still get their one try.
-      if (!_pendingSettled) {
-        _settlePending(null, _loadedTiles?.tiles ?? const []);
-      }
+      // Pending actions were stored under the load base: they settle only
+      // on its device list (build checks `_base == _loadBase`), once; a
+      // retry on the same base still settles them when it arrives (3.8.7).
       _base = next;
       _statesRequested = false; // re-pull state for the new base
     });

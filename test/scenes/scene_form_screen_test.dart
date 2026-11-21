@@ -549,6 +549,27 @@ void main() {
       );
     });
 
+    testWidgets('refresh while waiting: the list still settles pending', (
+      tester,
+    ) async {
+      const stored = [
+        SceneAction(
+          setTopic: 'zigbee2mqtt/lamp/set',
+          payload: '{"state":"ON"}',
+        ),
+      ];
+      final devices = Completer<List<Z2mDevice>>();
+      final s = _Setup(scene: _scene(stored), devicesFuture: devices.future);
+      await _pump(tester, s);
+      expect(find.text('1 other action is kept'), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.refresh));
+      await _settle(tester);
+      devices.complete([lamp]);
+      await _settle(tester);
+      expect(_ticked(tester, 'lamp'), isTrue);
+      expect(find.textContaining('other action'), findsNothing);
+    });
+
     testWidgets('discovery fails: pending kept; refresh does not move them', (
       tester,
     ) async {
