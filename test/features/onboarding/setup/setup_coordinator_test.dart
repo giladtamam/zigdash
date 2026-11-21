@@ -477,6 +477,96 @@ void main() {
       expect(s.candidate, candidate);
     });
 
+    // 3.8.5: a login can't get past a certificate the phone doesn't trust.
+    group('an encrypted broker the phone does not trust', () {
+      const untrusted = ProbeResult(
+        host: '192.168.1.10',
+        port: 8883,
+        needsAuth: true,
+        untrustedCert: true,
+      );
+
+      test('says so without asking for a login', () async {
+        final h = _Harness(scan: (_) => Stream.fromIterable([untrusted]));
+        final states = <SetupState>[];
+        final sub = h.coordinator.states.listen(states.add);
+        await h.coordinator.startScan();
+        for (var i = 0; i < 4; i++) {
+          await Future<void>.delayed(Duration.zero);
+        }
+        await sub.cancel();
+        final s = h.coordinator.state as SetupFailed;
+        expect(s.kind, SetupErrorKind.tlsUntrusted);
+        expect(s.candidate!.port, 8883);
+        expect(states.whereType<SetupNeedsAuth>(), isEmpty);
+        // Counted as found first (scan_found), then failed.
+        expect(states.whereType<SetupVerifying>(), hasLength(1));
+        expect(h.diagnostics.calls, isEmpty);
+
+        // Try again can't help, and doesn't pretend: the same answer.
+        await h.coordinator.retry();
+        expect(
+          (h.coordinator.state as SetupFailed).kind,
+          SetupErrorKind.tlsUntrusted,
+        );
+        expect(h.diagnostics.calls, isEmpty);
+      });
+
+      test('with a login already given, still says so', () async {
+        final h = _Harness(
+          reports: [failAt(DiagnosticStep.auth, 'diagAuthRejected'), ok()],
+        );
+        await h.coordinator.selectCandidate(
+          const SetupCandidate(
+            host: '192.168.1.10',
+            port: 1883,
+            protocol: MqttProtocol.tcp,
+          ),
+        );
+        await h.coordinator.submitCredentials('user', 'pw');
+        await h.coordinator.selectCandidate(
+          SetupCandidate.fromProbe(untrusted),
+        );
+        expect(
+          (h.coordinator.state as SetupFailed).kind,
+          SetupErrorKind.tlsUntrusted,
+        );
+      });
+
+      test('the same machine on 1883: verifies that one on its own', () async {
+        final h = _Harness(
+          scan: (_) => Stream.fromIterable([
+            untrusted,
+            const ProbeResult(host: '192.168.1.10', port: 1883),
+          ]),
+        );
+        await h.coordinator.startScan();
+        for (var i = 0; i < 4; i++) {
+          await Future<void>.delayed(Duration.zero);
+        }
+        final s = h.coordinator.state as SetupReview;
+        expect(s.candidate.port, 1883);
+        expect(h.diagnostics.calls, hasLength(1));
+      });
+
+      test('with other brokers, the untrusted card is left out', () async {
+        final h = _Harness(
+          scan: (_) => Stream.fromIterable([
+            untrusted,
+            const ProbeResult(host: '192.168.1.10', port: 1883),
+            const ProbeResult(host: '192.168.1.11', port: 1883),
+          ]),
+        );
+        await h.coordinator.startScan();
+        for (var i = 0; i < 4; i++) {
+          await Future<void>.delayed(Duration.zero);
+        }
+        final s = h.coordinator.state as SetupScanning;
+        expect(s.done, isTrue);
+        expect(s.candidates.map((c) => c.port), [1883, 1883]);
+      });
+    });
+
     test('candidate flagged needsAuth asks before verifying', () async {
       final h = _Harness();
       await h.coordinator.selectCandidate(
@@ -1026,6 +1116,26 @@ void main() {
         ));
       },
     );
+
+    test('a broker Zigbee2MQTT names with an untrusted certificate: says '
+        'so (3.8.5)', () async {
+      final h = await emptyScanWith(
+        [z2mPage],
+        answer: (_, _) => setting('mqtts://localhost:8883'),
+        brokers: {
+          '192.168.1.30:8883': const ProbeResult(
+            host: '192.168.1.30',
+            port: 8883,
+            needsAuth: true,
+            untrustedCert: true,
+          ),
+        },
+      );
+      final s = h.coordinator.state as SetupFailed;
+      expect(s.kind, SetupErrorKind.tlsUntrusted);
+      expect(s.candidate!.untrustedCert, isTrue);
+      expect(s.candidate!.protocol, MqttProtocol.tcpSsl);
+    });
 
     test('another address that does not answer is named', () async {
       final probed = <String>[];

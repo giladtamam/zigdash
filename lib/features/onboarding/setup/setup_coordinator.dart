@@ -570,9 +570,12 @@ class SetupCoordinator {
     ScanTried? tried;
     final run = _scan(ip, hubsForPlatform(_platform));
     _run = run;
-    void emitScanning({bool done = false}) => _emit(
+    void emitScanning({
+      bool done = false,
+      List<SetupCandidate>? candidates,
+    }) => _emit(
       SetupScanning(
-        mergeCandidates(buffer),
+        candidates ?? mergeCandidates(buffer),
         done: done,
         hubs: List.unmodifiable(hubs),
         progress: progress,
@@ -609,7 +612,9 @@ class SetupCoordinator {
       },
       onDone: () {
         if (_state is! SetupScanning) return;
-        final merged = mergeCandidates(buffer);
+        // 3.8.5: the same machine on 1883 beats an 8883 whose certificate
+        // the phone doesn't trust, so one broker left verifies on its own.
+        final merged = preferUsable(mergeCandidates(buffer));
         if (merged.isEmpty) {
           _emit(
             SetupScanEmpty(
@@ -625,7 +630,7 @@ class SetupCoordinator {
           // One broker found: continue without asking the user to pick it.
           unawaited(_verify(merged.single, lateHosts: tried?.lateHosts));
         } else {
-          emitScanning(done: true);
+          emitScanning(done: true, candidates: merged);
           unawaited(_nameCandidates(merged, op));
         }
       },
@@ -694,6 +699,7 @@ class SetupCoordinator {
           port: found.port,
           protocol: setting.tls ? MqttProtocol.tcpSsl : MqttProtocol.tcp,
           needsAuth: found.needsAuth,
+          untrustedCert: found.untrustedCert,
         );
         _emit(SetupVerifying(candidate));
         await _verify(candidate);
@@ -1079,6 +1085,16 @@ class SetupCoordinator {
       if (_state is! SetupVerifying) _emit(SetupVerifying(candidate, lateHosts: lateHosts));
       page = await _tryPages(_pagesFor(candidate));
       if (page == PageLook.found) return;
+    }
+    // 3.8.5: a login can't get past a certificate the phone doesn't trust,
+    // so don't ask for one. Outside the no-login check: a second pass with
+    // a login lands here too.
+    if (candidate.needsAuth && candidate.untrustedCert) {
+      if (_state is! SetupVerifying) {
+        _emit(SetupVerifying(candidate, lateHosts: lateHosts));
+      }
+      _emit(SetupFailed(SetupErrorKind.tlsUntrusted, candidate: candidate));
+      return;
     }
     if (candidate.needsAuth && _username == null) {
       final op = _op;

@@ -10,6 +10,7 @@ class SetupCandidate {
     required this.port,
     required this.protocol,
     this.needsAuth = false,
+    this.untrustedCert = false,
     this.transport = ConnectionTransport.mqtt,
   });
 
@@ -18,7 +19,18 @@ class SetupCandidate {
     port: probe.port,
     protocol: probe.port == 8883 ? MqttProtocol.tcpSsl : MqttProtocol.tcp,
     needsAuth: probe.needsAuth,
+    untrustedCert: probe.untrustedCert,
   );
+
+  SetupCandidate copyWith({bool? needsAuth, bool? untrustedCert}) =>
+      SetupCandidate(
+        host: host,
+        port: port,
+        protocol: protocol,
+        needsAuth: needsAuth ?? this.needsAuth,
+        untrustedCert: untrustedCert ?? this.untrustedCert,
+        transport: transport,
+      );
 
   final String host;
   final int port;
@@ -27,6 +39,10 @@ class SetupCandidate {
   /// The MQTT handshake indicated anonymous access is refused — the flow will
   /// ask for credentials after selection rather than discovering it late.
   final bool needsAuth;
+
+  /// The scan saw a TLS certificate the phone doesn't trust (3.8.5): the
+  /// app can't connect to it, with or without a login.
+  final bool untrustedCert;
 
   /// How this candidate is reached (2.10). Through Home Assistant, [host]
   /// is the Home Assistant address and the password slot holds the sign-in.
@@ -55,7 +71,8 @@ class SetupCandidate {
 
 /// Merges raw probe results into distinct candidates, first-seen order.
 /// A later probe for the same identity can only upgrade [needsAuth] (a
-/// CONNACK refusal observed on a repeat probe) — never downgrade it.
+/// CONNACK refusal observed on a repeat probe) or [untrustedCert] — never
+/// downgrade them.
 List<SetupCandidate> mergeCandidates(Iterable<ProbeResult> probes) {
   final byIdentity = <String, SetupCandidate>{};
   for (final probe in probes) {
@@ -63,14 +80,24 @@ List<SetupCandidate> mergeCandidates(Iterable<ProbeResult> probes) {
     final existing = byIdentity[c.identity];
     if (existing == null) {
       byIdentity[c.identity] = c;
-    } else if (c.needsAuth && !existing.needsAuth) {
-      byIdentity[c.identity] = SetupCandidate(
-        host: existing.host,
-        port: existing.port,
-        protocol: existing.protocol,
-        needsAuth: true,
+    } else if ((c.needsAuth && !existing.needsAuth) ||
+        (c.untrustedCert && !existing.untrustedCert)) {
+      byIdentity[c.identity] = existing.copyWith(
+        needsAuth: existing.needsAuth || c.needsAuth,
+        untrustedCert: existing.untrustedCert || c.untrustedCert,
       );
     }
   }
   return byIdentity.values.toList();
 }
+
+/// Drops a broker on 8883 whose certificate the phone doesn't trust when
+/// the same machine also answers on 1883 (3.8.5): the app can use only
+/// that one.
+List<SetupCandidate> preferUsable(List<SetupCandidate> candidates) => [
+  for (final c in candidates)
+    if (!(c.untrustedCert &&
+        c.port == 8883 &&
+        candidates.any((o) => o.host == c.host && o.port == 1883)))
+      c,
+];
