@@ -1381,7 +1381,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'De versleutelde verbinding kwam niet tot stand. De broker wil misschien een clientcertificaat, en dat ondersteunt ZigDash niet. Probeer op je thuisnetwerk de onversleutelde poort 1883.';
+      'De versleutelde verbinding kwam niet tot stand. De broker wil misschien een clientcertificaat, en dat ondersteunt ZigDash niet. Maak op je thuisnetwerk in plaats daarvan verbinding zonder versleuteling: TCP in plaats van TLS, meestal op poort 1883.';
 
   @override
   String get diagAuthRejected =>

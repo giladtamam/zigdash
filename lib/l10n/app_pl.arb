@@ -477,7 +477,7 @@
   "diagConnackFail": "Broker nie zakończył uzgadniania MQTT. Upewnij się, że to broker MQTT (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "Broker nie odpowiedział na logowanie na czas. Home Assistant może potrzebować kilku sekund na sprawdzenie, spróbuj ponownie.",
   "diagTlsUntrusted": "Telefon nie ufa certyfikatowi szyfrowania tego brokera: jest samopodpisany, wygasł albo wystawiono go na inną nazwę. ZigDash nie może go jeszcze użyć. W sieci domowej użyj zamiast tego nieszyfrowanego portu 1883 brokera albo daj brokerowi certyfikat od publicznego urzędu certyfikacji.",
-  "diagTlsFailed": "Szyfrowane połączenie się nie rozpoczęło. Broker może wymagać certyfikatu klienta, którego ZigDash nie obsługuje. Spróbuj jego nieszyfrowanego portu 1883 w sieci domowej.",
+  "diagTlsFailed": "Szyfrowane połączenie się nie rozpoczęło. Broker może wymagać certyfikatu klienta, którego ZigDash nie obsługuje. W sieci domowej połącz się zamiast tego bez szyfrowania: TCP zamiast TLS, zwykle na porcie 1883.",
   "diagAuthRejected": "Broker odrzucił nazwę użytkownika lub hasło. Sprawdź dane logowania.",
   "diagAuthRefused": "Broker odmówił połączenia. Sprawdź ustawienia połączenia.",
   "diagResolveLocalName": "Telefon nie znalazł tej nazwy. Android często nie rozpoznaje nazw kończących się na .local, więc wpisz zamiast niej adres IP (Home Assistant pokazuje go w Ustawienia › System › Sieć).",

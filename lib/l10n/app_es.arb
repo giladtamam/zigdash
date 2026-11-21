@@ -482,7 +482,7 @@
   "diagConnackFail": "El broker no completó el handshake MQTT. Asegúrate de que es un broker MQTT (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "El broker no respondió al inicio de sesión a tiempo. Home Assistant puede tardar unos segundos en comprobarlo; inténtalo de nuevo.",
   "diagTlsUntrusted": "Tu móvil no confía en el certificado de cifrado de este broker: está autofirmado, caducado o hecho para otro nombre. ZigDash todavía no puede usarlo. En la red de casa, usa en su lugar el puerto sin cifrar 1883 del broker, o dale al broker un certificado de una autoridad pública.",
-  "diagTlsFailed": "La conexión cifrada no se inició. Puede que el broker pida un certificado de cliente, algo que ZigDash no admite. Prueba su puerto sin cifrar 1883 en la red de casa.",
+  "diagTlsFailed": "La conexión cifrada no se inició. Puede que el broker pida un certificado de cliente, algo que ZigDash no admite. En la red de casa, conéctate sin cifrado: TCP en lugar de TLS, normalmente en el puerto 1883.",
   "diagAuthRejected": "El broker rechazó el usuario o la contraseña. Comprueba tus credenciales.",
   "diagAuthRefused": "El broker rechazó la conexión. Comprueba la configuración de conexión.",
   "diagResolveLocalName": "Tu teléfono no encontró este nombre. Android a menudo no resuelve nombres que terminan en .local; escribe la dirección IP (Home Assistant la muestra en Ajustes › Sistema › Red).",

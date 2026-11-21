@@ -1383,7 +1383,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'Die verschlüsselte Verbindung kam nicht zustande. Der Broker verlangt vielleicht ein Client-Zertifikat, das ZigDash nicht unterstützt. Versuche im Heimnetz seinen unverschlüsselten Port 1883.';
+      'Die verschlüsselte Verbindung kam nicht zustande. Der Broker verlangt vielleicht ein Client-Zertifikat, das ZigDash nicht unterstützt. Verbinde dich im Heimnetz stattdessen ohne Verschlüsselung: TCP statt TLS, meist auf Port 1883.';
 
   @override
   String get diagAuthRejected =>

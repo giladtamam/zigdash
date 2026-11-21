@@ -1362,7 +1362,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'החיבור המוצפן לא התחיל. ייתכן שהברוקר דורש תעודת לקוח, ש-ZigDash לא תומך בה. נסו את הפורט הלא מוצפן 1883 שלו ברשת של הבית.';
+      'החיבור המוצפן לא התחיל. ייתכן שהברוקר דורש תעודת לקוח, ש-ZigDash לא תומך בה. ברשת של הבית, התחברו במקום זאת בלי הצפנה: TCP במקום TLS, בדרך כלל בפורט 1883.';
 
   @override
   String get diagAuthRejected =>

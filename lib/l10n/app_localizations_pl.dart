@@ -1393,7 +1393,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'Szyfrowane połączenie się nie rozpoczęło. Broker może wymagać certyfikatu klienta, którego ZigDash nie obsługuje. Spróbuj jego nieszyfrowanego portu 1883 w sieci domowej.';
+      'Szyfrowane połączenie się nie rozpoczęło. Broker może wymagać certyfikatu klienta, którego ZigDash nie obsługuje. W sieci domowej połącz się zamiast tego bez szyfrowania: TCP zamiast TLS, zwykle na porcie 1883.';
 
   @override
   String get diagAuthRejected =>

@@ -1373,7 +1373,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. Prøv den ukrypterte porten 1883 på hjemmenettet.';
+      'Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. På hjemmenettet kan du heller koble til uten kryptering: TCP i stedet for TLS, vanligvis på port 1883.';
 
   @override
   String get diagAuthRejected =>

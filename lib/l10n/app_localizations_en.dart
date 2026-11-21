@@ -1371,7 +1371,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. Try its unencrypted port 1883 on your home network.';
+      'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. On your home network, connect without encryption instead: TCP rather than TLS, usually on port 1883.';
 
   @override
   String get diagAuthRejected =>

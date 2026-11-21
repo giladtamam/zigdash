@@ -482,7 +482,7 @@
   "diagConnackFail": "De broker heeft de MQTT-handshake niet voltooid. Zorg dat het een MQTT-broker is (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "De broker antwoordde niet op tijd op de aanmelding. Home Assistant kan een paar seconden nodig hebben om die te controleren, probeer het opnieuw.",
   "diagTlsUntrusted": "Je telefoon vertrouwt het versleutelingscertificaat van deze broker niet: het is zelfondertekend, verlopen of gemaakt voor een andere naam. ZigDash kan het nog niet gebruiken. Gebruik op je thuisnetwerk in plaats daarvan de onversleutelde poort 1883 van de broker, of geef de broker een certificaat van een publieke certificaatautoriteit.",
-  "diagTlsFailed": "De versleutelde verbinding kwam niet tot stand. De broker wil misschien een clientcertificaat, en dat ondersteunt ZigDash niet. Probeer op je thuisnetwerk de onversleutelde poort 1883.",
+  "diagTlsFailed": "De versleutelde verbinding kwam niet tot stand. De broker wil misschien een clientcertificaat, en dat ondersteunt ZigDash niet. Maak op je thuisnetwerk in plaats daarvan verbinding zonder versleuteling: TCP in plaats van TLS, meestal op poort 1883.",
   "diagAuthRejected": "De broker heeft gebruikersnaam of wachtwoord geweigerd. Controleer uw gegevens.",
   "diagAuthRefused": "De broker heeft de verbinding geweigerd. Controleer de verbindingsinstellingen.",
   "diagResolveLocalName": "Je telefoon kon deze naam niet vinden. Android kan namen die op .local eindigen vaak niet opzoeken; vul in plaats daarvan het IP-adres in (Home Assistant toont het onder Instellingen › Systeem › Netwerk).",

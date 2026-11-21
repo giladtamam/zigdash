@@ -1376,7 +1376,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'Šifrované spojení se nenavázalo. Broker možná chce klientský certifikát, který ZigDash nepodporuje. V domácí síti zkus jeho nešifrovaný port 1883.';
+      'Šifrované spojení se nenavázalo. Broker možná chce klientský certifikát, který ZigDash nepodporuje. V domácí síti se místo toho připoj bez šifrování: TCP místo TLS, obvykle na portu 1883.';
 
   @override
   String get diagAuthRejected =>

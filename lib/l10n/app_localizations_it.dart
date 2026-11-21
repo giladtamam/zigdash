@@ -1380,7 +1380,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'La connessione cifrata non è partita. Il broker potrebbe chiedere un certificato client, che ZigDash non supporta. Prova la sua porta non cifrata 1883 sulla rete di casa.';
+      'La connessione cifrata non è partita. Il broker potrebbe chiedere un certificato client, che ZigDash non supporta. Sulla rete di casa collegati invece senza crittografia: TCP invece di TLS, di solito sulla porta 1883.';
 
   @override
   String get diagAuthRejected =>

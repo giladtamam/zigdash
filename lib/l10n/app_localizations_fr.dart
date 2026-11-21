@@ -1386,7 +1386,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get diagTlsFailed =>
-      'La connexion chiffrée n\'a pas démarré. Le broker demande peut-être un certificat client, que ZigDash ne prend pas en charge. Essayez son port non chiffré 1883 sur le réseau de la maison.';
+      'La connexion chiffrée n\'a pas démarré. Le broker demande peut-être un certificat client, que ZigDash ne prend pas en charge. Sur le réseau de la maison, connectez-vous plutôt sans chiffrement : TCP au lieu de TLS, en général sur le port 1883.';
 
   @override
   String get diagAuthRejected =>

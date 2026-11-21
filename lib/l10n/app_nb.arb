@@ -482,7 +482,7 @@
   "diagConnackFail": "Brokeren fullførte ikke MQTT-håndtrykket. Sørg for at det er en MQTT-broker (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "Brokeren svarte ikke på innloggingen i tide. Home Assistant kan bruke noen sekunder på å sjekke den, så prøv igjen.",
   "diagTlsUntrusted": "Telefonen stoler ikke på krypteringssertifikatet til denne brokeren: det er selvsignert, utløpt eller laget for et annet navn. ZigDash kan ikke bruke det ennå. På hjemmenettet kan du heller bruke brokerens ukrypterte port 1883, eller gi brokeren et sertifikat fra en offentlig sertifikatutsteder.",
-  "diagTlsFailed": "Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. Prøv den ukrypterte porten 1883 på hjemmenettet.",
+  "diagTlsFailed": "Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. På hjemmenettet kan du heller koble til uten kryptering: TCP i stedet for TLS, vanligvis på port 1883.",
   "diagAuthRejected": "Brokeren avviste brukernavn eller passord. Kontroller påloggingsinformasjonen.",
   "diagAuthRefused": "Brokeren avviste tilkoblingen. Kontroller tilkoblingsinnstillingene.",
   "diagResolveLocalName": "Telefonen fant ikke dette navnet. Android klarer ofte ikke å slå opp navn som slutter på .local, så skriv inn IP-adressen i stedet (Home Assistant viser den under Innstillinger › System › Nettverk).",

@@ -2574,10 +2574,10 @@ abstract class AppLocalizations {
   /// **'This broker\'s encryption certificate isn\'t trusted by your phone: it is self-signed, expired, or made for another name. ZigDash can\'t use it yet. On your home network, use the broker\'s unencrypted port 1883 instead, or give the broker a certificate from a public authority.'**
   String get diagTlsUntrusted;
 
-  /// Broker test and setup (3.8.5): the TLS handshake failed for another reason, for example the broker wants a client certificate.
+  /// Broker test and setup (3.8.5): the TLS handshake failed for another reason, for example the broker wants a client certificate, or TLS was chosen for a broker that has none. TCP and TLS are the protocol names on the broker form; 1883 is the usual unencrypted MQTT port.
   ///
   /// In en, this message translates to:
-  /// **'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. Try its unencrypted port 1883 on your home network.'**
+  /// **'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. On your home network, connect without encryption instead: TCP rather than TLS, usually on port 1883.'**
   String get diagTlsFailed;
 
   /// No description provided for @diagAuthRejected.
