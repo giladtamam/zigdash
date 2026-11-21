@@ -143,9 +143,7 @@ void main() {
             return call.method == 'buy' ? buyAnswer : 'locked';
           });
       addTearDown(
-        () => TestDefaultBinaryMessengerBinding
-            .instance
-            .defaultBinaryMessenger
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(_channel, null),
       );
       final c = ProviderContainer(
@@ -216,6 +214,108 @@ void main() {
       await c.read(proBillingProvider.notifier).buy();
       final buy = calls.singleWhere((m) => m.method == 'buy');
       expect(buy.arguments, {'offerId': null, 'priceMicros': null});
+    });
+  });
+
+  // 3.8.6: `unlocked` goes once per install, whenever Play confirms the
+  // purchase after an Unlock tap, and never for a restored purchase.
+  group('unlocked is counted once', () {
+    late _Sink sink;
+    late SharedPreferences prefs;
+    late String statusAnswer;
+
+    Future<ProviderContainer> container({
+      String buyAnswer = 'pending',
+      Map<String, Object> stored = const {},
+    }) async {
+      sink = _Sink();
+      statusAnswer = 'locked';
+      SharedPreferences.setMockInitialValues({
+        'analytics_consent': true,
+        ...stored,
+      });
+      prefs = await SharedPreferences.getInstance();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            _channel,
+            (call) async => call.method == 'buy' ? buyAnswer : statusAnswer,
+          );
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(_channel, null),
+      );
+      final c = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          analyticsAvailableProvider.overrideWithValue(true),
+          analyticsSinkProvider.overrideWithValue(sink),
+          proOfferProvider.overrideWith((ref) async => _sale()),
+        ],
+      );
+      addTearDown(c.dispose);
+      c.listen(proOfferProvider, (_, _) {});
+      await c.read(proOfferProvider.future);
+      c.read(proBillingProvider);
+      await Future<void>.delayed(Duration.zero);
+      return c;
+    }
+
+    List<String> unlocked() => [
+      for (final e in sink.sent)
+        if (e.contains('step: unlocked')) e,
+    ];
+
+    test(
+      'Play confirms after buy() returned: sent once, with the tap',
+      () async {
+        final c = await container();
+        c.read(proFromProvider.notifier).state = ProFrom.settings;
+        await c.read(proBillingProvider.notifier).buy();
+        expect(c.read(proBillingProvider), ProStatus.locked);
+        expect(unlocked(), isEmpty);
+
+        // Minutes later, the app comes back and Play says it's owned.
+        statusAnswer = 'unlocked';
+        await c.read(proBillingProvider.notifier).refresh();
+        expect(c.read(proBillingProvider), ProStatus.unlocked);
+        expect(unlocked(), [
+          'pro {step: unlocked, from: settings, '
+              'path: settings/unlocked, sale: yes}',
+        ]);
+        expect(prefs.getString(proUnlockSentKey), '1');
+      },
+    );
+
+    test('a purchase restored at start, with no tap, is not counted', () async {
+      final c = await container();
+      statusAnswer = 'unlocked';
+      await c.read(proBillingProvider.notifier).refresh();
+      expect(c.read(proBillingProvider), ProStatus.unlocked);
+      expect(unlocked(), isEmpty);
+      expect(prefs.getString(proUnlockSentKey), isNull);
+    });
+
+    test('a second change to owned is not counted again', () async {
+      final c = await container(buyAnswer: 'unlocked');
+      await c.read(proBillingProvider.notifier).buy();
+      expect(unlocked(), hasLength(1));
+
+      // A refund, then Pro bought again in the same session.
+      statusAnswer = 'locked';
+      await c.read(proBillingProvider.notifier).refresh();
+      await c.read(proBillingProvider.notifier).buy();
+      expect(c.read(proBillingProvider), ProStatus.unlocked);
+      expect(unlocked(), hasLength(1));
+    });
+
+    test('an install that already sent it does not send it again', () async {
+      final c = await container(
+        buyAnswer: 'unlocked',
+        stored: {proUnlockSentKey: '1'},
+      );
+      await c.read(proBillingProvider.notifier).buy();
+      expect(c.read(proBillingProvider), ProStatus.unlocked);
+      expect(unlocked(), isEmpty);
     });
   });
 

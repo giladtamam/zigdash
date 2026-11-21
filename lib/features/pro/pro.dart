@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/analytics/analytics.dart';
 import 'pro_trial.dart'
@@ -60,8 +61,17 @@ const proOfferedKey = 'pro_offered';
 /// a fresh install before Play has synced) then can't hide what was bought.
 const proOwnedKey = 'pro_owned';
 
+/// "1" once this install sent `unlocked` (3.8.6): the event goes once per
+/// install, on the first change to owned after an Unlock tap, whichever
+/// answer from Play brings it.
+const proUnlockSentKey = 'pro_unlock_sent';
+
 /// Waits before asking Play again after it didn't answer.
-const proRetryDelays = [Duration(seconds: 3), Duration(seconds: 10), Duration(seconds: 30)];
+const proRetryDelays = [
+  Duration(seconds: 3),
+  Duration(seconds: 10),
+  Duration(seconds: 30),
+];
 
 /// Where the Pro screen was opened from, for the purchase events: set by
 /// `openPro`, read when Unlock is tapped.
@@ -79,13 +89,21 @@ class ProBilling extends Notifier<ProStatus> {
   Timer? _retry;
   int _tries = 0;
 
+  /// The last Unlock tap in this app session (3.8.6): what `unlocked` is
+  /// sent with when Play confirms the purchase, at once or minutes later
+  /// (a resume or a retry asking again).
+  ({ProFrom? from, bool sale, String? trial, DateTime? trialEnd})? _tap;
+  bool _unlockSent = false;
+
   @override
   ProStatus build() {
     AppLifecycleListener? life;
     try {
-      life = AppLifecycleListener(onResume: () {
-        if (state != ProStatus.unlocked) unawaited(refresh());
-      });
+      life = AppLifecycleListener(
+        onResume: () {
+          if (state != ProStatus.unlocked) unawaited(refresh());
+        },
+      );
     } catch (_) {
       // No Flutter binding (plain unit tests): no resume to listen to.
     }
@@ -130,15 +148,25 @@ class ProBilling extends Notifier<ProStatus> {
     if (answer == 'error') {
       if (method == 'status' && _tries < proRetryDelays.length) {
         _retry?.cancel();
-        _retry = Timer(proRetryDelays[_tries++], () => unawaited(_ask('status')));
+        _retry = Timer(
+          proRetryDelays[_tries++],
+          () => unawaited(_ask('status')),
+        );
       }
       return answer;
     }
     if (method == 'status') _tries = 0;
+    final was = state;
     state = _parse(answer);
+    if (was != ProStatus.unlocked && state == ProStatus.unlocked) {
+      _trackUnlocked();
+    }
     try {
       final prefs = ref.read(sharedPreferencesProvider);
-      await prefs.setString(proOfferedKey, state == ProStatus.unavailable ? '0' : '1');
+      await prefs.setString(
+        proOfferedKey,
+        state == ProStatus.unavailable ? '0' : '1',
+      );
       if (state == ProStatus.unlocked) {
         await prefs.setString(proOwnedKey, '1');
       } else if (answer == 'locked') {
@@ -170,6 +198,7 @@ class ProBilling extends Notifier<ProStatus> {
     analytics.track(
       ProEvent(ProStep.unlockTapped, from: from, sale: sale, trial: trialWire),
     );
+    _tap = (from: from, sale: sale, trial: trialWire, trialEnd: trial.end);
     final answer = await _ask('buy', {
       'offerId': shown?.offerId,
       'priceMicros': shown?.priceMicros,
@@ -181,16 +210,42 @@ class ProBilling extends Notifier<ProStatus> {
       ref.invalidate(proOfferProvider);
       return;
     }
-    if (state == ProStatus.unlocked) {
-      analytics.track(
-        ProEvent(ProStep.unlocked, from: from, sale: sale, trial: trialWire),
-      );
-      // 3.6: bought while the trial ran or within a week after it.
-      final end = trial.end;
-      if (end != null &&
-          DateTime.now().isBefore(end.add(const Duration(days: 7)))) {
-        analytics.track(const ProTrialEvent(ProTrialStep.kept));
-      }
+  }
+
+  /// `unlocked`, once per install, when Pro turns owned after an Unlock tap
+  /// (3.8.6). Until 3.8.5 it was sent only when Play had confirmed by the
+  /// time buy() returned, and Play often confirms later. A purchase
+  /// restored without a tap (start, reinstall) is never counted.
+  void _trackUnlocked() {
+    final tap = _tap;
+    if (tap == null || _unlockSent) return;
+    SharedPreferences? prefs;
+    try {
+      final p = ref.read(sharedPreferencesProvider);
+      if (p.getString(proUnlockSentKey) == '1') return;
+      prefs = p;
+    } catch (_) {
+      // No preferences: once per app session then.
+    }
+    _unlockSent = true;
+    _tap = null;
+    unawaited(
+      prefs?.setString(proUnlockSentKey, '1').then((_) {}, onError: (_) {}),
+    );
+    final analytics = ref.read(analyticsProvider);
+    analytics.track(
+      ProEvent(
+        ProStep.unlocked,
+        from: tap.from,
+        sale: tap.sale,
+        trial: tap.trial,
+      ),
+    );
+    // 3.6: bought while the trial ran or within a week after it.
+    final end = tap.trialEnd;
+    if (end != null &&
+        DateTime.now().isBefore(end.add(const Duration(days: 7)))) {
+      analytics.track(const ProTrialEvent(ProTrialStep.kept));
     }
   }
 }
