@@ -95,6 +95,7 @@ Future<_Rig> _pump(
   List<Automation> rules = const [],
   Stream<List<Automation>> Function()? rulesLater,
   Stream<EngineView> Function()? views,
+  Connection Function()? currentHome,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   final p = await SharedPreferences.getInstance();
@@ -118,7 +119,9 @@ Future<_Rig> _pump(
         sharedPreferencesProvider.overrideWithValue(p),
         analyticsAvailableProvider.overrideWithValue(true),
         analyticsSinkProvider.overrideWithValue(sink),
-        connectionByIdProvider.overrideWith((ref, _) async => home),
+        connectionByIdProvider.overrideWith(
+          (ref, _) async => currentHome?.call() ?? home,
+        ),
         connectionRepoProvider.overrideWithValue(_Repo(home)),
         historyRecorderOnlineProvider.overrideWith(
           (ref, _) =>
@@ -137,7 +140,8 @@ Future<_Rig> _pump(
           (ref, _) => rulesLater?.call() ?? Stream.value(rules),
         ),
         automationsRepoProvider.overrideWith(
-          (ref) => AutomationsRepo((_) async => mgr, p, timeZone: () async => 'UTC'),
+          (ref) =>
+              AutomationsRepo((_) async => mgr, p, timeZone: () async => 'UTC'),
         ),
       ],
       child: MaterialApp(
@@ -282,6 +286,28 @@ void main() {
     expect(find.byKey(const Key('history-on-phone')), findsNothing);
   });
 
+  testWidgets('3.8.6: a broker added meanwhile brings the offer back', (
+    tester,
+  ) async {
+    var home = _home('192.168.1.2', transport: ConnectionTransport.z2mPage);
+    await _pump(
+      tester,
+      transport: ConnectionTransport.z2mPage,
+      currentHome: () => home,
+    );
+    await tester.tap(find.byKey(const Key('history-on-turn-on')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('history-on-broker')), findsOneWidget);
+
+    home = _home('192.168.1.2');
+    ProviderScope.containerOf(
+      tester.element(find.byKey(const Key('history-on-broker'))),
+    ).invalidate(connectionByIdProvider('c1'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('history-on-broker')), findsNothing);
+    expect(find.byKey(const Key('history-on-turn-on')), findsOneWidget);
+  });
+
   testWidgets('Not now puts it away for the Home', (tester) async {
     final rig = await _pump(tester);
     await tester.tap(find.byKey(const Key('history-on-later')));
@@ -360,68 +386,74 @@ void main() {
       await tester.pump();
       await tester.pump();
       expect(rig.prefs.getBool('history_record_here_c1'), isTrue);
-      expect(find.textContaining('This device records history'), findsOneWidget);
+      expect(
+        find.textContaining('This device records history'),
+        findsOneWidget,
+      );
       // The check ends later: nothing else happens.
       await tester.pump(const Duration(seconds: 21));
       await tester.pump();
-      expect(find.textContaining('This device records history'), findsOneWidget);
-      expect(rig.link.published, isEmpty);
       expect(
-        rig.sink.sent.where((e) => e.contains('result: failed')),
-        isEmpty,
+        find.textContaining('This device records history'),
+        findsOneWidget,
       );
+      expect(rig.link.published, isEmpty);
+      expect(rig.sink.sent.where((e) => e.contains('result: failed')), isEmpty);
       expect(
         rig.sink.sent,
         contains('history_setup {result: this_device, from: card}'),
       );
     });
 
-    testWidgets('rules waiting for the Engine: asked about before the install', (
-      tester,
-    ) async {
-      final rig = await _pump(
-        tester,
-        rules: [
-          const Automation(
-            id: 'heater',
-            name: 'Heater at 7',
-            enabled: true,
-            trigger: TimeTrigger(at: '07:00'),
-            action: AutomationAction(
-              kind: ActionKind.device,
-              commands: [
-                EngineCommand(ieee: '0xh', payload: {'state': 'ON'}),
-              ],
+    testWidgets(
+      'rules waiting for the Engine: asked about before the install',
+      (tester) async {
+        final rig = await _pump(
+          tester,
+          rules: [
+            const Automation(
+              id: 'heater',
+              name: 'Heater at 7',
+              enabled: true,
+              trigger: TimeTrigger(at: '07:00'),
+              action: AutomationAction(
+                kind: ActionKind.device,
+                commands: [
+                  EngineCommand(ieee: '0xh', payload: {'state': 'ON'}),
+                ],
+              ),
             ),
-          ),
-        ],
-      );
-      await tester.tap(find.byKey(const Key('history-on-turn-on')));
-      // The card's progress spins under the sheet: no pumpAndSettle.
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text('Heater at 7'), findsOneWidget);
-      expect(rig.link.published, isEmpty, reason: 'nothing before a tap');
-      await tester.tap(find.byKey(const Key('engine-waiting-heater')));
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.tap(find.byKey(const Key('engine-sheet-install')));
-      await tester.pump();
-      for (var i = 0; i < 10; i++) {
-        await tester.runAsync(
-          () => Future<void>.delayed(const Duration(milliseconds: 20)),
+          ],
         );
-        await tester.pump(const Duration(milliseconds: 100));
-      }
-      expect(rig.mgr.rules, [('heater', false)]);
-      expect(
-        rig.link.published.map((p) => p.$1),
-        contains('zigbee2mqtt/bridge/request/extension/save'),
-      );
-      expect(
-        rig.sink.sent,
-        contains('engine_setup {step: install_tapped, from: history_on, z2m: 2.14}'),
-      );
-    });
+        await tester.tap(find.byKey(const Key('history-on-turn-on')));
+        // The card's progress spins under the sheet: no pumpAndSettle.
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(find.text('Heater at 7'), findsOneWidget);
+        expect(rig.link.published, isEmpty, reason: 'nothing before a tap');
+        await tester.tap(find.byKey(const Key('engine-waiting-heater')));
+        await tester.pump(const Duration(milliseconds: 500));
+        await tester.tap(find.byKey(const Key('engine-sheet-install')));
+        await tester.pump();
+        for (var i = 0; i < 10; i++) {
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 20)),
+          );
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        expect(rig.mgr.rules, [('heater', false)]);
+        expect(
+          rig.link.published.map((p) => p.$1),
+          contains('zigbee2mqtt/bridge/request/extension/save'),
+        );
+        expect(
+          rig.sink.sent,
+          contains(
+            'engine_setup {step: install_tapped, from: history_on, z2m: 2.14}',
+          ),
+        );
+      },
+    );
   });
 
   group('3.6.2: consent and rules waiting for the Engine', () {
@@ -452,51 +484,54 @@ void main() {
       return rig;
     }
 
-    testWidgets('Allow: the waiting rules first; Not now goes back to the offer', (
-      tester,
-    ) async {
-      final rig = await toConsent(tester);
-      await tester.tap(find.byKey(const Key('engine-sheet-save')));
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('history-on-turn-on')), findsOneWidget);
-      expect(rig.link.published, isEmpty);
-    });
+    testWidgets(
+      'Allow: the waiting rules first; Not now goes back to the offer',
+      (tester) async {
+        final rig = await toConsent(tester);
+        await tester.tap(find.byKey(const Key('engine-sheet-save')));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('history-on-turn-on')), findsOneWidget);
+        expect(rig.link.published, isEmpty);
+      },
+    );
 
-    testWidgets('Allow: a rule kept paused is saved disabled before the restart', (
-      tester,
-    ) async {
-      final rig = await toConsent(tester);
-      await tester.tap(find.byKey(const Key('engine-waiting-heater')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('engine-sheet-install')));
-      await tester.pump();
-      expect(rig.mgr.rules, [('heater', false)]);
-      expect(
-        rig.link.published.map((p) => p.$1).first,
-        'zigbee2mqtt/bridge/request/options',
-      );
-    });
+    testWidgets(
+      'Allow: a rule kept paused is saved disabled before the restart',
+      (tester) async {
+        final rig = await toConsent(tester);
+        await tester.tap(find.byKey(const Key('engine-waiting-heater')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('engine-sheet-install')));
+        await tester.pump();
+        expect(rig.mgr.rules, [('heater', false)]);
+        expect(
+          rig.link.published.map((p) => p.$1).first,
+          'zigbee2mqtt/bridge/request/options',
+        );
+      },
+    );
 
-    testWidgets('rules arriving 1 s after the hub check are still asked about', (
-      tester,
-    ) async {
-      Stream<List<Automation>> late() async* {
-        yield const [];
-        await Future<void>.delayed(const Duration(seconds: 1));
-        yield [heater];
-      }
+    testWidgets(
+      'rules arriving 1 s after the hub check are still asked about',
+      (tester) async {
+        Stream<List<Automation>> late() async* {
+          yield const [];
+          await Future<void>.delayed(const Duration(seconds: 1));
+          yield [heater];
+        }
 
-      final rig = await _pump(tester, rulesLater: late);
-      await tester.tap(find.byKey(const Key('history-on-turn-on')));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.byKey(const Key('engine-waiting-heater')), findsNothing);
-      expect(rig.link.published, isEmpty);
-      await tester.pump(const Duration(milliseconds: 600));
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.byKey(const Key('engine-waiting-heater')), findsOneWidget);
-      expect(rig.link.published, isEmpty);
-    });
+        final rig = await _pump(tester, rulesLater: late);
+        await tester.tap(find.byKey(const Key('history-on-turn-on')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(find.byKey(const Key('engine-waiting-heater')), findsNothing);
+        expect(rig.link.published, isEmpty);
+        await tester.pump(const Duration(milliseconds: 600));
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(find.byKey(const Key('engine-waiting-heater')), findsOneWidget);
+        expect(rig.link.published, isEmpty);
+      },
+    );
 
     testWidgets('"Not now" to add-ons kept on this phone: this phone instead', (
       tester,

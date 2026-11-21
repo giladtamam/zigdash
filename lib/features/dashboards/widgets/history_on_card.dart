@@ -255,6 +255,11 @@ class _HistoryOnCardState extends ConsumerState<HistoryOnCard> {
         .watch(connectionByIdProvider(widget.connectionId))
         .valueOrNull;
     final viaPage = transportOf(home?.transport) == ConnectionTransport.z2mPage;
+    // 3.8.6: the broker was added meanwhile; offer History again instead of
+    // still asking for the broker.
+    if (_stage == _Stage.broker && home != null && !viaPage) {
+      _stage = _Stage.offer;
+    }
     final online = viaPage
         ? false
         : ref
