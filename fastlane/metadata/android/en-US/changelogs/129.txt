@@ -1,1 +1,2 @@
 Scenes can now include the tiles you built yourself (custom MQTT tiles), and editing a scene keeps everything already in it.
+Your own switch tiles now look like the device tiles: tap anywhere to switch, with On/Off in your language.

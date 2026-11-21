@@ -851,12 +851,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get panelCoverClose => 'Sluiten';
 
   @override
-  String get panelToggleNoState => '(geen status)';
-
-  @override
-  String get panelToggleError => 'fout';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override

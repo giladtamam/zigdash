@@ -855,12 +855,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get panelCoverClose => 'Schließen';
 
   @override
-  String get panelToggleNoState => '(kein Status)';
-
-  @override
-  String get panelToggleError => 'Fehler';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override

@@ -848,12 +848,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get panelCoverClose => 'Stäng';
 
   @override
-  String get panelToggleNoState => '(ingen status)';
-
-  @override
-  String get panelToggleError => 'fel';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override

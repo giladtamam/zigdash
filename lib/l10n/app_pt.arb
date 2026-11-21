@@ -266,8 +266,6 @@
   "panelCoverOpen": "Abrir",
   "panelCoverStop": "Parar",
   "panelCoverClose": "Fechar",
-  "panelToggleNoState": "(sem estado)",
-  "panelToggleError": "erro",
   "panelStateOn": "LIGADO",
   "panelStateOff": "DESLIGADO",
   "panelNodeStatusOnline": "online",

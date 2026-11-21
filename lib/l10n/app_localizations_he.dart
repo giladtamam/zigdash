@@ -842,12 +842,6 @@ class AppLocalizationsHe extends AppLocalizations {
   String get panelCoverClose => 'סגירה';
 
   @override
-  String get panelToggleNoState => '(אין מצב)';
-
-  @override
-  String get panelToggleError => 'שגיאה';
-
-  @override
   String get panelStateOn => 'פועל';
 
   @override

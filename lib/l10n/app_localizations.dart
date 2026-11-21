@@ -1656,18 +1656,6 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get panelCoverClose;
 
-  /// No description provided for @panelToggleNoState.
-  ///
-  /// In en, this message translates to:
-  /// **'(no state)'**
-  String get panelToggleNoState;
-
-  /// No description provided for @panelToggleError.
-  ///
-  /// In en, this message translates to:
-  /// **'err'**
-  String get panelToggleError;
-
   /// No description provided for @panelStateOn.
   ///
   /// In en, this message translates to:

@@ -256,8 +256,6 @@
   "panelCoverOpen": "Otevřít",
   "panelCoverStop": "Stop",
   "panelCoverClose": "Zavřít",
-  "panelToggleNoState": "(bez stavu)",
-  "panelToggleError": "chyba",
   "panelStateOn": "ZAP",
   "panelStateOff": "VYP",
   "panelNodeStatusOnline": "online",

@@ -851,12 +851,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get panelCoverClose => 'Fechar';
 
   @override
-  String get panelToggleNoState => '(sem estado)';
-
-  @override
-  String get panelToggleError => 'erro';
-
-  @override
   String get panelStateOn => 'LIGADO';
 
   @override

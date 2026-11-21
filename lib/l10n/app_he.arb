@@ -310,8 +310,6 @@
   "panelCoverOpen": "פתיחה",
   "panelCoverStop": "עצירה",
   "panelCoverClose": "סגירה",
-  "panelToggleNoState": "(אין מצב)",
-  "panelToggleError": "שגיאה",
   "panelStateOn": "פועל",
   "panelStateOff": "כבוי",
   "panelNodeStatusOnline": "מקוון",

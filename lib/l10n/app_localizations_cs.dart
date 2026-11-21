@@ -850,12 +850,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get panelCoverClose => 'Zavřít';
 
   @override
-  String get panelToggleNoState => '(bez stavu)';
-
-  @override
-  String get panelToggleError => 'chyba';
-
-  @override
   String get panelStateOn => 'ZAP';
 
   @override

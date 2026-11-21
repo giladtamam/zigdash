@@ -289,9 +289,6 @@
   "panelCoverStop": "Стоп",
   "panelCoverClose": "Закрыть",
 
-  "panelToggleNoState": "(нет состояния)",
-  "panelToggleError": "ошибка",
-
   "panelStateOn": "ВКЛ",
   "panelStateOff": "ВЫКЛ",
 

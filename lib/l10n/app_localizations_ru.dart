@@ -853,12 +853,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get panelCoverClose => 'Закрыть';
 
   @override
-  String get panelToggleNoState => '(нет состояния)';
-
-  @override
-  String get panelToggleError => 'ошибка';
-
-  @override
   String get panelStateOn => 'ВКЛ';
 
   @override

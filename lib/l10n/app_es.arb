@@ -295,9 +295,6 @@
   "panelCoverStop": "Parar",
   "panelCoverClose": "Cerrar",
 
-  "panelToggleNoState": "(sin estado)",
-  "panelToggleError": "err",
-
   "panelStateOn": "ON",
   "panelStateOff": "OFF",
 
