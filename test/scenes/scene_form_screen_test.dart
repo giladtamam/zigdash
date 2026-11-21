@@ -286,6 +286,7 @@ void main() {
     await tester.tap(find.text('Tasmota plug'));
     await _settle(tester);
     expect(_ticked(tester, 'Tasmota plug'), isTrue);
+    expect(find.text('1 selected'), findsOneWidget, reason: 'tiles count');
     expect(
       tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
       isTrue,

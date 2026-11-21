@@ -12,6 +12,8 @@ import '../../devices/devices_providers.dart';
 import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../widgets/device_tile_panel.dart' show deviceClassIcon;
+import '../widgets/signal_tile.dart' show QuickActionChip;
+import '../../../core/theme/signal_icons.dart';
 import '../../../data/database/tables/panels.dart';
 import '../../../mqtt/json_path.dart';
 import '../../../data/repositories/dashboard_repo.dart';

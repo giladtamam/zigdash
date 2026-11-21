@@ -572,7 +572,9 @@ class _State extends ConsumerState<SceneFormScreen> {
                 child: Text(l10n.sceneFormNoDevices),
               )
             else if (capturable.isNotEmpty) ...[
-              Text(l10n.sceneFormSelectedCount(_edits.length),
+              // 3.8.7: ticked tiles count too.
+              Text(l10n.sceneFormSelectedCount(
+                      _edits.length + _tileActions.length),
                   style: Theme.of(context).textTheme.bodySmall),
               ...capturable.map((d) {
                 final name = d.friendlyName;
