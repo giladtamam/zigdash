@@ -1354,12 +1354,18 @@ void main() {
         connected: false,
         candidatesTried: 1,
       );
+      final sent = <(String, Map<String, String>)>[];
       final coordinator = await _pump(
         tester,
         scan: (_) => Stream.fromIterable([
           const ProbeResult(host: '192.168.1.10', port: 8883),
         ]),
         reports: [failed, failed],
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
       );
       await tester.tap(find.text('Find my setup'));
       await tester.pump();
@@ -1393,6 +1399,15 @@ void main() {
       expect(
         find.text('manual entry host=192.168.1.10&port=1883'),
         findsOneWidget,
+      );
+      // Counted apart from the other ways into the form.
+      expect(
+        sent.where((e) => e.$2['step'] == 'manual').map((e) => e.$2['from']),
+        ['tls_edit'],
+      );
+      expect(
+        sent.where((e) => e.$2['step'] == 'failed').first.$2['port'],
+        '8883',
       );
     });
   }

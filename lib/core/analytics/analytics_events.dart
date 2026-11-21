@@ -290,9 +290,11 @@ enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 /// Sent as `tls`. Never the address.
 enum ScanTls { yes, untrusted }
 
-/// Where Test & connect ran, on [SetupStepKind.manualTest] (3.8.5): the
-/// connection form's Test (`from: form`); the guided form sends none.
-enum ManualTestFrom { form }
+/// Where a broker form was reached from (3.8.5), sent as `from`: on
+/// [SetupStepKind.manualTest], [form] is the connection form's Test (the
+/// guided form sends none); on [SetupStepKind.manual], [tlsEdit] is Edit
+/// settings after a TLS failure in setup (the other ways in send none).
+enum ManualFrom { form, tlsEdit }
 
 /// Where setup opened the Home Assistant sign-in (3.1.3): while scanning,
 /// the card on an empty result, the note under "I use Home Assistant",
@@ -413,15 +415,16 @@ class SetupStep extends AnalyticsEvent {
     this.fromZha,
     this.linkSrc,
     this.tls,
-    this.testFrom,
+    this.manualFrom,
   });
 
   /// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5).
   final ScanTls? tls;
 
-  /// Where Test & connect ran, on [SetupStepKind.manualTest] (3.8.5).
-  /// Sent as `from`, without the `path` that [addressFrom] adds.
-  final ManualTestFrom? testFrom;
+  /// Where a broker form was reached from, on [SetupStepKind.manualTest]
+  /// and [SetupStepKind.manual] (3.8.5). Sent as `from`, without the
+  /// `path` that [addressFrom] adds.
+  final ManualFrom? manualFrom;
 
   /// Where the connect link came from (ha-link.md), on
   /// [SetupStepKind.haLink], and on [SetupStepKind.complete] when setup
@@ -594,7 +597,7 @@ class SetupStep extends AnalyticsEvent {
     if (fromZha != null) 'from_zha': fromZha!.name,
     if (linkSrc != null) 'link_src': _snake(linkSrc!.name),
     if (tls != null) 'tls': tls!.name,
-    if (testFrom != null) 'from': testFrom!.name,
+    if (manualFrom != null) 'from': _snake(manualFrom!.name),
     if (zhaDevices != null)
       'zha': bucket(
         zhaDevices!,

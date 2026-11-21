@@ -224,7 +224,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               result: manualTestResult(report),
               devices: report.connected ? report.deviceNames.length : null,
               portClass: portClassOf(cfg.port),
-              testFrom: ManualTestFrom.form,
+              manualFrom: ManualFrom.form,
             ),
           );
       setState(() => _testing = false);

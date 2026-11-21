@@ -289,15 +289,22 @@ class SetupScreen extends ConsumerWidget {
               // 3.8.5: an encrypted broker the phone can't use; the form
               // opens on the same address with the unencrypted port.
               onEditTls:
-                  (state.kind == SetupErrorKind.tlsUntrusted ||
-                          state.kind == SetupErrorKind.tlsFailed) &&
-                      state.candidate != null
+                  state.kind == SetupErrorKind.tlsUntrusted ||
+                      state.kind == SetupErrorKind.tlsFailed
                   ? () {
                       ref
                           .read(analyticsProvider)
-                          .track(const SetupStep(SetupStepKind.manual));
+                          .track(
+                            const SetupStep(
+                              SetupStepKind.manual,
+                              manualFrom: ManualFrom.tlsEdit,
+                            ),
+                          );
+                      final host = state.candidate?.host;
                       context.push(
-                        Routes.guidedConnectTo(state.candidate!.host, 1883),
+                        host == null
+                            ? Routes.guidedConnect
+                            : Routes.guidedConnectTo(host, 1883),
                       );
                     }
                   : null,
@@ -1690,8 +1697,9 @@ class _Failure extends StatelessWidget {
   final VoidCallback onRetry;
   final VoidCallback onManual;
 
-  /// The broker form on the same address with port 1883, for the two TLS
-  /// failures (3.8.5): it leads, and Try again follows.
+  /// The broker form on the same address with port 1883 (empty when no
+  /// address is known), for the two TLS failures (3.8.5): it leads, and
+  /// Retry follows.
   final VoidCallback? onEditTls;
 
   /// Moving from ZHA, when Home Assistant's check found ZHA devices.

@@ -377,7 +377,7 @@ void main() {
           SetupStepKind.manualTest,
           result: ManualTestResult.tlsUntrusted,
           portClass: '8883',
-          testFrom: ManualTestFrom.form,
+          manualFrom: ManualFrom.form,
         ).props,
         {
           'step': 'manual_test',
