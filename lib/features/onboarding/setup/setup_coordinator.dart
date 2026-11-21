@@ -1010,6 +1010,11 @@ class SetupCoordinator {
         await createDashboard();
       } else if (s.kind == SetupErrorKind.scanFailed) {
         await startScan();
+      } else if (s.kind == SetupErrorKind.tlsUntrusted &&
+          (s.candidate?.untrustedCert ?? false)) {
+        // 3.8.5: the scan's verdict on the certificate is cached on the
+        // candidate; a fixed certificate shows only to a fresh look.
+        await startScan(widen: _widen);
       } else if (s.candidate != null) {
         await _verify(s.candidate!);
       }

@@ -488,7 +488,20 @@ void main() {
       );
 
       test('says so without asking for a login', () async {
-        final h = _Harness(scan: (_) => Stream.fromIterable([untrusted]));
+        // The second look finds the certificate fixed.
+        var scans = 0;
+        final h = _Harness(
+          scan: (_) => Stream.fromIterable([
+            if (scans++ == 0)
+              untrusted
+            else
+              const ProbeResult(
+                host: '192.168.1.10',
+                port: 8883,
+                needsAuth: true,
+              ),
+          ]),
+        );
         final states = <SetupState>[];
         final sub = h.coordinator.states.listen(states.add);
         await h.coordinator.startScan();
@@ -504,13 +517,16 @@ void main() {
         expect(states.whereType<SetupVerifying>(), hasLength(1));
         expect(h.diagnostics.calls, isEmpty);
 
-        // Try again can't help, and doesn't pretend: the same answer.
+        // Try again looks again: the scan's verdict was cached on the
+        // candidate, so re-checking it would fail forever. A fixed
+        // certificate now reaches the login.
         await h.coordinator.retry();
-        expect(
-          (h.coordinator.state as SetupFailed).kind,
-          SetupErrorKind.tlsUntrusted,
-        );
-        expect(h.diagnostics.calls, isEmpty);
+        for (var i = 0; i < 4; i++) {
+          await Future<void>.delayed(Duration.zero);
+        }
+        expect(scans, 2);
+        final auth = h.coordinator.state as SetupNeedsAuth;
+        expect(auth.candidate.untrustedCert, isFalse);
       });
 
       test('with a login already given, still says so', () async {
