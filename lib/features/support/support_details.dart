@@ -45,6 +45,8 @@ FailureKind failureKindFromSetup(SetupErrorKind kind) => switch (kind) {
   SetupErrorKind.authRequired => FailureKind.loginRequired,
   SetupErrorKind.authRejected => FailureKind.loginRejected,
   SetupErrorKind.loginNoAnswer => FailureKind.timedOut,
+  SetupErrorKind.tlsUntrusted => FailureKind.tlsUntrusted,
+  SetupErrorKind.tlsFailed => FailureKind.tlsFailed,
   SetupErrorKind.notZigbee2Mqtt => FailureKind.noZigbee2mqtt,
   SetupErrorKind.noDevices ||
   SetupErrorKind.devicesListMissing => FailureKind.noDevices,
@@ -71,6 +73,8 @@ FailureKind failureKindFromLadder(DiagnosticsReport report) {
       'diagTcpZ2mBrokerElsewhere' => FailureKind.refused,
       'diagConnackFail' => FailureKind.notMqtt,
       'diagLoginNoAnswer' => FailureKind.timedOut,
+      'diagTlsUntrusted' => FailureKind.tlsUntrusted,
+      'diagTlsFailed' => FailureKind.tlsFailed,
       'diagAuthRejected' ||
       'diagAuthRejectedHa' ||
       'diagAuthRefused' => FailureKind.loginRejected,

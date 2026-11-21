@@ -286,6 +286,21 @@ class SetupScreen extends ConsumerWidget {
               state: state,
               onRetry: coordinator.retry,
               onManual: manual,
+              // 3.8.5: an encrypted broker the phone can't use; the form
+              // opens on the same address with the unencrypted port.
+              onEditTls:
+                  (state.kind == SetupErrorKind.tlsUntrusted ||
+                          state.kind == SetupErrorKind.tlsFailed) &&
+                      state.candidate != null
+                  ? () {
+                      ref
+                          .read(analyticsProvider)
+                          .track(const SetupStep(SetupStepKind.manual));
+                      context.push(
+                        Routes.guidedConnectTo(state.candidate!.host, 1883),
+                      );
+                    }
+                  : null,
               // 3.8.1: signed in, MQTT works, and the Zigbee is in ZHA.
               onZhaMove: state.kind == SetupErrorKind.haNoZigbee2Mqtt &&
                       fromZhaOrNull(
@@ -357,6 +372,12 @@ String _guidanceText(AppLocalizations l10n, String key) => switch (key) {
   'setupErrLoginNoAnswerTitle' => l10n.setupErrLoginNoAnswerTitle,
   'setupErrLoginNoAnswerBody' => l10n.setupErrLoginNoAnswerBody,
   'setupErrLoginNoAnswerAction' => l10n.setupErrLoginNoAnswerAction,
+  // 3.8.5: a certificate the phone doesn't trust, or another TLS failure.
+  'setupErrTlsUntrustedTitle' => l10n.setupErrTlsUntrustedTitle,
+  'setupErrTlsFailedTitle' => l10n.setupErrTlsFailedTitle,
+  'diagTlsUntrusted' => l10n.diagTlsUntrusted,
+  'diagTlsFailed' => l10n.diagTlsFailed,
+  'setupErrTlsAction' => l10n.setupErrTlsAction,
   // Missing until 2.8.2: the unknown screen read "Try again" three times.
   'setupErrUnknownTitle' => l10n.setupErrUnknownTitle,
   'setupErrUnknownBody' => l10n.setupErrUnknownBody,
@@ -1663,10 +1684,15 @@ class _Failure extends StatelessWidget {
     required this.onRetry,
     required this.onManual,
     this.onZhaMove,
+    this.onEditTls,
   });
   final SetupFailed state;
   final VoidCallback onRetry;
   final VoidCallback onManual;
+
+  /// The broker form on the same address with port 1883, for the two TLS
+  /// failures (3.8.5): it leads, and Try again follows.
+  final VoidCallback? onEditTls;
 
   /// Moving from ZHA, when Home Assistant's check found ZHA devices.
   final VoidCallback? onZhaMove;
@@ -1696,11 +1722,25 @@ class _Failure extends StatelessWidget {
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 24),
-        FilledButton.icon(
-          onPressed: onRetry,
-          icon: const Icon(Icons.refresh),
-          label: Text(_guidanceText(l10n, guidance.actionKey)),
-        ),
+        if (onEditTls case final onEdit?) ...[
+          FilledButton.icon(
+            key: const Key('setup-failed-edit-tls'),
+            onPressed: onEdit,
+            icon: const Icon(Icons.edit_outlined),
+            label: Text(_guidanceText(l10n, guidance.actionKey)),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.retry),
+          ),
+        ] else
+          FilledButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(_guidanceText(l10n, guidance.actionKey)),
+          ),
         if (onZhaMove != null) ...[
           const SizedBox(height: 12),
           FilledButton.tonalIcon(

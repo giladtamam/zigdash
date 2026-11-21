@@ -1383,6 +1383,14 @@ class AppLocalizationsRu extends AppLocalizations {
       'Брокер не ответил на вход вовремя. Home Assistant может проверять его несколько секунд, попробуйте ещё раз.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Телефон не доверяет сертификату шифрования этого брокера: он самоподписанный, просроченный или выпущен для другого имени. ZigDash пока не может его использовать. В домашней сети используйте вместо него нешифрованный порт брокера 1883 или выдайте брокеру сертификат от публичного удостоверяющего центра.';
+
+  @override
+  String get diagTlsFailed =>
+      'Шифрованное соединение не установилось. Возможно, брокер требует клиентский сертификат, а ZigDash его не поддерживает. Попробуйте его нешифрованный порт 1883 в домашней сети.';
+
+  @override
   String get diagAuthRejected =>
       'Брокер отклонил имя пользователя или пароль. Проверьте учётные данные.';
 
@@ -2243,6 +2251,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Повторить';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Телефон не доверяет сертификату этого брокера';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Шифрованное соединение не удалось';
+
+  @override
+  String get setupErrTlsAction => 'Изменить настройки';
 
   @override
   String get setupNoZ2mTitle =>

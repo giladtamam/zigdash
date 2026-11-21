@@ -1375,6 +1375,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il broker non ha risposto al login in tempo. Home Assistant può impiegare qualche secondo per verificarlo, quindi riprova.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Il tuo telefono non si fida del certificato di crittografia di questo broker: è autofirmato, scaduto o fatto per un altro nome. ZigDash non può ancora usarlo. Sulla rete di casa usa invece la porta non cifrata 1883 del broker, oppure dai al broker un certificato di un\'autorità pubblica.';
+
+  @override
+  String get diagTlsFailed =>
+      'La connessione cifrata non è partita. Il broker potrebbe chiedere un certificato client, che ZigDash non supporta. Prova la sua porta non cifrata 1883 sulla rete di casa.';
+
+  @override
   String get diagAuthRejected =>
       'Il broker ha rifiutato nome utente o password. Controlla le credenziali.';
 
@@ -2250,6 +2258,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Riprova';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Il tuo telefono non si fida del certificato di questo broker';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Connessione cifrata non riuscita';
+
+  @override
+  String get setupErrTlsAction => 'Modifica impostazioni';
 
   @override
   String get setupNoZ2mTitle =>

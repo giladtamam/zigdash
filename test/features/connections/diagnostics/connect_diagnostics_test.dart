@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show HandshakeException;
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,6 +28,13 @@ enum _ConnectBehavior {
 
   /// Accepts (CONNACK 0), then the socket drops before any subscribe.
   acceptedThenDropped,
+
+  /// The TLS handshake meets a certificate the phone doesn't trust: the
+  /// bad-certificate callback fires, then the handshake fails (3.8.5).
+  tlsUntrusted,
+
+  /// The TLS handshake fails with no certificate complaint (3.8.5).
+  tlsFailed,
 }
 
 class _FakeClient extends mc.MqttClient {
@@ -42,6 +50,9 @@ class _FakeClient extends mc.MqttClient {
 
   final subscribedTopics = <String>[];
   bool disconnectedCalled = false;
+
+  /// What watchBadCert would call, set by the diagnostics' watcher.
+  void Function()? onBad;
 
   @override
   Future<mc.MqttClientConnectionStatus?> connect([String? u, String? p]) {
@@ -61,6 +72,13 @@ class _FakeClient extends mc.MqttClient {
       case _ConnectBehavior.acceptedThenDropped:
         _status.returnCode = mc.MqttConnectReturnCode.connectionAccepted;
         return Future.value(_status);
+      case _ConnectBehavior.tlsUntrusted:
+        onBad?.call();
+        return Future.error(
+          const HandshakeException('CERTIFICATE_VERIFY_FAILED'),
+        );
+      case _ConnectBehavior.tlsFailed:
+        return Future.error(const HandshakeException('WRONG_VERSION_NUMBER'));
     }
   }
 
@@ -135,6 +153,7 @@ void main() {
         final b = h == remoteHost ? (remoteBehavior ?? behavior) : behavior;
         return _FakeClient(h, b);
       },
+      watchCert: (client, cfg, onBad) => (client as _FakeClient).onBad = onBad,
       deviceWindow: const Duration(seconds: 3),
     );
   }
@@ -353,6 +372,98 @@ void main() {
         expect(report!.steps[2].detailKey, 'diagLoginNoAnswer');
         expect(report!.connected, isFalse);
         expect(manualTestResult(report!), ManualTestResult.connack);
+      });
+    });
+
+    // 3.8.5: an encrypted broker used to read as "no answer", even with
+    // the right password, and retrying could never help.
+    group('TLS', () {
+      final withLogin = BrokerConfig(
+        id: 'conn-1',
+        host: host,
+        port: 8883,
+        protocol: MqttProtocol.tcpSsl,
+        username: 'zigdash',
+      );
+
+      test('an untrusted certificate says so, not "no answer"', () {
+        fakeAsync((async) {
+          final d = diagnostics(behavior: _ConnectBehavior.tlsUntrusted);
+          DiagnosticsReport? report;
+          d.run(config: withLogin, password: 'pw').then((r) => report = r);
+          async.flushMicrotasks();
+
+          expect(report!.steps[2].step, DiagnosticStep.connack);
+          expect(report!.steps[2].status, StepStatus.fail);
+          expect(report!.steps[2].detailKey, 'diagTlsUntrusted');
+          expect(manualTestResult(report!), ManualTestResult.tlsUntrusted);
+        });
+      });
+
+      test('another TLS failure says the encrypted connection failed', () {
+        fakeAsync((async) {
+          final d = diagnostics(behavior: _ConnectBehavior.tlsFailed);
+          DiagnosticsReport? report;
+          d.run(config: withLogin, password: 'pw').then((r) => report = r);
+          async.flushMicrotasks();
+
+          expect(report!.steps[2].detailKey, 'diagTlsFailed');
+          expect(manualTestResult(report!), ManualTestResult.tlsFailed);
+        });
+      });
+
+      test('without a login too', () {
+        fakeAsync((async) {
+          final d = diagnostics(behavior: _ConnectBehavior.tlsUntrusted);
+          DiagnosticsReport? report;
+          d
+              .run(
+                config: BrokerConfig(
+                  id: 'conn-1',
+                  host: host,
+                  port: 8883,
+                  protocol: MqttProtocol.tcpSsl,
+                ),
+                password: '',
+              )
+              .then((r) => report = r);
+          async.flushMicrotasks();
+          expect(report!.steps[2].detailKey, 'diagTlsUntrusted');
+        });
+      });
+
+      test('the flag is per candidate: a local TLS failure, then the '
+          'remote broker connects', () {
+        fakeAsync((async) {
+          final d = diagnostics(
+            behavior: _ConnectBehavior.tlsUntrusted,
+            remoteBehavior: _ConnectBehavior.connected,
+          );
+          DiagnosticsReport? report;
+          d
+              .run(config: config(remote: remoteHost), password: '')
+              .then((r) => report = r);
+          async.elapse(const Duration(seconds: 3));
+          expect(report!.connected, isTrue);
+          expect(report!.candidatesTried, 2);
+        });
+      });
+
+      test('a remote refusal after a local TLS failure is not called TLS',
+          () {
+        fakeAsync((async) {
+          final d = diagnostics(
+            behavior: _ConnectBehavior.tlsUntrusted,
+            remoteBehavior: _ConnectBehavior.refused,
+          );
+          DiagnosticsReport? report;
+          d
+              .run(config: config(remote: remoteHost), password: '')
+              .then((r) => report = r);
+          async.flushMicrotasks();
+          // The report is the last candidate's, with its own flag.
+          expect(report!.steps[2].detailKey, 'diagConnackFail');
+        });
       });
     });
 

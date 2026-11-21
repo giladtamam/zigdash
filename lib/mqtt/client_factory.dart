@@ -25,6 +25,10 @@ mc.MqttClient buildMqttClient(BrokerConfig config, String clientId, {String? hos
   return impl.buildPlatformClient(config, clientId, host: host);
 }
 
+/// The shape of [watchBadCert], so tests can stand in for it.
+typedef BadCertWatcher =
+    void Function(mc.MqttClient client, BrokerConfig config, void Function() onBad);
+
 /// Calls [onBad] when [client]'s TLS handshake meets a certificate the
 /// phone doesn't trust (3.8.5), so a failed connect can say so instead of
 /// "no answer". Never trusts it: the handshake still fails. Only a raw

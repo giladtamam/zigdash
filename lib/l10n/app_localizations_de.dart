@@ -1378,6 +1378,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Der Broker hat nicht rechtzeitig auf die Anmeldung geantwortet. Home Assistant braucht manchmal ein paar Sekunden zum Prüfen, versuche es noch einmal.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Dein Handy vertraut dem Verschlüsselungszertifikat dieses Brokers nicht: Es ist selbst signiert, abgelaufen oder für einen anderen Namen ausgestellt. ZigDash kann es noch nicht verwenden. Nutze im Heimnetz stattdessen den unverschlüsselten Port 1883 des Brokers, oder gib dem Broker ein Zertifikat einer öffentlichen Zertifizierungsstelle.';
+
+  @override
+  String get diagTlsFailed =>
+      'Die verschlüsselte Verbindung kam nicht zustande. Der Broker verlangt vielleicht ein Client-Zertifikat, das ZigDash nicht unterstützt. Versuche im Heimnetz seinen unverschlüsselten Port 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Der Broker hat Benutzername oder Passwort abgelehnt. Prüfen Sie Ihre Zugangsdaten.';
 
@@ -2259,6 +2267,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Erneut versuchen';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Dein Handy vertraut dem Zertifikat dieses Brokers nicht';
+
+  @override
+  String get setupErrTlsFailedTitle =>
+      'Verschlüsselte Verbindung fehlgeschlagen';
+
+  @override
+  String get setupErrTlsAction => 'Einstellungen bearbeiten';
 
   @override
   String get setupNoZ2mTitle =>

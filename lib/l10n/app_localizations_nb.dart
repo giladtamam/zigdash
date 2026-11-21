@@ -1368,6 +1368,14 @@ class AppLocalizationsNb extends AppLocalizations {
       'Brokeren svarte ikke på innloggingen i tide. Home Assistant kan bruke noen sekunder på å sjekke den, så prøv igjen.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Telefonen stoler ikke på krypteringssertifikatet til denne brokeren: det er selvsignert, utløpt eller laget for et annet navn. ZigDash kan ikke bruke det ennå. På hjemmenettet kan du heller bruke brokerens ukrypterte port 1883, eller gi brokeren et sertifikat fra en offentlig sertifikatutsteder.';
+
+  @override
+  String get diagTlsFailed =>
+      'Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. Prøv den ukrypterte porten 1883 på hjemmenettet.';
+
+  @override
   String get diagAuthRejected =>
       'Brokeren avviste brukernavn eller passord. Kontroller påloggingsinformasjonen.';
 
@@ -2242,6 +2250,16 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Prøv igjen';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Telefonen stoler ikke på sertifikatet til denne brokeren';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Den krypterte tilkoblingen mislyktes';
+
+  @override
+  String get setupErrTlsAction => 'Rediger innstillinger';
 
   @override
   String get setupNoZ2mTitle =>

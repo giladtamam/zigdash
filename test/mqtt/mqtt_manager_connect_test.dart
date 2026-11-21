@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show HandshakeException;
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,6 +25,12 @@ enum _Behavior {
 
   /// Connect throws synchronously (refused / unreachable).
   fail,
+
+  /// The TLS handshake meets a certificate the phone doesn't trust (3.8.5).
+  tlsUntrusted,
+
+  /// The TLS handshake fails with no certificate complaint (3.8.5).
+  tlsFailed,
 }
 
 /// Minimal [mc.MqttClient] that overrides only what [MqttManager] touches during
@@ -39,6 +46,9 @@ class _FakeClient extends mc.MqttClient {
   _updates = StreamController.broadcast();
 
   bool disconnectCalled = false;
+
+  /// What watchBadCert would call, set by the manager's watcher.
+  void Function()? onBad;
 
   void emit(String topic, String payload) {
     final message = mc.MqttPublishMessage();
@@ -58,6 +68,13 @@ class _FakeClient extends mc.MqttClient {
         return Future.value(_status);
       case _Behavior.fail:
         return Future.error(Exception('connection refused'));
+      case _Behavior.tlsUntrusted:
+        onBad?.call();
+        return Future.error(
+          const HandshakeException('CERTIFICATE_VERIFY_FAILED'),
+        );
+      case _Behavior.tlsFailed:
+        return Future.error(const HandshakeException('WRONG_VERSION_NUMBER'));
     }
   }
 
@@ -390,6 +407,91 @@ void main() {
       expect(manager.lastFailure, isNull);
       manager.dispose();
       async.flushMicrotasks();
+    });
+  });
+
+  // 3.8.5: an encrypted broker the phone can't use was "unknown".
+  group('TLS failures', () {
+    void watch(mc.MqttClient client, BrokerConfig _, void Function() onBad) =>
+        (client as _FakeClient).onBad = onBad;
+
+    FailureKind? failureOf(Map<String, _Behavior> byHost, {bool remote = true}) {
+      FailureKind? kind;
+      fakeAsync((async) {
+        final manager = MqttManager(
+          config: remote
+              ? configWithRemote()
+              : const BrokerConfig(
+                  id: 'conn-1',
+                  host: localHost,
+                  port: 8883,
+                  protocol: MqttProtocol.tcpSsl,
+                ),
+          password: '',
+          clientFactory: factoryFor(byHost),
+          watchCert: watch,
+        );
+        manager.connect();
+        async.elapse(const Duration(milliseconds: 8100));
+        kind = manager.lastFailure;
+        manager.dispose();
+        async.flushMicrotasks();
+      });
+      return kind;
+    }
+
+    test('an untrusted certificate, another TLS failure, anything else', () {
+      expect(
+        failureOf({localHost: _Behavior.tlsUntrusted}, remote: false),
+        FailureKind.tlsUntrusted,
+      );
+      expect(
+        failureOf({localHost: _Behavior.tlsFailed}, remote: false),
+        FailureKind.tlsFailed,
+      );
+      expect(
+        failureOf({localHost: _Behavior.fail}, remote: false),
+        FailureKind.unknown,
+      );
+    });
+
+    test('the flag is per candidate: a local TLS failure, then the remote '
+        'broker connects and the failure clears', () {
+      fakeAsync((async) {
+        final manager = MqttManager(
+          config: configWithRemote(),
+          password: '',
+          clientFactory: factoryFor({
+            localHost: _Behavior.tlsUntrusted,
+            remoteHost: _Behavior.succeed,
+          }),
+          watchCert: watch,
+        );
+        manager.connect();
+        async.elapse(const Duration(milliseconds: 100));
+        expect(manager.status, MqttStatus.connected);
+        expect(manager.lastFailure, isNull);
+        manager.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
+    test('a local timeout, then a remote TLS failure: the timeout is kept, '
+        'as the local try is the one that matters at home', () {
+      expect(
+        failureOf({
+          localHost: _Behavior.hang,
+          remoteHost: _Behavior.tlsUntrusted,
+        }),
+        FailureKind.timedOut,
+      );
+    });
+
+    test('a local refusal, then a remote TLS failure: not called TLS', () {
+      expect(
+        failureOf({localHost: _Behavior.fail, remoteHost: _Behavior.tlsFailed}),
+        isNot(anyOf(FailureKind.tlsUntrusted, FailureKind.tlsFailed)),
+      );
     });
   });
 

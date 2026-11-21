@@ -2568,6 +2568,18 @@ abstract class AppLocalizations {
   /// **'The broker didn\'t answer the login in time. Home Assistant can take a few seconds to check it, so try again.'**
   String get diagLoginNoAnswer;
 
+  /// Broker test and setup (3.8.5): the TLS handshake failed because the phone does not trust the broker's certificate (self-signed, expired, wrong name). 1883 is the usual unencrypted MQTT port.
+  ///
+  /// In en, this message translates to:
+  /// **'This broker\'s encryption certificate isn\'t trusted by your phone: it is self-signed, expired, or made for another name. ZigDash can\'t use it yet. On your home network, use the broker\'s unencrypted port 1883 instead, or give the broker a certificate from a public authority.'**
+  String get diagTlsUntrusted;
+
+  /// Broker test and setup (3.8.5): the TLS handshake failed for another reason, for example the broker wants a client certificate.
+  ///
+  /// In en, this message translates to:
+  /// **'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. Try its unencrypted port 1883 on your home network.'**
+  String get diagTlsFailed;
+
   /// No description provided for @diagAuthRejected.
   ///
   /// In en, this message translates to:
@@ -4031,6 +4043,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get setupErrLoginNoAnswerAction;
+
+  /// No description provided for @setupErrTlsUntrustedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone doesn\'t trust this broker\'s certificate'**
+  String get setupErrTlsUntrustedTitle;
+
+  /// No description provided for @setupErrTlsFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted connection failed'**
+  String get setupErrTlsFailedTitle;
+
+  /// Setup failure button (3.8.5): opens the broker form with the address filled in and port 1883.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit settings'**
+  String get setupErrTlsAction;
 
   /// No description provided for @setupNoZ2mTitle.
   ///

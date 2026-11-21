@@ -348,6 +348,12 @@ enum ManualTestResult {
   /// A Zigbee2MQTT machine whose own settings name the broker elsewhere
   /// (2.10.4): another machine, or a container on this one.
   z2mBrokerElsewhere,
+
+  /// The broker's TLS certificate isn't trusted by the phone (3.8.5).
+  tlsUntrusted,
+
+  /// The TLS handshake failed for another reason (3.8.5).
+  tlsFailed,
 }
 
 /// The port typed on the broker form, as a class (2.10.4): the MQTT

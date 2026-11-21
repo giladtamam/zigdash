@@ -1371,6 +1371,14 @@ class AppLocalizationsCs extends AppLocalizations {
       'Broker neodpověděl na přihlášení včas. Home Assistantu může ověření trvat pár sekund, tak to zkus znovu.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Tvůj telefon nedůvěřuje šifrovacímu certifikátu tohoto brokeru: je podepsaný sám sebou, vypršel nebo je vystavený na jiné jméno. ZigDash ho zatím neumí použít. V domácí síti místo toho použij nešifrovaný port brokeru 1883, nebo brokeru dej certifikát od veřejné certifikační autority.';
+
+  @override
+  String get diagTlsFailed =>
+      'Šifrované spojení se nenavázalo. Broker možná chce klientský certifikát, který ZigDash nepodporuje. V domácí síti zkus jeho nešifrovaný port 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Broker odmítl uživatelské jméno nebo heslo. Zkontroluj přihlašovací údaje.';
 
@@ -2243,6 +2251,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Zkusit znovu';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Tvůj telefon nedůvěřuje certifikátu tohoto brokeru';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Šifrované spojení selhalo';
+
+  @override
+  String get setupErrTlsAction => 'Upravit nastavení';
 
   @override
   String get setupNoZ2mTitle =>

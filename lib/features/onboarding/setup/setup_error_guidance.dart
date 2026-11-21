@@ -21,6 +21,15 @@ enum SetupErrorKind {
   /// Assistant's users, which can be slow on a Raspberry Pi.
   loginNoAnswer,
 
+  /// The broker's TLS certificate isn't trusted by the phone: self-signed,
+  /// expired, or made for another name (3.8.5). Retrying can't help; its
+  /// unencrypted port 1883 at home can.
+  tlsUntrusted,
+
+  /// The TLS handshake failed for another reason, such as a broker that
+  /// wants a client certificate (3.8.5).
+  tlsFailed,
+
   /// MQTT connected but no Zigbee2MQTT topics verified on this endpoint.
   notZigbee2Mqtt,
 
@@ -93,6 +102,8 @@ SetupErrorKind mapLadderFailure(DiagnosticsReport report) {
     'diagAuthRejectedHa' ||
     'diagAuthRefused' => SetupErrorKind.authRejected,
     'diagLoginNoAnswer' => SetupErrorKind.loginNoAnswer,
+    'diagTlsUntrusted' => SetupErrorKind.tlsUntrusted,
+    'diagTlsFailed' => SetupErrorKind.tlsFailed,
     _ => SetupErrorKind.unknown,
   };
 }
@@ -113,6 +124,18 @@ SetupGuidance guidanceFor(SetupErrorKind kind) => switch (kind) {
     titleKey: 'setupErrLoginNoAnswerTitle',
     explanationKey: 'setupErrLoginNoAnswerBody',
     actionKey: 'setupErrLoginNoAnswerAction',
+  ),
+  // The ladder's own messages say it all; the button edits the address
+  // with port 1883 (3.8.5).
+  SetupErrorKind.tlsUntrusted => const SetupGuidance(
+    titleKey: 'setupErrTlsUntrustedTitle',
+    explanationKey: 'diagTlsUntrusted',
+    actionKey: 'setupErrTlsAction',
+  ),
+  SetupErrorKind.tlsFailed => const SetupGuidance(
+    titleKey: 'setupErrTlsFailedTitle',
+    explanationKey: 'diagTlsFailed',
+    actionKey: 'setupErrTlsAction',
   ),
   SetupErrorKind.authRequired => const SetupGuidance(
     titleKey: 'setupErrAuthRequiredTitle',

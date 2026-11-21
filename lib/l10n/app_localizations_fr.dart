@@ -1381,6 +1381,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le broker n\'a pas répondu à la connexion à temps. Home Assistant peut mettre quelques secondes à la vérifier, réessayez.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Votre téléphone ne fait pas confiance au certificat de chiffrement de ce broker : il est auto-signé, expiré ou établi pour un autre nom. ZigDash ne peut pas encore l\'utiliser. Sur le réseau de la maison, utilisez plutôt le port non chiffré 1883 du broker, ou donnez au broker un certificat d\'une autorité publique.';
+
+  @override
+  String get diagTlsFailed =>
+      'La connexion chiffrée n\'a pas démarré. Le broker demande peut-être un certificat client, que ZigDash ne prend pas en charge. Essayez son port non chiffré 1883 sur le réseau de la maison.';
+
+  @override
   String get diagAuthRejected =>
       'Le broker a refusé le nom d\'utilisateur ou le mot de passe. Vérifiez vos identifiants.';
 
@@ -2261,6 +2269,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Réessayer';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Votre téléphone ne fait pas confiance au certificat de ce broker';
+
+  @override
+  String get setupErrTlsFailedTitle => 'La connexion chiffrée a échoué';
+
+  @override
+  String get setupErrTlsAction => 'Modifier les paramètres';
 
   @override
   String get setupNoZ2mTitle =>

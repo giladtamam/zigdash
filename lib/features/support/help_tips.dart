@@ -41,6 +41,11 @@ List<HelpTip> tipsFor(
         t(l.tipMqttLoginTitle, l.tipMqttLoginBody),
         t(l.tipSpacesTitle, l.tipSpacesBody),
       ],
+      // 3.8.5: the encrypted port; 1883 at home is the way round it.
+      SetupErrorKind.tlsUntrusted || SetupErrorKind.tlsFailed => [
+        t(l.tipRightPortTitle, l.tipRightPortBody),
+        t(l.tipPortProtocolTitle, l.tipPortProtocolBody),
+      ],
       SetupErrorKind.notZigbee2Mqtt => [
         t(l.tipZ2mBrokerTitle, l.tipZ2mBrokerBody),
         t(l.tipBaseTopicTitle, l.tipBaseTopicBody),

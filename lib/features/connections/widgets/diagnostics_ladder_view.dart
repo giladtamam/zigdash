@@ -44,6 +44,8 @@ class DiagnosticsLadderView extends StatelessWidget {
     'diagTcpTimeout' => context.l10n.diagTcpTimeout,
     'diagConnackFail' => context.l10n.diagConnackFail,
     'diagLoginNoAnswer' => context.l10n.diagLoginNoAnswer,
+    'diagTlsUntrusted' => context.l10n.diagTlsUntrusted,
+    'diagTlsFailed' => context.l10n.diagTlsFailed,
     'diagAuthRejected' => context.l10n.diagAuthRejected,
     'diagAuthRefused' => context.l10n.diagAuthRefused,
     _ => null,

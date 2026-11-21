@@ -1357,6 +1357,14 @@ class AppLocalizationsHe extends AppLocalizations {
       'הברוקר לא ענה להתחברות בזמן. ל-Home Assistant לוקח לפעמים כמה שניות לבדוק אותה, נסו שוב.';
 
   @override
+  String get diagTlsUntrusted =>
+      'הטלפון לא סומך על תעודת ההצפנה של הברוקר הזה: היא חתומה על ידי עצמה, פגת תוקף או הונפקה לשם אחר. ZigDash עוד לא יכול להשתמש בה. ברשת של הבית, השתמשו במקום זאת בפורט הלא מוצפן 1883 של הברוקר, או תנו לברוקר תעודה מרשות אישורים ציבורית.';
+
+  @override
+  String get diagTlsFailed =>
+      'החיבור המוצפן לא התחיל. ייתכן שהברוקר דורש תעודת לקוח, ש-ZigDash לא תומך בה. נסו את הפורט הלא מוצפן 1883 שלו ברשת של הבית.';
+
+  @override
   String get diagAuthRejected =>
       'הברוקר דחה את שם המשתמש או הסיסמה. בדקו את פרטי ההתחברות.';
 
@@ -2218,6 +2226,16 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'לנסות שוב';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'הטלפון לא סומך על התעודה של הברוקר הזה';
+
+  @override
+  String get setupErrTlsFailedTitle => 'החיבור המוצפן נכשל';
+
+  @override
+  String get setupErrTlsAction => 'עריכת הגדרות';
 
   @override
   String get setupNoZ2mTitle =>

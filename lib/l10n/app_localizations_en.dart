@@ -1366,6 +1366,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'The broker didn\'t answer the login in time. Home Assistant can take a few seconds to check it, so try again.';
 
   @override
+  String get diagTlsUntrusted =>
+      'This broker\'s encryption certificate isn\'t trusted by your phone: it is self-signed, expired, or made for another name. ZigDash can\'t use it yet. On your home network, use the broker\'s unencrypted port 1883 instead, or give the broker a certificate from a public authority.';
+
+  @override
+  String get diagTlsFailed =>
+      'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. Try its unencrypted port 1883 on your home network.';
+
+  @override
   String get diagAuthRejected =>
       'The broker rejected the username or password. Check your credentials.';
 
@@ -2238,6 +2246,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Try again';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Your phone doesn\'t trust this broker\'s certificate';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Encrypted connection failed';
+
+  @override
+  String get setupErrTlsAction => 'Edit settings';
 
   @override
   String get setupNoZ2mTitle =>
