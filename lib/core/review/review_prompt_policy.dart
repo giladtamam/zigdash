@@ -6,20 +6,24 @@
 class ReviewPromptPolicy {
   const ReviewPromptPolicy({
     this.minSessions = 2,
-    this.minAge = const Duration(days: 2),
+    this.minAge = const Duration(days: 1),
     this.cooldown = const Duration(days: 90),
   });
 
-  /// Distinct days on which a command the user sent was confirmed by the
-  /// device before we ask. One day proves the setup works; coming back on a
-  /// second day proves they kept it. Was four days (2026-09 to 2026-10),
-  /// which produced no visible rating in three weeks of production.
+  /// Distinct days with live data on a dashboard (the setup day counts; a
+  /// confirmed command or a passive report each count the day) before we
+  /// ask. One day proves the setup works; coming back on a second day
+  /// proves they kept it. Was four days (2026-09 to 2026-10), which produced
+  /// no visible rating in three weeks of production.
   final int minSessions;
 
-  /// Minimum time since the first successful session. Days are calendar
-  /// days, so one day still let a setup at 22:35 and a light at 01:00 ask
-  /// for a review 2.5 hours after install (3.1.9); two days means the
-  /// earliest ask is the day after tomorrow.
+  /// Minimum time since the first successful session, in calendar days.
+  /// One day alone let a setup at 22:35 and a light at 01:00 ask for a
+  /// review 2.5 hours after install (3.1.9), so 3.1.10 to 3.8.3 used two.
+  /// From 3.8.4 it is one again: the night-after-setup case is held by the
+  /// controller's 18-hour setup window instead, and two days left most
+  /// installs unasked (8 prompts against 34 setups in 30 days,
+  /// weak-points-plan-2026-11.md).
   final Duration minAge;
 
   /// Minimum gap between review requests. Google gives no signal whether the

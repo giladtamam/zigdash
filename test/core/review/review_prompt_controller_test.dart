@@ -143,16 +143,13 @@ void main() {
       expect(await _commandWin(c), isFalse);
       expect(launcher.requests, 0);
       clock.advance(1);
-      // Day 2 (Sep 2): second session, but only a day after the first.
-      expect(await _commandWin(c), isFalse);
-      expect(launcher.requests, 0);
-      clock.advance(1);
-      // Day 3 (Sep 3): two days after the first.
+      // Day 2 (Sep 2): second session, a calendar day after the first
+      // (3.8.4; was day 3).
       expect(await _commandWin(c), isTrue);
       expect(launcher.requests, 1);
       expect(
         prefs.getString(ReviewPromptController.kLastPromptDay),
-        '2026-09-03',
+        '2026-09-02',
       );
 
       // Same day again: nothing new.
@@ -196,13 +193,13 @@ void main() {
   });
 
   group('setup window', () {
-    test('refuses within 10 minutes of setup, asks after', () async {
+    test('refuses within 18 hours of setup, asks after', () async {
       final (c, launcher, clock, prefs) = await _setup(initial: _eligible());
       final now = clock.call().millisecondsSinceEpoch;
 
       await prefs.setInt(
         kSetupCompletedAtMs,
-        now - const Duration(minutes: 9, seconds: 59).inMilliseconds,
+        now - const Duration(hours: 17, minutes: 59).inMilliseconds,
       );
       expect(await _commandWin(c), isFalse);
       expect(launcher.requests, 0);
@@ -214,7 +211,7 @@ void main() {
 
       await prefs.setInt(
         kSetupCompletedAtMs,
-        now - const Duration(minutes: 10).inMilliseconds,
+        now - const Duration(hours: 18).inMilliseconds,
       );
       expect(await _commandWin(c), isTrue);
       expect(launcher.requests, 1);
@@ -252,6 +249,86 @@ void main() {
     });
   });
 
+  group('fresh install timing (3.8.4: one day, 18 hours)', () {
+    /// A fresh install whose setup finished at [setupAt], on a clock the
+    /// test moves to exact times.
+    Future<(ReviewPromptController, _FakeLauncher, void Function(DateTime))>
+    fresh(DateTime setupAt) async {
+      SharedPreferences.setMockInitialValues({
+        kSetupCompletedAtMs: setupAt.millisecondsSinceEpoch,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final launcher = _FakeLauncher();
+      var now = setupAt;
+      final c = ReviewPromptController(
+        prefs: prefs,
+        launcher: launcher,
+        now: () => now,
+      );
+      // The setup day's live data counts the first session.
+      await c.recordSuccessfulSession();
+      return (c, launcher, (DateTime t) => now = t);
+    }
+
+    // 3.1.9 in the wild: set up at 22:35, a light switched at 01:00.
+    test('does not ask the night after setup (22:35, then 01:00)', () async {
+      final (c, launcher, at) = await fresh(DateTime(2026, 10, 24, 22, 35));
+      at(DateTime(2026, 10, 25, 1));
+      expect(await _commandWin(c), isFalse);
+      expect(launcher.requests, 0);
+    });
+
+    test('asks the next day once 18 hours have passed', () async {
+      final (c, launcher, at) = await fresh(DateTime(2026, 11, 23, 10));
+      at(DateTime(2026, 11, 24, 3)); // 17 hours: still quiet
+      expect(await _commandWin(c), isFalse);
+      at(DateTime(2026, 11, 24, 10)); // 24 hours
+      expect(await _commandWin(c), isTrue);
+      expect(launcher.requests, 1);
+    });
+
+    test('never on the setup day itself, however late', () async {
+      final (c, launcher, at) = await fresh(DateTime(2026, 11, 23, 0, 5));
+      at(DateTime(2026, 11, 23, 23, 50)); // 23 h 45 min, same calendar day
+      expect(await _commandWin(c), isFalse);
+      expect(launcher.requests, 0);
+    });
+
+    test('a new setup restarts the 18 hours', () async {
+      final (c, launcher, at) = await fresh(DateTime(2026, 11, 23, 10));
+      final prefs = await SharedPreferences.getInstance();
+      // Another broker set up the next morning.
+      await prefs.setInt(
+        kSetupCompletedAtMs,
+        DateTime(2026, 11, 24, 9).millisecondsSinceEpoch,
+      );
+      at(DateTime(2026, 11, 24, 12));
+      expect(await _commandWin(c), isFalse);
+      at(DateTime(2026, 11, 25, 12));
+      expect(await _commandWin(c), isTrue);
+      expect(launcher.requests, 1);
+    });
+
+    test(
+      'an install with no setup time (before 3.4.8) needs only the policy',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final prefs = await SharedPreferences.getInstance();
+        final launcher = _FakeLauncher();
+        var now = DateTime(2026, 11, 23, 22, 35);
+        final c = ReviewPromptController(
+          prefs: prefs,
+          launcher: launcher,
+          now: () => now,
+        );
+        await c.recordSuccessfulSession();
+        now = DateTime(2026, 11, 24, 8);
+        expect(await _commandWin(c), isTrue);
+        expect(launcher.requests, 1);
+      },
+    );
+  });
+
   group('sensor-only homes (report trigger)', () {
     test('no command ever, 4 counted days, a report: prompts', () async {
       final (c, launcher, clock, _) = await _setup();
@@ -264,20 +341,17 @@ void main() {
       expect(launcher.requests, 1);
     });
 
-    test(
-      'a report on an eligible day does not prompt once a command was ever '
-      'confirmed',
-      () async {
-        final (c, launcher, _, _) = await _setup(
-          initial: {..._eligible(), ReviewPromptController.kCommandEver: true},
-        );
-        expect(await _reportWin(c), isFalse);
-        expect(launcher.requests, 0);
-        // The command path on the same install still asks.
-        expect(await _commandWin(c), isTrue);
-        expect(launcher.requests, 1);
-      },
-    );
+    test('a report on an eligible day does not prompt once a command was ever '
+        'confirmed', () async {
+      final (c, launcher, _, _) = await _setup(
+        initial: {..._eligible(), ReviewPromptController.kCommandEver: true},
+      );
+      expect(await _reportWin(c), isFalse);
+      expect(launcher.requests, 0);
+      // The command path on the same install still asks.
+      expect(await _commandWin(c), isTrue);
+      expect(launcher.requests, 1);
+    });
 
     test('commands on day 1, then reports: day 7 must NOT prompt', () async {
       final (c, launcher, clock, _) = await _setup();
@@ -299,9 +373,7 @@ void main() {
     });
 
     test('fewer than 4 counted days: no passive ask, however old', () async {
-      final (c, launcher, _, _) = await _setup(
-        initial: _eligible(sessions: 2),
-      );
+      final (c, launcher, _, _) = await _setup(initial: _eligible(sessions: 2));
       // Today's report makes it 3.
       expect(await _reportWin(c), isFalse);
       expect(c.sessions, 3);
@@ -309,9 +381,7 @@ void main() {
     });
 
     test('the fourth counted day itself may ask', () async {
-      final (c, launcher, _, _) = await _setup(
-        initial: _eligible(sessions: 3),
-      );
+      final (c, launcher, _, _) = await _setup(initial: _eligible(sessions: 3));
       // The day is counted (3 -> 4) before the ask.
       expect(await _reportWin(c), isTrue);
       expect(c.sessions, 4);
@@ -336,45 +406,41 @@ void main() {
   });
 
   group('usage event', () {
-    test(
-      'sent only when the policy is met, with result and trigger',
-      () async {
-        final sink = _FakeSink();
-        final (c, launcher, clock, _) = await _setup(sink: sink);
+    test('sent only when the policy is met, with result and trigger', () async {
+      final sink = _FakeSink();
+      final (c, launcher, clock, _) = await _setup(sink: sink);
 
-        await _commandWin(c);
-        expect(sink.sent, isEmpty, reason: 'first day: policy not met');
+      await _commandWin(c);
+      expect(sink.sent, isEmpty, reason: 'first day: policy not met');
 
-        clock.advance(1);
-        await _commandWin(c);
-        expect(sink.sent, isEmpty, reason: 'a day later: still too soon');
+      clock.advance(1);
+      await _commandWin(c);
+      expect(sink.sent.length, 1, reason: 'a day later (3.8.4)');
+      expect(sink.sent.single.$1, 'review_prompt');
+      expect(sink.sent.single.$2, {
+        'result': 'requested',
+        'trigger': 'command',
+      });
 
-        clock.advance(1);
-        await _commandWin(c);
-        expect(sink.sent.length, 1);
-        expect(sink.sent.single.$1, 'review_prompt');
-        expect(sink.sent.single.$2, {
-          'result': 'requested',
-          'trigger': 'command',
-        });
-
-        // Unavailable flow: reported as such, nothing requested.
-        launcher.available = false;
-        clock.advance(90);
-        expect(await _commandWin(c), isFalse);
-        expect(sink.sent.length, 2);
-        expect(sink.sent.last.$1, 'review_prompt');
-        expect(sink.sent.last.$2, {
-          'result': 'unavailable',
-          'trigger': 'command',
-        });
-        expect(launcher.requests, 1);
-      },
-    );
+      // Unavailable flow: reported as such, nothing requested.
+      launcher.available = false;
+      clock.advance(90);
+      expect(await _commandWin(c), isFalse);
+      expect(sink.sent.length, 2);
+      expect(sink.sent.last.$1, 'review_prompt');
+      expect(sink.sent.last.$2, {
+        'result': 'unavailable',
+        'trigger': 'command',
+      });
+      expect(launcher.requests, 1);
+    });
 
     test('a history ask reports the history trigger', () async {
       final sink = _FakeSink();
-      final (c, launcher, _, _) = await _setup(initial: _eligible(), sink: sink);
+      final (c, launcher, _, _) = await _setup(
+        initial: _eligible(),
+        sink: sink,
+      );
       expect(await c.maybeRequest(trigger: ReviewTrigger.history), isTrue);
       expect(launcher.requests, 1);
       expect(c.commandEver, isFalse, reason: 'History is not a command');
@@ -388,10 +454,7 @@ void main() {
       final sink = _FakeSink();
       final (c, _, _, _) = await _setup(initial: _eligible(), sink: sink);
       expect(await _reportWin(c), isTrue);
-      expect(sink.sent.single.$2, {
-        'result': 'requested',
-        'trigger': 'report',
-      });
+      expect(sink.sent.single.$2, {'result': 'requested', 'trigger': 'report'});
     });
 
     test('a refusal before the policy sends nothing', () async {

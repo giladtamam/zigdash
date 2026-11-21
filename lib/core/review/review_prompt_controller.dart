@@ -33,7 +33,7 @@ class ReviewPromptController {
     required ReviewLauncher launcher,
     Analytics? analytics,
     this.policy = const ReviewPromptPolicy(),
-    this.setupWindow = const Duration(minutes: 10),
+    this.setupWindow = const Duration(hours: 18),
     this.reportMinSessions = 4,
     DateTime Function()? now,
   }) : _prefs = prefs,
@@ -57,7 +57,11 @@ class ReviewPromptController {
   final ReviewPromptPolicy policy;
 
   /// No request within this long after setup completed ([kSetupCompletedAtMs],
-  /// written by the setup flow; absent means no window).
+  /// written by the setup flow; absent means no window, as on installs set
+  /// up before 3.4.8, where only the policy applies). Ten minutes until
+  /// 3.8.3; 18 hours from 3.8.4, so the policy's one calendar day can't ask
+  /// the night after setup. A new setup (another broker, a joined home)
+  /// rewrites the time and starts the window again, on purpose.
   final Duration setupWindow;
 
   /// Counted days a sensor-only install needs before a passive report may

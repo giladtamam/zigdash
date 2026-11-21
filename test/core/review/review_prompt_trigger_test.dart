@@ -46,7 +46,13 @@ const _almost = Duration(milliseconds: 1400);
 const _rest = Duration(milliseconds: 200);
 
 class _Harness {
-  _Harness(this.launcher, this.sink, this.status, this.confirmed, this.reported);
+  _Harness(
+    this.launcher,
+    this.sink,
+    this.status,
+    this.confirmed,
+    this.reported,
+  );
   final _FakeLauncher launcher;
   final _FakeSink sink;
   final StreamController<MqttStatus> status;
@@ -166,7 +172,7 @@ void main() {
     await h.close();
   });
 
-  testWidgets('never within 10 minutes of setup', (tester) async {
+  testWidgets('never within 18 hours of setup', (tester) async {
     final h = await _pump(
       tester,
       prefsValues: {
