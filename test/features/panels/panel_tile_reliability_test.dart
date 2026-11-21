@@ -176,6 +176,15 @@ void main() {
       ),
       'Aus',
     );
+    expect(
+      panelReliabilityValueLabel(
+        const ToggleConfig(jsonPath: null),
+        '{"a":1}',
+        _en,
+      ),
+      isNull,
+      reason: 'no "Last known: —"',
+    );
   });
 
   test('text log reliability label does not expose structured payloads', () {

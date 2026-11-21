@@ -129,9 +129,12 @@ class TogglePanel extends ConsumerWidget {
         ),
       ),
     );
-    final state = snapshot.hasError
+    // A stream error keeps the last value when there was one; "—" without.
+    final state = snapshot.hasValue
+        ? toggleState(config, snapshot.valueOrNull)
+        : snapshot.hasError
         ? const ToggleState(ToggleStateKind.noValue)
-        : toggleState(config, snapshot.valueOrNull);
+        : toggleState(config, null);
     final isOn = state.isOn;
     final line = toggleStateLine(state, l10n);
     final (:fg, :fgVariant) = signalTileForeground(context, on: isOn);

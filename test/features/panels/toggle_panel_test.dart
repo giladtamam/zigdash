@@ -152,6 +152,16 @@ void main() {
     expect(find.text('—'), findsOneWidget);
   });
 
+  testWidgets('a stream error keeps the last value', (tester) async {
+    final mgr = await _pump(tester, const ToggleConfig());
+    mgr.emit('{"state":"ON"}');
+    await tester.pumpAndSettle();
+    mgr.incoming.addError(Exception('broker hiccup'));
+    await tester.pumpAndSettle();
+    expect(find.text('On'), findsOneWidget);
+    expect(find.text('—'), findsNothing);
+  });
+
   testWidgets('a raw JSON payload with no path reads as a dash', (
     tester,
   ) async {

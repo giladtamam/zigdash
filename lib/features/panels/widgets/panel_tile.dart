@@ -147,7 +147,8 @@ String? panelReliabilityValueLabel(
 ) {
   if (value == null) return null;
   return switch (config) {
-    ToggleConfig config => toggleStateLine(
+    // "Last known: —" says nothing: no label for a raw JSON value.
+    ToggleConfig config => switch (toggleStateLine(
         toggleState(
           config,
           PanelValueSnapshot(
@@ -158,7 +159,10 @@ String? panelReliabilityValueLabel(
           ),
         ),
         l10n,
-      ),
+      )) {
+        '—' => null,
+        final line => line,
+      },
     CoverConfig config => _coverReliabilityValueLabel(config, value),
     TextLogConfig() => _textLogReliabilityValueLabel(value),
     // The tile reads its own state line; the raw payload is JSON.
