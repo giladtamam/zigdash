@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
-import 'package:zigdash/data/database/database.dart' show Scene;
+import 'package:zigdash/data/database/database.dart' show Connection, Scene;
+import 'package:zigdash/data/repositories/connection_repo.dart';
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/features/devices/devices_providers.dart';
@@ -167,7 +168,11 @@ class _Setup {
     this.tiles = SceneTiles.empty,
     this.tilesDelay,
     this.live = const {},
+    this.base = 'zigbee2mqtt',
   });
+
+  /// The Home's own base topic setting.
+  final String base;
 
   final Scene? scene;
   List<Z2mDevice> devices;
@@ -188,7 +193,10 @@ Future<void> _pump(WidgetTester tester, _Setup s) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        homeBaseTopicProvider.overrideWith((ref, _) => 'zigbee2mqtt'),
+        connectionsStreamProvider.overrideWith(
+          (ref) => Stream.value(const <Connection>[]),
+        ),
+        baseTopicOverrideProvider.overrideWith((ref, _) => s.base),
         sceneRepoProvider.overrideWithValue(s.repo),
         mqttManagerProvider.overrideWith((ref, _) async => s.mgr),
         sceneTilesLoaderProvider.overrideWithValue((_) async {
@@ -570,7 +578,7 @@ void main() {
       expect(find.textContaining('other action'), findsNothing);
     });
 
-    testWidgets('discovery fails: pending kept; refresh does not move them', (
+    testWidgets('discovery fails: pending kept and saved; a refresh settles', (
       tester,
     ) async {
       const stored = [
@@ -582,20 +590,137 @@ void main() {
       final s = _Setup(scene: _scene(stored), discoveryFails: true);
       await _pump(tester, s);
       expect(find.text('1 other action is kept'), findsOneWidget);
+      await _save(tester);
+      expect(
+        SceneAction.encodeList(s.repo.updates.single),
+        SceneAction.encodeList(stored),
+        reason: 'nothing ticked, the pending one saved as it was',
+      );
 
       s
         ..discoveryFails = false
         ..devices = [lamp];
       await tester.tap(find.byIcon(Icons.refresh));
       await _settle(tester);
-      expect(_ticked(tester, 'lamp'), isFalse);
-      expect(find.text('1 other action is kept'), findsOneWidget);
+      expect(_ticked(tester, 'lamp'), isTrue);
+      expect(find.textContaining('other action'), findsNothing);
+
+      await _save(tester);
+      expect(
+        SceneAction.encodeList(s.repo.updates.last),
+        SceneAction.encodeList(stored),
+        reason: 'one action for the lamp, not two',
+      );
+    });
+
+    testWidgets('controls the scene does not set read "not set"', (
+      tester,
+    ) async {
+      final cover = Z2mDevice(
+        friendlyName: 'blind',
+        type: 'Router',
+        ieeeAddress: '0xblind',
+        exposes: const [
+          Z2mExpose(type: 'enum', property: 'state', access: 3),
+          Z2mExpose(type: 'numeric', property: 'position', access: 7),
+        ],
+      );
+      final plug = _device('plug', '0xplug', ['state']);
+      const stored = [
+        SceneAction(
+          setTopic: 'zigbee2mqtt/lamp/set',
+          payload: '{"state":"ON"}',
+        ),
+        SceneAction(
+          setTopic: 'zigbee2mqtt/blind/set',
+          payload: '{"state":"OPEN"}',
+        ),
+        SceneAction(
+          setTopic: 'zigbee2mqtt/plug/set',
+          payload: '{"state":"TOGGLE"}',
+        ),
+      ];
+      final s = _Setup(scene: _scene(stored), devices: [lamp, cover, plug]);
+      await _pump(tester, s);
+      expect(_ticked(tester, 'lamp'), isTrue);
+      expect(_ticked(tester, 'blind'), isTrue);
+      expect(_ticked(tester, 'plug'), isTrue);
+      expect(
+        find.byKey(const Key('scene-unset-lamp-brightness')),
+        findsOneWidget,
+        reason: 'not Brightness 0',
+      );
+      expect(find.byKey(const Key('scene-unset-lamp-state')), findsNothing);
+      expect(
+        find.byKey(const Key('scene-unset-blind-position')),
+        findsOneWidget,
+        reason: 'not Position 0%',
+      );
+      expect(
+        find.byKey(const Key('scene-unset-plug-state')),
+        findsOneWidget,
+        reason: 'not Power off',
+      );
+      expect(find.text('TOGGLE'), findsOneWidget);
+      expect(find.text('0%'), findsNothing);
 
       await _save(tester);
       expect(
         SceneAction.encodeList(s.repo.updates.single),
         SceneAction.encodeList(stored),
       );
+
+      // Changing a "not set" control adds it.
+      final slider = find.descendant(
+        of: find.byKey(const Key('scene-unset-lamp-brightness')),
+        matching: find.byType(Slider),
+      );
+      tester.widget<Slider>(slider).onChanged!(100);
+      await _settle(tester);
+      expect(
+        find.byKey(const Key('scene-unset-lamp-brightness')),
+        findsNothing,
+      );
+      await _save(tester);
+      expect(
+        s.repo.updates.last.first,
+        const SceneAction(
+          setTopic: 'zigbee2mqtt/lamp/set',
+          payload: '{"state":"ON","brightness":100}',
+        ),
+      );
+    });
+
+    testWidgets('a Home with its own base: matched, built and noted on it', (
+      tester,
+    ) async {
+      const stored = [
+        SceneAction(setTopic: 'myz2m/lamp/set', payload: '{"state":"ON"}'),
+      ];
+      final s = _Setup(
+        scene: _scene(stored),
+        devices: [lamp],
+        base: 'myz2m',
+        tiles: SceneTiles(
+          tiles: [
+            _tile('grp', 'Group', const ToggleConfig(), 'myz2m/kitchen/set'),
+          ],
+        ),
+      );
+      await _pump(tester, s);
+      expect(_ticked(tester, 'lamp'), isTrue);
+      await tester.tap(find.text('Group'));
+      await _settle(tester);
+      expect(
+        find.text(_homeOnly),
+        findsNothing,
+        reason: 'a JSON /set under the Home base runs from Automations',
+      );
+      await _save(tester);
+      expect(s.repo.updates.single, const [
+        SceneAction(setTopic: 'myz2m/lamp/set', payload: '{"state":"ON"}'),
+        SceneAction(setTopic: 'myz2m/kitchen/set', payload: '{"state":"ON"}'),
+      ]);
     });
 
     testWidgets('duplicates: one place each, the rest kept, order kept', (

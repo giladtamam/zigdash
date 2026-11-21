@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/utils/material_icon.dart';
-import '../../devices/devices_providers.dart';
+import '../../devices/devices_providers.dart' show deviceStatesProvider;
 import '../../discovery/models/z2m_device.dart';
 import '../../discovery/providers/discovery_provider.dart';
 import '../../panels/models/panel_config.dart';
@@ -94,9 +94,11 @@ class _State extends ConsumerState<SceneFormScreen> {
   SceneTiles? _loadedTiles;
   // The base the saved scene was read under; pending actions are under it.
   String _loadBase = 'zigbee2mqtt';
-  // Pending `$base/…/set` actions get one pass, when the device list first
-  // arrives (or fails): never again, whatever `_refresh` does.
-  bool _pendingSettled = false;
+  // Pending `$base/…/set` actions settle once, on the first device list for
+  // the load base. A failed list lets tiles claim theirs (once) and leaves
+  // the rest pending until a list arrives, e.g. after a refresh.
+  bool _devicesSettled = false;
+  bool _tilesTried = false;
   bool _loaded = false;
   bool _saving = false;
   bool _statesRequested = false;
@@ -106,14 +108,25 @@ class _State extends ConsumerState<SceneFormScreen> {
   @override
   void initState() {
     super.initState();
-    _base = ref.read(homeBaseTopicProvider(widget.connectionId)) ?? _base;
+    _start();
+  }
+
+  /// Resolves the Home's base once its homes and dashboards are loaded (a
+  /// cold read here could miss them and guess `zigbee2mqtt`), then opens
+  /// the scene (3.8.7).
+  Future<void> _start() async {
+    final base = await homeBaseTopic(ref, widget.connectionId);
+    if (!mounted) return;
+    _base = base ?? _base;
     _baseController.text = _base;
     _loadBase = _base;
     if (_isEdit) {
-      _load();
+      await _load();
     } else {
-      _pendingSettled = true;
-      _loaded = true;
+      setState(() {
+        _devicesSettled = true;
+        _loaded = true;
+      });
     }
   }
 
@@ -169,12 +182,16 @@ class _State extends ConsumerState<SceneFormScreen> {
     return null;
   }
 
-  /// The one pass over pending actions (3.8.7). With the device list: a
+  /// A pass over pending actions (3.8.7). With the device list (once): a
   /// device whose row could build the payload, else any tile, else kept.
-  /// Without it (discovery failed): tiles only; the rest stay pending and
-  /// are saved as they were.
+  /// Without it (discovery failed, once): tiles only; the rest stay pending,
+  /// saved as they were, until a device list arrives.
   void _settlePending(List<Z2mDevice>? devices, List<SceneTile> tiles) {
-    _pendingSettled = true;
+    if (devices == null) {
+      _tilesTried = true;
+    } else {
+      _devicesSettled = true;
+    }
     for (final s in _slots) {
       if (s.kind != _SlotKind.pending) continue;
       final a = s.action!;
@@ -219,8 +236,9 @@ class _State extends ConsumerState<SceneFormScreen> {
     ref.invalidate(deviceStatesProvider(args));
     setState(() {
       // Pending actions were stored under the load base: they settle only
-      // on its device list (build checks `_base == _loadBase`), once; a
-      // retry on the same base still settles them when it arrives (3.8.7).
+      // on its device list (build checks `_base == _loadBase`). A retry on
+      // the same base, during the first wait or after a failed list,
+      // settles them when the list arrives (3.8.7).
       _base = next;
       _statesRequested = false; // re-pull state for the new base
     });
@@ -261,6 +279,25 @@ class _State extends ConsumerState<SceneFormScreen> {
       if (!on) {
         _edits.remove(d.friendlyName);
         return;
+      }
+      // An action for this device still waiting for the list is claimed
+      // into the row, never sent twice (3.8.7): as stored when the row
+      // could build it, else replaced in its place by the row's choice.
+      final topic = '$_base/${d.friendlyName}/set';
+      final waiting = _slots
+          .where((s) =>
+              s.kind == _SlotKind.pending && s.action!.setTopic == topic)
+          .firstOrNull;
+      if (waiting != null) {
+        waiting
+          ..kind = _SlotKind.device
+          ..key = d.friendlyName;
+        final map = deviceRowPayload(d, waiting.action!.payload);
+        if (map != null) {
+          _edits[d.friendlyName] = map;
+          _deviceOriginal[d.friendlyName] = waiting.action!;
+          return;
+        }
       }
       final live = _parseState(states[d.friendlyName]);
       var seed = initialSceneEdits(d, live);
@@ -398,10 +435,10 @@ class _State extends ConsumerState<SceneFormScreen> {
         SceneTiles.empty;
     final tiles = sceneTiles.tiles;
 
-    if (!_pendingSettled && _base == _loadBase) {
-      if (devicesAsync.hasError && !devicesAsync.isLoading) {
-        _settlePending(null, tiles);
-      } else if (devicesAsync.hasValue && !devicesAsync.isLoading) {
+    if (!_devicesSettled && _base == _loadBase && !devicesAsync.isLoading) {
+      if (devicesAsync.hasError) {
+        if (!_tilesTried) _settlePending(null, tiles);
+      } else if (devicesAsync.hasValue) {
         _settlePending(devicesAsync.requireValue, tiles);
       }
     }
@@ -632,7 +669,7 @@ class _State extends ConsumerState<SceneFormScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ?_tileControl(t),
-                if (!engineCanSend(action, _base))
+                if (!engineCanSend(action, _loadBase))
                   Text(l10n.sceneTileHomeOnly, style: outline),
               ],
             ),
@@ -765,22 +802,35 @@ class _State extends ConsumerState<SceneFormScreen> {
           _deviceOriginal.remove(name);
         });
 
+    // A control the stored scene doesn't set (or sets to something other
+    // than on/off) reads "not set": dimmed, no value, and added only when
+    // changed (3.8.7). A newly ticked row sets every control.
+    Widget unset(SceneControl c, Widget child) => Opacity(
+          key: Key('scene-unset-$name-${c.property}'),
+          opacity: 0.5,
+          child: child,
+        );
+
     return Column(
       children: controls.map((c) {
+        final raw = edits[c.property];
         if (c.kind == SceneControlKind.toggle) {
-          final on = edits[c.property] == c.onValue;
-          return SwitchListTile(
+          final known = raw == c.onValue || raw == c.offValue;
+          final tile = SwitchListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
             title: Text(_controlLabel(c.property)),
-            value: on,
+            subtitle: known ? null : Text(raw == null ? '—' : '$raw'),
+            value: raw == c.onValue,
             onChanged: (v) => set(c.property, v ? c.onValue : c.offValue),
           );
+          return known ? tile : unset(c, tile);
         }
-        final raw = edits[c.property];
+        final known = raw is num;
         final value =
-            (raw is num ? raw.toDouble() : c.min).clamp(c.min, c.max);
-        return Row(
+            (known ? raw.toDouble() : c.min).clamp(c.min, c.max).toDouble();
+        final text = known ? '${value.round()}${c.unit ?? ''}' : '—';
+        final row = Row(
           children: [
             SizedBox(
               width: 88,
@@ -799,11 +849,11 @@ class _State extends ConsumerState<SceneFormScreen> {
             ),
             SizedBox(
               width: 44,
-              child: Text('${value.round()}${c.unit ?? ''}',
-                  textAlign: TextAlign.end),
+              child: Text(text, textAlign: TextAlign.end),
             ),
           ],
         );
+        return known ? row : unset(c, row);
       }).toList(),
     );
   }
