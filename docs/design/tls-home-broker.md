@@ -1,4 +1,4 @@
-# Encrypted brokers: say what's wrong, fix WSS, count it (3.8.5, v2.1)
+# Encrypted brokers: say what's wrong, fix WSS, count it (3.8.5, v2.1, scored 9/10)
 
 v2.1 (v2 scored 7/10): every mapping site listed (most have catch-alls), the hook behind the
 conditional factory, the 1883 preference and the untrusted branch placed in the coordinator, the new field
@@ -89,7 +89,8 @@ data says so (section 5). Based on release/3.8.4 (3.8.4+126, another session's r
   candidate; `merged.single` then verifies 1883 on its own.
 - **No useless login:** in `_verify`, after the Zigbee2MQTT-page attempt (:1078, the page avoids TLS, so
   it goes first) and before `SetupNeedsAuth` (:1083): a candidate with `needsAuth && untrustedCert` →
-  `SetupFailed(SetupErrorKind.tlsUntrusted, candidate: …)`.
+  `SetupFailed(SetupErrorKind.tlsUntrusted, candidate: …)`, placed outside the `_username == null` guard
+  so a second pass after a retry with a login can't skip it (2a would still classify it right).
 - **"Edit settings" wired:** the failed screen's main button for the two TLS kinds calls a new
   `onEditTls` → `Routes.guidedConnectTo(host, 1883)` (as `manualTo`, setup_screen.dart:133); Retry stays,
   secondary. Today the action key only labels `onRetry` (~:1700).
@@ -102,13 +103,15 @@ data says so (section 5). Based on release/3.8.4 (3.8.4+126, another session's r
 
 ### 2d. Count it
 - `SetupStep` `failed` events: `port` (`portClassOf` of `SetupFailed.candidate.port`) for
-  `login_no_answer`, `tls_untrusted`, `tls_failed`, `port_closed`; new `error` values `tls_untrusted`, `tls_failed`. `scan_found` and
-  `needs_login`: `tls: yes` when the candidate is 8883 (no address).
+  `login_no_answer`, `tls_untrusted`, `tls_failed`, `port_closed`; new `error` values `tls_untrusted`, `tls_failed`. `scan_found`:
+  `tls: untrusted` when any found candidate has `untrustedCert` (counted even when 2b steered to 1883),
+  `tls: yes` for a trusted 8883 one (no address).
 - `ManualTestResult` gains `tlsUntrusted`, `tlsFailed` (`manual_test` already has `port`). `manual_test`
   is logged today only from the guided connect screen (guided_connect_screen.dart:201); the connection
   form's Test (connection_form_screen.dart:211) logs it too from 3.8.5 (`from: form`), so the gate sees
   both.
-- `store/PRIVACY.md`: the new values in the setup event row; policy published to GitHub and GitLab before
+- `store/PRIVACY.md`: the new values (`tls_untrusted`, `tls_failed`, `tls`, `port` on failures) and
+  `manual_test`'s new `from: form` in the setup event row; policy published to GitHub and GitLab before
   the build goes to Play (as every release that changes it).
 
 ## 3. Not in this release
@@ -126,7 +129,7 @@ data says so (section 5). Based on release/3.8.4 (3.8.4+126, another session's r
   survives `fromProbe`, `mergeCandidates` and the Zigbee2MQTT-settings path; the flag is per candidate
   (local TLS failure then remote success → connected, `lastFailure` cleared); local timeout then remote
   TLS failure → reports the timeout; analytics fields incl. the form's `manual_test`; one test per new
-  key through every mapping site; `watchBadCert` no-op on web (compiled in the web test target).
+  key through every mapping site; `watchBadCert` no-op on web (a `flutter build web` check by hand if CI has no web target).
 - **Real TLS round trip, offline:** a `SecureServerSocket` and `HttpServer.bindSecure` on localhost with a
   fixture certificate (test-only key, valid 50 years so CI never trips on expiry, under
   test/fixtures/tls, labelled so): an `MqttServerClient` from
