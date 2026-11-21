@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../core/analytics/analytics_events.dart' show SetupVia;
+import '../../../core/analytics/analytics_events.dart' show ScanTls, SetupVia;
 import '../../../data/database/tables/connections.dart';
 import '../../../mqtt/broker_config.dart';
 import '../../../mqtt/ha_address.dart';
@@ -147,6 +147,14 @@ sealed class SetupState {
   const SetupState();
 }
 
+/// What the scan found encrypted (3.8.5): untrusted when any broker's
+/// certificate isn't one the phone trusts, yes for a trusted one on 8883.
+ScanTls? scanTlsOf(Iterable<SetupCandidate> found) {
+  if (found.any((c) => c.untrustedCert)) return ScanTls.untrusted;
+  if (found.any((c) => c.port == 8883)) return ScanTls.yes;
+  return null;
+}
+
 /// The welcome screen — nothing running yet.
 class SetupIdle extends SetupState {
   const SetupIdle();
@@ -164,9 +172,14 @@ class SetupScanning extends SetupState {
     this.progress,
     this.platform,
     this.kinds = const {},
+    this.tls,
   });
   final List<SetupCandidate> candidates;
   final bool done;
+
+  /// What the scan found encrypted so far (3.8.5), from every broker it
+  /// found, also one [candidates] leaves out for the same machine's 1883.
+  final ScanTls? tls;
   final List<HubFound> hubs;
   final ScanProgressValue? progress;
   final SetupPlatform? platform;
@@ -580,6 +593,7 @@ class SetupCoordinator {
         hubs: List.unmodifiable(hubs),
         progress: progress,
         platform: _platform,
+        tls: scanTlsOf(mergeCandidates(buffer)),
       ),
     );
     _scanSub = run.events.listen(
@@ -756,6 +770,7 @@ class SetupCoordinator {
         progress: s.progress,
         platform: s.platform,
         kinds: Map.unmodifiable(kinds),
+        tls: s.tls,
       ),
     );
   }
@@ -776,6 +791,7 @@ class SetupCoordinator {
           progress: s.progress,
           platform: platform,
           kinds: s.kinds,
+          tls: s.tls,
         ),
       );
     } else if (s is SetupScanEmpty) {

@@ -284,6 +284,16 @@ enum ScanEmptyChoice { noHub, homeAssistant, otherNetwork }
 /// [z2mPage] (3.2): through Zigbee2MQTT's own web page, no broker.
 enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 
+/// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5):
+/// a broker whose certificate the phone doesn't trust (also when setup
+/// went on with the same machine's 1883), or else a trusted one on 8883.
+/// Sent as `tls`. Never the address.
+enum ScanTls { yes, untrusted }
+
+/// Where Test & connect ran, on [SetupStepKind.manualTest] (3.8.5): the
+/// connection form's Test (`from: form`); the guided form sends none.
+enum ManualTestFrom { form }
+
 /// Where setup opened the Home Assistant sign-in (3.1.3): while scanning,
 /// the card on an empty result, the note under "I use Home Assistant",
 /// the first button when Home Assistant was found without a broker, the
@@ -402,7 +412,16 @@ class SetupStep extends AnalyticsEvent {
     this.zhaDevices,
     this.fromZha,
     this.linkSrc,
+    this.tls,
+    this.testFrom,
   });
+
+  /// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5).
+  final ScanTls? tls;
+
+  /// Where Test & connect ran, on [SetupStepKind.manualTest] (3.8.5).
+  /// Sent as `from`, without the `path` that [addressFrom] adds.
+  final ManualTestFrom? testFrom;
 
   /// Where the connect link came from (ha-link.md), on
   /// [SetupStepKind.haLink], and on [SetupStepKind.complete] when setup
@@ -498,7 +517,9 @@ class SetupStep extends AnalyticsEvent {
   final bool? tidied;
 
   /// The class of the port typed ([portClassOf]), on
-  /// [SetupStepKind.manualTest] (2.10.4).
+  /// [SetupStepKind.manualTest] (2.10.4); from 3.8.5 also the broker's
+  /// port on a `failed` step that says no answer, a TLS failure or a
+  /// closed port.
   final String? portClass;
   final int? hostsTried;
   final bool? widened;
@@ -572,6 +593,8 @@ class SetupStep extends AnalyticsEvent {
     if (haApps != null) 'install': haApps! ? 'apps' : 'no_apps',
     if (fromZha != null) 'from_zha': fromZha!.name,
     if (linkSrc != null) 'link_src': _snake(linkSrc!.name),
+    if (tls != null) 'tls': tls!.name,
+    if (testFrom != null) 'from': testFrom!.name,
     if (zhaDevices != null)
       'zha': bucket(
         zhaDevices!,

@@ -294,6 +294,107 @@ void main() {
       );
     });
 
+    // 3.8.5: encrypted brokers counted, never an address.
+    test('scan_found says what it found encrypted', () {
+      const plain = SetupCandidate(
+        host: '192.168.1.30',
+        port: 1883,
+        protocol: MqttProtocol.tcp,
+      );
+      const trusted = SetupCandidate(
+        host: '192.168.1.30',
+        port: 8883,
+        protocol: MqttProtocol.tcpSsl,
+      );
+      const untrusted = SetupCandidate(
+        host: '192.168.1.30',
+        port: 8883,
+        protocol: MqttProtocol.tcpSsl,
+        needsAuth: true,
+        untrustedCert: true,
+      );
+      expect(scanTlsOf([plain]), isNull);
+      expect(scanTlsOf([plain, trusted]), ScanTls.yes);
+      expect(scanTlsOf([trusted, untrusted]), ScanTls.untrusted);
+      // Counted even when setup went on with the same machine's 1883, which
+      // left the untrusted card out of the list.
+      expect(
+        setupStepFor(
+          SetupScanning([plain], tls: scanTlsOf([untrusted, plain])),
+          const SetupVerifying(plain),
+        )!.props,
+        {'step': 'scan_found', 'tls': 'untrusted'},
+      );
+      expect(
+        setupStepFor(
+          const SetupScanning([trusted], tls: ScanTls.yes),
+          const SetupVerifying(trusted),
+        )!.props,
+        {'step': 'scan_found', 'tls': 'yes'},
+      );
+    });
+
+    test('failed carries the port for the failures a port explains', () {
+      SetupCandidate on(int port) => SetupCandidate(
+        host: '192.168.1.30',
+        port: port,
+        protocol: port == 8883 ? MqttProtocol.tcpSsl : MqttProtocol.tcp,
+      );
+      for (final (kind, port, error) in [
+        (SetupErrorKind.tlsUntrusted, 8883, 'tls_untrusted'),
+        (SetupErrorKind.tlsFailed, 8883, 'tls_failed'),
+        (SetupErrorKind.loginNoAnswer, 1883, 'login_no_answer'),
+        (SetupErrorKind.portClosed, 1884, 'port_closed'),
+      ]) {
+        expect(
+          setupStepFor(null, SetupFailed(kind, candidate: on(port)))!.props,
+          {
+            'step': 'failed',
+            'error': error,
+            'port': portClassOf(port),
+          },
+          reason: error,
+        );
+      }
+      // Not on the others, and not without a candidate.
+      expect(
+        setupStepFor(
+          null,
+          SetupFailed(SetupErrorKind.noDevices, candidate: on(1883)),
+        )!.props,
+        {'step': 'failed', 'error': 'no_devices'},
+      );
+      expect(
+        setupStepFor(null, const SetupFailed(SetupErrorKind.tlsUntrusted))!
+            .props,
+        {'step': 'failed', 'error': 'tls_untrusted'},
+      );
+    });
+
+    test('manual_test from the connection form says so, with no path', () {
+      expect(
+        const SetupStep(
+          SetupStepKind.manualTest,
+          result: ManualTestResult.tlsUntrusted,
+          portClass: '8883',
+          testFrom: ManualTestFrom.form,
+        ).props,
+        {
+          'step': 'manual_test',
+          'result': 'tls_untrusted',
+          'port': '8883',
+          'from': 'form',
+        },
+      );
+      expect(
+        const SetupStep(
+          SetupStepKind.manualTest,
+          result: ManualTestResult.tlsFailed,
+        ).props['result'],
+        'tls_failed',
+      );
+    });
+
     // 2.6.3: the empty result is counted once; chip taps re-emit it but
     // don't re-send it (they tripled the 2.6.2 diagnostics).
     test('a chip tap on the empty result does not re-send scan_empty', () {

@@ -6,6 +6,7 @@ import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../onboarding/first_run.dart';
@@ -213,6 +214,19 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
         password: _password.text,
       );
       if (!mounted) return;
+      // 3.8.5: counted here too, so an encrypted broker the phone doesn't
+      // trust is seen wherever it is tested.
+      ref
+          .read(analyticsProvider)
+          .track(
+            SetupStep(
+              SetupStepKind.manualTest,
+              result: manualTestResult(report),
+              devices: report.connected ? report.deviceNames.length : null,
+              portClass: portClassOf(cfg.port),
+              testFrom: ManualTestFrom.form,
+            ),
+          );
       setState(() => _testing = false);
       _showLadderSheet(report);
     } catch (e) {

@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zigdash/core/analytics/analytics_events.dart' show SetupVia;
+import 'package:zigdash/core/analytics/analytics_events.dart'
+    show ScanTls, SetupVia;
 import 'package:zigdash/data/database/tables/connections.dart';
 import 'package:zigdash/features/connections/diagnostics/connect_diagnostics.dart';
 import 'package:zigdash/features/connections/discovery/address_check.dart';
@@ -540,13 +541,20 @@ void main() {
             const ProbeResult(host: '192.168.1.10', port: 1883),
           ]),
         );
+        final states = <SetupState>[];
+        final sub = h.coordinator.states.listen(states.add);
         await h.coordinator.startScan();
         for (var i = 0; i < 4; i++) {
           await Future<void>.delayed(Duration.zero);
         }
+        await sub.cancel();
         final s = h.coordinator.state as SetupReview;
         expect(s.candidate.port, 1883);
         expect(h.diagnostics.calls, hasLength(1));
+        // scan_found still counts the untrusted one (analytics, 2d).
+        final verifying = states.indexWhere((s) => s is SetupVerifying);
+        final before = states[verifying - 1] as SetupScanning;
+        expect(before.tls, ScanTls.untrusted);
       });
 
       test('with other brokers, the untrusted card is left out', () async {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/onboarding/first_run.dart';
 import 'package:zigdash/core/storage/secure_storage.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
@@ -52,8 +53,26 @@ class _FakeDiagnostics extends ConnectDiagnostics {
   }) async => report;
 }
 
-List<Override> _overrides(AppDatabase db, {ConnectDiagnostics? diagnostics}) =>
-    [
+class _RecordingSink implements AnalyticsSink {
+  _RecordingSink(this.sent);
+  final List<(String, Map<String, String>)> sent;
+
+  @override
+  Future<void> start() async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  void send(String name, Map<String, String> props) => sent.add((name, props));
+}
+
+List<Override> _overrides(
+  AppDatabase db, {
+  ConnectDiagnostics? diagnostics,
+  List<Override> extra = const [],
+}) => [
+      ...extra,
       appDatabaseProvider.overrideWithValue(db),
       secureStorageProvider.overrideWithValue(_MemSecure()),
       connectionRepoProvider.overrideWith(
@@ -66,9 +85,12 @@ List<Override> _overrides(AppDatabase db, {ConnectDiagnostics? diagnostics}) =>
         connectDiagnosticsProvider.overrideWithValue(diagnostics),
     ];
 
-Widget _wrap(AppDatabase db, {ConnectDiagnostics? diagnostics}) =>
-    ProviderScope(
-      overrides: _overrides(db, diagnostics: diagnostics),
+Widget _wrap(
+  AppDatabase db, {
+  ConnectDiagnostics? diagnostics,
+  List<Override> extra = const [],
+}) => ProviderScope(
+      overrides: _overrides(db, diagnostics: diagnostics, extra: extra),
       child: MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -221,6 +243,61 @@ void main() {
     );
     expect(find.text('Retry'), findsOneWidget);
     expect(find.text('Cancel'), findsOneWidget);
+  });
+
+  // 3.8.5: the form's Test is counted like the guided one, with from: form,
+  // and an untrusted certificate says so instead of "no answer".
+  testWidgets('Test connection counts manual_test from the form', (
+    tester,
+  ) async {
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final sent = <(String, Map<String, String>)>[];
+    final fake = _FakeDiagnostics(
+      const DiagnosticsReport(
+        steps: [
+          StepResult(step: DiagnosticStep.resolve, status: StepStatus.pass),
+          StepResult(step: DiagnosticStep.tcp, status: StepStatus.pass),
+          StepResult(
+            step: DiagnosticStep.connack,
+            status: StepStatus.fail,
+            detailKey: 'diagTlsUntrusted',
+          ),
+        ],
+        connected: false,
+        candidatesTried: 1,
+      ),
+    );
+    await tester.pumpWidget(
+      _wrap(
+        db,
+        diagnostics: fake,
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(TextFormField, 'Name'), 'Z2M');
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Local host'),
+      '192.168.1.30',
+    );
+    await tester.enterText(find.widgetWithText(TextFormField, 'Port'), '8883');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Test connection'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('self-signed, expired'), findsOneWidget);
+    expect(sent.single.$1, 'setup_step');
+    expect(sent.single.$2, {
+      'step': 'manual_test',
+      'result': 'tls_untrusted',
+      'port': '8883',
+      'from': 'form',
+    });
   });
 
   // 2.10: a home connected through Home Assistant shows where, not broker

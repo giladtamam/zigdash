@@ -43,6 +43,7 @@ SetupStep? setupStepFor(
     SetupStepKind.scanFound,
     platform: platform,
     lateHosts: lateHosts,
+    tls: previous.tls,
   ),
   SetupVerifying() when previous is SetupScanEmpty => SetupStep(
     SetupStepKind.address,
@@ -91,10 +92,15 @@ SetupStep? setupStepFor(
     result: page,
     hub: brokerHost,
   ),
-  SetupFailed(:final kind, :final noNetwork) => SetupStep(
+  SetupFailed(:final kind, :final noNetwork, :final candidate) => SetupStep(
     SetupStepKind.failed,
     error: kind,
     noNetwork: noNetwork,
+    // 3.8.5: which port the broker was on, for the failures a port can
+    // explain (an encrypted 8883 read as no answer before 3.8.5).
+    portClass: candidate != null && _portFailures.contains(kind)
+        ? portClassOf(candidate.port)
+        : null,
     // 3.8.1: Home Assistant without Zigbee2MQTT, told apart when its
     // Zigbee is in ZHA (or a move is under way).
     fromZha: kind == SetupErrorKind.haNoZigbee2Mqtt ? fromZha : null,
@@ -116,6 +122,13 @@ SetupStep? setupStepFor(
     linkSrc: linkSrc,
   ),
   _ => null,
+};
+
+const _portFailures = {
+  SetupErrorKind.loginNoAnswer,
+  SetupErrorKind.tlsUntrusted,
+  SetupErrorKind.tlsFailed,
+  SetupErrorKind.portClosed,
 };
 
 /// The review was left without a dashboard (2.10.2): what the list held
