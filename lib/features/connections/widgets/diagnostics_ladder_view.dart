@@ -31,24 +31,6 @@ class DiagnosticsLadderView extends StatelessWidget {
         DiagnosticStep.devices => context.l10n.stepDevices,
       };
 
-  String? _detail(BuildContext context, String? key) => switch (key) {
-    'diagResolveFail' => context.l10n.diagResolveFail,
-    'diagResolveTimeout' => context.l10n.diagResolveTimeout,
-    'diagResolveLocalName' => context.l10n.diagResolveLocalName,
-    'diagTcpHaNoBroker' => context.l10n.diagTcpHaNoBroker,
-    'diagTcpSmlightClosed' => context.l10n.diagTcpSmlightClosed,
-    'diagTcpZ2mNoBroker' => context.l10n.diagTcpZ2mNoBroker,
-    'diagTcpZ2mBrokerElsewhere' => context.l10n.diagTcpZ2mBrokerElsewhere,
-    'diagAuthRejectedHa' => context.l10n.diagAuthRejectedHa,
-    'diagTcpFail' => context.l10n.diagTcpFail,
-    'diagTcpTimeout' => context.l10n.diagTcpTimeout,
-    'diagConnackFail' => context.l10n.diagConnackFail,
-    'diagLoginNoAnswer' => context.l10n.diagLoginNoAnswer,
-    'diagAuthRejected' => context.l10n.diagAuthRejected,
-    'diagAuthRefused' => context.l10n.diagAuthRefused,
-    _ => null,
-  };
-
   IconData _icon(StepStatus s) => switch (s) {
     StepStatus.pass => Icons.check_circle,
     StepStatus.fail => Icons.cancel,
@@ -98,7 +80,7 @@ class DiagnosticsLadderView extends StatelessWidget {
     final status =
         result?.status ?? (running ? StepStatus.running : StepStatus.pending);
     final cs = Theme.of(context).colorScheme;
-    final detail = _detail(context, result?.detailKey);
+    final detail = diagnosticDetail(context, result?.detailKey);
     final trailing =
         (step == DiagnosticStep.devices &&
             result?.status == StepStatus.pass &&
@@ -145,3 +127,25 @@ class DiagnosticsLadderView extends StatelessWidget {
     );
   }
 }
+
+/// The localized fix for a failed step's [StepResult.detailKey], or null
+/// (also the form's "keep the page" dialog, 3.8.6).
+String? diagnosticDetail(BuildContext context, String? key) => switch (key) {
+  'diagResolveFail' => context.l10n.diagResolveFail,
+  'diagResolveTimeout' => context.l10n.diagResolveTimeout,
+  'diagResolveLocalName' => context.l10n.diagResolveLocalName,
+  'diagTcpHaNoBroker' => context.l10n.diagTcpHaNoBroker,
+  'diagTcpSmlightClosed' => context.l10n.diagTcpSmlightClosed,
+  'diagTcpZ2mNoBroker' => context.l10n.diagTcpZ2mNoBroker,
+  'diagTcpZ2mBrokerElsewhere' => context.l10n.diagTcpZ2mBrokerElsewhere,
+  'diagAuthRejectedHa' => context.l10n.diagAuthRejectedHa,
+  'diagTcpFail' => context.l10n.diagTcpFail,
+  'diagTcpTimeout' => context.l10n.diagTcpTimeout,
+  'diagConnackFail' => context.l10n.diagConnackFail,
+  'diagLoginNoAnswer' => context.l10n.diagLoginNoAnswer,
+  'diagTlsUntrusted' => context.l10n.diagTlsUntrusted,
+  'diagTlsFailed' => context.l10n.diagTlsFailed,
+  'diagAuthRejected' => context.l10n.diagAuthRejected,
+  'diagAuthRefused' => context.l10n.diagAuthRefused,
+  _ => null,
+};

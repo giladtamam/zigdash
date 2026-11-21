@@ -1368,6 +1368,14 @@ class AppLocalizationsNb extends AppLocalizations {
       'Brokeren svarte ikke på innloggingen i tide. Home Assistant kan bruke noen sekunder på å sjekke den, så prøv igjen.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Telefonen stoler ikke på krypteringssertifikatet til denne brokeren: det er selvsignert, utløpt eller laget for et annet navn. ZigDash kan ikke bruke det ennå. På hjemmenettet kan du heller bruke brokerens ukrypterte port 1883, eller gi brokeren et sertifikat fra en offentlig sertifikatutsteder.';
+
+  @override
+  String get diagTlsFailed =>
+      'Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. På hjemmenettet kan du heller koble til uten kryptering: TCP i stedet for TLS, vanligvis på port 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Brokeren avviste brukernavn eller passord. Kontroller påloggingsinformasjonen.';
 
@@ -1663,7 +1671,43 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Dette hjemmet kobler seg til via Zigbee2MQTT-siden. Skriv inn MQTT-megleren din (som regel samme maskin, port 1883) for å slå på automasjoner, varsler og historikk. Etter lagring kobler ZigDash seg til via megleren.';
+      'Dette hjemmet kobler seg til via Zigbee2MQTT-siden. Skriv inn MQTT-megleren din (som regel samme maskin, port 1883) for å slå på automasjoner, varsler og historikk. Når megleren har enhetene dine, bytter ZigDash til den.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Tilkoblet, men denne megleren har ingen av enhetene dine. Hvis du nettopp slo på megleren, start Zigbee2MQTT på nytt så den kobler seg til den.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT bruker $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Leser innstillingene til Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Fortsette med Zigbee2MQTT-siden?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Denne megleren svarte, men den har ingen av enhetene dine, så dashbordene dine ville vært tomme. Zigbee2MQTT bruker kanskje en annen megler, eller må startes på nytt etter at megleren ble slått på.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Megleren svarte ikke, så dashbordene dine ville vært tomme.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Megleren avviste innloggingen, så dashbordene dine ville vært tomme.';
+
+  @override
+  String get connKeepPage => 'Behold Zigbee2MQTT-siden';
+
+  @override
+  String get connSaveAnyway => 'Lagre likevel';
+
+  @override
+  String get connChecking => 'Sjekker megleren…';
 
   @override
   String get setupManualEntry => 'Skriv inn detaljer manuelt';
@@ -2242,6 +2286,16 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Prøv igjen';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Telefonen stoler ikke på sertifikatet til denne brokeren';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Den krypterte tilkoblingen mislyktes';
+
+  @override
+  String get setupErrTlsAction => 'Rediger innstillinger';
 
   @override
   String get setupNoZ2mTitle =>

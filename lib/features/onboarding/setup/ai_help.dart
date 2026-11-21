@@ -179,6 +179,14 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     SetupErrorKind.loginNoAnswer =>
       "ZigDash found my broker, but it didn't answer the username and "
           'password in time.',
+    SetupErrorKind.tlsUntrusted =>
+      'ZigDash found my MQTT broker on an encrypted (TLS) port, but my phone '
+          "doesn't trust the broker's certificate: it is self-signed, expired, "
+          "or made for another name. ZigDash can't use such a certificate yet.",
+    SetupErrorKind.tlsFailed =>
+      'ZigDash tried an encrypted (TLS) connection to my MQTT broker, but '
+          'the TLS handshake failed. The broker may want a client '
+          "certificate, which ZigDash doesn't support.",
     SetupErrorKind.noDevices =>
       'ZigDash reached Zigbee2MQTT, but it published no devices during the '
           'check.',

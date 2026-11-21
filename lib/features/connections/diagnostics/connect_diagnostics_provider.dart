@@ -19,3 +19,18 @@ final connectDiagnosticsProvider = Provider<ConnectDiagnostics>(
     ),
   ),
 );
+
+/// Reads the `mqtt` settings from Zigbee2MQTT's web page (3.8.6): the
+/// connection form pre-fills a page Home's broker from them. Tests
+/// override it.
+typedef Z2mPageConfigFetch =
+    Future<Map<String, dynamic>?> Function(
+      String host,
+      int port, {
+      String? token,
+    });
+
+final z2mPageConfigProvider = Provider<Z2mPageConfigFetch>(
+  (ref) =>
+      (host, port, {token}) => fetchZ2mMqttConfig(host, port, token: token),
+);

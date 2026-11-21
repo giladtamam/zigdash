@@ -1371,6 +1371,14 @@ class AppLocalizationsCs extends AppLocalizations {
       'Broker neodpověděl na přihlášení včas. Home Assistantu může ověření trvat pár sekund, tak to zkus znovu.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Tvůj telefon nedůvěřuje šifrovacímu certifikátu tohoto brokeru: je podepsaný sám sebou, vypršel nebo je vystavený na jiné jméno. ZigDash ho zatím neumí použít. V domácí síti místo toho použij nešifrovaný port brokeru 1883, nebo brokeru dej certifikát od veřejné certifikační autority.';
+
+  @override
+  String get diagTlsFailed =>
+      'Šifrované spojení se nenavázalo. Broker možná chce klientský certifikát, který ZigDash nepodporuje. V domácí síti se místo toho připoj bez šifrování: TCP místo TLS, obvykle na portu 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Broker odmítl uživatelské jméno nebo heslo. Zkontroluj přihlašovací údaje.';
 
@@ -1667,7 +1675,43 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Po uložení se ZigDash připojuje přes broker.';
+      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Jakmile bude mít broker vaše zařízení, ZigDash na něj přepne.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Připojeno, ale tento broker nemá žádné z vašich zařízení. Pokud jste broker právě zapnuli, restartujte Zigbee2MQTT, aby se k němu připojil.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT používá $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Načítání nastavení Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Dál používat stránku Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Tento broker odpověděl, ale nemá žádné z vašich zařízení, takže by vaše nástěnky byly prázdné. Zigbee2MQTT možná používá jiný broker, nebo potřebuje restart po zapnutí brokeru.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Broker neodpověděl, takže by vaše nástěnky byly prázdné.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Broker odmítl přihlášení, takže by vaše nástěnky byly prázdné.';
+
+  @override
+  String get connKeepPage => 'Ponechat stránku Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Přesto uložit';
+
+  @override
+  String get connChecking => 'Kontrola brokeru…';
 
   @override
   String get setupManualEntry => 'Zadat údaje ručně';
@@ -2243,6 +2287,16 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Zkusit znovu';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Tvůj telefon nedůvěřuje certifikátu tohoto brokeru';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Šifrované spojení selhalo';
+
+  @override
+  String get setupErrTlsAction => 'Upravit nastavení';
 
   @override
   String get setupNoZ2mTitle =>

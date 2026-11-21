@@ -284,6 +284,18 @@ enum ScanEmptyChoice { noHub, homeAssistant, otherNetwork }
 /// [z2mPage] (3.2): through Zigbee2MQTT's own web page, no broker.
 enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 
+/// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5):
+/// a broker whose certificate the phone doesn't trust (also when setup
+/// went on with the same machine's 1883), or else a trusted one on 8883.
+/// Sent as `tls`. Never the address.
+enum ScanTls { yes, untrusted }
+
+/// Where a broker form was reached from (3.8.5), sent as `from`: on
+/// [SetupStepKind.manualTest], [form] is the connection form's Test (the
+/// guided form sends none); on [SetupStepKind.manual], [tlsEdit] is Edit
+/// settings after a TLS failure in setup (the other ways in send none).
+enum ManualFrom { form, tlsEdit }
+
 /// Where setup opened the Home Assistant sign-in (3.1.3): while scanning,
 /// the card on an empty result, the note under "I use Home Assistant",
 /// the first button when Home Assistant was found without a broker, the
@@ -348,6 +360,12 @@ enum ManualTestResult {
   /// A Zigbee2MQTT machine whose own settings name the broker elsewhere
   /// (2.10.4): another machine, or a container on this one.
   z2mBrokerElsewhere,
+
+  /// The broker's TLS certificate isn't trusted by the phone (3.8.5).
+  tlsUntrusted,
+
+  /// The TLS handshake failed for another reason (3.8.5).
+  tlsFailed,
 }
 
 /// The port typed on the broker form, as a class (2.10.4): the MQTT
@@ -396,7 +414,17 @@ class SetupStep extends AnalyticsEvent {
     this.zhaDevices,
     this.fromZha,
     this.linkSrc,
+    this.tls,
+    this.manualFrom,
   });
+
+  /// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5).
+  final ScanTls? tls;
+
+  /// Where a broker form was reached from, on [SetupStepKind.manualTest]
+  /// and [SetupStepKind.manual] (3.8.5). Sent as `from`, without the
+  /// `path` that [addressFrom] adds.
+  final ManualFrom? manualFrom;
 
   /// Where the connect link came from (ha-link.md), on
   /// [SetupStepKind.haLink], and on [SetupStepKind.complete] when setup
@@ -492,7 +520,9 @@ class SetupStep extends AnalyticsEvent {
   final bool? tidied;
 
   /// The class of the port typed ([portClassOf]), on
-  /// [SetupStepKind.manualTest] (2.10.4).
+  /// [SetupStepKind.manualTest] (2.10.4); from 3.8.5 also the broker's
+  /// port on a `failed` step that says no answer, a TLS failure or a
+  /// closed port.
   final String? portClass;
   final int? hostsTried;
   final bool? widened;
@@ -566,6 +596,8 @@ class SetupStep extends AnalyticsEvent {
     if (haApps != null) 'install': haApps! ? 'apps' : 'no_apps',
     if (fromZha != null) 'from_zha': fromZha!.name,
     if (linkSrc != null) 'link_src': _snake(linkSrc!.name),
+    if (tls != null) 'tls': tls!.name,
+    if (manualFrom != null) 'from': _snake(manualFrom!.name),
     if (zhaDevices != null)
       'zha': bucket(
         zhaDevices!,
@@ -1624,6 +1656,47 @@ class HistoryOnEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// Saving an MQTT broker for a Home that connects through the Zigbee2MQTT
+/// page (3.8.6, broker-no-devices-386.md §6): saved, the page kept, saved
+/// anyway or cancelled (also by leaving the form); whether the broker
+/// answered the check, refused the login, or it gave up after 15 s; how
+/// many devices it had, in buckets.
+enum PageBrokerResult {
+  saved('saved'),
+  keptPage('kept_page'),
+  savedAnyway('saved_anyway'),
+  cancelled('cancelled');
+
+  const PageBrokerResult(this.wire);
+  final String wire;
+}
+
+enum PageBrokerAnswered { yes, no, refused, timeout }
+
+class PageBrokerEvent extends AnalyticsEvent {
+  const PageBrokerEvent(this.result, {this.answered, this.devices});
+
+  final PageBrokerResult result;
+  final PageBrokerAnswered? answered;
+  final int? devices;
+
+  @override
+  String get name => 'page_broker';
+
+  @override
+  Map<String, String> get props => {
+    'result': result.wire,
+    if (answered != null) 'answered': answered!.name,
+    if (devices != null)
+      'devices': bucket(
+        devices!,
+        const [0],
+        ranges: const [(1, 5), (6, 20)],
+        top: '21+',
+      ),
+  };
 }
 
 /// The 14-day Pro trial (3.6, pro-trial-360.md §5): started (from where,

@@ -36,11 +36,14 @@ Future<String?> fetchZ2mDeviceList(
 Future<Map<String, dynamic>?> fetchZ2mMqttConfig(
   String host,
   int port, {
+  String? token,
   Duration timeout = const Duration(seconds: 5),
 }) async {
   WebSocket? socket;
   try {
-    socket = await WebSocket.connect('ws://$host:$port/api').timeout(timeout);
+    socket = await WebSocket.connect(
+      z2mApiUri(host, port, token: token).toString(),
+    ).timeout(timeout);
     final mqtt = await socket
         .where((frame) => frame is String)
         .map((frame) => z2mMqttConfigOf(frame as String))

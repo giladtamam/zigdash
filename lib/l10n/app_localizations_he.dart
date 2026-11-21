@@ -1357,6 +1357,14 @@ class AppLocalizationsHe extends AppLocalizations {
       'הברוקר לא ענה להתחברות בזמן. ל-Home Assistant לוקח לפעמים כמה שניות לבדוק אותה, נסו שוב.';
 
   @override
+  String get diagTlsUntrusted =>
+      'הטלפון לא סומך על תעודת ההצפנה של הברוקר הזה: היא חתומה על ידי עצמה, פגת תוקף או הונפקה לשם אחר. ZigDash עוד לא יכול להשתמש בה. ברשת של הבית, השתמשו במקום זאת בפורט הלא מוצפן 1883 של הברוקר, או תנו לברוקר תעודה מרשות אישורים ציבורית.';
+
+  @override
+  String get diagTlsFailed =>
+      'החיבור המוצפן לא התחיל. ייתכן שהברוקר דורש תעודת לקוח, ש-ZigDash לא תומך בה. ברשת של הבית, התחברו במקום זאת בלי הצפנה: TCP במקום TLS, בדרך כלל בפורט 1883.';
+
+  @override
   String get diagAuthRejected =>
       'הברוקר דחה את שם המשתמש או הסיסמה. בדקו את פרטי ההתחברות.';
 
@@ -1649,7 +1657,43 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'הבית הזה מתחבר דרך דף ה-Zigbee2MQTT. הזינו את ברוקר ה-MQTT שלכם (בדרך כלל אותו מחשב, פורט 1883) כדי להפעיל אוטומציות, התראות והיסטוריה. אחרי השמירה ZigDash מתחבר דרך הברוקר.';
+      'הבית הזה מתחבר דרך דף ה-Zigbee2MQTT. הזינו את ברוקר ה-MQTT שלכם (בדרך כלל אותו מחשב, פורט 1883) כדי להפעיל אוטומציות, התראות והיסטוריה. כשהמכשירים שלכם יהיו בברוקר, ZigDash יעבור אליו.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'מחובר, אבל בברוקר הזה אין אף אחד מהמכשירים שלכם. אם הרגע הפעלתם את הברוקר, הפעילו מחדש את Zigbee2MQTT כדי שיתחבר אליו.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT משתמש ב-$server';
+  }
+
+  @override
+  String get connReadingZ2m => 'קורא את ההגדרות של Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'להמשיך להשתמש בדף ה-Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'הברוקר הזה ענה, אבל אין בו אף אחד מהמכשירים שלכם, כך שהלוחות שלכם יהיו ריקים. ייתכן ש-Zigbee2MQTT משתמש בברוקר אחר, או צריך הפעלה מחדש אחרי שהברוקר הופעל.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'הברוקר לא ענה, כך שהלוחות שלכם יהיו ריקים.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'הברוקר דחה את ההתחברות, כך שהלוחות שלכם יהיו ריקים.';
+
+  @override
+  String get connKeepPage => 'להשאיר את דף ה-Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'לשמור בכל זאת';
+
+  @override
+  String get connChecking => 'בודק את הברוקר…';
 
   @override
   String get setupManualEntry => 'הזנת פרטים ידנית';
@@ -2218,6 +2262,16 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'לנסות שוב';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'הטלפון לא סומך על התעודה של הברוקר הזה';
+
+  @override
+  String get setupErrTlsFailedTitle => 'החיבור המוצפן נכשל';
+
+  @override
+  String get setupErrTlsAction => 'עריכת הגדרות';
 
   @override
   String get setupNoZ2mTitle =>

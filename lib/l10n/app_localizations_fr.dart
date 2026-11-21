@@ -1381,6 +1381,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le broker n\'a pas répondu à la connexion à temps. Home Assistant peut mettre quelques secondes à la vérifier, réessayez.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Votre téléphone ne fait pas confiance au certificat de chiffrement de ce broker : il est auto-signé, expiré ou établi pour un autre nom. ZigDash ne peut pas encore l\'utiliser. Sur le réseau de la maison, utilisez plutôt le port non chiffré 1883 du broker, ou donnez au broker un certificat d\'une autorité publique.';
+
+  @override
+  String get diagTlsFailed =>
+      'La connexion chiffrée n\'a pas démarré. Le broker demande peut-être un certificat client, que ZigDash ne prend pas en charge. Sur le réseau de la maison, connectez-vous plutôt sans chiffrement : TCP au lieu de TLS, en général sur le port 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Le broker a refusé le nom d\'utilisateur ou le mot de passe. Vérifiez vos identifiants.';
 
@@ -1681,7 +1689,43 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Ce domicile se connecte par la page Zigbee2MQTT. Saisissez votre broker MQTT (souvent la même machine, port 1883) pour activer automatisations, alertes et historique. Après l\'enregistrement, ZigDash se connecte par le broker.';
+      'Ce domicile se connecte par la page Zigbee2MQTT. Saisissez votre broker MQTT (souvent la même machine, port 1883) pour activer automatisations, alertes et historique. Quand le broker a vos appareils, ZigDash passe par lui.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Connecté, mais ce broker n\'a aucun de vos appareils. Si vous venez d\'activer le broker, redémarrez Zigbee2MQTT pour qu\'il s\'y connecte.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT utilise $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Lecture des réglages de Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Continuer avec la page Zigbee2MQTT ?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Ce broker a répondu, mais il n\'a aucun de vos appareils : vos tableaux de bord seraient vides. Zigbee2MQTT utilise peut-être un autre broker, ou doit être redémarré après l\'activation du broker.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Le broker n\'a pas répondu : vos tableaux de bord seraient vides.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Le broker a refusé l\'identifiant : vos tableaux de bord seraient vides.';
+
+  @override
+  String get connKeepPage => 'Garder la page Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Enregistrer quand même';
+
+  @override
+  String get connChecking => 'Vérification du broker…';
 
   @override
   String get setupManualEntry => 'Saisir les détails manuellement';
@@ -2261,6 +2305,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Réessayer';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Votre téléphone ne fait pas confiance au certificat de ce broker';
+
+  @override
+  String get setupErrTlsFailedTitle => 'La connexion chiffrée a échoué';
+
+  @override
+  String get setupErrTlsAction => 'Modifier les paramètres';
 
   @override
   String get setupNoZ2mTitle =>

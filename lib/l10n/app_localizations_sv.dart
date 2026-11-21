@@ -1368,6 +1368,14 @@ class AppLocalizationsSv extends AppLocalizations {
       'Brokern svarade inte på inloggningen i tid. Home Assistant kan behöva några sekunder för att kontrollera den, försök igen.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Telefonen litar inte på krypteringscertifikatet för den här brokern: det är självsignerat, har gått ut eller är utfärdat för ett annat namn. ZigDash kan inte använda det ännu. Använd i stället brokerns okrypterade port 1883 på hemnätverket, eller ge brokern ett certifikat från en offentlig certifikatutfärdare.';
+
+  @override
+  String get diagTlsFailed =>
+      'Den krypterade anslutningen startade inte. Brokern kanske vill ha ett klientcertifikat, vilket ZigDash inte stöder. Anslut i stället utan kryptering på hemnätverket: TCP i stället för TLS, oftast på port 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Servern avvisade användarnamn eller lösenord. Kontrollera dina uppgifter.';
 
@@ -1664,7 +1672,43 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Det här hemmet ansluter via Zigbee2MQTT-sidan. Ange din MQTT-broker (oftast samma maskin, port 1883) för att slå på automationer, larm och historik. När du sparat ansluter ZigDash via brokern.';
+      'Det här hemmet ansluter via Zigbee2MQTT-sidan. Ange din MQTT-broker (oftast samma maskin, port 1883) för att slå på automationer, larm och historik. När brokern har dina enheter byter ZigDash till den.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Ansluten, men den här brokern har ingen av dina enheter. Om du nyss slog på brokern, starta om Zigbee2MQTT så att den ansluter till den.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT använder $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Läser Zigbee2MQTT:s inställningar…';
+
+  @override
+  String get connKeepPageTitle => 'Fortsätta med Zigbee2MQTT-sidan?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Den här brokern svarade, men den har ingen av dina enheter, så dina dashboards skulle bli tomma. Zigbee2MQTT kanske använder en annan broker, eller behöver startas om efter att brokern slogs på.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Brokern svarade inte, så dina dashboards skulle bli tomma.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Brokern nekade inloggningen, så dina dashboards skulle bli tomma.';
+
+  @override
+  String get connKeepPage => 'Behåll Zigbee2MQTT-sidan';
+
+  @override
+  String get connSaveAnyway => 'Spara ändå';
+
+  @override
+  String get connChecking => 'Kontrollerar brokern…';
 
   @override
   String get setupManualEntry => 'Ange uppgifter manuellt';
@@ -2241,6 +2285,17 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get setupErrLoginNoAnswerAction => 'Försök igen';
+
+  @override
+  String get setupErrTlsUntrustedTitle =>
+      'Telefonen litar inte på certifikatet för den här brokern';
+
+  @override
+  String get setupErrTlsFailedTitle =>
+      'Den krypterade anslutningen misslyckades';
+
+  @override
+  String get setupErrTlsAction => 'Redigera inställningar';
 
   @override
   String get setupNoZ2mTitle =>

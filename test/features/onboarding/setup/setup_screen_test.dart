@@ -1334,6 +1334,84 @@ void main() {
     expect(find.textContaining('1 device found.'), findsOneWidget);
   });
 
+  // 3.8.5: an encrypted broker the phone can't use says so, and the form
+  // opens on the same address with port 1883.
+  for (final (key, title) in const [
+    ('diagTlsUntrusted', "Your phone doesn't trust this broker's certificate"),
+    ('diagTlsFailed', 'Encrypted connection failed'),
+  ]) {
+    testWidgets('a TLS failure ($key): its message, Edit settings, Retry', (
+      tester,
+    ) async {
+      final failed = DiagnosticsReport(
+        steps: [
+          StepResult(
+            step: DiagnosticStep.connack,
+            status: StepStatus.fail,
+            detailKey: key,
+          ),
+        ],
+        connected: false,
+        candidatesTried: 1,
+      );
+      final sent = <(String, Map<String, String>)>[];
+      final coordinator = await _pump(
+        tester,
+        scan: (_) => Stream.fromIterable([
+          const ProbeResult(host: '192.168.1.10', port: 8883),
+        ]),
+        reports: [failed, failed],
+        extra: [
+          analyticsProvider.overrideWithValue(
+            Analytics(_RecordingSink(sent), enabled: true),
+          ),
+        ],
+      );
+      await tester.tap(find.text('Find my setup'));
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text(title), findsOneWidget);
+      expect(
+        find.textContaining(
+          key == 'diagTlsUntrusted'
+              ? 'self-signed, expired, or made for another name'
+              : 'client certificate',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Something went wrong'), findsNothing);
+      expect(
+        find.widgetWithText(FilledButton, 'Edit settings'),
+        findsOneWidget,
+      );
+      // Retry stays, second.
+      await tester.ensureVisible(find.widgetWithText(OutlinedButton, 'Retry'));
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Retry'));
+      await tester.pump();
+      await tester.pump();
+      expect(coordinator.state, isA<SetupFailed>());
+
+      await tester.ensureVisible(find.text('Edit settings'));
+      await tester.tap(find.text('Edit settings'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('manual entry host=192.168.1.10&port=1883'),
+        findsOneWidget,
+      );
+      // Counted apart from the other ways into the form.
+      expect(
+        sent.where((e) => e.$2['step'] == 'manual').map((e) => e.$2['from']),
+        ['tls_edit'],
+      );
+      expect(
+        sent.where((e) => e.$2['step'] == 'failed').first.$2['port'],
+        '8883',
+      );
+    });
+  }
+
   testWidgets('on mobile data: says so, opens Wi-Fi, no Try again', (
     tester,
   ) async {

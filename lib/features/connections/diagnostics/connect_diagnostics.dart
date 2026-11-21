@@ -5,6 +5,7 @@ import 'package:mqtt_client/mqtt_client.dart' as mc;
 import '../../../core/analytics/analytics_events.dart' show ManualTestResult;
 import '../../../mqtt/broker_config.dart';
 import '../../../mqtt/client_factory.dart';
+import '../../../mqtt/connection_failure.dart' show isTlsFailure;
 import '../../../mqtt/endpoint.dart';
 import '../../../mqtt/mqtt_manager.dart' show MqttClientFactory;
 import '../../discovery/models/z2m_device.dart';
@@ -79,18 +80,24 @@ typedef Z2mBrokerAsk =
 class ConnectDiagnostics {
   ConnectDiagnostics({
     MqttClientFactory? clientFactory,
+    BadCertWatcher? watchCert,
     HostLookup? hostLookup,
     TcpProbe? tcpProbe,
     HostIdentifier? identify,
     Z2mBrokerAsk? askZ2m,
     this.deviceWindow = const Duration(seconds: 3),
   }) : _clientFactory = clientFactory ?? buildMqttClient,
+       _watchCert = watchCert ?? watchBadCert,
        _hostLookup = hostLookup ?? defaultHostLookup,
        _tcpProbe = tcpProbe ?? defaultTcpProbe,
        _identify = identify,
        _askZ2m = askZ2m;
 
   final MqttClientFactory _clientFactory;
+
+  /// Tells a certificate the phone doesn't trust apart (3.8.5); the real
+  /// one is [watchBadCert].
+  final BadCertWatcher _watchCert;
   final HostLookup _hostLookup;
   final TcpProbe _tcpProbe;
 
@@ -265,12 +272,17 @@ class ConnectDiagnostics {
         );
       return _aborted(steps);
     }
+    // Per candidate: the local try's certificate says nothing of the
+    // remote one's (3.8.5).
+    var sawBadCert = false;
+    _watchCert(client, config, () => sawBadCert = true);
 
     // --- connack ---
     // Inspect the status AFTER connect, whether it returned or threw: strict
     // brokers send a refusal CONNACK then drop the socket, which mqtt_client
     // surfaces as a thrown error — the return code is still in the status.
     var answered = false;
+    Object? connectError;
     try {
       await client.connect(config.username, password).timeout(budget);
     } on UnsupportedError {
@@ -286,9 +298,10 @@ class ConnectDiagnostics {
       return _aborted(steps);
     } on TimeoutException {
       // No CONNACK within budget — fall through to the fail below.
-    } catch (_) {
+    } catch (e) {
       // Socket-level failure OR a refusal CONNACK + close — the status below
       // distinguishes "broker answered and refused" from "never answered".
+      connectError = e;
     }
     final status = client.connectionStatus;
     final code = status?.returnCode;
@@ -306,9 +319,15 @@ class ConnectDiagnostics {
         StepResult(
           step: DiagnosticStep.connack,
           status: StepStatus.fail,
-          // With a login the broker was reached and went quiet on it; the
-          // Mosquitto add-on checks logins against Home Assistant's users.
-          detailKey: config.username == null
+          // A TLS failure first (3.8.5): it used to read as "no answer",
+          // and retrying can never help. With a login the broker was
+          // reached and went quiet on it; the Mosquitto add-on checks
+          // logins against Home Assistant's users.
+          detailKey: sawBadCert
+              ? 'diagTlsUntrusted'
+              : isTlsFailure(connectError)
+              ? 'diagTlsFailed'
+              : config.username == null
               ? 'diagConnackFail'
               : 'diagLoginNoAnswer',
         ),
@@ -482,6 +501,10 @@ ManualTestResult manualTestResult(DiagnosticsReport report) {
       return ManualTestResult.z2mBrokerElsewhere;
     case 'diagAuthRejectedHa':
       return ManualTestResult.haLogin;
+    case 'diagTlsUntrusted':
+      return ManualTestResult.tlsUntrusted;
+    case 'diagTlsFailed':
+      return ManualTestResult.tlsFailed;
   }
   return switch (failure?.step) {
     DiagnosticStep.resolve => ManualTestResult.resolve,
