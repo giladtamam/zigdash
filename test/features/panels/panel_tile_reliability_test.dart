@@ -11,6 +11,7 @@ import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/panels/providers/panel_value_provider.dart';
 import 'package:zigdash/features/panels/widgets/panel_reliability_frame.dart';
 import 'package:zigdash/features/panels/widgets/panel_tile.dart';
+import 'package:zigdash/features/panels/widgets/toggle_panel.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/mqtt_manager.dart';
@@ -164,23 +165,37 @@ void main() {
     }
   });
 
+  test('a toggle says its last value in the app\'s words (3.8.7)', () {
+    expect(panelReliabilityValueLabel(const ToggleConfig(), 'OFF', _en), 'Off');
+    expect(panelReliabilityValueLabel(const ToggleConfig(), 'ON', _en), 'On');
+    expect(
+      panelReliabilityValueLabel(
+        const ToggleConfig(),
+        'OFF',
+        lookupAppLocalizations(const Locale('de')),
+      ),
+      'Aus',
+    );
+  });
+
   test('text log reliability label does not expose structured payloads', () {
     expect(
       panelReliabilityValueLabel(
         const TextLogConfig(),
         '{"event":"door opened"}',
+        _en,
       ),
       isNull,
     );
     expect(
-      panelReliabilityValueLabel(const TextLogConfig(), 'door opened'),
+      panelReliabilityValueLabel(const TextLogConfig(), 'door opened', _en),
       'door opened',
     );
     expect(
       panelReliabilityValueLabel(const TextLogConfig(jsonPath: 'event'), {
         'kind': 'door',
         'open': true,
-      }),
+      }, _en),
       isNull,
     );
   });
@@ -223,7 +238,7 @@ void main() {
     expect(semanticsLabel, contains('Last known'));
     expect(semanticsLabel, isNot(contains('Controls unavailable')));
 
-    await tester.tap(find.byType(Switch));
+    await tester.tap(find.byType(TogglePanel));
     await tester.pumpAndSettle();
 
     expect(manager.publishedTopic, 'home/device');
@@ -347,3 +362,5 @@ void main() {
     expect(find.text('Sep 20'), findsOneWidget);
   });
 }
+
+final _en = lookupAppLocalizations(const Locale('en'));

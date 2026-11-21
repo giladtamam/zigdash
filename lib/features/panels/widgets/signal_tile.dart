@@ -22,11 +22,13 @@ import '../../../core/utils/window_class.dart';
   final fg = alarming
       ? roles.onAttention
       : on
-          ? roles.onActive
-          : Theme.of(context).colorScheme.onSurface;
+      ? roles.onActive
+      : Theme.of(context).colorScheme.onSurface;
   return (
     fg: fg,
-    fgVariant: alarming || on ? fg : Theme.of(context).colorScheme.onSurfaceVariant,
+    fgVariant: alarming || on
+        ? fg
+        : Theme.of(context).colorScheme.onSurfaceVariant,
   );
 }
 
@@ -58,36 +60,34 @@ class SignalTileCard extends StatelessWidget {
     final roles = SignalColors.of(context);
     final filled = alarming || on;
     const shape = RoundedSuperellipseBorder(
-        borderRadius: BorderRadiusDirectional.all(Radius.circular(SignalRadii.tile)));
+      borderRadius: BorderRadiusDirectional.all(
+        Radius.circular(SignalRadii.tile),
+      ),
+    );
     final idleColor = theme.cardTheme.color ?? roles.idle;
     final Widget ink = InkWell(
       customBorder: shape,
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: child,
-      ),
+      child: Padding(padding: const EdgeInsets.all(14), child: child),
     );
     return TweenAnimationBuilder<Color?>(
       tween: ColorTween(
-          end: alarming
-              ? roles.attention
-              : on
-                  ? roles.active
-                  : idleColor),
+        end: alarming
+            ? roles.attention
+            : on
+            ? roles.active
+            : idleColor,
+      ),
       duration: SignalMotion.of(context, SignalMotion.stateChange),
       curve: Curves.easeInOutCubicEmphasized,
       builder: (context, fill, child) => alarming
           ? _AlarmPulse(
               from: fill!,
               to: roles.attentionPulse,
-              builder: (pulse) => Card(color: pulse, shape: shape, child: child),
+              builder: (pulse) =>
+                  Card(color: pulse, shape: shape, child: child),
             )
-          : Card(
-              color: fill,
-              shape: filled ? shape : null,
-              child: child,
-            ),
+          : Card(color: fill, shape: filled ? shape : null, child: child),
       child: semanticsActions == null
           ? ink
           : Semantics(customSemanticsActions: semanticsActions, child: ink),
@@ -99,7 +99,11 @@ class SignalTileCard extends StatelessWidget {
 /// (2 s, signal-2.0.md §6). Steady at [from] when the system turns
 /// animations off. Nothing else in the app loops.
 class _AlarmPulse extends StatefulWidget {
-  const _AlarmPulse({required this.from, required this.to, required this.builder});
+  const _AlarmPulse({
+    required this.from,
+    required this.to,
+    required this.builder,
+  });
 
   final Color from;
   final Color to;
@@ -136,10 +140,15 @@ class _AlarmPulseState extends State<_AlarmPulse>
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) => widget.builder(Color.lerp(widget.from,
-            widget.to, Curves.easeInOutSine.transform(_controller.value))!),
-      );
+    animation: _controller,
+    builder: (context, _) => widget.builder(
+      Color.lerp(
+        widget.from,
+        widget.to,
+        Curves.easeInOutSine.transform(_controller.value),
+      )!,
+    ),
+  );
 }
 
 /// The quick-action chip in a Signal tile's corner. With [onPressed] it is
@@ -182,18 +191,17 @@ class QuickActionChip extends StatelessWidget {
     final material = Material(
       color: isOn ? roles.onActive : roles.raised,
       shape: const RoundedSuperellipseBorder(
-          borderRadius: BorderRadiusDirectional.all(
-              Radius.circular(SignalRadii.quickAction))),
+        borderRadius: BorderRadiusDirectional.all(
+          Radius.circular(SignalRadii.quickAction),
+        ),
+      ),
       clipBehavior: Clip.antiAlias,
       child: onPressed == null ? face : InkWell(onTap: onPressed, child: face),
     );
     if (onPressed == null) return ExcludeSemantics(child: material);
     return Semantics(
       toggled: on ?? false,
-      child: Tooltip(
-        message: tooltip ?? '',
-        child: material,
-      ),
+      child: Tooltip(message: tooltip ?? '', child: material),
     );
   }
 }
