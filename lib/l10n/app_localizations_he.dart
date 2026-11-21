@@ -1179,7 +1179,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'לא נמצאו התקנים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.';
+      'לא נמצאו התקנים או אריחים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.';
 
   @override
   String get sceneFormReadingState => 'קורא מצב נוכחי…';
@@ -1199,11 +1199,36 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get sceneFormNoDevicesSelected => 'בחרו לפחות התקן אחד ללכידה.';
+  String get sceneFormNoDevicesSelected => 'בחרו לפחות התקן אחד או אריח אחד.';
 
   @override
   String get sceneFormNothingCaptured =>
       'לא נלכד דבר הניתן לשינוי מההתקנים שנבחרו.';
+
+  @override
+  String get sceneFormTilesHeader => 'האריחים שלך';
+
+  @override
+  String get sceneFormTilesHint =>
+      'אריחים שיצרתם בעצמכם. הסצנה שולחת את מה שהאריח שולח.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'פועל רק מהטלפון הזה בבית: לא מאוטומציות ולא מבחוץ.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count פעולות נוספות נשמרות',
+      one: 'פעולה אחת נוספת נשמרת',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'הסרה';
 
   @override
   String get sceneDeleteTitle => 'למחוק סצנה?';
@@ -1229,7 +1254,13 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count התקנים';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count פעולות',
+      one: 'פעולה אחת',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4696,6 +4727,18 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'בסצנה הזו אין מה לשלוח.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count פעולות בסצנה הזו פועלות רק מהטלפון הזה בבית, לא מאוטומציות.',
+      one: 'פעולה אחת בסצנה הזו פועלת רק מהטלפון הזה בבית, לא מאוטומציות.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

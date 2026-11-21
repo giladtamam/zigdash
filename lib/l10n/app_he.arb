@@ -467,7 +467,7 @@
   "sceneFormNameLabel": "שם הסצנה",
   "sceneFormDevicesHeader": "התקנים ללכידה",
   "sceneFormCaptureHint": "נשמר המצב הניתן לשינוי של כל התקן נבחר (דלוק/כבוי, בהירות, צבע, מיקום…). ערכים לקריאה בלבד מתעלמים מהם.",
-  "sceneFormNoDevices": "לא נמצאו התקנים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.",
+  "sceneFormNoDevices": "לא נמצאו התקנים או אריחים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.",
   "sceneFormReadingState": "קורא מצב נוכחי…",
   "sceneCtrlPower": "הפעלה",
   "sceneCtrlBrightness": "בהירות",
@@ -480,8 +480,13 @@
       }
     }
   },
-  "sceneFormNoDevicesSelected": "בחרו לפחות התקן אחד ללכידה.",
+  "sceneFormNoDevicesSelected": "בחרו לפחות התקן אחד או אריח אחד.",
   "sceneFormNothingCaptured": "לא נלכד דבר הניתן לשינוי מההתקנים שנבחרו.",
+  "sceneFormTilesHeader": "האריחים שלך",
+  "sceneFormTilesHint": "אריחים שיצרתם בעצמכם. הסצנה שולחת את מה שהאריח שולח.",
+  "sceneTileHomeOnly": "פועל רק מהטלפון הזה בבית: לא מאוטומציות ולא מבחוץ.",
+  "sceneFormKeptActions": "{count, plural, =1{פעולה אחת נוספת נשמרת} other{{count} פעולות נוספות נשמרות}}",
+  "sceneFormRemoveKept": "הסרה",
   "sceneDeleteTitle": "למחוק סצנה?",
   "sceneDeleteMessage": "\"{name}\" יוסר. ההתקנים נשארים במצבם הנוכחי.",
   "@sceneDeleteMessage": {
@@ -498,7 +503,7 @@
       "name": {}
     }
   },
-  "sceneActionsCount": "{count} התקנים",
+  "sceneActionsCount": "{count, plural, =1{פעולה אחת} other{{count} פעולות}}",
   "scenesAllShutters": "כל התריסים",
   "sceneCloseAllShutters": "סגירת כל התריסים",
   "sceneOpenAllShutters": "פתיחת כל התריסים",
@@ -1526,6 +1531,7 @@
   "autoErrTown": "יש להגדיר עיר לזריחה ולשקיעה.",
   "autoErrPickAction": "יש לבחור מה יקרה.",
   "autoErrEmptyScene": "בסצנה הזו אין מה לשלוח.",
+  "autoSceneTilesSkipped": "{count, plural, =1{פעולה אחת בסצנה הזו פועלת רק מהטלפון הזה בבית, לא מאוטומציות.} other{{count} פעולות בסצנה הזו פועלות רק מהטלפון הזה בבית, לא מאוטומציות.}}",
   "autoErrNotConnected": "ZigDash לא מחובר לבית הזה. אפשר לנסות שוב בבית.",
   "autoNewTitle": "אוטומציה חדשה",
   "autoEditTitle": "עריכת אוטומציה",

@@ -1190,7 +1190,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Nenalezena žádná ovladatelná zařízení. Zkontroluj, že jsou spárovaná, a klepni na obnovit.';
+      'Nenalezena žádná ovladatelná zařízení ani dlaždice. Zkontroluj, že jsou spárovaná, a klepni na obnovit.';
 
   @override
   String get sceneFormReadingState => 'Načítám aktuální stav…';
@@ -1211,11 +1211,37 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Vyber aspoň jedno zařízení k uložení.';
+      'Vyber aspoň jedno zařízení nebo dlaždici.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Z vybraných zařízení se nepodařilo uložit nic nastavitelného.';
+
+  @override
+  String get sceneFormTilesHeader => 'Tvoje dlaždice';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Dlaždice, které sis vytvořil sám. Scéna pošle to, co posílá dlaždice.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Funguje jen z tohoto telefonu doma: ne z automatizací a ne zvenku.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dalších akcí zůstane',
+      few: '$count další akce zůstanou',
+      one: '1 další akce zůstane',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Odstranit';
 
   @override
   String get sceneDeleteTitle => 'Smazat scénu?';
@@ -1241,7 +1267,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return 'Zařízení: $count';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count akcí',
+      few: '$count akce',
+      one: '1 akce',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4748,6 +4781,21 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Tato scéna nemá co odeslat.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count akcí této scény funguje jen z tohoto telefonu doma, ne z automatizací.',
+      few:
+          '$count akce této scény fungují jen z tohoto telefonu doma, ne z automatizací.',
+      one:
+          '1 akce této scény funguje jen z tohoto telefonu doma, ne z automatizací.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

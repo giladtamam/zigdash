@@ -1194,7 +1194,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Управляемые устройства не найдены. Убедитесь, что они сопряжены, и нажмите «Обновить».';
+      'Управляемые устройства и плитки не найдены. Убедитесь, что устройства сопряжены, и нажмите «Обновить».';
 
   @override
   String get sceneFormReadingState => 'Чтение текущего состояния…';
@@ -1214,11 +1214,39 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get sceneFormNoDevicesSelected => 'Выберите хотя бы одно устройство.';
+  String get sceneFormNoDevicesSelected =>
+      'Выберите хотя бы одно устройство или плитку.';
 
   @override
   String get sceneFormNothingCaptured =>
       'У выбранных устройств не нашлось изменяемых состояний.';
+
+  @override
+  String get sceneFormTilesHeader => 'Ваши плитки';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Плитки, которые вы создали сами. Сцена отправляет то же, что отправляет плитка.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Работает только с этого телефона дома: не из автоматизаций и не издалека.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Сохраняются ещё $count действия',
+      many: 'Сохраняются ещё $count действий',
+      few: 'Сохраняются ещё $count действия',
+      one: 'Сохраняется ещё $count действие',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Удалить';
 
   @override
   String get sceneDeleteTitle => 'Удалить сцену?';
@@ -1247,10 +1275,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count устройства',
-      many: '$count устройств',
-      few: '$count устройства',
-      one: '$count устройство',
+      other: '$count действия',
+      many: '$count действий',
+      few: '$count действия',
+      one: '$count действие',
     );
     return '$_temp0';
   }
@@ -4746,6 +4774,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'В этой сцене нечего отправлять.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count действия этой сцены работают только с этого телефона дома, не из автоматизаций.',
+      many:
+          '$count действий этой сцены работают только с этого телефона дома, не из автоматизаций.',
+      few:
+          '$count действия этой сцены работают только с этого телефона дома, не из автоматизаций.',
+      one:
+          '$count действие этой сцены работает только с этого телефона дома, не из автоматизаций.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

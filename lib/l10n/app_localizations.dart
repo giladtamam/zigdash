@@ -2265,7 +2265,7 @@ abstract class AppLocalizations {
   /// No description provided for @sceneFormNoDevices.
   ///
   /// In en, this message translates to:
-  /// **'No controllable devices found. Make sure they\'re paired, then tap refresh.'**
+  /// **'No controllable devices or tiles found. Make sure they\'re paired, then tap refresh.'**
   String get sceneFormNoDevices;
 
   /// No description provided for @sceneFormReadingState.
@@ -2301,7 +2301,7 @@ abstract class AppLocalizations {
   /// No description provided for @sceneFormNoDevicesSelected.
   ///
   /// In en, this message translates to:
-  /// **'Select at least one device to capture.'**
+  /// **'Select at least one device or tile.'**
   String get sceneFormNoDevicesSelected;
 
   /// No description provided for @sceneFormNothingCaptured.
@@ -2309,6 +2309,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing settable was captured from the selected devices.'**
   String get sceneFormNothingCaptured;
+
+  /// No description provided for @sceneFormTilesHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tiles'**
+  String get sceneFormTilesHeader;
+
+  /// No description provided for @sceneFormTilesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiles you made yourself. The scene sends what the tile sends.'**
+  String get sceneFormTilesHint;
+
+  /// No description provided for @sceneTileHomeOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs only from this phone at home: not from Automations or when you\'re away.'**
+  String get sceneTileHomeOnly;
+
+  /// No description provided for @sceneFormKeptActions.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 other action is kept} other{{count} other actions are kept}}'**
+  String sceneFormKeptActions(int count);
+
+  /// No description provided for @sceneFormRemoveKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get sceneFormRemoveKept;
 
   /// No description provided for @sceneDeleteTitle.
   ///
@@ -2349,7 +2379,7 @@ abstract class AppLocalizations {
   /// No description provided for @sceneActionsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} devices'**
+  /// **'{count, plural, =1{1 action} other{{count} actions}}'**
   String sceneActionsCount(int count);
 
   /// No description provided for @scenesAllShutters.
@@ -8333,6 +8363,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That scene has nothing to send.'**
   String get autoErrEmptyScene;
+
+  /// No description provided for @autoSceneTilesSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 of this scene\'s actions runs only from this phone at home, not from Automations.} other{{count} of this scene\'s actions run only from this phone at home, not from Automations.}}'**
+  String autoSceneTilesSkipped(int count);
 
   /// No description provided for @autoErrNotConnected.
   ///

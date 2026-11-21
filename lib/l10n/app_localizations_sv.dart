@@ -1190,7 +1190,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Inga styrbara enheter hittades. Kontrollera att de är parade och tryck sedan på uppdatera.';
+      'Inga styrbara enheter eller rutor hittades. Kontrollera att de är parade och tryck sedan på uppdatera.';
 
   @override
   String get sceneFormReadingState => 'Läser aktuell status…';
@@ -1210,11 +1210,36 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
-  String get sceneFormNoDevicesSelected => 'Välj minst en enhet att fånga.';
+  String get sceneFormNoDevicesSelected => 'Välj minst en enhet eller ruta.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Inget inställningsbart kunde fångas från de valda enheterna.';
+
+  @override
+  String get sceneFormTilesHeader => 'Dina rutor';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Rutor som du har skapat själv. Scenen skickar det rutan skickar.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Körs bara från den här telefonen hemma: inte från Automationer eller på distans.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count andra åtgärder behålls',
+      one: '1 annan åtgärd behålls',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Ta bort';
 
   @override
   String get sceneDeleteTitle => 'Ta bort scenen?';
@@ -1240,7 +1265,13 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count enheter';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count åtgärder',
+      one: '1 åtgärd',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4746,6 +4777,19 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Den scenen har inget att skicka.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count av scenens åtgärder körs bara från den här telefonen hemma, inte från Automationer.',
+      one:
+          '1 av scenens åtgärder körs bara från den här telefonen hemma, inte från Automationer.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

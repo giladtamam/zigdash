@@ -1200,7 +1200,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Aucun appareil contrôlable trouvé. Vérifiez qu\'ils sont appairés, puis appuyez sur actualiser.';
+      'Aucun appareil ni tuile contrôlable trouvé. Vérifiez qu\'ils sont appairés, puis appuyez sur actualiser.';
 
   @override
   String get sceneFormReadingState => 'Lecture de l\'état actuel…';
@@ -1221,11 +1221,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Sélectionnez au moins un appareil à capturer.';
+      'Sélectionnez au moins un appareil ou une tuile.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Rien de réglable n\'a été capturé sur les appareils sélectionnés.';
+
+  @override
+  String get sceneFormTilesHeader => 'Vos tuiles';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Les tuiles que vous avez créées vous-même. La scène envoie ce que la tuile envoie.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Ne fonctionne que depuis ce téléphone à la maison : pas depuis les Automatisations ni à distance.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count autres actions sont conservées',
+      one: '1 autre action est conservée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Retirer';
 
   @override
   String get sceneDeleteTitle => 'Supprimer la scène ?';
@@ -1251,7 +1276,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count appareils';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count actions',
+      one: '1 action',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4779,6 +4810,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Cette scène n\'a rien à envoyer.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count actions de cette scène ne fonctionnent que depuis ce téléphone à la maison, pas depuis les Automatisations.',
+      one:
+          '1 action de cette scène ne fonctionne que depuis ce téléphone à la maison, pas depuis les Automatisations.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

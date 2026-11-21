@@ -1196,7 +1196,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Geen bestuurbare apparaten gevonden. Controleer of ze zijn gekoppeld en tik daarna op vernieuwen.';
+      'Geen bestuurbare apparaten of tegels gevonden. Controleer of ze zijn gekoppeld en tik daarna op vernieuwen.';
 
   @override
   String get sceneFormReadingState => 'Huidige status lezen…';
@@ -1217,11 +1217,36 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Selecteer minstens één apparaat om vast te leggen.';
+      'Selecteer minstens één apparaat of tegel.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Er kon niets instelbaars worden vastgelegd van de geselecteerde apparaten.';
+
+  @override
+  String get sceneFormTilesHeader => 'Jouw tegels';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Tegels die je zelf hebt gemaakt. De scène stuurt wat de tegel stuurt.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Werkt alleen vanaf deze telefoon thuis: niet vanuit Automatiseringen of op afstand.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count andere acties blijven behouden',
+      one: '1 andere actie blijft behouden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Verwijderen';
 
   @override
   String get sceneDeleteTitle => 'Scène verwijderen?';
@@ -1247,7 +1272,13 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count apparaten';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count acties',
+      one: '1 actie',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4761,6 +4792,19 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Die scène heeft niets te versturen.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count acties van deze scène werken alleen vanaf deze telefoon thuis, niet vanuit Automatiseringen.',
+      one:
+          '1 actie van deze scène werkt alleen vanaf deze telefoon thuis, niet vanuit Automatiseringen.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>
