@@ -849,12 +849,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get panelCoverClose => 'Lukk';
 
   @override
-  String get panelToggleNoState => '(ingen status)';
-
-  @override
-  String get panelToggleError => 'feil';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override
@@ -1190,7 +1184,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Fant ingen styrbare enheter. Kontroller at de er paret, og trykk deretter på oppdater.';
+      'Fant ingen styrbare enheter eller fliser. Kontroller at de er paret, og trykk deretter på oppdater.';
 
   @override
   String get sceneFormReadingState => 'Leser gjeldende status…';
@@ -1210,11 +1204,36 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get sceneFormNoDevicesSelected => 'Velg minst én enhet å fange.';
+  String get sceneFormNoDevicesSelected => 'Velg minst én enhet eller flis.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Ingenting innstillbart ble fanget fra de valgte enhetene.';
+
+  @override
+  String get sceneFormTilesHeader => 'Dine fliser';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Fliser du har laget selv. Scenen sender det flisen sender.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Kjører bare fra denne telefonen hjemme: ikke fra Automasjoner eller utenfra.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count andre handlinger beholdes',
+      one: '1 annen handling beholdes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Fjern';
 
   @override
   String get sceneDeleteTitle => 'Slette scenen?';
@@ -1240,7 +1259,13 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count enheter';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count handlinger',
+      one: '1 handling',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4742,6 +4767,19 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Den scenen har ingenting å sende.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count av handlingene i denne scenen kjører bare fra denne telefonen hjemme, ikke fra Automasjoner.',
+      one:
+          '1 av handlingene i denne scenen kjører bare fra denne telefonen hjemme, ikke fra Automasjoner.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

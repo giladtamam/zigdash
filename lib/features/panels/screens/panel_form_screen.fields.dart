@@ -112,12 +112,20 @@ extension _PanelFormFields on _State {
     Widget panelContent;
     switch (_type) {
       case PanelType.toggle:
-        panelContent = Row(
+        // 3.8.7: drawn like the tile on the dashboard (chip, bold name).
+        panelContent = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.toggle_off, color: cs.outline, size: 32),
-            const SizedBox(width: 8),
-            Text(name, style: theme.textTheme.bodyMedium),
+            const QuickActionChip(icon: Symbols.powerSettingsNew, on: false),
+            const SizedBox(height: 8),
+            Text(name, style: theme.textTheme.titleMedium),
+            Text(
+              context.l10n.deviceOff,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
+            ),
           ],
         );
       case PanelType.slider:

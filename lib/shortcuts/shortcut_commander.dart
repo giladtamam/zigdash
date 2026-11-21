@@ -6,6 +6,7 @@ import '../features/devices/device_state.dart';
 import '../features/panels/widgets/device_tile_panel.dart'
     show decodeDeviceState, deviceStateLine;
 import '../features/scenes/models/scene.dart';
+import '../features/scenes/scene_capture.dart' show engineCanSend;
 import '../l10n/app_localizations.dart';
 import '../mqtt/mqtt_manager.dart';
 
@@ -359,9 +360,14 @@ class ShortcutCommander {
   /// action went out. Confirmed when every device answered within
   /// [confirmWithin]; otherwise still [ShortcutOutcome.sent]: a scene with
   /// one silent light isn't a failure.
+  ///
+  /// With the Home's [base] (3.8.7), only actions the Engine could send
+  /// (`<base>/…/set` with a JSON object, [engineCanSend]) are waited for:
+  /// an own tile on another topic may never answer. Without it, every JSON
+  /// `/set` action is, as before.
   Future<ShortcutOutcome> runScene(
       MqttManager mgr, List<SceneAction> actions,
-      {void Function()? onSent}) async {
+      {void Function()? onSent, String? base}) async {
     if (!await reach(mgr)) return ShortcutOutcome.unreachable;
     final waiting = <int>{};
     final allIn = Completer<void>();
@@ -370,6 +376,7 @@ class ShortcutCommander {
     DateTime? sentAt;
     for (final (i, a) in actions.indexed) {
       if (!a.setTopic.endsWith('/set')) continue;
+      if (base != null && !engineCanSend(a, base)) continue;
       final Map<String, Object?> command;
       try {
         command = Map<String, Object?>.from(jsonDecode(a.payload) as Map);

@@ -852,12 +852,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get panelCoverClose => 'Cerrar';
 
   @override
-  String get panelToggleNoState => '(sin estado)';
-
-  @override
-  String get panelToggleError => 'err';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override
@@ -1197,7 +1191,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'No se encontraron dispositivos controlables. Asegúrate de que estén emparejados y toca actualizar.';
+      'No se encontraron dispositivos ni mosaicos controlables. Asegúrate de que estén emparejados y toca actualizar.';
 
   @override
   String get sceneFormReadingState => 'Leyendo el estado actual…';
@@ -1218,11 +1212,36 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Selecciona al menos un dispositivo para capturar.';
+      'Selecciona al menos un dispositivo o mosaico.';
 
   @override
   String get sceneFormNothingCaptured =>
       'No se capturó nada configurable de los dispositivos seleccionados.';
+
+  @override
+  String get sceneFormTilesHeader => 'Tus mosaicos';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Mosaicos que creaste tú. La escena envía lo que envía el mosaico.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Solo funciona desde este teléfono en casa: no desde Automatizaciones ni desde fuera.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Se conservan $count acciones más',
+      one: 'Se conserva 1 acción más',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Quitar';
 
   @override
   String get sceneDeleteTitle => '¿Eliminar la escena?';
@@ -1248,7 +1267,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count dispositivos';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count acciones',
+      one: '1 acción',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4765,6 +4790,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Esa escena no tiene nada que enviar.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count acciones de esta escena solo funcionan desde este teléfono en casa, no desde Automatizaciones.',
+      one:
+          '1 acción de esta escena solo funciona desde este teléfono en casa, no desde Automatizaciones.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

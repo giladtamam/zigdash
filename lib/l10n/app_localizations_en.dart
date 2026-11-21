@@ -847,12 +847,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get panelCoverClose => 'Close';
 
   @override
-  String get panelToggleNoState => '(no state)';
-
-  @override
-  String get panelToggleError => 'err';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override
@@ -1187,7 +1181,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'No controllable devices found. Make sure they\'re paired, then tap refresh.';
+      'No controllable devices or tiles found. Make sure they\'re paired, then tap refresh.';
 
   @override
   String get sceneFormReadingState => 'Reading current state…';
@@ -1208,11 +1202,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Select at least one device to capture.';
+      'Select at least one device or tile.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Nothing settable was captured from the selected devices.';
+
+  @override
+  String get sceneFormTilesHeader => 'Your tiles';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Tiles you made yourself. The scene sends what the tile sends.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Runs only from this phone at home: not from Automations or when you\'re away.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count other actions are kept',
+      one: '1 other action is kept',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Remove';
 
   @override
   String get sceneDeleteTitle => 'Delete scene?';
@@ -1238,7 +1257,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count devices';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count actions',
+      one: '1 action',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4741,6 +4766,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'That scene has nothing to send.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count of this scene\'s actions run only from this phone at home, not from Automations.',
+      one:
+          '1 of this scene\'s actions runs only from this phone at home, not from Automations.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>

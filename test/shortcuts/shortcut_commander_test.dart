@@ -380,6 +380,55 @@ void main() {
     });
   });
 
+  test('with the base, an own tile off it is sent but not waited for (3.8.7)',
+      () {
+    fakeAsync((async) {
+      final b = _Broker(); // answers each command with the new state
+      final m = _manager(b);
+      ShortcutOutcome? r;
+      ShortcutCommander(l10n: l10n).runScene(m, const [
+        SceneAction(setTopic: 'zigbee2mqtt/a/set', payload: '{"state":"OFF"}'),
+        SceneAction(setTopic: 'cmnd/plug/POWER', payload: 'ON'),
+        SceneAction(
+            setTopic: 'tasmota/plug/set', payload: '{"POWER":"ON"}'),
+      ], base: 'zigbee2mqtt').then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(b.sent.map((p) => p.$1),
+          ['zigbee2mqtt/a/set', 'cmnd/plug/POWER', 'tasmota/plug/set']);
+      expect(r, ShortcutOutcome.confirmed,
+          reason: "the device's answer alone confirms");
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
+  test('with the base, a scene of only outside actions is sent at once', () {
+    fakeAsync((async) {
+      final b = _Broker(silent: true);
+      final m = _manager(b);
+      ShortcutOutcome? r;
+      const actions = [
+        SceneAction(setTopic: 'cmnd/plug/POWER', payload: 'ON'),
+        SceneAction(setTopic: 'tasmota/plug/set', payload: '{"POWER":"ON"}'),
+      ];
+      ShortcutCommander(l10n: l10n)
+          .runScene(m, actions, base: 'zigbee2mqtt')
+          .then((v) => r = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(r, ShortcutOutcome.sent, reason: 'confirmWithin not reached');
+
+      // Without the base, the JSON /set one is waited for, as before.
+      ShortcutOutcome? old;
+      ShortcutCommander(l10n: l10n).runScene(m, actions).then((v) => old = v);
+      async.elapse(const Duration(milliseconds: 100));
+      expect(old, isNull, reason: 'still waiting');
+      async.elapse(const Duration(seconds: 6));
+      expect(old, ShortcutOutcome.sent);
+      m.dispose();
+      async.flushMicrotasks();
+    });
+  });
+
   test('a scene on an unreachable broker sends nothing', () {
     fakeAsync((async) {
       final b = _Broker(reachable: false);
