@@ -391,6 +391,8 @@ class ShortcutEngine {
       mgr,
       actions,
       onSent: () => say(commander.l10n.shortcutSceneSent),
+      // Own tiles off the base aren't waited for (3.8.7).
+      base: await _homeBase(connectionId),
     );
     if (outcome == ShortcutOutcome.confirmed) {
       await say(commander.l10n.shortcutSceneConfirmed);

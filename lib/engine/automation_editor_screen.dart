@@ -8,6 +8,7 @@ import '../features/discovery/models/z2m_device.dart';
 import '../features/discovery/providers/discovery_provider.dart';
 import '../features/scenes/all_shutters.dart';
 import '../features/scenes/models/scene.dart';
+import '../features/scenes/scene_capture.dart' show engineCanSend;
 import '../features/scenes/scenes_providers.dart';
 import '../features/settings/providers/settings_controller.dart' show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
@@ -541,6 +542,15 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
         ),
       );
 
+  /// How many of the picked saved scene's actions the Engine can't send.
+  int _homeOnlyCount(List<Scene> scenes) {
+    final scene = scenes.where((s) => s.id == _sceneId).firstOrNull;
+    if (scene == null || allShuttersCommand(scene.id) != null) return 0;
+    return SceneAction.decodeList(scene.actions)
+        .where((a) => !engineCanSend(a, _base))
+        .length;
+  }
+
   List<Widget> _actionFields(AppLocalizations l10n, List<Z2mDevice> devices, List<Scene> scenes) {
     final targets = [for (final d in devices) if (actionStatesFor(d).isNotEmpty) d];
     final target = _byIeee(targets, _aIeee);
@@ -563,8 +573,21 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
           decoration: InputDecoration(labelText: l10n.autoScene),
           items: [for (final s in scenes) DropdownMenuItem(value: s.id, child: Text(s.name))],
           onChanged: (v) => setState(() => _sceneId = v),
-        )
-      else ...[
+        ),
+      // Own-tile actions the Engine can't send (3.8.7): said under the
+      // picker; a scene of only those is refused on save.
+      if (_homeOnlyCount(scenes) case final skipped
+          when _actionKind == ActionKind.scene && skipped > 0)
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(
+            l10n.autoSceneTilesSkipped(skipped),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+        ),
+      if (_actionKind != ActionKind.scene) ...[
         if (targets.isEmpty)
           Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(l10n.autoNoTargets)),
         DropdownButtonFormField<String>(
