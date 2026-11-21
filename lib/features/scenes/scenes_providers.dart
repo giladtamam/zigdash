@@ -6,8 +6,11 @@ import 'dart:convert';
 import '../../core/analytics/analytics.dart';
 import '../../core/l10n/app_l10n.dart';
 import '../../core/utils/uuid.dart';
+import '../../data/database/daos/dashboard_dao.dart';
+import '../../data/database/daos/device_registry_dao.dart';
 import '../../data/database/daos/scene_dao.dart';
 import '../../data/database/database.dart';
+import '../../data/database/tables/panels.dart';
 import '../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../data/repositories/connection_repo.dart';
 import '../../data/repositories/dashboard_repo.dart';
@@ -96,6 +99,47 @@ final scenesForConnectionProvider =
       .watchByConnection(connectionId)
       .map((saved) => [...builtIn, ...saved]);
 });
+
+/// A Home's tiles for the scene editor (3.8.7): its scene-able tiles in
+/// dashboard then tile order, and its device tiles' names by IEEE address
+/// (the first in that order). One read of [DeviceRegistryDao.tilesOfHome].
+Future<SceneTiles> loadSceneTiles(AppDatabase db, String connectionId) async {
+  final dashboards = await DashboardDao(db).getByConnection(connectionId);
+  final dashboardNames = {for (final d in dashboards) d.id: d.name};
+  final tiles = <SceneTile>[];
+  final deviceNames = <String, String>{};
+  for (final (panel, prefix)
+      in await DeviceRegistryDao(db).tilesOfHome(connectionId)) {
+    if (panel.type == PanelType.device) {
+      // Reading tiles carry the IEEE too; only a device tile names it.
+      final ieee = panel.deviceIeee;
+      if (ieee != null) deviceNames.putIfAbsent(ieee, () => panel.name);
+      continue;
+    }
+    final tile = sceneTileOf(panel, prefix,
+        dashboardName: dashboardNames[panel.dashboardId]);
+    if (tile != null) tiles.add(tile);
+  }
+  return SceneTiles(
+    tiles: tiles,
+    deviceNames: deviceNames,
+    dashboards: dashboards.length,
+  );
+}
+
+/// How the scene editor reads a Home's tiles (3.8.7): [loadSceneTiles] over
+/// the app's database. The editor awaits it directly when it opens a saved
+/// scene; tests replace it.
+final sceneTilesLoaderProvider =
+    Provider<Future<SceneTiles> Function(String connectionId)>((ref) {
+  final db = ref.watch(appDatabaseProvider);
+  return (connectionId) => loadSceneTiles(db, connectionId);
+});
+
+/// A Home's tiles for the scene editor's build (3.8.7).
+final sceneTilesProvider =
+    FutureProvider.autoDispose.family<SceneTiles, String>(
+        (ref, connectionId) => ref.watch(sceneTilesLoaderProvider)(connectionId));
 
 /// The Home's shutters as the bridge reports them right now, or null while
 /// unknown (not connected, no device list yet).
