@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zigdash/core/theme/signal_colors.dart';
@@ -298,5 +299,48 @@ void main() {
     await tester.tap(find.byIcon(Symbols.powerSettingsNew).last);
     await tester.pumpAndSettle();
     expect(mgr.sent.single.$2, {'state_l2': 'ON'});
+  });
+
+  // 3.8.7 (own-switch-look-387.md §1): written before signal_tile.dart was
+  // extracted and unchanged after it: the chip and card keep their
+  // semantics.
+  testWidgets('a switch tile: the chip toggles, the card opens controls',
+      (tester) async {
+    final handle = tester.ensureSemantics();
+    final mgr = _Recorder();
+    addTearDown(mgr.dispose);
+    await tester.pumpWidget(_wrap(
+      _device([
+        {
+          'type': 'switch',
+          'features': [
+            {'type': 'binary', 'name': 'state', 'property': 'state', 'access': 7, 'value_on': 'ON', 'value_off': 'OFF'},
+          ],
+        },
+      ], name: 'Hall plug'),
+      mgr: mgr,
+      state: {'state': 'ON'},
+    ));
+    await tester.pumpAndSettle();
+
+    final chip = tester.getSemantics(find.byIcon(Symbols.powerSettingsNew));
+    expect(
+        chip,
+        matchesSemantics(
+          hasToggledState: true,
+          isToggled: true,
+          tooltip: 'Turn on or off',
+          hasTapAction: true,
+          isFocusable: true,
+          hasFocusAction: true,
+        ));
+    final card = tester.getSemantics(find.text('Hall plug'));
+    expect(
+        card.getSemanticsData().customSemanticsActionIds,
+        isNotEmpty,
+        reason: 'the Controls action');
+    expect(card.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    expect(card.label, contains('Hall plug'));
+    handle.dispose();
   });
 }

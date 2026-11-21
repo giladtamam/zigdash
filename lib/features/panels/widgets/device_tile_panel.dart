@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/signal_colors.dart';
 import '../../../core/theme/signal_icons.dart';
-import '../../../core/theme/tokens.dart';
-import '../../../core/utils/window_class.dart';import 'package:flutter/semantics.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/l10n/l10n_ext.dart';
@@ -20,9 +19,9 @@ import '../models/panel_config.dart';
 import '../providers/panel_value_provider.dart';
 import 'control_action.dart';
 import 'device_sheet.dart';
+import 'signal_tile.dart';
 import '../../history/history_config.dart' show historyShownOnDeviceTile;
 import '../../history/history_sheet.dart';
-import '../../../core/theme/motion.dart';
 
 /// Decodes a Zigbee2MQTT state payload; anything else reads as "no state".
 Map<String, Object?> decodeDeviceState(Object? payload) {
@@ -134,152 +133,119 @@ class DeviceTilePanel extends ConsumerWidget {
     final color = cls == DeviceClass.colorLight ? state.lightColor : null;
 
     // Signal (signal-2.0.md §4): amber and borderless when on, the attention
-    // container during an alarm, the idle tile with its hairline otherwise.
+    // container during an alarm, the idle tile with its hairline otherwise
+    // (signal_tile.dart, 3.8.7).
     final roles = SignalColors.of(context);
     final filled = alarming || anyOn;
-    final fg = alarming
-        ? roles.onAttention
-        : anyOn
-            ? roles.onActive
-            : scheme.onSurface;
-    final fgVariant = filled ? fg : scheme.onSurfaceVariant;
-    const shape = RoundedSuperellipseBorder(
-        borderRadius: BorderRadiusDirectional.all(Radius.circular(SignalRadii.tile)));
-    // The fill cross-fades on a state change (M3 standard timing), instantly
-    // when the system asks for no animations (signal-2.0.md §6).
-    final idleColor = theme.cardTheme.color ?? roles.idle;
-    return TweenAnimationBuilder<Color?>(
-      tween: ColorTween(
-          end: alarming
-              ? roles.attention
-              : anyOn
-                  ? roles.active
-                  : idleColor),
-      duration: SignalMotion.of(context, SignalMotion.stateChange),
-      curve: Curves.easeInOutCubicEmphasized,
-      builder: (context, fill, child) => alarming
-          ? _AlarmPulse(
-              from: fill!,
-              to: roles.attentionPulse,
-              builder: (pulse) => Card(color: pulse, shape: shape, child: child),
-            )
-          : Card(
-              color: fill,
-              shape: filled ? shape : null,
-              child: child,
-            ),
-      child: Semantics(
-        customSemanticsActions: {
-          CustomSemanticsAction(label: l10n.deviceControls): openSheet,
-        },
-        child: InkWell(
-          customBorder: shape,
-          onTap: openSheet,
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    if (showsSwitches && switches.isNotEmpty)
-                      for (final f in switches.take(3))
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 8),
-                          child: _QuickAction(
-                            icon: deviceClassIcon(cls, alarm: state.alarm),
-                            on: state.isOn(f),
-                            tooltip: l10n.deviceToggle,
-                            onPressed: () => toggle(f),
-                          ),
-                        )
-                    else
-                      SignalIcon(
-                        deviceClassIcon(cls, alarm: state.alarm),
-                        active: filled,
-                        color: fgVariant,
-                      ),
-                    const Spacer(),
-                    if (graphed != null)
-                      IconButton(
-                        key: const Key('tile-history'),
-                        tooltip: l10n.historyTitle,
-                        visualDensity: VisualDensity.compact,
-                        icon: Icon(Icons.timeline, color: fgVariant),
-                        onPressed: () => showHistorySheet(
-                          context,
-                          connectionId: connectionId,
-                          ieee: ieee!,
-                          path: graphed.property,
-                          title: '${panel.name} · ${humanizeProperty(graphed.property)}',
-                          unit: graphed.unit,
-                          topic: subscribeTopic,
-                        ),
-                      ),
-                    if (color != null)
-                      ExcludeSemantics(
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF000000 | color),
-                            shape: BoxShape.circle,
-                            border: Border.all(color: scheme.outlineVariant),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                if (big != null)
-                  Text(big,
-                      style: theme.textTheme.headlineMedium?.copyWith(color: fg)),
-                Text(
-                  panel.name,
-                  style: theme.textTheme.titleMedium?.copyWith(color: fg),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  line,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: state.batteryLow && !filled
-                        ? roles.onAttention
-                        : fgVariant,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (cls == DeviceClass.colorLight && profile.brightness != null)
-                  // On amber, the slider is drawn in ink so it stays visible.
-                  SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: filled ? fg : null,
-                      thumbColor: filled ? fg : null,
-                      inactiveTrackColor: filled ? fg.withValues(alpha: 0.24) : null,
+    final (:fg, :fgVariant) =
+        signalTileForeground(context, on: anyOn, alarming: alarming);
+    return SignalTileCard(
+      on: anyOn,
+      alarming: alarming,
+      onTap: openSheet,
+      semanticsActions: {
+        CustomSemanticsAction(label: l10n.deviceControls): openSheet,
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              if (showsSwitches && switches.isNotEmpty)
+                for (final f in switches.take(3))
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 8),
+                    child: QuickActionChip(
+                      icon: deviceClassIcon(cls, alarm: state.alarm),
+                      on: state.isOn(f),
+                      tooltip: l10n.deviceToggle,
+                      onPressed: () => toggle(f),
                     ),
-                    child: IconTheme.merge(
-                      data: IconThemeData(color: fgVariant),
-                      child: _InlineBrightness(
-                    state: state,
-                    onChanged: (pct) => sendDeviceCommand(
-                        context, ref, connectionId, publishTopic,
-                        DeviceCommand.brightnessPercent(
-                            profile.brightness!, pct)),
+                  )
+              else
+                SignalIcon(
+                  deviceClassIcon(cls, alarm: state.alarm),
+                  active: filled,
+                  color: fgVariant,
+                ),
+              const Spacer(),
+              if (graphed != null)
+                IconButton(
+                  key: const Key('tile-history'),
+                  tooltip: l10n.historyTitle,
+                  visualDensity: VisualDensity.compact,
+                  icon: Icon(Icons.timeline, color: fgVariant),
+                  onPressed: () => showHistorySheet(
+                    context,
+                    connectionId: connectionId,
+                    ieee: ieee!,
+                    path: graphed.property,
+                    title: '${panel.name} · ${humanizeProperty(graphed.property)}',
+                    unit: graphed.unit,
+                    topic: subscribeTopic,
                   ),
+                ),
+              if (color != null)
+                ExcludeSemantics(
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF000000 | color),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: scheme.outlineVariant),
                     ),
                   ),
-                if (cls == DeviceClass.cover)
-                  _CoverControls(
-                    state: state,
-                    onAction: (a) => sendDeviceCommand(context, ref,
-                        connectionId, publishTopic, DeviceCommand.cover(a)),
-                  ),
-              ],
-            ),
+                ),
+            ],
           ),
-        ),
+          const SizedBox(height: 8),
+          if (big != null)
+            Text(big,
+                style: theme.textTheme.headlineMedium?.copyWith(color: fg)),
+          Text(
+            panel.name,
+            style: theme.textTheme.titleMedium?.copyWith(color: fg),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            line,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: state.batteryLow && !filled
+                  ? roles.onAttention
+                  : fgVariant,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (cls == DeviceClass.colorLight && profile.brightness != null)
+            // On amber, the slider is drawn in ink so it stays visible.
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: filled ? fg : null,
+                thumbColor: filled ? fg : null,
+                inactiveTrackColor: filled ? fg.withValues(alpha: 0.24) : null,
+              ),
+              child: IconTheme.merge(
+                data: IconThemeData(color: fgVariant),
+                child: _InlineBrightness(
+              state: state,
+              onChanged: (pct) => sendDeviceCommand(
+                  context, ref, connectionId, publishTopic,
+                  DeviceCommand.brightnessPercent(
+                      profile.brightness!, pct)),
+            ),
+              ),
+            ),
+          if (cls == DeviceClass.cover)
+            _CoverControls(
+              state: state,
+              onAction: (a) => sendDeviceCommand(context, ref,
+                  connectionId, publishTopic, DeviceCommand.cover(a)),
+            ),
+        ],
       ),
     );
   }
@@ -416,105 +382,6 @@ IconData deviceClassIcon(DeviceClass cls, {bool? alarm}) => switch (cls) {
       DeviceClass.climate => Symbols.thermostat,
       DeviceClass.generic => Symbols.deviceUnknown,
     };
-
-/// A leak or smoke alarm's fill, pulsing slowly between [from] and [to]
-/// (2 s, signal-2.0.md §6). Steady at [from] when the system turns
-/// animations off. Nothing else in the app loops.
-class _AlarmPulse extends StatefulWidget {
-  const _AlarmPulse({required this.from, required this.to, required this.builder});
-
-  final Color from;
-  final Color to;
-  final Widget Function(Color fill) builder;
-
-  @override
-  State<_AlarmPulse> createState() => _AlarmPulseState();
-}
-
-class _AlarmPulseState extends State<_AlarmPulse>
-    with SingleTickerProviderStateMixin {
-  late final _controller = AnimationController(vsync: this);
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final half = SignalMotion.of(context, SignalMotion.alarmPulseHalf);
-    if (half == Duration.zero) {
-      _controller
-        ..stop()
-        ..value = 0;
-    } else if (!_controller.isAnimating) {
-      _controller
-        ..duration = half
-        ..repeat(reverse: true);
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) => widget.builder(Color.lerp(widget.from,
-            widget.to, Curves.easeInOutSine.transform(_controller.value))!),
-      );
-}
-
-class _QuickAction extends StatelessWidget {
-  const _QuickAction({
-    required this.icon,
-    required this.on,
-    required this.tooltip,
-    required this.onPressed,
-  });
-
-  final IconData icon;
-  final bool? on;
-  final String tooltip;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    // A squircle, ink with an amber icon when on and raised with an ink
-    // icon otherwise (signal-2.0.md §4). Unknown state still switches: the
-    // command toggles (or turns on) without knowing the current state.
-    final roles = SignalColors.of(context);
-    final scheme = Theme.of(context).colorScheme;
-    final isOn = on == true;
-    final size = SignalSpacing.quickAction[WindowClass.of(context).index];
-    return Semantics(
-      toggled: on ?? false,
-      child: Tooltip(
-        message: tooltip,
-        child: Material(
-          color: isOn ? roles.onActive : roles.raised,
-          shape: const RoundedSuperellipseBorder(
-              borderRadius: BorderRadiusDirectional.all(
-                  Radius.circular(SignalRadii.quickAction))),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPressed,
-            child: SizedBox.square(
-              dimension: size,
-              child: Center(
-                child: SignalIcon(
-                  icon,
-                  active: isOn,
-                  size: size * 0.5,
-                  color: isOn ? roles.active : scheme.onSurface,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _InlineBrightness extends StatelessWidget {
   const _InlineBrightness({required this.state, required this.onChanged});
