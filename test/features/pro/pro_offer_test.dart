@@ -319,6 +319,90 @@ void main() {
     });
   });
 
+  // 3.8.6 review: the tap survives a restart for three days, so a
+  // purchase Play confirms later (pending, cash, carrier) still counts.
+  group('a tap kept across a restart', () {
+    late _Sink sink;
+    late String statusAnswer;
+
+    Future<ProviderContainer> start(SharedPreferences prefs) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            _channel,
+            (call) async => call.method == 'buy' ? 'pending' : statusAnswer,
+          );
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(_channel, null),
+      );
+      final c = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          analyticsAvailableProvider.overrideWithValue(true),
+          analyticsSinkProvider.overrideWithValue(sink),
+          proOfferProvider.overrideWith((ref) async => _sale()),
+        ],
+      );
+      addTearDown(c.dispose);
+      c.listen(proOfferProvider, (_, _) {});
+      await c.read(proOfferProvider.future);
+      c.read(proBillingProvider);
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+      return c;
+    }
+
+    List<String> unlocked() => [
+      for (final e in sink.sent)
+        if (e.contains('step: unlocked')) e,
+    ];
+
+    test('tap, restart, then owned: sent once with the stored tap', () async {
+      sink = _Sink();
+      statusAnswer = 'locked';
+      SharedPreferences.setMockInitialValues({'analytics_consent': true});
+      final prefs = await SharedPreferences.getInstance();
+      final first = await start(prefs);
+      first.read(proFromProvider.notifier).state = ProFrom.wall;
+      await first.read(proBillingProvider.notifier).buy();
+      expect(prefs.getString(proUnlockTapKey), isNotNull);
+      first.dispose();
+
+      // The app starts again; Play now says Pro is owned.
+      statusAnswer = 'unlocked';
+      final second = await start(prefs);
+      expect(second.read(proBillingProvider), ProStatus.unlocked);
+      expect(unlocked(), [
+        'pro {step: unlocked, from: wall, path: wall/unlocked, sale: yes}',
+      ]);
+      expect(prefs.getString(proUnlockTapKey), isNull);
+      expect(prefs.getString(proUnlockSentKey), '1');
+
+      // And never again, even after another restart.
+      second.dispose();
+      final third = await start(prefs);
+      await third.read(proBillingProvider.notifier).refresh();
+      expect(unlocked(), hasLength(1));
+    });
+
+    test('a tap older than three days is not counted, and forgotten', () async {
+      sink = _Sink();
+      statusAnswer = 'unlocked';
+      final old = DateTime.now().subtract(const Duration(days: 4));
+      SharedPreferences.setMockInitialValues({
+        'analytics_consent': true,
+        proUnlockTapKey:
+            '{"from":"settings","sale":false,"trial":null,'
+            '"trialEnd":null,"at":${old.millisecondsSinceEpoch}}',
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final c = await start(prefs);
+      expect(c.read(proBillingProvider), ProStatus.unlocked);
+      expect(unlocked(), isEmpty);
+      expect(prefs.getString(proUnlockTapKey), isNull);
+    });
+  });
+
   group('the Pro screen', () {
     Future<void> screen(
       WidgetTester tester, {

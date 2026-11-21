@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:flutter/services.dart';
@@ -66,6 +67,21 @@ const proOwnedKey = 'pro_owned';
 /// answer from Play brings it.
 const proUnlockSentKey = 'pro_unlock_sent';
 
+/// The last Unlock tap, as JSON (3.8.6): kept so a purchase Play confirms
+/// after the app restarted (pending, cash, carrier billing) is still
+/// counted with that tap's values. Removed once sent, or after
+/// [proUnlockTapTtl].
+const proUnlockTapKey = 'pro_unlock_tap';
+const proUnlockTapTtl = Duration(days: 3);
+
+typedef _UnlockTap = ({
+  ProFrom? from,
+  bool sale,
+  String? trial,
+  DateTime? trialEnd,
+  DateTime at,
+});
+
 /// Waits before asking Play again after it didn't answer.
 const proRetryDelays = [
   Duration(seconds: 3),
@@ -89,11 +105,76 @@ class ProBilling extends Notifier<ProStatus> {
   Timer? _retry;
   int _tries = 0;
 
-  /// The last Unlock tap in this app session (3.8.6): what `unlocked` is
-  /// sent with when Play confirms the purchase, at once or minutes later
-  /// (a resume or a retry asking again).
-  ({ProFrom? from, bool sale, String? trial, DateTime? trialEnd})? _tap;
+  /// The last Unlock tap (3.8.6): what `unlocked` is sent with when Play
+  /// confirms the purchase, at once, minutes later (a resume or a retry
+  /// asking again) or after a restart ([proUnlockTapKey]).
+  _UnlockTap? _tap;
   bool _unlockSent = false;
+
+  SharedPreferences? get _prefs {
+    try {
+      return ref.read(sharedPreferencesProvider);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _saveTap(_UnlockTap tap) {
+    _tap = tap;
+    unawaited(
+      _prefs
+          ?.setString(
+            proUnlockTapKey,
+            jsonEncode({
+              'from': tap.from?.name,
+              'sale': tap.sale,
+              'trial': tap.trial,
+              'trialEnd': tap.trialEnd?.millisecondsSinceEpoch,
+              'at': tap.at.millisecondsSinceEpoch,
+            }),
+          )
+          .then((_) {}, onError: (_) {}),
+    );
+  }
+
+  void _forgetTap() {
+    _tap = null;
+    unawaited(_prefs?.remove(proUnlockTapKey).then((_) {}, onError: (_) {}));
+  }
+
+  /// This session's tap, else the stored one; an expired or unreadable
+  /// one is forgotten.
+  _UnlockTap? _currentTap() {
+    final now = DateTime.now();
+    var tap = _tap;
+    if (tap == null) {
+      final raw = _prefs?.getString(proUnlockTapKey);
+      if (raw == null) return null;
+      try {
+        final m = jsonDecode(raw) as Map<String, dynamic>;
+        final from = m['from'] as String?;
+        final end = m['trialEnd'] as int?;
+        tap = (
+          from: from == null
+              ? null
+              : ProFrom.values.where((f) => f.name == from).firstOrNull,
+          sale: m['sale'] == true,
+          trial: m['trial'] as String?,
+          trialEnd: end == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(end),
+          at: DateTime.fromMillisecondsSinceEpoch(m['at'] as int),
+        );
+      } catch (_) {
+        tap = null;
+      }
+    }
+    if (tap == null || now.difference(tap.at) > proUnlockTapTtl) {
+      _forgetTap();
+      return null;
+    }
+    return tap;
+  }
 
   @override
   ProStatus build() {
@@ -112,6 +193,8 @@ class ProBilling extends Notifier<ProStatus> {
       life?.dispose();
     });
     unawaited(Future.microtask(() => _ask('status')));
+    // An Unlock tap from an earlier run that expired is forgotten (3.8.6).
+    unawaited(Future.microtask(_currentTap));
     bool owned;
     try {
       owned = ref.read(sharedPreferencesProvider).getString(proOwnedKey) == '1';
@@ -198,7 +281,13 @@ class ProBilling extends Notifier<ProStatus> {
     analytics.track(
       ProEvent(ProStep.unlockTapped, from: from, sale: sale, trial: trialWire),
     );
-    _tap = (from: from, sale: sale, trial: trialWire, trialEnd: trial.end);
+    _saveTap((
+      from: from,
+      sale: sale,
+      trial: trialWire,
+      trialEnd: trial.end,
+      at: DateTime.now(),
+    ));
     final answer = await _ask('buy', {
       'offerId': shown?.offerId,
       'priceMicros': shown?.priceMicros,
@@ -215,20 +304,19 @@ class ProBilling extends Notifier<ProStatus> {
   /// `unlocked`, once per install, when Pro turns owned after an Unlock tap
   /// (3.8.6). Until 3.8.5 it was sent only when Play had confirmed by the
   /// time buy() returned, and Play often confirms later. A purchase
-  /// restored without a tap (start, reinstall) is never counted.
+  /// restored without a tap (start, reinstall) is never counted; a tap
+  /// older than [proUnlockTapTtl] doesn't count either.
   void _trackUnlocked() {
-    final tap = _tap;
-    if (tap == null || _unlockSent) return;
-    SharedPreferences? prefs;
-    try {
-      final p = ref.read(sharedPreferencesProvider);
-      if (p.getString(proUnlockSentKey) == '1') return;
-      prefs = p;
-    } catch (_) {
-      // No preferences: once per app session then.
+    if (_unlockSent) return;
+    final tap = _currentTap();
+    if (tap == null) return;
+    final prefs = _prefs;
+    if (prefs?.getString(proUnlockSentKey) == '1') {
+      _forgetTap();
+      return;
     }
     _unlockSent = true;
-    _tap = null;
+    _forgetTap();
     unawaited(
       prefs?.setString(proUnlockSentKey, '1').then((_) {}, onError: (_) {}),
     );
