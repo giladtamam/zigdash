@@ -1,78 +1,113 @@
-# Encrypted home brokers: trust on first use (3.8.5, v1)
+# Encrypted brokers: say what's wrong, fix WSS, count it (3.8.5, v2)
 
-Proposed 2026-11-21, on release/3.8.4 (3.8.4+126, rating timing, by another session).
+v2 after review (v1, trust on first use, scored 5/10). The owner chose two steps: **this release** tells
+the user the truth about an untrusted certificate, fixes direct WSS, and counts both; **trust on first
+use** (v1's idea, ~3 days done right: one policy through the client factory seam, pins committed on an
+accepted CONNACK, shortcut engine read-only, ConnectionRepo deletes, host edits) is built only if the
+data says so (section 5). Based on release/3.8.4 (3.8.4+126, another session's rating timing).
 
-## The bug
+## 1. What is wrong today (checked against the code)
 
-A broker on the home network that uses TLS with its own (self-signed) certificate, the usual way people
-turn on encryption at home, can never be set up:
+- **Untrusted certificate reads as "no answer".** Every real client (`client_factory_io.dart`
+  `buildPlatformClient`) uses the system's trust check. A broker with a self-signed, expired or
+  wrong-name certificate fails the TLS handshake; `mqtt_client` rethrows the `HandshakeException`
+  unwrapped; `connect_diagnostics.dart:290` catches it, the status is still `noneSpecified`, and 309-313
+  report `diagLoginNoAnswer` ("…Home Assistant can take a few seconds to check it, so try again") when a
+  login was given, `diagConnackFail` otherwise. `MqttManager._failureOf` gives `FailureKind.unknown`.
+  Retrying can never help. Reproduced 2026-11-21 on the emulator (3.8.3 debug, mosquitto with a
+  self-signed certificate on 8883, correct password).
+- **The scan asks for a password that can't work:** `broker_prober_io.dart:63` accepts any certificate,
+  finds the 8883 broker, sees anonymous refused, and setup asks for the login.
+- **Direct WSS never connects:** `client_factory_io.dart:58-62` sets `secure = true` for `wss` and
+  `useWebSocket = true`; `MqttServerClient.connect` (mqtt_server_client.dart:125-130) runs its `secure`
+  block after the WebSocket one and sets `useWebSocket = false`, so it opens a raw `SecureSocket` to
+  "wss://host". The package says not to set `secure` for wss; `relay_mqtt_client.dart:37` does it right.
+- **Reach, honestly:** 14 days, 26 sessions reached the login after a scan, 6 ended in `login_no_answer`.
+  The events carry no port, and `hub: none` means "machine unknown", not "plain broker", so how many of
+  the 6 were TLS is unknown: possibly 1. WSS use is unknown too. This release is mostly about not lying,
+  and about measuring.
 
-- The scan's MQTT check accepts any certificate (`broker_prober_io.dart:63`), so it finds the broker on
-  8883, sees anonymous refused, and asks for the login (`SetupCandidate.fromProbe`: 8883 → `tcpSsl`).
-- Every real connection (`client_factory_io.dart` `buildPlatformClient`: `secure = true`, no
-  `onBadCertificate`) rejects the certificate. The TLS handshake fails before MQTT, `connectionStatus`
-  stays `noneSpecified`, and `connect_diagnostics.dart:309` reports `diagLoginNoAnswer`: "The broker
-  didn't answer the login in time. Home Assistant can take a few seconds to check it, so try again."
-  The right password fails the same way; nothing the user can do helps.
-- Reproduced 2026-11-21 on the emulator (3.8.3 debug): mosquitto with a self-signed certificate on 8883,
-  correct password → that message; mosquitto's log shows the client closing during the handshake. A
-  wrong password on plain 1883 is reported correctly as rejected.
-- Data, last 14 days: 26 sessions reached the login after a scan; 6 ended in `login_no_answer` (5 on
-  plain brokers: SK, RU, ES, IT, UA). The event has no port, so how many were 8883 is unknown; this
-  release adds it.
+## 2. The changes
 
-## The fix
+### 2a. Tell a certificate failure apart (no change to what is trusted)
+- `ConnectDiagnostics` and `MqttManager`, right after the factory returns a client: if it is a
+  `MqttServerClient` and the connection is TLS (`tcpSsl` or `wss`), set `client.onBadCertificate =
+  (Object? _) { sawBadCert = true; return false; }`. Typed `(Object?)` because `mqtt_server_client.dart:131`
+  casts it to `bool Function(Object)?`; a `(X509Certificate)` closure would throw on every secure
+  connect. It always returns **false**: nothing new is trusted. The scan's own prober is unchanged.
+- Classification after a failed connect, in both places:
+  - `sawBadCert` → **certificate not trusted** (`diagTlsUntrusted`, `FailureKind.tlsUntrusted`,
+    `SetupErrorKind.tlsUntrusted`);
+  - `HandshakeException`/`TlsException` without `sawBadCert` → **TLS failed for another reason** (for
+    example a broker that wants a client certificate, or a TLS version mismatch): `diagTlsFailed`,
+    `FailureKind.tlsFailed`, `SetupErrorKind.tlsFailed`;
+  - otherwise as today.
+  In diagnostics the exception is caught at :290 (kept as `e`); `_failureOf` gets the same test.
+- New strings (13 languages, AI translations fine):
+  - untrusted: "This broker's encryption certificate isn't trusted by your phone: it is self-signed,
+    expired, or made for another name. ZigDash can't use it yet. On your home network, use the broker's
+    unencrypted port 1883 instead, or give the broker a certificate from a public authority." Action:
+    "Edit settings".
+  - failed: "The encrypted connection didn't start. The broker may want a client certificate, which
+    ZigDash doesn't support. Try its unencrypted port 1883 on your home network." Action: "Edit settings".
+- Every switch over the two enums handles the new kinds: `support_details.dart` (42, 73),
+  `help_tips.dart` (40), `ai_help.dart` (179; the assistant's facts get the true cause),
+  `setup_error_guidance.dart` (95 and `guidanceFor`), `diagnostics_ladder_view.dart` (46), and the
+  dashboard's connection-problem text for a saved connection (`FailureKind` → message).
+- `diagLoginNoAnswer`'s Home Assistant sentence stays (it is right for real slow logins); a TLS failure
+  no longer reaches it.
 
-### 1. Trust on first use, home addresses only
-- New `lib/mqtt/cert_pins.dart`: pins in SharedPreferences under `tls_pin::<host>:<port>` = SHA-256 of
-  the certificate's DER (`X509Certificate.der`, `package:crypto`, already a dependency).
-- `buildPlatformClient` gets an optional `CertPolicy`. For a secure TCP or WSS client whose target is a
-  **home address** (private IPv4 per `isPrivateIpv4`, `*.local`, `*.lan`, `*.home.arpa`, or a bare name
-  without a dot), `onBadCertificate` is set:
-  - no pin for host:port → accept, and remember the fingerprint as *seen* (in memory, on the policy);
-  - pin equals the fingerprint → accept;
-  - pin differs → reject, and record *changed* on the policy.
-- The pin is written only after the connection **succeeds** (CONNACK accepted): in setup's
-  `createDashboard` and the broker form's save, and by `MqttManager` on its first successful connect of a
-  connection with no pin (older saved connections). A failed or abandoned attempt pins nothing.
-- Not a home address (a remote host, a domain name): unchanged, the system's normal certificate check.
-  A valid certificate (a real CA) never reaches `onBadCertificate`, so nothing changes for those users.
-- The scan probe stays as it is (it only looks).
-- Deleting a connection deletes its pins; "Forget certificate" in the connection's edit screen when a
-  changed certificate blocks it (a broker that renewed its self-signed certificate).
+### 2b. Setup: don't ask for a password that can't work
+- `SocketMqttProber._confirmMqtt` records whether its accept-all callback was called; `ProbeResult` and
+  `SetupCandidate` get `untrustedCert` (bool). In the coordinator, a candidate with `needsAuth &&
+  untrustedCert` goes straight to `SetupFailed(tlsUntrusted)` instead of `SetupNeedsAuth`, unless the
+  same host also answered on 1883, which the scan then offers as usual (identity merge keeps both).
+  The failed screen's "Edit settings" opens the broker form with host and port 1883 prefilled.
 
-### 2. Say what happened
-- `connect_diagnostics.dart`: a secure attempt whose handshake failed reports `diagTlsUntrusted` (the
-  certificate isn't trusted: not a home address) or `diagTlsChanged` (it changed since last time),
-  instead of `diagConnackFail` / `diagLoginNoAnswer`. Told apart by the policy's record, not by parsing
-  error strings.
-- New `SetupErrorKind.tlsUntrusted` and `tlsChanged` with their guidance; `diagLoginNoAnswer`'s text
-  mentions Home Assistant only when the broker's machine is Home Assistant (as `diagAuthRejectedHa`).
-- Strings in 13 languages (AI translations are fine).
+### 2c. Direct WSS
+- `buildPlatformClient`: `secure` only for `tcpSsl`; `wss` stays WebSocket with the `wss://` URL
+  (`webSocketServer`), which brings TLS itself. With 2a's callback set, mqtt_client builds an
+  `HttpClient` whose `badCertificateCallback` calls it (ws_connection:69-73), so WSS gets the same
+  classification.
 
-### 3. Count it
-- `failed` and `manual_test` events: `port` bucket (1883 / 8883 / other, as `manual_test` already has)
-  and `tls: home_trusted | changed | untrusted` when relevant. `login_no_answer` gets `port` too.
-- PRIVACY.md (store/PRIVACY.md): the two new values in the setup event row. Policy published on GitHub
-  and GitLab before the release.
+### 2d. Count it
+- `SetupStep` `failed` events: `port` (`portClassOf`) for `login_no_answer`, `tls_untrusted`,
+  `tls_failed`, `port_closed`; new `error` values `tls_untrusted`, `tls_failed`. `scan_found` and
+  `needs_login`: `tls: yes` when the candidate is 8883 (no address).
+- `ManualTestResult` gains `tlsUntrusted`, `tlsFailed` (`manual_test` already has `port`).
+- `store/PRIVACY.md`: the new values in the setup event row; policy published to GitHub and GitLab before
+  the build goes to Play (as every release that changes it).
 
-## Safety
+## 3. Not in this release
+- Trusting a self-signed certificate (v1). The shortcut engine and widgets only get the new failure
+  kinds through `MqttManager`; nothing about trust changes anywhere, so the relay, Home Assistant and
+  Zigbee2MQTT-page clients (which return before the TCP branch) are untouched.
+- IPv6 and Tailscale addresses: no change in this release.
 
-Trusting an unknown certificate on first use means a device already on the home network at the moment of
-setup could impersonate the broker; after that, a changed certificate is refused and said so. Without
-this, the same user's only working option today is turning TLS off (plain 1883), which is weaker. Home
-addresses only; never for remote or relay connections; the user sees "Encrypted, certificate remembered"
-on the connection screen.
+## 4. Tests
+- Unit: factory (`wss` → not `secure`, `useWebSocket`, `wss://` URL; `tcpSsl` → `secure`); diagnostics
+  with a fake client that calls the callback and throws `HandshakeException` → `diagTlsUntrusted`, one
+  that throws without the callback → `diagTlsFailed`, a login timeout without TLS → `diagLoginNoAnswer`
+  still; `_failureOf` the same three; prober `untrustedCert`; coordinator: 8883 `needsAuth+untrustedCert`
+  → `tlsUntrusted`, with 1883 also found → offers 1883; analytics fields; every switch covered (the
+  analyzer's exhaustiveness does most of it).
+- **Real TLS round trip, offline:** a `SecureServerSocket` and `HttpServer.bindSecure` on localhost with a
+  fixture certificate (test-only key, under test/fixtures/tls, labelled so): an `MqttServerClient` from
+  the factory with the callback gets `sawBadCert == true` on TCP and on WSS and does not connect, and the
+  `(Object?)` cast doesn't throw.
+- Emulator (3.8.5 debug): mosquitto with a self-signed certificate on 8883 (also mosquitto's CA plus
+  server-certificate setup, connected by IP): broker form with TLS → the new message, not "no answer";
+  same broker with 1883 plain also open → the scan offers it; WSS on 9001 with TLS → the new message
+  (before: a raw socket error); plain 1883 SMHUB unchanged. Then on the owner's phone against the Mac's
+  test broker.
+- Goldens: re-rendered on Linux if a screen changes (CI recipe in memory).
 
-## Tests
-- Unit: `CertPolicy` (no pin / same / changed; home vs remote host); pin written only after success;
-  delete clears pins; diagnostics map a failed handshake to the two new keys.
-- Emulator: local mosquitto with a self-signed certificate on 8883: wrong password → rejected, right
-  password → connected and pinned; certificate replaced → "changed", Forget → works again. Plain 1883 and
-  the SMHUB unchanged.
-- Real phone on the home network, same broker on the Mac.
+## 5. Gate for trust on first use
+Three weeks after 3.8.5 is live: `failed` with `error=tls_untrusted` plus `manual_test=tls_untrusted`.
+**3 or more distinct sessions** → write v3 (trust on first use with the review's nine fixes) and score it;
+fewer → stop.
 
-## Size
-About 1.5 days: policy + factory + pin writes (0.5), diagnostics and error kinds (0.5), strings, events,
-policy, tests, emulator and phone check (0.5). Release 3.8.5+127 after 3.8.4 is live (or both together if
-3.8.4 is not sent yet: the owner decides).
+## 6. Size
+About 1.5 days: 2a 0.5, 2b 0.25, 2c 0.1, 2d 0.15, strings 0.1, tests incl. the TLS round trip 0.3,
+emulator and phone 0.2. Release 3.8.5+127 (after 3.8.4, or together if 3.8.4 isn't sent: the owner
+decides). Built code gets its own independent score before release.
