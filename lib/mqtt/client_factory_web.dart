@@ -33,5 +33,8 @@ mc.MqttClient buildPlatformClient(
   return client;
 }
 
+/// A browser checks certificates itself and says nothing about why: no-op.
+void watchBadCert(mc.MqttClient client, BrokerConfig config, void Function() onBad) {}
+
 /// A browser can't open raw TCP: the relay never hands back to the LAN here.
 Future<bool> probeTcp(String host, int port, {Duration timeout = const Duration(seconds: 2)}) async => false;
