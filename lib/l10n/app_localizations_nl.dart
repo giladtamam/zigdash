@@ -1708,6 +1708,10 @@ class AppLocalizationsNl extends AppLocalizations {
       'De broker antwoordde niet, dus je dashboards zouden leeg zijn.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'De broker weigerde de login, dus je dashboards zouden leeg zijn.';
+
+  @override
   String get connKeepPage => 'Zigbee2MQTT-pagina houden';
 
   @override

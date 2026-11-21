@@ -90,6 +90,21 @@ DiagnosticsReport _connected(int devices) => DiagnosticsReport(
   deviceNames: [for (var i = 0; i < devices; i++) 'd$i'],
 );
 
+const _loginRefused = DiagnosticsReport(
+  steps: [
+    StepResult(step: DiagnosticStep.resolve, status: StepStatus.pass),
+    StepResult(step: DiagnosticStep.tcp, status: StepStatus.pass),
+    StepResult(step: DiagnosticStep.connack, status: StepStatus.pass),
+    StepResult(
+      step: DiagnosticStep.auth,
+      status: StepStatus.fail,
+      detailKey: 'diagAuthRejected',
+    ),
+  ],
+  connected: false,
+  candidatesTried: 1,
+);
+
 const _refused = DiagnosticsReport(
   steps: [
     StepResult(step: DiagnosticStep.resolve, status: StepStatus.pass),
@@ -978,5 +993,200 @@ void main() {
         {'result': 'kept_page', 'answered': 'timeout'},
       ]);
     });
+
+    // Review fixes (3.8.6): what is checked is what is saved.
+    Future<Connection> row(WidgetTester tester, AppDatabase db) async {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 300)),
+      );
+      await tester.pump();
+      return (await tester.runAsync(() => ConnectionDao(db).getById('p1')))!;
+    }
+
+    testWidgets('a prefill landing mid-check changes nothing that is saved', (
+      tester,
+    ) async {
+      final db = AppDatabase.test(NativeDatabase.memory());
+      addTearDown(db.close);
+      final secure = _MemSecure();
+      await tester.runAsync(() => addPageHome(db, secure));
+      final prefill = Completer<Map<String, dynamic>?>();
+      final check = Completer<DiagnosticsReport>();
+      final diag = _RecordingDiagnostics(_connected(5), answer: check);
+      await openPageForm(
+        tester,
+        db,
+        secure,
+        diagnostics: diag,
+        page: _FakePageConfig(answer: prefill),
+      );
+      // Let the page transition end; the page has not answered yet.
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text("Reading Zigbee2MQTT's settings…"), findsOne);
+      await tester.tap(find.text('Save'));
+      await tester.pump();
+      expect(diag.runs.single.config.host, '192.168.1.64');
+      prefill.complete({'server': 'mqtt://192.168.1.5:1884', 'user': 'z2m'});
+      await tester.pump();
+      expect(fieldText(tester, 'Local host'), '192.168.1.64');
+      expect(fieldText(tester, 'Port'), '1883');
+      check.complete(_connected(5));
+      await tester.pump();
+      final saved = await row(tester, db);
+      expect(saved.transport, ConnectionTransport.mqtt);
+      expect(saved.host, '192.168.1.64');
+      expect(saved.port, 1883);
+      expect(saved.username, isNull);
+    });
+
+    testWidgets('fields are read-only mid-check; a change is not saved', (
+      tester,
+    ) async {
+      final db = AppDatabase.test(NativeDatabase.memory());
+      addTearDown(db.close);
+      final secure = _MemSecure();
+      await tester.runAsync(() => addPageHome(db, secure));
+      final check = Completer<DiagnosticsReport>();
+      await openPageForm(
+        tester,
+        db,
+        secure,
+        diagnostics: _RecordingDiagnostics(_connected(5), answer: check),
+        page: _FakePageConfig(),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pump();
+      final host = find.descendant(
+        of: find.widgetWithText(TextFormField, 'Local host'),
+        matching: find.byType(EditableText),
+      );
+      expect(tester.widget<EditableText>(host).readOnly, isTrue);
+      // Whatever still reaches the field (a paste, a fill) is not saved.
+      tester
+              .widget<TextFormField>(
+                find.widgetWithText(TextFormField, 'Local host'),
+              )
+              .controller!
+              .text =
+          '10.9.9.9';
+      check.complete(_connected(5));
+      await tester.pump();
+      expect((await row(tester, db)).host, '192.168.1.64');
+    });
+
+    testWidgets('a base topic only the page knew is kept on the Home', (
+      tester,
+    ) async {
+      final db = AppDatabase.test(NativeDatabase.memory());
+      addTearDown(db.close);
+      final secure = _MemSecure();
+      await tester.runAsync(() => addPageHome(db, secure));
+      final diag = _RecordingDiagnostics(_connected(8));
+      await openPageForm(
+        tester,
+        db,
+        secure,
+        diagnostics: diag,
+        page: _FakePageConfig(
+          mqtt: {'server': 'mqtt://localhost', 'base_topic': 'house'},
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pump();
+      expect(diag.runs.single.base, 'house');
+      final saved = await row(tester, db);
+      expect(saved.transport, ConnectionTransport.mqtt);
+      expect(saved.z2mBaseTopic, 'house');
+    });
+
+    testWidgets('a refused login says so: answered refused', (tester) async {
+      final db = AppDatabase.test(NativeDatabase.memory());
+      addTearDown(db.close);
+      final secure = _MemSecure();
+      final sent = <(String, Map<String, String>)>[];
+      await tester.runAsync(() => addPageHome(db, secure));
+      await openPageForm(
+        tester,
+        db,
+        secure,
+        diagnostics: _RecordingDiagnostics(_loginRefused),
+        page: _FakePageConfig(),
+        sent: sent,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('refused the login'), findsOne);
+      expect(find.textContaining("didn't answer"), findsNothing);
+      await tester.tap(find.text('Keep the Zigbee2MQTT page'));
+      await tester.pumpAndSettle();
+      expect(pageBroker(sent), [
+        {'result': 'kept_page', 'answered': 'refused'},
+      ]);
+    });
+
+    testWidgets('leaving the form mid-check counts as cancelled', (
+      tester,
+    ) async {
+      final db = AppDatabase.test(NativeDatabase.memory());
+      addTearDown(db.close);
+      final secure = _MemSecure();
+      final sent = <(String, Map<String, String>)>[];
+      await tester.runAsync(() => addPageHome(db, secure));
+      final check = Completer<DiagnosticsReport>();
+      await openPageForm(
+        tester,
+        db,
+        secure,
+        diagnostics: _RecordingDiagnostics(_connected(5), answer: check),
+        page: _FakePageConfig(),
+        sent: sent,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pump();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(find.text('list'), findsOne);
+      check.complete(_connected(5));
+      await tester.pump();
+      expect(await transportOfP1(tester, db), ConnectionTransport.z2mPage);
+      expect(pageBroker(sent), [
+        {'result': 'cancelled'},
+      ]);
+    });
+  });
+
+  testWidgets('a loaded manager without bridge/info: the page is asked', (
+    tester,
+  ) async {
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final secure = _MemSecure();
+    await tester.runAsync(() => addPageHome(db, secure));
+    final page = _FakePageConfig(mqtt: {'server': 'mqtt://192.168.1.5'});
+    final manager = MqttManager(
+      config: const BrokerConfig(
+        id: 'p1',
+        host: '192.168.1.64',
+        port: 8080,
+        protocol: MqttProtocol.ws,
+      ),
+      password: '',
+    );
+    await openPageForm(
+      tester,
+      db,
+      secure,
+      diagnostics: _RecordingDiagnostics(_connected(3)),
+      page: page,
+      extra: [mqttManagerProvider.overrideWith((ref, id) async => manager)],
+      beforeOpen: (c) => c.read(mqttManagerProvider('p1')),
+    );
+    await tester.pumpAndSettle();
+    expect(page.calls, hasLength(1));
+    expect(fieldText(tester, 'Local host'), '192.168.1.5');
   });
 }

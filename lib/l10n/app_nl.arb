@@ -575,6 +575,7 @@
   "connKeepPageTitle": "De Zigbee2MQTT-pagina blijven gebruiken?",
   "connKeepPageBodyEmpty": "Deze broker antwoordde, maar heeft geen van je apparaten, dus je dashboards zouden leeg zijn. Zigbee2MQTT gebruikt misschien een andere broker, of moet herstart worden nadat de broker aanging.",
   "connKeepPageBodyNoAnswer": "De broker antwoordde niet, dus je dashboards zouden leeg zijn.",
+  "connKeepPageBodyRefused": "De broker weigerde de login, dus je dashboards zouden leeg zijn.",
   "connKeepPage": "Zigbee2MQTT-pagina houden",
   "connSaveAnyway": "Toch opslaan",
   "connChecking": "Broker controleren…",

@@ -1698,6 +1698,10 @@ class AppLocalizationsSv extends AppLocalizations {
       'Brokern svarade inte, så dina dashboards skulle bli tomma.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Brokern nekade inloggningen, så dina dashboards skulle bli tomma.';
+
+  @override
   String get connKeepPage => 'Behåll Zigbee2MQTT-sidan';
 
   @override

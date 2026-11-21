@@ -1683,6 +1683,10 @@ class AppLocalizationsHe extends AppLocalizations {
       'הברוקר לא ענה, כך שהלוחות שלכם יהיו ריקים.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'הברוקר דחה את ההתחברות, כך שהלוחות שלכם יהיו ריקים.';
+
+  @override
   String get connKeepPage => 'להשאיר את דף ה-Zigbee2MQTT';
 
   @override

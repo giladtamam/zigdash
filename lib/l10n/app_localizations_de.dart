@@ -1711,6 +1711,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Der Broker hat nicht geantwortet, deine Dashboards wären also leer.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Der Broker hat die Anmeldung abgelehnt, deine Dashboards wären also leer.';
+
+  @override
   String get connKeepPage => 'Zigbee2MQTT-Seite behalten';
 
   @override

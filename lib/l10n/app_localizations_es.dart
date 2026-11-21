@@ -1707,6 +1707,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'El broker no respondió, así que tus tableros quedarían vacíos.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'El broker rechazó el inicio de sesión, así que tus tableros quedarían vacíos.';
+
+  @override
   String get connKeepPage => 'Mantener la página de Zigbee2MQTT';
 
   @override

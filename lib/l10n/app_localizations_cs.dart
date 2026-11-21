@@ -1701,6 +1701,10 @@ class AppLocalizationsCs extends AppLocalizations {
       'Broker neodpověděl, takže by vaše nástěnky byly prázdné.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Broker odmítl přihlášení, takže by vaše nástěnky byly prázdné.';
+
+  @override
   String get connKeepPage => 'Ponechat stránku Zigbee2MQTT';
 
   @override

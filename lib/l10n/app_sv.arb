@@ -575,6 +575,7 @@
   "connKeepPageTitle": "Fortsätta med Zigbee2MQTT-sidan?",
   "connKeepPageBodyEmpty": "Den här brokern svarade, men den har ingen av dina enheter, så dina dashboards skulle bli tomma. Zigbee2MQTT kanske använder en annan broker, eller behöver startas om efter att brokern slogs på.",
   "connKeepPageBodyNoAnswer": "Brokern svarade inte, så dina dashboards skulle bli tomma.",
+  "connKeepPageBodyRefused": "Brokern nekade inloggningen, så dina dashboards skulle bli tomma.",
   "connKeepPage": "Behåll Zigbee2MQTT-sidan",
   "connSaveAnyway": "Spara ändå",
   "connChecking": "Kontrollerar brokern…",

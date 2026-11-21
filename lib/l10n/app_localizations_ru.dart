@@ -1706,6 +1706,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Брокер не ответил, поэтому ваши дашборды были бы пустыми.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Брокер отклонил вход, поэтому ваши дашборды были бы пустыми.';
+
+  @override
   String get connKeepPage => 'Оставить страницу Zigbee2MQTT';
 
   @override

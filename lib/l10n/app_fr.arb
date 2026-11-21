@@ -500,6 +500,7 @@
   "connKeepPageTitle": "Continuer avec la page Zigbee2MQTT ?",
   "connKeepPageBodyEmpty": "Ce broker a répondu, mais il n'a aucun de vos appareils : vos tableaux de bord seraient vides. Zigbee2MQTT utilise peut-être un autre broker, ou doit être redémarré après l'activation du broker.",
   "connKeepPageBodyNoAnswer": "Le broker n'a pas répondu : vos tableaux de bord seraient vides.",
+  "connKeepPageBodyRefused": "Le broker a refusé l'identifiant : vos tableaux de bord seraient vides.",
   "connKeepPage": "Garder la page Zigbee2MQTT",
   "connSaveAnyway": "Enregistrer quand même",
   "connChecking": "Vérification du broker…",

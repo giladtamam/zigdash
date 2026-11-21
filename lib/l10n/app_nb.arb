@@ -575,6 +575,7 @@
   "connKeepPageTitle": "Fortsette med Zigbee2MQTT-siden?",
   "connKeepPageBodyEmpty": "Denne megleren svarte, men den har ingen av enhetene dine, så dashbordene dine ville vært tomme. Zigbee2MQTT bruker kanskje en annen megler, eller må startes på nytt etter at megleren ble slått på.",
   "connKeepPageBodyNoAnswer": "Megleren svarte ikke, så dashbordene dine ville vært tomme.",
+  "connKeepPageBodyRefused": "Megleren avviste innloggingen, så dashbordene dine ville vært tomme.",
   "connKeepPage": "Behold Zigbee2MQTT-siden",
   "connSaveAnyway": "Lagre likevel",
   "connChecking": "Sjekker megleren…",

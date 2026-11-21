@@ -1706,6 +1706,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'O broker não respondeu, então seus painéis ficariam vazios.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'O broker recusou o login, então seus painéis ficariam vazios.';
+
+  @override
   String get connKeepPage => 'Manter a página do Zigbee2MQTT';
 
   @override

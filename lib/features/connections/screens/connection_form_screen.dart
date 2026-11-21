@@ -114,6 +114,10 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   int _guardGen = 0;
   Timer? _guardTimer;
 
+  /// Read when the check starts, so leaving the form mid-check can still
+  /// count it as cancelled (`ref` is gone in dispose).
+  Analytics? _guardAnalytics;
+
   bool get _isEdit => widget.connectionId != null;
 
   @override
@@ -175,17 +179,19 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
     final id = widget.connectionId;
     if (host == null || id == null) return;
     setState(() => _readingZ2m = true);
+    final gen = _guardGen;
     Map<String, dynamic>? mqtt;
     try {
       final provider = mqttManagerProvider(id);
       final mgr = ref.exists(provider) ? ref.read(provider).valueOrNull : null;
-      if (mgr != null) {
-        final info = mgr
-            .liveUnder('')
-            .where((m) => m.topic.endsWith('/bridge/info'))
-            .firstOrNull;
-        if (info != null) mqtt = z2mMqttConfigOfInfo(info.payload);
+      final info = mgr
+          ?.liveUnder('')
+          .where((m) => m.topic.endsWith('/bridge/info'))
+          .firstOrNull;
+      if (info != null) {
+        mqtt = z2mMqttConfigOfInfo(info.payload);
       } else {
+        // No manager yet, or no bridge/info this session: ask the page.
         mqtt = await ref
             .read(z2mPageConfigProvider)(
               host,
@@ -205,6 +211,8 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
       if (base is String) _pageBase = base;
       if (setting == null) return;
       _z2mServer = setting.server;
+      // Once Save's check has started, the fields are what it checks.
+      if (_guarding || gen != _guardGen) return;
       if (!_hostTouched && setting.hosts.isNotEmpty) {
         _host.text = setting.hosts.first;
       }
@@ -264,7 +272,12 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   Future<void> _guardedSave() async {
     final gen = ++_guardGen;
     setState(() => _guarding = true);
+    _guardAnalytics = ref.read(analyticsProvider);
+    // What is checked is what gets saved: the fields are read-only while
+    // checking, and Save writes this config, not the fields again.
     final cfg = _formConfig(remote: false);
+    final password = _password.text;
+    final base = _base;
     final diagnostics = ref.read(connectDiagnosticsProvider);
     final outcome = Completer<DiagnosticsReport?>();
     _guardTimer?.cancel();
@@ -273,7 +286,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
     });
     unawaited(
       diagnostics
-          .run(config: cfg, password: _password.text, base: _base)
+          .run(config: cfg, password: password, base: base)
           .then<DiagnosticsReport?>((r) => r, onError: (_) => _noAnswer)
           .then((r) {
             if (!outcome.isCompleted) outcome.complete(r);
@@ -287,6 +300,8 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
         ? PageBrokerAnswered.timeout
         : report.connected
         ? PageBrokerAnswered.yes
+        : _loginRefused(report)
+        ? PageBrokerAnswered.refused
         : PageBrokerAnswered.no;
     final devices = report != null && report.connected
         ? report.deviceNames.length
@@ -294,18 +309,26 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
     void track(PageBrokerResult result) => ref
         .read(analyticsProvider)
         .track(PageBrokerEvent(result, answered: answered, devices: devices));
+    // Only this generation's result gets here: a cancelled check that
+    // finishes later, even while a new one runs, returned above and can
+    // never save.
     if (devices != null && devices > 0) {
       track(PageBrokerResult.saved);
-      return _write();
+      return _write(checked: cfg, checkedPassword: password, base: base);
     }
     final saveAnyway = await _askKeepPage(report);
     if (!mounted || gen != _guardGen) return;
     if (saveAnyway) {
       track(PageBrokerResult.savedAnyway);
-      return _write();
+      return _write(checked: cfg, checkedPassword: password, base: base);
     }
     track(PageBrokerResult.keptPage);
   }
+
+  /// The broker answered and refused the login.
+  static bool _loginRefused(DiagnosticsReport report) => report.steps.any(
+    (s) => s.step == DiagnosticStep.auth && s.status == StepStatus.fail,
+  );
 
   static const _noAnswer = DiagnosticsReport(
     steps: [],
@@ -317,9 +340,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
     _guardGen++;
     _guardTimer?.cancel();
     setState(() => _guarding = false);
-    ref
-        .read(analyticsProvider)
-        .track(const PageBrokerEvent(PageBrokerResult.cancelled));
+    _guardAnalytics?.track(const PageBrokerEvent(PageBrokerResult.cancelled));
   }
 
   /// "Keep using the Zigbee2MQTT page?": true for Save anyway. [report] is
@@ -327,6 +348,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   Future<bool> _askKeepPage(DiagnosticsReport? report) async {
     final l10n = context.l10n;
     final empty = report != null && report.connected;
+    final refused = report != null && !empty && _loginRefused(report);
     final failure = report?.steps
         .where((s) => s.status == StepStatus.fail)
         .firstOrNull;
@@ -345,6 +367,8 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               Text(
                 empty
                     ? l10n.connKeepPageBodyEmpty
+                    : refused
+                    ? l10n.connKeepPageBodyRefused
                     : l10n.connKeepPageBodyNoAnswer,
               ),
               if (empty && server != null) ...[
@@ -383,27 +407,34 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
         : _remoteHost.text.trim(),
   );
 
-  Future<void> _write() async {
+  /// Saves the form. After a page Home's check, [checked] is the broker
+  /// that was checked (3.8.6): saved as checked, whatever the fields say
+  /// now, and [base] is kept when it came from Zigbee2MQTT's page.
+  Future<void> _write({
+    BrokerConfig? checked,
+    String? checkedPassword,
+    String? base,
+  }) async {
     setState(() => _saving = true);
     final repo = ref.read(connectionRepoProvider);
-    final port = int.parse(_port.text);
-    final keepAlive = int.parse(_keepAlive.text);
+    final broker = checked ?? _formConfig(remote: false);
+    final password = checkedPassword ?? _password.text;
+    final port = broker.port;
+    final keepAlive = broker.keepAliveSeconds;
     // From the page, the stored secret is the page's token: always replace.
-    final passwordToWrite = _password.text.isEmpty && _isEdit && !_fromPage
+    final passwordToWrite = password.isEmpty && _isEdit && !_fromPage
         ? null
-        : _password.text;
+        : password;
 
     try {
       if (_isEdit) {
         await repo.update(
           id: widget.connectionId!,
           name: _name.text.trim(),
-          host: _host.text.trim(),
+          host: broker.host,
           port: port,
-          protocol: _protocol,
-          username: _username.text.trim().isEmpty
-              ? null
-              : _username.text.trim(),
+          protocol: broker.protocol,
+          username: broker.username,
           password: passwordToWrite,
           keepAliveSeconds: keepAlive,
           autoConnect: _autoConnect,
@@ -412,6 +443,18 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               : _remoteHost.text.trim(),
           transport: _fromPage ? ConnectionTransport.mqtt : null,
         );
+        // The Home's base topic came only from Zigbee2MQTT's page: keep it,
+        // or the Home would count under the default on the broker.
+        final pageBase = _pageBase?.trim();
+        if (_fromPage &&
+            base != null &&
+            pageBase != null &&
+            base == pageBase &&
+            base != 'zigbee2mqtt' &&
+            (_storedBase?.trim() ?? '').isEmpty &&
+            (_dashboardPrefix?.trim() ?? '').isEmpty) {
+          await repo.setBaseTopic(widget.connectionId!, base);
+        }
         if (_fromPage) {
           // The Home now goes through the broker: reconnect it, and let the
           // Engine screens look again.
@@ -421,13 +464,11 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
       } else {
         final id = await repo.create(
           name: _name.text.trim(),
-          host: _host.text.trim(),
+          host: broker.host,
           port: port,
-          protocol: _protocol,
-          username: _username.text.trim().isEmpty
-              ? null
-              : _username.text.trim(),
-          password: _password.text.isEmpty ? null : _password.text,
+          protocol: broker.protocol,
+          username: broker.username,
+          password: password.isEmpty ? null : password,
           keepAliveSeconds: keepAlive,
           autoConnect: _autoConnect,
           remoteHost: _remoteHost.text.trim().isEmpty
@@ -561,6 +602,10 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
 
   @override
   void dispose() {
+    // Leaving the form mid-check counts as cancelling it.
+    if (_guarding) {
+      _guardAnalytics?.track(const PageBrokerEvent(PageBrokerResult.cancelled));
+    }
     _guardGen++;
     _guardTimer?.cancel();
     _name.dispose();
@@ -650,6 +695,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               ],
             ],
             TextFormField(
+              readOnly: _guarding,
               controller: _name,
               decoration: InputDecoration(
                 labelText: context.l10n.connName,
@@ -672,13 +718,20 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               ),
               const SizedBox(height: 12),
             ] else ...[
-              ProtocolDropdown(value: _protocol, onChanged: _onProtocolChanged),
+              IgnorePointer(
+                ignoring: _guarding,
+                child: ProtocolDropdown(
+                  value: _protocol,
+                  onChanged: _onProtocolChanged,
+                ),
+              ),
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     flex: 3,
                     child: TextFormField(
+                      readOnly: _guarding,
                       controller: _host,
                       onChanged: (_) => _hostTouched = true,
                       decoration: InputDecoration(
@@ -693,6 +746,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextFormField(
+                      readOnly: _guarding,
                       controller: _port,
                       onChanged: (_) => _portTouched = true,
                       keyboardType: TextInputType.number,
@@ -715,7 +769,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                   TextButton.icon(
                     icon: const Icon(Icons.wifi_find, size: 18),
                     label: Text(context.l10n.connFindBrokers),
-                    onPressed: _findBrokers,
+                    onPressed: _guarding ? null : _findBrokers,
                   ),
                   const Spacer(),
                   TextButton(
@@ -726,6 +780,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               ),
               const SizedBox(height: 12),
               TextFormField(
+                readOnly: _guarding,
                 controller: _username,
                 onChanged: (_) => _userTouched = true,
                 decoration: InputDecoration(
@@ -734,6 +789,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               ),
               const SizedBox(height: 12),
               TextFormField(
+                readOnly: _guarding,
                 controller: _password,
                 obscureText: true,
                 decoration: InputDecoration(
@@ -756,7 +812,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
             // checked when it was connected.
             if (!_viaHa) ...[
               OutlinedButton.icon(
-                onPressed: _testing ? null : _testConnection,
+                onPressed: _testing || _guarding ? null : _testConnection,
                 icon: _testing
                     ? const SizedBox(
                         width: 16,
@@ -773,6 +829,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
               title: Text(context.l10n.advanced),
               children: [
                 TextFormField(
+                  readOnly: _guarding,
                   controller: _remoteHost,
                   decoration: InputDecoration(
                     labelText: _viaHa
@@ -785,6 +842,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
+                  readOnly: _guarding,
                   controller: _keepAlive,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(

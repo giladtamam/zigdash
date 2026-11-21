@@ -500,6 +500,7 @@
   "connKeepPageTitle": "Continuare con la pagina Zigbee2MQTT?",
   "connKeepPageBodyEmpty": "Questo broker ha risposto, ma non ha nessuno dei tuoi dispositivi, quindi le tue dashboard sarebbero vuote. Zigbee2MQTT forse usa un altro broker, o va riavviato dopo l'attivazione del broker.",
   "connKeepPageBodyNoAnswer": "Il broker non ha risposto, quindi le tue dashboard sarebbero vuote.",
+  "connKeepPageBodyRefused": "Il broker ha rifiutato l'accesso, quindi le tue dashboard sarebbero vuote.",
   "connKeepPage": "Tieni la pagina Zigbee2MQTT",
   "connSaveAnyway": "Salva comunque",
   "connChecking": "Verifica del broker…",

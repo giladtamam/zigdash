@@ -535,6 +535,7 @@
   "connKeepPageTitle": "Continuar usando a página do Zigbee2MQTT?",
   "connKeepPageBodyEmpty": "Este broker respondeu, mas não tem nenhum dos seus dispositivos, então seus painéis ficariam vazios. O Zigbee2MQTT pode usar outro broker, ou precisar ser reiniciado depois que o broker foi ligado.",
   "connKeepPageBodyNoAnswer": "O broker não respondeu, então seus painéis ficariam vazios.",
+  "connKeepPageBodyRefused": "O broker recusou o login, então seus painéis ficariam vazios.",
   "connKeepPage": "Manter a página do Zigbee2MQTT",
   "connSaveAnyway": "Salvar mesmo assim",
   "connChecking": "Verificando o broker…",

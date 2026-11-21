@@ -1660,8 +1660,9 @@ class HistoryOnEvent extends AnalyticsEvent {
 
 /// Saving an MQTT broker for a Home that connects through the Zigbee2MQTT
 /// page (3.8.6, broker-no-devices-386.md §6): saved, the page kept, saved
-/// anyway or cancelled; whether the broker answered the check (or it gave
-/// up after 15 s); how many devices it had, in buckets.
+/// anyway or cancelled (also by leaving the form); whether the broker
+/// answered the check, refused the login, or it gave up after 15 s; how
+/// many devices it had, in buckets.
 enum PageBrokerResult {
   saved('saved'),
   keptPage('kept_page'),
@@ -1672,7 +1673,7 @@ enum PageBrokerResult {
   final String wire;
 }
 
-enum PageBrokerAnswered { yes, no, timeout }
+enum PageBrokerAnswered { yes, no, refused, timeout }
 
 class PageBrokerEvent extends AnalyticsEvent {
   const PageBrokerEvent(this.result, {this.answered, this.devices});

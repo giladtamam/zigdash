@@ -1715,6 +1715,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le broker n\'a pas répondu : vos tableaux de bord seraient vides.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Le broker a refusé l\'identifiant : vos tableaux de bord seraient vides.';
+
+  @override
   String get connKeepPage => 'Garder la page Zigbee2MQTT';
 
   @override

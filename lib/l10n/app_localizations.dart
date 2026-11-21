@@ -3120,6 +3120,12 @@ abstract class AppLocalizations {
   /// **'The broker didn\'t answer, so your dashboards would be empty.'**
   String get connKeepPageBodyNoAnswer;
 
+  /// No description provided for @connKeepPageBodyRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker refused the login, so your dashboards would be empty.'**
+  String get connKeepPageBodyRefused;
+
   /// No description provided for @connKeepPage.
   ///
   /// In en, this message translates to:

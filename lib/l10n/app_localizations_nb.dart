@@ -1697,6 +1697,10 @@ class AppLocalizationsNb extends AppLocalizations {
       'Megleren svarte ikke, så dashbordene dine ville vært tomme.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Megleren avviste innloggingen, så dashbordene dine ville vært tomme.';
+
+  @override
   String get connKeepPage => 'Behold Zigbee2MQTT-siden';
 
   @override

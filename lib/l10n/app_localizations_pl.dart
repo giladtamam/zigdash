@@ -1711,6 +1711,10 @@ class AppLocalizationsPl extends AppLocalizations {
       'Broker nie odpowiedział, więc Twoje dashboardy byłyby puste.';
 
   @override
+  String get connKeepPageBodyRefused =>
+      'Broker odrzucił logowanie, więc Twoje dashboardy byłyby puste.';
+
+  @override
   String get connKeepPage => 'Zostaw stronę Zigbee2MQTT';
 
   @override
