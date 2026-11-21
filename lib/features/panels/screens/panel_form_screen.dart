@@ -104,6 +104,10 @@ class _State extends ConsumerState<PanelFormScreen> {
   final _onPayload = TextEditingController(text: '{"state":"ON"}');
   final _offPayload = TextEditingController(text: '{"state":"OFF"}');
   final _onMatch = TextEditingController(text: 'ON');
+  // A toggle's stored icons, kept through an edit (3.8.7): no picker sets
+  // them, but older configs and imports carry them.
+  int? _onIconCodepoint;
+  int? _offIconCodepoint;
   final _toggleJsonPath = TextEditingController(text: 'state');
 
   // Slider fields
@@ -361,6 +365,8 @@ class _State extends ConsumerState<PanelFormScreen> {
       _offPayload.text = cfg.offPayload;
       _onMatch.text = cfg.onMatch;
       _toggleJsonPath.text = cfg.jsonPath ?? '';
+      _onIconCodepoint = cfg.onIconCodepoint;
+      _offIconCodepoint = cfg.offIconCodepoint;
     } else if (cfg is SliderConfig) {
       _sliderMin.text = cfg.min.toString();
       _sliderMax.text = cfg.max.toString();
@@ -510,6 +516,8 @@ class _State extends ConsumerState<PanelFormScreen> {
           offPayload: _offPayload.text,
           jsonPath: nullIfBlank(_toggleJsonPath.text),
           onMatch: _onMatch.text,
+          onIconCodepoint: _onIconCodepoint,
+          offIconCodepoint: _offIconCodepoint,
         ),
       PanelType.slider => SliderConfig(
           min: double.tryParse(_sliderMin.text) ?? 0,
