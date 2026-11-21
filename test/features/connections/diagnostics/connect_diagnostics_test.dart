@@ -449,6 +449,33 @@ void main() {
         });
       });
 
+      test('a remote broker that never answers after a local TLS failure '
+          'is "no answer", not TLS', () {
+        fakeAsync((async) {
+          final d = diagnostics(
+            behavior: _ConnectBehavior.tlsUntrusted,
+            remoteBehavior: _ConnectBehavior.hang,
+          );
+          DiagnosticsReport? report;
+          d
+              .run(
+                config: BrokerConfig(
+                  id: 'conn-1',
+                  host: host,
+                  port: 8883,
+                  protocol: MqttProtocol.tcpSsl,
+                  username: 'zigdash',
+                  remoteHost: remoteHost,
+                ),
+                password: 'pw',
+              )
+              .then((r) => report = r);
+          async.elapse(const Duration(seconds: 30));
+          expect(report!.candidatesTried, 2);
+          expect(report!.steps[2].detailKey, 'diagLoginNoAnswer');
+        });
+      });
+
       test('a remote refusal after a local TLS failure is not called TLS',
           () {
         fakeAsync((async) {

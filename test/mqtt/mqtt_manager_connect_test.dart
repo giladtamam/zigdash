@@ -476,6 +476,39 @@ void main() {
       });
     });
 
+    test('a TLS failure doesn\'t stick: the next try that is refused says '
+        'refused', () {
+      fakeAsync((async) {
+        final behaviors = [_Behavior.tlsUntrusted, _Behavior.fail];
+        final manager = MqttManager(
+          config: const BrokerConfig(
+            id: 'conn-1',
+            host: localHost,
+            port: 8883,
+            protocol: MqttProtocol.tcpSsl,
+          ),
+          password: '',
+          clientFactory: (config, clientId, {host}) => _FakeClient(
+            host ?? config.host,
+            behaviors.isEmpty ? _Behavior.fail : behaviors.removeAt(0),
+          ),
+          watchCert: watch,
+        );
+        manager.connect();
+        async.flushMicrotasks();
+        expect(manager.lastFailure, FailureKind.tlsUntrusted);
+        manager.connect();
+        async.flushMicrotasks();
+        expect(behaviors, isEmpty);
+        expect(
+          manager.lastFailure,
+          isNot(anyOf(FailureKind.tlsUntrusted, FailureKind.tlsFailed)),
+        );
+        manager.dispose();
+        async.flushMicrotasks();
+      });
+    });
+
     test('a local timeout, then a remote TLS failure: the timeout is kept, '
         'as the local try is the one that matters at home', () {
       expect(
