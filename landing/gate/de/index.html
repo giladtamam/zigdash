@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wie ich mein PalGate-Abo durch ein Zigbee-Relais für $10 ersetzt habe · ZigDash</title>
+<meta name="description" content="Mein Tor öffnete sich über einen PalGate Spider-50 für ₪300 im Jahr. Ich habe ihn gegen ein Zigbee-Relais mit potentialfreiem Kontakt für einmalig $10 getauscht und öffne das Tor jetzt aus ZigDash, zu Hause und von überall. Material, Verdrahtung und Pairing.">
+<link rel="canonical" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Wie ich mein PalGate-Abo durch ein Zigbee-Relais für $10 ersetzt habe">
+<meta property="og:description" content="₪300 im Jahr für einen Toröffner oder einmalig $10. Material, Verdrahtung und Pairing, mit der ZigDash-App.">
+<meta property="og:url" content="https://zigdash.app/gate/de/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Einrichtung</a>
+    <a href="../../hubs/">Hubs</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hilfe</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Wie ich mein PalGate-Abo durch ein Zigbee-Relais für $10 ersetzt habe</h1>
+<p class="byline">Gilad Tamam, der Entwickler von ZigDash · 18. November 2026</p>
+<p class="byline">Auch auf: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Mein Einfahrtstor öffnete sich vom Handy aus über einen PalGate Spider-50: eine 4G-Box mit eigener SIM-Karte und einem Abo für ₪300 im Jahr. Ich habe sie ausgebaut und ein Zigbee-Relais eingesetzt, das $10 (etwa ₪37) gekostet hat, einmalig. Jetzt öffne ich das Tor über eine Kachel in ZigDash, zu Hause und von überall.</p>
+
+<p class="cost"><strong>₪300 jedes Jahr</strong> für das Abo oder <strong>etwa ₪37 einmalig</strong> für das Relais. Das Relais hatte sich nach etwa sechs Wochen bezahlt gemacht.</p>
+
+<div class="toc"><strong>Auf dieser Seite</strong>
+<ul>
+  <li><a href="#how">Wie ein Handy ein Tor öffnet</a></li>
+  <li><a href="#need">Was du brauchst</a></li>
+  <li><a href="#pair">1. Das Relais mit ZigDash pairen</a></li>
+  <li><a href="#spider">2. Den Spider ausbauen</a></li>
+  <li><a href="#wire">3. Das Relais verdrahten</a></li>
+  <li><a href="#tile">4. Eine Tor-Kachel in ZigDash</a></li>
+  <li><a href="#trade">Worauf du verzichtest</a></li>
+</ul></div>
+
+<h2 id="how">Wie ein Handy ein Tor öffnet</h2>
+<p>Eine Torsteuerung hat einen <strong>Öffnen</strong>-Eingang (oder Start-Eingang): zwei Klemmen, die das Tor öffnen, wenn sie miteinander verbunden werden, genau wie die Taste auf einer Torfernbedienung. Der Spider ist ein Relais mit SIM-Karte. Wenn die PalGate-App oder ein Anruf es verlangt, verbindet er diese beiden Klemmen für einen Moment.</p>
+<p>Ein Zigbee-Relais erledigt dieselbe Aufgabe. Der einzige Unterschied ist, wer ihm sagt, dass es schließen soll: dein eigener Zigbee-Hub zu Hause statt eines Mobilfunkdienstes, den du jedes Jahr bezahlst.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="Die PalGate Spider-50 Box in einer Hand, neben der Torsteuerung" loading="lazy" width="675" height="900"><figcaption>Der PalGate Spider-50, den ich ausgebaut habe.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="Die Platine der Torsteuerung mit ihrer Klemmleiste und den Drähten" loading="lazy" width="675" height="900"><figcaption>Die Torsteuerung. Zwei dieser Drähte sind ihr Öffnen-Eingang.</figcaption></figure>
+</div>
+
+<h2 id="need">Was du brauchst</h2>
+<ul>
+  <li><strong>Ein Zigbee-Relais mit potentialfreiem Kontakt.</strong> Meines ist ein "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" von AliExpress, etwa $10. Es wird als WLAN- und als Zigbee-Version verkauft: Nimm <strong>Zigbee</strong> (die Platine hat ein ZT3L-Modul). Es gibt es auch für verschiedene Versorgungsspannungen; ich habe die Version <strong>AC 85–250V</strong> genommen.</li>
+  <li><strong>Der potentialfreie Kontakt ist das Wichtige.</strong> Ein potentialfreier Kontakt ist ein einfacher Schalter ohne eigene Spannung: Er verbindet nur COM mit NO, genau wie die Taste einer Fernbedienung. Ein Relais, das Spannung auf seine Klemmen gibt (die Sorte, die zum Schalten einer Lampe gedacht ist), kann den Eingang der Torsteuerung beschädigen. Achte auf "dry contact" und Klemmen mit der Beschriftung <strong>COM</strong>, <strong>NO</strong> und <strong>NC</strong>.</li>
+  <li><strong>Einen Zigbee2MQTT-Hub zu Hause</strong>, der bis zum Tor reicht. Ich hatte schon einen (einen SMLIGHT SMHUB) für den Rest des Hauses. Wenn du keinen hast, sieh dir <a href="../../hubs/">Hubs</a> an.</li>
+  <li><strong>ZigDash</strong> auf deinem Handy (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Das Tor zu Hause zu öffnen ist kostenlos. Von überall öffnest du es mit der Fernsteuerung von ZigDash Pro: ein einmaliger Kauf, kein Abo.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="Die Platine des Zigbee-Relais: Versorgungsklemmen links, das ZT3L-Zigbee-Modul in der Mitte, das Relais und seine COM/NO/NC-Klemmen rechts" loading="lazy" width="675" height="900"><figcaption>Das Zigbee-Relais ohne Gehäuse: links die Versorgung, das ZT3L-Zigbee-Modul, die Pairing-Taste und rechts die potentialfreien Klemmen des Relais.</figcaption></figure>
+
+<h2 id="pair">1. Das Relais mit ZigDash pairen</h2>
+<p>Mach das Pairing zuerst zu Hause auf dem Tisch, bevor das Relais in den Torkasten kommt.</p>
+<ol>
+  <li>Versorge das Relais mit Strom.</li>
+  <li>Öffne in ZigDash <strong>Geräte</strong> und tippe auf <strong>Pairing starten</strong>.</li>
+  <li>Halte die <strong>Taste</strong> des Relais gedrückt, bis seine LED blinkt. Damit ist es im Pairing-Modus.</li>
+  <li>ZigDash zeigt <strong>Bereit</strong> mit dem neuen Gerät. Benenne es in <strong>Tor</strong> um.</li>
+</ol>
+<p>Schalte es ein paar Mal ein und aus und hör auf das Klicken des Relais.</p>
+
+<h2 id="spider">2. Den Spider ausbauen</h2>
+<div class="tip"><strong>Schalte zuerst den Strom des Tors am Leitungsschutzschalter ab.</strong> Im Torkasten liegen 230V an. Wenn du dich mit Netzspannung nicht wohlfühlst, lass die Schritte 2 und 3 von einem Elektriker machen. Fass die Sicherheitssensoren des Tors (Lichtschranken) und die Endschalter nicht an.</div>
+<ol>
+  <li>Finde die beiden Drähte, die vom Relaisausgang des Spiders (<strong>COM1</strong> und <strong>N.O.1</strong>) zum Öffnen-Eingang der Torsteuerung gehen. Markiere sie.</li>
+  <li>Schraube die Klemmleiste des Spiders ab und trenne den Spider von seiner Stromversorgung.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Die grüne Klemmleiste des Spiders mit dem braunen, blauen und schwarzen Draht" loading="lazy" width="675" height="900"><figcaption>Die Klemmleiste des Spiders, abgezogen. Das braune und das blaue Kabel gehen zum Öffnen-Eingang des Tors.</figcaption></figure>
+
+<h2 id="wire">3. Das Relais verdrahten</h2>
+<ol>
+  <li><strong>Ausgang:</strong> Die beiden Drähte des Öffnen-Eingangs kommen an <strong>COM</strong> und <strong>NO</strong> des Relais. Lass NC frei. Bei einem potentialfreien Kontakt spielt die Reihenfolge keine Rolle.</li>
+  <li><strong>Versorgung:</strong> Die Version AC 85–250V hängt direkt am Netz, wie ein Handyladegerät: zwei Drähte, Phase und Neutralleiter, von der 230V-Versorgung des Tors.</li>
+  <li>Schließ das Gehäuse des Relais, bring es an einer trockenen Stelle unter und schalte den Leitungsschutzschalter wieder ein.</li>
+</ol>
+<div class="tip"><strong>Signal:</strong> Das Tor ist meist der vom Hub am weitesten entfernte Punkt. Öffne in ZigDash die Geräteseite des Relais und prüfe das Signal. Ist es schwach, erweitert ein Zigbee-Gerät mit Netzstrom zwischen Haus und Tor (zum Beispiel eine smarte Steckdose) das Netz.</div>
+
+<h2 id="tile">4. Eine Tor-Kachel in ZigDash</h2>
+<ol>
+  <li>Tippe auf deinem Dashboard auf <strong>Von einem Gerät hinzufügen</strong> und wähle <strong>Tor</strong>.</li>
+  <li>Tippe auf die Kachel: Das Relais schließt und das Tor setzt sich in Bewegung, genau wie mit der Fernbedienung.</li>
+  <li>Der Öffnen-Eingang des Tors erwartet einen Tastendruck, daher kann ein Kontakt, der geschlossen bleibt, als langer Druck zählen. Prüfe, was dein Tor macht, und schalte die Kachel wieder aus, falls nötig.</li>
+  <li><strong>Von überall:</strong> Mit ZigDash Pro schaltest du die Fernsteuerung ein, und dieselbe Kachel funktioniert auch unterwegs, ohne offenen Port am Router und ohne monatliche Gebühr. Sie funktioniert auf bis zu fünf Handys; <strong>Mit einem anderen Handy teilen</strong> fügt die Handys der Familie mit einem QR-Code hinzu.</li>
+</ol>
+
+<h2 id="trade">Worauf du verzichtest</h2>
+<p>Um fair zum Spider zu sein: Er kann Dinge, die ein Zigbee-Relais nicht kann:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee-Relais + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Kosten</th><td>₪300 im Jahr (mein Tarif)</td><td>Etwa ₪37 einmalig; die Fernsteuerung ist ein einmaliger Kauf von ZigDash Pro</td></tr>
+    <tr><th>Verbindung</th><td>Eigene 4G-SIM: funktioniert auch, wenn das Haus kein Internet hat</td><td>Dein Zigbee-Hub zu Hause; unterwegs ist das Internet zu Hause nötig</td></tr>
+    <tr><th>Wer öffnen kann</th><td>Nutzer und Gäste, verwaltet in der PalGate-App, und Öffnen per Anruf</td><td>Handys, mit denen du das Zuhause teilst (bis zu fünf aus der Ferne)</td></tr>
+    <tr><th>Cloud</th><td>Der Dienst von PalGate</td><td>Zu Hause keine; aus der Ferne geht es über den Relay-Server von ZigDash, Ende-zu-Ende-verschlüsselt</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Für ein Einfamilienhaus, in dem die Familie ein Tor öffnet, kann das Relais alles, was ich brauchte. Für ein Gebäude mit vielen Bewohnern und Besuchern ist ein verwalteter Dienst wie PalGate weiterhin sinnvoll.</p>
+
+<div class="tip">PalGate ist eine Marke ihres Inhabers. ZigDash ist nicht mit PalGate oder PAL Electronics Systems verbunden. Die Preise sind die, die ich im November 2026 bezahlt habe.</div>
+
+<div class="tip"><strong>Hast du das auch gemacht?</strong> Erzähl mir, wie es gelaufen ist oder was an deinem Tor anders war: <a href="mailto:support@zigdash.app">support@zigdash.app</a> oder <a href="https://t.me/zigdash_app">die Community</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">ZigDash holen</a><a class="btn" href="../../hubs/">Hub auswählen</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Quellcode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Datenschutzerklärung</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

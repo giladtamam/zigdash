@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Come ho sostituito l'abbonamento PalGate con un relè Zigbee da $10 · ZigDash</title>
+<meta name="description" content="Il mio cancello si apriva con un PalGate Spider-50 a ₪300 l'anno. L'ho sostituito con un relè Zigbee a contatto pulito da $10, pagati una volta sola, e ora apro il cancello da ZigDash, a casa e da ovunque. Materiale, cablaggio e abbinamento.">
+<link rel="canonical" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Come ho sostituito l'abbonamento PalGate con un relè Zigbee da $10">
+<meta property="og:description" content="₪300 l'anno per un apricancello, oppure $10 una volta sola. Materiale, cablaggio e abbinamento, con l'app ZigDash.">
+<meta property="og:url" content="https://zigdash.app/gate/it/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Configurazione</a>
+    <a href="../../hubs/">Hub</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Aiuto</a>
+    <a href="https://t.me/zigdash_app">Comunità</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Come ho sostituito l'abbonamento PalGate con un relè Zigbee da $10</h1>
+<p class="byline">Gilad Tamam, lo sviluppatore di ZigDash · 18 novembre 2026</p>
+<p class="byline">Anche in: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Il cancello del mio vialetto si apriva dal telefono tramite un PalGate Spider-50: una scatola 4G con la sua SIM e un abbonamento da ₪300 l'anno. L'ho tolta e al suo posto ho messo un relè Zigbee che è costato $10 (circa ₪37), una volta sola. Ora apro il cancello da un riquadro in ZigDash, a casa e da ovunque.</p>
+
+<p class="cost"><strong>₪300 ogni anno</strong> per l'abbonamento, oppure <strong>circa ₪37 una volta sola</strong> per il relè. Il relè si è ripagato in circa sei settimane.</p>
+
+<div class="toc"><strong>In questa pagina</strong>
+<ul>
+  <li><a href="#how">Come un telefono apre un cancello</a></li>
+  <li><a href="#need">Cosa ti serve</a></li>
+  <li><a href="#pair">1. Abbina il relè a ZigDash</a></li>
+  <li><a href="#spider">2. Togli lo Spider</a></li>
+  <li><a href="#wire">3. Collega il relè</a></li>
+  <li><a href="#tile">4. Un riquadro Cancello in ZigDash</a></li>
+  <li><a href="#trade">A cosa rinunci</a></li>
+</ul></div>
+
+<h2 id="how">Come un telefono apre un cancello</h2>
+<p>La centralina di un cancello ha un ingresso di <strong>apertura</strong> (o start): due morsetti che aprono il cancello quando vengono collegati tra loro, proprio come il pulsante di un telecomando del cancello. Lo Spider è un relè con una SIM. Quando l'app PalGate o una telefonata glielo chiedono, collega quei due morsetti per un istante.</p>
+<p>Un relè Zigbee fa lo stesso lavoro. L'unica differenza è chi gli dice di chiudersi: il tuo hub Zigbee di casa, invece di un servizio cellulare che paghi ogni anno.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="La scatola PalGate Spider-50 in una mano, accanto alla centralina del cancello" loading="lazy" width="675" height="900"><figcaption>Il PalGate Spider-50 che ho tolto.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="La scheda della centralina del cancello con la sua morsettiera e i fili" loading="lazy" width="675" height="900"><figcaption>La centralina del cancello. Due di questi fili sono il suo ingresso di apertura.</figcaption></figure>
+</div>
+
+<h2 id="need">Cosa ti serve</h2>
+<ul>
+  <li><strong>Un relè Zigbee a contatto pulito.</strong> Il mio è un "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" preso su AliExpress, circa $10. Si vende in versione WiFi e in versione Zigbee: scegli <strong>Zigbee</strong> (la scheda ha un modulo ZT3L). Si vende anche per diverse tensioni di alimentazione; io ho preso quello <strong>AC 85–250V</strong>.</li>
+  <li><strong>Il contatto pulito è la cosa importante.</strong> Un contatto pulito è un semplice interruttore senza tensione propria: collega solo COM a NO, esattamente come il pulsante di un telecomando. Un relè che manda tensione sui suoi morsetti (il tipo fatto per accendere una lampada) può danneggiare l'ingresso della centralina del cancello. Cerca "dry contact" e morsetti marcati <strong>COM</strong>, <strong>NO</strong> e <strong>NC</strong>.</li>
+  <li><strong>Un hub Zigbee2MQTT a casa</strong> che arrivi fino al cancello. Io ne avevo già uno (uno SMLIGHT SMHUB) per il resto della casa. Se non ce l'hai, vedi <a href="../../hubs/">Hub</a>.</li>
+  <li><strong>ZigDash</strong> sul telefono (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Aprire il cancello da casa è gratis. Per aprirlo da ovunque serve il controllo remoto di ZigDash Pro: un acquisto una tantum, senza abbonamento.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="La scheda del relè Zigbee: morsetti di alimentazione a sinistra, il modulo Zigbee ZT3L al centro, il relè e i suoi morsetti COM/NO/NC a destra" loading="lazy" width="675" height="900"><figcaption>Il relè Zigbee fuori dalla sua custodia: alimentazione a sinistra, il modulo Zigbee ZT3L, il pulsante di abbinamento e i morsetti a contatto pulito del relè a destra.</figcaption></figure>
+
+<h2 id="pair">1. Abbina il relè a ZigDash</h2>
+<p>Abbinalo per prima cosa a casa, sul tavolo, prima che finisca nella scatola del cancello.</p>
+<ol>
+  <li>Alimenta il relè.</li>
+  <li>In ZigDash, apri <strong>Dispositivi</strong> e tocca <strong>Avvia abbinamento</strong>.</li>
+  <li>Tieni premuto il <strong>pulsante</strong> del relè finché il LED non lampeggia. Così entra in modalità abbinamento.</li>
+  <li>ZigDash mostra <strong>Pronto</strong> con il nuovo dispositivo. Rinominalo <strong>Cancello</strong>.</li>
+</ol>
+<p>Accendilo e spegnilo qualche volta e ascolta il clic del relè.</p>
+
+<h2 id="spider">2. Togli lo Spider</h2>
+<div class="tip"><strong>Prima togli la corrente al cancello dall'interruttore automatico.</strong> Nella scatola del cancello ci sono 230V. Se non ti senti a tuo agio a lavorare sulla rete elettrica, fai fare i passi 2 e 3 a un elettricista. Non toccare i sensori di sicurezza del cancello (fotocellule) né i finecorsa.</div>
+<ol>
+  <li>Trova i due fili che vanno dall'uscita relè dello Spider (<strong>COM1</strong> e <strong>N.O.1</strong>) all'ingresso di apertura della centralina del cancello. Contrassegnali.</li>
+  <li>Svita la morsettiera dello Spider e scollega l'alimentazione dello Spider.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="La morsettiera verde dello Spider con i fili marrone, blu e nero" loading="lazy" width="675" height="900"><figcaption>La morsettiera dello Spider, staccata. La coppia marrone e blu va all'ingresso di apertura del cancello.</figcaption></figure>
+
+<h2 id="wire">3. Collega il relè</h2>
+<ol>
+  <li><strong>Uscita:</strong> i due fili dell'ingresso di apertura vanno ai morsetti <strong>COM</strong> e <strong>NO</strong> del relè. Lascia NC libero. Su un contatto pulito l'ordine non conta.</li>
+  <li><strong>Alimentazione:</strong> la versione AC 85–250V si collega direttamente alla rete, come un caricabatterie del telefono: due fili, fase e neutro, dall'alimentazione a 230V del cancello.</li>
+  <li>Chiudi la custodia del relè, mettilo dove resta all'asciutto e riaccendi l'interruttore automatico.</li>
+</ol>
+<div class="tip"><strong>Segnale:</strong> il cancello di solito è il punto più lontano dall'hub. In ZigDash, apri la pagina del dispositivo del relè e controlla il segnale. Se è debole, un dispositivo Zigbee alimentato dalla rete tra la casa e il cancello (una presa smart, per esempio) estende la rete.</div>
+
+<h2 id="tile">4. Un riquadro Cancello in ZigDash</h2>
+<ol>
+  <li>Sulla tua dashboard, tocca <strong>Aggiungi da un dispositivo</strong> e scegli <strong>Cancello</strong>.</li>
+  <li>Tocca il riquadro: il relè si chiude e il cancello inizia a muoversi, proprio come con il telecomando.</li>
+  <li>L'ingresso di apertura del cancello si aspetta la pressione di un pulsante, quindi un contatto che resta chiuso può valere come una pressione lunga. Controlla cosa fa il tuo cancello, e spegni di nuovo il riquadro se serve.</li>
+  <li><strong>Da ovunque:</strong> con ZigDash Pro, attiva il controllo remoto e lo stesso riquadro funziona anche fuori casa, senza aprire porte sul router e senza canone mensile. Copre fino a cinque telefoni; <strong>Condividi con un altro telefono</strong> aggiunge i telefoni della famiglia con un solo codice QR.</li>
+</ol>
+
+<h2 id="trade">A cosa rinunci</h2>
+<p>Per essere onesti con lo Spider, fa cose che un relè Zigbee non fa:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Relè Zigbee + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Costo</th><td>₪300 l'anno (il mio piano)</td><td>Circa ₪37 una volta sola; il controllo remoto è un acquisto una tantum di ZigDash Pro</td></tr>
+    <tr><th>Connessione</th><td>La sua SIM 4G: funziona anche quando la casa non ha internet</td><td>Il tuo hub Zigbee a casa; fuori casa serve l'internet di casa</td></tr>
+    <tr><th>Chi può aprire</th><td>Utenti e ospiti gestiti nell'app PalGate, e apertura con una telefonata</td><td>I telefoni con cui condividi la casa (fino a cinque da remoto)</td></tr>
+    <tr><th>Cloud</th><td>Il servizio di PalGate</td><td>Nessuno a casa; da remoto passa per il server relay di ZigDash, con crittografia end-to-end</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Per una casa privata dove la famiglia apre un solo cancello, il relè fa tutto quello che mi serviva. Per un condominio con molti residenti e visitatori, un servizio gestito come PalGate ha ancora senso.</p>
+
+<div class="tip">PalGate è un marchio del suo proprietario. ZigDash non è affiliato a PalGate né a PAL Electronics Systems. I prezzi sono quelli che ho pagato a novembre 2026.</div>
+
+<div class="tip"><strong>L'hai fatto anche tu?</strong> Raccontami com'è andata, o cosa c'era di diverso nel tuo cancello: <a href="mailto:support@zigdash.app">support@zigdash.app</a> o <a href="https://t.me/zigdash_app">la comunità</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Scarica ZigDash</a><a class="btn" href="../../hubs/">Scegli un hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Codice sorgente</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Informativa sulla privacy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

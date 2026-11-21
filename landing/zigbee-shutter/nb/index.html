@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart rulleskodde med SONOFF MINI-ZBRBS og Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="En SONOFF MINI-ZBRBS Zigbee-modul bak bryteren til rulleskodden, koblet slik at den gamle bryteren beholdes. Deler, kobling, paring med Zigbee2MQTT, kalibrering og en rulleskodde-flis i ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Smart rulleskodde med SONOFF MINI-ZBRBS og Zigbee2MQTT">
+<meta property="og:description" content="En liten Zigbee-modul bak bryteren til rulleskodden: veggbryteren virker fortsatt, og rulleskodden åpnes fra ZigDash. Deler, kobling, paring og kalibrering.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/nb/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Oppsett</a>
+    <a href="../../hubs/">Huber</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hjelp</a>
+    <a href="https://t.me/zigdash_app">Fellesskap</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Slik gjorde jeg rulleskodden min smart med en SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, utvikleren av ZigDash · 21. november 2026</p>
+<p class="byline">Også på: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Rulleskodden på kontoret mitt har en elektrisk motor og en vanlig opp/ned-bryter på veggen. Jeg satte en SONOFF MINI-ZBRBS, en liten Zigbee-modul for rulleskodder, inn i veggboksen bak den bryteren. Veggbryteren virker akkurat som før, og nå åpnes og lukkes rulleskodden også fra en flis i ZigDash, hjemme og hvor som helst.</p>
+
+<div class="toc"><strong>På denne siden</strong>
+<ul>
+  <li><a href="#how">Slik virker det</a></li>
+  <li><a href="#need">Dette trenger du</a></li>
+  <li><a href="#wire">1. Koble til modulen</a></li>
+  <li><a href="#pair">2. Par den med ZigDash</a></li>
+  <li><a href="#mode">3. Fortell den hva slags bryter du har</a></li>
+  <li><a href="#calibrate">4. Kalibrer</a></li>
+  <li><a href="#tile">5. En rulleskodde-flis i ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Slik virker det</h2>
+<p>En rulleskoddemotor har to strømledere: den ene kjører den opp, den andre ned. Veggbryteren sender fase til en av dem. MINI-ZBRBS sitter imellom: motorens to ledere går til utgangene (<strong>Lout1</strong> og <strong>Lout2</strong>), og den gamle bryteren går til inngangene (<strong>S1</strong> og <strong>S2</strong>). Når du trykker på bryteren, styrer modulen motoren. Når ZigDash ber om det over Zigbee, styrer den motoren også.</p>
+<p>Modulen vet også hvor rulleskodden står, så du kan sende den til 50% i stedet for bare helt opp eller helt ned. Og siden den går på nettstrøm, fungerer den som en Zigbee-ruter som gjør nettverket ditt sterkere.</p>
+
+<h2 id="need">Dette trenger du</h2>
+<ul>
+  <li><strong>En SONOFF MINI-ZBRBS</strong> (Zigbee-bryter for rulleskodder). Zigbee2MQTT støtter den som modell <code>MINI-ZBRBS</code>.</li>
+  <li><strong>En rulleskoddemotor med egne endebrytere</strong>: den vanlige rørmotoren med fire ledere (nøytral, opp, ned, jord) som stopper av seg selv øverst og nederst. SONOFF oppgir at modulen tåler motorer opptil <strong>1&nbsp;A</strong>, og den stopper motoren av seg selv etter 2 minutter i samme retning.</li>
+  <li><strong>En nøytralleder i bryterboksen.</strong> Modulen trenger nøytral for å få strøm selv.</li>
+  <li><strong>Plass i boksen</strong> bak bryteren. SONOFF anbefaler en boks som er minst 60&nbsp;mm dyp.</li>
+  <li><strong>Hurtigkoblingsklemmer med spak</strong> (jeg brukte en WAGO 221) og noen korte biter ledning.</li>
+  <li><strong>En Zigbee2MQTT-hub</strong> hjemme. Har du ikke en ennå, se <a href="../../hubs/">Huber</a>.</li>
+  <li><strong>ZigDash</strong> på telefonen (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Å styre rulleskodden hjemme er gratis. Å styre den hvor som helst fra bruker fjernstyringen i ZigDash Pro: et engangskjøp, uten abonnement.</li>
+</ul>
+
+<div class="tip"><strong>Slå av strømmen på sikringen før du åpner bryteren.</strong> Det er 230V i boksen. Hvis du ikke er komfortabel med å jobbe med nettspenning, la en elektriker gjøre koblingen. SONOFF anbefaler en 1&nbsp;A automatsikring (MCB eller RCBO) foran modulen.</div>
+
+<h2 id="wire">1. Koble til modulen</h2>
+<p>Modulen har seks tilkoblingsklemmer, merket på den: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (opp) og <strong>S2</strong> (ned). Den har ingen jordklemme. Slik koblet jeg min:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Klemme</th><th>Går til</th><th>I boksen min</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Nøytral</td><td>De blå nøytrallederne, samlet i en WAGO 221, med en kort ledning derfra til N (se merknaden under om fargen)</td></tr>
+    <tr><th>L</th><td>Fase</td><td>Fasetilførselen i boksen</td></tr>
+    <tr><th>Lout1</th><td>Motor: opp (SONOFF kaller det forover)</td><td>Motorens svarte leder</td></tr>
+    <tr><th>Lout2</th><td>Motor: ned (bakover)</td><td>Motorens brune leder</td></tr>
+    <tr><th>S1</th><td>Bryterens opp-utgang</td><td>En av den gamle bryterens utganger</td></tr>
+    <tr><th>S2</th><td>Bryterens ned-utgang</td><td>Den gamle bryterens andre utgang</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Den gamle bryteren blir værende.</strong> Fellesklemmen får fase, som før. De to utgangene går ikke lenger til motoren: de går til S1 og S2, og forteller modulen hvilken vei den skal kjøre. <strong>S1 og S2 er innganger for nettspenning</strong>, ikke lavspenning: forsyn bryterens fellesklemme fra samme fase, på samme sikring, som L.</p>
+<p><strong>Jord:</strong> la motorens gul-grønne jordleder være koblet til boksens jord, slik den var. Den går ikke til modulen.</p>
+<p><strong>Opp og ned:</strong> lederfargene er forskjellige i hvert hus. Før du kobler fra bryteren, noter hvilken motorleder opp-utgangen forsynte, og merk den: den skal til Lout1. Hvis du bytter dem om, viser trinn 4 hvordan du retter det.</p>
+<div class="tip"><strong>Bruk en blå (eller grå) ledning til nøytralbroen.</strong> Jeg hadde bare rød for hånden, så på bildene mine er den korte ledningen fra WAGO-en til N rød, med en blå endehylse i modulenden. Rød betyr normalt fase, og den som åpner denne boksen neste gang, skal ikke måtte gjette. Bruker du en annen farge, merk den med blå tape i begge ender.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="To blå nøytralledere og en rød ledning samlet i en oransje WAGO 221-klemme med spak; den røde ledningen går til N-klemmen på SONOFF-modulen" loading="lazy" width="675" height="900"><figcaption>Nøytral: boksens blå nøytralledere i en WAGO 221, og en kort rød ledning derfra til modulens N.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="Baksiden av den gamle rulleskoddebryteren med tre røde ledninger i klemmene" loading="lazy" width="810" height="690"><figcaption>Den gamle rulleskoddebryteren, beholdt: fase inn på fellesklemmen, og opp- og ned-utgangene går nå til S1 og S2. Hvilken klemme som er fellesklemmen varierer fra bryter til bryter; sjekk din før du kobler den fra.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="Den åpne veggboksen med bryteren trukket ut og SONOFF MINI-ZBRBS tilkoblet: to røde ledninger fra bryteren til S1 og S2, motorens brune og svarte ledere til Lout2 og Lout1, fase til L og nøytral til N" loading="lazy" width="640" height="1124"><figcaption>Alt koblet, før det går tilbake i veggen. Fra venstre på modulen: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Sjekk at alle skrueklemmene er godt strammet. La modulen ligge utenfor boksen inntil videre, med klemmene vendt bort fra deg: du skal pare den i neste trinn.</p>
+
+<h2 id="pair">2. Par den med ZigDash</h2>
+<p>Paring krever at modulen har strøm og at knappen trykkes inn, så det er det ene øyeblikket du jobber nær en boks med spenning på. Trykk bare på knappen, med et verktøy av plast (baksiden av en penn), og ikke rør noe annet. La modulen ligge på noe som ikke leder strøm, uten å berøre bryterens metallramme.</p>
+<ol>
+  <li>Åpne <strong>Enheter</strong> i ZigDash og trykk på <strong>Start paring</strong>.</li>
+  <li>Slå på sikringen. Hold inne knappen på modulen i omtrent <strong>5 sekunder</strong>, til den blå lampen blinker sakte. Den blir i paringsmodus i opptil 3 minutter.</li>
+  <li>ZigDash viser den nye enheten. Gi den et navn du kjenner igjen, for eksempel <strong>Rulleskodde kontor</strong>.</li>
+  <li>Slå av sikringen. Brett ledningene inn, legg modulen bak bryteren, lukk boksen og slå sikringen på igjen. Alt annet gjøres fra telefonen og nettsiden til Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. Fortell den hva slags bryter du har</h2>
+<p>Modulen må vite hvordan veggbryteren din oppfører seg:</p>
+<ul>
+  <li><strong>En vippebryter som blir stående</strong> i opp, av eller ned (som min): modus <code>edge</code>.</li>
+  <li><strong>En trykknapp</strong> som fjærer tilbake når du slipper: modus <code>pulse</code>.</li>
+</ul>
+<p>Det enkleste er nettsiden til Zigbee2MQTT: åpne enheten, gå til fanen <strong>Exposes</strong> og sett <code>external_trigger_mode</code> til <code>edge</code> eller <code>pulse</code>. (Knappen på modulen kan også gjøre det: tre raske trykk går videre til neste brytertype, og lampen blinker tre ganger; du må kanskje gjenta det. Det betyr å åpne boksen igjen, så jeg brukte Zigbee2MQTT.)</p>
+<p>Sett så veggbryteren på opp, av og ned: rulleskodden skal bevege seg og stoppe som den alltid har gjort. Gjør den ikke det, er modusen feil; velg den andre.</p>
+
+<h2 id="calibrate">4. Kalibrer</h2>
+<p>Modulen lærer hvor lang tid rulleskodden bruker helt opp og helt ned. Uten det kan den åpne og lukke, men den kan ikke gå til en posisjon som 50%.</p>
+<ol>
+  <li>På nettsiden til Zigbee2MQTT, i fanen <strong>Exposes</strong> for enheten, setter du <code>motor_travel_calibration_action</code> til <code>start_automatic</code>.</li>
+  <li>La den gå: rulleskodden kjører helt den ene veien, så den andre. Ikke rør bryteren mens den holder på. Når den er ferdig, viser <code>motor_travel_calibration_status</code> verdien <code>Calibrated</code>.</li>
+</ol>
+<p>(På selve modulen starter du den samme kalibreringen ved å holde inne knappen i mer enn 10 sekunder, til lampen pulserer.) Hvis den automatiske kalibreringen ikke blir ferdig (for eksempel med en svak motor), beskriver både SONOFF og Zigbee2MQTT en manuell kalibrering: da markerer du selv helt åpen og helt lukket.</p>
+<p><strong>Opp og ned byttet om?</strong> Slå av sikringen, bytt om ledningene på <strong>Lout1</strong> og <strong>Lout2</strong>, og kalibrer på nytt. Zigbee2MQTT-valget <code>invert_cover</code> snur bare posisjonen den rapporterer; det endrer ikke hvilken vei motoren går.</p>
+
+<h2 id="tile">5. En rulleskodde-flis i ZigDash</h2>
+<ol>
+  <li>På dashbordet trykker du på <strong>Legg til fra en enhet</strong> og velger rulleskodden.</li>
+  <li>Flisen har knappene <strong>Åpne</strong>, <strong>Stopp</strong> og <strong>Lukk</strong>, og en rad med forhåndsvalgte posisjoner (0, 25, 50, 100 som standard). Du kan slå på en posisjonsregulator i flisens innstillinger.</li>
+  <li><strong>Hvor som helst fra:</strong> med ZigDash Pro slår du på fjernstyring, og den samme flisen virker borte fra hjemmet, uten å åpne noen port i ruteren og uten månedsavgift.</li>
+</ol>
+<p>Veggbryteren og appen virker side om side: bryteren er der fortsatt for alle som ikke har appen, og flisen fortsetter å virke uansett om rulleskodden sist ble flyttet for hånd eller fra telefonen.</p>
+
+<div class="tip">SONOFF er et varemerke som tilhører sin eier. ZigDash er ikke tilknyttet SONOFF eller ITEAD. Følg bruksanvisningen som følger med modulen, og de elektriske forskriftene der du bor.</div>
+
+<div class="tip"><strong>Har du gjort dette også?</strong> Fortell meg hvordan det gikk, eller hva som var annerledes i boksen din: <a href="mailto:support@zigdash.app">support@zigdash.app</a> eller <a href="https://t.me/zigdash_app">fellesskapet</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Last ned ZigDash</a><a class="btn" href="../../hubs/">Velg en hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Kildekode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Personvernerklæring</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoe ik mijn PalGate-abonnement verving door een Zigbee-relais van $10 · ZigDash</title>
+<meta name="description" content="Mijn poort ging open via een PalGate Spider-50 voor ₪300 per jaar. Ik heb die vervangen door een Zigbee-relais met potentiaalvrij contact van eenmalig $10, en nu open ik de poort vanuit ZigDash, thuis en overal. Onderdelen, bedrading en koppelen.">
+<link rel="canonical" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Hoe ik mijn PalGate-abonnement verving door een Zigbee-relais van $10">
+<meta property="og:description" content="₪300 per jaar voor een poortopener, of eenmalig $10. Onderdelen, bedrading en koppelen, met de ZigDash-app.">
+<meta property="og:url" content="https://zigdash.app/gate/nl/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Installatie</a>
+    <a href="../../hubs/">Hubs</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hulp</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Hoe ik mijn PalGate-abonnement verving door een Zigbee-relais van $10</h1>
+<p class="byline">Gilad Tamam, de ontwikkelaar van ZigDash · 18 november 2026</p>
+<p class="byline">Ook in het: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">De poort van mijn oprit ging open vanaf de telefoon via een PalGate Spider-50: een 4G-kastje met een eigen simkaart en een abonnement van ₪300 per jaar. Ik heb het eruit gehaald en er een Zigbee-relais in gezet dat $10 (ongeveer ₪37) kostte, eenmalig. Nu open ik de poort met een tegel in ZigDash, thuis en overal.</p>
+
+<p class="cost"><strong>₪300 per jaar</strong> voor het abonnement, of <strong>ongeveer ₪37 eenmalig</strong> voor het relais. Het relais had zich in ongeveer zes weken terugverdiend.</p>
+
+<div class="toc"><strong>Op deze pagina</strong>
+<ul>
+  <li><a href="#how">Hoe een telefoon een poort opent</a></li>
+  <li><a href="#need">Wat je nodig hebt</a></li>
+  <li><a href="#pair">1. Koppel het relais met ZigDash</a></li>
+  <li><a href="#spider">2. Haal de Spider eruit</a></li>
+  <li><a href="#wire">3. Sluit het relais aan</a></li>
+  <li><a href="#tile">4. Een tegel Poort in ZigDash</a></li>
+  <li><a href="#trade">Wat je opgeeft</a></li>
+</ul></div>
+
+<h2 id="how">Hoe een telefoon een poort opent</h2>
+<p>Een poortbesturing heeft een ingang voor <strong>openen</strong> (of start): twee aansluitklemmen die de poort openen wanneer ze met elkaar worden verbonden, precies zoals de knop op een afstandsbediening van de poort. De Spider is een relais met een simkaart. Wanneer de PalGate-app of een telefoontje erom vraagt, verbindt hij die twee klemmen even.</p>
+<p>Een Zigbee-relais doet hetzelfde werk. Het enige verschil is wie het opdracht geeft om te sluiten: je eigen Zigbee-hub thuis, in plaats van een mobiele dienst waarvoor je elk jaar betaalt.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="Het PalGate Spider-50-kastje in een hand, naast de poortbesturing" loading="lazy" width="675" height="900"><figcaption>De PalGate Spider-50 die ik eruit heb gehaald.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="De printplaat van de poortbesturing met de klemmenstrook en draden" loading="lazy" width="675" height="900"><figcaption>De poortbesturing. Twee van deze draden vormen de ingang voor openen.</figcaption></figure>
+</div>
+
+<h2 id="need">Wat je nodig hebt</h2>
+<ul>
+  <li><strong>Een Zigbee-relais met potentiaalvrij contact.</strong> Het mijne is een "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" van AliExpress, ongeveer $10. Het wordt verkocht in een wifi- en een Zigbee-versie: kies <strong>Zigbee</strong> (op de print zit een ZT3L-module). Het wordt ook verkocht voor verschillende voedingsspanningen; ik nam de versie voor <strong>AC 85–250V</strong>.</li>
+  <li><strong>Potentiaalvrij contact is het belangrijkste.</strong> Een potentiaalvrij (droog) contact is een gewone schakelaar zonder eigen spanning: het verbindt alleen COM met NO, precies zoals de knop van een afstandsbediening. Een relais dat spanning op zijn klemmen zet (het soort dat bedoeld is om een lamp te schakelen) kan de ingang van de poortbesturing beschadigen. Zoek naar "dry contact" en klemmen met de markering <strong>COM</strong>, <strong>NO</strong> en <strong>NC</strong>.</li>
+  <li><strong>Een Zigbee2MQTT-hub thuis</strong> die tot de poort reikt. Ik had er al een (een SMLIGHT SMHUB) voor de rest van het huis. Heb je er geen, kijk dan bij <a href="../../hubs/">Hubs</a>.</li>
+  <li><strong>ZigDash</strong> op je telefoon (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). De poort thuis openen is gratis. Om hem overal te openen gebruik je de bediening op afstand van ZigDash Pro: een eenmalige aankoop, geen abonnement.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="De print van het Zigbee-relais: voedingsklemmen links, de ZT3L-Zigbee-module in het midden, het relais en zijn COM/NO/NC-klemmen rechts" loading="lazy" width="675" height="900"><figcaption>Het Zigbee-relais zonder behuizing: voeding links, de ZT3L-Zigbee-module, de koppelknop en de potentiaalvrije klemmen van het relais rechts.</figcaption></figure>
+
+<h2 id="pair">1. Koppel het relais met ZigDash</h2>
+<p>Koppel het eerst thuis, op tafel, voordat het in de poortkast gaat.</p>
+<ol>
+  <li>Zet spanning op het relais.</li>
+  <li>Open in ZigDash <strong>Apparaten</strong> en tik op <strong>Koppelen starten</strong>.</li>
+  <li>Houd de <strong>knop</strong> van het relais ingedrukt tot de led knippert. Daarmee gaat het in koppelmodus.</li>
+  <li>ZigDash toont <strong>Klaar</strong> met het nieuwe apparaat. Hernoem het naar <strong>Poort</strong>.</li>
+</ol>
+<p>Zet het een paar keer aan en uit en luister naar de klik van het relais.</p>
+
+<h2 id="spider">2. Haal de Spider eruit</h2>
+<div class="tip"><strong>Schakel eerst de stroom van de poort uit bij de groepenkast.</strong> In de poortkast zit 230V. Werk je niet graag met netspanning, laat stap 2 en 3 dan door een elektricien doen. Kom niet aan de veiligheidssensoren van de poort (fotocellen) of de eindschakelaars.</div>
+<ol>
+  <li>Zoek de twee draden die van de relaisuitgang van de Spider (<strong>COM1</strong> en <strong>N.O.1</strong>) naar de ingang voor openen van de poortbesturing lopen. Markeer ze.</li>
+  <li>Schroef het klemmenblok van de Spider los en koppel de voeding van de Spider los.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Het groene klemmenblok van de Spider met de bruine, blauwe en zwarte draden" loading="lazy" width="675" height="900"><figcaption>Het klemmenblok van de Spider, losgehaald. Het bruine en blauwe paar gaat naar de ingang voor openen van de poort.</figcaption></figure>
+
+<h2 id="wire">3. Sluit het relais aan</h2>
+<ol>
+  <li><strong>Uitgang:</strong> de twee draden van de ingang voor openen gaan naar <strong>COM</strong> en <strong>NO</strong> van het relais. Laat NC leeg. Bij een potentiaalvrij contact maakt de volgorde niet uit.</li>
+  <li><strong>Voeding:</strong> de versie voor AC 85–250V gaat rechtstreeks op netspanning, zoals een telefoonlader: twee draden, fase en nul, van de 230V-voeding van de poort.</li>
+  <li>Sluit de behuizing van het relais, plaats het waar het droog blijft en zet de groep weer aan.</li>
+</ol>
+<div class="tip"><strong>Signaal:</strong> de poort is meestal het verste punt vanaf de hub. Open in ZigDash de apparaatpagina van het relais en controleer het signaal. Is het zwak, dan breidt een Zigbee-apparaat op netstroom tussen het huis en de poort (bijvoorbeeld een slimme stekker) het netwerk uit.</div>
+
+<h2 id="tile">4. Een tegel Poort in ZigDash</h2>
+<ol>
+  <li>Tik op je dashboard op <strong>Toevoegen vanaf een apparaat</strong> en kies <strong>Poort</strong>.</li>
+  <li>Tik op de tegel: het relais sluit en de poort begint te bewegen, net als met de afstandsbediening.</li>
+  <li>De ingang voor openen van de poort verwacht een druk op een knop, dus een contact dat gesloten blijft kan als lang indrukken gelden. Kijk wat jouw poort doet, en zet de tegel weer uit als dat nodig is.</li>
+  <li><strong>Overal vandaan:</strong> met ZigDash Pro zet je de bediening op afstand aan en werkt dezelfde tegel ook buitenshuis, zonder port forwarding op je router en zonder maandelijkse kosten. Het werkt voor maximaal vijf telefoons; <strong>Delen met een andere telefoon</strong> voegt de telefoons van het gezin toe met één QR-code.</li>
+</ol>
+
+<h2 id="trade">Wat je opgeeft</h2>
+<p>Eerlijk is eerlijk: de Spider kan dingen die een Zigbee-relais niet kan:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee-relais + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Kosten</th><td>₪300 per jaar (mijn abonnement)</td><td>Ongeveer ₪37 eenmalig; bediening op afstand is een eenmalige aankoop van ZigDash Pro</td></tr>
+    <tr><th>Verbinding</th><td>Eigen 4G-simkaart: werkt ook als het huis geen internet heeft</td><td>Je Zigbee-hub thuis; buitenshuis is het internet van thuis nodig</td></tr>
+    <tr><th>Wie kan openen</th><td>Gebruikers en gasten die in de PalGate-app worden beheerd, en openen via een telefoontje</td><td>Telefoons waarmee je het huis deelt (op afstand maximaal vijf)</td></tr>
+    <tr><th>Cloud</th><td>De dienst van PalGate</td><td>Geen thuis; op afstand gaat het via de relayserver van ZigDash, end-to-end versleuteld</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Voor een vrijstaand huis waar het gezin één poort opent, doet het relais alles wat ik nodig had. Voor een gebouw met veel bewoners en bezoekers is een beheerde dienst zoals PalGate nog steeds zinvol.</p>
+
+<div class="tip">PalGate is een handelsmerk van de eigenaar ervan. ZigDash is niet verbonden aan PalGate of PAL Electronics Systems. De prijzen zijn wat ik in november 2026 heb betaald.</div>
+
+<div class="tip"><strong>Heb jij dit ook gedaan?</strong> Laat me weten hoe het ging, of wat er anders was aan jouw poort: <a href="mailto:support@zigdash.app">support@zigdash.app</a> of <a href="https://t.me/zigdash_app">de community</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">ZigDash downloaden</a><a class="btn" href="../../hubs/">Kies een hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Broncode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacybeleid</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

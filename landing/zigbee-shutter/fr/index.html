@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volet roulant connecté avec un SONOFF MINI-ZBRBS et Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Un module Zigbee SONOFF MINI-ZBRBS derrière l'interrupteur du volet, câblé en gardant l'ancien interrupteur. Matériel, câblage, appairage avec Zigbee2MQTT, calibrage et une tuile de volet dans ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Volet roulant connecté avec un SONOFF MINI-ZBRBS et Zigbee2MQTT">
+<meta property="og:description" content="Un petit module Zigbee derrière l'interrupteur du volet : l'interrupteur mural fonctionne toujours, et le volet s'ouvre depuis ZigDash. Matériel, câblage, appairage et calibrage.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/fr/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Installation</a>
+    <a href="../../hubs/">Passerelles</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Aide</a>
+    <a href="https://t.me/zigdash_app">Communauté</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Comment j'ai rendu mon volet roulant intelligent avec un SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, le développeur de ZigDash · 21 novembre 2026</p>
+<p class="byline">Aussi en : <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Le volet roulant de mon bureau a un moteur électrique et un interrupteur montée/descente classique au mur. J'ai mis un SONOFF MINI-ZBRBS, un petit module Zigbee pour volets, dans la boîte d'encastrement derrière cet interrupteur. L'interrupteur mural fonctionne exactement comme avant, et maintenant le volet s'ouvre et se ferme aussi depuis une tuile dans ZigDash, à la maison et de n'importe où.</p>
+
+<div class="toc"><strong>Sur cette page</strong>
+<ul>
+  <li><a href="#how">Comment ça marche</a></li>
+  <li><a href="#need">Ce qu'il vous faut</a></li>
+  <li><a href="#wire">1. Câbler le module</a></li>
+  <li><a href="#pair">2. L'appairer avec ZigDash</a></li>
+  <li><a href="#mode">3. Lui dire quel type d'interrupteur vous avez</a></li>
+  <li><a href="#calibrate">4. Calibrer</a></li>
+  <li><a href="#tile">5. Une tuile de volet dans ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Comment ça marche</h2>
+<p>Un moteur de volet a deux fils d'alimentation : l'un le fait monter, l'autre le fait descendre. L'interrupteur mural envoie la phase sur l'un des deux. Le MINI-ZBRBS se place entre les deux : les deux fils du moteur vont sur ses sorties (<strong>Lout1</strong> et <strong>Lout2</strong>), et l'ancien interrupteur sur ses entrées (<strong>S1</strong> et <strong>S2</strong>). Quand vous appuyez sur l'interrupteur, le module commande le moteur. Quand ZigDash le demande par Zigbee, il commande aussi le moteur.</p>
+<p>Le module sait aussi où se trouve le volet, vous pouvez donc l'envoyer à 50 % au lieu de seulement tout en haut ou tout en bas. Et comme il est alimenté sur le secteur, il fait office de routeur Zigbee qui renforce votre réseau.</p>
+
+<h2 id="need">Ce qu'il vous faut</h2>
+<ul>
+  <li><strong>Un SONOFF MINI-ZBRBS</strong> (interrupteur Zigbee pour volet roulant). Zigbee2MQTT le prend en charge comme modèle <code>MINI-ZBRBS</code>.</li>
+  <li><strong>Un moteur de volet avec ses propres fins de course</strong> : le moteur tubulaire habituel à quatre fils (neutre, montée, descente, terre) qui s'arrête tout seul en haut et en bas. SONOFF annonce le module pour des moteurs jusqu'à <strong>1&nbsp;A</strong>, et il arrête de lui-même le moteur après 2 minutes dans un même sens.</li>
+  <li><strong>Un fil de neutre dans la boîte de l'interrupteur.</strong> Le module a besoin du neutre pour s'alimenter.</li>
+  <li><strong>De la place dans la boîte</strong> derrière l'interrupteur. SONOFF recommande une boîte d'au moins 60&nbsp;mm de profondeur.</li>
+  <li><strong>Des bornes à levier</strong> (j'ai utilisé une WAGO 221) et quelques petits bouts de fil.</li>
+  <li><strong>Une passerelle Zigbee2MQTT</strong> à la maison. Si vous n'en avez pas encore, voyez <a href="../../hubs/">Passerelles</a>.</li>
+  <li><strong>ZigDash</strong> sur votre téléphone (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Commander le volet à la maison est gratuit. Le commander de n'importe où passe par le contrôle à distance de ZigDash Pro : un achat unique, sans abonnement.</li>
+</ul>
+
+<div class="tip"><strong>Coupez le courant au disjoncteur avant d'ouvrir l'interrupteur.</strong> La boîte est sous 230V. Si vous n'êtes pas à l'aise avec le secteur, faites faire le câblage par un électricien. SONOFF recommande un disjoncteur de 1&nbsp;A (MCB ou RCBO) en amont du module.</div>
+
+<h2 id="wire">1. Câbler le module</h2>
+<p>Le module a six bornes, marquées dessus : <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (montée) et <strong>S2</strong> (descente). Il n'a pas de borne de terre. Voici comment j'ai câblé le mien :</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Borne</th><th>Va vers</th><th>Dans ma boîte</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Neutre</td><td>Les fils de neutre bleus, réunis dans une WAGO 221, avec un petit fil de là jusqu'à N (voir la remarque plus bas sur sa couleur)</td></tr>
+    <tr><th>L</th><td>Phase</td><td>La phase qui alimente la boîte</td></tr>
+    <tr><th>Lout1</th><td>Moteur : montée (SONOFF l'appelle « forward »)</td><td>Le fil noir du moteur</td></tr>
+    <tr><th>Lout2</th><td>Moteur : descente (« reverse »)</td><td>Le fil marron du moteur</td></tr>
+    <tr><th>S1</th><td>La sortie montée de l'interrupteur</td><td>L'une des sorties de l'ancien interrupteur</td></tr>
+    <tr><th>S2</th><td>La sortie descente de l'interrupteur</td><td>L'autre sortie de l'ancien interrupteur</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>L'ancien interrupteur reste.</strong> Sa borne commune reçoit la phase, comme avant. Ses deux sorties ne vont plus au moteur : elles vont sur S1 et S2, et indiquent au module dans quel sens entraîner le moteur. <strong>S1 et S2 sont des entrées secteur</strong>, pas de la basse tension : alimentez la borne commune de l'interrupteur depuis la même phase, sur le même disjoncteur, que L.</p>
+<p><strong>Terre :</strong> laissez la terre vert-jaune du moteur reliée à la terre de la boîte, comme avant. Elle ne va pas au module.</p>
+<p><strong>Montée et descente :</strong> les couleurs des fils changent d'une maison à l'autre. Avant de débrancher l'interrupteur, notez quel fil du moteur était alimenté par sa sortie montée, et marquez-le : c'est celui-là qui va sur Lout1. Si vous les inversez, l'étape 4 explique comment corriger.</p>
+<div class="tip"><strong>Utilisez un fil bleu (ou gris) pour le pont du neutre.</strong> Je n'avais que du rouge sous la main, donc sur mes photos le petit fil entre la WAGO et N est rouge, avec un embout bleu côté module. Le rouge signifie normalement la phase, et la prochaine personne qui ouvrira cette boîte ne devrait pas avoir à deviner. Si vous utilisez une autre couleur, marquez-la avec du ruban adhésif bleu aux deux extrémités.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Deux fils de neutre bleus et un fil rouge réunis dans une borne à levier WAGO 221 orange ; le fil rouge va à la borne N du module SONOFF" loading="lazy" width="675" height="900"><figcaption>Neutre : les neutres bleus de la boîte dans une WAGO 221, et un petit fil rouge de là jusqu'au N du module.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="L'arrière de l'ancien interrupteur de volet avec trois fils rouges dans ses bornes" loading="lazy" width="810" height="690"><figcaption>L'ancien interrupteur de volet, conservé : la phase arrive sur sa borne commune, et ses sorties montée et descente vont maintenant sur S1 et S2. La borne commune n'est pas la même d'un interrupteur à l'autre ; vérifiez la vôtre avant de le débrancher.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="La boîte murale ouverte avec l'interrupteur sorti et le SONOFF MINI-ZBRBS câblé : deux fils rouges de l'interrupteur vers S1 et S2, les fils marron et noir du moteur vers Lout2 et Lout1, la phase sur L et le neutre sur N" loading="lazy" width="640" height="1124"><figcaption>Tout est câblé, avant de remettre l'ensemble dans le mur. De gauche à droite sur le module : S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Vérifiez que chaque borne à vis est bien serrée. Laissez le module hors de la boîte pour l'instant, bornes tournées à l'opposé de vous : vous allez l'appairer à l'étape suivante.</p>
+
+<h2 id="pair">2. L'appairer avec ZigDash</h2>
+<p>L'appairage demande que le module soit alimenté et que l'on appuie sur son bouton : c'est donc le seul moment où vous travaillez près d'une boîte sous tension. Appuyez uniquement sur le bouton, avec un outil en plastique (l'arrière d'un stylo), et ne touchez à rien d'autre. Posez le module sur quelque chose qui ne conduit pas, sans contact avec le cadre métallique de l'interrupteur.</p>
+<ol>
+  <li>Dans ZigDash, ouvrez <strong>Appareils</strong> et touchez <strong>Lancer l'appairage</strong>.</li>
+  <li>Remettez le disjoncteur. Maintenez le bouton du module enfoncé environ <strong>5 secondes</strong>, jusqu'à ce que sa LED bleue clignote lentement. Il reste en mode appairage jusqu'à 3 minutes.</li>
+  <li>ZigDash affiche le nouvel appareil. Donnez-lui un nom que vous reconnaîtrez, par exemple <strong>Volet bureau</strong>.</li>
+  <li>Coupez le disjoncteur. Rangez les fils, placez le module derrière l'interrupteur, refermez la boîte et remettez le disjoncteur. Tout le reste se fait depuis votre téléphone et la page web de Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. Lui dire quel type d'interrupteur vous avez</h2>
+<p>Le module doit savoir comment se comporte votre interrupteur mural :</p>
+<ul>
+  <li><strong>Un interrupteur à bascule qui reste</strong> en position montée, arrêt ou descente (comme le mien) : mode <code>edge</code>.</li>
+  <li><strong>Un bouton-poussoir</strong> qui revient quand on le relâche : mode <code>pulse</code>.</li>
+</ul>
+<p>Le plus simple est la page web de Zigbee2MQTT : ouvrez l'appareil, allez dans son onglet <strong>Exposes</strong> et réglez <code>external_trigger_mode</code> sur <code>edge</code> ou <code>pulse</code>. (Le bouton du module peut aussi le faire : trois appuis rapides passent au type d'interrupteur suivant et la LED clignote trois fois ; il faudra peut-être recommencer. Cela veut dire rouvrir la boîte, donc j'ai utilisé Zigbee2MQTT.)</p>
+<p>Ensuite, mettez l'interrupteur mural sur montée, arrêt et descente : le volet doit bouger et s'arrêter comme il l'a toujours fait. Sinon, le mode n'est pas le bon ; choisissez l'autre.</p>
+
+<h2 id="calibrate">4. Calibrer</h2>
+<p>Le module apprend combien de temps le volet met pour monter et descendre complètement. Sans cela, il peut ouvrir et fermer, mais il ne peut pas aller à une position comme 50 %.</p>
+<ol>
+  <li>Dans la page web de Zigbee2MQTT, dans l'onglet <strong>Exposes</strong> de l'appareil, réglez <code>motor_travel_calibration_action</code> sur <code>start_automatic</code>.</li>
+  <li>Laissez faire : le volet va complètement dans un sens, puis dans l'autre. Ne touchez pas à l'interrupteur pendant ce temps. Une fois terminé, <code>motor_travel_calibration_status</code> affiche <code>Calibrated</code>.</li>
+</ol>
+<p>(Sur le module lui-même, maintenir le bouton plus de 10 secondes, jusqu'à ce que la LED « respire », lance le même calibrage.) Si le calibrage automatique ne se termine pas (avec un moteur faible, par exemple), SONOFF et Zigbee2MQTT décrivent tous deux un calibrage manuel : vous indiquez vous-même les positions complètement ouvert et complètement fermé.</p>
+<p><strong>Montée et descente inversées ?</strong> Coupez le disjoncteur, inversez les fils sur <strong>Lout1</strong> et <strong>Lout2</strong>, puis calibrez à nouveau. L'option <code>invert_cover</code> de Zigbee2MQTT inverse seulement la position affichée ; elle ne change pas le sens de rotation du moteur.</p>
+
+<h2 id="tile">5. Une tuile de volet dans ZigDash</h2>
+<ol>
+  <li>Sur votre tableau de bord, touchez <strong>Ajouter depuis un appareil</strong> et choisissez le volet.</li>
+  <li>La tuile a des boutons <strong>Ouvrir</strong>, <strong>Stop</strong> et <strong>Fermer</strong>, et une rangée de positions prédéfinies (0, 25, 50, 100 par défaut). Vous pouvez activer un curseur de position dans les réglages de la tuile.</li>
+  <li><strong>De n'importe où :</strong> avec ZigDash Pro, activez le contrôle à distance et la même tuile fonctionne loin de la maison, sans port ouvert sur votre box et sans abonnement mensuel.</li>
+</ol>
+<p>L'interrupteur mural et l'application fonctionnent côte à côte : l'interrupteur est toujours là pour ceux qui n'ont pas l'application, et la tuile continue de fonctionner, que le volet ait été bougé en dernier à la main ou depuis le téléphone.</p>
+
+<div class="tip">SONOFF est une marque de son propriétaire. ZigDash n'est pas affilié à SONOFF ni à ITEAD. Suivez la notice fournie avec votre module et les règles électriques locales.</div>
+
+<div class="tip"><strong>Vous l'avez fait aussi ?</strong> Dites-moi comment ça s'est passé, ou ce qui était différent dans votre boîte : <a href="mailto:support@zigdash.app">support@zigdash.app</a> ou <a href="https://t.me/zigdash_app">la communauté</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Obtenir ZigDash</a><a class="btn" href="../../hubs/">Choisir une passerelle</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Code source</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Politique de confidentialité</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

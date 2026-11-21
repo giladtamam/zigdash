@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo sustituí mi suscripción de PalGate por un relé Zigbee de $10 · ZigDash</title>
+<meta name="description" content="Mi portón se abría con un PalGate Spider-50 por ₪300 al año. Lo cambié por un relé Zigbee de contacto seco de $10, un único pago, y ahora abro el portón desde ZigDash, en casa y desde cualquier lugar. Material, cableado y emparejamiento.">
+<link rel="canonical" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Cómo sustituí mi suscripción de PalGate por un relé Zigbee de $10">
+<meta property="og:description" content="₪300 al año por un abridor de portón, o $10 una sola vez. Material, cableado y emparejamiento, con la app ZigDash.">
+<meta property="og:url" content="https://zigdash.app/gate/es/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Instalación</a>
+    <a href="../../hubs/">Hubs</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Ayuda</a>
+    <a href="https://t.me/zigdash_app">Comunidad</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Cómo sustituí mi suscripción de PalGate por un relé Zigbee de $10</h1>
+<p class="byline">Gilad Tamam, el desarrollador de ZigDash · 18 de noviembre de 2026</p>
+<p class="byline">También en: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">El portón de mi entrada se abría desde el móvil con un PalGate Spider-50: una caja 4G con su propia tarjeta SIM y una suscripción de ₪300 al año. La quité y puse un relé Zigbee que costó $10 (unos ₪37), una sola vez. Ahora abro el portón desde un mosaico en ZigDash, en casa y desde cualquier lugar.</p>
+
+<p class="cost"><strong>₪300 cada año</strong> por la suscripción, o <strong>unos ₪37 una sola vez</strong> por el relé. El relé se pagó solo en unas seis semanas.</p>
+
+<div class="toc"><strong>En esta página</strong>
+<ul>
+  <li><a href="#how">Cómo abre un móvil un portón</a></li>
+  <li><a href="#need">Qué necesitas</a></li>
+  <li><a href="#pair">1. Empareja el relé con ZigDash</a></li>
+  <li><a href="#spider">2. Quita el Spider</a></li>
+  <li><a href="#wire">3. Cablea el relé</a></li>
+  <li><a href="#tile">4. Un mosaico Portón en ZigDash</a></li>
+  <li><a href="#trade">A qué renuncias</a></li>
+</ul></div>
+
+<h2 id="how">Cómo abre un móvil un portón</h2>
+<p>La centralita de un portón tiene una entrada de <strong>apertura</strong> (o de marcha): dos bornes que abren el portón cuando se conectan entre sí, igual que el botón de un mando a distancia del portón. El Spider es un relé con tarjeta SIM. Cuando la app de PalGate o una llamada se lo piden, conecta esos dos bornes durante un momento.</p>
+<p>Un relé Zigbee hace el mismo trabajo. La única diferencia es quién le dice que cierre: tu propio hub Zigbee en casa, en lugar de un servicio móvil que pagas cada año.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="La caja PalGate Spider-50 en una mano, junto a la centralita del portón" loading="lazy" width="675" height="900"><figcaption>El PalGate Spider-50 que quité.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="La placa de la centralita del portón con su regleta de bornes y los cables" loading="lazy" width="675" height="900"><figcaption>La centralita del portón. Dos de estos cables son su entrada de apertura.</figcaption></figure>
+</div>
+
+<h2 id="need">Qué necesitas</h2>
+<ul>
+  <li><strong>Un relé Zigbee de contacto seco.</strong> El mío es un "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" de AliExpress, de unos $10. Se vende en versión WiFi y en versión Zigbee: elige <strong>Zigbee</strong> (la placa lleva un módulo ZT3L). También se vende para distintas tensiones de alimentación; yo cogí la de <strong>AC 85–250V</strong>.</li>
+  <li><strong>Lo importante es el contacto seco.</strong> Un contacto seco es un simple interruptor sin tensión propia: solo conecta COM con NO, exactamente como el botón de un mando. Un relé que saca tensión por sus bornes (el tipo pensado para encender una lámpara) puede dañar la entrada de la centralita del portón. Busca "dry contact" y bornes marcados <strong>COM</strong>, <strong>NO</strong> y <strong>NC</strong>.</li>
+  <li><strong>Un hub Zigbee2MQTT en casa</strong> que llegue hasta el portón. Yo ya tenía uno (un SMLIGHT SMHUB) para el resto de la casa. Si no lo tienes, consulta <a href="../../hubs/">Hubs</a>.</li>
+  <li><strong>ZigDash</strong> en tu móvil (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Abrir el portón en casa es gratis. Abrirlo desde cualquier lugar usa el control remoto de ZigDash Pro: una compra única, sin suscripción.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="La placa del relé Zigbee: bornes de alimentación a la izquierda, el módulo Zigbee ZT3L en el centro, el relé y sus bornes COM/NO/NC a la derecha" loading="lazy" width="675" height="900"><figcaption>El relé Zigbee fuera de su caja: la alimentación a la izquierda, el módulo Zigbee ZT3L, el botón de emparejamiento y los bornes de contacto seco del relé a la derecha.</figcaption></figure>
+
+<h2 id="pair">1. Empareja el relé con ZigDash</h2>
+<p>Emparéjalo primero en casa, sobre la mesa, antes de meterlo en la caja del portón.</p>
+<ol>
+  <li>Da corriente al relé.</li>
+  <li>En ZigDash, abre <strong>Dispositivos</strong> y toca <strong>Iniciar emparejamiento</strong>.</li>
+  <li>Mantén pulsado el <strong>botón</strong> del relé hasta que su LED parpadee. Así entra en modo de emparejamiento.</li>
+  <li>ZigDash muestra <strong>Listo</strong> con el nuevo dispositivo. Cámbiale el nombre a <strong>Portón</strong>.</li>
+</ol>
+<p>Enciéndelo y apágalo unas cuantas veces y escucha el clic del relé.</p>
+
+<h2 id="spider">2. Quita el Spider</h2>
+<div class="tip"><strong>Primero corta la corriente del portón en el magnetotérmico.</strong> En la caja del portón hay 230V. Si no te sientes cómodo trabajando con la red eléctrica, pide a un electricista que haga los pasos 2 y 3. No toques los sensores de seguridad del portón (fotocélulas) ni los finales de carrera.</div>
+<ol>
+  <li>Localiza los dos cables que van de la salida de relé del Spider (<strong>COM1</strong> y <strong>N.O.1</strong>) a la entrada de apertura de la centralita. Márcalos.</li>
+  <li>Desatornilla la regleta de bornes del Spider y desconecta la alimentación del Spider.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="La regleta de bornes verde del Spider con los cables marrón, azul y negro" loading="lazy" width="675" height="900"><figcaption>La regleta de bornes del Spider, desenchufada. El par marrón y azul va a la entrada de apertura del portón.</figcaption></figure>
+
+<h2 id="wire">3. Cablea el relé</h2>
+<ol>
+  <li><strong>Salida:</strong> los dos cables de la entrada de apertura van a los bornes <strong>COM</strong> y <strong>NO</strong> del relé. Deja NC libre. En un contacto seco el orden da igual.</li>
+  <li><strong>Alimentación:</strong> la versión AC 85–250V se conecta directamente a la red, como un cargador de móvil: dos cables, fase y neutro, desde la alimentación de 230V del portón.</li>
+  <li>Cierra la caja del relé, colócalo donde no se moje y vuelve a subir el magnetotérmico.</li>
+</ol>
+<div class="tip"><strong>Señal:</strong> el portón suele ser el punto más alejado del hub. En ZigDash, abre la página del dispositivo del relé y comprueba la señal. Si es débil, un dispositivo Zigbee conectado a la red eléctrica entre la casa y el portón (un enchufe inteligente, por ejemplo) amplía la red.</div>
+
+<h2 id="tile">4. Un mosaico Portón en ZigDash</h2>
+<ol>
+  <li>En tu tablero, toca <strong>Añadir desde un dispositivo</strong> y elige <strong>Portón</strong>.</li>
+  <li>Toca el mosaico: el relé se cierra y el portón empieza a moverse, igual que con el mando.</li>
+  <li>La entrada de apertura del portón espera una pulsación de botón, así que un contacto que se queda cerrado puede contar como una pulsación larga. Comprueba qué hace tu portón y vuelve a apagar el mosaico si hace falta.</li>
+  <li><strong>Desde cualquier lugar:</strong> con ZigDash Pro, activa el control remoto y el mismo mosaico funciona fuera de casa, sin abrir ningún puerto en tu router y sin cuota mensual. Cubre hasta cinco móviles; <strong>Compartir con otro teléfono</strong> añade los móviles de la familia con un solo código QR.</li>
+</ol>
+
+<h2 id="trade">A qué renuncias</h2>
+<p>Para ser justo con el Spider, hace cosas que un relé Zigbee no hace:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Relé Zigbee + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Coste</th><td>₪300 al año (mi plan)</td><td>Unos ₪37 una sola vez; el control remoto es una compra única de ZigDash Pro</td></tr>
+    <tr><th>Conexión</th><td>Su propia SIM 4G: funciona aunque la casa no tenga internet</td><td>Tu hub Zigbee en casa; fuera de casa necesita el internet de casa</td></tr>
+    <tr><th>Quién puede abrir</th><td>Usuarios e invitados gestionados en la app de PalGate, y apertura con una llamada</td><td>Los móviles con los que compartes la casa (hasta cinco en remoto)</td></tr>
+    <tr><th>Nube</th><td>El servicio de PalGate</td><td>Ninguna en casa; en remoto pasa por el servidor de retransmisión de ZigDash, con cifrado de extremo a extremo</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Para una casa particular donde la familia abre un portón, el relé hace todo lo que yo necesitaba. Para un edificio con muchos vecinos y visitantes, un servicio gestionado como PalGate sigue teniendo sentido.</p>
+
+<div class="tip">PalGate es una marca de su propietario. ZigDash no está afiliado a PalGate ni a PAL Electronics Systems. Los precios son los que pagué en noviembre de 2026.</div>
+
+<div class="tip"><strong>¿Tú también lo has hecho?</strong> Cuéntame cómo te fue, o qué era distinto en tu portón: <a href="mailto:support@zigdash.app">support@zigdash.app</a> o <a href="https://t.me/zigdash_app">la comunidad</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Descargar ZigDash</a><a class="btn" href="../../hubs/">Elegir un hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Código fuente</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Política de privacidad</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

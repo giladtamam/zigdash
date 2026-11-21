@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jak jsem předplatné PalGate nahradil Zigbee relé za $10 · ZigDash</title>
+<meta name="description" content="Moje brána se otevírala přes PalGate Spider-50 za ₪300 ročně. Vyměnil jsem ho za Zigbee relé s bezpotenciálovým kontaktem za jednorázových $10 a teď bránu otevírám ze ZigDash, doma i odkudkoli. Materiál, zapojení a párování.">
+<link rel="canonical" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Jak jsem předplatné PalGate nahradil Zigbee relé za $10">
+<meta property="og:description" content="₪300 ročně za otevírání brány, nebo $10 jednou. Materiál, zapojení a párování, s aplikací ZigDash.">
+<meta property="og:url" content="https://zigdash.app/gate/cs/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Zprovoznění</a>
+    <a href="../../hubs/">Huby</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Nápověda</a>
+    <a href="https://t.me/zigdash_app">Komunita</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Jak jsem předplatné PalGate nahradil Zigbee relé za $10</h1>
+<p class="byline">Gilad Tamam, vývojář ZigDash · 18. listopadu 2026</p>
+<p class="byline">Také v jazycích: <a href="../" hreflang="en" lang="en">English</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Bránu u příjezdové cesty jsem otevíral z telefonu přes PalGate Spider-50: 4G krabičku s vlastní SIM kartou a předplatným ₪300 ročně. Vyndal jsem ji a místo ní dal Zigbee relé, které stálo $10 (asi ₪37), jednou. Teď bránu otevírám dlaždicí v ZigDash, doma i odkudkoli.</p>
+
+<p class="cost"><strong>₪300 každý rok</strong> za předplatné, nebo <strong>asi ₪37 jednou</strong> za relé. Relé se zaplatilo zhruba za šest týdnů.</p>
+
+<div class="toc"><strong>Na této stránce</strong>
+<ul>
+  <li><a href="#how">Jak telefon otevírá bránu</a></li>
+  <li><a href="#need">Co potřebuješ</a></li>
+  <li><a href="#pair">1. Spáruj relé se ZigDash</a></li>
+  <li><a href="#spider">2. Vyndej Spider</a></li>
+  <li><a href="#wire">3. Zapoj relé</a></li>
+  <li><a href="#tile">4. Dlaždice Brána v ZigDash</a></li>
+  <li><a href="#trade">Čeho se vzdáváš</a></li>
+</ul></div>
+
+<h2 id="how">Jak telefon otevírá bránu</h2>
+<p>Řídicí jednotka brány má vstup <strong>otevřít</strong> (nebo start): dvě svorky, které bránu otevřou, když se propojí, přesně jako tlačítko na dálkovém ovladači brány. Spider je relé se SIM kartou. Když ho o to požádá aplikace PalGate nebo telefonní hovor, na okamžik ty dvě svorky propojí.</p>
+<p>Zigbee relé dělá totéž. Jediný rozdíl je v tom, kdo mu řekne, aby sepnulo: tvůj vlastní Zigbee hub doma, místo mobilní služby, kterou platíš každý rok.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="Krabička PalGate Spider-50 v ruce vedle řídicí jednotky brány" loading="lazy" width="675" height="900"><figcaption>PalGate Spider-50, který jsem vyndal.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="Deska řídicí jednotky brány se svorkovnicí a vodiči" loading="lazy" width="675" height="900"><figcaption>Řídicí jednotka brány. Dva z těchto vodičů jsou její vstup pro otevření.</figcaption></figure>
+</div>
+
+<h2 id="need">Co potřebuješ</h2>
+<ul>
+  <li><strong>Zigbee relé s bezpotenciálovým kontaktem.</strong> Moje je "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" z AliExpressu, asi za $10. Prodává se ve verzi WiFi i Zigbee: vyber <strong>Zigbee</strong> (deska má modul ZT3L). Prodává se také pro různá napájecí napětí; já vzal verzi <strong>AC 85–250V</strong>.</li>
+  <li><strong>Bezpotenciálový kontakt je to podstatné.</strong> Bezpotenciálový (suchý) kontakt je obyčejný spínač bez vlastního napětí: jen propojí COM s NO, přesně jako tlačítko ovladače. Relé, které na své svorky pouští napětí (typ určený ke spínání lampy), může poškodit vstup řídicí jednotky brány. Hledej "dry contact" a svorky označené <strong>COM</strong>, <strong>NO</strong> a <strong>NC</strong>.</li>
+  <li><strong>Zigbee2MQTT hub doma</strong>, který na bránu dosáhne. Já už jeden měl (SMLIGHT SMHUB) pro zbytek domu. Pokud ho nemáš, podívej se na <a href="../../hubs/">Huby</a>.</li>
+  <li><strong>ZigDash</strong> v telefonu (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Otevírání brány doma je zdarma. Otevírání odkudkoli používá dálkové ovládání ZigDash Pro: jednorázový nákup, žádné předplatné.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="Deska Zigbee relé: napájecí svorky vlevo, Zigbee modul ZT3L uprostřed, relé a jeho svorky COM/NO/NC vpravo" loading="lazy" width="675" height="900"><figcaption>Zigbee relé vyndané z krabičky: napájení vlevo, Zigbee modul ZT3L, párovací tlačítko a bezpotenciálové svorky relé vpravo.</figcaption></figure>
+
+<h2 id="pair">1. Spáruj relé se ZigDash</h2>
+<p>Nejdřív ho spáruj doma na stole, než přijde do krabice brány.</p>
+<ol>
+  <li>Připoj relé k napájení.</li>
+  <li>V ZigDash otevři <strong>Zařízení</strong> a klepni na <strong>Spustit párování</strong>.</li>
+  <li>Stiskni a podrž <strong>tlačítko</strong> relé, dokud LED nezačne blikat. Tím se relé přepne do párovacího režimu.</li>
+  <li>ZigDash ukáže <strong>Připraveno</strong> s novým zařízením. Přejmenuj ho na <strong>Brána</strong>.</li>
+</ol>
+<p>Několikrát ho zapni a vypni a poslouchej, jak relé cvaká.</p>
+
+<h2 id="spider">2. Vyndej Spider</h2>
+<div class="tip"><strong>Nejdřív vypni napájení brány jističem.</strong> V krabici brány je 230V. Pokud si s prací na síťovém napětí nevěříš, nech kroky 2 a 3 na elektrikáři. Nesahej na bezpečnostní senzory brány (fotobuňky) ani na koncové spínače.</div>
+<ol>
+  <li>Najdi dva vodiče, které vedou z reléového výstupu Spideru (<strong>COM1</strong> a <strong>N.O.1</strong>) na vstup pro otevření v řídicí jednotce brány. Označ si je.</li>
+  <li>Odšroubuj svorkovnici Spideru a odpoj Spider od napájení.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Zelená svorkovnice Spideru s hnědým, modrým a černým vodičem" loading="lazy" width="675" height="900"><figcaption>Odpojená svorkovnice Spideru. Hnědo-modrý pár vede na vstup brány pro otevření.</figcaption></figure>
+
+<h2 id="wire">3. Zapoj relé</h2>
+<ol>
+  <li><strong>Výstup:</strong> dva vodiče vstupu pro otevření připoj na <strong>COM</strong> a <strong>NO</strong> relé. NC nech volné. U bezpotenciálového kontaktu na pořadí nezáleží.</li>
+  <li><strong>Napájení:</strong> verze AC 85–250V se připojuje přímo na síť, jako nabíječka telefonu: dva vodiče, fáze a nulový vodič, z 230V napájení brány.</li>
+  <li>Zavři krabičku relé, umísti ho tam, kde zůstane v suchu, a jistič znovu zapni.</li>
+</ol>
+<div class="tip"><strong>Signál:</strong> brána je obvykle nejvzdálenější bod od hubu. V ZigDash otevři stránku zařízení relé a zkontroluj signál. Pokud je slabý, síť rozšíří Zigbee zařízení napájené ze sítě mezi domem a bránou (například chytrá zásuvka).</div>
+
+<h2 id="tile">4. Dlaždice Brána v ZigDash</h2>
+<ol>
+  <li>Na nástěnce klepni na <strong>Přidat ze zařízení</strong> a vyber <strong>Brána</strong>.</li>
+  <li>Klepni na dlaždici: relé sepne a brána se rozjede, stejně jako s ovladačem.</li>
+  <li>Vstup brány pro otevření čeká stisk tlačítka, takže kontakt, který zůstane sepnutý, se může počítat jako dlouhý stisk. Zjisti, co tvoje brána dělá, a pokud je to potřeba, dlaždici zase vypni.</li>
+  <li><strong>Odkudkoli:</strong> se ZigDash Pro zapni dálkové ovládání a stejná dlaždice funguje i mimo domov, bez otevřeného portu na routeru a bez měsíčního poplatku. Pokrývá až pět telefonů; <strong>Sdílet s dalším telefonem</strong> přidá telefony rodiny jedním QR kódem.</li>
+</ol>
+
+<h2 id="trade">Čeho se vzdáváš</h2>
+<p>Abych byl ke Spideru spravedlivý, umí věci, které Zigbee relé neumí:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee relé + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Cena</th><td>₪300 ročně (můj tarif)</td><td>Asi ₪37 jednou; dálkové ovládání je jednorázový nákup ZigDash Pro</td></tr>
+    <tr><th>Připojení</th><td>Vlastní 4G SIM: funguje, i když dům nemá internet</td><td>Tvůj Zigbee hub doma; mimo domov potřebuje domácí internet</td></tr>
+    <tr><th>Kdo může otevírat</th><td>Uživatelé a hosté spravovaní v aplikaci PalGate a otevírání telefonním hovorem</td><td>Telefony, se kterými sdílíš domácnost (vzdáleně až pět)</td></tr>
+    <tr><th>Cloud</th><td>Služba PalGate</td><td>Doma žádný; vzdálený přístup jde přes relay server ZigDash, šifrovaně end-to-end</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Pro rodinný dům, kde rodina otevírá jednu bránu, dělá relé všechno, co jsem potřeboval. Pro bytový dům s mnoha obyvateli a návštěvníky má spravovaná služba jako PalGate pořád smysl.</p>
+
+<div class="tip">PalGate je ochranná známka svého vlastníka. ZigDash není s PalGate ani PAL Electronics Systems nijak spojen. Ceny jsou ty, které jsem zaplatil v listopadu 2026.</div>
+
+<div class="tip"><strong>Dělal jsi to taky?</strong> Napiš mi, jak to dopadlo, nebo co bylo u tvé brány jinak: <a href="mailto:support@zigdash.app">support@zigdash.app</a> nebo <a href="https://t.me/zigdash_app">v komunitě</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Stáhnout ZigDash</a><a class="btn" href="../../hubs/">Vybrat hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Zdrojový kód</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Zásady ochrany osobních údajů</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -95,20 +95,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/"/>
   </url>
   <url>
-    <loc>https://zigdash.app/gate/</loc>
-    <lastmod>2026-11-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
-    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
-  </url>
-  <url>
-    <loc>https://zigdash.app/gate/he/</loc>
-    <lastmod>2026-11-18</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
-    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
-  </url>
-  <url>
     <loc>https://zigdash.app/start-home-assistant-zigbee/</loc>
     <lastmod>2026-11-19</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/start-home-assistant-zigbee/"/>
@@ -121,5 +107,473 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/start-home-assistant-zigbee/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/start-home-assistant-zigbee/de/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/start-home-assistant-zigbee/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/cs/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/de/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/es/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/fr/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/he/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/it/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/nb/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/nl/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/pl/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/pt/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/ru/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/zigbee-shutter/sv/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/cs/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/de/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/es/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/fr/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/he/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/it/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/nb/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/nl/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/pl/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/pt/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/ru/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
+  </url>
+  <url>
+    <loc>https://zigdash.app/gate/sv/</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zigdash.app/gate/"/>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/"/>
+    <xhtml:link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/"/>
+    <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
   </url>
 </urlset>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smarter Rollladen mit SONOFF MINI-ZBRBS und Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Ein Zigbee-Modul SONOFF MINI-ZBRBS hinter dem Rollladenschalter, verdrahtet so, dass der alte Schalter bleibt. Material, Verdrahtung, Pairing mit Zigbee2MQTT, Kalibrierung und eine Rollladen-Kachel in ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Smarter Rollladen mit SONOFF MINI-ZBRBS und Zigbee2MQTT">
+<meta property="og:description" content="Ein kleines Zigbee-Modul hinter dem Rollladenschalter: Der Wandschalter funktioniert weiter, und der Rollladen öffnet sich aus ZigDash. Material, Verdrahtung, Pairing und Kalibrierung.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/de/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Einrichtung</a>
+    <a href="../../hubs/">Hubs</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hilfe</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Wie ich meinen Rollladen mit einem SONOFF MINI-ZBRBS smart gemacht habe</h1>
+<p class="byline">Gilad Tamam, der Entwickler von ZigDash · 21. November 2026</p>
+<p class="byline">Auch auf: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Der Rollladen in meinem Büro hat einen Elektromotor und einen normalen Auf/Ab-Schalter an der Wand. Ich habe einen SONOFF MINI-ZBRBS, ein kleines Zigbee-Rollladenmodul, in die Dose hinter diesem Schalter gesetzt. Der Wandschalter funktioniert genau wie vorher, und jetzt öffnet und schließt sich der Rollladen auch über eine Kachel in ZigDash, zu Hause und von überall.</p>
+
+<div class="toc"><strong>Auf dieser Seite</strong>
+<ul>
+  <li><a href="#how">So funktioniert es</a></li>
+  <li><a href="#need">Was du brauchst</a></li>
+  <li><a href="#wire">1. Das Modul verdrahten</a></li>
+  <li><a href="#pair">2. Mit ZigDash koppeln</a></li>
+  <li><a href="#mode">3. Dem Modul sagen, welchen Schalter du hast</a></li>
+  <li><a href="#calibrate">4. Kalibrieren</a></li>
+  <li><a href="#tile">5. Eine Rollladen-Kachel in ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">So funktioniert es</h2>
+<p>Ein Rollladenmotor hat zwei Stromadern: Die eine fährt ihn hoch, die andere runter. Der Wandschalter legt die Phase auf eine davon. Der MINI-ZBRBS sitzt dazwischen: Die beiden Motoradern kommen an seine Ausgänge (<strong>Lout1</strong> und <strong>Lout2</strong>), und der alte Schalter an seine Eingänge (<strong>S1</strong> und <strong>S2</strong>). Wenn du den Schalter drückst, steuert das Modul den Motor. Wenn ZigDash per Zigbee fragt, steuert es den Motor ebenfalls.</p>
+<p>Das Modul weiß außerdem, wo der Rollladen steht, du kannst ihn also auf 50 % fahren statt nur ganz hoch oder ganz runter. Und weil es am Netz hängt, arbeitet es als Zigbee-Router, der dein Netz stärker macht.</p>
+
+<h2 id="need">Was du brauchst</h2>
+<ul>
+  <li><strong>Einen SONOFF MINI-ZBRBS</strong> (Zigbee-Rollladenschalter). Zigbee2MQTT unterstützt ihn als Modell <code>MINI-ZBRBS</code>.</li>
+  <li><strong>Einen Rollladenmotor mit eigenen Endschaltern</strong>: der übliche Rohrmotor mit vier Adern (Neutralleiter, auf, ab, Schutzleiter), der oben und unten von selbst stoppt. SONOFF gibt das Modul für Motoren bis <strong>1&nbsp;A</strong> an, und es stoppt den Motor von selbst nach 2 Minuten in einer Richtung.</li>
+  <li><strong>Einen Neutralleiter in der Schalterdose.</strong> Das Modul braucht den Neutralleiter für seine eigene Versorgung.</li>
+  <li><strong>Platz in der Dose</strong> hinter dem Schalter. SONOFF empfiehlt eine Dose mit mindestens 60&nbsp;mm Tiefe.</li>
+  <li><strong>Hebelklemmen</strong> (ich habe eine WAGO 221 verwendet) und ein paar kurze Drahtstücke.</li>
+  <li><strong>Einen Zigbee2MQTT-Hub</strong> zu Hause. Wenn du noch keinen hast, sieh dir <a href="../../hubs/">Hubs</a> an.</li>
+  <li><strong>ZigDash</strong> auf deinem Handy (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Den Rollladen zu Hause zu steuern ist kostenlos. Von überall steuerst du ihn mit der Fernsteuerung von ZigDash Pro: ein einmaliger Kauf, kein Abo.</li>
+</ul>
+
+<div class="tip"><strong>Schalte den Strom am Leitungsschutzschalter ab, bevor du den Schalter öffnest.</strong> In der Dose liegen 230V an. Wenn du dich mit Netzspannung nicht wohlfühlst, lass die Verdrahtung von einem Elektriker machen. SONOFF empfiehlt vor dem Modul einen Leitungsschutzschalter mit 1&nbsp;A (MCB oder RCBO).</div>
+
+<h2 id="wire">1. Das Modul verdrahten</h2>
+<p>Das Modul hat sechs Klemmen, aufgedruckt: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (auf) und <strong>S2</strong> (ab). Eine Schutzleiterklemme hat es nicht. So habe ich meins verdrahtet:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Klemme</th><th>Geht an</th><th>In meiner Dose</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Neutralleiter</td><td>Die blauen Neutralleiter, zusammengeführt in einer WAGO 221, von dort ein kurzer Draht zu N (siehe den Hinweis unten zu seiner Farbe)</td></tr>
+    <tr><th>L</th><td>Phase</td><td>Die Phase, die die Dose versorgt</td></tr>
+    <tr><th>Lout1</th><td>Motor: auf (bei SONOFF „forward“)</td><td>Die schwarze Ader des Motors</td></tr>
+    <tr><th>Lout2</th><td>Motor: ab („reverse“)</td><td>Die braune Ader des Motors</td></tr>
+    <tr><th>S1</th><td>Der Auf-Ausgang des Schalters</td><td>Einer der Ausgänge des alten Schalters</td></tr>
+    <tr><th>S2</th><td>Der Ab-Ausgang des Schalters</td><td>Der andere Ausgang des alten Schalters</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Der alte Schalter bleibt.</strong> Seine gemeinsame Klemme bekommt wie bisher die Phase. Seine beiden Ausgänge gehen nicht mehr zum Motor: Sie gehen an S1 und S2 und sagen dem Modul, in welche Richtung es fahren soll. <strong>S1 und S2 sind Netzspannungseingänge</strong>, keine Kleinspannung: Versorge die gemeinsame Klemme des Schalters von derselben Phase, über denselben Leitungsschutzschalter, wie L.</p>
+<p><strong>Schutzleiter:</strong> Lass den grün-gelben Schutzleiter des Motors wie bisher mit dem Schutzleiter der Dose verbunden. Er geht nicht an das Modul.</p>
+<p><strong>Auf und ab:</strong> Aderfarben sind in jedem Haus anders. Bevor du den Schalter abklemmst, notiere, welche Motorader sein Auf-Ausgang versorgt hat, und markiere sie: Diese kommt an Lout1. Wenn du sie vertauschst, zeigt Schritt 4, wie du das behebst.</p>
+<div class="tip"><strong>Nimm für die Brücke zum Neutralleiter einen blauen (oder grauen) Draht.</strong> Ich hatte nur Rot zur Hand, deshalb ist auf meinen Fotos der kurze Draht von der WAGO zu N rot, mit einer blauen Aderendhülse am Modul. Rot steht normalerweise für die Phase, und wer diese Dose als Nächstes öffnet, sollte nicht raten müssen. Wenn du eine andere Farbe nimmst, markiere sie an beiden Enden mit blauem Klebeband.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Zwei blaue Neutralleiter und ein roter Draht, zusammengeführt in einer orangefarbenen WAGO-221-Hebelklemme; der rote Draht geht an die Klemme N des SONOFF-Moduls" loading="lazy" width="675" height="900"><figcaption>Neutralleiter: die blauen Neutralleiter der Dose in einer WAGO 221 und von dort ein kurzer roter Draht zum N des Moduls.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="Die Rückseite des alten Rollladenschalters mit drei roten Drähten in seinen Klemmen" loading="lazy" width="810" height="690"><figcaption>Der alte Rollladenschalter, behalten: Die Phase kommt an seine gemeinsame Klemme, und seine Auf- und Ab-Ausgänge gehen jetzt an S1 und S2. Welche Klemme die gemeinsame ist, ist von Schalter zu Schalter verschieden; prüfe das bei deinem, bevor du ihn abklemmst.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="Die offene Wanddose mit herausgezogenem Schalter und dem verdrahteten SONOFF MINI-ZBRBS: zwei rote Drähte vom Schalter an S1 und S2, die braune und schwarze Ader des Motors an Lout2 und Lout1, Phase an L und Neutralleiter an N" loading="lazy" width="640" height="1124"><figcaption>Alles verdrahtet, bevor es zurück in die Wand kommt. Am Modul von links: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Prüfe, dass jede Schraubklemme fest sitzt. Lass das Modul vorerst außerhalb der Dose, mit den Klemmen von dir weg: Im nächsten Schritt koppelst du es.</p>
+
+<h2 id="pair">2. Mit ZigDash koppeln</h2>
+<p>Zum Koppeln muss das Modul Strom haben und seine Taste gedrückt werden, das ist also der eine Moment, in dem du nahe an einer Dose unter Spannung arbeitest. Drück nur die Taste, mit einem Werkzeug aus Kunststoff (dem hinteren Ende eines Stifts), und berühre nichts anderes. Leg das Modul auf etwas, das nicht leitet, ohne Kontakt zum Metallrahmen des Schalters.</p>
+<ol>
+  <li>Öffne in ZigDash <strong>Geräte</strong> und tippe auf <strong>Pairing starten</strong>.</li>
+  <li>Schalte den Leitungsschutzschalter ein. Halte die Taste des Moduls etwa <strong>5 Sekunden</strong> gedrückt, bis seine blaue LED langsam blinkt. Es bleibt bis zu 3 Minuten im Pairing-Modus.</li>
+  <li>ZigDash zeigt das neue Gerät. Gib ihm einen Namen, den du wiedererkennst, etwa <strong>Rollladen Büro</strong>.</li>
+  <li>Schalte den Leitungsschutzschalter aus. Leg die Drähte ein, setz das Modul hinter den Schalter, schließ die Dose und schalte den Leitungsschutzschalter wieder ein. Alles Weitere machst du vom Handy und der Zigbee2MQTT-Weboberfläche aus.</li>
+</ol>
+
+<h2 id="mode">3. Dem Modul sagen, welchen Schalter du hast</h2>
+<p>Das Modul muss wissen, wie sich dein Wandschalter verhält:</p>
+<ul>
+  <li><strong>Ein rastender Wippschalter</strong>, der in Auf, Aus oder Ab stehen bleibt (wie meiner): Modus <code>edge</code>.</li>
+  <li><strong>Ein Taster</strong>, der beim Loslassen zurückspringt: Modus <code>pulse</code>.</li>
+</ul>
+<p>Am einfachsten geht es über die Zigbee2MQTT-Weboberfläche: Öffne das Gerät, geh auf den Tab <strong>Exposes</strong> und setze <code>external_trigger_mode</code> auf <code>edge</code> oder <code>pulse</code>. (Mit der Taste des Moduls geht es auch: Ein schnelles dreifaches Drücken schaltet zum nächsten Schaltertyp, und die LED blinkt dreimal; eventuell musst du das wiederholen. Dafür müsstest du die Dose wieder öffnen, deshalb habe ich Zigbee2MQTT genommen.)</p>
+<p>Dann schalte den Wandschalter auf Auf, Aus und Ab: Der Rollladen sollte fahren und anhalten wie immer. Wenn nicht, ist der Modus falsch; stell den anderen ein.</p>
+
+<h2 id="calibrate">4. Kalibrieren</h2>
+<p>Das Modul lernt, wie lange der Rollladen ganz hoch und ganz runter braucht. Ohne das kann es öffnen und schließen, aber keine Position wie 50 % anfahren.</p>
+<ol>
+  <li>Setze in der Zigbee2MQTT-Weboberfläche, im Tab <strong>Exposes</strong> des Geräts, <code>motor_travel_calibration_action</code> auf <code>start_automatic</code>.</li>
+  <li>Lass es laufen: Der Rollladen fährt ganz in die eine Richtung, dann in die andere. Fass den Schalter dabei nicht an. Wenn es fertig ist, zeigt <code>motor_travel_calibration_status</code> den Wert <code>Calibrated</code>.</li>
+</ol>
+<p>(Am Modul selbst startet dieselbe Kalibrierung, wenn du die Taste länger als 10 Sekunden hältst, bis die LED pulsiert.) Wenn die automatische Kalibrierung nicht fertig wird (zum Beispiel bei einem schwachen Motor), beschreiben SONOFF und Zigbee2MQTT beide eine manuelle Kalibrierung: Du markierst ganz offen und ganz geschlossen selbst.</p>
+<p><strong>Auf und ab vertauscht?</strong> Schalte den Leitungsschutzschalter aus, tausche die Drähte an <strong>Lout1</strong> und <strong>Lout2</strong> und kalibriere dann neu. Die Zigbee2MQTT-Option <code>invert_cover</code> dreht nur die gemeldete Position um; sie ändert nicht, in welche Richtung der Motor läuft.</p>
+
+<h2 id="tile">5. Eine Rollladen-Kachel in ZigDash</h2>
+<ol>
+  <li>Tippe auf deinem Dashboard auf <strong>Von einem Gerät hinzufügen</strong> und wähle den Rollladen.</li>
+  <li>Die Kachel hat die Tasten <strong>Öffnen</strong>, <strong>Stopp</strong> und <strong>Schließen</strong> und eine Reihe Positionsvorgaben (standardmäßig 0, 25, 50, 100). In den Einstellungen der Kachel kannst du einen Positionsregler einschalten.</li>
+  <li><strong>Von überall:</strong> Mit ZigDash Pro schaltest du die Fernsteuerung ein, und dieselbe Kachel funktioniert auch unterwegs, ohne geöffneten Port am Router und ohne monatliche Gebühr.</li>
+</ol>
+<p>Wandschalter und App arbeiten nebeneinander: Der Schalter ist weiterhin für alle da, die die App nicht haben, und die Kachel funktioniert weiter, egal ob der Rollladen zuletzt von Hand oder vom Handy bewegt wurde.</p>
+
+<div class="tip">SONOFF ist eine Marke ihres Inhabers. ZigDash ist nicht mit SONOFF oder ITEAD verbunden. Halte dich an die Anleitung, die deinem Modul beiliegt, und an die örtlichen Elektrovorschriften.</div>
+
+<div class="tip"><strong>Hast du das auch gemacht?</strong> Erzähl mir, wie es gelaufen ist oder was in deiner Dose anders war: <a href="mailto:support@zigdash.app">support@zigdash.app</a> oder <a href="https://t.me/zigdash_app">die Community</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">ZigDash holen</a><a class="btn" href="../../hubs/">Hub auswählen</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Quellcode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Datenschutzerklärung</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

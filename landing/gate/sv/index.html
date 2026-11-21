@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Så bytte jag ut mitt PalGate-abonnemang mot ett Zigbee-relä för $10 · ZigDash</title>
+<meta name="description" content="Min grind öppnades via en PalGate Spider-50 för ₪300 om året. Jag bytte den mot ett Zigbee-relä med potentialfri kontakt för $10 en gång, och nu öppnar jag grinden från ZigDash, hemma och var som helst. Delar, inkoppling och ihopparning.">
+<link rel="canonical" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Så bytte jag ut mitt PalGate-abonnemang mot ett Zigbee-relä för $10">
+<meta property="og:description" content="₪300 om året för en grindöppnare, eller $10 en gång. Delar, inkoppling och ihopparning, med ZigDash-appen.">
+<meta property="og:url" content="https://zigdash.app/gate/sv/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Installation</a>
+    <a href="../../hubs/">Hubbar</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hjälp</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Så bytte jag ut mitt PalGate-abonnemang mot ett Zigbee-relä för $10</h1>
+<p class="byline">Gilad Tamam, utvecklaren av ZigDash · 18 november 2026</p>
+<p class="byline">Finns också på: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a></p>
+<p class="lead">Min uppfartsgrind öppnades från telefonen via en PalGate Spider-50: en 4G-låda med eget SIM-kort och ett abonnemang för ₪300 om året. Jag tog bort den och satte in ett Zigbee-relä som kostade $10 (ungefär ₪37), en gång. Nu öppnar jag grinden från en ruta i ZigDash, hemma och var som helst.</p>
+
+<p class="cost"><strong>₪300 varje år</strong> för abonnemanget, eller <strong>ungefär ₪37 en gång</strong> för reläet. Reläet hade tjänat in sig efter ungefär sex veckor.</p>
+
+<div class="toc"><strong>På den här sidan</strong>
+<ul>
+  <li><a href="#how">Så öppnar en telefon en grind</a></li>
+  <li><a href="#need">Det här behöver du</a></li>
+  <li><a href="#pair">1. Para ihop reläet med ZigDash</a></li>
+  <li><a href="#spider">2. Ta bort Spider</a></li>
+  <li><a href="#wire">3. Koppla in reläet</a></li>
+  <li><a href="#tile">4. En Grind-ruta i ZigDash</a></li>
+  <li><a href="#trade">Vad du ger upp</a></li>
+</ul></div>
+
+<h2 id="how">Så öppnar en telefon en grind</h2>
+<p>En grindstyrning har en <strong>öppna</strong>-ingång (eller start): två plintar som öppnar grinden när de kopplas ihop, precis som knappen på en grindfjärrkontroll. Spider är ett relä med SIM-kort. När PalGate-appen eller ett telefonsamtal ber om det kopplar den ihop de två plintarna ett ögonblick.</p>
+<p>Ett Zigbee-relä gör samma jobb. Den enda skillnaden är vem som säger åt det att sluta kontakten: din egen Zigbee-hubb hemma, i stället för en mobiltjänst som du betalar för varje år.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="PalGate Spider-50-lådan i en hand, bredvid grindstyrningen" loading="lazy" width="675" height="900"><figcaption>PalGate Spider-50 som jag tog bort.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="Grindstyrningens kretskort med plintlist och ledningar" loading="lazy" width="675" height="900"><figcaption>Grindstyrningen. Två av de här ledningarna är dess öppna-ingång.</figcaption></figure>
+</div>
+
+<h2 id="need">Det här behöver du</h2>
+<ul>
+  <li><strong>Ett Zigbee-relä med potentialfri kontakt.</strong> Mitt är ett "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" från AliExpress, ungefär $10. Det säljs i wifi- och Zigbee-version: välj <strong>Zigbee</strong> (kortet har en ZT3L-modul). Det säljs också för olika matningsspänningar; jag tog versionen för <strong>AC 85–250V</strong>.</li>
+  <li><strong>Potentialfri kontakt är det viktiga.</strong> En potentialfri (torr) kontakt är en enkel brytare utan egen spänning: den kopplar bara ihop COM med NO, precis som knappen på en fjärrkontroll. Ett relä som skickar ut spänning på sina plintar (den sort som är gjord för att tända en lampa) kan skada grindstyrningens ingång. Leta efter "dry contact" och plintar märkta <strong>COM</strong>, <strong>NO</strong> och <strong>NC</strong>.</li>
+  <li><strong>En Zigbee2MQTT-hubb hemma</strong> som når fram till grinden. Jag hade redan en (en SMLIGHT SMHUB) för resten av huset. Om du inte har någon, se <a href="../../hubs/">Hubbar</a>.</li>
+  <li><strong>ZigDash</strong> i telefonen (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Att öppna grinden hemma är gratis. För att öppna den var som helst ifrån använder du fjärrstyrningen i ZigDash Pro: ett engångsköp, inget abonnemang.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="Zigbee-reläets kretskort: strömplintar till vänster, ZT3L-Zigbee-modulen i mitten, reläet och dess COM/NO/NC-plintar till höger" loading="lazy" width="675" height="900"><figcaption>Zigbee-reläet utan hölje: ström in till vänster, ZT3L-Zigbee-modulen, ihopparningsknappen och reläets potentialfria plintar till höger.</figcaption></figure>
+
+<h2 id="pair">1. Para ihop reläet med ZigDash</h2>
+<p>Para ihop det hemma först, på bordet, innan det monteras i grindlådan.</p>
+<ol>
+  <li>Koppla ström till reläet.</li>
+  <li>Öppna <strong>Enheter</strong> i ZigDash och tryck på <strong>Starta ihopparning</strong>.</li>
+  <li>Tryck och håll in reläets <strong>knapp</strong> tills lysdioden blinkar. Då går det in i ihopparningsläge.</li>
+  <li>ZigDash visar <strong>Redo</strong> med den nya enheten. Byt namn på den till <strong>Grind</strong>.</li>
+</ol>
+<p>Slå på och av den några gånger och lyssna efter reläets klick.</p>
+
+<h2 id="spider">2. Ta bort Spider</h2>
+<div class="tip"><strong>Slå först av strömmen till grinden i elcentralen.</strong> Det finns 230V i grindlådan. Om du inte känner dig trygg med att arbeta med nätspänning, låt en elektriker göra steg 2 och 3. Rör inte grindens säkerhetssensorer (fotoceller) eller gränslägesbrytare.</div>
+<ol>
+  <li>Hitta de två ledningarna som går från Spiders reläutgång (<strong>COM1</strong> och <strong>N.O.1</strong>) till grindstyrningens öppna-ingång. Märk dem.</li>
+  <li>Skruva loss Spiders plintblock och koppla bort strömmen till Spider.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Spiders gröna plintblock med bruna, blå och svarta ledningar" loading="lazy" width="675" height="900"><figcaption>Spiders plintblock, urkopplat. Det bruna och blå paret går till grindens öppna-ingång.</figcaption></figure>
+
+<h2 id="wire">3. Koppla in reläet</h2>
+<ol>
+  <li><strong>Utgång:</strong> de två ledningarna från öppna-ingången går till reläets <strong>COM</strong> och <strong>NO</strong>. Lämna NC tom. På en potentialfri kontakt spelar ordningen ingen roll.</li>
+  <li><strong>Ström:</strong> versionen för AC 85–250V tar nätspänning direkt, som en telefonladdare: två ledningar, fas och nolla, från grindens 230V-matning.</li>
+  <li>Stäng reläets hölje, placera det där det håller sig torrt och slå på säkringen igen.</li>
+</ol>
+<div class="tip"><strong>Signal:</strong> grinden är oftast den punkt som ligger längst från hubben. Öppna reläets enhetssida i ZigDash och kontrollera signalen. Om den är svag utökar en nätansluten Zigbee-enhet mellan huset och grinden (till exempel en smart kontakt) nätverket.</div>
+
+<h2 id="tile">4. En Grind-ruta i ZigDash</h2>
+<ol>
+  <li>Tryck på <strong>Lägg till från en enhet</strong> på din dashboard och välj <strong>Grind</strong>.</li>
+  <li>Tryck på rutan: reläet sluter och grinden börjar röra sig, precis som med fjärrkontrollen.</li>
+  <li>Grindens öppna-ingång förväntar sig ett knapptryck, så en kontakt som förblir sluten kan räknas som ett långt tryck. Kolla vad din grind gör, och slå av rutan igen om det behövs.</li>
+  <li><strong>Var som helst ifrån:</strong> med ZigDash Pro slår du på fjärrstyrning och samma ruta fungerar även borta från hemmet, utan portvidarebefordran i routern och utan månadsavgift. Den täcker upp till fem telefoner; <strong>Dela med en annan telefon</strong> lägger till familjens telefoner med en QR-kod.</li>
+</ol>
+
+<h2 id="trade">Vad du ger upp</h2>
+<p>För att vara rättvis mot Spider gör den saker som ett Zigbee-relä inte gör:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee-relä + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Kostnad</th><td>₪300 om året (mitt abonnemang)</td><td>Ungefär ₪37 en gång; fjärrstyrning är ett engångsköp av ZigDash Pro</td></tr>
+    <tr><th>Anslutning</th><td>Eget 4G-SIM: fungerar när huset saknar internet</td><td>Din Zigbee-hubb hemma; borta från hemmet behövs internet hemma</td></tr>
+    <tr><th>Vem kan öppna</th><td>Användare och gäster som hanteras i PalGate-appen, och öppning via telefonsamtal</td><td>Telefoner som du delar hemmet med (upp till fem på distans)</td></tr>
+    <tr><th>Moln</th><td>PalGates tjänst</td><td>Inget hemma; på distans går det via ZigDash-reläservern, end-to-end-krypterat</td></tr>
+  </tbody>
+</table>
+</div>
+<p>För en villa där familjen öppnar en grind gör reläet allt jag behövde. För en byggnad med många boende och besökare är en hanterad tjänst som PalGate fortfarande vettig.</p>
+
+<div class="tip">PalGate är ett varumärke som tillhör sin ägare. ZigDash är inte knutet till PalGate eller PAL Electronics Systems. Priserna är vad jag betalade i november 2026.</div>
+
+<div class="tip"><strong>Har du också gjort det här?</strong> Berätta hur det gick, eller vad som var annorlunda med din grind: <a href="mailto:support@zigdash.app">support@zigdash.app</a> eller <a href="https://t.me/zigdash_app">communityn</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Hämta ZigDash</a><a class="btn" href="../../hubs/">Välj en hubb</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Källkod</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Integritetspolicy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart rulljalusi med SONOFF MINI-ZBRBS och Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="En SONOFF MINI-ZBRBS Zigbee-modul bakom jalusibrytaren, inkopplad så att den gamla brytaren finns kvar. Delar, inkoppling, ihopparning med Zigbee2MQTT, kalibrering och en jalusiruta i ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Smart rulljalusi med SONOFF MINI-ZBRBS och Zigbee2MQTT">
+<meta property="og:description" content="En liten Zigbee-modul bakom jalusibrytaren: väggbrytaren fungerar fortfarande, och jalusin öppnas från ZigDash. Delar, inkoppling, ihopparning och kalibrering.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/sv/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Installation</a>
+    <a href="../../hubs/">Hubbar</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hjälp</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Så gjorde jag min rulljalusi smart med en SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, utvecklaren av ZigDash · 21 november 2026</p>
+<p class="byline">Finns också på: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a></p>
+<p class="lead">Rulljalusin på mitt kontor har en elmotor och en vanlig upp/ned-brytare på väggen. Jag satte en SONOFF MINI-ZBRBS, en liten Zigbee-modul för rulljalusier, i apparatdosan bakom den brytaren. Väggbrytaren fungerar precis som förut, och nu öppnas och stängs jalusin också från en ruta i ZigDash, hemma och var som helst ifrån.</p>
+
+<div class="toc"><strong>På den här sidan</strong>
+<ul>
+  <li><a href="#how">Så fungerar det</a></li>
+  <li><a href="#need">Det här behöver du</a></li>
+  <li><a href="#wire">1. Koppla in modulen</a></li>
+  <li><a href="#pair">2. Para ihop den med ZigDash</a></li>
+  <li><a href="#mode">3. Tala om vilken sorts brytare du har</a></li>
+  <li><a href="#calibrate">4. Kalibrera</a></li>
+  <li><a href="#tile">5. En jalusiruta i ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Så fungerar det</h2>
+<p>En jalusimotor har två strömledare: den ena kör den uppåt, den andra nedåt. Väggbrytaren skickar fas till en av dem. MINI-ZBRBS sitter emellan: motorns två ledare går till dess utgångar (<strong>Lout1</strong> och <strong>Lout2</strong>), och den gamla brytaren går till dess ingångar (<strong>S1</strong> och <strong>S2</strong>). När du trycker på brytaren styr modulen motorn. När ZigDash ber om det över Zigbee styr den också motorn.</p>
+<p>Modulen vet också var jalusin står, så du kan skicka den till 50% i stället för bara hela vägen upp eller ned. Och eftersom den drivs från elnätet fungerar den som en Zigbee-router som gör ditt nätverk starkare.</p>
+
+<h2 id="need">Det här behöver du</h2>
+<ul>
+  <li><strong>En SONOFF MINI-ZBRBS</strong> (Zigbee-brytare för rulljalusier). Zigbee2MQTT stöder den som modell <code>MINI-ZBRBS</code>.</li>
+  <li><strong>En jalusimotor med egna gränslägesbrytare</strong>: den vanliga rörmotorn med fyra ledare (neutral, upp, ned, skyddsjord) som stannar av sig själv uppe och nere. SONOFF anger att modulen klarar motorer upp till <strong>1&nbsp;A</strong>, och den stoppar motorn av sig själv efter 2 minuter åt samma håll.</li>
+  <li><strong>En neutralledare (nolla) i brytardosan.</strong> Modulen behöver neutralen för sin egen strömförsörjning.</li>
+  <li><strong>Plats i dosan</strong> bakom brytaren. SONOFF rekommenderar en dosa som är minst 60&nbsp;mm djup.</li>
+  <li><strong>Snabbkopplingsklämmor med spak</strong> (jag använde en WAGO 221) och några korta bitar ledning.</li>
+  <li><strong>En Zigbee2MQTT-hubb</strong> hemma. Har du ingen än, se <a href="../../hubs/">Hubbar</a>.</li>
+  <li><strong>ZigDash</strong> i telefonen (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Att styra jalusin hemma är gratis. Att styra den var som helst ifrån använder fjärrstyrningen i ZigDash Pro: ett engångsköp, inget abonnemang.</li>
+</ul>
+
+<div class="tip"><strong>Slå av strömmen med automatsäkringen innan du öppnar brytaren.</strong> Det finns 230V i dosan. Om du inte känner dig trygg med att arbeta med nätspänning, låt en elektriker göra inkopplingen. SONOFF rekommenderar en 1&nbsp;A automatsäkring (MCB eller RCBO) före modulen.</div>
+
+<h2 id="wire">1. Koppla in modulen</h2>
+<p>Modulen har sex anslutningsplintar, märkta på den: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (upp) och <strong>S2</strong> (ned). Den har ingen jordplint. Så här kopplade jag min:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Plint</th><th>Går till</th><th>I min dosa</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Neutral</td><td>De blå neutralledarna, samlade i en WAGO 221, med en kort ledning därifrån till N (se anmärkningen nedan om färgen)</td></tr>
+    <tr><th>L</th><td>Fas</td><td>Dosans inkommande fas</td></tr>
+    <tr><th>Lout1</th><td>Motor: upp (SONOFF kallar det framåt)</td><td>Motorns svarta ledare</td></tr>
+    <tr><th>Lout2</th><td>Motor: ned (bakåt)</td><td>Motorns bruna ledare</td></tr>
+    <tr><th>S1</th><td>Brytarens upp-utgång</td><td>En av den gamla brytarens utgångar</td></tr>
+    <tr><th>S2</th><td>Brytarens ned-utgång</td><td>Den gamla brytarens andra utgång</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Den gamla brytaren blir kvar.</strong> Dess gemensamma plint får fas, som förut. Dess två utgångar går inte längre till motorn: de går till S1 och S2 och talar om för modulen åt vilket håll den ska köra. <strong>S1 och S2 är ingångar för nätspänning</strong>, inte klenspänning: mata brytarens gemensamma plint från samma fas, via samma säkring, som L.</p>
+<p><strong>Skyddsjord:</strong> låt motorns gulgröna skyddsjord vara ihopkopplad med dosans skyddsjord, som den var. Den går inte till modulen.</p>
+<p><strong>Upp och ned:</strong> ledarfärgerna skiljer sig i varje hus. Innan du kopplar loss brytaren, notera vilken motorledare dess upp-utgång matade och märk den: den ska till Lout1. Om du får dem åt fel håll visar steg 4 hur du rättar det.</p>
+<div class="tip"><strong>Använd en blå (eller grå) ledning till neutralbryggan.</strong> Jag hade bara röd till hands, så på mina bilder är den korta ledningen från WAGO-klämman till N röd, med en blå ändhylsa i modulens ände. Röd betyder normalt fas, och den som öppnar dosan härnäst ska inte behöva gissa. Använder du en annan färg, märk den med blå tejp i båda ändar.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Två blå neutralledare och en röd ledning samlade i en orange WAGO 221-klämma med spak; den röda ledningen går till N-plinten på SONOFF-modulen" loading="lazy" width="675" height="900"><figcaption>Neutral: dosans blå neutralledare i en WAGO 221, och en kort röd ledning därifrån till modulens N.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="Baksidan av den gamla jalusibrytaren med tre röda ledningar i plintarna" loading="lazy" width="810" height="690"><figcaption>Den gamla jalusibrytaren, kvar: fas in på den gemensamma plinten, och upp- och ned-utgångarna går nu till S1 och S2. Vilken plint som är den gemensamma skiljer sig mellan brytare; kontrollera din innan du kopplar loss den.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="Den öppna apparatdosan med brytaren utdragen och SONOFF MINI-ZBRBS inkopplad: två röda ledningar från brytaren till S1 och S2, motorns bruna och svarta ledare till Lout2 och Lout1, fas till L och neutral till N" loading="lazy" width="640" height="1124"><figcaption>Allt inkopplat, innan det går tillbaka in i väggen. Från vänster på modulen: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Kontrollera att varje skruvplint är ordentligt åtdragen. Låt modulen ligga utanför dosan tills vidare, med plintarna vända bort från dig: du parar ihop den i nästa steg.</p>
+
+<h2 id="pair">2. Para ihop den med ZigDash</h2>
+<p>Ihopparningen kräver att modulen har ström och att dess knapp trycks in, så det är det enda tillfället du arbetar nära en spänningssatt dosa. Tryck bara på knappen, med ett verktyg av plast (baksidan av en penna), och rör inget annat. Lägg modulen på något som inte leder ström, utan att den rör brytarens metallram.</p>
+<ol>
+  <li>Öppna <strong>Enheter</strong> i ZigDash och tryck på <strong>Starta ihopparning</strong>.</li>
+  <li>Slå på säkringen. Håll in knappen på modulen i ungefär <strong>5 sekunder</strong>, tills den blå lysdioden blinkar långsamt. Den stannar i ihopparningsläge i upp till 3 minuter.</li>
+  <li>ZigDash visar den nya enheten. Ge den ett namn du känner igen, till exempel <strong>Jalusi kontoret</strong>.</li>
+  <li>Slå av säkringen. Vik in ledningarna, sätt modulen bakom brytaren, stäng dosan och slå på säkringen igen. Allt annat gör du från telefonen och Zigbee2MQTT:s webbsida.</li>
+</ol>
+
+<h2 id="mode">3. Tala om vilken sorts brytare du har</h2>
+<p>Modulen måste veta hur din väggbrytare beter sig:</p>
+<ul>
+  <li><strong>En vippbrytare som stannar kvar</strong> i upp, av eller ned (som min): läge <code>edge</code>.</li>
+  <li><strong>En tryckknapp</strong> som fjädrar tillbaka när du släpper: läge <code>pulse</code>.</li>
+</ul>
+<p>Enklast är Zigbee2MQTT:s webbsida: öppna enheten, gå till fliken <strong>Exposes</strong> och sätt <code>external_trigger_mode</code> till <code>edge</code> eller <code>pulse</code>. (Modulens knapp kan också göra det: tre snabba tryck stegar till nästa brytartyp och lysdioden blinkar tre gånger; du kan behöva upprepa det. Det betyder att öppna dosan igen, så jag använde Zigbee2MQTT.)</p>
+<p>Sätt sedan väggbrytaren på upp, av och ned: jalusin ska röra sig och stanna som den alltid har gjort. Gör den inte det är läget fel; välj det andra.</p>
+
+<h2 id="calibrate">4. Kalibrera</h2>
+<p>Modulen lär sig hur lång tid jalusin tar för att gå hela vägen upp och ned. Utan det kan den öppna och stänga, men inte gå till ett läge som 50%.</p>
+<ol>
+  <li>På Zigbee2MQTT:s webbsida, i enhetens flik <strong>Exposes</strong>, sätter du <code>motor_travel_calibration_action</code> till <code>start_automatic</code>.</li>
+  <li>Låt den köra: jalusin går hela vägen åt ena hållet och sedan åt andra. Rör inte brytaren under tiden. När den är klar visar <code>motor_travel_calibration_status</code> värdet <code>Calibrated</code>.</li>
+</ol>
+<p>(På själva modulen startar du samma kalibrering genom att hålla in knappen i mer än 10 sekunder, tills lysdioden pulserar.) Om den automatiska kalibreringen inte blir klar (till exempel med en svag motor) beskriver både SONOFF och Zigbee2MQTT en manuell kalibrering: då markerar du själv helt öppen och helt stängd.</p>
+<p><strong>Upp och ned omkastade?</strong> Slå av säkringen, byt plats på ledarna i <strong>Lout1</strong> och <strong>Lout2</strong> och kalibrera igen. Zigbee2MQTT:s alternativ <code>invert_cover</code> vänder bara på läget som rapporteras; det ändrar inte åt vilket håll motorn går.</p>
+
+<h2 id="tile">5. En jalusiruta i ZigDash</h2>
+<ol>
+  <li>På din instrumentpanel trycker du på <strong>Lägg till från en enhet</strong> och väljer jalusin.</li>
+  <li>Rutan har knapparna <strong>Öppna</strong>, <strong>Stopp</strong> och <strong>Stäng</strong>, och en rad förinställda lägen (0, 25, 50, 100 som standard). Du kan slå på ett positionsreglage i rutans inställningar.</li>
+  <li><strong>Var som helst ifrån:</strong> med ZigDash Pro slår du på fjärrstyrning, och samma ruta fungerar när du är hemifrån, utan att någon port öppnas i routern och utan månadsavgift.</li>
+</ol>
+<p>Väggbrytaren och appen fungerar sida vid sida: brytaren finns kvar för alla som inte har appen, och rutan fortsätter att fungera oavsett om jalusin senast flyttades för hand eller från telefonen.</p>
+
+<div class="tip">SONOFF är ett varumärke som tillhör sin ägare. ZigDash är inte knutet till SONOFF eller ITEAD. Följ manualen som följer med din modul och de elföreskrifter som gäller där du bor.</div>
+
+<div class="tip"><strong>Har du också gjort det här?</strong> Berätta hur det gick, eller vad som var annorlunda i din dosa: <a href="mailto:support@zigdash.app">support@zigdash.app</a> eller <a href="https://t.me/zigdash_app">communityn</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Hämta ZigDash</a><a class="btn" href="../../hubs/">Välj en hubb</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Källkod</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Integritetspolicy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

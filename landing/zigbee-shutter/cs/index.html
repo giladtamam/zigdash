@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chytrá roleta se SONOFF MINI-ZBRBS a Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Zigbee modul SONOFF MINI-ZBRBS za vypínačem rolety, zapojený tak, že starý vypínač zůstane. Materiál, zapojení, párování se Zigbee2MQTT, kalibrace a dlaždice rolety v ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Chytrá roleta se SONOFF MINI-ZBRBS a Zigbee2MQTT">
+<meta property="og:description" content="Malý Zigbee modul za vypínačem rolety: nástěnný vypínač dál funguje a roleta se otevírá ze ZigDash. Materiál, zapojení, párování a kalibrace.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/cs/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Zprovoznění</a>
+    <a href="../../hubs/">Huby</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Nápověda</a>
+    <a href="https://t.me/zigdash_app">Komunita</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Jak jsem udělal ze své rolety chytrou pomocí SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, vývojář ZigDash · 21. listopadu 2026</p>
+<p class="byline">Také v jazycích: <a href="../" hreflang="en" lang="en">English</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Roleta v mé pracovně má elektrický motor a obyčejný vypínač nahoru/dolů na zdi. Do krabice za tímto vypínačem jsem dal SONOFF MINI-ZBRBS, malý Zigbee modul pro rolety. Nástěnný vypínač funguje přesně jako dřív a roleta se teď navíc otevírá a zavírá z dlaždice v ZigDash, doma i odkudkoli.</p>
+
+<div class="toc"><strong>Na této stránce</strong>
+<ul>
+  <li><a href="#how">Jak to funguje</a></li>
+  <li><a href="#need">Co potřebuješ</a></li>
+  <li><a href="#wire">1. Zapoj modul</a></li>
+  <li><a href="#pair">2. Spáruj ho se ZigDash</a></li>
+  <li><a href="#mode">3. Řekni mu, jaký máš vypínač</a></li>
+  <li><a href="#calibrate">4. Kalibrace</a></li>
+  <li><a href="#tile">5. Dlaždice rolety v ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Jak to funguje</h2>
+<p>Motor rolety má dva napájecí vodiče: jeden ho pouští nahoru, druhý dolů. Nástěnný vypínač přivádí fázi na jeden z nich. MINI-ZBRBS sedí mezi tím: dva vodiče motoru jdou na jeho výstupy (<strong>Lout1</strong> a <strong>Lout2</strong>) a starý vypínač na jeho vstupy (<strong>S1</strong> a <strong>S2</strong>). Když zmáčkneš vypínač, modul ovládá motor. Když o to ZigDash požádá přes Zigbee, ovládá motor také.</p>
+<p>Modul taky ví, kde roleta je, takže ji můžeš poslat na 50 % místo jen úplně nahoru nebo úplně dolů. A protože je napájený ze sítě, funguje jako Zigbee router, který tvou síť posílí.</p>
+
+<h2 id="need">Co potřebuješ</h2>
+<ul>
+  <li><strong>SONOFF MINI-ZBRBS</strong> (Zigbee spínač pro rolety). Zigbee2MQTT ho podporuje jako model <code>MINI-ZBRBS</code>.</li>
+  <li><strong>Motor rolety s vlastními koncovými spínači</strong>: běžný trubkový motor se čtyřmi vodiči (nulový, nahoru, dolů, ochranný), který se nahoře a dole zastaví sám. SONOFF uvádí modul pro motory do <strong>1&nbsp;A</strong> a modul motor sám zastaví po 2 minutách v jednom směru.</li>
+  <li><strong>Nulový vodič v krabici vypínače.</strong> Modul potřebuje nulák pro své vlastní napájení.</li>
+  <li><strong>Místo v krabici</strong> za vypínačem. SONOFF doporučuje krabici hlubokou alespoň 60&nbsp;mm.</li>
+  <li><strong>Páčkové svorky</strong> (já použil WAGO 221) a pár krátkých kousků vodiče.</li>
+  <li><strong>Zigbee2MQTT hub</strong> doma. Pokud ho ještě nemáš, podívej se na <a href="../../hubs/">Huby</a>.</li>
+  <li><strong>ZigDash</strong> v telefonu (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Ovládání rolety doma je zdarma. Ovládání odkudkoli používá dálkové ovládání ZigDash Pro: jednorázový nákup, žádné předplatné.</li>
+</ul>
+
+<div class="tip"><strong>Než otevřeš vypínač, vypni proud jističem.</strong> V krabici je 230V. Pokud si s prací na síťovém napětí nevěříš, nech zapojení udělat elektrikáře. SONOFF doporučuje před modulem jistič 1&nbsp;A (MCB nebo RCBO).</div>
+
+<h2 id="wire">1. Zapoj modul</h2>
+<p>Modul má šest svorek, na něm vytištěných: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (nahoru) a <strong>S2</strong> (dolů). Ochrannou svorku nemá. Takhle jsem zapojil ten svůj:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Svorka</th><th>Vede na</th><th>V mé krabici</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Nulový vodič</td><td>Modré nulové vodiče, spojené ve WAGO 221, odtud krátký vodič na N (viz poznámku níže o jeho barvě)</td></tr>
+    <tr><th>L</th><td>Fáze</td><td>Fáze, která napájí krabici</td></tr>
+    <tr><th>Lout1</th><td>Motor: nahoru (SONOFF tomu říká „forward“)</td><td>Černý vodič motoru</td></tr>
+    <tr><th>Lout2</th><td>Motor: dolů („reverse“)</td><td>Hnědý vodič motoru</td></tr>
+    <tr><th>S1</th><td>Výstup vypínače nahoru</td><td>Jeden z výstupů starého vypínače</td></tr>
+    <tr><th>S2</th><td>Výstup vypínače dolů</td><td>Druhý výstup starého vypínače</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Starý vypínač zůstává.</strong> Jeho společná svorka dostává fázi jako dřív. Jeho dva výstupy už nevedou k motoru: jdou na S1 a S2 a říkají modulu, kterým směrem jet. <strong>S1 a S2 jsou vstupy na síťové napětí</strong>, ne malé napětí: společnou svorku vypínače napájej ze stejné fáze, na stejném jističi, jako L.</p>
+<p><strong>Ochranný vodič:</strong> nech zelenožlutý ochranný vodič motoru spojený s ochranným vodičem v krabici, jak byl. Na modul nevede.</p>
+<p><strong>Nahoru a dolů:</strong> barvy vodičů jsou v každém domě jiné. Než vypínač odpojíš, poznamenej si, který vodič motoru napájel jeho výstup nahoru, a označ ho: ten jde na Lout1. Když je prohodíš, krok 4 ukazuje, jak to opravit.</p>
+<div class="tip"><strong>Na propojku nulového vodiče použij modrý (nebo šedý) vodič.</strong> Měl jsem po ruce jen červený, takže na mých fotkách je krátký vodič z WAGO na N červený, s modrou dutinkou na konci u modulu. Červená obvykle znamená fázi a kdo tuhle krabici otevře příště, by neměl muset hádat. Pokud použiješ jinou barvu, označ ji na obou koncích modrou páskou.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Dva modré nulové vodiče a jeden červený vodič spojené v oranžové páčkové svorce WAGO 221; červený vodič vede na svorku N modulu SONOFF" loading="lazy" width="675" height="900"><figcaption>Nulový vodič: modré nuláky z krabice ve WAGO 221 a odtud krátký červený vodič na N modulu.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="Zadní strana starého vypínače rolety se třemi červenými vodiči ve svorkách" loading="lazy" width="810" height="690"><figcaption>Starý vypínač rolety, ponechaný: fáze vstupuje na jeho společnou svorku a jeho výstupy nahoru a dolů teď vedou na S1 a S2. Která svorka je společná, se liší vypínač od vypínače; zkontroluj to u svého, než ho odpojíš.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="Otevřená krabice ve zdi s vytaženým vypínačem a zapojeným SONOFF MINI-ZBRBS: dva červené vodiče z vypínače na S1 a S2, hnědý a černý vodič motoru na Lout2 a Lout1, fáze na L a nulový vodič na N" loading="lazy" width="640" height="1124"><figcaption>Vše zapojené, než to půjde zpátky do zdi. Na modulu zleva: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Zkontroluj, že každá šroubová svorka je pevně dotažená. Modul zatím nech mimo krabici, svorkami od sebe: v dalším kroku ho spáruješ.</p>
+
+<h2 id="pair">2. Spáruj ho se ZigDash</h2>
+<p>Párování vyžaduje, aby byl modul pod napětím a aby se zmáčklo jeho tlačítko, takže je to jediný okamžik, kdy pracuješ u krabice pod napětím. Mačkej jen tlačítko, plastovým nástrojem (zadní stranou propisky), a ničeho jiného se nedotýkej. Polož modul na něco nevodivého, tak aby se nedotýkal kovového rámečku vypínače.</p>
+<ol>
+  <li>V ZigDash otevři <strong>Zařízení</strong> a klepni na <strong>Spustit párování</strong>.</li>
+  <li>Zapni jistič. Podrž tlačítko modulu asi <strong>5 sekund</strong>, dokud jeho modrá LED nezačne pomalu blikat. V režimu párování zůstane až 3 minuty.</li>
+  <li>ZigDash ukáže nové zařízení. Dej mu jméno, které poznáš, třeba <strong>Roleta pracovna</strong>.</li>
+  <li>Vypni jistič. Zastrč vodiče, dej modul za vypínač, zavři krabici a jistič znovu zapni. Všechno ostatní uděláš z telefonu a webové stránky Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. Řekni mu, jaký máš vypínač</h2>
+<p>Modul musí vědět, jak se tvůj nástěnný vypínač chová:</p>
+<ul>
+  <li><strong>Kolébkový vypínač, který zůstane</strong> v poloze nahoru, vypnuto nebo dolů (jako ten můj): režim <code>edge</code>.</li>
+  <li><strong>Tlačítko</strong>, které se po puštění vrátí zpět: režim <code>pulse</code>.</li>
+</ul>
+<p>Nejjednodušší je webová stránka Zigbee2MQTT: otevři zařízení, přejdi na jeho kartu <strong>Exposes</strong> a nastav <code>external_trigger_mode</code> na <code>edge</code> nebo <code>pulse</code>. (Umí to i tlačítko modulu: rychlé trojité stisknutí přepne na další typ vypínače a LED třikrát blikne; možná to budeš muset zopakovat. To ale znamená znovu otevřít krabici, takže jsem použil Zigbee2MQTT.)</p>
+<p>Pak přepni nástěnný vypínač nahoru, vypnuto a dolů: roleta by se měla pohybovat a zastavovat jako vždycky. Pokud ne, režim je špatně; nastav ten druhý.</p>
+
+<h2 id="calibrate">4. Kalibrace</h2>
+<p>Modul se naučí, jak dlouho roletě trvá vyjet úplně nahoru a dolů. Bez toho umí otevřít a zavřít, ale neumí najet na polohu jako 50 %.</p>
+<ol>
+  <li>Na webové stránce Zigbee2MQTT, na kartě <strong>Exposes</strong> zařízení, nastav <code>motor_travel_calibration_action</code> na <code>start_automatic</code>.</li>
+  <li>Nech to běžet: roleta vyjede úplně jedním směrem, pak druhým. Během toho na vypínač nesahej. Až to skončí, <code>motor_travel_calibration_status</code> ukáže <code>Calibrated</code>.</li>
+</ol>
+<p>(Přímo na modulu spustí stejnou kalibraci podržení tlačítka déle než 10 sekund, dokud LED nezačne „dýchat“.) Pokud automatická kalibrace nedoběhne (třeba u slabého motoru), SONOFF i Zigbee2MQTT popisují ruční kalibraci: plně otevřeno a plně zavřeno si označíš sám.</p>
+<p><strong>Nahoru a dolů prohozené?</strong> Vypni jistič, prohoď vodiče na <strong>Lout1</strong> a <strong>Lout2</strong> a pak kalibruj znovu. Volba <code>invert_cover</code> v Zigbee2MQTT jen obrací hlášenou polohu; nemění, kterým směrem se motor točí.</p>
+
+<h2 id="tile">5. Dlaždice rolety v ZigDash</h2>
+<ol>
+  <li>Na nástěnce klepni na <strong>Přidat ze zařízení</strong> a vyber roletu.</li>
+  <li>Dlaždice má tlačítka <strong>Otevřít</strong>, <strong>Stop</strong> a <strong>Zavřít</strong> a řadu předvoleb polohy (výchozí 0, 25, 50, 100). V nastavení dlaždice můžeš zapnout posuvník polohy.</li>
+  <li><strong>Odkudkoli:</strong> se ZigDash Pro zapni dálkové ovládání a stejná dlaždice funguje i mimo domov, bez otevřeného portu na routeru a bez měsíčního poplatku.</li>
+</ol>
+<p>Nástěnný vypínač a aplikace fungují vedle sebe: vypínač tu dál je pro každého, kdo aplikaci nemá, a dlaždice funguje dál, ať roletou naposledy pohnul někdo rukou, nebo z telefonu.</p>
+
+<div class="tip">SONOFF je ochranná známka svého vlastníka. ZigDash není se SONOFF ani ITEAD nijak spojen. Řiď se návodem dodaným s modulem a místními elektrotechnickými předpisy.</div>
+
+<div class="tip"><strong>Dělal jsi to taky?</strong> Napiš mi, jak to dopadlo, nebo co bylo ve tvé krabici jinak: <a href="mailto:support@zigdash.app">support@zigdash.app</a> nebo <a href="https://t.me/zigdash_app">v komunitě</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Stáhnout ZigDash</a><a class="btn" href="../../hubs/">Vybrat hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Zdrojový kód</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Zásady ochrany osobních údajů</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
