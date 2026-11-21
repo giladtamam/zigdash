@@ -1685,7 +1685,39 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Ten dom łączy się przez stronę Zigbee2MQTT. Podaj swój broker MQTT (zwykle to samo urządzenie, port 1883), aby włączyć automatyzacje, alerty i historię. Po zapisaniu ZigDash łączy się przez broker.';
+      'Ten dom łączy się przez stronę Zigbee2MQTT. Podaj swój broker MQTT (zwykle to samo urządzenie, port 1883), aby włączyć automatyzacje, alerty i historię. Gdy broker będzie mieć Twoje urządzenia, ZigDash przełączy się na niego.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Połączono, ale ten broker nie ma żadnego z Twoich urządzeń. Jeśli właśnie włączono broker, uruchom ponownie Zigbee2MQTT, aby się z nim połączył.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT używa $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Odczytywanie ustawień Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Nadal używać strony Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Ten broker odpowiedział, ale nie ma żadnego z Twoich urządzeń, więc Twoje dashboardy byłyby puste. Zigbee2MQTT może używać innego brokera albo wymagać restartu po włączeniu brokera.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Broker nie odpowiedział, więc Twoje dashboardy byłyby puste.';
+
+  @override
+  String get connKeepPage => 'Zostaw stronę Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Zapisz mimo to';
+
+  @override
+  String get connChecking => 'Sprawdzanie brokera…';
 
   @override
   String get setupManualEntry => 'Wpisz dane ręcznie';

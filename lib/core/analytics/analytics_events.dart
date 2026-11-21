@@ -1658,6 +1658,46 @@ class HistoryOnEvent extends AnalyticsEvent {
   Map<String, String> get props => {'step': step.wire, 'from': from.name};
 }
 
+/// Saving an MQTT broker for a Home that connects through the Zigbee2MQTT
+/// page (3.8.6, broker-no-devices-386.md §6): saved, the page kept, saved
+/// anyway or cancelled; whether the broker answered the check (or it gave
+/// up after 15 s); how many devices it had, in buckets.
+enum PageBrokerResult {
+  saved('saved'),
+  keptPage('kept_page'),
+  savedAnyway('saved_anyway'),
+  cancelled('cancelled');
+
+  const PageBrokerResult(this.wire);
+  final String wire;
+}
+
+enum PageBrokerAnswered { yes, no, timeout }
+
+class PageBrokerEvent extends AnalyticsEvent {
+  const PageBrokerEvent(this.result, {this.answered, this.devices});
+
+  final PageBrokerResult result;
+  final PageBrokerAnswered? answered;
+  final int? devices;
+
+  @override
+  String get name => 'page_broker';
+
+  @override
+  Map<String, String> get props => {
+    'result': result.wire,
+    if (answered != null) 'answered': answered!.name,
+    if (devices != null)
+      'devices': bucket(
+        devices!,
+        const [0],
+        ranges: const [(1, 5), (6, 20)],
+        top: '21+',
+      ),
+  };
+}
+
 /// The 14-day Pro trial (3.6, pro-trial-360.md §5): started (from where,
 /// the Home's platform, the install's first-open week), declined (the
 /// offer), a feature used (once each), the ending card shown, ended, or

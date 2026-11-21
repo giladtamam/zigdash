@@ -1680,7 +1680,39 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Этот дом подключается через страницу Zigbee2MQTT. Введите ваш MQTT-брокер (обычно та же машина, порт 1883), чтобы включить автоматизации, оповещения и историю. После сохранения ZigDash подключается через брокер.';
+      'Этот дом подключается через страницу Zigbee2MQTT. Введите ваш MQTT-брокер (обычно та же машина, порт 1883), чтобы включить автоматизации, оповещения и историю. Когда на брокере будут ваши устройства, ZigDash переключится на него.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Подключено, но на этом брокере нет ни одного вашего устройства. Если вы только что включили брокер, перезапустите Zigbee2MQTT, чтобы он к нему подключился.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT использует $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Чтение настроек Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Продолжить через страницу Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Этот брокер ответил, но на нём нет ни одного вашего устройства, поэтому ваши дашборды были бы пустыми. Возможно, Zigbee2MQTT использует другой брокер или его нужно перезапустить после включения брокера.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Брокер не ответил, поэтому ваши дашборды были бы пустыми.';
+
+  @override
+  String get connKeepPage => 'Оставить страницу Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Всё равно сохранить';
+
+  @override
+  String get connChecking => 'Проверка брокера…';
 
   @override
   String get setupManualEntry => 'Ввести вручную';

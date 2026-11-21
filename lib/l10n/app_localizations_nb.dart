@@ -1671,7 +1671,39 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Dette hjemmet kobler seg til via Zigbee2MQTT-siden. Skriv inn MQTT-megleren din (som regel samme maskin, port 1883) for å slå på automasjoner, varsler og historikk. Etter lagring kobler ZigDash seg til via megleren.';
+      'Dette hjemmet kobler seg til via Zigbee2MQTT-siden. Skriv inn MQTT-megleren din (som regel samme maskin, port 1883) for å slå på automasjoner, varsler og historikk. Når megleren har enhetene dine, bytter ZigDash til den.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Tilkoblet, men denne megleren har ingen av enhetene dine. Hvis du nettopp slo på megleren, start Zigbee2MQTT på nytt så den kobler seg til den.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT bruker $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Leser innstillingene til Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Fortsette med Zigbee2MQTT-siden?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Denne megleren svarte, men den har ingen av enhetene dine, så dashbordene dine ville vært tomme. Zigbee2MQTT bruker kanskje en annen megler, eller må startes på nytt etter at megleren ble slått på.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Megleren svarte ikke, så dashbordene dine ville vært tomme.';
+
+  @override
+  String get connKeepPage => 'Behold Zigbee2MQTT-siden';
+
+  @override
+  String get connSaveAnyway => 'Lagre likevel';
+
+  @override
+  String get connChecking => 'Sjekker megleren…';
 
   @override
   String get setupManualEntry => 'Skriv inn detaljer manuelt';

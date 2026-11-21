@@ -1675,7 +1675,39 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Po uložení se ZigDash připojuje přes broker.';
+      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Jakmile bude mít broker vaše zařízení, ZigDash na něj přepne.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Připojeno, ale tento broker nemá žádné z vašich zařízení. Pokud jste broker právě zapnuli, restartujte Zigbee2MQTT, aby se k němu připojil.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT používá $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Načítání nastavení Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Dál používat stránku Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Tento broker odpověděl, ale nemá žádné z vašich zařízení, takže by vaše nástěnky byly prázdné. Zigbee2MQTT možná používá jiný broker, nebo potřebuje restart po zapnutí brokeru.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Broker neodpověděl, takže by vaše nástěnky byly prázdné.';
+
+  @override
+  String get connKeepPage => 'Ponechat stránku Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Přesto uložit';
+
+  @override
+  String get connChecking => 'Kontrola brokeru…';
 
   @override
   String get setupManualEntry => 'Zadat údaje ručně';

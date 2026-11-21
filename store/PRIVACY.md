@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.8.5 is published (replaces the policy published with ZigDash 3.8.3)
+**Effective date:** the day ZigDash 3.8.6 is published (replaces the policy published with ZigDash 3.8.5)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -227,6 +227,7 @@ never from anything you typed or anything your broker sent.
 | `home_share` | From 3.1.7, sharing a Home with another phone | that a phone showed its share code, that another phone joined, and whether the dashboards arrived; never the Home, its address or its login |
 | `pro` | From 2.7, Google Play and App Store versions only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. From 3.6: whether the 14-day trial had not started, was running or had ended. Nothing about the payment, the price or the currency |
 | `history_on` | From 3.6: the Turn on History card | shown, tapped, put off, the consent shown or declined, this phone chosen to record, or the broker asked for; and whether it was right after setup or later |
+| `page_broker` | From 3.8.6: saving your MQTT broker for a home that connects through the Zigbee2MQTT page | whether it was saved, you kept the page, saved anyway or cancelled; whether the broker answered (or the check gave up after 15 seconds); how many devices it had (0, 1–5, 6–20, 21+) |
 | `pro_trial` | From 3.6, Google Play version only: the 14-day Pro trial | started (from where: right after setup, the History card, a History sheet or the offer; the Home's kind of connection; the week ZigDash was installed), the offer declined, a Pro feature used during it (the week or month History, the wall tablet extras, more than three automations; once each), the ending card shown, ended, or Pro bought during it or within a week after. Never a device, a reading or a time of day |
 | `sale_card` | From 3.4.6, Google Play version only: the card on the Devices tab that announces a sale on ZigDash Pro | the step only: shown, opened or closed |
 | `review_prompt` | From 2.6.5: the app asked Google Play (or, on iPhone and iPad, the App Store) to show its "rate this app" dialog, at most once in 90 days and only from the second day of use. From 3.6.1 at one of three moments: a device you control answered, a home with sensors only after four days of use, or closing History after a week or month chart | whether the dialog was requested, or could not be because the review flow is not available on the device, and which of the three moments it was. Nothing about whether you rated, or what |

@@ -1,0 +1,1 @@
+Adding your broker to a home that uses the Zigbee2MQTT page now checks the broker really has your devices before switching.

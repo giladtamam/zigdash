@@ -1657,7 +1657,39 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'הבית הזה מתחבר דרך דף ה-Zigbee2MQTT. הזינו את ברוקר ה-MQTT שלכם (בדרך כלל אותו מחשב, פורט 1883) כדי להפעיל אוטומציות, התראות והיסטוריה. אחרי השמירה ZigDash מתחבר דרך הברוקר.';
+      'הבית הזה מתחבר דרך דף ה-Zigbee2MQTT. הזינו את ברוקר ה-MQTT שלכם (בדרך כלל אותו מחשב, פורט 1883) כדי להפעיל אוטומציות, התראות והיסטוריה. כשהמכשירים שלכם יהיו בברוקר, ZigDash יעבור אליו.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'מחובר, אבל בברוקר הזה אין אף אחד מהמכשירים שלכם. אם הרגע הפעלתם את הברוקר, הפעילו מחדש את Zigbee2MQTT כדי שיתחבר אליו.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT משתמש ב-$server';
+  }
+
+  @override
+  String get connReadingZ2m => 'קורא את ההגדרות של Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'להמשיך להשתמש בדף ה-Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'הברוקר הזה ענה, אבל אין בו אף אחד מהמכשירים שלכם, כך שהלוחות שלכם יהיו ריקים. ייתכן ש-Zigbee2MQTT משתמש בברוקר אחר, או צריך הפעלה מחדש אחרי שהברוקר הופעל.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'הברוקר לא ענה, כך שהלוחות שלכם יהיו ריקים.';
+
+  @override
+  String get connKeepPage => 'להשאיר את דף ה-Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'לשמור בכל זאת';
+
+  @override
+  String get connChecking => 'בודק את הברוקר…';
 
   @override
   String get setupManualEntry => 'הזנת פרטים ידנית';

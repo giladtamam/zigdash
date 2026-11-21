@@ -92,4 +92,38 @@ void main() {
       expect(z2mBrokerSetting({'server': ''}, frontendHost: 'x'), isNull);
     });
   });
+
+  // 3.8.6: the connection form reads a locked page with its token.
+  group('z2mApiUri', () {
+    test('adds ?token= only when there is one', () {
+      expect(
+        z2mApiUri('192.168.1.64', 8080).toString(),
+        'ws://192.168.1.64:8080/api',
+      );
+      expect(
+        z2mApiUri('192.168.1.64', 8080, token: '').toString(),
+        'ws://192.168.1.64:8080/api',
+      );
+      expect(
+        z2mApiUri('192.168.1.64', 8080, token: 'a b&c').toString(),
+        'ws://192.168.1.64:8080/api?token=a+b%26c',
+      );
+    });
+  });
+
+  group('z2mMqttConfigOfInfo', () {
+    test('reads the mqtt section of a bridge/info payload', () {
+      final payload = jsonEncode({
+        'config': {
+          'mqtt': {'server': 'mqtt://localhost', 'base_topic': 'z2m'},
+        },
+      });
+      expect(z2mMqttConfigOfInfo(payload), {
+        'server': 'mqtt://localhost',
+        'base_topic': 'z2m',
+      });
+      expect(z2mMqttConfigOfInfo('not json'), isNull);
+      expect(z2mMqttConfigOfInfo('{"config": 1}'), isNull);
+    });
+  });
 }

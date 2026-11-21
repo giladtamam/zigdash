@@ -3081,8 +3081,62 @@ abstract class AppLocalizations {
   /// No description provided for @connFromPageNote.
   ///
   /// In en, this message translates to:
-  /// **'This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. After saving, ZigDash connects through the broker.'**
+  /// **'This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. When the broker has your devices, ZigDash switches to it.'**
   String get connFromPageNote;
+
+  /// No description provided for @connBrokerNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected, but this broker has none of your devices. If you just turned the broker on, restart Zigbee2MQTT so it connects to it.'**
+  String get connBrokerNoDevices;
+
+  /// No description provided for @connZ2mUses.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT uses {server}'**
+  String connZ2mUses(String server);
+
+  /// No description provided for @connReadingZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading Zigbee2MQTT\'s settings…'**
+  String get connReadingZ2m;
+
+  /// No description provided for @connKeepPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep using the Zigbee2MQTT page?'**
+  String get connKeepPageTitle;
+
+  /// No description provided for @connKeepPageBodyEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'This broker answered, but it has none of your devices, so your dashboards would be empty. Zigbee2MQTT may use another broker, or need a restart after the broker was turned on.'**
+  String get connKeepPageBodyEmpty;
+
+  /// No description provided for @connKeepPageBodyNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker didn\'t answer, so your dashboards would be empty.'**
+  String get connKeepPageBodyNoAnswer;
+
+  /// No description provided for @connKeepPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the Zigbee2MQTT page'**
+  String get connKeepPage;
+
+  /// No description provided for @connSaveAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Save anyway'**
+  String get connSaveAnyway;
+
+  /// No description provided for @connChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the broker…'**
+  String get connChecking;
 
   /// No description provided for @setupManualEntry.
   ///
