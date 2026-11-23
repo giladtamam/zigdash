@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android-blue.svg)](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash)
+[![App Store](https://img.shields.io/badge/Platform-iOS-blue.svg)](https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829)
 [![Built with Flutter](https://img.shields.io/badge/Built%20with-Flutter-02569B.svg)](https://flutter.dev)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-db61a2.svg)](https://github.com/sponsors/giladtamam)
 [![Website](https://img.shields.io/badge/Website-zigdash.app-006a6a.svg)](https://zigdash.app)
@@ -86,6 +87,7 @@ MQTT.
 ## Install
 
 - [Google Play](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash): the way to get ZigDash, with automatic updates.
+- [App Store](https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829): iPhone and iPad (not in EU countries yet).
 - Phones without Google Play: APKs on [GitHub Releases](https://github.com/giladtamam/zigdash/releases), published less often.
 - F-Droid / IzzyOnDroid / Obtainium: in progress.
 
