@@ -43,7 +43,7 @@
 </section>
 
 <section id="iphone" hidden>
-  <p class="lead">This link holds your Home Assistant's address. Install ZigDash and open it: choose Home Assistant, then The Zigbee2MQTT app, and tap Paste.</p>
+  <p class="lead">This link holds your Home Assistant's address. Copy it below, then install ZigDash and open it: choose Home Assistant, then The Zigbee2MQTT app, and tap Paste.</p>
   <div id="addrs"></div>
   <a class="btn primary" href="https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829" data-goatcounter-click="c-appstore">Download on the App Store</a>
   <p>The iPhone version is not in EU countries yet.</p>
@@ -80,7 +80,8 @@
       copy.className = 'btn';
       copy.type = 'button';
       copy.textContent = 'Copy';
-      var failed = function () { copy.textContent = 'Press and hold the address to copy it'; };
+      copy.setAttribute('data-goatcounter-click', 'c-copy');
+      var failed = function () { copy.textContent = 'Hold the address to copy'; };
       copy.onclick = function () {
         if (!navigator.clipboard) return failed();
         navigator.clipboard.writeText(addr).then(function () { copy.textContent = 'Copied'; }, failed);
