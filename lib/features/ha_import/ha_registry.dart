@@ -62,6 +62,7 @@ class HaDevice {
     this.nameByUser,
     this.areaId,
     this.parentId,
+    this.viaId,
   });
 
   static HaDevice? fromJson(Map<Object?, Object?> json) {
@@ -79,6 +80,7 @@ class HaDevice {
       nameByUser: json['name_by_user'] as String?,
       areaId: json['area_id'] as String?,
       parentId: json['parent_device_id'] as String?,
+      viaId: json['via_device_id'] as String?,
     );
   }
 
@@ -90,6 +92,10 @@ class HaDevice {
 
   /// Set on child devices (Home Assistant 2026.9+); those are skipped.
   final String? parentId;
+
+  /// The device this one connects through. Every ZHA device but the
+  /// coordinator has one.
+  final String? viaId;
 
   /// The name the user gave the device in Home Assistant. Without one,
   /// Home Assistant's `name` is only Zigbee2MQTT's own (often the address),
@@ -113,9 +119,25 @@ class HaDevice {
 
   /// A device ZHA (Home Assistant's own Zigbee) runs.
   bool get isZha => identifiers.any((i) => i.$1 == 'zha');
+
+  /// The IEEE address of a device ZHA runs (not its coordinator), in
+  /// Zigbee2MQTT's form: ZHA's `aa:bb:…` becomes `0xaabb…`. After a move
+  /// from ZHA (zha-migration.md), the same device has the same address in
+  /// Zigbee2MQTT, and ZHA's entry, disabled or not, still has its name and
+  /// room.
+  String? get zhaIeee {
+    if (viaId == null) return null;
+    for (final (domain, value) in identifiers) {
+      if (domain != 'zha') continue;
+      final hex = value.replaceAll(':', '').toLowerCase();
+      if (_hex16.hasMatch(hex)) return '0x$hex';
+    }
+    return null;
+  }
 }
 
 final _z2mDevice = RegExp(r'^zigbee2mqtt_(0x[0-9a-fA-F]{16})$');
+final _hex16 = RegExp(r'^[0-9a-f]{16}$');
 
 class HaArea {
   const HaArea({required this.id, required this.name, this.floorId});
@@ -175,8 +197,20 @@ class ImportDashboard {
 /// a dashboard per floor, a section per room, built from rooms rather than
 /// Home Assistant's own dashboards).
 class ImportPlan {
-  const ImportPlan({required this.dashboards, required this.zhaDevices});
+  const ImportPlan({
+    required this.dashboards,
+    required this.zhaDevices,
+    this.fromZha = 0,
+    required this.z2mDevices,
+  });
   final List<ImportDashboard> dashboards;
+
+  /// Devices whose name or room came from their old ZHA entry (3.8).
+  final int fromZha;
+
+  /// Devices Zigbee2MQTT has. None during a move (nothing paired yet) is
+  /// not "ZHA only" (3.8).
+  final int z2mDevices;
 
   /// Devices ZHA runs. ZigDash cannot show them; when nothing matched and
   /// these exist, Zigbee2MQTT is not in use and the import says so.
@@ -193,7 +227,10 @@ class ImportPlan {
         if (r.name != null) r,
   ].length;
 
-  bool get zhaOnly => matched == 0 && zhaDevices > 0;
+  bool get zhaOnly => matched == 0 && zhaDevices > 0 && z2mDevices > 0;
+
+  /// Nothing paired in Zigbee2MQTT yet, often mid-move from ZHA (3.8).
+  bool get z2mEmpty => matched == 0 && z2mDevices == 0;
 }
 
 /// Matches Home Assistant's devices to the Zigbee2MQTT devices ZigDash sees,
@@ -211,25 +248,52 @@ ImportPlan planImport(HaRegistry registry, List<Z2mDevice> z2m) {
   final areas = {for (final a in registry.areas) a.id: a};
   final floors = {for (final f in registry.floors) f.id: f};
 
+  // A device moved from ZHA keeps its address: ZHA's entry fills in a
+  // name or room the Zigbee2MQTT one lacks (3.8, zha-migration.md).
+  final zhaByIeee = <String, HaDevice>{
+    for (final d in registry.devices)
+      if (d.parentId == null && d.zhaIeee != null) d.zhaIeee!: d,
+  };
+
   // floor id (or null) -> area id (or null) -> devices
   final grouped = <String?, Map<String?, List<ImportedDevice>>>{};
   final seen = <String>{};
+  var fromZha = 0;
+  void add(Z2mDevice device, String? areaId, String? name) {
+    final floorId = areas[areaId]?.floorId;
+    grouped
+        .putIfAbsent(floors.containsKey(floorId) ? floorId : null, () => {})
+        .putIfAbsent(areaId, () => [])
+        .add(ImportedDevice(device: device, name: name ?? device.displayName));
+  }
+
+  String? zhaRoom(HaDevice? zha) =>
+      zha == null ? null : _roomOf(zha, registry.entityAreas[zha.id], areas);
+
   for (final ha in registry.devices) {
     if (ha.parentId != null) continue;
     final ieee = ha.z2mIeee;
     final device = ieee == null ? null : byIeee[ieee];
     if (device == null || !seen.add(ieee!)) continue;
-    final areaId = _roomOf(ha, registry.entityAreas[ha.id], areas);
-    final floorId = areas[areaId]?.floorId;
-    grouped
-        .putIfAbsent(floors.containsKey(floorId) ? floorId : null, () => {})
-        .putIfAbsent(areaId, () => [])
-        .add(
-          ImportedDevice(
-            device: device,
-            name: ha.userName ?? device.displayName,
-          ),
-        );
+    final zha = zhaByIeee[ieee];
+    final room = _roomOf(ha, registry.entityAreas[ha.id], areas);
+    final name = ha.userName ?? (_unnamed(device) ? zha?.userName : null);
+    final areaId = room ?? zhaRoom(zha);
+    if ((ha.userName == null && name != null) ||
+        (room == null && areaId != null)) {
+      fromZha++;
+    }
+    add(device, areaId, name);
+  }
+  // Zigbee2MQTT devices Home Assistant has no MQTT entry for (no MQTT
+  // integration, or discovery off): ZHA's entry alone.
+  for (final MapEntry(key: ieee, value: zha) in zhaByIeee.entries) {
+    final device = byIeee[ieee];
+    if (device == null || !seen.add(ieee)) continue;
+    final areaId = zhaRoom(zha);
+    final name = _unnamed(device) ? zha.userName : null;
+    if (name != null || areaId != null) fromZha++;
+    add(device, areaId, name);
   }
 
   int byName(String? a, String? b) {
@@ -263,8 +327,15 @@ ImportPlan planImport(HaRegistry registry, List<Z2mDevice> z2m) {
         ),
     ],
     zhaDevices: registry.devices.where((d) => d.isZha).length,
+    fromZha: fromZha,
+    z2mDevices: byIeee.length,
   );
 }
+
+/// Still called by its address in Zigbee2MQTT: a name given there since the
+/// move wins over the old ZHA one.
+bool _unnamed(Z2mDevice d) =>
+    d.friendlyName.toLowerCase() == d.ieeeAddress?.toLowerCase();
 
 String? _roomOf(
   HaDevice device,

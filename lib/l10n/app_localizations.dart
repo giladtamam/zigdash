@@ -393,7 +393,7 @@ abstract class AppLocalizations {
   /// No description provided for @connHelpZhaBody.
   ///
   /// In en, this message translates to:
-  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which provides an MQTT broker.'**
+  /// **'ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can\'t connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which runs with an MQTT broker such as Mosquitto.'**
   String get connHelpZhaBody;
 
   /// No description provided for @connHelpSameNetwork.
@@ -1656,18 +1656,6 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get panelCoverClose;
 
-  /// No description provided for @panelToggleNoState.
-  ///
-  /// In en, this message translates to:
-  /// **'(no state)'**
-  String get panelToggleNoState;
-
-  /// No description provided for @panelToggleError.
-  ///
-  /// In en, this message translates to:
-  /// **'err'**
-  String get panelToggleError;
-
   /// No description provided for @panelStateOn.
   ///
   /// In en, this message translates to:
@@ -2265,7 +2253,7 @@ abstract class AppLocalizations {
   /// No description provided for @sceneFormNoDevices.
   ///
   /// In en, this message translates to:
-  /// **'No controllable devices found. Make sure they\'re paired, then tap refresh.'**
+  /// **'No controllable devices or tiles found. Make sure they\'re paired, then tap refresh.'**
   String get sceneFormNoDevices;
 
   /// No description provided for @sceneFormReadingState.
@@ -2301,7 +2289,7 @@ abstract class AppLocalizations {
   /// No description provided for @sceneFormNoDevicesSelected.
   ///
   /// In en, this message translates to:
-  /// **'Select at least one device to capture.'**
+  /// **'Select at least one device or tile.'**
   String get sceneFormNoDevicesSelected;
 
   /// No description provided for @sceneFormNothingCaptured.
@@ -2309,6 +2297,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing settable was captured from the selected devices.'**
   String get sceneFormNothingCaptured;
+
+  /// No description provided for @sceneFormTilesHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tiles'**
+  String get sceneFormTilesHeader;
+
+  /// No description provided for @sceneFormTilesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiles you made yourself. The scene sends what the tile sends.'**
+  String get sceneFormTilesHint;
+
+  /// No description provided for @sceneTileHomeOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs only from this phone at home: not from Automations or when you\'re away.'**
+  String get sceneTileHomeOnly;
+
+  /// No description provided for @sceneFormKeptActions.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 other action is kept} other{{count} other actions are kept}}'**
+  String sceneFormKeptActions(int count);
+
+  /// No description provided for @sceneFormRemoveKept.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get sceneFormRemoveKept;
 
   /// No description provided for @sceneDeleteTitle.
   ///
@@ -2349,7 +2367,7 @@ abstract class AppLocalizations {
   /// No description provided for @sceneActionsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} devices'**
+  /// **'{count, plural, =1{1 action} other{{count} actions}}'**
   String sceneActionsCount(int count);
 
   /// No description provided for @scenesAllShutters.
@@ -2568,6 +2586,18 @@ abstract class AppLocalizations {
   /// **'The broker didn\'t answer the login in time. Home Assistant can take a few seconds to check it, so try again.'**
   String get diagLoginNoAnswer;
 
+  /// Broker test and setup (3.8.5): the TLS handshake failed because the phone does not trust the broker's certificate (self-signed, expired, wrong name). 1883 is the usual unencrypted MQTT port.
+  ///
+  /// In en, this message translates to:
+  /// **'This broker\'s encryption certificate isn\'t trusted by your phone: it is self-signed, expired, or made for another name. ZigDash can\'t use it yet. On your home network, use the broker\'s unencrypted port 1883 instead, or give the broker a certificate from a public authority.'**
+  String get diagTlsUntrusted;
+
+  /// Broker test and setup (3.8.5): the TLS handshake failed for another reason, for example the broker wants a client certificate, or TLS was chosen for a broker that has none. TCP and TLS are the protocol names on the broker form; 1883 is the usual unencrypted MQTT port.
+  ///
+  /// In en, this message translates to:
+  /// **'The encrypted connection didn\'t start. The broker may want a client certificate, which ZigDash doesn\'t support. On your home network, connect without encryption instead: TCP rather than TLS, usually on port 1883.'**
+  String get diagTlsFailed;
+
   /// No description provided for @diagAuthRejected.
   ///
   /// In en, this message translates to:
@@ -2591,12 +2621,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is your Home Assistant, but no MQTT broker is running on it. Install and start the Mosquitto broker app (Settings › Apps), then try again.'**
   String get diagTcpHaNoBroker;
-
-  /// iOS variant of diagResolveLocalName: iOS resolves .local, so no Android claim. Settings › System › Network is Home Assistant's own menu path.
-  ///
-  /// In en, this message translates to:
-  /// **'Your phone couldn\'t find this name. Check that it\'s spelled right, or enter the IP address instead (Home Assistant shows it under Settings › System › Network).'**
-  String get diagResolveLocalNameIos;
 
   /// Broker test: port 1883 refused on an SMLIGHT hub (2.9.5). Settings › MQTT and Allow External are the hub's own English labels; keep them in English.
   ///
@@ -2931,7 +2955,7 @@ abstract class AppLocalizations {
   /// No description provided for @noHubHaBody.
   ///
   /// In en, this message translates to:
-  /// **'Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.'**
+  /// **'Add the Mosquitto broker and Zigbee2MQTT apps (Settings › Apps), then sign in from ZigDash with your Home Assistant login.'**
   String get noHubHaBody;
 
   /// Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names.
@@ -3075,8 +3099,68 @@ abstract class AppLocalizations {
   /// No description provided for @connFromPageNote.
   ///
   /// In en, this message translates to:
-  /// **'This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. After saving, ZigDash connects through the broker.'**
+  /// **'This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. When the broker has your devices, ZigDash switches to it.'**
   String get connFromPageNote;
+
+  /// No description provided for @connBrokerNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected, but this broker has none of your devices. If you just turned the broker on, restart Zigbee2MQTT so it connects to it.'**
+  String get connBrokerNoDevices;
+
+  /// No description provided for @connZ2mUses.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT uses {server}'**
+  String connZ2mUses(String server);
+
+  /// No description provided for @connReadingZ2m.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading Zigbee2MQTT\'s settings…'**
+  String get connReadingZ2m;
+
+  /// No description provided for @connKeepPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep using the Zigbee2MQTT page?'**
+  String get connKeepPageTitle;
+
+  /// No description provided for @connKeepPageBodyEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'This broker answered, but it has none of your devices, so your dashboards would be empty. Zigbee2MQTT may use another broker, or need a restart after the broker was turned on.'**
+  String get connKeepPageBodyEmpty;
+
+  /// No description provided for @connKeepPageBodyNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker didn\'t answer, so your dashboards would be empty.'**
+  String get connKeepPageBodyNoAnswer;
+
+  /// No description provided for @connKeepPageBodyRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The broker refused the login, so your dashboards would be empty.'**
+  String get connKeepPageBodyRefused;
+
+  /// No description provided for @connKeepPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the Zigbee2MQTT page'**
+  String get connKeepPage;
+
+  /// No description provided for @connSaveAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Save anyway'**
+  String get connSaveAnyway;
+
+  /// No description provided for @connChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the broker…'**
+  String get connChecking;
 
   /// No description provided for @setupManualEntry.
   ///
@@ -3155,12 +3239,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications are off for ZigDash, so there\'s no reminder. You can turn them on in Android\'s settings.'**
   String get reminderNoPermission;
-
-  /// No description provided for @reminderNoPermissionIos.
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications are off for ZigDash, so there\'s no reminder. You can turn them on in Settings › ZigDash › Notifications.'**
-  String get reminderNoPermissionIos;
 
   /// No description provided for @reminderChannel.
   ///
@@ -3414,6 +3492,60 @@ abstract class AppLocalizations {
   /// **'That didn\'t hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.'**
   String get haShareNothing;
 
+  /// No description provided for @haLinkNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address from your link. Sign in to connect.'**
+  String get haLinkNote;
+
+  /// No description provided for @haLinkReferrerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the address from the link you opened before installing ZigDash. Sign in to connect.'**
+  String get haLinkReferrerNote;
+
+  /// No description provided for @haLinkNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'That link didn\'t hold a Home Assistant address. Make a new one at zigdash.app/connect.'**
+  String get haLinkNothing;
+
+  /// No description provided for @haNoneComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a computer'**
+  String get haNoneComputer;
+
+  /// No description provided for @haComputerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a computer'**
+  String get haComputerTitle;
+
+  /// No description provided for @haComputerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'On a computer where Home Assistant is open, go to this page and paste Home Assistant\'s address there. Then scan the code with this phone\'s camera.'**
+  String get haComputerBody;
+
+  /// No description provided for @haComputerCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get haComputerCopy;
+
+  /// No description provided for @setupLinkPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your link brought a Home Assistant address. Tap Home Assistant to use it.'**
+  String get setupLinkPending;
+
+  /// No description provided for @setupLinkPendingNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your link didn\'t hold a Home Assistant address. Make a new one at zigdash.app/connect.'**
+  String get setupLinkPendingNothing;
+
   /// The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do.
   ///
   /// In en, this message translates to:
@@ -3461,6 +3593,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker app (Settings › Apps) and the MQTT integration, then try again.'**
   String get haConnectNoMqtt;
+
+  /// Setup's Home Assistant check found devices in ZHA (3.7.1, zha-migration.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Your Zigbee runs in ZHA, Home Assistant\'s own Zigbee ({count, plural, =1{1 device} other{{count} devices}}). ZigDash works with Zigbee2MQTT, so it can\'t show them. Moving to Zigbee2MQTT means pairing your devices again; the guide shows two ways.'**
+  String haConnectZhaFound(int count);
+
+  /// No description provided for @haConnectZhaMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving from ZHA'**
+  String get haConnectZhaMove;
+
+  /// No description provided for @haConnectNoMqttNoApps.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home Assistant has no MQTT integration, and no apps (it runs as a container), so Mosquitto and Zigbee2MQTT run as their own containers next to it. If they already run, connect ZigDash to Mosquitto directly. Or add the MQTT integration in Home Assistant, then try again.'**
+  String get haConnectNoMqttNoApps;
+
+  /// No description provided for @haConnectNoAppsGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'How to connect'**
+  String get haConnectNoAppsGuide;
+
+  /// No description provided for @zhaMoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash works with Zigbee2MQTT. Moving means pairing your devices again. Home Assistant can keep using them once you add its MQTT integration.'**
+  String get zhaMoveBody;
+
+  /// No description provided for @zhaMoveWaySecond.
+  ///
+  /// In en, this message translates to:
+  /// **'Second adapter: room by room, ZHA keeps running'**
+  String get zhaMoveWaySecond;
+
+  /// No description provided for @zhaMoveWaySame.
+  ///
+  /// In en, this message translates to:
+  /// **'Same adapter: free, all at once'**
+  String get zhaMoveWaySame;
+
+  /// No description provided for @zhaMoveReadSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the steps'**
+  String get zhaMoveReadSteps;
+
+  /// No description provided for @zhaMoveImMoving.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m moving'**
+  String get zhaMoveImMoving;
+
+  /// No description provided for @zhaMoveNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get zhaMoveNotNow;
+
+  /// No description provided for @zhaMovingNoted.
+  ///
+  /// In en, this message translates to:
+  /// **'Noted. When Zigbee2MQTT runs, open setup: ZigDash finds it, then offers your names and rooms from Home Assistant.'**
+  String get zhaMovingNoted;
+
+  /// No description provided for @setupMovingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to your new Zigbee2MQTT'**
+  String get setupMovingTitle;
+
+  /// No description provided for @setupMovingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving from ZHA? Once Zigbee2MQTT runs, ZigDash looks for it on your network.'**
+  String get setupMovingBody;
 
   /// No description provided for @haConnectSignInFailed.
   ///
@@ -3912,6 +4122,24 @@ abstract class AppLocalizations {
   /// **'Try again'**
   String get setupErrLoginNoAnswerAction;
 
+  /// No description provided for @setupErrTlsUntrustedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone doesn\'t trust this broker\'s certificate'**
+  String get setupErrTlsUntrustedTitle;
+
+  /// No description provided for @setupErrTlsFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted connection failed'**
+  String get setupErrTlsFailedTitle;
+
+  /// Setup failure button (3.8.5): opens the broker form with the address filled in and port 1883.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit settings'**
+  String get setupErrTlsAction;
+
   /// No description provided for @setupNoZ2mTitle.
   ///
   /// In en, this message translates to:
@@ -4080,12 +4308,6 @@ abstract class AppLocalizations {
   /// **'A VPN is on, and it can hide your home network from the scan. If you\'re at home, turn the VPN off and tap Try again. Or keep it on and allow local network (LAN) access in the VPN app\'s settings.'**
   String get setupVpnHint;
 
-  /// No description provided for @setupLocalNetworkIos.
-  ///
-  /// In en, this message translates to:
-  /// **'ZigDash needs Local Network access to find your hub. If you said no, allow it in Settings › Privacy & Security › Local Network.'**
-  String get setupLocalNetworkIos;
-
   /// No description provided for @setupNoBrokerZ2mTitle.
   ///
   /// In en, this message translates to:
@@ -4247,18 +4469,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{host} can\'t be found from this phone; Android often can\'t look up .local names. Tap {button} above and use the address you open Home Assistant with in your browser, or type its IP address here. Home Assistant shows it under Settings › System › Network.'**
   String setupAddressNotResolvedHa(String host, String button);
-
-  /// No description provided for @setupAddressNotResolvedHaIos.
-  ///
-  /// In en, this message translates to:
-  /// **'{host} can\'t be found from this phone. Tap {button} above and use the address you open Home Assistant with in your browser, or type its IP address here. Home Assistant shows it under Settings › System › Network.'**
-  String setupAddressNotResolvedHaIos(String host, String button);
-
-  /// No description provided for @setupAddressNotResolvedIos.
-  ///
-  /// In en, this message translates to:
-  /// **'{host} could not be looked up. Check the name, or try the IP address instead. Home Assistant shows it under Settings › System › Network.'**
-  String setupAddressNotResolvedIos(String host);
 
   /// No description provided for @setupAddressNotLocal.
   ///
@@ -5880,12 +6090,6 @@ abstract class AppLocalizations {
   /// **'Names ending in .local don\'t work on every Android phone. Try the hub\'s number address, like 192.168.1.20.'**
   String get tipNumberAddressBody;
 
-  /// No description provided for @tipNumberAddressBodyIos.
-  ///
-  /// In en, this message translates to:
-  /// **'If the name doesn\'t work, try the hub\'s number address, like 192.168.1.20.'**
-  String get tipNumberAddressBodyIos;
-
   /// No description provided for @tipPortProtocolTitle.
   ///
   /// In en, this message translates to:
@@ -6876,12 +7080,6 @@ abstract class AppLocalizations {
   /// **'Hides Android\'s status and navigation bars too.'**
   String get wallFullscreenSubtitle;
 
-  /// No description provided for @wallFullscreenSubtitleIos.
-  ///
-  /// In en, this message translates to:
-  /// **'Hides the status bar too; the Home indicator dims.'**
-  String get wallFullscreenSubtitleIos;
-
   /// No description provided for @wallDimAfter.
   ///
   /// In en, this message translates to:
@@ -7152,12 +7350,6 @@ abstract class AppLocalizations {
   /// **'A forgotten PIN can only be reset by clearing ZigDash\'s data in Android\'s settings, which removes this Home unless you have a backup. Export one before setting a PIN.'**
   String get kioskPinForgotBody;
 
-  /// No description provided for @kioskPinForgotBodyIos.
-  ///
-  /// In en, this message translates to:
-  /// **'A forgotten PIN can only be reset by deleting and reinstalling ZigDash, which removes this Home unless you have a backup. Export one before setting a PIN.'**
-  String get kioskPinForgotBodyIos;
-
   /// No description provided for @kioskExportBackup.
   ///
   /// In en, this message translates to:
@@ -7175,18 +7367,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Android blocks Home and recent apps until ZigDash is unpinned. A tablet without a lock screen unpins with a gesture, so this is not the lock.'**
   String get kioskOsPinSubtitle;
-
-  /// No description provided for @kioskGuidedAccessTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Lock to ZigDash with Guided Access'**
-  String get kioskGuidedAccessTitle;
-
-  /// No description provided for @kioskGuidedAccess.
-  ///
-  /// In en, this message translates to:
-  /// **'iOS keeps ZigDash on screen until you end Guided Access: turn it on in Settings › Accessibility › Guided Access, then triple-click the side button in ZigDash.'**
-  String get kioskGuidedAccess;
 
   /// No description provided for @kioskOn.
   ///
@@ -7359,14 +7539,8 @@ abstract class AppLocalizations {
   /// No description provided for @proFreeBody.
   ///
   /// In en, this message translates to:
-  /// **'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.'**
+  /// **'Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing that is free today becomes paid.'**
   String get proFreeBody;
-
-  /// No description provided for @proFreeBodyIos.
-  ///
-  /// In en, this message translates to:
-  /// **'Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.'**
-  String get proFreeBodyIos;
 
   /// No description provided for @proBuy.
   ///
@@ -7386,23 +7560,41 @@ abstract class AppLocalizations {
   /// **'One payment, no subscription. Bought on another phone with the same Google account? It unlocks automatically.'**
   String get proOnce;
 
-  /// No description provided for @proOnceIos.
-  ///
-  /// In en, this message translates to:
-  /// **'One payment, no subscription. Bought on another iPhone or iPad with the same Apple Account? It unlocks automatically, or tap Restore purchase.'**
-  String get proOnceIos;
-
   /// No description provided for @proRestore.
   ///
   /// In en, this message translates to:
   /// **'Restore purchase'**
   String get proRestore;
 
+  /// No description provided for @proRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro is unlocked on this phone.'**
+  String get proRestored;
+
   /// No description provided for @proRestoreNone.
   ///
   /// In en, this message translates to:
-  /// **'No ZigDash Pro purchase found for this Apple ID.'**
+  /// **'Google Play has no Pro purchase for this Google account. Bought it with another account? Switch accounts in the Play Store, then try again.'**
   String get proRestoreNone;
+
+  /// No description provided for @proRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach Google Play. Try again in a moment.'**
+  String get proRestoreFailed;
+
+  /// Restore purchase on the App Store build: the Apple ID owns no Pro.
+  ///
+  /// In en, this message translates to:
+  /// **'No ZigDash Pro purchase found for this Apple ID.'**
+  String get proRestoreNoneIos;
+
+  /// Restore purchase on the App Store build: the App Store did not answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the App Store. Try again in a moment.'**
+  String get proRestoreFailedIos;
 
   /// No description provided for @historyNotRecorded.
   ///
@@ -7650,6 +7842,18 @@ abstract class AppLocalizations {
   /// **'Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.'**
   String get haImportOfferBody;
 
+  /// No description provided for @haImportOfferBodyZha.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA\'s included.'**
+  String get haImportOfferBodyZha;
+
+  /// No description provided for @haImportNoZ2mDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home\'s settings.'**
+  String get haImportNoZ2mDevices;
+
   /// No description provided for @haImportOfferLater.
   ///
   /// In en, this message translates to:
@@ -7787,36 +7991,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your Zigbee2MQTT is version {version}. Automations need 2.4 or newer. Update Zigbee2MQTT on your hub, then come back here.'**
   String engineTooOldBody(Object version);
-
-  /// No description provided for @engineIntroTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Automations run on your hub, not on your phone'**
-  String get engineIntroTitle;
-
-  /// No description provided for @engineIntroBody.
-  ///
-  /// In en, this message translates to:
-  /// **'ZigDash puts ZigDash Engine inside Zigbee2MQTT on your hub. It watches your devices and runs your rules, so a light turns on when the door opens even with your phone off and the internet down.'**
-  String get engineIntroBody;
-
-  /// No description provided for @engineIntroNothingByHand.
-  ///
-  /// In en, this message translates to:
-  /// **'Nothing to install by hand. ZigDash does it over your home network.'**
-  String get engineIntroNothingByHand;
-
-  /// No description provided for @engineIntroVersion.
-  ///
-  /// In en, this message translates to:
-  /// **'Your Zigbee2MQTT is version {version}.'**
-  String engineIntroVersion(Object version);
-
-  /// No description provided for @engineIntroRemove.
-  ///
-  /// In en, this message translates to:
-  /// **'You can remove it any time from this screen.'**
-  String get engineIntroRemove;
 
   /// No description provided for @engineInstall.
   ///
@@ -8189,6 +8363,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That scene has nothing to send.'**
   String get autoErrEmptyScene;
+
+  /// No description provided for @autoSceneTilesSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 of this scene\'s actions runs only from this phone at home, not from Automations.} other{{count} of this scene\'s actions run only from this phone at home, not from Automations.}}'**
+  String autoSceneTilesSkipped(int count);
 
   /// No description provided for @autoErrNotConnected.
   ///
@@ -9851,6 +10031,1026 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ZigDash Pro: longer history, more automations, and more.'**
   String get saleCardHomeAssistant;
+
+  /// Chat with your home early-access card and Settings row (3.5.4, docs/design/assistant-early-access.md).
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with your home'**
+  String get chatEarlyTitle;
+
+  /// No description provided for @chatEarlyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. It\'s out now for ZigDash Pro owners. The first {count} to join get a founder\'s code: free for 3 months, remote access included.'**
+  String chatEarlyBody(int count);
+
+  /// No description provided for @chatEarlyTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Join on Telegram'**
+  String get chatEarlyTelegram;
+
+  /// No description provided for @chatEarlyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Join by email'**
+  String get chatEarlyEmail;
+
+  /// No description provided for @chatEarlyNotForMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Not for me'**
+  String get chatEarlyNotForMe;
+
+  /// No description provided for @chatEarlyClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get chatEarlyClose;
+
+  /// No description provided for @chatEarlyEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email'**
+  String get chatEarlyEmailHint;
+
+  /// No description provided for @chatEarlyBadEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'That doesn\'t look like an email address.'**
+  String get chatEarlyBadEmail;
+
+  /// No description provided for @chatEarlyEmailUse.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll only use this to invite you to the beta and tell you its price.'**
+  String get chatEarlyEmailUse;
+
+  /// No description provided for @chatEarlyPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get chatEarlyPrivacy;
+
+  /// No description provided for @chatEarlySend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get chatEarlySend;
+
+  /// No description provided for @chatEarlyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send. Try Telegram, or later.'**
+  String get chatEarlyFailed;
+
+  /// No description provided for @chatEarlyInFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re #{position} on the list: one of the first {count}. You\'ll get a founder\'s code: Chat and remote access, free for 3 months.'**
+  String chatEarlyInFirst(int position, int count);
+
+  /// No description provided for @chatEarlyAfterFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re #{position} on the list. The first {count} places are taken. Chat is out now for ZigDash Pro owners.'**
+  String chatEarlyAfterFirst(int position, int count);
+
+  /// No description provided for @chatEarlyListed.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already on the list.'**
+  String get chatEarlyListed;
+
+  /// No description provided for @chatEarlyPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'After the free months, would €2.49 a month be OK?'**
+  String get chatEarlyPrice;
+
+  /// No description provided for @chatEarlyYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get chatEarlyYes;
+
+  /// No description provided for @chatEarlyMaybe.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe'**
+  String get chatEarlyMaybe;
+
+  /// No description provided for @chatEarlyNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get chatEarlyNo;
+
+  /// No description provided for @chatEarlyThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks, noted.'**
+  String get chatEarlyThanks;
+
+  /// No description provided for @settingsChatEarlySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Early access: join the list'**
+  String get settingsChatEarlySubtitle;
+
+  /// Turn on History card (3.6, docs/design/pro-trial-360.md §2).
+  ///
+  /// In en, this message translates to:
+  /// **'See your home over days'**
+  String get historyOnTitle;
+
+  /// No description provided for @historyOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on History to see temperatures, power and doors over days and weeks, not just now. ZigDash Engine records on your hub, even when your phone is off.'**
+  String get historyOnBody;
+
+  /// No description provided for @historyOnTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on History'**
+  String get historyOnTurnOn;
+
+  /// No description provided for @historyOnLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get historyOnLater;
+
+  /// No description provided for @historyOnWorking.
+  ///
+  /// In en, this message translates to:
+  /// **'Turning on History…'**
+  String get historyOnWorking;
+
+  /// No description provided for @historyOnConsentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine records History on your hub, so it keeps going when your phone is off. Your Zigbee2MQTT blocks add-ons, as new installs do: ZigDash would turn on \"Allow external JavaScript\" and restart it.'**
+  String get historyOnConsentBody;
+
+  /// No description provided for @historyOnAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow and restart'**
+  String get historyOnAllow;
+
+  /// No description provided for @historyOnBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'History is recorded through your MQTT broker. ZigDash reaches this home through Zigbee2MQTT\'s page, so add the broker first.'**
+  String get historyOnBrokerBody;
+
+  /// No description provided for @historyOnAddBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the broker'**
+  String get historyOnAddBroker;
+
+  /// No description provided for @historyOnPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub can\'t run ZigDash Engine. This phone can record instead, while ZigDash is open: best on a wall tablet that stays on.'**
+  String get historyOnPhoneBody;
+
+  /// No description provided for @historyOnPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Record on this phone'**
+  String get historyOnPhone;
+
+  /// The 14-day Pro trial (3.6, docs/design/pro-trial-360.md §3).
+  ///
+  /// In en, this message translates to:
+  /// **'Pro is on for 14 days'**
+  String get proTrialStartedTitle;
+
+  /// No description provided for @proTrialOfferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try ZigDash Pro free for 14 days'**
+  String get proTrialOfferTitle;
+
+  /// No description provided for @proTrialWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'History for 7 and 30 days, the wall tablet extras, and more than three automations.'**
+  String get proTrialWhat;
+
+  /// No description provided for @proTrialNoPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment, nothing renews.'**
+  String get proTrialNoPayment;
+
+  /// No description provided for @proTrialStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the trial'**
+  String get proTrialStart;
+
+  /// No description provided for @proTrialEndingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Pro trial ends in 2 days'**
+  String get proTrialEndingTitle;
+
+  /// No description provided for @proTrialKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Pro · {price}'**
+  String proTrialKeep(String price);
+
+  /// No description provided for @proTrialUsedHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'the week and month History'**
+  String get proTrialUsedHistory;
+
+  /// No description provided for @proTrialUsedWall.
+  ///
+  /// In en, this message translates to:
+  /// **'the wall tablet extras'**
+  String get proTrialUsedWall;
+
+  /// No description provided for @proTrialUsedAutomation.
+  ///
+  /// In en, this message translates to:
+  /// **'more than three automations'**
+  String get proTrialUsedAutomation;
+
+  /// No description provided for @proTrialYouUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'You used {features}.'**
+  String proTrialYouUsed(String features);
+
+  /// No description provided for @proTrialAfterEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'After it ends, everything you set up stays; the week and month views and new automations past three need Pro.'**
+  String get proTrialAfterEnd;
+
+  /// No description provided for @proTrialDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Trial: 1 day left} other{Trial: {days} days left}}'**
+  String proTrialDaysLeft(int days);
+
+  /// No description provided for @proTrialEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trial ended. Everything you set up is still there.'**
+  String get proTrialEnded;
+
+  /// No description provided for @engineSlimCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations run on your hub with ZigDash Engine. ZigDash puts it there when you save your first one.'**
+  String get engineSlimCard;
+
+  /// No description provided for @engineAwayMakeAtHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Make automations at home: ZigDash puts its Engine on your hub then, over your home network.'**
+  String get engineAwayMakeAtHome;
+
+  /// No description provided for @engineSheetSource.
+  ///
+  /// In en, this message translates to:
+  /// **'See its source on GitHub'**
+  String get engineSheetSource;
+
+  /// No description provided for @engineSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine runs your automations'**
+  String get engineSheetTitle;
+
+  /// No description provided for @engineSheetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine is one open-source file that ZigDash adds to Zigbee2MQTT\'s folder on your hub. It runs your automations there, with your phone off. Remove it any time from the Automations tab.'**
+  String get engineSheetBody;
+
+  /// No description provided for @engineSheetInstallSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Install and save'**
+  String get engineSheetInstallSave;
+
+  /// No description provided for @engineSheetSaveOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Save without running'**
+  String get engineSheetSaveOnly;
+
+  /// No description provided for @engineSheetSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get engineSheetSave;
+
+  /// No description provided for @engineSheetNoAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT on your hub didn\'t answer in time, so ZigDash can\'t install its Engine now. Save now, and install it from the Automations tab when your hub answers.'**
+  String get engineSheetNoAnswer;
+
+  /// No description provided for @engineSheetSavedNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Your automation is saved. It runs once ZigDash Engine is on your hub.'**
+  String get engineSheetSavedNotRunning;
+
+  /// No description provided for @engineWaitingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved earlier, waiting for ZigDash Engine'**
+  String get engineWaitingTitle;
+
+  /// No description provided for @engineWaitingRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs once installed'**
+  String get engineWaitingRun;
+
+  /// No description provided for @engineWaitingPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Stays paused'**
+  String get engineWaitingPaused;
+
+  /// No description provided for @autoNotRunTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'None of these run yet'**
+  String get autoNotRunTitle;
+
+  /// No description provided for @autoNotRunBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Not running: ZigDash Engine isn\'t on your hub. Until it is, your MQTT broker keeps these, and a broker without persistence loses them when it restarts.'**
+  String get autoNotRunBody;
+
+  /// No description provided for @autoNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Not running'**
+  String get autoNotRunning;
+
+  /// No description provided for @historyUsePhoneInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this phone instead'**
+  String get historyUsePhoneInstead;
+
+  /// ZigDash Chat (3.7.0, docs/design/chat-linking.md §3): Home settings row and screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat (beta)'**
+  String get chatTitle;
+
+  /// No description provided for @chatRowReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to your home from Telegram'**
+  String get chatRowReady;
+
+  /// No description provided for @chatRowNoPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of ZigDash Pro (not included in the trial)'**
+  String get chatRowNoPro;
+
+  /// No description provided for @chatRowNoRemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on remote control first'**
+  String get chatRowNoRemote;
+
+  /// No description provided for @chatRowNoEngine.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs ZigDash Engine on your hub'**
+  String get chatRowNoEngine;
+
+  /// No description provided for @chatIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to your home from Telegram'**
+  String get chatIntroTitle;
+
+  /// No description provided for @chatIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send the ZigDash Home bot on Telegram a message like \"is the back door open?\" or \"close the office shutter\", and your home answers. It reads what your devices report and their history; with Read and control, it can also switch the lights, covers, switches, plugs and thermostats you choose.'**
+  String get chatIntroBody;
+
+  /// No description provided for @chatIntroNever.
+  ///
+  /// In en, this message translates to:
+  /// **'It never opens, closes or changes locks, valves or sirens, and never changes automations or settings: for those it tells you to open ZigDash.'**
+  String get chatIntroNever;
+
+  /// No description provided for @chatIntroBeta.
+  ///
+  /// In en, this message translates to:
+  /// **'Free during the beta: up to 300 messages a month for this Home.'**
+  String get chatIntroBeta;
+
+  /// No description provided for @chatIntroWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who reads the messages: Telegram, which carries them; our server in the EU, which keeps the conversation for 24 hours; and Anthropic (Claude) in the US, which writes the answers. What Chat reads about your home goes the same way.'**
+  String get chatIntroWho;
+
+  /// No description provided for @chatPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'How Chat handles your data'**
+  String get chatPolicy;
+
+  /// No description provided for @chatLinkedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked accounts'**
+  String get chatLinkedTitle;
+
+  /// No description provided for @chatLinkedNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No Telegram account linked yet.'**
+  String get chatLinkedNone;
+
+  /// No description provided for @chatLinkedLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the linked accounts. Check the internet connection.'**
+  String get chatLinkedLoadFailed;
+
+  /// No description provided for @chatLinkedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{scope} · last used {when}'**
+  String chatLinkedLine(String scope, String when);
+
+  /// No description provided for @chatLinkedNeverUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{scope} · not used yet'**
+  String chatLinkedNeverUsed(String scope);
+
+  /// No description provided for @chatRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get chatRemove;
+
+  /// No description provided for @chatRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}?'**
+  String chatRemoveTitle(String name);
+
+  /// No description provided for @chatRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This Telegram account can no longer reach your home, and its conversation is deleted.'**
+  String get chatRemoveBody;
+
+  /// No description provided for @chatRemovedLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed. Your hub forgets it the next time ZigDash is open at home.'**
+  String get chatRemovedLater;
+
+  /// No description provided for @chatAuditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What Chat did'**
+  String get chatAuditTitle;
+
+  /// No description provided for @chatAuditShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get chatAuditShow;
+
+  /// No description provided for @chatAuditEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet.'**
+  String get chatAuditEmpty;
+
+  /// No description provided for @chatAuditFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub didn\'t answer. Try again later.'**
+  String get chatAuditFailed;
+
+  /// No description provided for @chatAuditSent.
+  ///
+  /// In en, this message translates to:
+  /// **'set {what}'**
+  String chatAuditSent(String what);
+
+  /// No description provided for @chatAuditNotSent.
+  ///
+  /// In en, this message translates to:
+  /// **'couldn\'t send'**
+  String get chatAuditNotSent;
+
+  /// No description provided for @chatHereTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with your home is here'**
+  String get chatHereTitle;
+
+  /// No description provided for @chatHereBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Link your Telegram account, then ask your home \"is the back door open?\" or tell it to close a shutter. Part of Pro, free during the beta.'**
+  String get chatHereBody;
+
+  /// No description provided for @chatHereSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up'**
+  String get chatHereSetUp;
+
+  /// No description provided for @chatHereNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get chatHereNotNow;
+
+  /// No description provided for @chatLinkNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a Telegram account'**
+  String get chatLinkNew;
+
+  /// No description provided for @chatLinkAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Link another Telegram account'**
+  String get chatLinkAnother;
+
+  /// No description provided for @chatScopeRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get chatScopeRead;
+
+  /// No description provided for @chatScopeReadHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Answers questions. Changes nothing.'**
+  String get chatScopeReadHelp;
+
+  /// No description provided for @chatScopeControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Read and control'**
+  String get chatScopeControl;
+
+  /// No description provided for @chatScopeControlHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Also switches the devices you choose below.'**
+  String get chatScopeControlHelp;
+
+  /// No description provided for @chatControlsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What Chat may switch'**
+  String get chatControlsTitle;
+
+  /// No description provided for @chatControlsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'On to start: lights and covers on your dashboards. Off to start: switches and plugs (they can run a heater, a boiler or a pump), thermostats, gates and garage doors. Locks, valves and sirens are never listed.'**
+  String get chatControlsHelp;
+
+  /// No description provided for @chatControlsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices to choose from yet.'**
+  String get chatControlsEmpty;
+
+  /// No description provided for @chatKindLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get chatKindLight;
+
+  /// No description provided for @chatKindCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get chatKindCover;
+
+  /// No description provided for @chatKindSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch or plug'**
+  String get chatKindSwitch;
+
+  /// No description provided for @chatKindThermostat.
+  ///
+  /// In en, this message translates to:
+  /// **'Thermostat'**
+  String get chatKindThermostat;
+
+  /// No description provided for @chatGateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'gate or door, off to start'**
+  String get chatGateNote;
+
+  /// No description provided for @chatAgeAndAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Each person links their own Telegram account, with its own scope. Linked people must be 16 or older. Anyone using a linked Telegram account can do what its scope allows. Even Read shows whether anyone is home and which doors and windows are open.'**
+  String get chatAgeAndAccount;
+
+  /// No description provided for @chatEngineOld.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash Engine on your hub is updating to the version with Chat. Try again in a minute.'**
+  String get chatEngineOld;
+
+  /// No description provided for @chatLinkButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Telegram'**
+  String get chatLinkButton;
+
+  /// No description provided for @chatLinkAway.
+  ///
+  /// In en, this message translates to:
+  /// **'Link at home: ZigDash sets this up on your hub over your home network.'**
+  String get chatLinkAway;
+
+  /// No description provided for @chatCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish in Telegram'**
+  String get chatCodeTitle;
+
+  /// No description provided for @chatCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In Telegram, tap Start in the ZigDash Home bot. It sends you a 4-digit code: type it here within 10 minutes.'**
+  String get chatCodeBody;
+
+  /// No description provided for @chatCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'4-digit code'**
+  String get chatCodeHint;
+
+  /// No description provided for @chatCodeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get chatCodeConfirm;
+
+  /// No description provided for @chatOpenTelegram.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Telegram again'**
+  String get chatOpenTelegram;
+
+  /// No description provided for @chatLinkedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked. Send the bot a message to try it.'**
+  String get chatLinkedDone;
+
+  /// No description provided for @chatFailUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach ZigDash\'s servers. Check the internet connection and try again.'**
+  String get chatFailUnreachable;
+
+  /// No description provided for @chatFailLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'The relay didn\'t accept this phone\'s remote login. Open Remote control and turn it off and on again.'**
+  String get chatFailLogin;
+
+  /// No description provided for @chatFailPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play doesn\'t confirm a ZigDash Pro purchase for this Home.'**
+  String get chatFailPurchase;
+
+  /// No description provided for @chatFailTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Try again in an hour.'**
+  String get chatFailTooMany;
+
+  /// No description provided for @chatFailExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The code ran out. Start again.'**
+  String get chatFailExpired;
+
+  /// No description provided for @chatFailWrongCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That isn\'t the code the bot sent. Check it and try again.'**
+  String get chatFailWrongCode;
+
+  /// No description provided for @chatFailRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'That didn\'t work. Try again later.'**
+  String get chatFailRefused;
+
+  /// No description provided for @chatFailNotClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'The bot hasn\'t got the code yet. Open Telegram, tap Start in the ZigDash Home bot, then type the code it sends.'**
+  String get chatFailNotClaimed;
+
+  /// No description provided for @chatFailWrongCodeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'That isn\'t the code the bot sent. Tries left: {count}.'**
+  String chatFailWrongCodeLeft(int count);
+
+  /// Founder's pass (docs/design/founders-pass.md): Remote control page, Chat screen and Home settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a founder\'s code?'**
+  String get founderCodeAsk;
+
+  /// No description provided for @founderCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Founder\'s code'**
+  String get founderCodeLabel;
+
+  /// No description provided for @founderCodeUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the code'**
+  String get founderCodeUse;
+
+  /// No description provided for @founderCodeAtHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter it at home, with ZigDash Engine on your hub: ZigDash sets remote control up over your home network.'**
+  String get founderCodeAtHome;
+
+  /// No description provided for @founderCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That isn\'t a founder\'s code. Check it and try again.'**
+  String get founderCodeWrong;
+
+  /// No description provided for @founderCodeUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'That code was already used. Each code works once.'**
+  String get founderCodeUsed;
+
+  /// No description provided for @founderCodeDeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'The date to enter that code has passed. Ask for more time from Get help.'**
+  String get founderCodeDeadline;
+
+  /// No description provided for @founderCodeRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'That code was withdrawn.'**
+  String get founderCodeRevoked;
+
+  /// No description provided for @founderCodeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass is on: remote control and Chat for this Home until {date}.'**
+  String founderCodeDone(String date);
+
+  /// No description provided for @founderEndsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass ends on {date}. ZigDash Pro keeps remote control and Chat, with nothing to set up again.'**
+  String founderEndsOn(String date);
+
+  /// No description provided for @founderGetPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Pro'**
+  String get founderGetPro;
+
+  /// No description provided for @founderEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass ended on {date}. ZigDash Pro brings remote control and Chat back, with nothing to set up again.'**
+  String founderEnded(String date);
+
+  /// No description provided for @founderEndedNoDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your founder\'s pass ended. ZigDash Pro brings remote control and Chat back, with nothing to set up again.'**
+  String get founderEndedNoDate;
+
+  /// No description provided for @founderDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home\'s founder\'s pass ended and its remote control was removed.'**
+  String get founderDeleted;
+
+  /// No description provided for @remoteRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home\'s remote control was removed from the relay.'**
+  String get remoteRemoved;
+
+  /// No description provided for @founderSetUpWithPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up with Pro'**
+  String get founderSetUpWithPro;
+
+  /// No description provided for @founderUseProTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your Pro purchase for this Home?'**
+  String get founderUseProTitle;
+
+  /// No description provided for @founderUseProBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote control and Chat for this Home move to your Pro purchase: the same phones and Chat links, nothing to set up again. A purchase covers one Home.'**
+  String get founderUseProBody;
+
+  /// No description provided for @founderUsePro.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Pro for this Home'**
+  String get founderUsePro;
+
+  /// No description provided for @founderUpgraded.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home now runs on your Pro purchase.'**
+  String get founderUpgraded;
+
+  /// No description provided for @founderUpgradeTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'That purchase already belongs to another Home.'**
+  String get founderUpgradeTaken;
+
+  /// No description provided for @founderUpgradeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t move this Home to your Pro purchase. Try again later.'**
+  String get founderUpgradeFailed;
+
+  /// No description provided for @remoteHubRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The relay refused this hub\'s login'**
+  String get remoteHubRefused;
+
+  /// No description provided for @chatRowPassEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Founder\'s pass ended: links can still be removed'**
+  String get chatRowPassEnded;
+
+  /// No description provided for @chatFailPassEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'This Home\'s founder\'s pass ended, so no new Telegram account can be linked.'**
+  String get chatFailPassEnded;
+
+  /// No description provided for @panelToggleNoState.
+  ///
+  /// In en, this message translates to:
+  /// **'(no state)'**
+  String get panelToggleNoState;
+
+  /// No description provided for @panelToggleError.
+  ///
+  /// In en, this message translates to:
+  /// **'err'**
+  String get panelToggleError;
+
+  /// iOS variant of diagResolveLocalName: iOS resolves .local, so no Android claim. Settings › System › Network is Home Assistant's own menu path.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone couldn\'t find this name. Check that it\'s spelled right, or enter the IP address instead (Home Assistant shows it under Settings › System › Network).'**
+  String get diagResolveLocalNameIos;
+
+  /// No description provided for @reminderNoPermissionIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off for ZigDash, so there\'s no reminder. You can turn them on in Settings › ZigDash › Notifications.'**
+  String get reminderNoPermissionIos;
+
+  /// No description provided for @setupLocalNetworkIos.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash needs Local Network access to find your hub. If you said no, allow it in Settings › Privacy & Security › Local Network.'**
+  String get setupLocalNetworkIos;
+
+  /// No description provided for @setupAddressNotResolvedHaIos.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} can\'t be found from this phone. Tap {button} above and use the address you open Home Assistant with in your browser, or type its IP address here. Home Assistant shows it under Settings › System › Network.'**
+  String setupAddressNotResolvedHaIos(String host, String button);
+
+  /// No description provided for @setupAddressNotResolvedIos.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} could not be looked up. Check the name, or try the IP address instead. Home Assistant shows it under Settings › System › Network.'**
+  String setupAddressNotResolvedIos(String host);
+
+  /// No description provided for @tipNumberAddressBodyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'If the name doesn\'t work, try the hub\'s number address, like 192.168.1.20.'**
+  String get tipNumberAddressBodyIos;
+
+  /// No description provided for @wallFullscreenSubtitleIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Hides the status bar too; the Home indicator dims.'**
+  String get wallFullscreenSubtitleIos;
+
+  /// No description provided for @kioskPinForgotBodyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'A forgotten PIN can only be reset by deleting and reinstalling ZigDash, which removes this Home unless you have a backup. Export one before setting a PIN.'**
+  String get kioskPinForgotBodyIos;
+
+  /// No description provided for @kioskGuidedAccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock to ZigDash with Guided Access'**
+  String get kioskGuidedAccessTitle;
+
+  /// No description provided for @kioskGuidedAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'iOS keeps ZigDash on screen until you end Guided Access: turn it on in Settings › Accessibility › Guided Access, then triple-click the side button in ZigDash.'**
+  String get kioskGuidedAccess;
+
+  /// No description provided for @proFreeBodyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.'**
+  String get proFreeBodyIos;
+
+  /// No description provided for @proOnceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'One payment, no subscription. Bought on another iPhone or iPad with the same Apple Account? It unlocks automatically, or tap Restore purchase.'**
+  String get proOnceIos;
+
+  /// No description provided for @engineIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations run on your hub, not on your phone'**
+  String get engineIntroTitle;
+
+  /// No description provided for @engineIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash puts ZigDash Engine inside Zigbee2MQTT on your hub. It watches your devices and runs your rules, so a light turns on when the door opens even with your phone off and the internet down.'**
+  String get engineIntroBody;
+
+  /// No description provided for @engineIntroNothingByHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to install by hand. ZigDash does it over your home network.'**
+  String get engineIntroNothingByHand;
+
+  /// No description provided for @engineIntroVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Zigbee2MQTT is version {version}.'**
+  String engineIntroVersion(Object version);
+
+  /// No description provided for @engineIntroRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'You can remove it any time from this screen.'**
+  String get engineIntroRemove;
 }
 
 class _AppLocalizationsDelegate

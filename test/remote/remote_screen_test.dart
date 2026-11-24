@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +19,8 @@ import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/endpoint.dart';
 import 'package:zigdash/mqtt/mqtt_status.dart';
 import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
+import 'package:zigdash/remote/founder.dart';
+import 'package:zigdash/remote/founder_ui.dart';
 import 'package:zigdash/remote/remote_home.dart';
 import 'package:zigdash/remote/remote_phones.dart';
 import 'package:zigdash/remote/remote_screen.dart';
@@ -49,6 +53,49 @@ Connection _home({
   updatedAt: DateTime(2026),
 );
 
+final _now = DateTime(2026, 11, 16, 12);
+final _end = DateTime(2027, 2, 14, 12);
+
+FounderStatus _pass({DateTime? ends, bool ended = false, bool deleted = false, String? kind = 'founder'}) =>
+    FounderStatus(kind: kind, expiresAt: ends ?? _end, ended: ended, deleted: deleted, fetchedAt: _now);
+
+/// The relay, as the page uses it: answers set by the test, calls recorded.
+class _Relay extends RemoteSetup {
+  _Relay() : super(RemoteHomeStore(const FlutterSecureStorage()), (_) => throw UnimplementedError());
+
+  final calls = <String>[];
+  RemoteHome? login;
+  FounderStatus? founder;
+  FounderRedeemResult redeemAnswer = FounderRedeemResult.ready;
+  FounderUpgradeResult upgradeAnswer = FounderUpgradeResult.done;
+
+  @override
+  Future<(FounderRedeemResult, DateTime?)> redeem(String connectionId, String code) async {
+    calls.add('redeem $code');
+    if (redeemAnswer != FounderRedeemResult.ready) return (redeemAnswer, null);
+    login = _login;
+    founder = _pass();
+    return (redeemAnswer, _end);
+  }
+
+  @override
+  Future<FounderUpgradeResult> upgrade(String connectionId) async {
+    calls.add('upgrade');
+    if (upgradeAnswer == FounderUpgradeResult.done) founder = FounderStatus(fetchedAt: _now);
+    return upgradeAnswer;
+  }
+
+  @override
+  Future<void> turnOff(String connectionId, {bool everywhere = true}) async {
+    calls.add('turnOff everywhere=$everywhere');
+    login = null;
+    founder = null;
+  }
+}
+
+/// This phone's Pro, changed by a test as a purchase would.
+final _pro = StateProvider<ProStatus>((ref) => ProStatus.locked);
+
 final _login = RemoteHome(
   homeId: 'a1b2',
   url: 'wss://relay.example/mqtt',
@@ -71,13 +118,21 @@ Future<_Sink> _page(
   ProOffer? offer,
   Map<String, Object> prefs = const {},
   RemoteFrom from = RemoteFrom.door,
+  FounderStatus? founder,
+  bool founderOffered = false,
+  _Relay? relay,
+  EngineReport? report,
+  Map<String, String> secure = const {},
 }) async {
-  tester.view.physicalSize = const Size(1080, 3200);
+  tester.view.physicalSize = const Size(1080, 6000);
   tester.view.devicePixelRatio = 2.5;
   addTearDown(tester.view.reset);
   SharedPreferences.setMockInitialValues({'analytics_consent': true, ...prefs});
   final p = await SharedPreferences.getInstance();
+  FlutterSecureStorage.setMockInitialValues({...secure});
   final sink = _Sink();
+  relay?.login ??= login;
+  relay?.founder ??= founder;
   final router = GoRouter(
     initialLocation: '/remote',
     routes: [
@@ -101,13 +156,22 @@ Future<_Sink> _page(
         sharedPreferencesProvider.overrideWithValue(p),
         analyticsAvailableProvider.overrideWithValue(true),
         analyticsSinkProvider.overrideWithValue(sink),
-        proStatusProvider.overrideWithValue(pro),
+        _pro.overrideWith((ref) => pro),
+        proStatusProvider.overrideWith((ref) => ref.watch(_pro)),
         proPurchaseProvider.overrideWithValue(() {}),
         proPriceProvider.overrideWith((ref) async => price),
         proOfferProvider.overrideWith((ref) async => offer),
         remoteSoldProvider.overrideWithValue(sold),
         atHomeProvider.overrideWith((ref, _) => connected && atHome),
-        remoteHomeProvider.overrideWith((ref, _) async => login),
+        remoteHomeProvider.overrideWith((ref, _) async => relay == null ? login : relay.login),
+        founderStatusProvider.overrideWith((ref, _) async => relay == null ? founder : relay.founder),
+        founderRefreshProvider.overrideWithValue((_) async {}),
+        founderCodeOfferedProvider.overrideWithValue(founderOffered),
+        founderNowProvider.overrideWithValue(() => _now),
+        if (relay != null) ...[
+          remoteSetupProvider.overrideWithValue(relay),
+          founderUpgraderProvider.overrideWith((ref) => FounderUpgrader(relay, p, delay: (_) => Duration.zero)),
+        ],
         remotePhonesProvider.overrideWith((ref, _) async => const []),
         connectionByIdProvider.overrideWith(
           (ref, _) async => home ?? _home(),
@@ -125,6 +189,7 @@ Future<_Sink> _page(
             EngineView(
               phase: phase,
               hub: const HubInfo(version: '2.14.0', externalJsAllowed: true),
+              report: report,
             ),
           ),
         ),
@@ -150,6 +215,9 @@ void main() {
       bool connected = true,
       bool atHome = true,
       RemoteEngineStep engine = RemoteEngineStep.installed,
+      bool founder = false,
+      bool passEnded = false,
+      bool deleted = false,
     }) => remoteStateOf(
       fits: fits,
       sold: sold,
@@ -158,7 +226,25 @@ void main() {
       connected: connected,
       atHome: atHome,
       engine: engine,
+      founder: founder,
+      passEnded: passEnded,
+      deleted: deleted,
     );
+
+    test("a founder's pass counts as Pro while it runs; ended and deleted Homes say so", () {
+      expect(of(pro: false, founder: true), RemoteState.ready);
+      expect(of(pro: false, founder: true, atHome: false), RemoteState.away);
+      expect(of(on: true, pro: false, founder: true), RemoteState.on);
+      expect(of(on: true, pro: false, passEnded: true), RemoteState.passEnded);
+      // Pro bought elsewhere doesn't move the Home by itself.
+      expect(of(on: true, passEnded: true), RemoteState.passEnded);
+      expect(of(on: true, pro: false, passEnded: true, deleted: true), RemoteState.deleted);
+      // Neither without a login here.
+      expect(of(pro: false, passEnded: true, deleted: true), RemoteState.noPro);
+      expect(of(fits: false, on: true, deleted: true), RemoteState.unfit);
+      // Where Play billing isn't available, a founder's Home stays on.
+      expect(of(on: true, sold: false, pro: false, founder: true), RemoteState.on);
+    });
 
     test('one state for every case, decided before any tap', () {
       expect(of(), RemoteState.ready);
@@ -398,5 +484,247 @@ void main() {
     );
     expect(find.byKey(const Key('remote-unfit')), findsOneWidget);
     expect(find.byKey(const Key('remote-off')), findsOneWidget);
+  });
+
+  group("founder's pass", () {
+    Future<void> openCode(WidgetTester tester) async {
+      await tester.tap(find.byKey(const Key('founder-code-ask')));
+      await tester.pumpAndSettle();
+    }
+
+    FilledButton use(WidgetTester tester) => tester.widget<FilledButton>(find.byKey(const Key('founder-code-use')));
+
+    testWidgets('where Play billing is unavailable the code field is still offered, and at home it turns remote on',
+        (tester) async {
+      final relay = _Relay();
+      final sink = await _page(tester, sold: false, pro: ProStatus.unavailable, founderOffered: true, relay: relay);
+      expect(find.byKey(const Key('remote-play-only')), findsNothing);
+      expect(find.text("Have a founder's code?"), findsOneWidget);
+      await openCode(tester);
+      expect(use(tester).onPressed, isNull, reason: 'nothing typed yet');
+      expect(find.byKey(const Key('founder-code-at-home')), findsNothing);
+      await tester.enterText(find.byKey(const Key('founder-code')), 'zd-7k3m q9ab-x2');
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('founder-code-use')));
+      await tester.pumpAndSettle();
+      expect(relay.calls, ['redeem zd-7k3m q9ab-x2']);
+      expect(find.text('Remote control is on'), findsOneWidget);
+      expect(find.text("Your founder's pass is on: remote control and Chat for this Home until Feb 14, 2027."),
+          findsOneWidget);
+      // No new analytics: the page counted what it showed first.
+      expect(sink.sent, ['remote {step: opened, pro: no, open: door/not_sold}']);
+    });
+
+    testWidgets('without Pro: See Pro, and the code below it', (tester) async {
+      await _page(tester, founderOffered: true);
+      expect(find.byKey(const Key('remote-see-pro')), findsOneWidget);
+      expect(find.byKey(const Key('founder-code-ask')), findsOneWidget);
+    });
+
+    testWidgets('outside the Play build, no code field', (tester) async {
+      await _page(tester);
+      expect(find.byKey(const Key('founder-code-ask')), findsNothing);
+    });
+
+    testWidgets('with Pro, no code field', (tester) async {
+      await _page(tester, founderOffered: true, pro: ProStatus.unlocked);
+      expect(find.byKey(const Key('founder-code-ask')), findsNothing);
+    });
+
+    testWidgets('away, the code waits for home', (tester) async {
+      await _page(tester, founderOffered: true, atHome: false, endpoint: MqttEndpoint.remote, relay: _Relay());
+      await openCode(tester);
+      await tester.enterText(find.byKey(const Key('founder-code')), 'ZD-7K3M-Q9AB-X2');
+      await tester.pump();
+      expect(find.byKey(const Key('founder-code-at-home')), findsOneWidget);
+      expect(use(tester).onPressed, isNull);
+    });
+
+    testWidgets('without the Engine, the code waits for it', (tester) async {
+      await _page(tester, founderOffered: true, phase: HubEnginePhase.notInstalled, relay: _Relay());
+      await openCode(tester);
+      await tester.enterText(find.byKey(const Key('founder-code')), 'ZD-7K3M-Q9AB-X2');
+      await tester.pump();
+      expect(find.byKey(const Key('founder-code-at-home')), findsOneWidget);
+      expect(use(tester).onPressed, isNull);
+    });
+
+    for (final (answer, text) in [
+      (FounderRedeemResult.wrongCode, "That isn't a founder's code. Check it and try again."),
+      (FounderRedeemResult.used, 'That code was already used. Each code works once.'),
+      (FounderRedeemResult.deadline, 'The date to enter that code has passed. Ask for more time from Get help.'),
+      (FounderRedeemResult.revoked, 'That code was withdrawn.'),
+      (FounderRedeemResult.tooMany, 'Too many tries. Try again in an hour.'),
+      (FounderRedeemResult.unreachable, "ZigDash's relay didn't answer. Try again later."),
+    ]) {
+      testWidgets('${answer.name}: said, and the code stays to try again', (tester) async {
+        final relay = _Relay()..redeemAnswer = answer;
+        await _page(tester, founderOffered: true, relay: relay);
+        await openCode(tester);
+        await tester.enterText(find.byKey(const Key('founder-code')), 'ZD-7K3M-Q9AB-X2');
+        await tester.pump();
+        await tester.tap(find.byKey(const Key('founder-code-use')));
+        await tester.pumpAndSettle();
+        expect(find.text(text), findsOneWidget);
+        expect(find.text('Remote control is on'), findsNothing);
+        expect(tester.widget<TextField>(find.byKey(const Key('founder-code'))).controller!.text, 'ZD-7K3M-Q9AB-X2');
+        await tester.tap(find.byKey(const Key('founder-code-use')));
+        await tester.pumpAndSettle();
+        expect(relay.calls, hasLength(2));
+      });
+    }
+
+    testWidgets('ended: no Reconnect hub, no Phones; the date and Get Pro', (tester) async {
+      final sink = await _page(
+        tester,
+        login: _login,
+        founder: _pass(ended: true),
+        report: const EngineReport(
+            version: '3.7.1', runningOn: 'hub', rulesLoaded: 0, rulesUnknown: [], stoppedSelf: false, at: null,
+            remoteConnected: false, remoteError: 'refused'),
+      );
+      expect(
+        find.text("Your founder's pass ended on Feb 14, 2027. ZigDash Pro brings remote control and Chat back, "
+            'with nothing to set up again.'),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('founder-get-pro')), findsOneWidget);
+      expect(find.byKey(const Key('remote-reconnect-hub')), findsNothing);
+      expect(find.byKey(const Key('remote-add-phone')), findsNothing);
+      expect(find.text('Remote control is on'), findsNothing);
+      expect(find.byKey(const Key('remote-off')), findsOneWidget);
+      expect(sink.sent, ['remote {step: opened, pro: no, open: door/on}']);
+    });
+
+    testWidgets('an end date that has passed reads as ended before the relay says so', (tester) async {
+      await _page(tester, login: _login, founder: _pass(ends: _now.subtract(const Duration(hours: 1))));
+      expect(find.byKey(const Key('remote-pass-ended')), findsOneWidget);
+    });
+
+    testWidgets('Get Pro from the line, bought: the Home moves to the purchase', (tester) async {
+      final relay = _Relay();
+      await _page(tester, login: _login, founder: _pass(ended: true), relay: relay);
+      await tester.tap(find.byKey(const Key('founder-get-pro')));
+      await tester.pumpAndSettle();
+      expect(find.text('ZigDash Pro'), findsWidgets);
+      final container = ProviderScope.containerOf(tester.element(find.byType(Scaffold).last));
+      container.read(_pro.notifier).state = ProStatus.unlocked;
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(relay.calls, ['upgrade']);
+      expect(find.text('This Home now runs on your Pro purchase.'), findsOneWidget);
+      expect(find.text('Remote control is on'), findsOneWidget);
+      expect(find.byKey(const Key('founder-pro-line')), findsNothing);
+    });
+
+    testWidgets('Get Pro, then back without buying: nothing moves, and nothing is remembered', (tester) async {
+      final relay = _Relay();
+      await _page(tester, login: _login, founder: _pass(ended: true), relay: relay);
+      await tester.tap(find.byKey(const Key('founder-get-pro')));
+      await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(relay.calls, isEmpty);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool(founderUpgradeKey('c1')), isNull);
+    });
+
+    testWidgets('Pro bought elsewhere: asked first, and nothing happens without a yes', (tester) async {
+      final relay = _Relay();
+      await _page(tester, pro: ProStatus.unlocked, login: _login, founder: _pass(), relay: relay);
+      expect(find.text("Your founder's pass is on: remote control and Chat for this Home until Feb 14, 2027."),
+          findsOneWidget);
+      await tester.tap(find.byKey(const Key('founder-use-pro')));
+      await tester.pumpAndSettle();
+      expect(find.text('Use your Pro purchase for this Home?'), findsOneWidget);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(relay.calls, isEmpty);
+
+      relay.upgradeAnswer = FounderUpgradeResult.taken;
+      await tester.tap(find.byKey(const Key('founder-use-pro')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('founder-use-pro-ok')));
+      await tester.pumpAndSettle();
+      expect(relay.calls, ['upgrade']);
+      expect(find.text('That purchase already belongs to another Home.'), findsOneWidget);
+    });
+
+    testWidgets('the last 7 days: the date and Get Pro', (tester) async {
+      await _page(tester, login: _login, founder: _pass(ends: _now.add(const Duration(days: 3))), relay: _Relay());
+      expect(find.textContaining("Your founder's pass ends on Nov 19, 2026."), findsOneWidget);
+      expect(find.byKey(const Key('founder-get-pro')), findsOneWidget);
+      // Running, so the hub and the phones are still there.
+      expect(find.byKey(const Key('remote-add-phone')), findsOneWidget);
+    });
+
+    testWidgets('earlier in the pass, without Pro: no line', (tester) async {
+      await _page(tester, login: _login, founder: _pass());
+      expect(find.byKey(const Key('founder-pro-line')), findsNothing);
+      expect(find.text('Remote control is on'), findsOneWidget);
+    });
+
+    testWidgets('deleted: said, and Set up with Pro forgets the dead login first', (tester) async {
+      final relay = _Relay();
+      final sink = await _page(tester, login: _login, founder: _pass(ended: true, deleted: true), relay: relay);
+      expect(find.text("This Home's founder's pass ended and its remote control was removed."), findsOneWidget);
+      expect(find.byKey(const Key('remote-add-phone')), findsNothing);
+      await tester.tap(find.byKey(const Key('remote-set-up-with-pro')));
+      await tester.pumpAndSettle();
+      expect(relay.calls, ['turnOff everywhere=false']);
+      // Without Pro, the Pro screen; behind it the usual steps.
+      expect(sink.sent.last, 'pro {step: screen_shown, from: remote_door, path: remote_door/screen_shown}');
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('remote-steps')), findsOneWidget);
+    });
+
+    testWidgets('a Pro Home the relay deleted gets plain words', (tester) async {
+      await _page(tester, pro: ProStatus.unlocked, login: _login, founder: _pass(kind: null, deleted: true));
+      expect(find.text("This Home's remote control was removed from the relay."), findsOneWidget);
+    });
+
+    testWidgets("the Engine says the relay refused the hub's login", (tester) async {
+      await _page(
+        tester,
+        pro: ProStatus.unlocked,
+        login: _login,
+        report: const EngineReport(
+            version: '3.7.1', runningOn: 'hub', rulesLoaded: 0, rulesUnknown: [], stoppedSelf: false, at: null,
+            remoteConnected: false, remoteError: 'refused'),
+      );
+      expect(find.text("The relay refused this hub's login"), findsOneWidget);
+      expect(find.byKey(const Key('remote-reconnect-hub')), findsOneWidget);
+    });
+
+    testWidgets('a purchase from the line that never reached the relay moves the Home on the next visit',
+        (tester) async {
+      final relay = _Relay();
+      await _page(
+        tester,
+        pro: ProStatus.unlocked,
+        login: _login,
+        founder: _pass(ended: true),
+        relay: relay,
+        prefs: {founderUpgradeKey('c1'): true},
+        secure: {'remote_founder::c1': jsonEncode(_pass(ended: true).toJson())},
+      );
+      expect(relay.calls, ['upgrade']);
+      expect(find.text('This Home now runs on your Pro purchase.'), findsOneWidget);
+    });
+
+    testWidgets('without that earlier yes, opening the page moves nothing', (tester) async {
+      final relay = _Relay();
+      await _page(
+        tester,
+        pro: ProStatus.unlocked,
+        login: _login,
+        founder: _pass(ended: true),
+        relay: relay,
+        secure: {'remote_founder::c1': jsonEncode(_pass(ended: true).toJson())},
+      );
+      expect(relay.calls, isEmpty);
+      expect(find.byKey(const Key('founder-use-pro')), findsOneWidget);
+    });
   });
 }

@@ -13,16 +13,31 @@ import '../settings/providers/settings_controller.dart';
 class HaImportOffer extends Notifier<String?> {
   static const key = 'ha_import_offer';
 
+  /// Offered because of a move from ZHA (3.8): Home Assistant may not be
+  /// on the scanned network, and the names come from ZHA too.
+  static const zhaKey = 'ha_import_offer_zha';
+
   @override
   String? build() => ref.watch(sharedPreferencesProvider).getString(key);
 
-  Future<void> offer(String connectionId) async {
-    await ref.read(sharedPreferencesProvider).setString(key, connectionId);
+  bool get fromZha =>
+      ref.read(sharedPreferencesProvider).getBool(zhaKey) ?? false;
+
+  Future<void> offer(String connectionId, {bool fromZha = false}) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setString(key, connectionId);
+    if (fromZha) {
+      await prefs.setBool(zhaKey, true);
+    } else {
+      await prefs.remove(zhaKey);
+    }
     state = connectionId;
   }
 
   Future<void> clear() async {
-    await ref.read(sharedPreferencesProvider).remove(key);
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.remove(key);
+    await prefs.remove(zhaKey);
     state = null;
   }
 }
@@ -60,7 +75,9 @@ class HaImportOfferCard extends ConsumerWidget {
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 8),
               child: Text(
-                l10n.haImportOfferBody,
+                offer.fromZha
+                    ? l10n.haImportOfferBodyZha
+                    : l10n.haImportOfferBody,
                 style: theme.textTheme.bodyMedium,
               ),
             ),

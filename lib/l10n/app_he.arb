@@ -62,7 +62,7 @@
   "connHelpSmhubTitle": "SMLIGHT SMHUB",
   "connHelpSmhubBody": "כתובת הברוקר היא כתובת ה‑IP של ההאב. פתחו את דף הווב של ההאב (smhub.local): ב‑Dashboard, תיבת Network מציגה אותה ליד IPv4. גם האפליקציה של הנתב מציגה את ההאב בשם SMHUB. הפורט הוא 1883, ללא שם משתמש/סיסמה כברירת מחדל.",
   "connHelpZhaTitle": "Home Assistant ZHA",
-  "connHelpZhaBody": "ל‑ZHA אין ברוקר MQTT — הוא מדבר ישירות עם Home Assistant, ולכן ZigDash לא יכול להתחבר אליו. כדי להשתמש ב‑ZigDash, עברו ל‑Zigbee2MQTT (זמין כיישום של Home Assistant או כקונטיינר Docker), שמספק ברוקר MQTT.",
+  "connHelpZhaBody": "ל‑ZHA אין ברוקר MQTT — הוא מדבר ישירות עם Home Assistant, ולכן ZigDash לא יכול להתחבר אליו. כדי להשתמש ב‑ZigDash, עברו ל‑Zigbee2MQTT (זמין כיישום של Home Assistant או כקונטיינר Docker), שעובד עם ברוקר MQTT כמו Mosquitto.",
   "connHelpSameNetwork": "הטלפון והברוקר חייבים להיות באותה רשת Wi‑Fi (לא רשת אורחים או VLAN מבודד).",
   "connRemoteHost": "מארח מרוחק (Tailscale)",
   "connRemoteHostHint": "בשימוש כשהמארח המקומי אינו זמין. עדיף כתובת ה-Tailscale של הרכזת, למשל 100.x.y.z",
@@ -310,8 +310,6 @@
   "panelCoverOpen": "פתיחה",
   "panelCoverStop": "עצירה",
   "panelCoverClose": "סגירה",
-  "panelToggleNoState": "(אין מצב)",
-  "panelToggleError": "שגיאה",
   "panelStateOn": "פועל",
   "panelStateOff": "כבוי",
   "panelNodeStatusOnline": "מקוון",
@@ -467,7 +465,7 @@
   "sceneFormNameLabel": "שם הסצנה",
   "sceneFormDevicesHeader": "התקנים ללכידה",
   "sceneFormCaptureHint": "נשמר המצב הניתן לשינוי של כל התקן נבחר (דלוק/כבוי, בהירות, צבע, מיקום…). ערכים לקריאה בלבד מתעלמים מהם.",
-  "sceneFormNoDevices": "לא נמצאו התקנים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.",
+  "sceneFormNoDevices": "לא נמצאו התקנים או אריחים הניתנים לשליטה. ודאו שהם משויכים והקישו רענון.",
   "sceneFormReadingState": "קורא מצב נוכחי…",
   "sceneCtrlPower": "הפעלה",
   "sceneCtrlBrightness": "בהירות",
@@ -480,8 +478,13 @@
       }
     }
   },
-  "sceneFormNoDevicesSelected": "בחרו לפחות התקן אחד ללכידה.",
+  "sceneFormNoDevicesSelected": "בחרו לפחות התקן אחד או אריח אחד.",
   "sceneFormNothingCaptured": "לא נלכד דבר הניתן לשינוי מההתקנים שנבחרו.",
+  "sceneFormTilesHeader": "האריחים שלך",
+  "sceneFormTilesHint": "אריחים שיצרתם בעצמכם. הסצנה שולחת את מה שהאריח שולח.",
+  "sceneTileHomeOnly": "פועל רק מהטלפון הזה בבית: לא מאוטומציות ולא מבחוץ.",
+  "sceneFormKeptActions": "{count, plural, =1{פעולה אחת נוספת נשמרת} other{{count} פעולות נוספות נשמרות}}",
+  "sceneFormRemoveKept": "הסרה",
   "sceneDeleteTitle": "למחוק סצנה?",
   "sceneDeleteMessage": "\"{name}\" יוסר. ההתקנים נשארים במצבם הנוכחי.",
   "@sceneDeleteMessage": {
@@ -498,7 +501,7 @@
       "name": {}
     }
   },
-  "sceneActionsCount": "{count} התקנים",
+  "sceneActionsCount": "{count, plural, =1{פעולה אחת} other{{count} פעולות}}",
   "scenesAllShutters": "כל התריסים",
   "sceneCloseAllShutters": "סגירת כל התריסים",
   "sceneOpenAllShutters": "פתיחת כל התריסים",
@@ -542,11 +545,12 @@
   "diagTcpTimeout": "החיבור לברוקר עבר את גבול הזמן. ייתכן שהוא לא זמין או מחוץ לרשת.",
   "diagConnackFail": "הברוקר לא השלים את לחיצת היד של MQTT. ודאו שזה ברוקר MQTT (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "הברוקר לא ענה להתחברות בזמן. ל-Home Assistant לוקח לפעמים כמה שניות לבדוק אותה, נסו שוב.",
+  "diagTlsUntrusted": "הטלפון לא סומך על תעודת ההצפנה של הברוקר הזה: היא חתומה על ידי עצמה, פגת תוקף או הונפקה לשם אחר. ZigDash עוד לא יכול להשתמש בה. ברשת של הבית, השתמשו במקום זאת בפורט הלא מוצפן 1883 של הברוקר, או תנו לברוקר תעודה מרשות אישורים ציבורית.",
+  "diagTlsFailed": "החיבור המוצפן לא התחיל. ייתכן שהברוקר דורש תעודת לקוח, ש-ZigDash לא תומך בה. ברשת של הבית, התחברו במקום זאת בלי הצפנה: TCP במקום TLS, בדרך כלל בפורט 1883.",
   "diagAuthRejected": "הברוקר דחה את שם המשתמש או הסיסמה. בדקו את פרטי ההתחברות.",
   "diagAuthRefused": "הברוקר סירב לחיבור. בדקו את הגדרות החיבור.",
   "diagResolveLocalName": "הטלפון לא מצא את השם הזה. אנדרואיד לרוב לא מזהה שמות שמסתיימים ב‑.local, אז הזינו את כתובת ה‑IP במקום (Home Assistant מציג אותה תחת הגדרות › מערכת › רשת).",
   "diagTcpHaNoBroker": "זה ה‑Home Assistant שלכם, אבל לא רץ עליו ברוקר MQTT. התקינו והפעילו את היישום Mosquitto broker (הגדרות › יישומים), ונסו שוב.",
-  "diagResolveLocalNameIos": "הטלפון לא מצא את השם הזה. בדקו שהוא כתוב נכון, או הזינו את כתובת ה‑IP במקום (Home Assistant מציג אותה תחת הגדרות › מערכת › רשת).",
   "diagTcpSmlightClosed": "זה ה‑hub של SMLIGHT שלכם, אבל ברוקר ה‑MQTT שלו לא מקבל חיבורים ממכשירים אחרים. בדף האינטרנט של ה‑hub פתחו Settings › MQTT, הפעילו Allow External, שמרו ונסו שוב.",
   "diagTcpZ2mBrokerElsewhere": "Zigbee2MQTT רץ בכתובת הזו, אבל מגיע לברוקר שלו דרך שם אחר (ראו Zigbee2MQTT › Settings › MQTT › Server). אם זה מחשב אחר, הקלידו את הכתובת שלו, בדרך כלל עם פורט 1883. אם זה קונטיינר על המחשב הזה, פרסמו את הפורט שלו (ports: \"1883:1883\") ואפשרו לו להאזין לרשת, ואז נסו שוב.",
   "diagTcpZ2mNoBroker": "בכתובת הזו פועל Zigbee2MQTT, אבל ברוקר ה‑MQTT שלו לא מקבל חיבורים ממכשירים אחרים. Mosquitto מאזין רק במחשב שלו עד שמוסיפים לקובץ mosquitto.conf את השורות \"listener 1883\" ו‑\"allow_anonymous true\" (או מגדירים סיסמה). הפעילו מחדש את Mosquitto ונסו שוב.",
@@ -554,7 +558,9 @@
   "foundDevices": "{count, plural, =1{נמצא מכשיר אחד} other{נמצאו {count} מכשירים}}",
   "@foundDevices": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "foundDevicesHint": "מכשירי הזיגבי שלכם נראים. המשיכו לבניית לוח המחוונים.",
@@ -612,7 +618,7 @@
   "noHubPi": "Raspberry Pi או כל מחשב לינוקס",
   "noHubPiBody": "מתקינים לבד Zigbee2MQTT ואת ברוקר Mosquitto. בערך שעה, עם המדריך של Zigbee2MQTT.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "מוסיפים את התוספים Mosquitto broker ו-Zigbee2MQTT, ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.",
+  "noHubHaBody": "מוסיפים את היישומים Mosquitto broker ו-Zigbee2MQTT (הגדרות › יישומים), ואז נכנסים מ-ZigDash עם החשבון של Home Assistant.",
   "noHubRadio": "ל-Pi או ל-Home Assistant צריך גם מתאם Zigbee, כמו SLZB-06 או דונגל של Sonoff. ב-SMHUB הוא מובנה.",
   "noHubDemoNote": "בינתיים אפשר לראות איך ZigDash עובד, עם בית לדוגמה.",
   "noHubRemind": "תזכירו לי בעוד שבוע",
@@ -636,7 +642,17 @@
   "engineNeedsBrokerTitle": "אוטומציות צריכות את ברוקר ה-MQTT שלכם",
   "engineNeedsBrokerBody": "הבית הזה מתחבר דרך דף ה-Zigbee2MQTT, וזה מספיק ללוחות שלכם. אוטומציות, התראות והיסטוריה רצות ב-ZigDash Engine שעל הרכזת, שמדבר דרך ברוקר ה-MQTT. הוסיפו את פרטיו פעם אחת, ומאז ZigDash יתחבר דרך הברוקר.",
   "engineNeedsBrokerButton": "הוספת פרטי ברוקר",
-  "connFromPageNote": "הבית הזה מתחבר דרך דף ה-Zigbee2MQTT. הזינו את ברוקר ה-MQTT שלכם (בדרך כלל אותו מחשב, פורט 1883) כדי להפעיל אוטומציות, התראות והיסטוריה. אחרי השמירה ZigDash מתחבר דרך הברוקר.",
+  "connFromPageNote": "הבית הזה מתחבר דרך דף ה-Zigbee2MQTT. הזינו את ברוקר ה-MQTT שלכם (בדרך כלל אותו מחשב, פורט 1883) כדי להפעיל אוטומציות, התראות והיסטוריה. כשהמכשירים שלכם יהיו בברוקר, ZigDash יעבור אליו.",
+  "connBrokerNoDevices": "מחובר, אבל בברוקר הזה אין אף אחד מהמכשירים שלכם. אם הרגע הפעלתם את הברוקר, הפעילו מחדש את Zigbee2MQTT כדי שיתחבר אליו.",
+  "connZ2mUses": "Zigbee2MQTT משתמש ב-{server}",
+  "connReadingZ2m": "קורא את ההגדרות של Zigbee2MQTT…",
+  "connKeepPageTitle": "להמשיך להשתמש בדף ה-Zigbee2MQTT?",
+  "connKeepPageBodyEmpty": "הברוקר הזה ענה, אבל אין בו אף אחד מהמכשירים שלכם, כך שהלוחות שלכם יהיו ריקים. ייתכן ש-Zigbee2MQTT משתמש בברוקר אחר, או צריך הפעלה מחדש אחרי שהברוקר הופעל.",
+  "connKeepPageBodyNoAnswer": "הברוקר לא ענה, כך שהלוחות שלכם יהיו ריקים.",
+  "connKeepPageBodyRefused": "הברוקר דחה את ההתחברות, כך שהלוחות שלכם יהיו ריקים.",
+  "connKeepPage": "להשאיר את דף ה-Zigbee2MQTT",
+  "connSaveAnyway": "לשמור בכל זאת",
+  "connChecking": "בודק את הברוקר…",
   "setupManualEntry": "הזנת פרטים ידנית",
   "setupScanningTitle": "מחפש חיבור…",
   "setupScanningHint": "השאירו מכשיר זה באותה רשת מקומית של מארח ה-Zigbee2MQTT.",
@@ -650,7 +666,6 @@
   "reminderButton": "תזכירו לי מחר",
   "reminderSet": "נזכיר לכם מחר, בטלפון הזה.",
   "reminderNoPermission": "ההתראות של ZigDash כבויות, ולכן לא תהיה תזכורת. אפשר להפעיל אותן בהגדרות של Android.",
-  "reminderNoPermissionIos": "ההתראות של ZigDash כבויות, ולכן לא תהיה תזכורת. אפשר להפעיל אותן בהגדרות › ZigDash › עדכונים.",
   "reminderChannel": "תזכורת להגדרה",
   "reminderTitle": "סיימו להגדיר את ZigDash",
   "reminderBody": "בבית, ברשת ה-Wi-Fi שלכם? הקישו כדי לנסות שוב: זה לוקח בערך דקה.",
@@ -693,6 +708,15 @@
   "haPasteNothing": "אין כתובת במה שהעתקתם.",
   "haSharedNote": "זו הכתובת ששיתפתם. התחברו כדי להשלים את החיבור.",
   "haShareNothing": "לא הייתה שם כתובת. באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם ואז על אייקון השיתוף למעלה.",
+  "haLinkNote": "זו הכתובת מהקישור שלכם. התחברו כדי להשלים את החיבור.",
+  "haLinkReferrerNote": "זו הכתובת מהקישור שפתחתם לפני התקנת ZigDash. התחברו כדי להשלים את החיבור.",
+  "haLinkNothing": "הקישור הזה לא הכיל כתובת של Home Assistant. אפשר ליצור חדש ב-zigdash.app/connect.",
+  "haNoneComputer": "שימוש במחשב",
+  "haComputerTitle": "שימוש במחשב",
+  "haComputerBody": "במחשב שבו Home Assistant פתוח, היכנסו לעמוד הזה והדביקו שם את הכתובת של Home Assistant. אחר כך סרקו את הקוד עם המצלמה של הטלפון הזה.",
+  "haComputerCopy": "העתקת קישור",
+  "setupLinkPending": "הקישור שלכם הביא כתובת של Home Assistant. הקישו על Home Assistant כדי להשתמש בה.",
+  "setupLinkPendingNothing": "הקישור שלכם לא הכיל כתובת של Home Assistant. אפשר ליצור חדש ב-zigdash.app/connect.",
   "haHandoverShare": "הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה, ובחרו ב-ZigDash. מדפדפן, שתפו את הדף עם ZigDash.",
   "haHandoverCopy": "הכי מהר: באפליקציית Home Assistant פתחו הגדרות › אפליקציה נלווית, הקישו על השרת שלכם, ואז על אייקון השיתוף למעלה ועל העתקת קישור. חזרו לכאן והקישו על הדבקה.",
   "haConnectOtherNetwork": "הכתובת הזו נמצאת ברשת אחרת מזו של הטלפון, שנמצא ב-{network}. השתמשו בכתובת שאפליקציית Home Assistant שלכם פותחת, לרוב כתובת מרוחקת, או חברו את הטלפון לרשת שבה נמצא Home Assistant.",
@@ -701,6 +725,19 @@
   "setupNoWifiHa": "משתמש ב-Home Assistant? התחבר",
   "haConnectNotAdmin": "המשתמש שלכם ב-Home Assistant אינו מנהל. ZigDash צריך מנהל בשביל ה-MQTT של Home Assistant. היכנסו כמנהל, או הדביקו אסימון שמנהל יצר.",
   "haConnectNoMqtt": "ל‑Home Assistant הזה אין אינטגרציית MQTT. גם Zigbee2MQTT צריך אחת: ב‑Home Assistant הוסיפו את היישום Mosquitto broker (הגדרות › יישומים) ואת אינטגרציית MQTT, ונסו שוב.",
+  "haConnectZhaFound": "ה‑Zigbee שלכם רץ ב‑ZHA, ה‑Zigbee המובנה של Home Assistant ({count, plural, =1{מכשיר אחד} other{{count} מכשירים}}). ZigDash עובד עם Zigbee2MQTT, ולכן לא יכול להציג אותם. מעבר ל‑Zigbee2MQTT פירושו לצמד מחדש את המכשירים; המדריך מציג שתי דרכים.",
+  "haConnectZhaMove": "מעבר מ‑ZHA",
+  "haConnectNoMqttNoApps": "ל‑Home Assistant הזה אין אינטגרציית MQTT ואין יישומים (הוא רץ כקונטיינר), ולכן Mosquitto ו‑Zigbee2MQTT רצים לידו כקונטיינרים נפרדים. אם הם כבר רצים, חברו את ZigDash ישירות ל‑Mosquitto. או הוסיפו ב‑Home Assistant את אינטגרציית MQTT ונסו שוב.",
+  "haConnectNoAppsGuide": "איך להתחבר",
+  "zhaMoveBody": "ZigDash עובד עם Zigbee2MQTT. מעבר פירושו לצמד מחדש את המכשירים. Home Assistant יכול להמשיך להשתמש בהם אחרי שתוסיפו את אינטגרציית MQTT.",
+  "zhaMoveWaySecond": "מתאם שני: חדר אחרי חדר, ZHA ממשיך לפעול",
+  "zhaMoveWaySame": "אותו מתאם: בחינם, הכול בבת אחת",
+  "zhaMoveReadSteps": "לקריאת השלבים",
+  "zhaMoveImMoving": "אני עובר",
+  "zhaMoveNotNow": "לא עכשיו",
+  "zhaMovingNoted": "נרשם. כש‑Zigbee2MQTT רץ, פתחו את ההגדרה: ZigDash ימצא אותו ויציע את השמות והחדרים מ‑Home Assistant.",
+  "setupMovingTitle": "התחברות ל‑Zigbee2MQTT החדש",
+  "setupMovingBody": "עוברים מ‑ZHA? כש‑Zigbee2MQTT ירוץ, ZigDash יחפש אותו ברשת שלכם.",
   "haConnectSignInFailed": "הכניסה לא הושלמה. נסו שוב, או השתמשו באסימון ארוך טווח.",
   "setupHaShortcut": "Zigbee2MQTT רץ בתוך Home Assistant? אפשר לדלג על הברוקר ועל ההתחברות אליו: היכנסו עם חשבון המנהל שלכם ב-Home Assistant. זה עובד מכל רשת.",
   "haConnectButton": "התחברות דרך Home Assistant",
@@ -776,6 +813,9 @@
   "setupErrLoginNoAnswerTitle": "הברוקר לא ענה להתחברות",
   "setupErrLoginNoAnswerBody": "הברוקר נמצא, אבל הוא לא ענה בזמן על שם המשתמש והסיסמה. היישום Mosquitto broker של Home Assistant בודק התחברויות מול Home Assistant, וזה יכול לקחת כמה שניות ב‑Raspberry Pi. נסו שוב, וודאו שהמשתמש הזה קיים ב‑Home Assistant. ב‑hub של SMLIGHT, הפעילו במקום זאת את Allow Anonymous תחת Settings › MQTT, ואז לא צריך התחברות.",
   "setupErrLoginNoAnswerAction": "לנסות שוב",
+  "setupErrTlsUntrustedTitle": "הטלפון לא סומך על התעודה של הברוקר הזה",
+  "setupErrTlsFailedTitle": "החיבור המוצפן נכשל",
+  "setupErrTlsAction": "עריכת הגדרות",
   "setupNoZ2mTitle": "ה‑broker שלך עובד, אבל Zigbee2MQTT לא מפרסם כאן",
   "setupNoZ2mBody": "האזנו ל‑{base}/bridge ולא התקבל דבר.",
   "setupBaseTopicQuestion": "משתמשים ב‑base topic אחר?",
@@ -792,30 +832,74 @@
   "setupZhaNote": "ZigDash מציג מכשירים מ‑Zigbee2MQTT, ולכן הוא לא רואה מכשירים ב‑ZHA, ה‑Zigbee המובנה של Home Assistant. אפשר לנסות את בית ההדגמה כדי לראות איך ZigDash עובד.",
   "setupPlatformNotSure": "לא בטוח",
   "setupScanProgress": "נבדקו {checked} מתוך {total} כתובות",
-  "@setupScanProgress": {"placeholders": {"checked": {"type": "int"}, "total": {"type": "int"}}},
+  "@setupScanProgress": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "setupScanHintHa": "מחפשים את Home Assistant ואת ה-MQTT broker שלו…",
   "setupScanHintSmlight": "מחפשים את ה-SMHUB שלכם…",
   "setupScanHintPi": "מחפשים MQTT broker ברשת שלכם…",
   "setupHubSeenHa": "נמצא Home Assistant בכתובת {host}",
-  "@setupHubSeenHa": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenHa": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenZ2m": "נמצא Zigbee2MQTT בכתובת {host}",
-  "@setupHubSeenZ2m": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenZ2m": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenSmlight": "נמצאה רכזת SMLIGHT בכתובת {host}",
-  "@setupHubSeenSmlight": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenSmlight": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenHint": "עדיין מחפשים את ה-MQTT broker שלו…",
   "setupNoBrokerHaTitle": "נמצא Home Assistant, אבל אין MQTT broker",
   "setupNoBrokerHaBody": "Home Assistant נמצא בכתובת {host}, אבל שום דבר לא עונה בפורט MQTT 1883. ב‑Home Assistant פתחו הגדרות › יישומים, התקינו והפעילו את היישום Mosquitto broker ונסו שוב.",
-  "@setupNoBrokerHaBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerHaBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerHaZha": "משתמשים ב-Zigbee המובנה של Home Assistant ‏(ZHA) במקום Zigbee2MQTT? ZigDash עובד רק עם Zigbee2MQTT, ולכן לא רואה מכשירי ZHA. ההדגמה מראה מה הייתם מקבלים.",
   "setupNoBrokerHaDocker": "אין יישומים בהגדרות של ה‑Home Assistant שלכם? אז הוא רץ ב‑Docker ‏(Home Assistant Container), שאין בו יישומים: Mosquitto רץ בקונטיינר משלו. הזינו למטה את הכתובת של המחשב שמריץ אותו.",
   "setupVpnHint": "VPN פועל, והוא יכול להסתיר את הרשת הביתית מהסריקה. אם אתם בבית, כבו את ה-VPN והקישו על נסו שוב. או השאירו אותו פועל ואפשרו גישה לרשת המקומית (LAN) בהגדרות אפליקציית ה-VPN.",
-  "setupLocalNetworkIos": "ZigDash צריך גישה לרשת המקומית כדי למצוא את ההאב. אם סירבתם, אפשרו אותה בהגדרות › פרטיות ואבטחה › רשת מקומית.",
   "setupNoBrokerZ2mTitle": "נמצא Zigbee2MQTT, אבל אי אפשר להגיע ל-broker שלו",
   "setupNoBrokerZ2mBody": "Zigbee2MQTT נמצא בכתובת {host}, אבל ה-MQTT broker שלו לא מקבל חיבורים מהטלפון. Mosquitto 2 מאזין רק ברכזת עצמה עד שבקובץ ההגדרות יופיעו 'listener 1883' ו-'allow_anonymous true' (או פרטי התחברות). הפעילו אותו מחדש ונסו שוב.",
-  "@setupNoBrokerZ2mBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerZ2mBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerSmlightTitle": "נמצאה רכזת SMLIGHT, אבל MQTT כבוי",
   "setupNoBrokerSmlightBody": "הרכזת נמצאת בכתובת {host}, אבל אי אפשר להגיע ל-MQTT broker שלה. בממשק הווב של הרכזת פתחו Settings › MQTT, הפעילו Allow External ובדקו ש-Zigbee2MQTT פועל. אחר כך נסו שוב.",
-  "@setupNoBrokerSmlightBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerSmlightBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupZ2mAsking": "שואלים את Zigbee2MQTT איפה ה-broker שלו…",
   "setupZ2mLocalOnlyTitle": "ה-broker שלכם מקבל חיבורים רק מהמכשיר שעליו הוא רץ",
   "setupZ2mLocalOnlyBody": "Zigbee2MQTT משתמש ב-{server}, ומהטלפון שלכם שום דבר לא עונה שם. כך Mosquitto 2 מתנהג כברירת מחדל. הוסיפו את שתי השורות האלה ל-mosquitto.conf, הפעילו מחדש את Mosquitto ונסו שוב:",
@@ -825,7 +909,13 @@
   "setupZ2mTokenRequired": "עמוד האינטרנט של Zigbee2MQTT מוגן בטוקן, ולכן האפליקציה לא הצליחה לקרוא היכן הברוקר שלו. הקלידו את כתובת הברוקר מתוך Zigbee2MQTT › Settings › MQTT.",
   "setupZ2mUnreachable": "Zigbee2MQTT משתמש ב-broker בכתובת {server}, אבל הוא לא ענה לטלפון שלכם. בדקו שה-broker פועל ושהטלפון באותה רשת.",
   "setupConnectTo": "התחברות אל {host}",
-  "@setupConnectTo": {"placeholders": {"host": {"type": "String"}}},
+  "@setupConnectTo": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNotFoundHa": "לא נמצא Home Assistant ברשת הזו. ודאו שהטלפון מחובר לאותה רשת Wi-Fi כמו Home Assistant (לא רשת אורחים), ונסו שוב. אם אתם יודעים את הכתובת, הזינו אותה למטה.",
   "setupNotFoundSmlight": "לא נמצא hub של SMLIGHT ברשת הזו. ודאו שה‑hub דולק ושהטלפון מחובר לאותה רשת Wi-Fi, ונסו שוב. אם אתם יודעים את הכתובת, הזינו אותה למטה.",
   "setupNotFoundPi": "לא נמצא MQTT broker ברשת הזו. בדקו ש-Mosquitto פועל ומאזין ברשת (פורט 1883) ושהטלפון מחובר לאותו Wi-Fi. אחר כך נסו שוב.",
@@ -839,9 +929,7 @@
   "setupAddressCheck": "לבדוק את הכתובת הזו",
   "setupAddressNothing": "שום דבר לא ענה בכתובת {host}. בדקו את הכתובת, ושהטלפון מחובר לאותה רשת Wi-Fi.",
   "setupAddressNotResolved": "לא ניתן היה לפענח את {host}. שמות שמסתיימים ב‑.local נכשלים לעיתים קרובות באנדרואיד; נסו את כתובת ה‑IP במקום. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.",
-  "setupAddressNotResolvedIos": "לא ניתן היה לפענח את {host}. בדקו את השם, או נסו את כתובת ה‑IP במקום. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.",
   "setupAddressNotResolvedHa": "לא ניתן למצוא את {host} מהטלפון הזה; אנדרואיד לרוב לא מצליח לפענח שמות ‎.local. הקישו על {button} למעלה והשתמשו בכתובת שבה אתם פותחים את Home Assistant בדפדפן, או הקלידו כאן את כתובת ה‑IP שלו. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.",
-  "setupAddressNotResolvedHaIos": "לא ניתן למצוא את {host} מהטלפון הזה. הקישו על {button} למעלה והשתמשו בכתובת שבה אתם פותחים את Home Assistant בדפדפן, או הקלידו כאן את כתובת ה‑IP שלו. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.",
   "setupAddressNotLocal": "{host} אינו ברשת הביתית שלכם. השתמשו בכתובת שעובדת ב‑Wi-Fi שלכם, לא בקישור מרוחק כמו Nabu Casa או DuckDNS.",
   "setupAddressInvalid": "קודם הזינו כתובת.",
   "setupChoicesTitle": "מה מהבאים מתאים לכם?",
@@ -854,7 +942,16 @@
   "setupChoiceOtherSub": "Wi-Fi לאורחים או נתב שני",
   "setupChoiceOtherNote": "הטלפון צריך להגיע לרכזת. Wi-Fi לאורחים, או נתב שני עם Wi-Fi משלו, מפריד ביניהם. התחברו ל-Wi-Fi שהרכזת נמצאת בו והקישו על נסו שוב. אפשר גם להזין למטה את כתובת ה‑IP של הרכזת, או לנסות אחד מהשמות המקובלים האלה:",
   "guidedHostYourPhone": "הטלפון שלכם הוא {ip}, אז הרכזת מתחילה בדרך כלל ב-{prefix}.",
-  "@guidedHostYourPhone": {"placeholders": {"ip": {"type": "String"}, "prefix": {"type": "String"}}},
+  "@guidedHostYourPhone": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      },
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
   "guidedHostHa": "משתמשים ב-Home Assistant? המארח הוא הכתובת שבה אתם פותחים את Home Assistant, פורט 1883.",
   "demoBannerText": "את/ה במצב הדגמה",
   "demoBannerAction": "חיבור הבית שלך",
@@ -1051,7 +1148,13 @@
   "assistantTitle": "העוזר של ZigDash",
   "assistantNotice": "התשובה מגיעה משירות AI שרואה את פרטי התמיכה שלך. הוא לעולם לא צריך סיסמאות או כתובות.",
   "assistantOpeningScan": "הסריקה דרך {network} בדקה {hosts} כתובות ומצאה {brokers} ברוקרים.",
-  "@assistantOpeningScan": { "placeholders": { "network": {}, "hosts": {}, "brokers": {} } },
+  "@assistantOpeningScan": {
+    "placeholders": {
+      "network": {},
+      "hosts": {},
+      "brokers": {}
+    }
+  },
   "assistantOpeningRunningYes": "אמרת ש-Zigbee2MQTT פועל. בוא נמצא אותו.",
   "assistantOpeningRunningNotSure": "לא היית בטוח אם Zigbee2MQTT פועל. בוא נברר.",
   "assistantOpeningGeneric": "ספר לי מה ניסית לעשות ואעזור לך להתחבר.",
@@ -1067,9 +1170,24 @@
   "assistantHelpedNo": "לא",
   "assistantTalkToPerson": "לדבר עם אדם",
   "assistantHomeOpening": "{home} מחובר ו{count, plural, =0{אף מכשיר לא מדווח} =1{מכשיר אחד מדווח} other{{count} מכשירים מדווחים}}. במה אפשר לעזור?",
-  "@assistantHomeOpening": { "placeholders": { "home": {"type": "String"}, "count": {"type": "int"} } },
+  "@assistantHomeOpening": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "assistantHomeOpeningOffline": "ZigDash לא מצליח להגיע אל {home} כרגע. במה אפשר לעזור?",
-  "@assistantHomeOpeningOffline": { "placeholders": { "home": {"type": "String"} } },
+  "@assistantHomeOpeningOffline": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      }
+    }
+  },
   "assistantChipDevice": "מכשיר הפסיק להגיב",
   "assistantChipTile": "הוספת אריח",
   "assistantChipAutomations": "אוטומציות",
@@ -1116,7 +1234,6 @@
   "tipRestartZ2mBody": "אם יש מכשירים משויכים אבל אף אחד לא מגיע, הפעילו מחדש את Zigbee2MQTT כדי שיפרסם את רשימת המכשירים שלו.",
   "tipNumberAddressTitle": "השתמשו בכתובת המספרית",
   "tipNumberAddressBody": "שמות שמסתיימים ב‑.local לא עובדים בכל טלפון Android. נסו את הכתובת המספרית של ההאב, למשל 192.168.1.20.",
-  "tipNumberAddressBodyIos": "אם השם לא עובד, נסו את הכתובת המספרית של ההאב, למשל 192.168.1.20.",
   "tipPortProtocolTitle": "פורט ופרוטוקול",
   "tipPortProtocolBody": "בדרך כלל זה TCP בפורט 1883. בחרו TLS או WebSocket רק אם ה‑broker מוגדר לכך.",
   "tipManualLoginTitle": "התחברות",
@@ -1282,7 +1399,6 @@
   "wallKeepOnSubtitle": "הם חוזרים בנגיעה ונעלמים שוב אחרי 10 שניות.",
   "wallFullscreen": "מסך מלא",
   "wallFullscreenSubtitle": "מסתיר גם את סרגלי המצב והניווט של אנדרואיד.",
-  "wallFullscreenSubtitleIos": "מסתיר גם את שורת המצב; מחוון הבית מתעמעם.",
   "wallDimAfter": "עמעום אחרי",
   "wallDimOff": "כבוי",
   "wallIdleTitle": "כשאף אחד לא נוגע",
@@ -1313,7 +1429,11 @@
   "wallNightFrom": "מ-",
   "wallNightTo": "עד",
   "wallDimMinutes": "{minutes} דק׳",
-  "@wallDimMinutes": { "placeholders": { "minutes": {} } },
+  "@wallDimMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
   "kioskLock": "נעילת קיוסק",
   "kioskLockSubtitle": "רק לוחות הבית הזה והפקדים שלהם נשארים זמינים. לחיצה ארוכה על הכותרת כדי לצאת.",
   "kioskPin": "קוד PIN",
@@ -1329,12 +1449,9 @@
   "kioskPinWrong": "קוד שגוי.",
   "kioskPinForgot": "שכחתם את הקוד?",
   "kioskPinForgotBody": "קוד שנשכח אפשר לאפס רק במחיקת הנתונים של ZigDash בהגדרות אנדרואיד, וזה מסיר את הבית הזה אלא אם יש לכם גיבוי. ייצאו גיבוי לפני הגדרת קוד.",
-  "kioskPinForgotBodyIos": "קוד שנשכח אפשר לאפס רק במחיקה והתקנה מחדש של ZigDash, וזה מסיר את הבית הזה אלא אם יש לכם גיבוי. ייצאו גיבוי לפני הגדרת קוד.",
   "kioskExportBackup": "ייצוא גיבוי",
   "kioskOsPin": "להצמיד את ZigDash גם באנדרואיד",
   "kioskOsPinSubtitle": "אנדרואיד חוסם את כפתור הבית והאפליקציות האחרונות עד לביטול ההצמדה של ZigDash. טאבלט בלי מסך נעילה מבטל את ההצמדה במחווה, כך שזו לא הנעילה.",
-  "kioskGuidedAccessTitle": "נעילה ל-ZigDash עם גישה מודרכת",
-  "kioskGuidedAccess": "iOS משאיר את ZigDash על המסך עד שמסיימים את הגישה המודרכת: מפעילים אותה בהגדרות › נגישות › גישה מודרכת, ואז לוחצים שלוש פעמים על הכפתור הצדדי ב-ZigDash.",
   "kioskOn": "קיוסק פעיל. לחיצה ארוכה על הכותרת כדי לצאת.",
   "kioskLeaveTitle": "לצאת מהקיוסק?",
   "kioskLeave": "יציאה",
@@ -1363,14 +1480,16 @@
   "proGetWall": "טאבלט קיר: מדידות על השעון, התעוררות בתנועה, לוח זמנים לילי והתראות קוליות",
   "proGetFuture": "כל תכונת Pro שתגיע בהמשך, בלי תוספת תשלום",
   "proFreeTitle": "חינם לתמיד",
-  "proFreeBody": "ההגדרה, הדשבורדים, השליטה בכל מכשיר, הווידג'טים, אריחי ההגדרות המהירות, ההתראות, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שאתם משתמשים בו היום לא ננעל.",
-  "proFreeBodyIos": "ההגדרה, הדשבורדים, השליטה בכל מכשיר, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שאתם משתמשים בו היום לא ננעל.",
+  "proFreeBody": "ההגדרה, הדשבורדים, השליטה בכל מכשיר, הווידג'טים, אריחי ההגדרות המהירות, ההתראות, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שחינמי היום לא יהפוך לבתשלום.",
   "proBuy": "לקבלת Pro",
   "proBuyPrice": "לקבלת Pro · {price}",
   "proOnce": "תשלום אחד, בלי מנוי. קניתם בטלפון אחר עם אותו חשבון Google? זה נפתח אוטומטית.",
-  "proOnceIos": "תשלום אחד, בלי מנוי. קניתם באייפון או אייפד אחר עם אותו חשבון Apple? זה נפתח אוטומטית, או הקישו על שחזור רכישה.",
   "proRestore": "שחזור רכישה",
-  "proRestoreNone": "לא נמצאה רכישה של ZigDash Pro עבור ה‑Apple ID הזה.",
+  "proRestored": "Pro פתוח בטלפון הזה.",
+  "proRestoreNone": "ל-Google Play אין רכישת Pro בחשבון Google הזה. קניתם בחשבון אחר? החליפו חשבון בחנות Play ונסו שוב.",
+  "proRestoreFailed": "לא הצלחנו להגיע ל-Google Play. נסו שוב בעוד רגע.",
+  "proRestoreNoneIos": "לא נמצאה רכישה של ZigDash Pro עבור ה‑Apple ID הזה.",
+  "proRestoreFailedIos": "לא ניתן להתחבר ל-App Store. נסו שוב בעוד רגע.",
   "historyNotRecorded": "מוקלטים רק מספרים שמוצגים בלוח בקרה. הוסיפו את הערך הזה כאריח כדי להתחיל את ההיסטוריה שלו.",
   "historyRecordHere": "להקליט במכשיר הזה",
   "historyRecordHereHint": "אי אפשר להשתמש ב־ZigDash Engine ברכזת? ZigDash יכול לשמור בטלפון או בטאבלט שנשאר פתוח, כמו טאבלט קיר. כל הטלפונים של הבית רואים את ההיסטוריה.",
@@ -1412,6 +1531,8 @@
   "haImportOpen": "פתיחת הלוחות",
   "haImportOfferTitle": "להביא את השמות והחדרים מ-Home Assistant?",
   "haImportOfferBody": "Home Assistant נמצא ברשת שלכם. ‏ZigDash יכול לתת לאריחים את השמות ולהוסיף לוח לכל קומה וחדר, כמו שהגדרתם שם.",
+  "haImportOfferBodyZha": "‏ZigDash יכול לתת לאריחים שמות ולהוסיף לוח לכל קומה וחדר, לפי השמות והחדרים של המכשירים ב‑Home Assistant, כולל אלה מ‑ZHA.",
+  "haImportNoZ2mDevices": "ב‑Zigbee2MQTT עדיין אין מכשירים. צמדו אליו קודם את המכשירים, ואז פתחו את הייבוא מ‑Home Assistant בהגדרות של הבית הזה.",
   "haImportOfferLater": "לא עכשיו",
   "haImportOfferGo": "ייבוא",
   "haImportSignIn": "התחברות עם Home Assistant",
@@ -1435,11 +1556,6 @@
   "engineInstalling": "מתקין ברכזת…",
   "engineTooOldTitle": "צריך לעדכן את Zigbee2MQTT",
   "engineTooOldBody": "גרסת Zigbee2MQTT שלך היא {version}. אוטומציות דורשות 2.4 ומעלה. יש לעדכן את Zigbee2MQTT ברכזת ולחזור לכאן.",
-  "engineIntroTitle": "אוטומציות רצות ברכזת, לא בטלפון",
-  "engineIntroBody": "ZigDash מוסיף את ZigDash Engine בתוך Zigbee2MQTT ברכזת. הוא עוקב אחרי המכשירים ומריץ את הכללים, כך שאור נדלק כשהדלת נפתחת גם כשהטלפון כבוי ואין אינטרנט.",
-  "engineIntroNothingByHand": "אין מה להתקין ידנית. ZigDash עושה את זה דרך הרשת הביתית.",
-  "engineIntroVersion": "גרסת Zigbee2MQTT שלך היא {version}.",
-  "engineIntroRemove": "אפשר להסיר אותו בכל עת מהמסך הזה.",
   "engineInstall": "התקנה ברכזת",
   "engineDeclinedTitle": "אין אוטומציות ברכזת הזו",
   "engineDeclinedBody": "Zigbee2MQTT ברכזת לא מאפשר תוספים, כך ששום דבר לא יריץ את הכללים כשהטלפון לא בבית. סצנות, התראות ולוח הבקרה עובדים כרגיל.",
@@ -1502,6 +1618,7 @@
   "autoErrTown": "יש להגדיר עיר לזריחה ולשקיעה.",
   "autoErrPickAction": "יש לבחור מה יקרה.",
   "autoErrEmptyScene": "בסצנה הזו אין מה לשלוח.",
+  "autoSceneTilesSkipped": "{count, plural, =1{פעולה אחת בסצנה הזו פועלת רק מהטלפון הזה בבית, לא מאוטומציות.} other{{count} פעולות בסצנה הזו פועלות רק מהטלפון הזה בבית, לא מאוטומציות.}}",
   "autoErrNotConnected": "ZigDash לא מחובר לבית הזה. אפשר לנסות שוב בבית.",
   "autoNewTitle": "אוטומציה חדשה",
   "autoEditTitle": "עריכת אוטומציה",
@@ -1778,5 +1895,175 @@
   "proSaleNoEnd": "מבצע: {percent}% הנחה",
   "proSaleEnded": "המבצע הסתיים. זה המחיר עכשיו.",
   "saleCardRemote": "ZigDash Pro: שליטה בבית מכל מקום, ועוד.",
-  "saleCardHomeAssistant": "ZigDash Pro: היסטוריה ארוכה יותר, יותר אוטומציות, ועוד."
+  "saleCardHomeAssistant": "ZigDash Pro: היסטוריה ארוכה יותר, יותר אוטומציות, ועוד.",
+  "chatEarlyTitle": "צ'אט עם הבית",
+  "chatEarlyBody": "שלחו הודעה כמו \"תסגור את התריס במשרד\" או \"הדלת האחורית פתוחה?\" והבית עונה. זה כבר זמין לבעלי ZigDash Pro. {count} הראשונים שנרשמים יקבלו קוד מייסדים: בחינם ל-3 חודשים, כולל גישה מרחוק.",
+  "chatEarlyTelegram": "הרשמה בטלגרם",
+  "chatEarlyEmail": "הרשמה במייל",
+  "chatEarlyNotForMe": "לא בשבילי",
+  "chatEarlyClose": "סגירה",
+  "chatEarlyEmailHint": "המייל שלך",
+  "chatEarlyBadEmail": "זה לא נראה כמו כתובת מייל.",
+  "chatEarlyEmailUse": "נשתמש בו רק כדי להזמין אותך לבטא ולספר לך את המחיר.",
+  "chatEarlyPrivacy": "מדיניות פרטיות",
+  "chatEarlySend": "שליחה",
+  "chatEarlyFailed": "השליחה נכשלה. נסו בטלגרם, או מאוחר יותר.",
+  "chatEarlyInFirst": "את/ה מספר {position} ברשימה: מתוך {count} הראשונים. תקבלו קוד מייסדים: צ'אט וגישה מרחוק, בחינם ל-3 חודשים.",
+  "chatEarlyAfterFirst": "את/ה מספר {position} ברשימה. {count} המקומות הראשונים תפוסים. הצ'אט כבר זמין לבעלי ZigDash Pro.",
+  "chatEarlyListed": "המייל הזה כבר ברשימה.",
+  "chatEarlyPrice": "אחרי החודשים החינמיים, 2.49 אירו לחודש יהיה בסדר?",
+  "chatEarlyYes": "כן",
+  "chatEarlyMaybe": "אולי",
+  "chatEarlyNo": "לא",
+  "chatEarlyThanks": "תודה, נרשם.",
+  "settingsChatEarlySubtitle": "גישה מוקדמת: הרשמה לרשימה",
+  "historyOnTitle": "לראות את הבית לאורך ימים",
+  "historyOnBody": "הפעילו היסטוריה כדי לראות טמפרטורות, צריכת חשמל ודלתות לאורך ימים ושבועות, לא רק עכשיו. ZigDash Engine מקליט ברכזת, גם כשהטלפון כבוי.",
+  "historyOnTurnOn": "הפעלת היסטוריה",
+  "historyOnLater": "לא עכשיו",
+  "historyOnWorking": "מפעילים היסטוריה…",
+  "historyOnConsentBody": "ZigDash Engine מקליט היסטוריה ברכזת, כך שהיא ממשיכה גם כשהטלפון כבוי. Zigbee2MQTT שלכם חוסם תוספים, כמו בהתקנות חדשות: ZigDash יפעיל \"Allow external JavaScript\" ויפעיל אותו מחדש.",
+  "historyOnAllow": "לאשר ולהפעיל מחדש",
+  "historyOnBrokerBody": "ההיסטוריה עוברת דרך שרת ה-MQTT שלכם. ZigDash מתחבר לבית הזה דרך הדף של Zigbee2MQTT, אז הוסיפו קודם את השרת.",
+  "historyOnAddBroker": "הוספת השרת",
+  "historyOnPhoneBody": "הרכזת שלכם לא יכולה להריץ את ZigDash Engine. הטלפון הזה יכול להקליט במקומה כל עוד ZigDash פתוח: הכי טוב בטאבלט קיר שנשאר דולק.",
+  "historyOnPhone": "להקליט בטלפון הזה",
+  "proTrialStartedTitle": "Pro פעיל ל-14 יום",
+  "proTrialOfferTitle": "נסו את ZigDash Pro בחינם ל-14 יום",
+  "proTrialWhat": "היסטוריה של 7 ו-30 יום, התוספות לטאבלט הקיר ויותר משלוש אוטומציות.",
+  "proTrialNoPayment": "בלי תשלום, שום דבר לא מתחדש.",
+  "proTrialStart": "להתחיל ניסיון",
+  "proTrialEndingTitle": "הניסיון של Pro מסתיים בעוד יומיים",
+  "proTrialKeep": "להשאיר את Pro · {price}",
+  "proTrialUsedHistory": "היסטוריית השבוע והחודש",
+  "proTrialUsedWall": "התוספות לטאבלט הקיר",
+  "proTrialUsedAutomation": "יותר משלוש אוטומציות",
+  "proTrialYouUsed": "השתמשתם ב: {features}.",
+  "proTrialAfterEnd": "אחרי שהוא מסתיים, כל מה שהגדרתם נשאר; תצוגות השבוע והחודש ואוטומציות חדשות מעבר לשלוש דורשות Pro.",
+  "proTrialDaysLeft": "{days, plural, =1{ניסיון: נשאר יום אחד} other{ניסיון: נשארו {days} ימים}}",
+  "proTrialEnded": "הניסיון הסתיים. כל מה שהגדרתם עדיין שם.",
+  "engineSlimCard": "אוטומציות רצות ברכזת עם ZigDash Engine. ‏ZigDash מתקין אותו שם כשתשמרו את הראשונה.",
+  "engineAwayMakeAtHome": "יוצרים אוטומציות בבית: אז ZigDash מתקין את ה-Engine שלו ברכזת, דרך הרשת הביתית.",
+  "engineSheetSource": "לקוד המקור ב-GitHub",
+  "engineSheetTitle": "ZigDash Engine מריץ את האוטומציות שלכם",
+  "engineSheetBody": "ZigDash Engine הוא קובץ קוד פתוח אחד ש-ZigDash מוסיף לתיקייה של Zigbee2MQTT ברכזת. הוא מריץ שם את האוטומציות, גם כשהטלפון כבוי. אפשר להסיר אותו בכל עת מלשונית האוטומציות.",
+  "engineSheetInstallSave": "להתקין ולשמור",
+  "engineSheetSaveOnly": "לשמור בלי להפעיל",
+  "engineSheetSave": "שמירה",
+  "engineSheetNoAnswer": "Zigbee2MQTT ברכזת לא ענה בזמן, ולכן ZigDash לא יכול להתקין את ה-Engine עכשיו. שמרו עכשיו והתקינו אותו מלשונית האוטומציות כשהרכזת תענה.",
+  "engineSheetSavedNotRunning": "האוטומציה נשמרה. היא תרוץ ברגע ש-ZigDash Engine יהיה ברכזת.",
+  "engineWaitingTitle": "נשמרו קודם, ממתינות ל-ZigDash Engine",
+  "engineWaitingRun": "תרוץ אחרי ההתקנה",
+  "engineWaitingPaused": "נשארת מושהית",
+  "autoNotRunTitle": "אף אחת מהן עוד לא רצה",
+  "autoNotRunBody": "לא רצה: ZigDash Engine לא נמצא ברכזת. עד שיהיה, ה-broker של MQTT שומר אותן, ו-broker בלי persistence מאבד אותן כשהוא מופעל מחדש.",
+  "autoNotRunning": "לא רצה",
+  "historyUsePhoneInstead": "להשתמש בטלפון הזה במקום",
+  "chatTitle": "צ'אט (בטא)",
+  "chatRowReady": "לדבר עם הבית מטלגרם",
+  "chatRowNoPro": "חלק מ-ZigDash Pro (לא כלול בתקופת הניסיון)",
+  "chatRowNoRemote": "קודם צריך להפעיל שליטה מרחוק",
+  "chatRowNoEngine": "דורש את ZigDash Engine ברכזת",
+  "chatIntroTitle": "לדבר עם הבית מטלגרם",
+  "chatIntroBody": "שלחו לבוט ZigDash Home בטלגרם הודעה כמו \"הדלת האחורית פתוחה?\" או \"תסגור את התריס במשרד\", והבית עונה. הוא קורא מה המכשירים מדווחים ואת ההיסטוריה שלהם; עם \"קריאה ושליטה\" הוא יכול גם להפעיל ולכבות את התאורה, התריסים, המתגים, השקעים והתרמוסטטים שתבחרו.",
+  "chatIntroNever": "הוא אף פעם לא פותח, סוגר או משנה מנעולים, ברזים או סירנות, ואף פעם לא משנה אוטומציות או הגדרות: בשביל אלה הוא יגיד לכם לפתוח את ZigDash.",
+  "chatIntroBeta": "בחינם בזמן הבטא: עד 300 הודעות בחודש לבית הזה.",
+  "chatIntroWho": "מי קורא את ההודעות: טלגרם, שמעבירה אותן; השרת שלנו באיחוד האירופי, ששומר את השיחה 24 שעות; ו-Anthropic (Claude) בארה\"ב, שכותבת את התשובות. מה שהצ'אט קורא על הבית עובר באותה דרך.",
+  "chatPolicy": "איך הצ'אט מטפל במידע שלכם",
+  "chatLinkedTitle": "חשבונות מקושרים",
+  "chatLinkedNone": "עדיין לא קושר אף חשבון טלגרם.",
+  "chatLinkedLoadFailed": "לא הצלחנו לטעון את החשבונות המקושרים. כדאי לבדוק את החיבור לאינטרנט.",
+  "chatLinkedLine": "{scope} · שימוש אחרון {when}",
+  "chatLinkedNeverUsed": "{scope} · עוד לא היה בשימוש",
+  "chatRemove": "הסרה",
+  "chatRemoveTitle": "להסיר את {name}?",
+  "chatRemoveBody": "חשבון הטלגרם הזה לא יוכל עוד לגשת לבית, והשיחה שלו נמחקת.",
+  "chatRemovedLater": "הוסר. הרכזת תשכח אותו בפעם הבאה ש-ZigDash פתוח בבית.",
+  "chatAuditTitle": "מה הצ'אט עשה",
+  "chatAuditShow": "הצגה",
+  "chatAuditEmpty": "עדיין כלום.",
+  "chatAuditFailed": "הרכזת לא ענתה. אפשר לנסות שוב מאוחר יותר.",
+  "chatAuditSent": "הוגדר: {what}",
+  "chatAuditNotSent": "לא נשלח",
+  "chatHereTitle": "צ'אט עם הבית כבר כאן",
+  "chatHereBody": "קשרו את חשבון הטלגרם שלכם, ואז שאלו את הבית \"האם הדלת האחורית פתוחה?\" או בקשו ממנו לסגור תריס. חלק מ-Pro, בחינם בתקופת הבטא.",
+  "chatHereSetUp": "להגדרה",
+  "chatHereNotNow": "לא עכשיו",
+  "chatLinkNew": "קישור חשבון טלגרם",
+  "chatLinkAnother": "קישור חשבון טלגרם נוסף",
+  "chatScopeRead": "קריאה",
+  "chatScopeReadHelp": "עונה על שאלות. לא משנה כלום.",
+  "chatScopeControl": "קריאה ושליטה",
+  "chatScopeControlHelp": "גם מפעיל ומכבה את המכשירים שתבחרו למטה.",
+  "chatControlsTitle": "מה הצ'אט רשאי להפעיל",
+  "chatControlsHelp": "פעילים בהתחלה: תאורה ותריסים שבלוחות שלכם. כבויים בהתחלה: מתגים ושקעים (הם יכולים להפעיל תנור, דוד או משאבה), תרמוסטטים, שערים ודלתות חניה. מנעולים, ברזים וסירנות אף פעם לא מופיעים.",
+  "chatControlsEmpty": "עדיין אין מכשירים לבחירה.",
+  "chatKindLight": "תאורה",
+  "chatKindCover": "תריס",
+  "chatKindSwitch": "מתג או שקע",
+  "chatKindThermostat": "תרמוסטט",
+  "chatGateNote": "שער או דלת, כבוי בהתחלה",
+  "chatAgeAndAccount": "כל אחד מקשר את חשבון הטלגרם שלו, עם הרשאות משלו. אנשים מקושרים חייבים להיות בני 16 ומעלה. כל מי שמשתמש בחשבון טלגרם מקושר יכול לעשות מה שההרשאות שלו מאפשרות. גם \"קריאה\" מראה אם מישהו בבית ואילו דלתות וחלונות פתוחים.",
+  "chatEngineOld": "ZigDash Engine ברכזת מתעדכן לגרסה עם הצ'אט. אפשר לנסות שוב בעוד דקה.",
+  "chatLinkButton": "קישור טלגרם",
+  "chatLinkAway": "מקשרים בבית: ZigDash מגדיר את זה ברכזת דרך הרשת הביתית.",
+  "chatCodeTitle": "מסיימים בטלגרם",
+  "chatCodeBody": "בטלגרם, הקישו \"התחל\" בבוט ZigDash Home. הוא שולח קוד בן 4 ספרות: הקלידו אותו כאן תוך 10 דקות.",
+  "chatCodeHint": "קוד בן 4 ספרות",
+  "chatCodeConfirm": "אישור",
+  "chatOpenTelegram": "לפתוח שוב את טלגרם",
+  "chatLinkedDone": "קושר. שלחו לבוט הודעה כדי לנסות.",
+  "chatFailUnreachable": "לא הצלחנו להגיע לשרתים של ZigDash. כדאי לבדוק את החיבור לאינטרנט ולנסות שוב.",
+  "chatFailLogin": "הממסר לא קיבל את פרטי הגישה מרחוק של הטלפון הזה. פתחו את \"שליטה מרחוק\", כבו והפעילו שוב.",
+  "chatFailPurchase": "Google Play לא מאשר רכישה של ZigDash Pro לבית הזה.",
+  "chatFailTooMany": "יותר מדי ניסיונות. אפשר לנסות שוב בעוד שעה.",
+  "chatFailExpired": "תוקף הקוד פג. צריך להתחיל מחדש.",
+  "chatFailWrongCode": "זה לא הקוד שהבוט שלח. בדקו ונסו שוב.",
+  "chatFailRefused": "זה לא עבד. אפשר לנסות שוב מאוחר יותר.",
+  "chatFailNotClaimed": "הבוט עוד לא קיבל את הקוד. פתחו את טלגרם, הקישו \"התחל\" בבוט ZigDash Home, ואז הקלידו את הקוד שהוא שולח.",
+  "chatFailWrongCodeLeft": "זה לא הקוד שהבוט שלח. ניסיונות שנשארו: {count}.",
+  "founderCodeAsk": "יש לכם קוד מייסדים?",
+  "founderCodeLabel": "קוד מייסדים",
+  "founderCodeUse": "שימוש בקוד",
+  "founderCodeAtHome": "יש להזין אותו בבית, כש-ZigDash Engine מותקן ברכזת: ZigDash מגדיר את השליטה מרחוק דרך הרשת הביתית.",
+  "founderCodeWrong": "זה לא קוד מייסדים. כדאי לבדוק ולנסות שוב.",
+  "founderCodeUsed": "הקוד הזה כבר נוצל. כל קוד עובד פעם אחת.",
+  "founderCodeDeadline": "המועד להזנת הקוד הזה עבר. אפשר לבקש עוד זמן דרך קבלת עזרה.",
+  "founderCodeRevoked": "הקוד הזה בוטל.",
+  "founderCodeDone": "כרטיס המייסדים פעיל: שליטה מרחוק וצ'אט לבית הזה עד {date}.",
+  "founderEndsOn": "כרטיס המייסדים מסתיים ב-{date}. עם ZigDash Pro השליטה מרחוק והצ'אט נשארים, בלי להגדיר שום דבר מחדש.",
+  "founderGetPro": "לקבלת Pro",
+  "founderEnded": "כרטיס המייסדים הסתיים ב-{date}. ZigDash Pro מחזיר את השליטה מרחוק ואת הצ'אט, בלי להגדיר שום דבר מחדש.",
+  "founderEndedNoDate": "כרטיס המייסדים הסתיים. ZigDash Pro מחזיר את השליטה מרחוק ואת הצ'אט, בלי להגדיר שום דבר מחדש.",
+  "founderDeleted": "כרטיס המייסדים של הבית הזה הסתיים והשליטה מרחוק שלו הוסרה.",
+  "remoteRemoved": "השליטה מרחוק של הבית הזה הוסרה מהממסר.",
+  "founderSetUpWithPro": "הגדרה עם Pro",
+  "founderUseProTitle": "להשתמש ברכישת ה-Pro לבית הזה?",
+  "founderUseProBody": "השליטה מרחוק והצ'אט של הבית הזה יעברו לרכישת ה-Pro: אותם טלפונים ואותם קישורי צ'אט, בלי להגדיר שום דבר מחדש. רכישה אחת מכסה בית אחד.",
+  "founderUsePro": "שימוש ב-Pro לבית הזה",
+  "founderUpgraded": "הבית הזה פועל עכשיו עם רכישת ה-Pro.",
+  "founderUpgradeTaken": "הרכישה הזו כבר שייכת לבית אחר.",
+  "founderUpgradeFailed": "לא ניתן היה להעביר את הבית לרכישת ה-Pro. כדאי לנסות שוב מאוחר יותר.",
+  "remoteHubRefused": "הממסר סירב להתחברות של הרכזת",
+  "chatRowPassEnded": "כרטיס המייסדים הסתיים: עדיין אפשר להסיר קישורים",
+  "chatFailPassEnded": "כרטיס המייסדים של הבית הזה הסתיים, ולכן אי אפשר לקשר חשבון טלגרם חדש.",
+  "panelToggleNoState": "(אין מצב)",
+  "panelToggleError": "שגיאה",
+  "diagResolveLocalNameIos": "הטלפון לא מצא את השם הזה. בדקו שהוא כתוב נכון, או הזינו את כתובת ה‑IP במקום (Home Assistant מציג אותה תחת הגדרות › מערכת › רשת).",
+  "reminderNoPermissionIos": "ההתראות של ZigDash כבויות, ולכן לא תהיה תזכורת. אפשר להפעיל אותן בהגדרות › ZigDash › עדכונים.",
+  "setupLocalNetworkIos": "ZigDash צריך גישה לרשת המקומית כדי למצוא את ההאב. אם סירבתם, אפשרו אותה בהגדרות › פרטיות ואבטחה › רשת מקומית.",
+  "setupAddressNotResolvedIos": "לא ניתן היה לפענח את {host}. בדקו את השם, או נסו את כתובת ה‑IP במקום. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.",
+  "setupAddressNotResolvedHaIos": "לא ניתן למצוא את {host} מהטלפון הזה. הקישו על {button} למעלה והשתמשו בכתובת שבה אתם פותחים את Home Assistant בדפדפן, או הקלידו כאן את כתובת ה‑IP שלו. Home Assistant מציג אותה תחת הגדרות › מערכת › רשת.",
+  "tipNumberAddressBodyIos": "אם השם לא עובד, נסו את הכתובת המספרית של ההאב, למשל 192.168.1.20.",
+  "wallFullscreenSubtitleIos": "מסתיר גם את שורת המצב; מחוון הבית מתעמעם.",
+  "kioskPinForgotBodyIos": "קוד שנשכח אפשר לאפס רק במחיקה והתקנה מחדש של ZigDash, וזה מסיר את הבית הזה אלא אם יש לכם גיבוי. ייצאו גיבוי לפני הגדרת קוד.",
+  "kioskGuidedAccessTitle": "נעילה ל-ZigDash עם גישה מודרכת",
+  "kioskGuidedAccess": "iOS משאיר את ZigDash על המסך עד שמסיימים את הגישה המודרכת: מפעילים אותה בהגדרות › נגישות › גישה מודרכת, ואז לוחצים שלוש פעמים על הכפתור הצדדי ב-ZigDash.",
+  "proFreeBodyIos": "ההגדרה, הדשבורדים, השליטה בכל מכשיר, שלוש אוטומציות לכל בית וטאבלט הקיר עצמו נשארים בחינם. שום דבר שאתם משתמשים בו היום לא ננעל.",
+  "proOnceIos": "תשלום אחד, בלי מנוי. קניתם באייפון או אייפד אחר עם אותו חשבון Apple? זה נפתח אוטומטית, או הקישו על שחזור רכישה.",
+  "engineIntroTitle": "אוטומציות רצות ברכזת, לא בטלפון",
+  "engineIntroBody": "ZigDash מוסיף את ZigDash Engine בתוך Zigbee2MQTT ברכזת. הוא עוקב אחרי המכשירים ומריץ את הכללים, כך שאור נדלק כשהדלת נפתחת גם כשהטלפון כבוי ואין אינטרנט.",
+  "engineIntroNothingByHand": "אין מה להתקין ידנית. ZigDash עושה את זה דרך הרשת הביתית.",
+  "engineIntroVersion": "גרסת Zigbee2MQTT שלך היא {version}.",
+  "engineIntroRemove": "אפשר להסיר אותו בכל עת מהמסך הזה."
 }

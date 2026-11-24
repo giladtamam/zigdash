@@ -202,6 +202,20 @@ enum SetupStepKind {
   /// link ([welcomeDemo]) are gone with it; the ZHA note's demo counts as
   /// [demo].
   noHub,
+
+  /// A ZigDash connect link brought a Home Assistant address
+  /// (docs/design/ha-link.md): [SetupStep.choice] says how it opened (a
+  /// [HaLinkOpened]), [SetupStep.result] whether it held an address (a
+  /// [HaHandover]) and [SetupStep.linkSrc] where the link came from. Never
+  /// the address. On first run it waits for the usage-data answer.
+  haLink,
+
+  /// 3.7.1 only (3.8 counts the sheet as `zha_move`): "Moving from ZHA"
+  /// was tapped where the Home Assistant check found
+  /// devices in ZHA (zha-migration.md), with [SetupStep.choice]
+  /// saying after which outcome (a `HaConnectOutcome`: no_mqtt or
+  /// not_admin).
+  zhaMove,
 }
 
 /// Where the "Nothing yet" screen was opened from (3.4): the first
@@ -270,6 +284,18 @@ enum ScanEmptyChoice { noHub, homeAssistant, otherNetwork }
 /// [z2mPage] (3.2): through Zigbee2MQTT's own web page, no broker.
 enum SetupVia { scan, homeAssistant, brokerForm, shared, z2mPage }
 
+/// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5):
+/// a broker whose certificate the phone doesn't trust (also when setup
+/// went on with the same machine's 1883), or else a trusted one on 8883.
+/// Sent as `tls`. Never the address.
+enum ScanTls { yes, untrusted }
+
+/// Where a broker form was reached from (3.8.5), sent as `from`: on
+/// [SetupStepKind.manualTest], [form] is the connection form's Test (the
+/// guided form sends none); on [SetupStepKind.manual], [tlsEdit] is Edit
+/// settings after a TLS failure in setup (the other ways in send none).
+enum ManualFrom { form, tlsEdit }
+
 /// Where setup opened the Home Assistant sign-in (3.1.3): while scanning,
 /// the card on an empty result, the note under "I use Home Assistant",
 /// the first button when Home Assistant was found without a broker, the
@@ -283,7 +309,18 @@ enum HaWhere { home, nabuCasa, duckDns, ownDomain }
 /// (ha-share-paste.md): typed by hand, filled in by the look or the scan,
 /// pasted with the Paste button, or shared from another app. Never the
 /// address.
-enum HaAddressFrom { typed, found, pasted, shared }
+/// From ha-link.md also from a ZigDash connect link ([link]) or the link
+/// opened before installing, through Google Play ([referrer]).
+enum HaAddressFrom { typed, found, pasted, shared, link, referrer }
+
+/// How a ZigDash connect link reached the app (ha-link.md): the link
+/// itself (an App Link), the zigdash.app page's "Open in ZigDash" button,
+/// or Google Play's install referrer on first start.
+enum HaLinkOpened { appLink, intent, referrer }
+
+/// Where a ZigDash connect link was made (ha-link.md): zigdash.app, or
+/// the ZigDash integration in Home Assistant.
+enum HaLinkSrc { site, haIntegration }
 
 /// Whether pasted or shared text held a Home Assistant address.
 enum HaHandover { address, noAddress }
@@ -323,6 +360,12 @@ enum ManualTestResult {
   /// A Zigbee2MQTT machine whose own settings name the broker elsewhere
   /// (2.10.4): another machine, or a container on this one.
   z2mBrokerElsewhere,
+
+  /// The broker's TLS certificate isn't trusted by the phone (3.8.5).
+  tlsUntrusted,
+
+  /// The TLS handshake failed for another reason (3.8.5).
+  tlsFailed,
 }
 
 /// The port typed on the broker form, as a class (2.10.4): the MQTT
@@ -367,9 +410,41 @@ class SetupStep extends AnalyticsEvent {
     this.helpSeen,
     this.shape,
     this.addressFrom,
+    this.haApps,
+    this.zhaDevices,
+    this.fromZha,
+    this.linkSrc,
+    this.tls,
+    this.manualFrom,
   });
 
+  /// What the scan found encrypted, on [SetupStepKind.scanFound] (3.8.5).
+  final ScanTls? tls;
+
+  /// Where a broker form was reached from, on [SetupStepKind.manualTest]
+  /// and [SetupStepKind.manual] (3.8.5). Sent as `from`, without the
+  /// `path` that [addressFrom] adds.
+  final ManualFrom? manualFrom;
+
+  /// Where the connect link came from (ha-link.md), on
+  /// [SetupStepKind.haLink], and on [SetupStepKind.complete] when setup
+  /// finished with the link's address unchanged. Sent as `link_src`.
+  final HaLinkSrc? linkSrc;
+
+  /// On [SetupStepKind.complete] (3.8): whether this setup followed "I'm
+  /// moving" or a Home Assistant check that found ZHA devices, within 60
+  /// days. Sent as `from_zha`.
+  final FromZha? fromZha;
+
   final SetupStepKind step;
+
+  /// Whether the Home Assistant has apps, on [SetupStepKind.haConnect]
+  /// after no_mqtt or not_admin (3.7.1, zha-migration.md); sent as
+  /// `install`.
+  final bool? haApps;
+
+  /// Devices in ZHA, in broad groups, on the same tries; sent as `zha`.
+  final int? zhaDevices;
 
   /// The kind of address a Home Assistant try went to (an
   /// [HaAddressShape]), on [SetupStepKind.haConnect] (3.1.12). Never the
@@ -445,7 +520,9 @@ class SetupStep extends AnalyticsEvent {
   final bool? tidied;
 
   /// The class of the port typed ([portClassOf]), on
-  /// [SetupStepKind.manualTest] (2.10.4).
+  /// [SetupStepKind.manualTest] (2.10.4); from 3.8.5 also the broker's
+  /// port on a `failed` step that says no answer, a TLS failure or a
+  /// closed port.
   final String? portClass;
   final int? hostsTried;
   final bool? widened;
@@ -516,6 +593,18 @@ class SetupStep extends AnalyticsEvent {
     if (addressFrom != null) 'from': _snake(addressFrom!.name),
     if (addressFrom != null && result != null)
       'path': '${_snake(addressFrom!.name)}/${_snake(result!.name)}',
+    if (haApps != null) 'install': haApps! ? 'apps' : 'no_apps',
+    if (fromZha != null) 'from_zha': fromZha!.name,
+    if (linkSrc != null) 'link_src': _snake(linkSrc!.name),
+    if (tls != null) 'tls': tls!.name,
+    if (manualFrom != null) 'from': _snake(manualFrom!.name),
+    if (zhaDevices != null)
+      'zha': bucket(
+        zhaDevices!,
+        const [0],
+        ranges: const [(1, 10), (11, 30), (31, 60)],
+        top: '61+',
+      ),
   };
 
   /// The interface kind as a fixed label: wifi, ethernet or other.
@@ -526,8 +615,49 @@ class SetupStep extends AnalyticsEvent {
   };
 }
 
+/// Why a finished setup counts as a move from ZHA (3.8, zha-migration.md).
+enum FromZha { moving, devices }
+
+/// Where the Moving from ZHA sheet was opened (3.8).
+enum ZhaMoveFrom { answer, demo, noMqtt, notAdmin, help, noZigbee2Mqtt }
+
+/// What happened on the Moving from ZHA sheet (3.8).
+enum ZhaMoveStep { opened, guide, moving, notNow }
+
+/// The Moving from ZHA sheet (3.8, zha-migration.md): opened (with where
+/// from), Read the steps, I'm moving, Not now. No names, addresses or
+/// identifiers.
+class ZhaMoveEvent extends AnalyticsEvent {
+  const ZhaMoveEvent(this.step, this.from);
+  final ZhaMoveStep step;
+  final ZhaMoveFrom from;
+
+  @override
+  String get name => 'zha_move';
+
+  @override
+  Map<String, String> get props => {
+    'step': _snake(step.name),
+    'from': _snake(from.name),
+  };
+}
+
 /// What happened on the Home Assistant "couldn't find it" card (3.5.2).
-enum HaNoneChoice { shown, openApp, lookAgain, assistant }
+/// 3.6: `openApp` only when the app really opened, `openAppFailed` when it
+/// didn't; `returned` once back from it, `returnedCold` when ZigDash had
+/// been closed meanwhile and started again within 30 minutes.
+enum HaNoneChoice {
+  shown,
+  openApp,
+  lookAgain,
+  assistant,
+  openAppFailed,
+  returned,
+  returnedCold,
+
+  /// "Use a computer" (ha-link.md): zigdash.app/connect makes a code there.
+  computer,
+}
 
 enum Feature {
   devicesTab,
@@ -969,18 +1099,15 @@ enum ReviewPromptResult { requested, unavailable }
 /// Google gives no signal whether the dialog was then shown or answered, so
 /// this is the only way to know the prompt fires at all.
 /// What made the request (3.4.8): a command the user sent and saw
-/// confirmed, or a passive device report (sensor-only homes).
-enum ReviewTrigger { command, report }
+/// confirmed, a passive device report (sensor-only homes), or (3.6.1)
+/// closing History after a week or month chart with data.
+enum ReviewTrigger { command, report, history }
 
 class ReviewPrompted extends AnalyticsEvent {
-  const ReviewPrompted(this.result, {this.trigger, this.nth});
+  const ReviewPrompted(this.result, {this.trigger});
 
   final ReviewPromptResult result;
   final ReviewTrigger? trigger;
-
-  /// Which confirmed command of the session made the request (3.4.8);
-  /// sent bucketed as 3, 4-9, 10+.
-  final int? nth;
 
   @override
   String get name => 'review_prompt';
@@ -989,8 +1116,6 @@ class ReviewPrompted extends AnalyticsEvent {
   Map<String, String> get props => {
     'result': result.name,
     if (trigger != null) 'trigger': trigger!.name,
-    if (nth != null)
-      'nth': bucket(nth!, const [3], ranges: const [(4, 9)], top: '10+'),
   };
 }
 
@@ -1006,17 +1131,34 @@ enum HistorySetupResult {
   thisDevice,
 }
 
-/// The history recorder was set up from a history sheet.
+/// Where the recorder was set up from (3.6): a History sheet, the
+/// History card right after setup, or the same card later.
+enum HistorySetupFrom { sheet, finish, card }
+
+/// The history recorder was set up from a history sheet or, from 3.6, the
+/// "Turn on History" card.
 class HistorySetup extends AnalyticsEvent {
-  const HistorySetup(this.result);
+  const HistorySetup(
+    this.result, {
+    this.from = HistorySetupFrom.sheet,
+    this.why,
+  });
 
   final HistorySetupResult result;
+  final HistorySetupFrom from;
+
+  /// 3.6.2: why a `failed` failed.
+  final EngineWhy? why;
 
   @override
   String get name => 'history_setup';
 
   @override
-  Map<String, String> get props => {'result': _snake(result.name)};
+  Map<String, String> get props => {
+    'result': _snake(result.name),
+    'from': from.name,
+    if (why != null) 'why': _snake(why!.name),
+  };
 }
 
 /// A step of the import from Home Assistant (2.8): the offer after setup
@@ -1051,9 +1193,14 @@ class HaImportEvent extends AnalyticsEvent {
     this.zhaOnly,
     this.method,
     this.outcome,
+    this.fromZha,
   });
 
   final HaImportStep step;
+
+  /// At the preview (3.8): devices whose name or room came from their old
+  /// ZHA entry, in the same groups as [devices].
+  final int? fromZha;
   final HaSignInMethod? method;
   final HaSignInOutcome? outcome;
 
@@ -1080,6 +1227,7 @@ class HaImportEvent extends AnalyticsEvent {
       if (renamed != null) 'renamed': count(renamed!),
       if (dashboards != null) 'dashboards': count(dashboards!),
       if (zhaOnly != null) 'zha_only': zhaOnly! ? 'yes' : 'no',
+      if (fromZha != null) 'from_zha': count(fromZha!),
       if (method != null) 'method': method!.name,
       if (outcome != null) 'outcome': outcome!.name,
     };
@@ -1100,12 +1248,19 @@ enum ProFrom {
   automations,
   wall,
   saleCard,
+
+  /// 3.6: the card two days before the trial ends.
+  trialEnd,
 }
 
 class ProEvent extends AnalyticsEvent {
-  const ProEvent(this.step, {this.from, this.sale});
+  const ProEvent(this.step, {this.from, this.sale, this.trial});
 
   final ProStep step;
+
+  /// 3.6: the 14-day trial at the time: none, running or ended, so a
+  /// purchase on day 20 from Settings still shows it came after a trial.
+  final String? trial;
 
   /// The view that led to the Pro screen; null for a locked view.
   final ProFrom? from;
@@ -1124,6 +1279,7 @@ class ProEvent extends AnalyticsEvent {
     if (from != null) 'from': _snake(from!.name),
     if (from != null) 'path': '${_snake(from!.name)}/${_snake(step.name)}',
     if (sale != null) 'sale': sale! ? 'yes' : 'no',
+    if (trial != null) 'trial': trial!,
   };
 }
 
@@ -1162,7 +1318,13 @@ enum HubBackupStep {
 enum HubBackupWhy { noAnswer, background, disconnected }
 
 class HubBackupEvent extends AnalyticsEvent {
-  const HubBackupEvent(this.step, {this.auto, this.took, this.attempt, this.why});
+  const HubBackupEvent(
+    this.step, {
+    this.auto,
+    this.took,
+    this.attempt,
+    this.why,
+  });
 
   final HubBackupStep step;
   final bool? auto;
@@ -1216,6 +1378,11 @@ enum RemoteState {
   proOffline,
   unfit,
   notSold,
+
+  /// A founder's pass ended, or the relay deleted its Home
+  /// (founders-pass.md). Counted as [on]: the pass adds no analytics.
+  passEnded,
+  deleted,
 }
 
 class RemoteEvent extends AnalyticsEvent {
@@ -1278,13 +1445,38 @@ enum EngineStep {
   startedAgain,
   seenPaused,
   seenStopped,
+
+  /// 3.6.2: an Install button was tapped (offered → tapped → installed).
+  installTapped,
 }
 
-/// Which screen led to the Engine: Automations, Alerts or History.
-enum EngineFrom { automations, alerts, history }
+/// Which screen led to the Engine: Automations, Alerts or History; from
+/// 3.6.2 also saving an Automation.
+enum EngineFrom { automations, alerts, history, historyOn, save }
+
+/// Why the Engine couldn't go on the hub (3.6.2): away through the relay,
+/// no broker connection, no `bridge/info`, info but no `bridge/extensions`,
+/// Zigbee2MQTT too old, add-ons blocked, Zigbee2MQTT refused, no answer to
+/// the install, or anything else.
+enum EngineWhy {
+  relay,
+  noConnection,
+  noInfo,
+  noExtensions,
+  tooOld,
+  blocked,
+  refused,
+  noAnswer,
+  other,
+}
 
 class EngineEvent extends AnalyticsEvent {
-  const EngineEvent(this.step, {this.z2m, this.from = EngineFrom.automations});
+  const EngineEvent(
+    this.step, {
+    this.z2m,
+    this.from = EngineFrom.automations,
+    this.why,
+  });
 
   final EngineStep step;
 
@@ -1292,14 +1484,18 @@ class EngineEvent extends AnalyticsEvent {
   final String? z2m;
   final EngineFrom from;
 
+  /// 3.6.2: why a `failed` failed.
+  final EngineWhy? why;
+
   @override
   String get name => 'engine_setup';
 
   @override
   Map<String, String> get props => {
     'step': _snake(step.name),
-    'from': from.name,
+    'from': _snake(from.name),
     if (z2mMinor(z2m) != null) 'z2m': z2mMinor(z2m)!,
+    if (why != null) 'why': _snake(why!.name),
   };
 }
 
@@ -1319,6 +1515,7 @@ class AutomationSaved extends AnalyticsEvent {
     required this.offAfter,
     required this.isNew,
     required this.homeCount,
+    required this.running,
   });
 
   /// device_state, device_action, device_reading, clock or sun.
@@ -1332,6 +1529,10 @@ class AutomationSaved extends AnalyticsEvent {
 
   /// How many Automations the Home has after saving.
   final int homeCount;
+
+  /// 3.6.2: ZigDash Engine runs it (no: saved before the Engine is on the
+  /// hub).
+  final bool running;
 
   @override
   String get name => 'automation_saved';
@@ -1349,6 +1550,7 @@ class AutomationSaved extends AnalyticsEvent {
       ranges: const [(4, 10)],
       top: '11+',
     ),
+    'running': running ? 'yes' : 'no',
   };
 }
 
@@ -1366,4 +1568,171 @@ class HomeShareEvent extends AnalyticsEvent {
 
   @override
   Map<String, String> get props => {'step': _snake(step.name)};
+}
+
+/// "Chat with your home" early access (3.5.4, assistant-early-access.md §6):
+/// the card was shown (once per install), Telegram or email chosen, an
+/// email sign-up sent or failed, "Not for me", or the price question
+/// answered. Never the email or the Telegram chat.
+enum ChatEarlyStep {
+  shown('shown'),
+  telegram('telegram'),
+  emailSent('email_sent'),
+  emailFailed('email_failed'),
+  notForMe('not_for_me'),
+  priceYes('price_yes'),
+  priceMaybe('price_maybe'),
+  priceNo('price_no');
+
+  const ChatEarlyStep(this.wire);
+  final String wire;
+}
+
+/// Where the early-access choices were opened: the dashboard card or
+/// Settings.
+enum ChatEarlyFrom { card, settings }
+
+class ChatEarly extends AnalyticsEvent {
+  const ChatEarly(this.step, this.from);
+
+  final ChatEarlyStep step;
+  final ChatEarlyFrom from;
+
+  @override
+  String get name => 'chat_early';
+
+  @override
+  Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// ZigDash Chat (3.7.0, chat-linking.md §4): the Chat screen was opened on
+/// a Home that can link (intro), a Telegram account was linked or removed,
+/// or a step failed, and why (not at home, Engine too old, unreachable,
+/// login, purchase, too many tries, code expired, wrong code, refused).
+/// Counts only: never a name, a code or the Telegram account.
+enum ChatLinkStep { intro, linked, removed, failed }
+
+class ChatLinkEvent extends AnalyticsEvent {
+  const ChatLinkEvent(this.step, {this.why});
+
+  final ChatLinkStep step;
+  final String? why;
+
+  @override
+  String get name => 'chat_link';
+
+  @override
+  Map<String, String> get props => {
+    'step': step.name,
+    if (why != null) 'why': why!,
+  };
+}
+
+/// The "Turn on History" card (3.6, pro-trial-360.md §2): shown (once per
+/// Home), tapped, put off, the consent shown or declined, this phone chosen,
+/// or a broker asked for. `from`: right after setup (finish) or later
+/// (card).
+enum HistoryOnStep {
+  shown('shown'),
+  tapped('tapped'),
+  later('later'),
+  consentShown('consent_shown'),
+  declined('declined'),
+  phone('phone'),
+  broker('broker');
+
+  const HistoryOnStep(this.wire);
+  final String wire;
+}
+
+class HistoryOnEvent extends AnalyticsEvent {
+  const HistoryOnEvent(this.step, this.from);
+
+  final HistoryOnStep step;
+  final HistorySetupFrom from;
+
+  @override
+  String get name => 'history_on';
+
+  @override
+  Map<String, String> get props => {'step': step.wire, 'from': from.name};
+}
+
+/// Saving an MQTT broker for a Home that connects through the Zigbee2MQTT
+/// page (3.8.6, broker-no-devices-386.md §6): saved, the page kept, saved
+/// anyway or cancelled (also by leaving the form); whether the broker
+/// answered the check, refused the login, or it gave up after 15 s; how
+/// many devices it had, in buckets.
+enum PageBrokerResult {
+  saved('saved'),
+  keptPage('kept_page'),
+  savedAnyway('saved_anyway'),
+  cancelled('cancelled');
+
+  const PageBrokerResult(this.wire);
+  final String wire;
+}
+
+enum PageBrokerAnswered { yes, no, refused, timeout }
+
+class PageBrokerEvent extends AnalyticsEvent {
+  const PageBrokerEvent(this.result, {this.answered, this.devices});
+
+  final PageBrokerResult result;
+  final PageBrokerAnswered? answered;
+  final int? devices;
+
+  @override
+  String get name => 'page_broker';
+
+  @override
+  Map<String, String> get props => {
+    'result': result.wire,
+    if (answered != null) 'answered': answered!.name,
+    if (devices != null)
+      'devices': bucket(
+        devices!,
+        const [0],
+        ranges: const [(1, 5), (6, 20)],
+        top: '21+',
+      ),
+  };
+}
+
+/// The 14-day Pro trial (3.6, pro-trial-360.md §5): started (from where,
+/// the Home's platform, the install's first-open week), declined (the
+/// offer), a feature used (once each), the ending card shown, ended, or
+/// kept (Pro bought while it ran or within a week after).
+enum ProTrialStep {
+  started('started'),
+  declined('declined'),
+  used('used'),
+  endingShown('ending_shown'),
+  ended('ended'),
+  kept('kept');
+
+  const ProTrialStep(this.wire);
+  final String wire;
+}
+
+class ProTrialEvent extends AnalyticsEvent {
+  const ProTrialEvent(this.step, {this.from, this.hub, this.week, this.what});
+
+  final ProTrialStep step;
+  final String? from;
+  final String? hub;
+  final String? week;
+  final String? what;
+
+  @override
+  String get name => 'pro_trial';
+
+  @override
+  Map<String, String> get props => {
+    'step': step.wire,
+    if (from != null) 'from': from!,
+    if (hub != null) 'hub': hub!,
+    if (week != null) 'week': week!,
+    if (what != null) 'what': what!,
+  };
 }

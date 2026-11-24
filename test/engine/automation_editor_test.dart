@@ -18,6 +18,7 @@ import 'package:zigdash/features/devices/devices_providers.dart' show homeBaseTo
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
 import 'package:zigdash/features/pro/pro.dart';
+import 'package:zigdash/features/scenes/models/scene.dart';
 import 'package:zigdash/features/scenes/scenes_providers.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
@@ -107,11 +108,18 @@ Automation _rule(String id) => Automation(
           kind: ActionKind.device, commands: [EngineCommand(ieee: '0xlight', payload: {'state': 'ON'})], label: 'Hallway light'),
     );
 
+final _engineRunning = engineViewProvider.overrideWith((ref, _) => Stream.value(EngineView(
+      phase: HubEnginePhase.running,
+      report: EngineReport(
+          version: '3.0.0', runningOn: 'hub', rulesLoaded: 0, rulesUnknown: const [], stoppedSelf: false, at: DateTime(2026)),
+    )));
+
 void main() {
   testWidgets('motion turns the light on for five minutes: saved retained for the Engine', (tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     addTearDown(tester.view.reset);
-    final mgr = await _pump(tester, const AutomationEditorScreen(connectionId: 'c1'));
+    // 3.6.2: with the Engine running, saving goes straight to the hub.
+    final mgr = await _pump(tester, const AutomationEditorScreen(connectionId: 'c1'), extra: [_engineRunning]);
 
     await tester.tap(find.byKey(const Key('auto-trigger-device')));
     await tester.pumpAndSettle();
@@ -194,6 +202,73 @@ void main() {
     await tester.tap(find.byKey(const Key('auto-new')));
     await tester.pumpAndSettle();
     expect(find.text('3 automations are free. Want more?'), findsOneWidget);
+  });
+
+  // 3.8.7: own tiles the Engine can't send are left out of the commands,
+  // and said under the scene picker.
+  Scene sceneOf(List<SceneAction> actions) => Scene(
+        id: 's1',
+        connectionId: 'c1',
+        name: 'Evening',
+        iconCodepoint: 0,
+        colorSeed: 0,
+        actions: SceneAction.encodeList(actions),
+        sortOrder: 0,
+        createdAt: DateTime(2026),
+        updatedAt: DateTime(2026),
+      );
+  const sceneRule = Automation(
+    id: 'r1',
+    name: 'Evening at 7',
+    enabled: true,
+    trigger: TimeTrigger(at: '19:00'),
+    action: AutomationAction(kind: ActionKind.scene, commands: [], sceneId: 's1', label: 'Evening'),
+  );
+
+  testWidgets('a scene with a raw tile: one command, and the note', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    addTearDown(tester.view.reset);
+    final mgr = await _pump(tester, const AutomationEditorScreen(connectionId: 'c1', existing: sceneRule), extra: [
+      _engineRunning,
+      scenesForConnectionProvider.overrideWith((ref, _) => Stream.value([
+            sceneOf(const [
+              SceneAction(setTopic: 'zigbee2mqtt/Hallway light/set', payload: '{"state":"ON"}'),
+              SceneAction(setTopic: 'cmnd/plug/POWER', payload: 'ON'),
+            ]),
+          ])),
+    ]);
+    final note = find.text("1 of this scene's actions runs only from this phone at home, not from Automations.");
+    await tester.scrollUntilVisible(note, 200, scrollable: find.byType(Scrollable).first);
+    expect(note, findsOneWidget);
+    await tester.tap(find.byKey(const Key('auto-save')));
+    await tester.pumpAndSettle();
+    final rule = mgr.published.firstWhere((p) => p.$1.startsWith('zigdash/automations/rules/'));
+    expect((jsonDecode(rule.$2) as Map)['action']['commands'], [
+      {'ieee': '0xlight', 'payload': {'state': 'ON'}},
+    ]);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 4));
+  });
+
+  testWidgets('a scene of only raw tiles has nothing to send', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    addTearDown(tester.view.reset);
+    final mgr = await _pump(tester, const AutomationEditorScreen(connectionId: 'c1', existing: sceneRule), extra: [
+      _engineRunning,
+      scenesForConnectionProvider.overrideWith((ref, _) => Stream.value([
+            sceneOf(const [
+              SceneAction(setTopic: 'cmnd/plug/POWER', payload: 'ON'),
+              SceneAction(setTopic: 'zigbee2mqtt/kitchen/set', payload: 'OFF'),
+            ]),
+          ])),
+    ]);
+    final note = find.text("2 of this scene's actions run only from this phone at home, not from Automations.");
+    await tester.scrollUntilVisible(note, 200, scrollable: find.byType(Scrollable).first);
+    expect(note, findsOneWidget);
+    await tester.tap(find.byKey(const Key('auto-save')));
+    await tester.pumpAndSettle();
+    expect(find.text('That scene has nothing to send.'), findsOneWidget);
+    expect(mgr.published.where((p) => p.$1.startsWith('zigdash/automations/rules/')), isEmpty);
   });
 
   test('town search: name or plain-letter name, starts-with first', () {

@@ -9,21 +9,28 @@ import '../../engine/engine_setup.dart';
 import '../../core/analytics/analytics.dart';
 import '../../core/l10n/l10n_ext.dart';
 import '../../core/review/review_prompt_controller.dart';
+import '../../core/review/review_prompt_trigger.dart' show kReviewDelay;
 import '../../core/theme/signal_colors.dart';
 import '../../l10n/app_localizations.dart';
 import '../panels/providers/panel_value_provider.dart';
 import '../panels/widgets/device_tile_panel.dart' show formatReading;
 import '../kiosk/kiosk.dart';
 import '../pro/pro.dart';
+import '../pro/pro_trial.dart';
 import '../pro/pro_screen.dart';
 import 'history_chart.dart';
 import 'history_config.dart' show decodeHistoryReadings;
 import 'app_history_recorder.dart';
 import 'history_record.dart';
 import 'history_service.dart';
+import 'history_setup_flow.dart' show markHistoryTurnedOn;
 
 /// Opens a reading's history (docs/design/history-2.7.md): [ieee] and
 /// [path] name the reading, [title] is shown on top.
+///
+/// 3.6.1: a week or month chart with at least two days of points is a happy
+/// moment. The review is asked for after the sheet has closed, never over
+/// the chart, and only if the screen underneath is still the one showing.
 Future<void> showHistorySheet(
   BuildContext context, {
   required String connectionId,
@@ -32,20 +39,30 @@ Future<void> showHistorySheet(
   required String title,
   String? unit,
   String? topic,
-}) => showModalBottomSheet<void>(
-  context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  showDragHandle: true,
-  builder: (_) => HistorySheet(
-    connectionId: connectionId,
-    ieee: ieee,
-    path: path,
-    title: title,
-    unit: unit,
-    topic: topic,
-  ),
-);
+}) async {
+  var seen = false;
+  await showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    showDragHandle: true,
+    builder: (_) => HistorySheet(
+      connectionId: connectionId,
+      ieee: ieee,
+      path: path,
+      title: title,
+      unit: unit,
+      topic: topic,
+      onRangeDataSeen: () => seen = true,
+    ),
+  );
+  if (!seen || !context.mounted) return;
+  await Future<void>.delayed(kReviewDelay);
+  if (!context.mounted || ModalRoute.of(context)?.isCurrent == false) return;
+  await ProviderScope.containerOf(context, listen: false)
+      .read(reviewPromptControllerProvider)
+      .maybeRequest(trigger: ReviewTrigger.history);
+}
 
 class HistorySheet extends ConsumerStatefulWidget {
   const HistorySheet({
@@ -58,6 +75,7 @@ class HistorySheet extends ConsumerStatefulWidget {
     this.topic,
     this.now,
     this.padding = const EdgeInsets.fromLTRB(16, 0, 16, 24),
+    this.onRangeDataSeen,
   });
 
   /// Around the content: the sheet's margins, or none inside a card.
@@ -76,6 +94,10 @@ class HistorySheet extends ConsumerStatefulWidget {
   /// The clock, for tests.
   final DateTime Function()? now;
 
+  /// Called once when a week or month chart showed points on at least two
+  /// days (not locked), for the review ask after the sheet closes.
+  final VoidCallback? onRangeDataSeen;
+
   @override
   ConsumerState<HistorySheet> createState() => _HistorySheetState();
 }
@@ -84,7 +106,17 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   HistoryRange _range = HistoryRange.day;
   HistoryPoint? _scrub;
   bool _busy = false;
+
+  /// 3.6.2: the hub is being checked (up to 20 s); this phone can be
+  /// chosen meanwhile.
+  bool _checking = false;
+  bool _phoneChosen = false;
+
+  /// Each set-up tap; an older one left behind (this phone was chosen,
+  /// then set up tapped again) gives up after its check.
+  int _setUpRun = 0;
   bool _lockedSeen = false;
+  bool _rangeDataSeen = false;
 
   @override
   void initState() {
@@ -105,16 +137,28 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
         : active;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final now = (widget.now ?? DateTime.now)();
-    final pro = ref.watch(proStatusProvider);
+    // 3.6: open while the 14-day trial runs (pro_trial.dart).
+    final visible = ref.watch(proVisibleProvider);
     final ranges = [
       for (final r in HistoryRange.values)
-        if (!r.isPro || pro != ProStatus.unavailable) r,
+        if (!r.isPro || visible) r,
     ];
     final range = ranges.contains(_range) ? _range : HistoryRange.day;
-    final locked = range.isPro && pro == ProStatus.locked;
+    final locked = range.isPro && ref.watch(proLockedProvider);
     if (locked && !_lockedSeen) {
       _lockedSeen = true;
-      ref.read(analyticsProvider).track(const ProEvent(ProStep.lockedShown));
+      ref
+          .read(analyticsProvider)
+          .track(
+            ProEvent(
+              ProStep.lockedShown,
+              trial: proTrialProp(
+                ref.read(proTrialOfferedProvider),
+                ref.read(proTrialProvider),
+                DateTime.now(),
+              ),
+            ),
+          );
     }
     final online = ref
         .watch(historyRecorderOnlineProvider(widget.connectionId))
@@ -133,6 +177,22 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
                   .valueOrNull ??
               const {};
     final series = historySeries(range, now, days);
+    // 3.6: a week or month view that showed data counts as used in the
+    // trial (once; a purchase isn't a trial).
+    if (range.isPro &&
+        !locked &&
+        !_rangeDataSeen &&
+        series.map((p) => DateUtils.dateOnly(p.at)).toSet().length >= 2) {
+      _rangeDataSeen = true;
+      widget.onRangeDataSeen?.call();
+    }
+    if (range.isPro && !locked && series.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ref.read(proTrialProvider.notifier).used(ProTrialUse.history);
+        }
+      });
+    }
     final from = now.subtract(range.span);
     final step = switch (range) {
       HistoryRange.day => const Duration(minutes: historySlotMinutes),
@@ -191,9 +251,10 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
       body = online != true
           ? _SetupCard(
               busy: _busy,
+              checking: _checking,
               notConnected: installed,
               onSetUp: () => _install(l10n),
-              onRecordHere: () => _recordHere(l10n),
+              onRecordHere: () => _checking ? _usePhone(l10n) : _recordHere(l10n),
             )
           : _Note(text: recorded ? l10n.historyEmpty : l10n.historyNotRecorded);
     } else {
@@ -292,21 +353,39 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
   Future<void> _install(AppLocalizations l10n) async {
     final service = ref.read(historyServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
-    setState(() => _busy = true);
+    final run = ++_setUpRun;
+    setState(() {
+      _busy = true;
+      _checking = true;
+      _phoneChosen = false;
+    });
+    EngineWhy? why;
     try {
-      final r = await ensureEngine(context, ref, widget.connectionId, from: EngineFrom.history);
-      if (!mounted) return;
+      final r = await ensureEngine(
+        context,
+        ref,
+        widget.connectionId,
+        from: EngineFrom.history,
+        onChecked: () {
+          if (mounted) setState(() => _checking = false);
+        },
+        abandoned: () => !mounted || _phoneChosen || run != _setUpRun,
+        failedWhy: (w) => why = w,
+      );
+      if (!mounted || run != _setUpRun) return;
       switch (r) {
         case EngineSetup.ready:
           _track(HistorySetupResult.installed);
+          await markHistoryTurnedOn(ref, HistorySetupFrom.sheet);
           await service.publishConfig(widget.connectionId);
           messenger.showSnackBar(SnackBar(content: Text(l10n.historyInstalled)));
           // A happy moment (2.8.1): the review policy still decides.
           await ref.read(reviewPromptControllerProvider).recordSuccessfulSession();
         case EngineSetup.needsUser:
+        case EngineSetup.cancelled:
           break;
         case EngineSetup.failed:
-          _track(HistorySetupResult.failed);
+          _track(HistorySetupResult.failed, why: why);
           final here = await showDialog<bool>(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -326,8 +405,23 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
           if (here == true) await _recordHere(l10n);
       }
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted && !_phoneChosen && run == _setUpRun) {
+        setState(() {
+          _busy = false;
+          _checking = false;
+        });
+      }
     }
+  }
+
+  /// 3.6.2: "Use this phone instead" while the hub is checked.
+  Future<void> _usePhone(AppLocalizations l10n) async {
+    setState(() {
+      _phoneChosen = true;
+      _busy = false;
+      _checking = false;
+    });
+    await _recordHere(l10n);
   }
 
   /// No Node-RED (2.9.1): this device records while ZigDash is open.
@@ -337,11 +431,12 @@ class _HistorySheetState extends ConsumerState<HistorySheet> {
         .read(historyRecordHereProvider(widget.connectionId).notifier)
         .set(true);
     _track(HistorySetupResult.thisDevice);
+    await markHistoryTurnedOn(ref, HistorySetupFrom.sheet);
     messenger.showSnackBar(SnackBar(content: Text(l10n.historyRecordingHere)));
   }
 
-  void _track(HistorySetupResult r) =>
-      ref.read(analyticsProvider).track(HistorySetup(r));
+  void _track(HistorySetupResult r, {EngineWhy? why}) =>
+      ref.read(analyticsProvider).track(HistorySetup(r, why: why));
 
 }
 
@@ -351,10 +446,14 @@ class _SetupCard extends StatelessWidget {
     required this.busy,
     required this.onSetUp,
     required this.onRecordHere,
+    this.checking = false,
     this.notConnected = false,
   });
 
   final bool busy;
+
+  /// The hub is being checked: says so, and offers this phone at once.
+  final bool checking;
 
   /// The recorder was installed but never came online.
   final bool notConnected;
@@ -398,6 +497,10 @@ class _SetupCard extends StatelessWidget {
                   : const Icon(Icons.timeline),
               label: Text(l10n.historySetupAction),
             ),
+            if (checking) ...[
+              const SizedBox(height: 8),
+              Text(l10n.engineChecking, style: theme.textTheme.bodyMedium),
+            ],
             const SizedBox(height: 12),
             Text(
               l10n.historyRecordHereHint,
@@ -406,9 +509,12 @@ class _SetupCard extends StatelessWidget {
               ),
             ),
             TextButton.icon(
-              onPressed: busy ? null : onRecordHere,
+              key: checking ? const Key('history-use-phone') : null,
+              onPressed: busy && !checking ? null : onRecordHere,
               icon: const Icon(Icons.tablet_android_outlined),
-              label: Text(l10n.historyRecordHere),
+              label: Text(
+                checking ? l10n.historyUsePhoneInstead : l10n.historyRecordHere,
+              ),
             ),
           ],
         ),

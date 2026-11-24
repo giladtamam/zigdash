@@ -8,18 +8,21 @@ import '../../l10n/app_localizations.dart';
 import '../../remote/remote_setup.dart' show remoteFits;
 import '../onboarding/demo_service.dart' show isDemoConnection;
 import 'pro.dart';
+import 'pro_trial.dart';
+import 'pro_trial_card.dart' show proTrialDaysLeftText;
 
 /// Opens the Pro screen. Settings and every Unlock lead here first, so
 /// nobody meets Play's purchase sheet before knowing what Pro adds and what
 /// stays free (2.9.6).
-void openPro(BuildContext context, {required ProFrom from}) {
+/// Completes when the Pro screen is closed.
+Future<void> openPro(BuildContext context, {required ProFrom from}) {
   // Kept for the purchase events: a tap on the price says where it began.
   final scope = ProviderScope.containerOf(context, listen: false);
   scope.read(proFromProvider.notifier).state = from;
   // "The sale has ended" belongs to the visit in which the tap found it
   // gone, not to every later one.
   scope.read(proSaleEndedProvider.notifier).state = false;
-  Navigator.of(context).push(
+  return Navigator.of(context).push(
     MaterialPageRoute<void>(builder: (_) => ProScreen(from: from)),
   );
 }
@@ -55,7 +58,17 @@ class _ProScreenState extends ConsumerState<ProScreen>
     WidgetsBinding.instance.addObserver(this);
     ref
         .read(analyticsProvider)
-        .track(ProEvent(ProStep.screenShown, from: widget.from));
+        .track(
+          ProEvent(
+            ProStep.screenShown,
+            from: widget.from,
+            trial: proTrialProp(
+              ref.read(proTrialOfferedProvider),
+              ref.read(proTrialProvider),
+              DateTime.now(),
+            ),
+          ),
+        );
   }
 
   @override
@@ -70,16 +83,27 @@ class _ProScreenState extends ConsumerState<ProScreen>
     if (state == AppLifecycleState.resumed) ref.invalidate(proOfferProvider);
   }
 
-  /// App Review requires a way to restore a purchase (iOS build only).
-  /// Says so when the Apple ID has none; success shows as Unlocked.
+  bool _restoring = false;
+
   Future<void> _restore() async {
-    final messenger = ScaffoldMessenger.of(context);
-    final none = context.l10n.proRestoreNone;
-    await ref.read(proBillingProvider.notifier).restore();
+    setState(() => _restoring = true);
+    // The App Store build syncs with Apple first (App Review requires it).
+    final billing = ref.read(proBillingProvider.notifier);
+    final answer = proFlavor == 'appstore'
+        ? await billing.restore()
+        : await billing.refresh();
     if (!mounted) return;
-    if (ref.read(proStatusProvider) != ProStatus.unlocked) {
-      messenger.showSnackBar(SnackBar(content: Text(none)));
-    }
+    setState(() => _restoring = false);
+    final l10n = context.l10n;
+    final ios = proFlavor == 'appstore';
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(switch (answer) {
+        'unlocked' => l10n.proRestored,
+        'locked' || 'pending' || 'changed' =>
+          ios ? l10n.proRestoreNoneIos : l10n.proRestoreNone,
+        _ => ios ? l10n.proRestoreFailedIos : l10n.proRestoreFailed,
+      }),
+    ));
   }
 
   @override
@@ -116,6 +140,26 @@ class _ProScreenState extends ConsumerState<ProScreen>
           padding: const EdgeInsets.all(16),
           children: [
             Text(l10n.proScreenIntro, style: theme.textTheme.bodyLarge),
+            // 3.6: the trial, while it runs or once it ended.
+            if (!unlocked && proTrialDaysLeftText(ref, l10n) != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                proTrialDaysLeftText(ref, l10n)!,
+                key: const Key('pro-trial-left'),
+                style: theme.textTheme.titleSmall,
+              ),
+            ] else if (!unlocked &&
+                ref.watch(proTrialOfferedProvider) &&
+                ref
+                    .watch(proTrialProvider)
+                    .endedAt(ref.read(proTrialNowProvider)())) ...[
+              const SizedBox(height: 12),
+              Text(
+                l10n.proTrialEnded,
+                key: const Key('pro-trial-ended'),
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
             const SizedBox(height: 24),
             Text(l10n.proWhatYouGet, style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
@@ -201,10 +245,13 @@ class _ProScreenState extends ConsumerState<ProScreen>
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodySmall,
               ),
-              if (proFlavor == 'appstore') ...[
-                const SizedBox(height: 8),
-                TextButton(onPressed: _restore, child: Text(l10n.proRestore)),
-              ],
+              const SizedBox(height: 8),
+              // Bought before (a reinstall, a new phone): the store is asked again.
+              TextButton(
+                key: const Key('pro-restore'),
+                onPressed: _restoring ? null : _restore,
+                child: Text(l10n.proRestore),
+              ),
             ],
           ],
         ),

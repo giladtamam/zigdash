@@ -1,8 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/analytics/analytics.dart';
+import 'pro_trial.dart'
+    show proTrialOfferedProvider, proTrialProp, proTrialProvider;
 import '../settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 
@@ -53,6 +60,38 @@ ProStatus _parse(Object? s) => switch (s) {
 /// only exist where Pro is sold use this instead of popping in (3.4.4).
 const proOfferedKey = 'pro_offered';
 
+/// "1" once Play said Pro is owned on this phone, removed when Play says it
+/// isn't: a moment without Play (offline, the billing service restarting,
+/// a fresh install before Play has synced) then can't hide what was bought.
+const proOwnedKey = 'pro_owned';
+
+/// "1" once this install sent `unlocked` (3.8.6): the event goes once per
+/// install, on the first change to owned after an Unlock tap, whichever
+/// answer from Play brings it.
+const proUnlockSentKey = 'pro_unlock_sent';
+
+/// The last Unlock tap, as JSON (3.8.6): kept so a purchase Play confirms
+/// after the app restarted (pending, cash, carrier billing) is still
+/// counted with that tap's values. Removed once sent, or after
+/// [proUnlockTapTtl].
+const proUnlockTapKey = 'pro_unlock_tap';
+const proUnlockTapTtl = Duration(days: 3);
+
+typedef _UnlockTap = ({
+  ProFrom? from,
+  bool sale,
+  String? trial,
+  DateTime? trialEnd,
+  DateTime at,
+});
+
+/// Waits before asking Play again after it didn't answer.
+const proRetryDelays = [
+  Duration(seconds: 3),
+  Duration(seconds: 10),
+  Duration(seconds: 30),
+];
+
 /// Where the Pro screen was opened from, for the purchase events: set by
 /// `openPro`, read when Unlock is tapped.
 final proFromProvider = StateProvider<ProFrom?>((ref) => null);
@@ -61,29 +100,165 @@ final proFromProvider = StateProvider<ProFrom?>((ref) => null);
 /// so, and shows the price Play charges now.
 final proSaleEndedProvider = StateProvider<bool>((ref) => false);
 
-/// Play's answer: asked once at start, and again after a purchase.
+/// Play's answer: asked at start, again whenever the app comes back while
+/// Pro isn't unlocked, after a purchase, and from Restore purchase. When Play
+/// doesn't answer, the last known answer stands and Play is asked again after
+/// [proRetryDelays].
 class ProBilling extends Notifier<ProStatus> {
-  @override
-  ProStatus build() {
-    _ask('status');
-    return ProStatus.unavailable;
+  Timer? _retry;
+  int _tries = 0;
+
+  /// The last Unlock tap (3.8.6): what `unlocked` is sent with when Play
+  /// confirms the purchase, at once, minutes later (a resume or a retry
+  /// asking again) or after a restart ([proUnlockTapKey]).
+  _UnlockTap? _tap;
+  bool _unlockSent = false;
+
+  SharedPreferences? get _prefs {
+    try {
+      return ref.read(sharedPreferencesProvider);
+    } catch (_) {
+      return null;
+    }
   }
 
-  /// Play's raw answer, or null where there is no Play to ask.
+  void _saveTap(_UnlockTap tap) {
+    _tap = tap;
+    unawaited(
+      _prefs
+          ?.setString(
+            proUnlockTapKey,
+            jsonEncode({
+              'from': tap.from?.name,
+              'sale': tap.sale,
+              'trial': tap.trial,
+              'trialEnd': tap.trialEnd?.millisecondsSinceEpoch,
+              'at': tap.at.millisecondsSinceEpoch,
+            }),
+          )
+          .then((_) {}, onError: (_) {}),
+    );
+  }
+
+  void _forgetTap() {
+    _tap = null;
+    unawaited(_prefs?.remove(proUnlockTapKey).then((_) {}, onError: (_) {}));
+  }
+
+  /// This session's tap, else the stored one; an expired or unreadable
+  /// one is forgotten.
+  _UnlockTap? _currentTap() {
+    final now = DateTime.now();
+    var tap = _tap;
+    if (tap == null) {
+      final raw = _prefs?.getString(proUnlockTapKey);
+      if (raw == null) return null;
+      try {
+        final m = jsonDecode(raw) as Map<String, dynamic>;
+        final from = m['from'] as String?;
+        final end = m['trialEnd'] as int?;
+        tap = (
+          from: from == null
+              ? null
+              : ProFrom.values.where((f) => f.name == from).firstOrNull,
+          sale: m['sale'] == true,
+          trial: m['trial'] as String?,
+          trialEnd: end == null
+              ? null
+              : DateTime.fromMillisecondsSinceEpoch(end),
+          at: DateTime.fromMillisecondsSinceEpoch(m['at'] as int),
+        );
+      } catch (_) {
+        tap = null;
+      }
+    }
+    if (tap == null || now.difference(tap.at) > proUnlockTapTtl) {
+      _forgetTap();
+      return null;
+    }
+    return tap;
+  }
+
+  @override
+  ProStatus build() {
+    AppLifecycleListener? life;
+    try {
+      life = AppLifecycleListener(
+        onResume: () {
+          if (state != ProStatus.unlocked) unawaited(refresh());
+        },
+      );
+    } catch (_) {
+      // No Flutter binding (plain unit tests): no resume to listen to.
+    }
+    ref.onDispose(() {
+      _retry?.cancel();
+      life?.dispose();
+    });
+    unawaited(Future.microtask(() => _ask('status')));
+    // An Unlock tap from an earlier run that expired is forgotten (3.8.6).
+    unawaited(Future.microtask(_currentTap));
+    bool owned;
+    try {
+      owned = ref.read(sharedPreferencesProvider).getString(proOwnedKey) == '1';
+    } catch (_) {
+      owned = false;
+    }
+    return owned ? ProStatus.unlocked : ProStatus.unavailable;
+  }
+
+  /// Asks Play again now (Restore purchase, the app coming back) and returns
+  /// its raw answer ("error" when it didn't answer; the status then stays).
+  Future<String?> refresh() async {
+    _retry?.cancel();
+    _tries = 0;
+    return _ask('status');
+  }
+
+  /// Play's raw answer, or null where there is no Play to ask. "error" (and
+  /// a timeout or a channel error) leaves the status as it was and tries
+  /// again later.
   Future<String?> _ask(String method, [Object? arguments]) async {
     String? answer;
     try {
-      answer = await _billing.invokeMethod<String>(method, arguments);
-      state = _parse(answer);
-    } on PlatformException {
-      state = ProStatus.unavailable;
+      answer = await _billing
+          .invokeMethod<String>(method, arguments)
+          .timeout(const Duration(seconds: 20));
     } on MissingPluginException {
-      state = ProStatus.unavailable;
+      answer = 'unavailable';
+    } on PlatformException {
+      answer = 'error';
+    } on TimeoutException {
+      answer = 'error';
+    }
+    if (answer == 'error') {
+      if (method == 'status' && _tries < proRetryDelays.length) {
+        _retry?.cancel();
+        _retry = Timer(
+          proRetryDelays[_tries++],
+          () => unawaited(_ask('status')),
+        );
+      }
+      return answer;
+    }
+    if (method == 'status') _tries = 0;
+    final was = state;
+    state = _parse(answer);
+    if (was != ProStatus.unlocked && state == ProStatus.unlocked) {
+      _trackUnlocked();
     }
     try {
-      await ref
-          .read(sharedPreferencesProvider)
-          .setString(proOfferedKey, state == ProStatus.unavailable ? '0' : '1');
+      final prefs = ref.read(sharedPreferencesProvider);
+      await prefs.setString(
+        proOfferedKey,
+        state == ProStatus.unavailable ? '0' : '1',
+      );
+      if (state == ProStatus.unlocked) {
+        await prefs.setString(proOwnedKey, '1');
+      } else if (answer == 'locked') {
+        // Play says it isn't owned (a refund, another account): forget it.
+        await prefs.remove(proOwnedKey);
+      }
     } catch (_) {
       // Preferences are a convenience here; Play's answer stands without.
     }
@@ -100,7 +275,22 @@ class ProBilling extends Notifier<ProStatus> {
     final from = ref.read(proFromProvider);
     final shown = ref.read(proOfferProvider).valueOrNull;
     final sale = shown?.onSale(DateTime.now()) ?? false;
-    analytics.track(ProEvent(ProStep.unlockTapped, from: from, sale: sale));
+    final trial = ref.read(proTrialProvider);
+    final trialWire = proTrialProp(
+      ref.read(proTrialOfferedProvider),
+      trial,
+      DateTime.now(),
+    );
+    analytics.track(
+      ProEvent(ProStep.unlockTapped, from: from, sale: sale, trial: trialWire),
+    );
+    _saveTap((
+      from: from,
+      sale: sale,
+      trial: trialWire,
+      trialEnd: trial.end,
+      at: DateTime.now(),
+    ));
     final answer = await _ask('buy', {
       'offerId': shown?.offerId,
       'priceMicros': shown?.priceMicros,
@@ -112,14 +302,47 @@ class ProBilling extends Notifier<ProStatus> {
       ref.invalidate(proOfferProvider);
       return;
     }
-    if (state == ProStatus.unlocked) {
-      analytics.track(ProEvent(ProStep.unlocked, from: from, sale: sale));
+  }
+
+  /// `unlocked`, once per install, when Pro turns owned after an Unlock tap
+  /// (3.8.6). Until 3.8.5 it was sent only when Play had confirmed by the
+  /// time buy() returned, and Play often confirms later. A purchase
+  /// restored without a tap (start, reinstall) is never counted; a tap
+  /// older than [proUnlockTapTtl] doesn't count either.
+  void _trackUnlocked() {
+    if (_unlockSent) return;
+    final tap = _currentTap();
+    if (tap == null) return;
+    final prefs = _prefs;
+    if (prefs?.getString(proUnlockSentKey) == '1') {
+      _forgetTap();
+      return;
+    }
+    _unlockSent = true;
+    _forgetTap();
+    unawaited(
+      prefs?.setString(proUnlockSentKey, '1').then((_) {}, onError: (_) {}),
+    );
+    final analytics = ref.read(analyticsProvider);
+    analytics.track(
+      ProEvent(
+        ProStep.unlocked,
+        from: tap.from,
+        sale: tap.sale,
+        trial: tap.trial,
+      ),
+    );
+    // 3.6: bought while the trial ran or within a week after it.
+    final end = tap.trialEnd;
+    if (end != null &&
+        DateTime.now().isBefore(end.add(const Duration(days: 7)))) {
+      analytics.track(const ProTrialEvent(ProTrialStep.kept));
     }
   }
 
   /// Asks the App Store again for a Pro bought on another device or before
   /// a reinstall; App Review requires the button.
-  Future<void> restore() => _ask('restore');
+  Future<String?> restore() => _ask('restore');
 }
 
 final proBillingProvider = NotifierProvider<ProBilling, ProStatus>(

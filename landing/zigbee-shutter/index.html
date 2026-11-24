@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart shutter with a SONOFF MINI-ZBRBS and Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="A SONOFF MINI-ZBRBS Zigbee module behind the shutter switch, wired with the old switch kept. Parts, wiring, pairing with Zigbee2MQTT, calibration, and a shutter tile in ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../assets/icon.png">
+<meta property="og:title" content="Smart shutter with a SONOFF MINI-ZBRBS and Zigbee2MQTT">
+<meta property="og:description" content="A small Zigbee module behind the shutter switch: the wall switch still works, and the shutter opens from ZigDash. Parts, wiring, pairing and calibration.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../"><img src="../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../setup/">Setup</a>
+    <a href="../hubs/">Hubs</a>
+    <a href="../home-assistant/">Home Assistant</a>
+    <a href="../help/">Help</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>How I made my shutter smart with a SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, the developer of ZigDash · 21 November 2026</p>
+<p class="byline">Also in: <a href="cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="de/" hreflang="de" lang="de">Deutsch</a> · <a href="es/" hreflang="es" lang="es">Español</a> · <a href="fr/" hreflang="fr" lang="fr">Français</a> · <a href="he/" hreflang="he" lang="he">עברית</a> · <a href="it/" hreflang="it" lang="it">Italiano</a> · <a href="nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="pl/" hreflang="pl" lang="pl">Polski</a> · <a href="pt/" hreflang="pt" lang="pt">Português</a> · <a href="ru/" hreflang="ru" lang="ru">Русский</a> · <a href="sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">My office shutter has an electric motor and a regular up/down switch on the wall. I put a SONOFF MINI-ZBRBS, a small Zigbee shutter module, into the wall box behind that switch. The wall switch still works exactly as before, and now the shutter also opens and closes from a tile in ZigDash, at home and from anywhere.</p>
+
+<div class="toc"><strong>On this page</strong>
+<ul>
+  <li><a href="#how">How it works</a></li>
+  <li><a href="#need">What you need</a></li>
+  <li><a href="#wire">1. Wire the module</a></li>
+  <li><a href="#pair">2. Pair it with ZigDash</a></li>
+  <li><a href="#mode">3. Tell it what kind of switch you have</a></li>
+  <li><a href="#calibrate">4. Calibrate</a></li>
+  <li><a href="#tile">5. A shutter tile in ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">How it works</h2>
+<p>A shutter motor has two power wires: one turns it up, the other turns it down. The wall switch sends live to one of them. The MINI-ZBRBS sits in between: the motor's two wires go to its outputs (<strong>Lout1</strong> and <strong>Lout2</strong>), and the old switch goes to its inputs (<strong>S1</strong> and <strong>S2</strong>). When you press the switch, the module drives the motor. When ZigDash asks over Zigbee, it drives the motor too.</p>
+<p>The module also knows where the shutter is, so you can send it to 50% instead of only all the way up or down. And because it is mains-powered, it works as a Zigbee router that makes your network stronger.</p>
+
+<h2 id="need">What you need</h2>
+<ul>
+  <li><strong>A SONOFF MINI-ZBRBS</strong> (Zigbee roller shutter switch). Zigbee2MQTT supports it as model <code>MINI-ZBRBS</code>.</li>
+  <li><strong>A shutter motor with its own limit switches</strong>: the usual tubular motor with four wires (neutral, up, down, earth) that stops by itself at the top and bottom. SONOFF rates the module for motors up to <strong>1&nbsp;A</strong>, and it stops the motor by itself after 2 minutes in one direction.</li>
+  <li><strong>A neutral wire in the switch box.</strong> The module needs neutral to power itself.</li>
+  <li><strong>Room in the box</strong> behind the switch. SONOFF recommends a box at least 60&nbsp;mm deep.</li>
+  <li><strong>Lever connectors</strong> (I used a WAGO 221) and a few short pieces of wire.</li>
+  <li><strong>A Zigbee2MQTT hub</strong> at home. If you don't have one yet, see <a href="../hubs/">Hubs</a>.</li>
+  <li><strong>ZigDash</strong> on your phone (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Controlling the shutter at home is free. Controlling it from anywhere uses ZigDash Pro's remote control: a one-time purchase, no subscription.</li>
+</ul>
+
+<div class="tip"><strong>Turn the power off at the breaker before you open the switch.</strong> The box has 230V in it. If you're not comfortable working with mains, have an electrician do the wiring. SONOFF recommends a 1&nbsp;A circuit breaker (MCB or RCBO) in front of the module.</div>
+
+<h2 id="wire">1. Wire the module</h2>
+<p>The module has six terminals, printed on it: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (up) and <strong>S2</strong> (down). It has no earth terminal. This is how I wired mine:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Terminal</th><th>Goes to</th><th>In my box</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Neutral</td><td>The blue neutral wires, joined in a WAGO 221, with a short wire from there to N (see the note below on its colour)</td></tr>
+    <tr><th>L</th><td>Live</td><td>The live supply of the box</td></tr>
+    <tr><th>Lout1</th><td>Motor: up (SONOFF calls it forward)</td><td>The motor's black wire</td></tr>
+    <tr><th>Lout2</th><td>Motor: down (reverse)</td><td>The motor's brown wire</td></tr>
+    <tr><th>S1</th><td>The switch's up output</td><td>One of the old switch's outputs</td></tr>
+    <tr><th>S2</th><td>The switch's down output</td><td>The old switch's other output</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>The old switch stays.</strong> Its common terminal gets live, as before. Its two outputs no longer go to the motor: they go to S1 and S2, and tell the module which way to drive. <strong>S1 and S2 are mains inputs</strong>, not low voltage: feed the switch's common from the same live, on the same breaker, as L.</p>
+<p><strong>Earth:</strong> keep the motor's yellow-green earth joined to the box's earth, as it was. It doesn't go to the module.</p>
+<p><strong>Up and down:</strong> wire colours are different in every house. Before you disconnect the switch, note which motor wire its up output fed, and mark it: that one goes to Lout1. If you get them the wrong way round, step 4 shows how to fix it.</p>
+<div class="tip"><strong>Use a blue (or grey) wire for the neutral jumper.</strong> I only had red to hand, so in my photos the short wire from the WAGO to N is red, with a blue ferrule at the module end. Red normally means live, and whoever opens this box next shouldn't have to guess. If you use another colour, mark it with blue tape at both ends.</div>
+
+<div class="photos">
+  <figure><img src="../assets/shutter/neutral.jpg" alt="Two blue neutral wires and a red wire joined in an orange WAGO 221 lever connector; the red wire goes to the N terminal of the SONOFF module" loading="lazy" width="675" height="900"><figcaption>Neutral: the box's blue neutrals in a WAGO 221, and a short red wire from there to the module's N.</figcaption></figure>
+  <figure><img src="../assets/shutter/switch.jpg" alt="The back of the old shutter switch with three red wires in its terminals" loading="lazy" width="810" height="690"><figcaption>The old shutter switch, kept: live in on its common, and its up and down outputs now go to S1 and S2. Which terminal is the common differs between switches; check yours before you disconnect it.</figcaption></figure>
+</div>
+<figure><img src="../assets/shutter/wiring.jpg" alt="The open wall box with the switch pulled out and the SONOFF MINI-ZBRBS wired: two red wires from the switch to S1 and S2, the motor's brown and black wires to Lout2 and Lout1, live to L and neutral to N" loading="lazy" width="640" height="1124"><figcaption>Everything wired, before it goes back into the wall. From left on the module: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Check that every screw terminal is tight. Leave the module outside the box for now, with its terminals facing away from you: you'll pair it in the next step.</p>
+
+<h2 id="pair">2. Pair it with ZigDash</h2>
+<p>Pairing needs the module powered and its button pressed, so it's the one moment you work near a live box. Press only the button, with a plastic tool (the back of a pen), and touch nothing else. Rest the module on something that doesn't conduct, not touching the metal frame of the switch.</p>
+<ol>
+  <li>In ZigDash, open <strong>Devices</strong> and tap <strong>Start pairing</strong>.</li>
+  <li>Turn the breaker on. Press and hold the module's button for about <strong>5 seconds</strong>, until its blue LED blinks slowly. It stays in pairing mode for up to 3 minutes.</li>
+  <li>ZigDash shows the new device. Give it a name you'll recognise, like <strong>Office shutter</strong>.</li>
+  <li>Turn the breaker off. Fold the wires in, put the module behind the switch, close the box and turn the breaker back on. Everything else is done from your phone and the Zigbee2MQTT web page.</li>
+</ol>
+
+<h2 id="mode">3. Tell it what kind of switch you have</h2>
+<p>The module has to know how your wall switch behaves:</p>
+<ul>
+  <li><strong>A rocker that stays</strong> in up, off or down (like mine): mode <code>edge</code>.</li>
+  <li><strong>A push button</strong> that springs back when you let go: mode <code>pulse</code>.</li>
+</ul>
+<p>The easiest way is the Zigbee2MQTT web page: open the device, go to its <strong>Exposes</strong> tab and set <code>external_trigger_mode</code> to <code>edge</code> or <code>pulse</code>. (The module's button can do it too: a quick triple press steps to the next switch type and the LED blinks three times; you may need to repeat it. That means opening the box again, so I used Zigbee2MQTT.)</p>
+<p>Then press the wall switch up, off and down: the shutter should move and stop as it always did. If it doesn't, the mode is wrong; set the other one.</p>
+
+<h2 id="calibrate">4. Calibrate</h2>
+<p>The module learns how long the shutter takes to go all the way up and down. Without that, it can open and close, but it can't go to a position like 50%.</p>
+<ol>
+  <li>In the Zigbee2MQTT web page, on the device's <strong>Exposes</strong> tab, set <code>motor_travel_calibration_action</code> to <code>start_automatic</code>.</li>
+  <li>Let it run: the shutter goes all the way one way, then the other. Don't touch the switch while it does. When it's done, <code>motor_travel_calibration_status</code> shows <code>Calibrated</code>.</li>
+</ol>
+<p>(On the module itself, holding the button for more than 10 seconds, until the LED breathes, starts the same calibration.) If automatic calibration doesn't finish (with a weak motor, for example), SONOFF and Zigbee2MQTT both describe a manual calibration: you mark fully open and fully closed yourself.</p>
+<p><strong>Up and down swapped?</strong> Turn the breaker off, swap the wires on <strong>Lout1</strong> and <strong>Lout2</strong>, then calibrate again. Zigbee2MQTT's <code>invert_cover</code> option only flips the position it reports; it doesn't change which way the motor turns.</p>
+
+<h2 id="tile">5. A shutter tile in ZigDash</h2>
+<ol>
+  <li>On your dashboard, tap <strong>Add from a device</strong> and pick the shutter.</li>
+  <li>The tile has <strong>Open</strong>, <strong>Stop</strong> and <strong>Close</strong> buttons, and a row of position presets (0, 25, 50, 100 by default). You can turn on a position slider in the tile's settings.</li>
+  <li><strong>From anywhere:</strong> with ZigDash Pro, turn on remote control and the same tile works away from home, with no port opened on your router and no monthly fee.</li>
+</ol>
+<p>The wall switch and the app work side by side: the switch is still there for anyone who doesn't have the app, and the tile keeps working whether the shutter was last moved by hand or from the phone.</p>
+
+<div class="tip">SONOFF is a trademark of its owner. ZigDash isn't affiliated with SONOFF or ITEAD. Follow the manual that comes with your module and your local electrical rules.</div>
+
+<div class="tip"><strong>Did you do this too?</strong> Tell me how it went, or what was different in your box: <a href="mailto:support@zigdash.app">support@zigdash.app</a> or <a href="https://t.me/zigdash_app">the community</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Get ZigDash</a><a class="btn" href="../hubs/">Choose a hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

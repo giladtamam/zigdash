@@ -25,7 +25,11 @@
   "languageFrench": "Français",
   "connectionsTitle": "Hem",
   "connLoadFailed": "Kunde inte ladda: {error}",
-  "@connLoadFailed": { "placeholders": { "error": {} } },
+  "@connLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "connAddBroker": "Lägg till broker",
   "connEmpty": "Inga anslutningar ännu.\nTryck på „Lägg till broker” för att peka ZigDash mot din MQTT-server.",
   "connNew": "Ny anslutning",
@@ -43,9 +47,19 @@
   "connRescan": "Skanna igen",
   "connBrokerNeedsLogin": "Inloggning krävs",
   "connFindBrokersScanning": "Skannar {subnet}…",
-  "@connFindBrokersScanning": { "placeholders": { "subnet": {} } },
+  "@connFindBrokersScanning": {
+    "placeholders": {
+      "subnet": {}
+    }
+  },
   "connFindBrokersFound": "{count} broker(s) hittade – tryck för att använda",
-  "@connFindBrokersFound": { "placeholders": { "count": { "type": "int" } } },
+  "@connFindBrokersFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "connFindBrokersNone": "Inga brokers hittades på ditt Wi-Fi.",
   "connFindBrokersNoIp": "Kunde inte läsa din Wi-Fi-adress. Kontrollera att Wi-Fi är på och försök igen.",
   "connHelpTitle": "Hitta din brokers IP",
@@ -54,7 +68,7 @@
   "connHelpSmhubTitle": "SMLIGHT SMHUB",
   "connHelpSmhubBody": "Brokerns IP är hubbens IP-adress. Öppna hubbens webbsida (smhub.local): på Dashboard visar rutan Network den bredvid IPv4. Routerns app visar också hubben som SMHUB. Porten är 1883, utan användarnamn/lösenord som standard.",
   "connHelpZhaTitle": "Home Assistant ZHA",
-  "connHelpZhaBody": "ZHA har ingen MQTT-broker – den pratar direkt med Home Assistant, så ZigDash kan inte ansluta till den. För att använda ZigDash, byt till Zigbee2MQTT (finns som Home Assistant-app eller Docker-container), som ger en MQTT-broker.",
+  "connHelpZhaBody": "ZHA har ingen MQTT-broker – den pratar direkt med Home Assistant, så ZigDash kan inte ansluta till den. För att använda ZigDash, byt till Zigbee2MQTT (finns som Home Assistant-app eller Docker-container), som körs med en MQTT-broker som Mosquitto.",
   "connHelpSameNetwork": "Din telefon och brokern måste vara på samma Wi-Fi-nätverk (inte ett gäst- eller isolerat VLAN).",
   "connRemoteHost": "Extern värd (Tailscale)",
   "connRemoteHostHint": "Används när den lokala värden inte kan nås. Föredra hubbens Tailscale-IP, t.ex. 100.x.y.z",
@@ -74,23 +88,28 @@
   "cancel": "Avbryt",
   "connDeleteTitle": "Ta bort anslutningen?",
   "connDeleteContent": "Tar bort „{name}”, dess dashboards/paneler och det sparade lösenordet.",
-  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "@connDeleteContent": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "statusDisconnected": "Frånkopplad",
   "statusConnecting": "Ansluter…",
   "statusConnected": "Ansluten",
   "statusReconnecting": "Återansluter…",
   "statusError": "Fel",
   "statusConnectedRemote": "Ansluten · Extern",
-
   "dashPlaceholder": "Öppna en broker från fliken Brokers för att se och hantera dess dashboards.",
-
   "dashAddDashboard": "Lägg till dashboard",
   "dashEditDashboard": "Redigera dashboard",
   "dashAddPanel": "Lägg till panel",
   "dashEmpty": "Inga dashboards ännu.\nTryck på „Lägg till dashboard” för att skapa en för den här brokern.",
   "dashLoadFailed": "Fel: {error}",
-  "@dashLoadFailed": { "placeholders": { "error": {} } },
-
+  "@dashLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "panelPickerTitle": "Lägg till panel",
   "panelPickerSectionControl": "Kontroll",
   "panelPickerSectionState": "Status",
@@ -124,7 +143,6 @@
   "panelPickerProgressSubtitle": "Numerisk stapel för batteri, länkkvalitet osv.",
   "panelPickerTextLogTitle": "Textlogg",
   "panelPickerTextLogSubtitle": "Rullande meddelandehistorik för ett ämne",
-
   "dashExportMenu": "Exportera dashboards",
   "dashImportMenu": "Importera dashboards",
   "dashExportTitle": "Exportera dashboards",
@@ -135,10 +153,19 @@
   "dashImportHint": "Klistra in exporterad JSON här",
   "dashImportButton": "Importera",
   "dashImportSuccess": "{count,plural, =1{1 dashboard importerad} other{{count} dashboards importerade}}",
-  "@dashImportSuccess": { "placeholders": { "count": { "type": "int" } } },
+  "@dashImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "dashImportFailed": "Importen misslyckades: {error}",
-  "@dashImportFailed": { "placeholders": { "error": {} } },
-
+  "@dashImportFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashFormNew": "Ny dashboard",
   "dashFormEdit": "Redigera dashboard",
   "dashFormName": "Namn",
@@ -154,12 +181,18 @@
   "dashDeleteTitle": "Ta bort den här dashboarden?",
   "dashDeleteContent": "Alla paneler under den tas också bort.",
   "dashDeleteConfirm": "Ta bort",
-
   "panelFormNew": "Ny {type}",
-  "@panelFormNew": { "placeholders": { "type": {} } },
+  "@panelFormNew": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelFormEdit": "Redigera {type}",
-  "@panelFormEdit": { "placeholders": { "type": {} } },
-
+  "@panelFormEdit": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelTypeButton": "Knapp",
   "panelTypeToggle": "Strömbrytare",
   "panelTypeSlider": "Reglage",
@@ -176,10 +209,13 @@
   "panelTypeAutoClose": "Auto-stäng",
   "panelTypeDevice": "Enhet",
   "panelTypeReading": "Mätvärde",
-
   "panelFormName": "Namn",
   "panelFormDashboardPrefix": "Dashboardprefix: {prefix}/ (används om det inte åsidosätts nedan)",
-  "@panelFormDashboardPrefix": { "placeholders": { "prefix": {} } },
+  "@panelFormDashboardPrefix": {
+    "placeholders": {
+      "prefix": {}
+    }
+  },
   "panelFormTopicPrefixOverride": "Åsidosätt ämnesprefix (valfritt)",
   "panelFormTopicPrefixOverrideHint": "zigbee2mqtt/rullgardin",
   "panelFormTopicPrefixOverrideHelper": "Använd en annan enhet på den här dashboarden. Tomt = använd dashboardprefixet.",
@@ -199,14 +235,12 @@
   "panelFormQos1": "1 – minst en gång",
   "panelFormQos2": "2 – exakt en gång",
   "panelFormRetain": "Retain",
-
   "panelToggleOnPayload": "På-payload",
   "panelToggleOffPayload": "Av-payload",
   "panelToggleJsonPath": "JSON-sökväg (valfritt)",
   "panelToggleJsonPathHint": "state",
   "panelToggleOnMatch": "På-matchning",
   "panelToggleOnMatchHelper": "Värde på JSON-sökvägen som betyder „på” (t.ex. „ON”)",
-
   "panelSliderMin": "Min",
   "panelSliderMax": "Max",
   "panelSliderStep": "Steg",
@@ -214,9 +248,7 @@
   "panelSliderTemplateHelper": "Använd ordet value som platshållare – det ersätts med reglagets värde",
   "panelSliderJsonPath": "JSON-sökväg (valfritt)",
   "panelSliderJsonPathHint": "brightness",
-
   "panelButtonPayload": "Payload",
-
   "panelLedJsonPath": "JSON-sökväg (valfritt)",
   "panelLedJsonPathHint": "contact",
   "panelLedJsonPathHelper": "t.ex. „contact”, „occupancy”, „water_leak”",
@@ -226,12 +258,10 @@
   "panelLedOnLabelHint": "ON",
   "panelLedOffLabel": "Av-etikett (valfritt)",
   "panelLedOffLabelHint": "OFF",
-
   "panelNodeOnlinePayload": "Online-payload",
   "panelNodeOnlinePayloadHelper": "Värde som betyder „online” (Z2M-standard: „online”)",
   "panelNodeJsonPath": "JSON-sökväg (valfritt)",
   "panelNodeJsonPathHelper": "Lämna tomt för Z2M-standard (rå „online”/„offline”-sträng)",
-
   "panelProgressMin": "Min",
   "panelProgressMax": "Max",
   "panelProgressUnit": "Enhet",
@@ -239,7 +269,6 @@
   "panelProgressJsonPath": "JSON-sökväg (valfritt)",
   "panelProgressJsonPathHint": "battery",
   "panelProgressJsonPathHelper": "t.ex. „battery”, „linkquality”",
-
   "panelOptionsJsonPath": "JSON-sökväg (valfritt)",
   "panelOptionsJsonPathHint": "state",
   "panelOptionsJsonPathHelper": "Fält i den mottagna payloaden som innehåller aktuellt värde",
@@ -248,24 +277,20 @@
   "panelOptionsPayload": "Payload",
   "panelOptionsMatch": "Matchning (aktuellt värde)",
   "panelOptionsAdd": "Lägg till alternativ",
-
   "panelCoverDescription": "ÖPPEN-/STOPP-/STÄNGD-knappar plus en rad positionsförinställningar. Använder standard Z2M-rullgardin-payloads (state och position).",
   "panelCoverPresets": "Positionsförinställningar",
   "panelCoverPresetsHint": "0, 25, 50, 100",
   "panelCoverPresetsHelper": "Kommaavgränsade procenttal (0–100). Tomt = ingen förinställningsrad.",
   "panelCoverShowSlider": "Visa positionsreglage",
-
   "panelTextInputHint": "Ledtext (valfritt)",
   "panelTextInputHintHint": "Skriv ett värde…",
   "panelTextInputTemplate": "Mall",
   "panelTextInputTemplateHelper": "Använd ordet value som platshållare – det ersätts med den inskrivna texten. Standard publicerar råtexten.",
   "panelTextInputClearAfterSend": "Rensa efter sändning",
-
   "panelTextLogMaxLines": "Max rader",
   "panelTextLogMaxLinesHelper": "Hur många senaste meddelanden som behålls",
   "panelTextLogJsonPath": "JSON-sökväg (valfritt)",
   "panelTextLogJsonPathHelper": "Logga bara det här fältet i stället för hela payloaden",
-
   "panelScheduleDescription": "Körs på SMHUB via Node-RED – även när den här telefonen är avstängd. Publiceringsämnet ovan är målet för rullgardinskommandon.",
   "panelScheduleOpenTime": "Öppningstid",
   "panelScheduleCloseTime": "Stängningstid",
@@ -273,7 +298,6 @@
   "panelScheduleClosePayload": "Stäng-payload",
   "panelScheduleEnabled": "Aktiverad",
   "panelScheduleSavedOffline": "Sparat – inte ansluten; schemat synkroniseras när du är online.",
-
   "panelAutoCloseDescription": "Körs på SMHUB via Node-RED – även när den här telefonen är avstängd. Publiceringsämnet ovan är enhetens kommandomål (t.ex. dörr).",
   "panelAutoCloseTriggerPath": "Utlösarens JSON-sökväg",
   "panelAutoCloseTriggerPathHelper": "Fält i enhetens status-JSON att bevaka (standard: state)",
@@ -284,49 +308,57 @@
   "panelAutoCloseDelaySecondsHelper": "1–3600. Tid att vänta efter att enheten sätts på innan stäng-payloaden publiceras.",
   "panelAutoCloseEnabled": "Aktiverad",
   "panelAutoCloseSavedOffline": "Sparat – inte ansluten; regeln synkroniseras när du är online.",
-
   "panelTileEdit": "Redigera panel",
   "panelTileDuplicate": "Duplicera panel",
   "panelTileMoveUp": "Flytta upp",
   "panelTileMoveDown": "Flytta ned",
   "panelTileDelete": "Ta bort panel",
-
   "panelCoverOpen": "Öppna",
   "panelCoverStop": "Stopp",
   "panelCoverClose": "Stäng",
-
-  "panelToggleNoState": "(ingen status)",
-  "panelToggleError": "fel",
-
   "panelStateOn": "ON",
   "panelStateOff": "OFF",
-
   "panelNodeStatusOnline": "online",
   "panelNodeStatusOffline": "offline",
   "panelNodeStatusUnknown": "okänd",
   "panelNodeStatusError": "fel",
-
   "panelMultiStateNoOptions": "Inga alternativ konfigurerade",
-
   "panelTextInputDefaultHint": "Skriv ett värde…",
-
   "panelTextLogWaiting": "Väntar på meddelanden…",
-
   "panelScheduleOpensAt": "Öppnar {time}",
-  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "@panelScheduleOpensAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleClosesAt": "Stänger {time}",
-  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "@panelScheduleClosesAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleOfflineWarning": "Schemaläggaren offline – körs inte",
   "panelScheduleDisabled": "Inaktiverad",
   "panelScheduleNext": "Nästa: {action} kl. {at}",
-  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "@panelScheduleNext": {
+    "placeholders": {
+      "action": {},
+      "at": {}
+    }
+  },
   "panelScheduleActionOpen": "öppna",
   "panelScheduleActionClose": "stäng",
   "panelAutoCloseIdle": "Inaktiv",
   "panelAutoCloseDisabled": "Inaktiverad",
   "panelAutoCloseOffline": "Automatisering offline – regeln körs inte",
   "panelAutoCloseClosingIn": "Stänger om {seconds}s",
-  "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@panelAutoCloseClosingIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "panelAutoCloseClosingNow": "Stänger nu…",
   "panelGridEmpty": "Inga rutor ännu.\nTryck på Lägg till ruta för att lägga dina enheter här.",
   "panelsOffline": "Offline – visar senaste värden",
@@ -336,7 +368,6 @@
   "connectionFailed": "Anslutningen misslyckades",
   "connectionAutomaticRetry": "Automatiska försök fortsätter",
   "connectionReconnectNow": "Anslut igen nu",
-
   "settingsAbout": "Om",
   "settingsHelp": "Hjälp & guide",
   "settingsVersion": "Version",
@@ -356,7 +387,6 @@
   "reportProblemEmailPrompt": "Vad hände, och vad förväntade du dig?",
   "settingsBuyCoffee": "Bjud mig på en kaffe",
   "settingsBuyCoffeeSubtitle": "Gratis & öppen källkod — dricks håller kaffet varmt.",
-
   "a11yBackupMenu": "Säkerhetskopiera & återställ",
   "a11ySelectColor": "Välj färg",
   "a11ySelectIcon": "Välj ikon",
@@ -365,9 +395,7 @@
   "a11yMoreOptions": "Fler alternativ",
   "a11yRefresh": "Uppdatera",
   "a11yDeleteConnection": "Ta bort anslutning",
-
   "controlNotConnected": "Inte ansluten – ändringen skickades inte",
-
   "discoverFromDevice": "Lägg till från en enhet…",
   "discoverFromDeviceSubtitle": "Identifiera en Zigbee2MQTT-enhet automatiskt",
   "discoverTitle": "Lägg till från enhet",
@@ -391,19 +419,27 @@
     }
   },
   "previewNoValue": "(inget värde på den här sökvägen)",
-
   "connErrorTitle": "Anslutningsfel",
   "connErrorUnknown": "Inga feluppgifter tillgängliga.",
   "connTestButton": "Testa anslutning",
   "connTestOk": "Anslutningen lyckades",
   "connTestFailed": "Anslutningen misslyckades: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } },
-
+  "@connTestFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "devicesTitle": "Enheter",
   "devicesAddButton": "Lägg till enhet",
   "devicesPairingTitle": "Parar – tryck på enhetens knapp",
   "devicesPairingHint": "Söker efter nya enheter… {seconds}s",
-  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "@devicesPairingHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "devicesPairingStop": "Stopp",
   "devicesNone": "Inga enheter hittades.",
   "devicesListMissing": "Zigbee2MQTT har inte skickat sin enhetslista. Det kan hända när MQTT-brokern har startats om.",
@@ -414,38 +450,71 @@
   "devicesOnline": "Online",
   "devicesOffline": "Offline",
   "devicesPaired": "Redo: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } },
+  "@devicesPaired": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "devicesPairedHint": "Tillagd i ditt nätverk. För att sätta den på en dashboard, använd „Lägg till från en enhet” på den dashboarden.",
   "scenesTitle": "Scener",
   "scenesNone": "Inga scener ännu. Ställ in dina enheter som du vill och spara dem sedan som en scen.",
   "scenesNewButton": "Ny scen",
   "scenesActivated": "{name} aktiverad",
-  "@scenesActivated": { "placeholders": { "name": {} } },
+  "@scenesActivated": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "scenesActivateOffline": "Inte ansluten – scenen kan inte aktiveras",
   "sceneFormNewTitle": "Ny scen",
   "sceneFormEditTitle": "Redigera scen",
   "sceneFormNameLabel": "Scennamn",
   "sceneFormDevicesHeader": "Enheter att fånga",
   "sceneFormCaptureHint": "Varje vald enhets aktuella inställningsbara status (på/av, ljusstyrka, färg, position…) sparas. Skrivskyddade värden ignoreras.",
-  "sceneFormNoDevices": "Inga styrbara enheter hittades. Kontrollera att de är parade och tryck sedan på uppdatera.",
+  "sceneFormNoDevices": "Inga styrbara enheter eller rutor hittades. Kontrollera att de är parade och tryck sedan på uppdatera.",
   "sceneFormReadingState": "Läser aktuell status…",
   "sceneCtrlPower": "Ström",
   "sceneCtrlBrightness": "Ljusstyrka",
   "sceneCtrlPosition": "Position",
   "sceneFormSelectedCount": "{count} valda",
-  "@sceneFormSelectedCount": { "placeholders": { "count": { "type": "int" } } },
-  "sceneFormNoDevicesSelected": "Välj minst en enhet att fånga.",
+  "@sceneFormSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sceneFormNoDevicesSelected": "Välj minst en enhet eller ruta.",
   "sceneFormNothingCaptured": "Inget inställningsbart kunde fångas från de valda enheterna.",
+  "sceneFormTilesHeader": "Dina rutor",
+  "sceneFormTilesHint": "Rutor som du har skapat själv. Scenen skickar det rutan skickar.",
+  "sceneTileHomeOnly": "Körs bara från den här telefonen hemma: inte från Automationer eller på distans.",
+  "sceneFormKeptActions": "{count, plural, =1{1 annan åtgärd behålls} other{{count} andra åtgärder behålls}}",
+  "sceneFormRemoveKept": "Ta bort",
   "sceneDeleteTitle": "Ta bort scenen?",
   "sceneDeleteMessage": "„{name}” tas bort. Enheterna behåller sin aktuella status.",
-  "@sceneDeleteMessage": { "placeholders": { "name": {} } },
+  "@sceneDeleteMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "sceneEditAction": "Redigera",
   "sceneDeleteAction": "Ta bort",
   "sceneAddToDashboard": "Lägg till på dashboard",
   "sceneAddedToDashboard": "Tillagd på {name}",
-  "@sceneAddedToDashboard": { "placeholders": { "name": {} } },
-  "sceneActionsCount": "{count} enheter",
-  "@sceneActionsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneAddedToDashboard": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "sceneActionsCount": "{count, plural, =1{1 åtgärd} other{{count} åtgärder}}",
+  "@sceneActionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "scenesAllShutters": "Alla jalusier",
   "sceneCloseAllShutters": "Stäng alla jalusier",
   "sceneOpenAllShutters": "Öppna alla jalusier",
@@ -459,11 +528,6 @@
   "panelPickerSceneSubtitle": "Ett tryck aktiverar en sparad scen",
   "panelSceneChoose": "Scen",
   "panelSceneMissing": "Scenen hittades inte – välj igen",
-  "languageGerman": "Deutsch",
-  "languageDutch": "Nederlands",
-  "languageSwedish": "Svenska",
-  "languageNorwegian": "Norsk",
-  "languageSpanish": "Español",
   "guidedConnectTitle": "Konfigurera broker",
   "guidedConnectIntro": "Vi testar varje steg i anslutningen och visar dina Zigbee-enheter.",
   "guidedBaseTopic": "Bastopic",
@@ -481,17 +545,24 @@
   "diagTcpTimeout": "Anslutningen till servern tog för lång tid. Den kan vara offline eller oåtkomlig.",
   "diagConnackFail": "Servern slutförde inte MQTT-handskakningen. Se till att det är en MQTT-server (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "Brokern svarade inte på inloggningen i tid. Home Assistant kan behöva några sekunder för att kontrollera den, försök igen.",
+  "diagTlsUntrusted": "Telefonen litar inte på krypteringscertifikatet för den här brokern: det är självsignerat, har gått ut eller är utfärdat för ett annat namn. ZigDash kan inte använda det ännu. Använd i stället brokerns okrypterade port 1883 på hemnätverket, eller ge brokern ett certifikat från en offentlig certifikatutfärdare.",
+  "diagTlsFailed": "Den krypterade anslutningen startade inte. Brokern kanske vill ha ett klientcertifikat, vilket ZigDash inte stöder. Anslut i stället utan kryptering på hemnätverket: TCP i stället för TLS, oftast på port 1883.",
   "diagAuthRejected": "Servern avvisade användarnamn eller lösenord. Kontrollera dina uppgifter.",
   "diagAuthRefused": "Servern avvisade anslutningen. Kontrollera anslutningsinställningarna.",
   "diagResolveLocalName": "Telefonen hittade inte det här namnet. Android kan ofta inte slå upp namn som slutar på .local, så ange IP-adressen i stället (Home Assistant visar den under Inställningar › System › Nätverk).",
   "diagTcpHaNoBroker": "Det här är din Home Assistant, men ingen MQTT-broker körs på den. Installera och starta appen Mosquitto broker (Inställningar › Appar) och försök igen.",
-  "diagResolveLocalNameIos": "Telefonen hittade inte det här namnet. Kontrollera att det är rätt stavat, eller ange IP-adressen i stället (Home Assistant visar den under Inställningar › System › Nätverk).",
   "diagTcpSmlightClosed": "Det här är din SMLIGHT-hubb, men dess MQTT-broker tar inte emot anslutningar från andra enheter. Öppna Settings › MQTT på hubbens webbsida, slå på Allow External, spara och försök igen.",
   "diagTcpZ2mBrokerElsewhere": "Zigbee2MQTT kör på den här adressen men når sin broker under ett annat namn (se Zigbee2MQTT › Settings › MQTT › Server). Är det en annan maskin, skriv in dess adress, oftast med port 1883. Är det en container på den här maskinen, publicera dess port (ports: \"1883:1883\") och låt den lyssna på nätverket, och försök sedan igen.",
   "diagTcpZ2mNoBroker": "Zigbee2MQTT körs på den här adressen, men dess MQTT-broker tar inte emot anslutningar från andra enheter. Mosquitto lyssnar bara på sin egen dator tills du lägger till raderna ”listener 1883” och ”allow_anonymous true” i mosquitto.conf (eller ställer in ett lösenord). Starta om Mosquitto och försök igen.",
   "diagAuthRejectedHa": "Home Assistants broker nekade inloggningen. Använd namn och lösenord för en Home Assistant-användare (Inställningar › Personer › Användare); helst en egen användare bara för MQTT.",
   "foundDevices": "{count, plural, =1{Hittade 1 enhet} other{Hittade {count} enheter}}",
-  "@foundDevices": { "placeholders": {"count": {"type": "int"}} },
+  "@foundDevices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "foundDevicesHint": "Dina Zigbee-enheter är synliga. Fortsätt till din instrumentpanel.",
   "noDevicesTitle": "Ansluten – inga enheter hittade ännu",
   "noDevicesHint": "ZigDash ser servern men har ännu inte hittat några Zigbee-enheter. Du kan starta ihopparning.",
@@ -502,7 +573,11 @@
   "guidedStuckTitle": "Fastnat? Fråga en människa",
   "guidedStuckBody": "Två försök utan anslutning. Berätta vilken hubb du har och vad du skrev, så hjälper vi dig att hitta den.",
   "ladderTriedHint": "Försökte {count} adresser",
-  "@ladderTriedHint": { "placeholders": {"count": {}} },
+  "@ladderTriedHint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "guidedSaveFailed": "Det gick inte att spara anslutningen. Försök igen.",
   "setupWelcomeTitle": "Välkommen till ZigDash",
   "setupWelcomeHeadline": "Ditt Zigbee-hem, i mobilen",
@@ -543,7 +618,7 @@
   "noHubPi": "En Raspberry Pi eller valfri Linux-dator",
   "noHubPiBody": "Installera Zigbee2MQTT och Mosquitto-brokern själv. Ungefär en timme, med Zigbee2MQTT:s egen guide.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Lägg till tilläggen Mosquitto broker och Zigbee2MQTT och logga sedan in från ZigDash med din Home Assistant-inloggning.",
+  "noHubHaBody": "Lägg till apparna Mosquitto broker och Zigbee2MQTT (Inställningar › Appar) och logga sedan in från ZigDash med din Home Assistant-inloggning.",
   "noHubRadio": "En Pi eller Home Assistant behöver också en Zigbee-adapter, som en SLZB-06 eller en Sonoff-dongel. SMHUB har en inbyggd.",
   "noHubDemoNote": "Se under tiden hur ZigDash fungerar, med ett exempelhem.",
   "noHubRemind": "Påminn mig om en vecka",
@@ -567,7 +642,17 @@
   "engineNeedsBrokerTitle": "Automationer behöver din MQTT-broker",
   "engineNeedsBrokerBody": "Det här hemmet ansluter via Zigbee2MQTT-sidan, vilket räcker för dina instrumentpaneler. Automationer, larm och historik körs i ZigDash Engine på din hubb, som pratar via din MQTT-broker. Ange dess uppgifter en gång, så ansluter ZigDash via brokern från och med då.",
   "engineNeedsBrokerButton": "Ange brokeruppgifter",
-  "connFromPageNote": "Det här hemmet ansluter via Zigbee2MQTT-sidan. Ange din MQTT-broker (oftast samma maskin, port 1883) för att slå på automationer, larm och historik. När du sparat ansluter ZigDash via brokern.",
+  "connFromPageNote": "Det här hemmet ansluter via Zigbee2MQTT-sidan. Ange din MQTT-broker (oftast samma maskin, port 1883) för att slå på automationer, larm och historik. När brokern har dina enheter byter ZigDash till den.",
+  "connBrokerNoDevices": "Ansluten, men den här brokern har ingen av dina enheter. Om du nyss slog på brokern, starta om Zigbee2MQTT så att den ansluter till den.",
+  "connZ2mUses": "Zigbee2MQTT använder {server}",
+  "connReadingZ2m": "Läser Zigbee2MQTT:s inställningar…",
+  "connKeepPageTitle": "Fortsätta med Zigbee2MQTT-sidan?",
+  "connKeepPageBodyEmpty": "Den här brokern svarade, men den har ingen av dina enheter, så dina dashboards skulle bli tomma. Zigbee2MQTT kanske använder en annan broker, eller behöver startas om efter att brokern slogs på.",
+  "connKeepPageBodyNoAnswer": "Brokern svarade inte, så dina dashboards skulle bli tomma.",
+  "connKeepPageBodyRefused": "Brokern nekade inloggningen, så dina dashboards skulle bli tomma.",
+  "connKeepPage": "Behåll Zigbee2MQTT-sidan",
+  "connSaveAnyway": "Spara ändå",
+  "connChecking": "Kontrollerar brokern…",
   "setupManualEntry": "Ange uppgifter manuellt",
   "setupScanningTitle": "Letar efter en anslutning…",
   "setupScanningHint": "Håll den här enheten på samma lokala nätverk som din Zigbee2MQTT-värd.",
@@ -581,7 +666,6 @@
   "reminderButton": "Påminn mig i morgon",
   "reminderSet": "Vi påminner dig i morgon, på den här telefonen.",
   "reminderNoPermission": "Aviseringar är avstängda för ZigDash, så det blir ingen påminnelse. Du kan slå på dem i Androids inställningar.",
-  "reminderNoPermissionIos": "Notiser är avstängda för ZigDash, så det blir ingen påminnelse. Du kan slå på dem i Inställningar › ZigDash › Notiser.",
   "reminderChannel": "Påminnelse om konfiguration",
   "reminderTitle": "Slutför konfigurationen av ZigDash",
   "reminderBody": "Hemma på ditt wifi? Tryck för att försöka igen: det tar ungefär en minut.",
@@ -624,6 +708,15 @@
   "haPasteNothing": "Ingen adress i det du kopierade.",
   "haSharedNote": "Det här är adressen du delade. Logga in för att ansluta.",
   "haShareNothing": "Det innehöll ingen adress. I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server och sedan på delningsikonen högst upp.",
+  "haLinkNote": "Det här är adressen från din länk. Logga in för att ansluta.",
+  "haLinkReferrerNote": "Det här är adressen från länken du öppnade innan du installerade ZigDash. Logga in för att ansluta.",
+  "haLinkNothing": "Länken innehöll ingen Home Assistant-adress. Skapa en ny på zigdash.app/connect.",
+  "haNoneComputer": "Använd en dator",
+  "haComputerTitle": "Använd en dator",
+  "haComputerBody": "Gå till den här sidan på en dator där Home Assistant är öppet och klistra in Home Assistants adress där. Skanna sedan koden med den här telefonens kamera.",
+  "haComputerCopy": "Kopiera länk",
+  "setupLinkPending": "Din länk tog med en Home Assistant-adress. Tryck på Home Assistant för att använda den.",
+  "setupLinkPendingNothing": "Din länk innehöll ingen Home Assistant-adress. Skapa en ny på zigdash.app/connect.",
   "haHandoverShare": "Snabbast: I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server, sedan på delningsikonen högst upp, och väljer ZigDash. Från en webbläsare delar du sidan med ZigDash.",
   "haHandoverCopy": "Snabbast: I Home Assistant-appen öppnar du Inställningar › Companion-app, trycker på din server, sedan på delningsikonen högst upp och på Kopiera länk. Gå tillbaka och tryck på Klistra in.",
   "haConnectOtherNetwork": "Adressen ligger i ett annat nätverk än den här telefonen, som är på {network}. Använd adressen som din Home Assistant-app öppnar, ofta en fjärradress, eller anslut telefonen till nätverket där Home Assistant finns.",
@@ -632,6 +725,19 @@
   "setupNoWifiHa": "Använder du Home Assistant? Logga in",
   "haConnectNotAdmin": "Din Home Assistant-användare är inte administratör. ZigDash behöver en för Home Assistants MQTT. Logga in som administratör, eller klistra in en token som en administratör skapat.",
   "haConnectNoMqtt": "Den här Home Assistant har ingen MQTT-integration. Zigbee2MQTT behöver också en: lägg till appen Mosquitto broker (Inställningar › Appar) och MQTT-integrationen i Home Assistant och försök igen.",
+  "haConnectZhaFound": "Din Zigbee körs i ZHA, Home Assistants egen Zigbee ({count, plural, =1{1 enhet} other{{count} enheter}}). ZigDash fungerar med Zigbee2MQTT och kan därför inte visa dem. Att flytta till Zigbee2MQTT innebär att para enheterna igen; guiden visar två sätt.",
+  "haConnectZhaMove": "Flytta från ZHA",
+  "haConnectNoMqttNoApps": "Den här Home Assistant har ingen MQTT-integration och inga appar (den körs som container), så Mosquitto och Zigbee2MQTT körs som egna containrar bredvid. Om de redan körs, anslut ZigDash direkt till Mosquitto. Eller lägg till MQTT-integrationen i Home Assistant och försök igen.",
+  "haConnectNoAppsGuide": "Så ansluter du",
+  "zhaMoveBody": "ZigDash fungerar med Zigbee2MQTT. Att flytta innebär att para dina enheter igen. Home Assistant kan fortsätta använda dem när du lägger till dess MQTT-integration.",
+  "zhaMoveWaySecond": "Andra adaptern: rum för rum, ZHA fortsätter att köra",
+  "zhaMoveWaySame": "Samma adapter: gratis, allt på en gång",
+  "zhaMoveReadSteps": "Läs stegen",
+  "zhaMoveImMoving": "Jag flyttar",
+  "zhaMoveNotNow": "Inte nu",
+  "zhaMovingNoted": "Noterat. När Zigbee2MQTT körs, öppna konfigurationen: ZigDash hittar det och erbjuder dina namn och rum från Home Assistant.",
+  "setupMovingTitle": "Anslut till ditt nya Zigbee2MQTT",
+  "setupMovingBody": "Flyttar du från ZHA? När Zigbee2MQTT körs letar ZigDash efter det i ditt nätverk.",
   "haConnectSignInFailed": "Inloggningen slutfördes inte. Försök igen, eller använd en långlivad token.",
   "setupHaShortcut": "Kör Zigbee2MQTT i Home Assistant? Hoppa över brokern och dess inloggning: logga in med ditt administratörskonto i Home Assistant. Det fungerar från alla nätverk.",
   "haConnectButton": "Anslut via Home Assistant",
@@ -707,6 +813,9 @@
   "setupErrLoginNoAnswerTitle": "Brokern svarade inte på inloggningen",
   "setupErrLoginNoAnswerBody": "Din broker hittades, men den svarade inte på användarnamn och lösenord i tid. Home Assistants app Mosquitto broker kontrollerar inloggningar mot Home Assistant, vilket kan ta några sekunder på en Raspberry Pi. Försök igen och kontrollera att användaren finns i Home Assistant. På en SMLIGHT-hubb kan du i stället slå på Allow Anonymous under Settings › MQTT, så behövs ingen inloggning.",
   "setupErrLoginNoAnswerAction": "Försök igen",
+  "setupErrTlsUntrustedTitle": "Telefonen litar inte på certifikatet för den här brokern",
+  "setupErrTlsFailedTitle": "Den krypterade anslutningen misslyckades",
+  "setupErrTlsAction": "Redigera inställningar",
   "setupNoZ2mTitle": "Din broker fungerar, men Zigbee2MQTT publicerar inte här",
   "setupNoZ2mBody": "Vi lyssnade på {base}/bridge och hörde ingenting.",
   "setupBaseTopicQuestion": "Använder du ett annat basämne?",
@@ -723,30 +832,74 @@
   "setupZhaNote": "ZigDash visar enheter från Zigbee2MQTT och ser därför inte enheter i ZHA, Home Assistants egen Zigbee. Du kan prova demohemmet för att se hur ZigDash fungerar.",
   "setupPlatformNotSure": "Vet inte",
   "setupScanProgress": "Kontrollerade {checked} av {total} adresser",
-  "@setupScanProgress": {"placeholders": {"checked": {"type": "int"}, "total": {"type": "int"}}},
+  "@setupScanProgress": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "setupScanHintHa": "Letar efter Home Assistant och dess MQTT-broker…",
   "setupScanHintSmlight": "Letar efter din SMHUB…",
   "setupScanHintPi": "Letar efter en MQTT-broker i ditt nätverk…",
   "setupHubSeenHa": "Hittade Home Assistant på {host}",
-  "@setupHubSeenHa": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenHa": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenZ2m": "Hittade Zigbee2MQTT på {host}",
-  "@setupHubSeenZ2m": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenZ2m": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenSmlight": "Hittade din SMLIGHT-hubb på {host}",
-  "@setupHubSeenSmlight": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenSmlight": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenHint": "Letar fortfarande efter dess MQTT-broker…",
   "setupNoBrokerHaTitle": "Hittade Home Assistant, men ingen MQTT-broker",
   "setupNoBrokerHaBody": "Home Assistant finns på {host}, men inget svarar på MQTT-port 1883. Öppna Inställningar › Appar i Home Assistant, installera och starta appen Mosquitto broker och försök igen.",
-  "@setupNoBrokerHaBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerHaBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerHaZha": "Använder du Home Assistants inbyggda Zigbee (ZHA) i stället för Zigbee2MQTT? ZigDash fungerar bara med Zigbee2MQTT och ser därför inte ZHA-enheter. Demon visar vad du skulle få.",
   "setupNoBrokerHaDocker": "Inga Appar i din Home Assistants inställningar? Då körs den i Docker (Home Assistant Container), som inte har appar: Mosquitto körs i en egen container. Ange adressen till datorn som kör den nedan.",
   "setupVpnHint": "En VPN är på, och den kan dölja ditt hemnätverk för sökningen. Är du hemma, stäng av VPN:en och tryck på Försök igen. Eller låt den vara på och tillåt åtkomst till lokalt nätverk (LAN) i VPN-appens inställningar.",
-  "setupLocalNetworkIos": "ZigDash behöver åtkomst till lokalt nätverk för att hitta din hubb. Om du sa nej, tillåt det i Inställningar › Integritet och säkerhet › Lokalt nätverk.",
   "setupNoBrokerZ2mTitle": "Hittade Zigbee2MQTT, men dess broker går inte att nå",
   "setupNoBrokerZ2mBody": "Zigbee2MQTT finns på {host}, men dess MQTT-broker tar inte emot anslutningar från din telefon. Mosquitto 2 lyssnar bara på själva hubben tills konfigurationen har 'listener 1883' och 'allow_anonymous true' (eller en inloggning). Starta om den och försök igen.",
-  "@setupNoBrokerZ2mBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerZ2mBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerSmlightTitle": "Hittade din SMLIGHT-hubb, men MQTT är av",
   "setupNoBrokerSmlightBody": "Din hubb finns på {host}, men dess MQTT-broker går inte att nå. Öppna Settings › MQTT i hubbens webbgränssnitt, slå på Allow External och kontrollera att Zigbee2MQTT kör. Försök sedan igen.",
-  "@setupNoBrokerSmlightBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerSmlightBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupZ2mAsking": "Frågar Zigbee2MQTT var dess broker finns…",
   "setupZ2mLocalOnlyTitle": "Din broker tar bara emot anslutningar från sin egen maskin",
   "setupZ2mLocalOnlyBody": "Zigbee2MQTT använder {server}, och inget svarar där från din telefon. Mosquitto 2 gör så som standard. Lägg till de här två raderna i mosquitto.conf, starta om Mosquitto och försök igen:",
@@ -756,7 +909,13 @@
   "setupZ2mTokenRequired": "Zigbee2MQTT:s webbsida är skyddad med en token, så appen kunde inte läsa var dess broker finns. Skriv in broker-adressen från Zigbee2MQTT › Settings › MQTT.",
   "setupZ2mUnreachable": "Zigbee2MQTT använder brokern på {server}, men den svarade inte din telefon. Kontrollera att brokern körs och att telefonen är på samma nätverk.",
   "setupConnectTo": "Anslut till {host}",
-  "@setupConnectTo": {"placeholders": {"host": {"type": "String"}}},
+  "@setupConnectTo": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNotFoundHa": "Ingen Home Assistant hittades på det här nätverket. Kontrollera att telefonen är på samma Wi-Fi som Home Assistant (inte ett gästnät) och försök igen. Vet du adressen, ange den nedan.",
   "setupNotFoundSmlight": "Ingen SMLIGHT-hubb hittades på det här nätverket. Kontrollera att hubben är på och att telefonen är på samma Wi-Fi, och försök igen. Vet du adressen, ange den nedan.",
   "setupNotFoundPi": "Ingen MQTT-broker hittades i det här nätverket. Kontrollera att Mosquitto kör och lyssnar på nätverket (port 1883) och att telefonen är på samma Wi-Fi. Försök sedan igen.",
@@ -770,9 +929,7 @@
   "setupAddressCheck": "Kontrollera den här adressen",
   "setupAddressNothing": "Inget svarade på {host}. Kontrollera adressen och att telefonen är på samma Wi-Fi.",
   "setupAddressNotResolved": "{host} kunde inte slås upp. Namn som slutar på .local misslyckas ofta på Android; prova IP-adressen i stället. Home Assistant visar den under Inställningar › System › Nätverk.",
-  "setupAddressNotResolvedIos": "{host} kunde inte slås upp. Kontrollera namnet, eller prova IP-adressen i stället. Home Assistant visar den under Inställningar › System › Nätverk.",
   "setupAddressNotResolvedHa": "{host} går inte att hitta från den här telefonen; Android kan ofta inte slå upp .local-namn. Tryck på {button} ovan och använd adressen du öppnar Home Assistant med i webbläsaren, eller skriv IP-adressen här. Home Assistant visar den under Inställningar › System › Nätverk.",
-  "setupAddressNotResolvedHaIos": "{host} går inte att hitta från den här telefonen. Tryck på {button} ovan och använd adressen du öppnar Home Assistant med i webbläsaren, eller skriv IP-adressen här. Home Assistant visar den under Inställningar › System › Nätverk.",
   "setupAddressNotLocal": "{host} finns inte på ditt hemnätverk. Använd adressen som fungerar på ditt Wi-Fi, inte en fjärrlänk som Nabu Casa eller DuckDNS.",
   "setupAddressInvalid": "Ange en adress först.",
   "setupChoicesTitle": "Vilket av dessa passar dig?",
@@ -785,7 +942,16 @@
   "setupChoiceOtherSub": "Ett gästnätverk eller en andra router",
   "setupChoiceOtherNote": "Telefonen måste nå din hubb. Ett gästnätverk, eller en andra router med eget wifi, håller dem isär. Anslut till det wifi som hubben är på och tryck på Försök igen. Eller ange hubbens IP-adress nedan, eller prova något av dessa vanliga namn:",
   "guidedHostYourPhone": "Din telefon är {ip}, så hubben börjar oftast med {prefix}.",
-  "@guidedHostYourPhone": {"placeholders": {"ip": {"type": "String"}, "prefix": {"type": "String"}}},
+  "@guidedHostYourPhone": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      },
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
   "guidedHostHa": "Använder du Home Assistant? Värden är adressen du öppnar Home Assistant med, port 1883.",
   "demoBannerText": "Du är i demoläge",
   "demoBannerAction": "Anslut ditt hem",
@@ -982,7 +1148,13 @@
   "assistantTitle": "ZigDash-assistent",
   "assistantNotice": "Det här svaret kommer från en AI-tjänst som ser dina supportuppgifter. Den behöver aldrig dina lösenord eller adresser.",
   "assistantOpeningScan": "Din sökning via {network} provade {hosts} adresser och hittade {brokers} brokers.",
-  "@assistantOpeningScan": { "placeholders": { "network": {}, "hosts": {}, "brokers": {} } },
+  "@assistantOpeningScan": {
+    "placeholders": {
+      "network": {},
+      "hosts": {},
+      "brokers": {}
+    }
+  },
   "assistantOpeningRunningYes": "Du sa att Zigbee2MQTT kör. Låt oss hitta den.",
   "assistantOpeningRunningNotSure": "Du var inte säker på om Zigbee2MQTT kör. Låt oss ta reda på det.",
   "assistantOpeningGeneric": "Berätta vad du försökte göra, så hjälper jag dig att ansluta.",
@@ -998,9 +1170,24 @@
   "assistantHelpedNo": "Nej",
   "assistantTalkToPerson": "Prata med en person",
   "assistantHomeOpening": "{home} är ansluten och {count, plural, =0{ingen enhet rapporterar} =1{1 enhet rapporterar} other{{count} enheter rapporterar}}. Vad behöver du?",
-  "@assistantHomeOpening": { "placeholders": { "home": {"type": "String"}, "count": {"type": "int"} } },
+  "@assistantHomeOpening": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "assistantHomeOpeningOffline": "ZigDash når inte {home} just nu. Vad behöver du?",
-  "@assistantHomeOpeningOffline": { "placeholders": { "home": {"type": "String"} } },
+  "@assistantHomeOpeningOffline": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      }
+    }
+  },
   "assistantChipDevice": "En enhet slutade svara",
   "assistantChipTile": "Lägg till en ruta",
   "assistantChipAutomations": "Automationer",
@@ -1047,7 +1234,6 @@
   "tipRestartZ2mBody": "Om enheter är parkopplade men inga dyker upp, starta om Zigbee2MQTT så att den publicerar sin enhetslista.",
   "tipNumberAddressTitle": "Använd sifferadressen",
   "tipNumberAddressBody": "Namn som slutar på .local fungerar inte på alla Android-telefoner. Prova hubbens sifferadress, till exempel 192.168.1.20.",
-  "tipNumberAddressBodyIos": "Om namnet inte fungerar, prova hubbens sifferadress, till exempel 192.168.1.20.",
   "tipPortProtocolTitle": "Port och protokoll",
   "tipPortProtocolBody": "TCP på 1883 är det vanliga. Välj TLS eller WebSocket bara om din broker är inställd för det.",
   "tipManualLoginTitle": "Inloggning",
@@ -1213,7 +1399,6 @@
   "wallKeepOnSubtitle": "De kommer tillbaka vid beröring och döljs igen efter 10 sekunder.",
   "wallFullscreen": "Helskärm",
   "wallFullscreenSubtitle": "Döljer även Androids status- och navigeringsfält.",
-  "wallFullscreenSubtitleIos": "Döljer även statusfältet; hemindikatorn tonas ned.",
   "wallDimAfter": "Dämpa efter",
   "wallDimOff": "Av",
   "wallIdleTitle": "När ingen rör den",
@@ -1244,7 +1429,11 @@
   "wallNightFrom": "Från",
   "wallNightTo": "till",
   "wallDimMinutes": "{minutes} min",
-  "@wallDimMinutes": { "placeholders": { "minutes": {} } },
+  "@wallDimMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
   "kioskLock": "Kiosklås",
   "kioskLockSubtitle": "Bara det här hemmets paneler och deras reglage går att nå. Håll in titeln för att avsluta.",
   "kioskPin": "PIN",
@@ -1260,12 +1449,9 @@
   "kioskPinWrong": "Fel PIN.",
   "kioskPinForgot": "Glömt PIN?",
   "kioskPinForgotBody": "En glömd PIN kan bara återställas genom att rensa ZigDashs data i Androids inställningar, vilket tar bort det här hemmet om du inte har en säkerhetskopia. Exportera en innan du anger en PIN.",
-  "kioskPinForgotBodyIos": "En glömd PIN kan bara återställas genom att radera och installera om ZigDash, vilket tar bort det här hemmet om du inte har en säkerhetskopia. Exportera en innan du anger en PIN.",
   "kioskExportBackup": "Exportera säkerhetskopia",
   "kioskOsPin": "Fäst även ZigDash i Android",
   "kioskOsPinSubtitle": "Android spärrar Hem och senaste appar tills ZigDash lossas. En surfplatta utan låsskärm lossar med en gest, så det här är inte låset.",
-  "kioskGuidedAccessTitle": "Lås till ZigDash med Guidad åtkomst",
-  "kioskGuidedAccess": "iOS håller ZigDash på skärmen tills du avslutar Guidad åtkomst: slå på det i Inställningar › Hjälpmedel › Guidad åtkomst och trippelklicka sedan på sidoknappen i ZigDash.",
   "kioskOn": "Kiosk på. Håll in titeln för att avsluta.",
   "kioskLeaveTitle": "Avsluta kiosk?",
   "kioskLeave": "Avsluta",
@@ -1294,14 +1480,16 @@
   "proGetWall": "Väggplatta: mätvärden på klockan, väckning vid rörelse, nattschema och alarm",
   "proGetFuture": "Alla Pro-funktioner som kommer senare, utan extra kostnad",
   "proFreeTitle": "Gratis för alltid",
-  "proFreeBody": "Konfiguration, instrumentpaneler, styrning av alla enheter, widgetar, snabbinställningsrutor, aviseringar, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.",
-  "proFreeBodyIos": "Konfiguration, instrumentpaneler, styrning av alla enheter, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.",
+  "proFreeBody": "Konfiguration, instrumentpaneler, styrning av alla enheter, widgetar, snabbinställningsrutor, aviseringar, tre automationer per hem och själva väggplattan förblir gratis. Inget som är gratis i dag blir betalt.",
   "proBuy": "Skaffa Pro",
   "proBuyPrice": "Skaffa Pro · {price}",
   "proOnce": "En betalning, ingen prenumeration. Köpt på en annan telefon med samma Google-konto? Det låses upp automatiskt.",
-  "proOnceIos": "En betalning, ingen prenumeration. Köpt på en annan iPhone eller iPad med samma Apple-konto? Det låses upp automatiskt, eller tryck på Återställ köp.",
   "proRestore": "Återställ köp",
-  "proRestoreNone": "Inget köp av ZigDash Pro hittades för detta Apple-ID.",
+  "proRestored": "Pro är upplåst på den här telefonen.",
+  "proRestoreNone": "Google Play har inget Pro-köp för det här Google-kontot. Köpt med ett annat konto? Byt konto i Play Butik och försök igen.",
+  "proRestoreFailed": "Kunde inte nå Google Play. Försök igen om en stund.",
+  "proRestoreNoneIos": "Inget köp av ZigDash Pro hittades för detta Apple-ID.",
+  "proRestoreFailedIos": "Kunde inte nå App Store. Försök igen om en stund.",
   "historyNotRecorded": "Bara siffror som visas på en instrumentpanel spelas in. Lägg till den här som en ruta för att starta historiken.",
   "historyRecordHere": "Spela in på den här enheten",
   "historyRecordHereHint": "Går ZigDash Engine inte att använda på hubben? ZigDash kan spara på en telefon eller platta som är öppen, som en väggplatta. Alla telefoner i hemmet ser historiken.",
@@ -1343,6 +1531,8 @@
   "haImportOpen": "Öppna dashboards",
   "haImportOfferTitle": "Hämta namn och rum från Home Assistant?",
   "haImportOfferBody": "Home Assistant finns på ditt nätverk. ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, så som du har satt upp dem där.",
+  "haImportOfferBodyZha": "ZigDash kan namnge dina rutor och lägga till en dashboard per våning och rum, med namnen och rummen för dina enheter i Home Assistant, även de från ZHA.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT har inga enheter än. Para dina enheter där först och öppna sedan Importera från Home Assistant i det här hemmets inställningar.",
   "haImportOfferLater": "Inte nu",
   "haImportOfferGo": "Importera",
   "haImportSignIn": "Logga in med Home Assistant",
@@ -1366,11 +1556,6 @@
   "engineInstalling": "Installerar på hubben…",
   "engineTooOldTitle": "Zigbee2MQTT behöver uppdateras",
   "engineTooOldBody": "Din Zigbee2MQTT är version {version}. Automationer kräver 2.4 eller nyare. Uppdatera Zigbee2MQTT på hubben och kom sedan tillbaka hit.",
-  "engineIntroTitle": "Automationer körs på hubben, inte på telefonen",
-  "engineIntroBody": "ZigDash lägger ZigDash Engine i Zigbee2MQTT på din hubb. Det bevakar dina enheter och kör dina regler, så att en lampa tänds när dörren öppnas även med telefonen avstängd och utan internet.",
-  "engineIntroNothingByHand": "Inget att installera för hand. ZigDash gör det via hemnätverket.",
-  "engineIntroVersion": "Din Zigbee2MQTT är version {version}.",
-  "engineIntroRemove": "Du kan ta bort den när som helst från den här skärmen.",
   "engineInstall": "Installera på hubben",
   "engineDeclinedTitle": "Inga automationer på den här hubben",
   "engineDeclinedBody": "Zigbee2MQTT på din hubb tillåter inga tillägg, så inget kan köra dina regler när telefonen är borta. Scener, larm och instrumentpanelen fungerar som förut.",
@@ -1433,6 +1618,7 @@
   "autoErrTown": "Ange din ort för soluppgång och solnedgång.",
   "autoErrPickAction": "Välj vad som ska hända.",
   "autoErrEmptyScene": "Den scenen har inget att skicka.",
+  "autoSceneTilesSkipped": "{count, plural, =1{1 av scenens åtgärder körs bara från den här telefonen hemma, inte från Automationer.} other{{count} av scenens åtgärder körs bara från den här telefonen hemma, inte från Automationer.}}",
   "autoErrNotConnected": "ZigDash är inte anslutet till det här hemmet. Försök igen hemma.",
   "autoNewTitle": "Ny automation",
   "autoEditTitle": "Redigera automation",
@@ -1709,5 +1895,175 @@
   "proSaleNoEnd": "Rea: {percent} % rabatt",
   "proSaleEnded": "Rean är slut. Det här är priset nu.",
   "saleCardRemote": "ZigDash Pro: styr hemmet var du än är, och mer.",
-  "saleCardHomeAssistant": "ZigDash Pro: längre historik, fler automatiseringar och mer."
+  "saleCardHomeAssistant": "ZigDash Pro: längre historik, fler automatiseringar och mer.",
+  "chatEarlyTitle": "Chatta med ditt hem",
+  "chatEarlyBody": "Skicka ett meddelande som \"stäng persiennen på kontoret\" eller \"är bakdörren öppen?\" så svarar ditt hem. Nu tillgängligt för dig som har ZigDash Pro. De första {count} som anmäler sig får en grundarkod: gratis i 3 månader, fjärråtkomst ingår.",
+  "chatEarlyTelegram": "Anmäl dig på Telegram",
+  "chatEarlyEmail": "Anmäl dig via e-post",
+  "chatEarlyNotForMe": "Inte för mig",
+  "chatEarlyClose": "Stäng",
+  "chatEarlyEmailHint": "Din e-post",
+  "chatEarlyBadEmail": "Det ser inte ut som en e-postadress.",
+  "chatEarlyEmailUse": "Vi använder den bara för att bjuda in dig till betan och berätta priset.",
+  "chatEarlyPrivacy": "Integritet",
+  "chatEarlySend": "Skicka",
+  "chatEarlyFailed": "Det gick inte att skicka. Prova Telegram, eller senare.",
+  "chatEarlyInFirst": "Du är nr {position} på listan: bland de första {count}. Du får en grundarkod: chatt och fjärråtkomst, gratis i 3 månader.",
+  "chatEarlyAfterFirst": "Du är nr {position} på listan. De första {count} platserna är tagna. Chatt finns nu för dig som har ZigDash Pro.",
+  "chatEarlyListed": "Den här e-postadressen finns redan på listan.",
+  "chatEarlyPrice": "Skulle 2,49 € i månaden vara okej efter de gratis månaderna?",
+  "chatEarlyYes": "Ja",
+  "chatEarlyMaybe": "Kanske",
+  "chatEarlyNo": "Nej",
+  "chatEarlyThanks": "Tack, noterat.",
+  "settingsChatEarlySubtitle": "Tidig åtkomst: anmäl dig",
+  "historyOnTitle": "Se ditt hem över flera dagar",
+  "historyOnBody": "Slå på historik för att se temperaturer, el och dörrar över dagar och veckor, inte bara nu. ZigDash Engine spelar in på din hubb, även när telefonen är av.",
+  "historyOnTurnOn": "Slå på historik",
+  "historyOnLater": "Inte nu",
+  "historyOnWorking": "Slår på historik…",
+  "historyOnConsentBody": "ZigDash Engine spelar in historiken på din hubb, så den fortsätter när telefonen är av. Din Zigbee2MQTT blockerar tillägg, som nya installationer gör: ZigDash skulle slå på \"Tillåt extern JavaScript\" och starta om den.",
+  "historyOnAllow": "Tillåt och starta om",
+  "historyOnBrokerBody": "Historiken går via din MQTT-broker. ZigDash når det här hemmet via Zigbee2MQTT:s sida, så lägg till brokern först.",
+  "historyOnAddBroker": "Lägg till brokern",
+  "historyOnPhoneBody": "Din hubb kan inte köra ZigDash Engine. Den här telefonen kan spela in i stället medan ZigDash är öppen: bäst på en väggplatta som alltid är på.",
+  "historyOnPhone": "Spela in på den här telefonen",
+  "proTrialStartedTitle": "Pro är på i 14 dagar",
+  "proTrialOfferTitle": "Prova ZigDash Pro gratis i 14 dagar",
+  "proTrialWhat": "Historik för 7 och 30 dagar, extrafunktionerna för väggplattan och fler än tre automationer.",
+  "proTrialNoPayment": "Ingen betalning, inget förnyas.",
+  "proTrialStart": "Starta provperioden",
+  "proTrialEndingTitle": "Din Pro-provperiod slutar om 2 dagar",
+  "proTrialKeep": "Behåll Pro · {price}",
+  "proTrialUsedHistory": "vecko- och månadshistoriken",
+  "proTrialUsedWall": "väggplattans extrafunktioner",
+  "proTrialUsedAutomation": "fler än tre automationer",
+  "proTrialYouUsed": "Du använde {features}.",
+  "proTrialAfterEnd": "Efteråt finns allt du ställt in kvar; vecko- och månadsvyerna och nya automationer utöver tre kräver Pro.",
+  "proTrialDaysLeft": "{days, plural, =1{Provperiod: 1 dag kvar} other{Provperiod: {days} dagar kvar}}",
+  "proTrialEnded": "Din provperiod är slut. Allt du ställt in finns kvar.",
+  "engineSlimCard": "Automationer körs på din hubb med ZigDash Engine. ZigDash lägger det där när du sparar din första.",
+  "engineAwayMakeAtHome": "Skapa automationer hemma: då lägger ZigDash sin Engine på din hubb via ditt hemnätverk.",
+  "engineSheetSource": "Se källkoden på GitHub",
+  "engineSheetTitle": "ZigDash Engine kör dina automationer",
+  "engineSheetBody": "ZigDash Engine är en enda fil med öppen källkod som ZigDash lägger i Zigbee2MQTT:s mapp på din hubb. Den kör dina automationer där, även med telefonen avstängd. Ta bort den när som helst från fliken Automationer.",
+  "engineSheetInstallSave": "Installera och spara",
+  "engineSheetSaveOnly": "Spara utan att köra",
+  "engineSheetSave": "Spara",
+  "engineSheetNoAnswer": "Zigbee2MQTT på din hubb svarade inte i tid, så ZigDash kan inte installera sin Engine nu. Spara nu och installera den från fliken Automationer när hubben svarar.",
+  "engineSheetSavedNotRunning": "Din automation är sparad. Den körs när ZigDash Engine finns på din hubb.",
+  "engineWaitingTitle": "Sparade tidigare, väntar på ZigDash Engine",
+  "engineWaitingRun": "Körs efter installation",
+  "engineWaitingPaused": "Förblir pausad",
+  "autoNotRunTitle": "Ingen av dessa körs ännu",
+  "autoNotRunBody": "Körs inte: ZigDash Engine finns inte på din hubb. Till dess sparar din MQTT-broker dem, och en broker utan persistens tappar dem när den startar om.",
+  "autoNotRunning": "Körs inte",
+  "historyUsePhoneInstead": "Använd den här telefonen i stället",
+  "chatTitle": "Chat (beta)",
+  "chatRowReady": "Prata med ditt hem från Telegram",
+  "chatRowNoPro": "Del av ZigDash Pro (ingår inte i provperioden)",
+  "chatRowNoRemote": "Slå på fjärrstyrning först",
+  "chatRowNoEngine": "Behöver ZigDash Engine på din hubb",
+  "chatIntroTitle": "Prata med ditt hem från Telegram",
+  "chatIntroBody": "Skicka ZigDash Home-boten på Telegram ett meddelande som \"är bakdörren öppen?\" eller \"stäng persiennen på kontoret\", så svarar ditt hem. Den läser vad dina enheter rapporterar och deras historik; med Läsa och styra kan den också slå av och på de lampor, persienner, brytare, uttag och termostater du väljer.",
+  "chatIntroNever": "Den öppnar, stänger eller ändrar aldrig lås, ventiler eller sirener, och ändrar aldrig automationer eller inställningar: för det ber den dig öppna ZigDash.",
+  "chatIntroBeta": "Gratis under betan: upp till 300 meddelanden i månaden för det här hemmet.",
+  "chatIntroWho": "Vem som läser meddelandena: Telegram, som för fram dem; vår server i EU, som sparar samtalet i 24 timmar; och Anthropic (Claude) i USA, som skriver svaren. Det Chat läser om ditt hem går samma väg.",
+  "chatPolicy": "Hur Chat hanterar dina data",
+  "chatLinkedTitle": "Länkade konton",
+  "chatLinkedNone": "Inget Telegram-konto länkat än.",
+  "chatLinkedLoadFailed": "Kunde inte läsa in de länkade kontona. Kontrollera internetanslutningen.",
+  "chatLinkedLine": "{scope} · senast använt {when}",
+  "chatLinkedNeverUsed": "{scope} · inte använt än",
+  "chatRemove": "Ta bort",
+  "chatRemoveTitle": "Ta bort {name}?",
+  "chatRemoveBody": "Det här Telegram-kontot når inte längre ditt hem, och dess samtal raderas.",
+  "chatRemovedLater": "Borttaget. Din hubb glömmer det nästa gång ZigDash är öppet hemma.",
+  "chatAuditTitle": "Vad Chat har gjort",
+  "chatAuditShow": "Visa",
+  "chatAuditEmpty": "Inget än.",
+  "chatAuditFailed": "Din hubb svarade inte. Försök igen senare.",
+  "chatAuditSent": "ställt in: {what}",
+  "chatAuditNotSent": "skickades inte",
+  "chatHereTitle": "Chatt med ditt hem är här",
+  "chatHereBody": "Länka ditt Telegram-konto och fråga ditt hem \"är bakdörren öppen?\" eller be det stänga en rullgardin. Ingår i Pro, gratis under betan.",
+  "chatHereSetUp": "Konfigurera",
+  "chatHereNotNow": "Inte nu",
+  "chatLinkNew": "Länka ett Telegram-konto",
+  "chatLinkAnother": "Länka ett till Telegram-konto",
+  "chatScopeRead": "Läsa",
+  "chatScopeReadHelp": "Svarar på frågor. Ändrar inget.",
+  "chatScopeControl": "Läsa och styra",
+  "chatScopeControlHelp": "Slår också av och på enheterna du väljer nedan.",
+  "chatControlsTitle": "Vad Chat får slå av och på",
+  "chatControlsHelp": "På från början: lampor och persienner på dina instrumentpaneler. Av från början: brytare och uttag (de kan driva ett element, en varmvattenberedare eller en pump), termostater, grindar och garageportar. Lås, ventiler och sirener visas aldrig.",
+  "chatControlsEmpty": "Inga enheter att välja än.",
+  "chatKindLight": "Lampa",
+  "chatKindCover": "Persienn",
+  "chatKindSwitch": "Brytare eller uttag",
+  "chatKindThermostat": "Termostat",
+  "chatGateNote": "grind eller dörr, av från början",
+  "chatAgeAndAccount": "Varje person länkar sitt eget Telegram-konto, med egen behörighet. Länkade personer måste vara 16 år eller äldre. Alla som använder ett länkat Telegram-konto kan göra det behörigheten tillåter. Även Läsa visar om någon är hemma och vilka dörrar och fönster som är öppna.",
+  "chatEngineOld": "ZigDash Engine på din hubb uppdateras till versionen med Chat. Försök igen om en minut.",
+  "chatLinkButton": "Länka Telegram",
+  "chatLinkAway": "Länka hemma: ZigDash ställer in det på din hubb via ditt hemnätverk.",
+  "chatCodeTitle": "Slutför i Telegram",
+  "chatCodeBody": "Tryck på Starta hos ZigDash Home-boten i Telegram. Den skickar en fyrsiffrig kod: skriv den här inom 10 minuter.",
+  "chatCodeHint": "Fyrsiffrig kod",
+  "chatCodeConfirm": "Bekräfta",
+  "chatOpenTelegram": "Öppna Telegram igen",
+  "chatLinkedDone": "Länkat. Skicka ett meddelande till boten för att prova.",
+  "chatFailUnreachable": "Kunde inte nå ZigDashs servrar. Kontrollera internetanslutningen och försök igen.",
+  "chatFailLogin": "Reläet godtog inte telefonens fjärrinloggning. Öppna Fjärrstyrning, stäng av den och slå på den igen.",
+  "chatFailPurchase": "Google Play bekräftar inget köp av ZigDash Pro för det här hemmet.",
+  "chatFailTooMany": "För många försök. Försök igen om en timme.",
+  "chatFailExpired": "Koden har gått ut. Börja om.",
+  "chatFailWrongCode": "Det är inte koden som boten skickade. Kontrollera den och försök igen.",
+  "chatFailRefused": "Det gick inte. Försök igen senare.",
+  "chatFailNotClaimed": "Boten har inte fått koden än. Öppna Telegram, tryck på Starta hos ZigDash Home-boten och skriv sedan koden den skickar.",
+  "chatFailWrongCodeLeft": "Det är inte koden som boten skickade. Försök kvar: {count}.",
+  "founderCodeAsk": "Har du en grundarkod?",
+  "founderCodeLabel": "Grundarkod",
+  "founderCodeUse": "Använd koden",
+  "founderCodeAtHome": "Ange den hemma, med ZigDash Engine på hubben: ZigDash ställer in fjärrstyrning via hemnätverket.",
+  "founderCodeWrong": "Det är ingen grundarkod. Kontrollera den och försök igen.",
+  "founderCodeUsed": "Den koden har redan använts. Varje kod fungerar en gång.",
+  "founderCodeDeadline": "Sista dagen att ange koden har passerat. Be om mer tid via Få hjälp.",
+  "founderCodeRevoked": "Den koden har dragits tillbaka.",
+  "founderCodeDone": "Ditt grundarpass är på: fjärrstyrning och Chat för det här hemmet till {date}.",
+  "founderEndsOn": "Ditt grundarpass slutar {date}. Med ZigDash Pro behåller du fjärrstyrning och Chat, utan att ställa in något igen.",
+  "founderGetPro": "Skaffa Pro",
+  "founderEnded": "Ditt grundarpass slutade {date}. ZigDash Pro ger tillbaka fjärrstyrning och Chat, utan att ställa in något igen.",
+  "founderEndedNoDate": "Ditt grundarpass har slutat. ZigDash Pro ger tillbaka fjärrstyrning och Chat, utan att ställa in något igen.",
+  "founderDeleted": "Grundarpasset för det här hemmet har slutat och dess fjärrstyrning har tagits bort.",
+  "remoteRemoved": "Fjärrstyrningen för det här hemmet har tagits bort från reläet.",
+  "founderSetUpWithPro": "Ställ in med Pro",
+  "founderUseProTitle": "Använda ditt Pro-köp för det här hemmet?",
+  "founderUseProBody": "Fjärrstyrning och Chat för det här hemmet flyttas till ditt Pro-köp: samma telefoner och Chat-länkar, inget att ställa in igen. Ett köp gäller ett hem.",
+  "founderUsePro": "Använd Pro för det här hemmet",
+  "founderUpgraded": "Det här hemmet använder nu ditt Pro-köp.",
+  "founderUpgradeTaken": "Det köpet hör redan till ett annat hem.",
+  "founderUpgradeFailed": "Kunde inte flytta hemmet till ditt Pro-köp. Försök igen senare.",
+  "remoteHubRefused": "Reläet nekade hubbens inloggning",
+  "chatRowPassEnded": "Grundarpasset har slutat: länkar kan fortfarande tas bort",
+  "chatFailPassEnded": "Grundarpasset för det här hemmet har slutat, så inga nya Telegram-konton kan länkas.",
+  "panelToggleNoState": "(ingen status)",
+  "panelToggleError": "fel",
+  "diagResolveLocalNameIos": "Telefonen hittade inte det här namnet. Kontrollera att det är rätt stavat, eller ange IP-adressen i stället (Home Assistant visar den under Inställningar › System › Nätverk).",
+  "reminderNoPermissionIos": "Notiser är avstängda för ZigDash, så det blir ingen påminnelse. Du kan slå på dem i Inställningar › ZigDash › Notiser.",
+  "setupLocalNetworkIos": "ZigDash behöver åtkomst till lokalt nätverk för att hitta din hubb. Om du sa nej, tillåt det i Inställningar › Integritet och säkerhet › Lokalt nätverk.",
+  "setupAddressNotResolvedIos": "{host} kunde inte slås upp. Kontrollera namnet, eller prova IP-adressen i stället. Home Assistant visar den under Inställningar › System › Nätverk.",
+  "setupAddressNotResolvedHaIos": "{host} går inte att hitta från den här telefonen. Tryck på {button} ovan och använd adressen du öppnar Home Assistant med i webbläsaren, eller skriv IP-adressen här. Home Assistant visar den under Inställningar › System › Nätverk.",
+  "tipNumberAddressBodyIos": "Om namnet inte fungerar, prova hubbens sifferadress, till exempel 192.168.1.20.",
+  "wallFullscreenSubtitleIos": "Döljer även statusfältet; hemindikatorn tonas ned.",
+  "kioskPinForgotBodyIos": "En glömd PIN kan bara återställas genom att radera och installera om ZigDash, vilket tar bort det här hemmet om du inte har en säkerhetskopia. Exportera en innan du anger en PIN.",
+  "kioskGuidedAccessTitle": "Lås till ZigDash med Guidad åtkomst",
+  "kioskGuidedAccess": "iOS håller ZigDash på skärmen tills du avslutar Guidad åtkomst: slå på det i Inställningar › Hjälpmedel › Guidad åtkomst och trippelklicka sedan på sidoknappen i ZigDash.",
+  "proFreeBodyIos": "Konfiguration, instrumentpaneler, styrning av alla enheter, tre automationer per hem och själva väggplattan förblir gratis. Inget du använder i dag låses.",
+  "proOnceIos": "En betalning, ingen prenumeration. Köpt på en annan iPhone eller iPad med samma Apple-konto? Det låses upp automatiskt, eller tryck på Återställ köp.",
+  "engineIntroTitle": "Automationer körs på hubben, inte på telefonen",
+  "engineIntroBody": "ZigDash lägger ZigDash Engine i Zigbee2MQTT på din hubb. Det bevakar dina enheter och kör dina regler, så att en lampa tänds när dörren öppnas även med telefonen avstängd och utan internet.",
+  "engineIntroNothingByHand": "Inget att installera för hand. ZigDash gör det via hemnätverket.",
+  "engineIntroVersion": "Din Zigbee2MQTT är version {version}.",
+  "engineIntroRemove": "Du kan ta bort den när som helst från den här skärmen."
 }

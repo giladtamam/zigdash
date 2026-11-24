@@ -1,60 +1,49 @@
-ZigDash er MQTT-dashbordet laget for Zigbee2MQTT: det finner Zigbee-enhetene dine automatisk, så smarthjem-dashbordet bygger seg selv. Ingen sky, ingen reklame, ingen konto: gratis og åpen kildekode. Styr lys, persienner, brytere og sensorer fra mobilen eller et veggmontert nettbrett, og automatiser på huben din selv når mobilen er av.
-
-Krever et kjørende Zigbee2MQTT og en MQTT-broker i nettverket ditt. Ikke Zigbee2MQTT ennå? Appen har et demohjem du kan se deg rundt i.
-
-AUTOMATISK OPPDAGELSE FOR ZIGBEE2MQTT
-• Skann Zigbee2MQTT-bridgen din og lag et panel for hver enhet med ett trykk, uten å koble topics manuelt.
-• Egne topics, QoS og retain per panel når du vil ha full kontroll.
-
-KOBLE TIL HVILKEN SOM HELST BROKER
-• Alle MQTT-brokere: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
-• Brokeroppdagelse skanner det lokale nettverket automatisk.
-• Brukernavn og passord i maskinvarestøttet sikker lagring, aldri i klartekst.
-• Sanntidsstatus med automatisk gjentilkobling (eksponentiell backoff).
-• Tailscale-støtte: fjerntilgang over WireGuard-nettet ditt, uten portviderekobling.
-• Flere brokere med umiddelbar bytting.
-• En fullverdig MQTT-klient under panseret: publiser og abonner på hvilket som helst topic.
-
-16 PANELTYPER – STYR ALT
-Bryter, Knapp, Glidebryter, Persienne (åpne/stopp/lukk med forvalg), Flertilstand, Kombo, Radio, LED-indikator, Nodestatus, Fremdrift, Tekstinndata, Tekstlogg, Scene, Tidsplan, Auto-av-regel og Zigbee2MQTT-enhetsoppdagelse. Fra lys og persienner til sensorer og scener: ett Zigbee-dashbord for hver enhet.
-
-SNARVEIER – UTEN Å ÅPNE APPEN
-• Fliser i Hurtiginnstillinger: slå på en lampe eller stikkontakt med ett trykk, eller still en persienne med en glidebryter, rett fra varslingspanelet.
-• Android-enhetsstyring: hver enhet på dashbordene dine som et kort, med glidebrytere for lysstyrke og posisjon.
-• Widgets på startskjermen: én enhet, en scene, eller en gruppe på opptil fem enheter med sceneknapper.
-
-VARSLER, SELV NÅR APPEN ER LUKKET
-
-• Lekkasje, røyk, en dør som åpnes om natten eller lavt batteri: Node-RED på huben passer på, ZigDash setter det opp med ett trykk, og varselet når telefonen din via Googles push, ende-til-ende-kryptert. Ingen konto, ingen ekstra app, ingen batteribruk.
-
-• Del hjemmets varsler med familien, eller få dem med ntfy-appen på en telefon uten Google-tjenester.
-
+ZigDash er et raskt Zigbee2MQTT-dashbord for mobilen og et veggnettbrett. Logg inn med Home Assistant hvis Zigbee2MQTT kjører der, eller koble til MQTT-megleren din, så bygger dashbordet seg selv. Ingen konto, ingen reklame.
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
+TO MÅTER Å KOBLE TIL
+• Home Assistant: logg inn, så finner ZigDash Zigbee2MQTT der. Del eller lim inn adressen fra Home Assistant-appen, uten å skrive.
+• MQTT-megleren din: Mosquitto, EMQX, en SMLIGHT-hub eller en Raspberry Pi. Oppsettet leter etter den på Wi-Fi-en din.
+• Ingen hub ennå? Se deg rundt i demohjemmet.
 
-AUTOMATISERING – KJØRER SELV NÅR MOBILEN ER AV
-• Tidsplanpaneler: daglige åpne/lukke-timere lagret som retained MQTT-konfigurasjon.
-• Auto-av-regler: slå av en enhet N sekunder etter at den slås på, perfekt for vifter, pumper og tidsstyrt lys.
-• Begge kjører på den alltid-på-huben din (Node-RED på SMLIGHT, Raspberry Pi eller en hvilken som helst MQTT-enhet). Node-RED-flyter følger med.
+DASHBORDET BYGGER SEG SELV
+• Hver Zigbee2MQTT-enhet får en flis: lys, persienner, stikkontakter, brytere, sensorer, termostater.
+• Rom og scener, pluss egne MQTT-fliser for alt annet på megleren.
 
-GJENNOMFØRT – MOBIL OG NETTBRETT
-• Material 3 med lyst, mørkt og systemtema; Material You dynamiske farger på Android 12+.
-• Mobil og nettbrett, stående og liggende. Kioskmodus: fullskjerm, demping, PIN-lås.
-• Tilgjengelig på norsk, engelsk, fransk, tysk, spansk, nederlandsk, svensk, russisk, polsk, portugisisk og hebraisk, med automatisk RTL.
-• Responsivt panelrutenett, dashbordlås, sikkerhetskopi/gjenoppretting som portabel JSON, scener.
+HISTORIKK
+• Temperaturer, strøm og dører over flere dager, registrert av ZigDash Engine på huben, også når mobilen er av. I dag er gratis; 7 og 30 dager er i Pro, med 14 dagers gratis prøve.
 
-100 % PRIVAT. INGEN SKY.
-• Ingen reklame. Ingen konto. Anonyme bruksdata, som du kan slå av når som helst.
-• Dataene dine bor på enheten din og MQTT-brokeren din, ingen andre steder.
-• Åpen kildekode (MIT). Koden er offentlig og kan ettergås.
+AUTOMASJONER PÅ HUBEN
+• «Når døren åpnes, slå på lyset i gangen.» ZigDash Engine kjører reglene dine inne i Zigbee2MQTT, så de virker med mobilen av og uten internett. Tre per hjem er gratis.
 
-HVEM ER DETTE FOR?
-Du kjører Zigbee2MQTT med egen broker, kanskje sammen med Home Assistant, og vil ha rask styring fra mobilen eller et veggnettbrett uten å åpne Zigbee2MQTT-webgrensesnittet. Lei av skyavhengige apper, leverandørlåsing og datainnsamling? ZigDash er for deg.
+VARSLER
+• Lekkasje, røyk, en åpen dør eller lavt batteri: et varsel på hver mobil i hjemmet, også når ZigDash er lukket, ende-til-ende-kryptert fra huben.
+
+VEGGNETTBRETT
+• En veggskjerm med klokke og kiosklås, gratis. Pro legger til målinger på klokken, vekking ved bevegelse, nattplan og alarmer.
+
+UTEN Å ÅPNE APPEN
+• Widgeter på startskjermen, hurtiginnstillingsfliser og Androids enhetskontroller.
+
+HUB-SIKKERHETSKOPI
+• Hver dag en kopi av Zigbee2MQTT-innstillingene, Zigbee-nettet og enhetsnavnene, lagret på mobilen, for å få tilbake en hub som er nullstilt.
+
+FJERNSTYRING
+• Styr hjemmet fra hvor som helst gjennom ZigDash sitt krypterte relé: én betaling, ingen månedsavgift, ingen portvideresending eller VPN. Hjem koblet til via Home Assistant virker borte overalt der Home Assistant-adressen din virker.
+
+HJELP I APPEN
+• En assistent svarer på norsk om fliser, enheter og automasjoner, og et menneske er ett trykk unna.
+
+PRIVAT
+• Enhetene dine blir i nettverket ditt: ingen skykonto. Anonyme bruksdata, som du kan slå av når som helst. Åpen kildekode (MIT).
+
+━━━━━━━━━━━━━━━━━━━━━━
 
 DETTE TRENGER DU
-• Et Zigbee2MQTT-oppsett med en MQTT-broker på det lokale nettverket.
-• Tailscale (valgfritt) for fjerntilgang utenfor hjemmet.
-• Node-RED (valgfritt) for automatisering på huben.
+• Zigbee2MQTT, i Home Assistant, på en SMLIGHT-hub, en Raspberry Pi eller i Docker. Automasjoner og historikk krever Zigbee2MQTT 2.4 eller nyere.
+• ZHA (Home Assistants innebygde Zigbee) støttes ikke.
 
-Spørsmål og ideer: Telegram-gruppe t.me/zigdash_app
+ZigDash Pro er én betaling: historikk over dager, ubegrensede automasjoner, ekstrafunksjonene for veggnettbrettet og fjernstyring. Alt som er gratis i dag, forblir gratis.
+
+På norsk, engelsk, fransk, hebraisk, italiensk, nederlandsk, polsk, portugisisk, russisk, spansk, svensk, tsjekkisk og tysk.

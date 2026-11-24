@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zigdash/data/database/database.dart' show Panel;
+import 'package:zigdash/data/database/tables/panels.dart';
 import 'package:zigdash/features/discovery/models/z2m_device.dart';
+import 'package:zigdash/features/panels/models/panel_config.dart';
 import 'package:zigdash/features/scenes/models/scene.dart';
 import 'package:zigdash/features/scenes/scene_capture.dart';
 
@@ -242,4 +245,270 @@ void main() {
       expect(SceneAction.decodeList('{"not":"a list"}'), isEmpty);
     });
   });
+
+  // ---- Own tiles in scenes (3.8.7, scene-own-tiles-387.md) ----
+
+  group('sceneTileOf', () {
+    test('control tiles carry the composed topics', () {
+      final t = sceneTileOf(
+          _panel(PanelType.toggle, const ToggleConfig(), topic: 'lamp/set',
+              sub: 'lamp'),
+          'zigbee2mqtt',
+          dashboardName: 'Home')!;
+      expect(t.publishTopic, 'zigbee2mqtt/lamp/set');
+      expect(t.subscribeTopic, 'zigbee2mqtt/lamp');
+      expect(t.jsonPath, 'state');
+      expect(t.dashboardName, 'Home');
+      expect(t.name, 'Tile');
+
+      // The tile's own prefix wins; an empty prefix leaves the topic as is.
+      expect(
+          sceneTileOf(
+                  _panel(PanelType.button, const ButtonConfig(payload: 'ON'),
+                      topic: 'cmnd/plug/POWER', prefix: ''),
+                  'zigbee2mqtt')!
+              .publishTopic,
+          'cmnd/plug/POWER');
+      expect(
+          sceneTileOf(
+                  _panel(PanelType.slider, const SliderConfig(),
+                      topic: 'g/set', prefix: 'z2m'),
+                  'zigbee2mqtt')!
+              .publishTopic,
+          'z2m/g/set');
+      expect(
+          sceneTileOf(_panel(PanelType.slider, const SliderConfig(),
+                  topic: 'cmnd/dim'), null)!
+              .publishTopic,
+          'cmnd/dim');
+      final cover = sceneTileOf(
+          _panel(PanelType.cover, const CoverConfig(), topic: 'blind/set'),
+          'zigbee2mqtt')!;
+      expect(cover.jsonPath, isNull, reason: 'a cover reads the whole payload');
+      for (final type in [PanelType.multiState, PanelType.combo, PanelType.radio]) {
+        expect(
+            sceneTileOf(_panel(type, OptionsConfig.coverDefault()), 'z')?.type,
+            type);
+      }
+    });
+
+    test('types a scene does not send are left out', () {
+      for (final type in [
+        PanelType.textInput,
+        PanelType.schedule,
+        PanelType.autoClose,
+        PanelType.scene,
+        PanelType.led,
+        PanelType.reading,
+        PanelType.device,
+        PanelType.textLog,
+        PanelType.progress,
+        PanelType.nodeStatus,
+      ]) {
+        final config = PanelConfig.defaultFor(type);
+        expect(sceneTileOf(_panel(type, config), 'zigbee2mqtt'), isNull,
+            reason: type.name);
+      }
+    });
+  });
+
+  group('buildTileAction', () {
+    test('toggle: on/off payloads, raw or JSON, unchanged', () {
+      final raw = _tile(const ToggleConfig(onPayload: 'ON', offPayload: 'OFF'),
+          topic: 'cmnd/plug/POWER');
+      expect(buildTileAction(raw, false),
+          const SceneAction(setTopic: 'cmnd/plug/POWER', payload: 'OFF'));
+      expect(buildTileAction(raw, true)!.payload, 'ON');
+      final json = _tile(const ToggleConfig());
+      expect(buildTileAction(json, true)!.payload, '{"state":"ON"}');
+      expect(buildTileAction(json, false)!.payload, '{"state":"OFF"}');
+    });
+
+    test('slider: {value} rounded and clamped', () {
+      final t = _tile(const SliderConfig(min: 0, max: 100,
+          valueTemplate: '{"brightness":{value}}'));
+      expect(buildTileAction(t, 42.6)!.payload, '{"brightness":43}');
+      expect(buildTileAction(t, 400)!.payload, '{"brightness":100}');
+      expect(buildTileAction(t, -3)!.payload, '{"brightness":0}');
+    });
+
+    test('options, cover and button payloads', () {
+      final o = _tile(OptionsConfig.coverDefault());
+      expect(buildTileAction(o, 2)!.payload, '{"state":"CLOSE"}');
+      final c = _tile(const CoverConfig());
+      expect(buildTileAction(c, const SceneCoverValue(SceneCoverChoice.open))!
+          .payload, '{"state":"OPEN"}');
+      expect(buildTileAction(c, const SceneCoverValue(SceneCoverChoice.close))!
+          .payload, '{"state":"CLOSE"}');
+      expect(buildTileAction(c, const SceneCoverValue(SceneCoverChoice.stop))!
+          .payload, '{"state":"STOP"}');
+      expect(
+          buildTileAction(
+                  c, const SceneCoverValue(SceneCoverChoice.position, 30))!
+              .payload,
+          '{"position":30}');
+      final b = _tile(const ButtonConfig(payload: 'PRESS {x}'),
+          type: PanelType.button);
+      expect(buildTileAction(b, null)!.payload, 'PRESS {x}');
+    });
+
+    test('slider guards: step 0 has no divisions; min ≥ max is disabled', () {
+      const free = SliderConfig(min: 0, max: 10, step: 0,
+          valueTemplate: '{value}');
+      expect(sliderDivisions(free), isNull);
+      expect(sliderDivisions(const SliderConfig(min: 0, max: 10, step: 2)), 5);
+      final t = _tile(free);
+      expect(t.disabled, isFalse);
+      expect(buildTileAction(t, 99)!.payload, '10');
+      final broken = _tile(const SliderConfig(min: 5, max: 5));
+      expect(broken.disabled, isTrue);
+      expect(buildTileAction(broken, 5), isNull);
+      expect(tileSeedValue(broken, 5), isNull);
+      expect(_tile(const OptionsConfig()).disabled, isTrue);
+    });
+  });
+
+  group('payload → value', () {
+    test('each kind finds its value, or null', () {
+      final toggle = _tile(const ToggleConfig(onPayload: 'ON', offPayload: 'OFF'));
+      expect(tileValueOf(toggle, 'ON'), true);
+      expect(tileValueOf(toggle, 'OFF'), false);
+      expect(tileValueOf(toggle, 'TOGGLE'), isNull);
+
+      final slider = _tile(const SliderConfig(
+          min: 0, max: 100, valueTemplate: 'dim {value} now'));
+      expect(tileValueOf(slider, 'dim 40 now'), 40);
+      expect(tileValueOf(slider, 'dim 400 now'), 100, reason: 'clamped');
+      expect(tileValueOf(slider, 'dim 4.5 now'), 4.5);
+      expect(tileValueOf(slider, 'dim x now'), isNull);
+      expect(tileValueOf(slider, 'dim 40'), isNull);
+
+      final options = _tile(OptionsConfig.coverDefault());
+      expect(tileValueOf(options, '{"state":"STOP"}'), 1);
+      expect(tileValueOf(options, '{"state":"HALF"}'), isNull);
+
+      final cover = _tile(const CoverConfig());
+      expect(tileValueOf(cover, '{"state":"CLOSE"}'),
+          const SceneCoverValue(SceneCoverChoice.close));
+      expect(tileValueOf(cover, '{"position":70}'),
+          const SceneCoverValue(SceneCoverChoice.position, 70));
+      expect(
+          tileValueOf(_tile(const CoverConfig(showSlider: false)),
+              '{"position":70}'),
+          isNull);
+
+      final button = _tile(const ButtonConfig(payload: 'PRESS'),
+          type: PanelType.button);
+      expect(tileValueOf(button, 'PRESS'), true);
+      expect(tileValueOf(button, 'press'), isNull);
+    });
+
+    test('templateValue with repeated {value}', () {
+      expect(templateValue('{value}-{value}', '3-3'), 3);
+      expect(templateValue('{value}-{value}', '3-4'), isNull);
+      expect(templateValue('no placeholder', 'no placeholder'), isNull);
+    });
+  });
+
+  group('seeding from the tile', () {
+    test('toggle, slider, options', () {
+      final toggle = _tile(const ToggleConfig(onMatch: 'on'));
+      expect(tileSeedValue(toggle, 'on'), true);
+      expect(tileSeedValue(toggle, 'off'), false);
+      expect(tileSeedValue(toggle, null), true, reason: 'unknown → on');
+      final slider = _tile(const SliderConfig(min: 0, max: 100));
+      expect(tileSeedValue(slider, 250), 100);
+      expect(tileSeedValue(slider, '30'), 30);
+      expect(tileSeedValue(slider, null), 50, reason: 'mid-range');
+      final options = _tile(OptionsConfig.coverDefault());
+      expect(tileSeedValue(options, 'CLOSE'), 2);
+      expect(tileSeedValue(options, 'HALF'), 0);
+      expect(tileSeedValue(options, null), 0);
+    });
+
+    test('cover: position when shown, else the state', () {
+      const raw = '{"state":"CLOSED","position":40}';
+      expect(tileSeedValue(_tile(const CoverConfig()), raw),
+          const SceneCoverValue(SceneCoverChoice.position, 40));
+      expect(tileSeedValue(_tile(const CoverConfig(showSlider: false)), raw),
+          const SceneCoverValue(SceneCoverChoice.close));
+      expect(tileSeedValue(_tile(const CoverConfig()), '{"state":"stopped"}'),
+          const SceneCoverValue(SceneCoverChoice.stop));
+      expect(tileSeedValue(_tile(const CoverConfig()), '{"state":"opening"}'),
+          const SceneCoverValue(SceneCoverChoice.open));
+      expect(tileSeedValue(_tile(const CoverConfig()), null),
+          const SceneCoverValue(SceneCoverChoice.open));
+      expect(tileSeedValue(_tile(const CoverConfig()), '{"position":"55"}'),
+          const SceneCoverValue(SceneCoverChoice.position, 55));
+    });
+  });
+
+  group('engineCanSend', () {
+    test('only a JSON object to <base>/…/set', () {
+      bool can(String topic, String payload) => engineCanSend(
+          SceneAction(setTopic: topic, payload: payload), 'zigbee2mqtt');
+      expect(can('zigbee2mqtt/lamp/set', '{"state":"ON"}'), isTrue);
+      expect(can('zigbee2mqtt/lamp/set', 'ON'), isFalse);
+      expect(can('zigbee2mqtt/lamp/set', '[1]'), isFalse);
+      expect(can('cmnd/plug/POWER', '{"state":"ON"}'), isFalse);
+      expect(can('zigbee2mqtt/lamp', '{"state":"ON"}'), isFalse);
+      expect(can('zigbee2mqtt/lamp/get', '{"state":""}'), isFalse);
+      expect(can('zigbee2mqttx/lamp/set', '{"state":"ON"}'), isFalse);
+    });
+  });
+
+  group('deviceRowPayload', () {
+    test('only payloads the device row could build', () {
+      expect(deviceRowPayload(_light, '{"state":"ON","brightness":9}'),
+          {'state': 'ON', 'brightness': 9});
+      expect(deviceRowPayload(_light, '{"state_l2":"ON"}'), isNull);
+      expect(deviceRowPayload(_light, '{}'), isNull);
+      expect(deviceRowPayload(_light, 'ON'), isNull);
+    });
+  });
 }
+
+final _stamp = DateTime(2026, 11, 21);
+
+Panel _panel(
+  PanelType type,
+  PanelConfig config, {
+  String topic = 'x/set',
+  String? sub,
+  String? prefix,
+}) =>
+    Panel(
+      id: 'p-${type.name}',
+      dashboardId: 'd1',
+      name: 'Tile',
+      type: type,
+      topic: topic,
+      subscribeTopic: sub,
+      topicPrefixOverride: prefix,
+      qos: 1,
+      retain: false,
+      width: PanelWidth.small,
+      sortOrder: 0,
+      config: jsonEncode(config.toJson()),
+      mergeFlags: 0,
+      createdAt: _stamp,
+      updatedAt: _stamp,
+    );
+
+SceneTile _tile(PanelConfig config,
+        {String topic = 'zigbee2mqtt/t/set', PanelType? type}) =>
+    SceneTile(
+      panelId: 'p1',
+      name: 'T',
+      type: type ??
+          switch (config) {
+            ToggleConfig() => PanelType.toggle,
+            SliderConfig() => PanelType.slider,
+            ButtonConfig() => PanelType.button,
+            OptionsConfig() => PanelType.multiState,
+            _ => PanelType.cover,
+          },
+      config: config,
+      publishTopic: topic,
+      subscribeTopic: topic,
+    );

@@ -1,1 +1,1 @@
-Dashbord for Zigbee2MQTT. Ingen Home Assistant: en liten hub og mobilen din.
+Rask Zigbee2MQTT-dashbord. Styr hjemmet fra hvor som helst, uten månedsavgift.

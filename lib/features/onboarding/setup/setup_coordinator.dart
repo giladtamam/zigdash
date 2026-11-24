@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../core/analytics/analytics_events.dart' show SetupVia;
+import '../../../core/analytics/analytics_events.dart' show ScanTls, SetupVia;
 import '../../../data/database/tables/connections.dart';
 import '../../../mqtt/broker_config.dart';
 import '../../../mqtt/ha_address.dart';
@@ -147,6 +147,14 @@ sealed class SetupState {
   const SetupState();
 }
 
+/// What the scan found encrypted (3.8.5): untrusted when any broker's
+/// certificate isn't one the phone trusts, yes for a trusted one on 8883.
+ScanTls? scanTlsOf(Iterable<SetupCandidate> found) {
+  if (found.any((c) => c.untrustedCert)) return ScanTls.untrusted;
+  if (found.any((c) => c.port == 8883)) return ScanTls.yes;
+  return null;
+}
+
 /// The welcome screen — nothing running yet.
 class SetupIdle extends SetupState {
   const SetupIdle();
@@ -164,9 +172,14 @@ class SetupScanning extends SetupState {
     this.progress,
     this.platform,
     this.kinds = const {},
+    this.tls,
   });
   final List<SetupCandidate> candidates;
   final bool done;
+
+  /// What the scan found encrypted so far (3.8.5), from every broker it
+  /// found, also one [candidates] leaves out for the same machine's 1883.
+  final ScanTls? tls;
   final List<HubFound> hubs;
   final ScanProgressValue? progress;
   final SetupPlatform? platform;
@@ -570,13 +583,17 @@ class SetupCoordinator {
     ScanTried? tried;
     final run = _scan(ip, hubsForPlatform(_platform));
     _run = run;
-    void emitScanning({bool done = false}) => _emit(
+    void emitScanning({
+      bool done = false,
+      List<SetupCandidate>? candidates,
+    }) => _emit(
       SetupScanning(
-        mergeCandidates(buffer),
+        candidates ?? mergeCandidates(buffer),
         done: done,
         hubs: List.unmodifiable(hubs),
         progress: progress,
         platform: _platform,
+        tls: scanTlsOf(mergeCandidates(buffer)),
       ),
     );
     _scanSub = run.events.listen(
@@ -609,7 +626,9 @@ class SetupCoordinator {
       },
       onDone: () {
         if (_state is! SetupScanning) return;
-        final merged = mergeCandidates(buffer);
+        // 3.8.5: the same machine on 1883 beats an 8883 whose certificate
+        // the phone doesn't trust, so one broker left verifies on its own.
+        final merged = preferUsable(mergeCandidates(buffer));
         if (merged.isEmpty) {
           _emit(
             SetupScanEmpty(
@@ -625,7 +644,7 @@ class SetupCoordinator {
           // One broker found: continue without asking the user to pick it.
           unawaited(_verify(merged.single, lateHosts: tried?.lateHosts));
         } else {
-          emitScanning(done: true);
+          emitScanning(done: true, candidates: merged);
           unawaited(_nameCandidates(merged, op));
         }
       },
@@ -694,6 +713,7 @@ class SetupCoordinator {
           port: found.port,
           protocol: setting.tls ? MqttProtocol.tcpSsl : MqttProtocol.tcp,
           needsAuth: found.needsAuth,
+          untrustedCert: found.untrustedCert,
         );
         _emit(SetupVerifying(candidate));
         await _verify(candidate);
@@ -750,6 +770,7 @@ class SetupCoordinator {
         progress: s.progress,
         platform: s.platform,
         kinds: Map.unmodifiable(kinds),
+        tls: s.tls,
       ),
     );
   }
@@ -770,6 +791,7 @@ class SetupCoordinator {
           progress: s.progress,
           platform: platform,
           kinds: s.kinds,
+          tls: s.tls,
         ),
       );
     } else if (s is SetupScanEmpty) {
@@ -988,6 +1010,11 @@ class SetupCoordinator {
         await createDashboard();
       } else if (s.kind == SetupErrorKind.scanFailed) {
         await startScan();
+      } else if (s.kind == SetupErrorKind.tlsUntrusted &&
+          (s.candidate?.untrustedCert ?? false)) {
+        // 3.8.5: the scan's verdict on the certificate is cached on the
+        // candidate; a fixed certificate shows only to a fresh look.
+        await startScan(widen: _widen);
       } else if (s.candidate != null) {
         await _verify(s.candidate!);
       }
@@ -1079,6 +1106,16 @@ class SetupCoordinator {
       if (_state is! SetupVerifying) _emit(SetupVerifying(candidate, lateHosts: lateHosts));
       page = await _tryPages(_pagesFor(candidate));
       if (page == PageLook.found) return;
+    }
+    // 3.8.5: a login can't get past a certificate the phone doesn't trust,
+    // so don't ask for one. Outside the no-login check: a second pass with
+    // a login lands here too.
+    if (candidate.needsAuth && candidate.untrustedCert) {
+      if (_state is! SetupVerifying) {
+        _emit(SetupVerifying(candidate, lateHosts: lateHosts));
+      }
+      _emit(SetupFailed(SetupErrorKind.tlsUntrusted, candidate: candidate));
+      return;
     }
     if (candidate.needsAuth && _username == null) {
       final op = _op;

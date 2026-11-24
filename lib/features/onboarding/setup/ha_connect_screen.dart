@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../mqtt/ha_token.dart';
 import '../../../mqtt/ha_address.dart';
+import '../../../mqtt/ha_mqtt_client.dart' show HaFacts;
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../core/analytics/analytics.dart';
@@ -16,15 +18,21 @@ import '../../../core/router/routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shortcuts/shortcut_service.dart' show appChannel;
 import '../../ha_import/ha_auth.dart';
+import '../../settings/providers/settings_controller.dart'
+    show sharedPreferencesProvider;
 import '../../connections/discovery/network_info.dart';
 import '../../connections/discovery/subnet.dart';
+import '../../zha_move/zha_move.dart';
 import 'ai_help.dart';
 import 'ha_address_shape.dart';
 import 'ha_connect.dart';
 import 'ha_discovery.dart';
 import 'ha_handover.dart';
+import 'ha_link.dart';
+import 'no_hub_screen.dart' show haGuideUrl;
 import 'setup_coordinator.dart' show SetupPlatform;
 import 'setup_providers.dart';
+import 'setup_screen.dart' show openSetupLink;
 import 'setup_waiting.dart';
 
 /// "Connect through Home Assistant" (docs/design/ha-route.md): the address,
@@ -34,16 +42,22 @@ class HaConnectScreen extends ConsumerStatefulWidget {
   const HaConnectScreen({
     super.key,
     this.initialHost,
-    this.shared = false,
+    this.arrivedFrom,
     this.controller,
     this.again,
     this.offWifi = false,
+    this.highlightPaste = false,
   });
 
-  /// Opened by text shared to ZigDash from another app
-  /// (ha-share-paste.md): [initialHost] is the address it held, or null
-  /// when it held none.
-  final bool shared;
+  /// Back from the Home Assistant app after ZigDash was closed meanwhile
+  /// (3.6): Paste is pointed out at once.
+  final bool highlightPaste;
+
+  /// Opened with an address handed to ZigDash: text shared from another
+  /// app (ha-share-paste.md), or a ZigDash connect link (ha-link.md).
+  /// [initialHost] is the address it held, or null when it held none.
+  /// Null when the screen was opened any other way.
+  final HaAddressFrom? arrivedFrom;
 
   /// The Home Assistant the scan saw, if any.
   final String? initialHost;
@@ -73,6 +87,11 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
   /// "shown" was counted, and whether Look again is running (the card
   /// stays in place meanwhile).
   var _haApp = false;
+
+  /// 3.6: the Home Assistant app was opened from here and the person
+  /// hasn't come back yet; then Paste is pointed out.
+  var _leftForHaApp = false;
+  late var _highlightPaste = widget.highlightPaste;
   bool? _onWifi;
   var _noneCounted = false;
   var _retrying = false;
@@ -101,7 +120,14 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
   /// the right line and the right button.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed || !_nothingFound) return;
+    if (state != AppLifecycleState.resumed) return;
+    if (_leftForHaApp) {
+      _leftForHaApp = false;
+      _none(HaNoneChoice.returned);
+      clearHaAppLeft(ref.read(sharedPreferencesProvider));
+      setState(() => _highlightPaste = true);
+    }
+    if (!_nothingFound) return;
     _checkWifi();
     _checkHaApp();
   }
@@ -111,13 +137,20 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
       .track(SetupStep(SetupStepKind.haNone, choice: choice, network: network));
 
   Future<void> _openHaApp() async {
-    _none(HaNoneChoice.openApp);
     var opened = false;
     try {
       opened = await appChannel.invokeMethod<bool>('openHaApp') ?? false;
     } catch (_) {}
+    // 3.6: counted after the answer, so a tap that opened nothing isn't
+    // an "open_app".
+    _none(opened ? HaNoneChoice.openApp : HaNoneChoice.openAppFailed);
+    if (opened) {
+      _leftForHaApp = true;
+      await markHaAppLeft(ref.read(sharedPreferencesProvider));
+      return;
+    }
     // Disabled since the check: the browser lines show instead.
-    if (!opened && mounted) setState(() => _haApp = false);
+    if (mounted) setState(() => _haApp = false);
   }
 
   Future<void> _lookAgain() async {
@@ -128,6 +161,13 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     });
     await _controller.lookAgain();
     if (mounted) setState(() => _retrying = false);
+  }
+
+  /// "Use a computer" (ha-link.md): zigdash.app/connect, on a computer
+  /// where Home Assistant is open, makes a code this phone's camera opens.
+  void _useComputer() {
+    _none(HaNoneChoice.computer);
+    showUseComputerSheet(context);
   }
 
   void _askAssistant() {
@@ -193,10 +233,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     };
     if (initial.isNotEmpty) {
       // Shared from another app, or seen by the scan.
-      _fill(
-        initial,
-        widget.shared ? HaAddressFrom.shared : HaAddressFrom.found,
-      );
+      _fill(initial, widget.arrivedFrom ?? HaAddressFrom.found);
     }
     _address.addListener(_edited);
     _controller.addListener(_onState);
@@ -212,7 +249,18 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
 
   HaConnectController _make() => HaConnectController(
     address: widget.initialHost ?? '',
-    onEvent: (event) => ref.read(analyticsProvider).track(event),
+    onEvent: (event) {
+      ref.read(analyticsProvider).track(event);
+      // ha-link.md: the link's address worked, as it came.
+      if (event is SetupStep &&
+          event.step == SetupStepKind.haConnect &&
+          event.result == HaConnectOutcome.ok &&
+          (event.addressFrom == HaAddressFrom.link ||
+              event.addressFrom == HaAddressFrom.referrer)) {
+        markHaLinkUsed(ref.read(sharedPreferencesProvider));
+      }
+    },
+    onZhaFound: () => markZhaFound(ref.read(sharedPreferencesProvider)),
     adopt: (address, signIn) => widget.again == null
         ? ref
               .read(setupCoordinatorProvider)
@@ -250,6 +298,16 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
     await repo.setHomeAssistantSignIn(id, address: address, signIn: signIn);
     ref.invalidate(mqttManagerProvider(id));
   }
+
+  /// "Moving from ZHA": the sheet (3.8; 3.7.1 opened the web guide),
+  /// counted with the outcome that showed it.
+  void _zhaMove(HaConnectProblem after) => showZhaMoveSheet(
+    context,
+    ref,
+    after == HaConnectProblem.notAdmin
+        ? ZhaMoveFrom.notAdmin
+        : ZhaMoveFrom.noMqtt,
+  );
 
   void _onState() {
     if (!mounted) return;
@@ -325,6 +383,7 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
                     onOpenApp: _openHaApp,
                     onLookAgain: _lookAgain,
                     onAssistant: _askAssistant,
+                    onComputer: _useComputer,
                   )
                 : null,
             found: _controller.found,
@@ -333,9 +392,11 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
                 setState(() => _fill(address, HaAddressFrom.found)),
             onPaste: _paste,
             pasteNothing: _pasteNothing,
+            highlightPaste: _highlightPaste,
             // What a share brought: its address, still in the field, or
             // nothing usable.
-            shared: !widget.shared
+            handedFrom: widget.arrivedFrom,
+            shared: widget.arrivedFrom == null
                 ? null
                 : widget.initialHost == null
                 // Said only while the field is still empty: the look may
@@ -351,6 +412,8 @@ class _HaConnectScreenState extends ConsumerState<HaConnectScreen>
             onSignIn: () => _controller.signInAndConnect(_address.text),
             onToken: () =>
                 _controller.connectWithToken(_address.text, _token.text),
+            onZhaMove: _zhaMove,
+            onHaGuide: () => openSetupLink(haGuideUrl),
           ),
           HaConnectChecking() => SetupWaiting(
             title: l10n.haConnectChecking,
@@ -389,19 +452,36 @@ class _Ask extends StatefulWidget {
     this.onWhere,
     this.onPaste,
     this.pasteNothing = false,
+    this.highlightPaste = false,
     this.shared,
+    this.handedFrom,
     this.shareTarget = false,
+    this.onZhaMove,
+    this.onHaGuide,
   });
   final HaConnectAsk state;
+
+  /// "Moving from ZHA", when the check found devices in ZHA, with the
+  /// problem it followed; and the Home Assistant guide, for an
+  /// installation with no apps.
+  final ValueChanged<HaConnectProblem>? onZhaMove;
+  final VoidCallback? onHaGuide;
 
   /// The Paste button (ha-share-paste.md), and whether its last tap found
   /// no address in what was copied.
   final VoidCallback? onPaste;
   final bool pasteNothing;
 
+  /// Back from the Home Assistant app (3.6): Paste stands out and scrolls
+  /// into view.
+  final bool highlightPaste;
+
   /// What a share from another app brought, while it is still what the
   /// field says; null when the screen was opened another way.
   final HaHandover? shared;
+
+  /// How the handed-over address came: shared, or from a link.
+  final HaAddressFrom? handedFrom;
 
   /// Whether ZigDash is in other apps' share sheets now: the help then
   /// says to share, otherwise to copy and paste.
@@ -503,12 +583,21 @@ class _AskState extends State<_Ask> {
         if (widget.onPaste != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              key: const Key('ha-paste'),
-              onPressed: widget.onPaste,
-              icon: const Icon(Icons.content_paste, size: 18),
-              label: Text(l10n.haPaste),
-            ),
+            child: widget.highlightPaste
+                ? _ScrollIntoView(
+                    child: FilledButton.tonalIcon(
+                      key: const Key('ha-paste'),
+                      onPressed: widget.onPaste,
+                      icon: const Icon(Icons.content_paste, size: 18),
+                      label: Text(l10n.haPaste),
+                    ),
+                  )
+                : TextButton.icon(
+                    key: const Key('ha-paste'),
+                    onPressed: widget.onPaste,
+                    icon: const Icon(Icons.content_paste, size: 18),
+                    label: Text(l10n.haPaste),
+                  ),
           ),
         if (widget.pasteNothing)
           Semantics(
@@ -522,11 +611,21 @@ class _AskState extends State<_Ask> {
           ),
         if (widget.shared == HaHandover.address) ...[
           const SizedBox(height: 4),
-          Text(l10n.haSharedNote, style: theme.textTheme.bodyMedium),
+          Text(
+            switch (widget.handedFrom) {
+              HaAddressFrom.link => l10n.haLinkNote,
+              HaAddressFrom.referrer => l10n.haLinkReferrerNote,
+              _ => l10n.haSharedNote,
+            },
+            key: const Key('ha-handed-note'),
+            style: theme.textTheme.bodyMedium,
+          ),
         ] else if (widget.shared == HaHandover.noAddress) ...[
           const SizedBox(height: 4),
           Text(
-            l10n.haShareNothing,
+            widget.handedFrom == HaAddressFrom.shared
+                ? l10n.haShareNothing
+                : l10n.haLinkNothing,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.error,
             ),
@@ -640,11 +739,34 @@ class _AskState extends State<_Ask> {
               problem,
               shape: widget.state.shape,
               phoneIp: widget.phoneIp,
+              facts: widget.state.facts,
             ),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.error,
             ),
           ),
+          if (zhaFound(widget.state.facts) && widget.onZhaMove != null) ...[
+            const SizedBox(height: 8),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: FilledButton.tonalIcon(
+                key: const Key('ha-zha-move'),
+                onPressed: () => widget.onZhaMove!(problem),
+                icon: const Icon(Icons.open_in_new, size: 18),
+                label: Text(l10n.haConnectZhaMove),
+              ),
+            ),
+          ] else if (noApps(problem, widget.state.facts) &&
+              widget.onHaGuide != null)
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                key: const Key('ha-no-apps-guide'),
+                onPressed: widget.onHaGuide,
+                icon: const Icon(Icons.open_in_new, size: 18),
+                label: Text(l10n.haConnectNoAppsGuide),
+              ),
+            ),
         ],
         if (widget.canSignIn) ...[
           const SizedBox(height: 24),
@@ -708,6 +830,7 @@ class _AskState extends State<_Ask> {
               from: AiHelpFrom.haConnect,
               platform: SetupPlatform.homeAssistant,
               haProblem: problem,
+              haFacts: widget.state.facts,
             ),
           ),
         ],
@@ -727,6 +850,7 @@ class _NothingFound {
     required this.onOpenApp,
     required this.onLookAgain,
     required this.onAssistant,
+    required this.onComputer,
   });
 
   /// Null until checked.
@@ -736,6 +860,7 @@ class _NothingFound {
   final VoidCallback onOpenApp;
   final VoidCallback onLookAgain;
   final VoidCallback onAssistant;
+  final VoidCallback onComputer;
 }
 
 /// The look found nothing (ha-nothing-found.md): why, in one line; how to
@@ -830,6 +955,12 @@ class _NothingFoundCard extends StatelessWidget {
                   label: Text(l10n.haNoneLookAgain),
                 ),
                 TextButton.icon(
+                  key: const Key('ha-none-computer'),
+                  onPressed: card.onComputer,
+                  icon: const Icon(Icons.computer),
+                  label: Text(l10n.haNoneComputer),
+                ),
+                TextButton.icon(
                   key: const Key('ha-none-assistant'),
                   onPressed: card.onAssistant,
                   icon: const Icon(Icons.auto_awesome),
@@ -872,14 +1003,29 @@ String _hostOf(HaFound found) {
   return base == null ? found.address : '${base.host}:${base.port}';
 }
 
+/// Whether the check found devices in ZHA (zha-migration.md, Phase 0).
+bool zhaFound(HaFacts? facts) => (facts?.zhaDevices ?? 0) > 0;
+
+/// No MQTT integration on a Home Assistant without apps (Container or
+/// Core), and nothing in ZHA: Mosquitto can't be added under Settings ›
+/// Apps there.
+bool noApps(HaConnectProblem p, HaFacts? facts) =>
+    p == HaConnectProblem.noMqtt && facts?.apps == false && !zhaFound(facts);
+
 /// What a failed try says, visible for tests. Nothing answering is told by
-/// the [shape] of the address it went to (3.1.12).
+/// the [shape] of the address it went to (3.1.12). After no MQTT or no
+/// admin, devices found in ZHA come first: neither Mosquitto nor an admin
+/// sign-in gets ZigDash to them (3.7.1).
 String problemText(
   AppLocalizations l10n,
   HaConnectProblem p, {
   HaAddressShape? shape,
   String? phoneIp,
+  HaFacts? facts,
 }) => switch (p) {
+  HaConnectProblem.noMqtt || HaConnectProblem.notAdmin when zhaFound(facts) =>
+    l10n.haConnectZhaFound(facts!.zhaDevices!),
+  HaConnectProblem.noMqtt when noApps(p, facts) => l10n.haConnectNoMqttNoApps,
   HaConnectProblem.noAddress => l10n.haImportNoAddress,
   HaConnectProblem.noToken => l10n.haImportNoToken,
   HaConnectProblem.unreachable => _unreachableText(l10n, shape, phoneIp),
@@ -907,4 +1053,59 @@ String _unreachableText(
     HaAddressShape.publicIp => l10n.haConnectRemoteUnreachable,
     _ => l10n.haImportUnreachable,
   };
+}
+
+/// Scrolls its child into view once, when it first appears.
+class _ScrollIntoView extends StatefulWidget {
+  const _ScrollIntoView({required this.child});
+  final Widget child;
+
+  @override
+  State<_ScrollIntoView> createState() => _ScrollIntoViewState();
+}
+
+class _ScrollIntoViewState extends State<_ScrollIntoView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0.5,
+          duration: const Duration(milliseconds: 300),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+/// When the Home Assistant app was opened from setup (3.6), so a restart
+/// soon after (Android may close ZigDash meanwhile) comes back here.
+const haAppLeftAtKey = 'ha_app_left_at_ms';
+
+/// The date is kept under [zhaFoundAtKey] (zha_move.dart).
+Future<void> markZhaFound(SharedPreferences prefs) =>
+    prefs.setInt(zhaFoundAtKey, DateTime.now().millisecondsSinceEpoch);
+
+/// How long after leaving a restart still counts as coming back.
+const haAppReturnWindow = Duration(minutes: 30);
+
+Future<void> markHaAppLeft(SharedPreferences prefs) =>
+    prefs.setInt(haAppLeftAtKey, DateTime.now().millisecondsSinceEpoch);
+
+Future<void> clearHaAppLeft(SharedPreferences prefs) =>
+    prefs.remove(haAppLeftAtKey);
+
+/// True (and forgotten) when ZigDash starts again within
+/// [haAppReturnWindow] of opening the Home Assistant app.
+bool takeHaAppColdReturn(SharedPreferences prefs, {DateTime? now}) {
+  final at = prefs.getInt(haAppLeftAtKey);
+  if (at == null) return false;
+  prefs.remove(haAppLeftAtKey);
+  final left = DateTime.fromMillisecondsSinceEpoch(at);
+  return (now ?? DateTime.now()).difference(left) < haAppReturnWindow;
 }

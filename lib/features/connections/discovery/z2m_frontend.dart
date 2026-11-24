@@ -45,21 +45,43 @@ class Z2mPageLocked implements Exception {
   const Z2mPageLocked();
 }
 
+/// Zigbee2MQTT's web API address: `ws://host:port/api`, with `?token=`
+/// when the page has its own token (3.8.6), as `Z2mFrontendClient` does.
+Uri z2mApiUri(String host, int port, {String? token}) {
+  final uri = Uri.parse('ws://$host:$port/api');
+  return token == null || token.isEmpty
+      ? uri
+      : uri.replace(queryParameters: {'token': token});
+}
+
 /// The `mqtt` section of a `bridge/info` frame from Zigbee2MQTT's web API,
 /// or null for any other frame.
 Map<String, dynamic>? z2mMqttConfigOf(String frame) {
   try {
     final decoded = jsonDecode(frame);
     if (decoded is! Map || decoded['topic'] != 'bridge/info') return null;
-    final payload = decoded['payload'];
-    if (payload is! Map) return null;
-    final config = payload['config'];
-    if (config is! Map) return null;
-    final mqtt = config['mqtt'];
-    return mqtt is Map ? Map<String, dynamic>.from(mqtt) : null;
+    return _mqttOfInfo(decoded['payload']);
   } catch (_) {
     return null;
   }
+}
+
+/// The `mqtt` section of a `bridge/info` payload as the app received it
+/// on `<base>/bridge/info` (3.8.6), or null.
+Map<String, dynamic>? z2mMqttConfigOfInfo(String payload) {
+  try {
+    return _mqttOfInfo(jsonDecode(payload));
+  } catch (_) {
+    return null;
+  }
+}
+
+Map<String, dynamic>? _mqttOfInfo(Object? payload) {
+  if (payload is! Map) return null;
+  final config = payload['config'];
+  if (config is! Map) return null;
+  final mqtt = config['mqtt'];
+  return mqtt is Map ? Map<String, dynamic>.from(mqtt) : null;
 }
 
 /// The `bridge/devices` payload of a frame from Zigbee2MQTT's web API, as

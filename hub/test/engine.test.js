@@ -443,7 +443,8 @@ async function withRemote() {
 test('the Engine subscribes to everything the app sends it, the relay login included', async () => {
   const z = fakeZ2m();
   await z.engine.start();
-  assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/history/#', 'zigdash/remote/set']);
+  // 3.7.0: Chat, dormant, listens only for a client's config (hub/test/chat.test.js).
+  assert.deepEqual(z.subscribed.sort(), ['zigdash/alerts/#', 'zigdash/automations/#', 'zigdash/chat/clients/+', 'zigdash/history/#', 'zigdash/remote/set']);
   await z.engine.stop();
 });
 
@@ -634,3 +635,63 @@ test('remote: the last runs found on the broker at start go up before any new ru
   await z.engine.stop();
 });
 
+
+// ---------- a refused relay login (3.7.1, docs/design/founders-pass.md) ----------
+
+const refusal = (code) => Object.assign(new Error('Connection refused: Not authorized'), { code });
+
+test('remote: a refused login backs off 15 s doubling to 5 minutes, says "refused", and resets once connected', async () => {
+  const z = fakeZ2m();
+  const relay = fakeRelay();
+  z.engine.mqttConnect = (url, options) => { relay.options = { ...options }; return relay; };
+  await z.engine.start();
+  z.mqttIn('zigdash/remote/set', JSON.stringify(remoteCfg));
+  assert.equal(relay.options.reconnectPeriod, 15000);
+  assert.equal(relay.options.reconnectOnConnackError, true, 'mqtt.js 5 would otherwise stop after the first refusal');
+  const periods = [];
+  for (let i = 0; i < 7; i++) {
+    relay.emit('error', refusal(135));
+    periods.push(relay.options.reconnectPeriod);
+  }
+  assert.deepEqual(periods, [15000, 30000, 60000, 120000, 240000, 300000, 300000]);
+  assert.deepEqual(z.last('state').remote, { connected: false, error: 'refused' });
+
+  relay.emit('connect');
+  assert.equal(relay.options.reconnectPeriod, 15000);
+  assert.deepEqual(z.last('state').remote, { connected: true });
+  relay.emit('close');
+  relay.emit('error', refusal(134));
+  assert.equal(relay.options.reconnectPeriod, 15000, 'starts again at 15 s after a success');
+  relay.emit('error', refusal(134));
+  assert.equal(relay.options.reconnectPeriod, 30000);
+  await z.engine.stop();
+});
+
+test('remote: MQTT 3.1.1 refusals (4, 5) count; other errors keep the period and say what they were', async () => {
+  const z = fakeZ2m();
+  const relay = fakeRelay();
+  z.engine.mqttConnect = (url, options) => { relay.options = { ...options }; return relay; };
+  await z.engine.start();
+  z.mqttIn('zigdash/remote/set', JSON.stringify(remoteCfg));
+  relay.emit('error', Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' }));
+  assert.equal(relay.options.reconnectPeriod, 15000);
+  assert.equal(z.last('state').remote.error, 'ECONNREFUSED');
+  relay.emit('error', refusal(4));
+  relay.emit('error', refusal(5));
+  assert.equal(relay.options.reconnectPeriod, 30000);
+  assert.equal(z.last('state').remote.error, 'refused');
+  relay.emit('error', refusal(136)); // server unavailable: not about the login
+  assert.equal(relay.options.reconnectPeriod, 30000);
+  assert.equal(z.last('state').remote.error, '136');
+  await z.engine.stop();
+});
+
+test('remote: a refused login on a client without options still reports, and connecting again clears it', async () => {
+  const { z, relay } = await withRemote();
+  relay.emit('close');
+  relay.emit('error', refusal(135));
+  assert.deepEqual(z.last('state').remote, { connected: false, error: 'refused' });
+  relay.emit('connect');
+  assert.deepEqual(z.last('state').remote, { connected: true });
+  await z.engine.stop();
+});

@@ -157,7 +157,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA har ingen MQTT-broker – den snakker direkte med Home Assistant, så ZigDash kan ikke koble til. For å bruke ZigDash, bytt til Zigbee2MQTT (tilgjengelig som Home Assistant-app eller Docker-container), som gir en MQTT-broker.';
+      'ZHA har ingen MQTT-broker – den snakker direkte med Home Assistant, så ZigDash kan ikke koble til. For å bruke ZigDash, bytt til Zigbee2MQTT (tilgjengelig som Home Assistant-app eller Docker-container), som kjører med en MQTT-broker som Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -849,12 +849,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String get panelCoverClose => 'Lukk';
 
   @override
-  String get panelToggleNoState => '(ingen status)';
-
-  @override
-  String get panelToggleError => 'feil';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override
@@ -1190,7 +1184,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Fant ingen styrbare enheter. Kontroller at de er paret, og trykk deretter på oppdater.';
+      'Fant ingen styrbare enheter eller fliser. Kontroller at de er paret, og trykk deretter på oppdater.';
 
   @override
   String get sceneFormReadingState => 'Leser gjeldende status…';
@@ -1210,11 +1204,36 @@ class AppLocalizationsNb extends AppLocalizations {
   }
 
   @override
-  String get sceneFormNoDevicesSelected => 'Velg minst én enhet å fange.';
+  String get sceneFormNoDevicesSelected => 'Velg minst én enhet eller flis.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Ingenting innstillbart ble fanget fra de valgte enhetene.';
+
+  @override
+  String get sceneFormTilesHeader => 'Dine fliser';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Fliser du har laget selv. Scenen sender det flisen sender.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Kjører bare fra denne telefonen hjemme: ikke fra Automasjoner eller utenfra.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count andre handlinger beholdes',
+      one: '1 annen handling beholdes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Fjern';
 
   @override
   String get sceneDeleteTitle => 'Slette scenen?';
@@ -1240,7 +1259,13 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count enheter';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count handlinger',
+      one: '1 handling',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1368,6 +1393,14 @@ class AppLocalizationsNb extends AppLocalizations {
       'Brokeren svarte ikke på innloggingen i tide. Home Assistant kan bruke noen sekunder på å sjekke den, så prøv igjen.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Telefonen stoler ikke på krypteringssertifikatet til denne brokeren: det er selvsignert, utløpt eller laget for et annet navn. ZigDash kan ikke bruke det ennå. På hjemmenettet kan du heller bruke brokerens ukrypterte port 1883, eller gi brokeren et sertifikat fra en offentlig sertifikatutsteder.';
+
+  @override
+  String get diagTlsFailed =>
+      'Den krypterte tilkoblingen startet ikke. Brokeren vil kanskje ha et klientsertifikat, som ZigDash ikke støtter. På hjemmenettet kan du heller koble til uten kryptering: TCP i stedet for TLS, vanligvis på port 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Brokeren avviste brukernavn eller passord. Kontroller påloggingsinformasjonen.';
 
@@ -1382,10 +1415,6 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get diagTcpHaNoBroker =>
       'Dette er Home Assistant-en din, men det kjører ingen MQTT-broker på den. Installer og start appen Mosquitto broker (Innstillinger › Apper), og prøv igjen.';
-
-  @override
-  String get diagResolveLocalNameIos =>
-      'Telefonen fant ikke dette navnet. Sjekk at det er skrevet riktig, eller skriv inn IP-adressen i stedet (Home Assistant viser den under Innstillinger › System › Nettverk).';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1584,7 +1613,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'Legg til tilleggene Mosquitto broker og Zigbee2MQTT, og logg deretter inn fra ZigDash med Home Assistant-påloggingen din.';
+      'Legg til appene Mosquitto broker og Zigbee2MQTT (Innstillinger › Apper), og logg deretter inn fra ZigDash med Home Assistant-påloggingen din.';
 
   @override
   String get noHubRadio =>
@@ -1667,7 +1696,43 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Dette hjemmet kobler seg til via Zigbee2MQTT-siden. Skriv inn MQTT-megleren din (som regel samme maskin, port 1883) for å slå på automasjoner, varsler og historikk. Etter lagring kobler ZigDash seg til via megleren.';
+      'Dette hjemmet kobler seg til via Zigbee2MQTT-siden. Skriv inn MQTT-megleren din (som regel samme maskin, port 1883) for å slå på automasjoner, varsler og historikk. Når megleren har enhetene dine, bytter ZigDash til den.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Tilkoblet, men denne megleren har ingen av enhetene dine. Hvis du nettopp slo på megleren, start Zigbee2MQTT på nytt så den kobler seg til den.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT bruker $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Leser innstillingene til Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Fortsette med Zigbee2MQTT-siden?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Denne megleren svarte, men den har ingen av enhetene dine, så dashbordene dine ville vært tomme. Zigbee2MQTT bruker kanskje en annen megler, eller må startes på nytt etter at megleren ble slått på.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Megleren svarte ikke, så dashbordene dine ville vært tomme.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Megleren avviste innloggingen, så dashbordene dine ville vært tomme.';
+
+  @override
+  String get connKeepPage => 'Behold Zigbee2MQTT-siden';
+
+  @override
+  String get connSaveAnyway => 'Lagre likevel';
+
+  @override
+  String get connChecking => 'Sjekker megleren…';
 
   @override
   String get setupManualEntry => 'Skriv inn detaljer manuelt';
@@ -1713,10 +1778,6 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Varsler er slått av for ZigDash, så det blir ingen påminnelse. Du kan slå dem på i Android-innstillingene.';
-
-  @override
-  String get reminderNoPermissionIos =>
-      'Varsler er slått av for ZigDash, så det blir ingen påminnelse. Du kan slå dem på i Innstillinger › ZigDash › Varslinger.';
 
   @override
   String get reminderChannel => 'Påminnelse om oppsett';
@@ -1866,6 +1927,39 @@ class AppLocalizationsNb extends AppLocalizations {
       'Det inneholdt ingen adresse. I Home Assistant-appen åpner du Innstillinger › Companion-app, trykker på serveren din og deretter på delingsikonet øverst.';
 
   @override
+  String get haLinkNote =>
+      'Dette er adressen fra lenken din. Logg inn for å koble til.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Dette er adressen fra lenken du åpnet før du installerte ZigDash. Logg inn for å koble til.';
+
+  @override
+  String get haLinkNothing =>
+      'Lenken inneholdt ingen Home Assistant-adresse. Lag en ny på zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Bruk en datamaskin';
+
+  @override
+  String get haComputerTitle => 'Bruk en datamaskin';
+
+  @override
+  String get haComputerBody =>
+      'Gå til denne siden på en datamaskin der Home Assistant er åpent, og lim inn adressen til Home Assistant der. Skann deretter koden med kameraet på denne telefonen.';
+
+  @override
+  String get haComputerCopy => 'Kopier lenke';
+
+  @override
+  String get setupLinkPending =>
+      'Lenken din hadde med en Home Assistant-adresse. Trykk på Home Assistant for å bruke den.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Lenken din inneholdt ingen Home Assistant-adresse. Lag en ny på zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Raskest: I Home Assistant-appen åpner du Innstillinger › Companion-app, trykker på serveren din, deretter på delingsikonet øverst, og velger ZigDash. Fra en nettleser deler du siden med ZigDash.';
 
@@ -1896,6 +1990,58 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Denne Home Assistant-en har ingen MQTT-integrasjon. Zigbee2MQTT trenger også en: legg til appen Mosquitto broker (Innstillinger › Apper) og MQTT-integrasjonen i Home Assistant, og prøv igjen.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count enheter',
+      one: '1 enhet',
+    );
+    return 'Zigbee-en din kjører i ZHA, Home Assistants egen Zigbee ($_temp0). ZigDash fungerer med Zigbee2MQTT og kan derfor ikke vise dem. Å flytte til Zigbee2MQTT betyr å pare enhetene på nytt; veiledningen viser to måter.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Flytte fra ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Denne Home Assistant har ingen MQTT-integrasjon og ingen apper (den kjører som container), så Mosquitto og Zigbee2MQTT kjører som egne containere ved siden av. Hvis de allerede kjører, koble ZigDash direkte til Mosquitto. Eller legg til MQTT-integrasjonen i Home Assistant og prøv igjen.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Slik kobler du til';
+
+  @override
+  String get zhaMoveBody =>
+      'ZigDash fungerer med Zigbee2MQTT. Å flytte betyr å pare enhetene på nytt. Home Assistant kan fortsatt bruke dem når du legger til MQTT-integrasjonen.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Andre adapter: rom for rom, ZHA fortsetter å kjøre';
+
+  @override
+  String get zhaMoveWaySame => 'Samme adapter: gratis, alt på en gang';
+
+  @override
+  String get zhaMoveReadSteps => 'Les stegene';
+
+  @override
+  String get zhaMoveImMoving => 'Jeg flytter';
+
+  @override
+  String get zhaMoveNotNow => 'Ikke nå';
+
+  @override
+  String get zhaMovingNoted =>
+      'Notert. Når Zigbee2MQTT kjører, åpne oppsettet: ZigDash finner det og tilbyr navn og rom fra Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'Koble til ditt nye Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Flytter du fra ZHA? Når Zigbee2MQTT kjører, ser ZigDash etter det på nettverket ditt.';
 
   @override
   String get haConnectSignInFailed =>
@@ -2167,6 +2313,16 @@ class AppLocalizationsNb extends AppLocalizations {
   String get setupErrLoginNoAnswerAction => 'Prøv igjen';
 
   @override
+  String get setupErrTlsUntrustedTitle =>
+      'Telefonen stoler ikke på sertifikatet til denne brokeren';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Den krypterte tilkoblingen mislyktes';
+
+  @override
+  String get setupErrTlsAction => 'Rediger innstillinger';
+
+  @override
   String get setupNoZ2mTitle =>
       'Brokeren din fungerer, men Zigbee2MQTT publiserer ikke her';
 
@@ -2269,10 +2425,6 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get setupVpnHint =>
       'Et VPN er på, og det kan skjule hjemmenettet ditt for søket. Er du hjemme, slå av VPN-et og trykk Prøv igjen. Eller la det være på og tillat tilgang til lokalt nettverk (LAN) i innstillingene til VPN-appen.';
-
-  @override
-  String get setupLocalNetworkIos =>
-      'ZigDash trenger tilgang til lokalt nettverk for å finne huben din. Hvis du sa nei, tillat det i Innstillinger › Personvern og sikkerhet › Lokalt nettverk.';
 
   @override
   String get setupNoBrokerZ2mTitle =>
@@ -2386,16 +2538,6 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String setupAddressNotResolvedHa(String host, String button) {
     return '$host finnes ikke fra denne telefonen; Android klarer ofte ikke å slå opp .local-navn. Trykk på $button ovenfor og bruk adressen du åpner Home Assistant med i nettleseren, eller skriv IP-adressen her. Home Assistant viser den under Innstillinger › System › Nettverk.';
-  }
-
-  @override
-  String setupAddressNotResolvedHaIos(String host, String button) {
-    return '$host finnes ikke fra denne telefonen. Trykk på $button ovenfor og bruk adressen du åpner Home Assistant med i nettleseren, eller skriv IP-adressen her. Home Assistant viser den under Innstillinger › System › Nettverk.';
-  }
-
-  @override
-  String setupAddressNotResolvedIos(String host) {
-    return '$host kunne ikke slås opp. Sjekk navnet, eller prøv IP-adressen i stedet. Home Assistant viser den under Innstillinger › System › Nettverk.';
   }
 
   @override
@@ -3301,10 +3443,6 @@ class AppLocalizationsNb extends AppLocalizations {
       'Navn som slutter på .local fungerer ikke på alle Android-telefoner. Prøv hubens talladresse, for eksempel 192.168.1.20.';
 
   @override
-  String get tipNumberAddressBodyIos =>
-      'Hvis navnet ikke fungerer, prøv hubens talladresse, for eksempel 192.168.1.20.';
-
-  @override
   String get tipPortProtocolTitle => 'Port og protokoll';
 
   @override
@@ -3877,10 +4015,6 @@ class AppLocalizationsNb extends AppLocalizations {
       'Skjuler også Androids status- og navigasjonslinje.';
 
   @override
-  String get wallFullscreenSubtitleIos =>
-      'Skjuler også statuslinjen; Hjem-indikatoren dempes.';
-
-  @override
   String get wallDimAfter => 'Demp etter';
 
   @override
@@ -4027,10 +4161,6 @@ class AppLocalizationsNb extends AppLocalizations {
       'En glemt PIN kan bare nullstilles ved å slette ZigDash-dataene i Android-innstillingene, noe som fjerner dette hjemmet med mindre du har en sikkerhetskopi. Eksporter én før du angir en PIN.';
 
   @override
-  String get kioskPinForgotBodyIos =>
-      'En glemt PIN kan bare nullstilles ved å slette og installere ZigDash på nytt, noe som fjerner dette hjemmet med mindre du har en sikkerhetskopi. Eksporter én før du angir en PIN.';
-
-  @override
   String get kioskExportBackup => 'Eksporter sikkerhetskopi';
 
   @override
@@ -4039,13 +4169,6 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get kioskOsPinSubtitle =>
       'Android blokkerer Hjem og nylige apper til ZigDash løsnes. Et nettbrett uten låseskjerm løsner med en bevegelse, så dette er ikke låsen.';
-
-  @override
-  String get kioskGuidedAccessTitle => 'Lås til ZigDash med Veiledet tilgang';
-
-  @override
-  String get kioskGuidedAccess =>
-      'iOS holder ZigDash på skjermen til du avslutter Veiledet tilgang: slå det på i Innstillinger › Tilgjengelighet › Veiledet tilgang, og trykk deretter tre ganger på sideknappen i ZigDash.';
 
   @override
   String get kioskOn => 'Kiosk på. Hold inne tittelen for å avslutte.';
@@ -4146,11 +4269,7 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Oppsett, dashbord, styring av alle enheter, moduler, hurtiginnstillingsfliser, varsler, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.';
-
-  @override
-  String get proFreeBodyIos =>
-      'Oppsett, dashbord, styring av alle enheter, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.';
+      'Oppsett, dashbord, styring av alle enheter, moduler, hurtiginnstillingsfliser, varsler, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting som er gratis i dag, blir betalt.';
 
   @override
   String get proBuy => 'Skaff Pro';
@@ -4165,15 +4284,26 @@ class AppLocalizationsNb extends AppLocalizations {
       'Én betaling, ikke abonnement. Kjøpt på en annen telefon med samme Google-konto? Det låses opp automatisk.';
 
   @override
-  String get proOnceIos =>
-      'Én betaling, ikke abonnement. Kjøpt på en annen iPhone eller iPad med samme Apple-konto? Det låses opp automatisk, eller trykk på Gjenopprett kjøp.';
-
-  @override
   String get proRestore => 'Gjenopprett kjøp';
 
   @override
+  String get proRestored => 'Pro er låst opp på denne telefonen.';
+
+  @override
   String get proRestoreNone =>
+      'Google Play har ikke noe Pro-kjøp for denne Google-kontoen. Kjøpt med en annen konto? Bytt konto i Play Butikk og prøv igjen.';
+
+  @override
+  String get proRestoreFailed =>
+      'Fikk ikke kontakt med Google Play. Prøv igjen om litt.';
+
+  @override
+  String get proRestoreNoneIos =>
       'Fant ikke noe kjøp av ZigDash Pro for denne Apple-ID-en.';
+
+  @override
+  String get proRestoreFailedIos =>
+      'Fikk ikke kontakt med App Store. Prøv igjen om litt.';
 
   @override
   String get historyNotRecorded =>
@@ -4332,6 +4462,14 @@ class AppLocalizationsNb extends AppLocalizations {
       'Home Assistant er på nettverket ditt. ZigDash kan gi flisene navn og legge til et dashbord per etasje og rom, slik du har satt dem opp der.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash kan gi flisene navn og legge til et dashbord per etasje og rom, med navnene og rommene til enhetene dine i Home Assistant, også de fra ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT har ingen enheter ennå. Par enhetene dine der først, og åpne deretter Importer fra Home Assistant i innstillingene for dette hjemmet.';
+
+  @override
   String get haImportOfferLater => 'Ikke nå';
 
   @override
@@ -4410,27 +4548,6 @@ class AppLocalizationsNb extends AppLocalizations {
   String engineTooOldBody(Object version) {
     return 'Zigbee2MQTT er versjon $version. Automasjoner krever 2.4 eller nyere. Oppdater Zigbee2MQTT på huben, og kom så tilbake hit.';
   }
-
-  @override
-  String get engineIntroTitle =>
-      'Automasjoner kjører på huben, ikke på telefonen';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash legger ZigDash Engine inn i Zigbee2MQTT på huben din. Det følger med på enhetene og kjører reglene dine, så en lampe tennes når døren åpnes selv med telefonen av og uten internett.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Ingenting å installere for hånd. ZigDash gjør det over hjemmenettet.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Zigbee2MQTT er versjon $version.';
-  }
-
-  @override
-  String get engineIntroRemove =>
-      'Du kan fjerne den når som helst fra denne skjermen.';
 
   @override
   String get engineInstall => 'Installer på huben';
@@ -4658,6 +4775,19 @@ class AppLocalizationsNb extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Den scenen har ingenting å sende.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count av handlingene i denne scenen kjører bare fra denne telefonen hjemme, ikke fra Automasjoner.',
+      one:
+          '1 av handlingene i denne scenen kjører bare fra denne telefonen hjemme, ikke fra Automasjoner.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>
@@ -5637,4 +5767,614 @@ class AppLocalizationsNb extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: lengre historikk, flere automatiseringer og mer.';
+
+  @override
+  String get chatEarlyTitle => 'Chat med hjemmet ditt';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Send en melding som «lukk persiennen på kontoret» eller «er bakdøren åpen?», så svarer hjemmet ditt. Nå tilgjengelig for dem som har ZigDash Pro. De første $count som melder seg på, får en grunnleggerkode: gratis i 3 måneder, fjerntilgang inkludert.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Meld deg på via Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Meld deg på via e-post';
+
+  @override
+  String get chatEarlyNotForMe => 'Ikke for meg';
+
+  @override
+  String get chatEarlyClose => 'Lukk';
+
+  @override
+  String get chatEarlyEmailHint => 'E-posten din';
+
+  @override
+  String get chatEarlyBadEmail => 'Det ser ikke ut som en e-postadresse.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'Vi bruker den bare til å invitere deg til betaen og fortelle deg prisen.';
+
+  @override
+  String get chatEarlyPrivacy => 'Personvern';
+
+  @override
+  String get chatEarlySend => 'Send';
+
+  @override
+  String get chatEarlyFailed =>
+      'Kunne ikke sende. Prøv Telegram, eller senere.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Du er nr. $position på listen: blant de første $count. Du får en grunnleggerkode: chat og fjerntilgang, gratis i 3 måneder.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Du er nr. $position på listen. De første $count plassene er tatt. Chat er nå tilgjengelig for dem som har ZigDash Pro.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Denne e-postadressen står allerede på listen.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Ville 2,49 € i måneden vært greit etter de gratis månedene?';
+
+  @override
+  String get chatEarlyYes => 'Ja';
+
+  @override
+  String get chatEarlyMaybe => 'Kanskje';
+
+  @override
+  String get chatEarlyNo => 'Nei';
+
+  @override
+  String get chatEarlyThanks => 'Takk, notert.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Tidlig tilgang: meld deg på';
+
+  @override
+  String get historyOnTitle => 'Se hjemmet ditt over flere dager';
+
+  @override
+  String get historyOnBody =>
+      'Slå på historikk for å se temperaturer, strøm og dører over dager og uker, ikke bare nå. ZigDash Engine tar opp på huben din, også når telefonen er av.';
+
+  @override
+  String get historyOnTurnOn => 'Slå på historikk';
+
+  @override
+  String get historyOnLater => 'Ikke nå';
+
+  @override
+  String get historyOnWorking => 'Slår på historikk…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine tar opp historikken på huben, så den fortsetter når telefonen er av. Zigbee2MQTT-en din blokkerer tillegg, slik nye installasjoner gjør: ZigDash ville slått på «Tillat ekstern JavaScript» og startet den på nytt.';
+
+  @override
+  String get historyOnAllow => 'Tillat og start på nytt';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Historikken går via MQTT-brokeren din. ZigDash når dette hjemmet via Zigbee2MQTT-siden, så legg til brokeren først.';
+
+  @override
+  String get historyOnAddBroker => 'Legg til brokeren';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Huben din kan ikke kjøre ZigDash Engine. Denne telefonen kan ta opp i stedet mens ZigDash er åpen: best på et veggnettbrett som alltid står på.';
+
+  @override
+  String get historyOnPhone => 'Ta opp på denne telefonen';
+
+  @override
+  String get proTrialStartedTitle => 'Pro er på i 14 dager';
+
+  @override
+  String get proTrialOfferTitle => 'Prøv ZigDash Pro gratis i 14 dager';
+
+  @override
+  String get proTrialWhat =>
+      'Historikk for 7 og 30 dager, ekstrafunksjonene for veggnettbrettet og flere enn tre automasjoner.';
+
+  @override
+  String get proTrialNoPayment => 'Ingen betaling, ingenting fornyes.';
+
+  @override
+  String get proTrialStart => 'Start prøveperioden';
+
+  @override
+  String get proTrialEndingTitle => 'Pro-prøveperioden din slutter om 2 dager';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Behold Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'uke- og månedshistorikken';
+
+  @override
+  String get proTrialUsedWall => 'ekstrafunksjonene for veggnettbrettet';
+
+  @override
+  String get proTrialUsedAutomation => 'flere enn tre automasjoner';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Du brukte $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Etterpå blir alt du har satt opp, værende; uke- og månedsvisningen og nye automasjoner utover tre krever Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Prøveperiode: $days dager igjen',
+      one: 'Prøveperiode: 1 dag igjen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Prøveperioden er over. Alt du har satt opp, er der fortsatt.';
+
+  @override
+  String get engineSlimCard =>
+      'Automasjoner kjører på huben din med ZigDash Engine. ZigDash legger det dit når du lagrer den første.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'Lag automasjoner hjemme: da legger ZigDash sin Engine på huben din, over hjemmenettet.';
+
+  @override
+  String get engineSheetSource => 'Se kildekoden på GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine kjører automasjonene dine';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine er én åpen kildekode-fil som ZigDash legger i Zigbee2MQTT-mappen på huben din. Den kjører automasjonene dine der, også med telefonen av. Fjern den når som helst fra fanen Automasjoner.';
+
+  @override
+  String get engineSheetInstallSave => 'Installer og lagre';
+
+  @override
+  String get engineSheetSaveOnly => 'Lagre uten å kjøre';
+
+  @override
+  String get engineSheetSave => 'Lagre';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT på huben svarte ikke i tide, så ZigDash kan ikke installere Engine nå. Lagre nå, og installer den fra fanen Automasjoner når huben svarer.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Automasjonen er lagret. Den kjører når ZigDash Engine er på huben din.';
+
+  @override
+  String get engineWaitingTitle => 'Lagret tidligere, venter på ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Kjører etter installering';
+
+  @override
+  String get engineWaitingPaused => 'Forblir satt på pause';
+
+  @override
+  String get autoNotRunTitle => 'Ingen av disse kjører ennå';
+
+  @override
+  String get autoNotRunBody =>
+      'Kjører ikke: ZigDash Engine er ikke på huben din. Inntil da tar MQTT-brokeren vare på dem, og en broker uten persistens mister dem når den starter på nytt.';
+
+  @override
+  String get autoNotRunning => 'Kjører ikke';
+
+  @override
+  String get historyUsePhoneInstead => 'Bruk denne telefonen i stedet';
+
+  @override
+  String get chatTitle => 'Chat (beta)';
+
+  @override
+  String get chatRowReady => 'Snakk med hjemmet ditt fra Telegram';
+
+  @override
+  String get chatRowNoPro => 'Del av ZigDash Pro (ikke med i prøveperioden)';
+
+  @override
+  String get chatRowNoRemote => 'Slå på fjernstyring først';
+
+  @override
+  String get chatRowNoEngine => 'Trenger ZigDash Engine på huben din';
+
+  @override
+  String get chatIntroTitle => 'Snakk med hjemmet ditt fra Telegram';
+
+  @override
+  String get chatIntroBody =>
+      'Send ZigDash Home-boten på Telegram en melding som «er bakdøren åpen?» eller «lukk persiennen på kontoret», så svarer hjemmet ditt. Den leser hva enhetene dine melder og historikken deres; med Lese og styre kan den også slå av og på lysene, persiennene, bryterne, stikkontaktene og termostatene du velger.';
+
+  @override
+  String get chatIntroNever =>
+      'Den åpner, lukker eller endrer aldri låser, ventiler eller sirener, og endrer aldri automasjoner eller innstillinger: for det ber den deg åpne ZigDash.';
+
+  @override
+  String get chatIntroBeta =>
+      'Gratis under betaen: opptil 300 meldinger i måneden for dette hjemmet.';
+
+  @override
+  String get chatIntroWho =>
+      'Hvem som leser meldingene: Telegram, som frakter dem; serveren vår i EU, som tar vare på samtalen i 24 timer; og Anthropic (Claude) i USA, som skriver svarene. Det Chat leser om hjemmet ditt, går samme vei.';
+
+  @override
+  String get chatPolicy => 'Hvordan Chat behandler dataene dine';
+
+  @override
+  String get chatLinkedTitle => 'Koblede kontoer';
+
+  @override
+  String get chatLinkedNone => 'Ingen Telegram-konto er koblet ennå.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'Kunne ikke laste de koblede kontoene. Sjekk internettforbindelsen.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · sist brukt $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · ikke brukt ennå';
+  }
+
+  @override
+  String get chatRemove => 'Fjern';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'Fjerne $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'Denne Telegram-kontoen når ikke lenger hjemmet ditt, og samtalen slettes.';
+
+  @override
+  String get chatRemovedLater =>
+      'Fjernet. Huben glemmer den neste gang ZigDash er åpen hjemme.';
+
+  @override
+  String get chatAuditTitle => 'Hva Chat har gjort';
+
+  @override
+  String get chatAuditShow => 'Vis';
+
+  @override
+  String get chatAuditEmpty => 'Ingenting ennå.';
+
+  @override
+  String get chatAuditFailed => 'Huben svarte ikke. Prøv igjen senere.';
+
+  @override
+  String chatAuditSent(String what) {
+    return 'satt: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'ikke sendt';
+
+  @override
+  String get chatHereTitle => 'Chat med hjemmet ditt er her';
+
+  @override
+  String get chatHereBody =>
+      'Koble til Telegram-kontoen din og spør hjemmet ditt «er bakdøren åpen?» eller be det lukke en rullegardin. Del av Pro, gratis i betaen.';
+
+  @override
+  String get chatHereSetUp => 'Sett opp';
+
+  @override
+  String get chatHereNotNow => 'Ikke nå';
+
+  @override
+  String get chatLinkNew => 'Koble til en Telegram-konto';
+
+  @override
+  String get chatLinkAnother => 'Koble til en Telegram-konto til';
+
+  @override
+  String get chatScopeRead => 'Lese';
+
+  @override
+  String get chatScopeReadHelp => 'Svarer på spørsmål. Endrer ingenting.';
+
+  @override
+  String get chatScopeControl => 'Lese og styre';
+
+  @override
+  String get chatScopeControlHelp =>
+      'Slår også av og på enhetene du velger nedenfor.';
+
+  @override
+  String get chatControlsTitle => 'Hva Chat kan slå av og på';
+
+  @override
+  String get chatControlsHelp =>
+      'På fra start: lys og persienner på dashbordene dine. Av fra start: brytere og stikkontakter (de kan drive en ovn, en varmtvannsbereder eller en pumpe), termostater, porter og garasjeporter. Låser, ventiler og sirener vises aldri.';
+
+  @override
+  String get chatControlsEmpty => 'Ingen enheter å velge ennå.';
+
+  @override
+  String get chatKindLight => 'Lys';
+
+  @override
+  String get chatKindCover => 'Persienne';
+
+  @override
+  String get chatKindSwitch => 'Bryter eller stikkontakt';
+
+  @override
+  String get chatKindThermostat => 'Termostat';
+
+  @override
+  String get chatGateNote => 'port eller dør, av fra start';
+
+  @override
+  String get chatAgeAndAccount =>
+      'Hver person kobler sin egen Telegram-konto, med eget omfang. Koblede personer må være 16 år eller eldre. Alle som bruker en koblet Telegram-konto, kan gjøre det omfanget tillater. Selv Lese viser om noen er hjemme og hvilke dører og vinduer som er åpne.';
+
+  @override
+  String get chatEngineOld =>
+      'ZigDash Engine på huben oppdateres til versjonen med Chat. Prøv igjen om et minutt.';
+
+  @override
+  String get chatLinkButton => 'Koble til Telegram';
+
+  @override
+  String get chatLinkAway =>
+      'Koble til hjemme: ZigDash setter dette opp på huben over hjemmenettverket ditt.';
+
+  @override
+  String get chatCodeTitle => 'Fullfør i Telegram';
+
+  @override
+  String get chatCodeBody =>
+      'Trykk Start hos ZigDash Home-boten i Telegram. Den sender deg en firesifret kode: skriv den inn her innen 10 minutter.';
+
+  @override
+  String get chatCodeHint => 'Firesifret kode';
+
+  @override
+  String get chatCodeConfirm => 'Bekreft';
+
+  @override
+  String get chatOpenTelegram => 'Åpne Telegram igjen';
+
+  @override
+  String get chatLinkedDone => 'Koblet. Send boten en melding for å prøve.';
+
+  @override
+  String get chatFailUnreachable =>
+      'Kom ikke fram til ZigDash-serverne. Sjekk internettforbindelsen og prøv igjen.';
+
+  @override
+  String get chatFailLogin =>
+      'Reléet godtok ikke fjerninnloggingen til denne telefonen. Åpne Fjernstyring, slå den av og på igjen.';
+
+  @override
+  String get chatFailPurchase =>
+      'Google Play bekrefter ikke et kjøp av ZigDash Pro for dette hjemmet.';
+
+  @override
+  String get chatFailTooMany => 'For mange forsøk. Prøv igjen om en time.';
+
+  @override
+  String get chatFailExpired => 'Koden har gått ut. Begynn på nytt.';
+
+  @override
+  String get chatFailWrongCode =>
+      'Det er ikke koden boten sendte. Sjekk den og prøv igjen.';
+
+  @override
+  String get chatFailRefused => 'Det gikk ikke. Prøv igjen senere.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'Boten har ikke fått koden ennå. Åpne Telegram, trykk Start hos ZigDash Home-boten, og skriv inn koden den sender.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'Det er ikke koden boten sendte. Gjenstående forsøk: $count.';
+  }
+
+  @override
+  String get founderCodeAsk => 'Har du en grunnleggerkode?';
+
+  @override
+  String get founderCodeLabel => 'Grunnleggerkode';
+
+  @override
+  String get founderCodeUse => 'Bruk koden';
+
+  @override
+  String get founderCodeAtHome =>
+      'Skriv den inn hjemme, med ZigDash Engine på huben: ZigDash setter opp fjernstyring over hjemmenettet.';
+
+  @override
+  String get founderCodeWrong =>
+      'Det er ikke en grunnleggerkode. Sjekk den og prøv igjen.';
+
+  @override
+  String get founderCodeUsed =>
+      'Den koden er allerede brukt. Hver kode virker én gang.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Fristen for å skrive inn koden har gått ut. Be om mer tid via Få hjelp.';
+
+  @override
+  String get founderCodeRevoked => 'Den koden er trukket tilbake.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Grunnleggerpasset ditt er på: fjernstyring og Chat for dette hjemmet til $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Grunnleggerpasset ditt slutter $date. Med ZigDash Pro beholder du fjernstyring og Chat, uten å sette opp noe på nytt.';
+  }
+
+  @override
+  String get founderGetPro => 'Skaff Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Grunnleggerpasset ditt sluttet $date. ZigDash Pro gir deg fjernstyring og Chat tilbake, uten å sette opp noe på nytt.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Grunnleggerpasset ditt er slutt. ZigDash Pro gir deg fjernstyring og Chat tilbake, uten å sette opp noe på nytt.';
+
+  @override
+  String get founderDeleted =>
+      'Grunnleggerpasset for dette hjemmet er slutt, og fjernstyringen er fjernet.';
+
+  @override
+  String get remoteRemoved =>
+      'Fjernstyringen for dette hjemmet er fjernet fra reléet.';
+
+  @override
+  String get founderSetUpWithPro => 'Sett opp med Pro';
+
+  @override
+  String get founderUseProTitle => 'Bruke Pro-kjøpet ditt for dette hjemmet?';
+
+  @override
+  String get founderUseProBody =>
+      'Fjernstyring og Chat for dette hjemmet flyttes til Pro-kjøpet ditt: de samme telefonene og Chat-koblingene, ingenting å sette opp på nytt. Ett kjøp dekker ett hjem.';
+
+  @override
+  String get founderUsePro => 'Bruk Pro for dette hjemmet';
+
+  @override
+  String get founderUpgraded => 'Dette hjemmet bruker nå Pro-kjøpet ditt.';
+
+  @override
+  String get founderUpgradeTaken =>
+      'Det kjøpet hører allerede til et annet hjem.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Kunne ikke flytte hjemmet til Pro-kjøpet ditt. Prøv igjen senere.';
+
+  @override
+  String get remoteHubRefused => 'Reléet avviste innloggingen til huben';
+
+  @override
+  String get chatRowPassEnded =>
+      'Grunnleggerpasset er slutt: koblinger kan fortsatt fjernes';
+
+  @override
+  String get chatFailPassEnded =>
+      'Grunnleggerpasset for dette hjemmet er slutt, så ingen nye Telegram-kontoer kan kobles til.';
+
+  @override
+  String get panelToggleNoState => '(ingen status)';
+
+  @override
+  String get panelToggleError => 'feil';
+
+  @override
+  String get diagResolveLocalNameIos =>
+      'Telefonen fant ikke dette navnet. Sjekk at det er skrevet riktig, eller skriv inn IP-adressen i stedet (Home Assistant viser den under Innstillinger › System › Nettverk).';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Varsler er slått av for ZigDash, så det blir ingen påminnelse. Du kan slå dem på i Innstillinger › ZigDash › Varslinger.';
+
+  @override
+  String get setupLocalNetworkIos =>
+      'ZigDash trenger tilgang til lokalt nettverk for å finne huben din. Hvis du sa nei, tillat det i Innstillinger › Personvern og sikkerhet › Lokalt nettverk.';
+
+  @override
+  String setupAddressNotResolvedHaIos(String host, String button) {
+    return '$host finnes ikke fra denne telefonen. Trykk på $button ovenfor og bruk adressen du åpner Home Assistant med i nettleseren, eller skriv IP-adressen her. Home Assistant viser den under Innstillinger › System › Nettverk.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return '$host kunne ikke slås opp. Sjekk navnet, eller prøv IP-adressen i stedet. Home Assistant viser den under Innstillinger › System › Nettverk.';
+  }
+
+  @override
+  String get tipNumberAddressBodyIos =>
+      'Hvis navnet ikke fungerer, prøv hubens talladresse, for eksempel 192.168.1.20.';
+
+  @override
+  String get wallFullscreenSubtitleIos =>
+      'Skjuler også statuslinjen; Hjem-indikatoren dempes.';
+
+  @override
+  String get kioskPinForgotBodyIos =>
+      'En glemt PIN kan bare nullstilles ved å slette og installere ZigDash på nytt, noe som fjerner dette hjemmet med mindre du har en sikkerhetskopi. Eksporter én før du angir en PIN.';
+
+  @override
+  String get kioskGuidedAccessTitle => 'Lås til ZigDash med Veiledet tilgang';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS holder ZigDash på skjermen til du avslutter Veiledet tilgang: slå det på i Innstillinger › Tilgjengelighet › Veiledet tilgang, og trykk deretter tre ganger på sideknappen i ZigDash.';
+
+  @override
+  String get proFreeBodyIos =>
+      'Oppsett, dashbord, styring av alle enheter, tre automasjoner per hjem og selve veggnettbrettet forblir gratis. Ingenting du bruker i dag blir låst.';
+
+  @override
+  String get proOnceIos =>
+      'Én betaling, ikke abonnement. Kjøpt på en annen iPhone eller iPad med samme Apple-konto? Det låses opp automatisk, eller trykk på Gjenopprett kjøp.';
+
+  @override
+  String get engineIntroTitle =>
+      'Automasjoner kjører på huben, ikke på telefonen';
+
+  @override
+  String get engineIntroBody =>
+      'ZigDash legger ZigDash Engine inn i Zigbee2MQTT på huben din. Det følger med på enhetene og kjører reglene dine, så en lampe tennes når døren åpnes selv med telefonen av og uten internett.';
+
+  @override
+  String get engineIntroNothingByHand =>
+      'Ingenting å installere for hånd. ZigDash gjør det over hjemmenettet.';
+
+  @override
+  String engineIntroVersion(Object version) {
+    return 'Zigbee2MQTT er versjon $version.';
+  }
+
+  @override
+  String get engineIntroRemove =>
+      'Du kan fjerne den når som helst fra denne skjermen.';
 }

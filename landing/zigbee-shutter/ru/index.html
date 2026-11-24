@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Умные рольставни на SONOFF MINI-ZBRBS и Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Модуль Zigbee SONOFF MINI-ZBRBS за выключателем рольставни, подключённый с сохранением старого выключателя. Детали, подключение, сопряжение с Zigbee2MQTT, калибровка и плитка рольставни в ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Умные рольставни на SONOFF MINI-ZBRBS и Zigbee2MQTT">
+<meta property="og:description" content="Небольшой модуль Zigbee за выключателем рольставни: настенный выключатель по-прежнему работает, а рольставня открывается из ZigDash. Детали, подключение, сопряжение и калибровка.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/ru/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Установка</a>
+    <a href="../../hubs/">Хабы</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Помощь</a>
+    <a href="https://t.me/zigdash_app">Сообщество</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Как я сделал рольставню умной с помощью SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, разработчик ZigDash · 21 ноября 2026 г.</p>
+<p class="byline">Также на других языках: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">У рольставни в моём кабинете есть электромотор и обычный выключатель «вверх/вниз» на стене. Я поставил SONOFF MINI-ZBRBS, небольшой модуль Zigbee для рольставней, в подрозетник за этим выключателем. Настенный выключатель работает точно так же, как раньше, а теперь рольставня ещё и открывается и закрывается с плитки в ZigDash, дома и откуда угодно.</p>
+
+<div class="toc"><strong>На этой странице</strong>
+<ul>
+  <li><a href="#how">Как это работает</a></li>
+  <li><a href="#need">Что понадобится</a></li>
+  <li><a href="#wire">1. Подключите модуль</a></li>
+  <li><a href="#pair">2. Выполните сопряжение с ZigDash</a></li>
+  <li><a href="#mode">3. Укажите, какой у вас выключатель</a></li>
+  <li><a href="#calibrate">4. Калибровка</a></li>
+  <li><a href="#tile">5. Плитка рольставни в ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Как это работает</h2>
+<p>У мотора рольставни два силовых провода: один крутит его вверх, другой вниз. Настенный выключатель подаёт фазу на один из них. MINI-ZBRBS стоит посередине: два провода мотора идут на его выходы (<strong>Lout1</strong> и <strong>Lout2</strong>), а старый выключатель на его входы (<strong>S1</strong> и <strong>S2</strong>). Когда вы нажимаете выключатель, модуль управляет мотором. Когда ZigDash просит об этом по Zigbee, модуль тоже управляет мотором.</p>
+<p>Модуль также знает, где находится рольставня, поэтому её можно отправить на 50%, а не только полностью вверх или вниз. А поскольку он питается от сети, он работает как роутер Zigbee и делает вашу сеть сильнее.</p>
+
+<h2 id="need">Что понадобится</h2>
+<ul>
+  <li><strong>SONOFF MINI-ZBRBS</strong> (Zigbee-выключатель для рольставней). Zigbee2MQTT поддерживает его как модель <code>MINI-ZBRBS</code>.</li>
+  <li><strong>Мотор рольставни со своими концевыми выключателями</strong>: обычный трубчатый мотор с четырьмя проводами (ноль, вверх, вниз, заземление), который сам останавливается вверху и внизу. SONOFF указывает, что модуль рассчитан на моторы до <strong>1&nbsp;A</strong>, а сам модуль останавливает мотор через 2 минуты движения в одну сторону.</li>
+  <li><strong>Нулевой провод в коробке выключателя.</strong> Модулю нужен ноль для собственного питания.</li>
+  <li><strong>Место в подрозетнике</strong> за выключателем. SONOFF рекомендует подрозетник глубиной не менее 60&nbsp;мм.</li>
+  <li><strong>Клеммы с рычажками</strong> (я использовал WAGO 221) и несколько коротких кусков провода.</li>
+  <li><strong>Хаб Zigbee2MQTT</strong> дома. Если его ещё нет, смотрите <a href="../../hubs/">Хабы</a>.</li>
+  <li><strong>ZigDash</strong> на телефоне (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Управлять рольставней дома можно бесплатно. Управление откуда угодно работает через удалённое управление ZigDash Pro: разовая покупка, без подписки.</li>
+</ul>
+
+<div class="tip"><strong>Прежде чем вскрывать выключатель, отключите питание автоматическим выключателем.</strong> В коробке 230V. Если вам неуютно работать с сетевым напряжением, поручите подключение электрику. SONOFF рекомендует установить перед модулем автоматический выключатель на 1&nbsp;A (MCB или RCBO).</div>
+
+<h2 id="wire">1. Подключите модуль</h2>
+<p>У модуля шесть клемм, подписанных на корпусе: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (вверх) и <strong>S2</strong> (вниз). Клеммы заземления у него нет. Вот как я подключил свой:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Клемма</th><th>Куда идёт</th><th>В моей коробке</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Ноль</td><td>Синие нулевые провода, соединённые в WAGO 221, и короткий провод оттуда на N (см. примечание ниже о его цвете)</td></tr>
+    <tr><th>L</th><td>Фаза</td><td>Питающая фаза коробки</td></tr>
+    <tr><th>Lout1</th><td>Мотор: вверх (SONOFF называет это «вперёд»)</td><td>Чёрный провод мотора</td></tr>
+    <tr><th>Lout2</th><td>Мотор: вниз («назад»)</td><td>Коричневый провод мотора</td></tr>
+    <tr><th>S1</th><td>Выход «вверх» выключателя</td><td>Один из выходов старого выключателя</td></tr>
+    <tr><th>S2</th><td>Выход «вниз» выключателя</td><td>Другой выход старого выключателя</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Старый выключатель остаётся.</strong> На его общую клемму, как и раньше, приходит фаза. Его два выхода больше не идут на мотор: они идут на S1 и S2 и говорят модулю, в какую сторону крутить. <strong>S1 и S2 — входы сетевого напряжения</strong>, а не низковольтные: запитайте общую клемму выключателя от той же фазы и через тот же автомат, что и L.</p>
+<p><strong>Заземление:</strong> оставьте жёлто-зелёный провод заземления мотора соединённым с заземлением коробки, как было. На модуль он не идёт.</p>
+<p><strong>Вверх и вниз:</strong> цвета проводов в каждом доме свои. Прежде чем отключать выключатель, запишите, какой провод мотора питал его выход «вверх», и пометьте его: он идёт на Lout1. Если перепутаете, в шаге 4 показано, как это исправить.</p>
+<div class="tip"><strong>Для перемычки нуля используйте синий (или серый) провод.</strong> У меня под рукой был только красный, поэтому на моих фото короткий провод от WAGO к N красный, с синим наконечником-гильзой со стороны модуля. Красный обычно означает фазу, и тот, кто откроет эту коробку следующим, не должен гадать. Если используете другой цвет, пометьте его синей изолентой с обоих концов.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Два синих нулевых провода и красный провод, соединённые в оранжевой клемме с рычажками WAGO 221; красный провод идёт на клемму N модуля SONOFF" loading="lazy" width="675" height="900"><figcaption>Ноль: синие нулевые провода коробки в WAGO 221 и короткий красный провод оттуда на N модуля.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="Обратная сторона старого выключателя рольставни с тремя красными проводами в клеммах" loading="lazy" width="810" height="690"><figcaption>Старый выключатель рольставни, сохранён: фаза приходит на общую клемму, а выходы «вверх» и «вниз» теперь идут на S1 и S2. Какая клемма общая, зависит от выключателя; проверьте свой, прежде чем отключать.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="Открытый подрозетник с вытащенным выключателем и подключённым SONOFF MINI-ZBRBS: два красных провода от выключателя на S1 и S2, коричневый и чёрный провода мотора на Lout2 и Lout1, фаза на L и ноль на N" loading="lazy" width="640" height="1124"><figcaption>Всё подключено, перед тем как вернуть в стену. Слева направо на модуле: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Проверьте, что каждая винтовая клемма хорошо затянута. Пока оставьте модуль вне коробки, клеммами от себя: на следующем шаге вы выполните сопряжение.</p>
+
+<h2 id="pair">2. Выполните сопряжение с ZigDash</h2>
+<p>Для сопряжения на модуль должно быть подано питание и нажата его кнопка, так что это единственный момент, когда вы работаете рядом с коробкой под напряжением. Нажимайте только кнопку, пластиковым предметом (обратной стороной ручки), и больше ничего не трогайте. Положите модуль на что-нибудь непроводящее, чтобы он не касался металлической рамки выключателя.</p>
+<ol>
+  <li>В ZigDash откройте <strong>Устройства</strong> и нажмите <strong>Начать сопряжение</strong>.</li>
+  <li>Включите автомат. Нажмите и удерживайте кнопку модуля около <strong>5 секунд</strong>, пока синий светодиод не начнёт медленно мигать. Модуль остаётся в режиме сопряжения до 3 минут.</li>
+  <li>ZigDash покажет новое устройство. Дайте ему понятное имя, например <strong>Рольставня кабинет</strong>.</li>
+  <li>Выключите автомат. Уложите провода, поставьте модуль за выключатель, закройте коробку и снова включите автомат. Всё остальное делается с телефона и на веб-странице Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. Укажите, какой у вас выключатель</h2>
+<p>Модулю нужно знать, как ведёт себя ваш настенный выключатель:</p>
+<ul>
+  <li><strong>Клавишный выключатель с фиксацией</strong> в положениях вверх, выкл. или вниз (как у меня): режим <code>edge</code>.</li>
+  <li><strong>Кнопка</strong>, которая возвращается, когда её отпускаешь: режим <code>pulse</code>.</li>
+</ul>
+<p>Проще всего это сделать на веб-странице Zigbee2MQTT: откройте устройство, перейдите на вкладку <strong>Exposes</strong> и установите <code>external_trigger_mode</code> в <code>edge</code> или <code>pulse</code>. (Это можно сделать и кнопкой модуля: быстрое тройное нажатие переключает на следующий тип выключателя, и светодиод мигает три раза; возможно, придётся повторить. Для этого снова нужно вскрывать коробку, поэтому я использовал Zigbee2MQTT.)</p>
+<p>Затем переключите настенный выключатель вверх, в выкл. и вниз: рольставня должна двигаться и останавливаться, как всегда. Если нет, режим выбран неверно; установите другой.</p>
+
+<h2 id="calibrate">4. Калибровка</h2>
+<p>Модуль запоминает, сколько времени рольставне нужно, чтобы пройти полностью вверх и вниз. Без этого он может открывать и закрывать, но не может выставить положение вроде 50%.</p>
+<ol>
+  <li>На веб-странице Zigbee2MQTT, на вкладке <strong>Exposes</strong> устройства, установите <code>motor_travel_calibration_action</code> в <code>start_automatic</code>.</li>
+  <li>Дайте ей пройти: рольставня проедет до конца в одну сторону, потом в другую. Не трогайте выключатель в это время. Когда всё закончится, <code>motor_travel_calibration_status</code> покажет <code>Calibrated</code>.</li>
+</ol>
+<p>(На самом модуле ту же калибровку запускает удержание кнопки дольше 10 секунд, пока светодиод не начнёт «дышать».) Если автоматическая калибровка не завершается (например, со слабым мотором), и SONOFF, и Zigbee2MQTT описывают ручную калибровку: вы сами отмечаете полностью открытое и полностью закрытое положение.</p>
+<p><strong>Вверх и вниз перепутаны?</strong> Выключите автомат, поменяйте местами провода на <strong>Lout1</strong> и <strong>Lout2</strong> и откалибруйте заново. Параметр <code>invert_cover</code> в Zigbee2MQTT лишь переворачивает сообщаемое положение; направление вращения мотора он не меняет.</p>
+
+<h2 id="tile">5. Плитка рольставни в ZigDash</h2>
+<ol>
+  <li>На панели нажмите <strong>Добавить из устройства</strong> и выберите рольставню.</li>
+  <li>На плитке есть кнопки <strong>Открыть</strong>, <strong>Стоп</strong> и <strong>Закрыть</strong>, а также ряд готовых положений (по умолчанию 0, 25, 50, 100). В настройках плитки можно включить ползунок положения.</li>
+  <li><strong>Откуда угодно:</strong> с ZigDash Pro включите удалённое управление, и та же плитка работает вне дома, без открытия портов на роутере и без ежемесячной платы.</li>
+</ol>
+<p>Настенный выключатель и приложение работают бок о бок: выключатель остаётся для всех, у кого нет приложения, а плитка продолжает работать независимо от того, двигали рольставню в последний раз рукой или с телефона.</p>
+
+<div class="tip">SONOFF — товарный знак своего владельца. ZigDash не связан с SONOFF или ITEAD. Следуйте инструкции, прилагаемой к модулю, и местным электротехническим нормам.</div>
+
+<div class="tip"><strong>Вы тоже это сделали?</strong> Расскажите, как всё прошло или что было иначе в вашей коробке: <a href="mailto:support@zigdash.app">support@zigdash.app</a> или <a href="https://t.me/zigdash_app">сообщество</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Скачать ZigDash</a><a class="btn" href="../../hubs/">Выбрать хаб</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Исходный код</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Политика конфиденциальности</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

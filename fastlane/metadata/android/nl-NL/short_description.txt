@@ -1,1 +1,1 @@
-Dashboard voor Zigbee2MQTT. Zonder Home Assistant: een kleine hub en je mobiel.
+Snel Zigbee2MQTT-dashboard. Bedien je huis overal, zonder maandelijkse kosten.

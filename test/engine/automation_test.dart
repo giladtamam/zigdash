@@ -92,6 +92,20 @@ void main() {
     expect(cmds[1].toJson(), {'topic': 'zigbee2mqtt/Gone/set', 'payload': {'state': 'OFF'}});
   });
 
+  test('scene commands leave out what the Engine cannot send (3.8.7)', () {
+    final lamp = _device('Lamp', '0xl', const []);
+    final cmds = sceneCommands(const [
+      SceneAction(setTopic: 'zigbee2mqtt/Lamp/set', payload: '{"state":"ON"}'),
+      SceneAction(setTopic: 'zigbee2mqtt/kitchen/set', payload: '{"state":"OFF"}'),
+      SceneAction(setTopic: 'zigbee2mqtt/Lamp/set', payload: 'ON'),
+      SceneAction(setTopic: 'cmnd/plug/POWER', payload: '{"POWER":"ON"}'),
+    ], [lamp], 'zigbee2mqtt');
+    expect([for (final c in cmds) c.toJson()], [
+      {'ieee': '0xl', 'payload': {'state': 'ON'}},
+      {'topic': 'zigbee2mqtt/kitchen/set', 'payload': {'state': 'OFF'}},
+    ], reason: 'no {} command for the raw payload, nothing outside the base');
+  });
+
   test('recent runs decode', () {
     final runs = decodeRuns('[{"id":"a1","at":"2026-10-22T15:40:08.339Z","commands":1}]');
     expect(runs.single.id, 'a1');

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jak zastąpiłem abonament PalGate przekaźnikiem Zigbee za $10 · ZigDash</title>
+<meta name="description" content="Moja brama otwierała się przez PalGate Spider-50 za ₪300 rocznie. Zamieniłem go na przekaźnik Zigbee ze stykiem bezpotencjałowym za jednorazowe $10 i teraz otwieram bramę z ZigDash, w domu i z dowolnego miejsca. Części, podłączenie i parowanie.">
+<link rel="canonical" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Jak zastąpiłem abonament PalGate przekaźnikiem Zigbee za $10">
+<meta property="og:description" content="₪300 rocznie za otwieranie bramy albo $10 jednorazowo. Części, podłączenie i parowanie, z aplikacją ZigDash.">
+<meta property="og:url" content="https://zigdash.app/gate/pl/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Konfiguracja</a>
+    <a href="../../hubs/">Huby</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Pomoc</a>
+    <a href="https://t.me/zigdash_app">Społeczność</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Jak zastąpiłem abonament PalGate przekaźnikiem Zigbee za $10</h1>
+<p class="byline">Gilad Tamam, twórca ZigDash · 18 listopada 2026</p>
+<p class="byline">Również w językach: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Moja brama wjazdowa otwierała się z telefonu przez PalGate Spider-50: skrzynkę 4G z własną kartą SIM i abonamentem za ₪300 rocznie. Wyjąłem ją i założyłem przekaźnik Zigbee, który kosztował $10 (około ₪37), jednorazowo. Teraz otwieram bramę kafelkiem w ZigDash, w domu i z dowolnego miejsca.</p>
+
+<p class="cost"><strong>₪300 co roku</strong> za abonament albo <strong>około ₪37 jednorazowo</strong> za przekaźnik. Przekaźnik zwrócił się po mniej więcej sześciu tygodniach.</p>
+
+<div class="toc"><strong>Na tej stronie</strong>
+<ul>
+  <li><a href="#how">Jak telefon otwiera bramę</a></li>
+  <li><a href="#need">Czego potrzebujesz</a></li>
+  <li><a href="#pair">1. Sparuj przekaźnik z ZigDash</a></li>
+  <li><a href="#spider">2. Wyjmij Spidera</a></li>
+  <li><a href="#wire">3. Podłącz przekaźnik</a></li>
+  <li><a href="#tile">4. Kafelek Brama w ZigDash</a></li>
+  <li><a href="#trade">Z czego rezygnujesz</a></li>
+</ul></div>
+
+<h2 id="how">Jak telefon otwiera bramę</h2>
+<p>Sterownik bramy ma wejście <strong>otwierania</strong> (lub startu): dwa zaciski, które otwierają bramę, gdy zostaną ze sobą połączone, dokładnie jak przycisk na pilocie do bramy. Spider to przekaźnik z kartą SIM. Gdy poprosi go o to aplikacja PalGate albo połączenie telefoniczne, na chwilę łączy te dwa zaciski.</p>
+<p>Przekaźnik Zigbee robi to samo. Jedyna różnica polega na tym, kto każe mu zewrzeć styk: twój własny hub Zigbee w domu, a nie usługa komórkowa, za którą płacisz co roku.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="Skrzynka PalGate Spider-50 w dłoni, obok sterownika bramy" loading="lazy" width="675" height="900"><figcaption>PalGate Spider-50, który wyjąłem.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="Płytka sterownika bramy z listwą zacisków i przewodami" loading="lazy" width="675" height="900"><figcaption>Sterownik bramy. Dwa z tych przewodów to jego wejście otwierania.</figcaption></figure>
+</div>
+
+<h2 id="need">Czego potrzebujesz</h2>
+<ul>
+  <li><strong>Przekaźnik Zigbee ze stykiem bezpotencjałowym.</strong> Mój to "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" z AliExpress, około $10. Sprzedawany jest w wersji WiFi i Zigbee: wybierz <strong>Zigbee</strong> (na płytce jest moduł ZT3L). Jest też sprzedawany na różne napięcia zasilania; wziąłem wersję <strong>AC 85–250V</strong>.</li>
+  <li><strong>Styk bezpotencjałowy to najważniejsza część.</strong> Styk bezpotencjałowy (suchy) to zwykły łącznik bez własnego napięcia: łączy tylko COM z NO, dokładnie jak przycisk pilota. Przekaźnik, który podaje napięcie na swoje zaciski (taki do włączania lampy), może uszkodzić wejście sterownika bramy. Szukaj oznaczenia "dry contact" i zacisków opisanych <strong>COM</strong>, <strong>NO</strong> i <strong>NC</strong>.</li>
+  <li><strong>Hub Zigbee2MQTT w domu</strong>, którego zasięg dochodzi do bramy. Ja już miałem taki (SMLIGHT SMHUB) dla reszty domu. Jeśli nie masz, zobacz <a href="../../hubs/">Huby</a>.</li>
+  <li><strong>ZigDash</strong> na telefonie (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Otwieranie bramy w domu jest bezpłatne. Do otwierania jej z dowolnego miejsca służy zdalne sterowanie ZigDash Pro: jednorazowy zakup, bez abonamentu.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="Płytka przekaźnika Zigbee: zaciski zasilania po lewej, moduł Zigbee ZT3L pośrodku, przekaźnik i jego zaciski COM/NO/NC po prawej" loading="lazy" width="675" height="900"><figcaption>Przekaźnik Zigbee wyjęty z obudowy: zasilanie po lewej, moduł Zigbee ZT3L, przycisk parowania i bezpotencjałowe zaciski przekaźnika po prawej.</figcaption></figure>
+
+<h2 id="pair">1. Sparuj przekaźnik z ZigDash</h2>
+<p>Najpierw sparuj go w domu, na stole, zanim trafi do skrzynki bramy.</p>
+<ol>
+  <li>Podłącz zasilanie do przekaźnika.</li>
+  <li>W ZigDash otwórz <strong>Urządzenia</strong> i dotknij <strong>Rozpocznij parowanie</strong>.</li>
+  <li>Naciśnij i przytrzymaj <strong>przycisk</strong> przekaźnika, aż dioda zacznie migać. To przełącza go w tryb parowania.</li>
+  <li>ZigDash pokazuje <strong>Gotowe</strong> z nowym urządzeniem. Zmień jego nazwę na <strong>Brama</strong>.</li>
+</ol>
+<p>Włącz go i wyłącz kilka razy i posłuchaj kliknięcia przekaźnika.</p>
+
+<h2 id="spider">2. Wyjmij Spidera</h2>
+<div class="tip"><strong>Najpierw wyłącz zasilanie bramy bezpiecznikiem.</strong> W skrzynce bramy jest 230V. Jeśli nie czujesz się pewnie przy pracy z napięciem sieciowym, zleć kroki 2 i 3 elektrykowi. Nie dotykaj czujników bezpieczeństwa bramy (fotokomórek) ani wyłączników krańcowych.</div>
+<ol>
+  <li>Znajdź dwa przewody, które biegną z wyjścia przekaźnika Spidera (<strong>COM1</strong> i <strong>N.O.1</strong>) do wejścia otwierania sterownika bramy. Oznacz je.</li>
+  <li>Odkręć listwę zaciskową Spidera i odłącz zasilanie Spidera.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Zielona listwa zaciskowa Spidera z brązowym, niebieskim i czarnym przewodem" loading="lazy" width="675" height="900"><figcaption>Listwa zaciskowa Spidera, odłączona. Para brązowo-niebieska idzie do wejścia otwierania bramy.</figcaption></figure>
+
+<h2 id="wire">3. Podłącz przekaźnik</h2>
+<ol>
+  <li><strong>Wyjście:</strong> dwa przewody wejścia otwierania podłącz do <strong>COM</strong> i <strong>NO</strong> przekaźnika. NC zostaw puste. Przy styku bezpotencjałowym kolejność nie ma znaczenia.</li>
+  <li><strong>Zasilanie:</strong> wersja AC 85–250V przyjmuje napięcie sieciowe bezpośrednio, jak ładowarka do telefonu: dwa przewody, fazowy i neutralny, z zasilania 230V bramy.</li>
+  <li>Zamknij obudowę przekaźnika, umieść go w suchym miejscu i z powrotem włącz bezpiecznik.</li>
+</ol>
+<div class="tip"><strong>Sygnał:</strong> brama to zwykle punkt najdalej od huba. W ZigDash otwórz stronę urządzenia przekaźnika i sprawdź sygnał. Jeśli jest słaby, urządzenie Zigbee zasilane z sieci między domem a bramą (na przykład inteligentne gniazdko) rozszerzy sieć.</div>
+
+<h2 id="tile">4. Kafelek Brama w ZigDash</h2>
+<ol>
+  <li>Na dashboardzie dotknij <strong>Dodaj z urządzenia</strong> i wybierz <strong>Brama</strong>.</li>
+  <li>Dotknij kafelka: przekaźnik zwiera styk i brama zaczyna się ruszać, tak jak z pilotem.</li>
+  <li>Wejście otwierania bramy oczekuje naciśnięcia przycisku, więc styk, który pozostaje zwarty, może zostać uznany za długie naciśnięcie. Sprawdź, co robi twoja brama, i w razie potrzeby wyłącz kafelek z powrotem.</li>
+  <li><strong>Z dowolnego miejsca:</strong> z ZigDash Pro włącz zdalne sterowanie, a ten sam kafelek działa poza domem, bez otwierania portu na routerze i bez miesięcznej opłaty. Obejmuje do pięciu telefonów; <strong>Udostępnij innemu telefonowi</strong> dodaje telefony rodziny jednym kodem QR.</li>
+</ol>
+
+<h2 id="trade">Z czego rezygnujesz</h2>
+<p>Uczciwie wobec Spidera: potrafi rzeczy, których przekaźnik Zigbee nie potrafi:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Przekaźnik Zigbee + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Koszt</th><td>₪300 rocznie (mój plan)</td><td>Około ₪37 jednorazowo; zdalne sterowanie to jednorazowy zakup ZigDash Pro</td></tr>
+    <tr><th>Połączenie</th><td>Własna karta SIM 4G: działa, gdy w domu nie ma internetu</td><td>Twój hub Zigbee w domu; poza domem potrzebny jest domowy internet</td></tr>
+    <tr><th>Kto może otworzyć</th><td>Użytkownicy i goście zarządzani w aplikacji PalGate oraz otwieranie połączeniem telefonicznym</td><td>Telefony, którym udostępniasz dom (zdalnie do pięciu)</td></tr>
+    <tr><th>Chmura</th><td>Usługa PalGate</td><td>Brak w domu; zdalnie przez serwer pośredniczący ZigDash, z szyfrowaniem end-to-end</td></tr>
+  </tbody>
+</table>
+</div>
+<p>W domu jednorodzinnym, gdzie rodzina otwiera jedną bramę, przekaźnik robi wszystko, czego potrzebowałem. W budynku z wieloma mieszkańcami i gośćmi zarządzana usługa taka jak PalGate nadal ma sens.</p>
+
+<div class="tip">PalGate jest znakiem towarowym swojego właściciela. ZigDash nie jest powiązany z PalGate ani PAL Electronics Systems. Ceny to kwoty, które zapłaciłem w listopadzie 2026.</div>
+
+<div class="tip"><strong>Też to zrobiłeś?</strong> Napisz mi, jak poszło albo co było inaczej przy twojej bramie: <a href="mailto:support@zigdash.app">support@zigdash.app</a> lub <a href="https://t.me/zigdash_app">społeczność</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Pobierz ZigDash</a><a class="btn" href="../../hubs/">Wybierz hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Kod źródłowy</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Polityka prywatności</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

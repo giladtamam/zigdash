@@ -1,0 +1,49 @@
+SHORT: Schnelles Zigbee2MQTT-Dashboard. Steuere dein Zuhause von überall, ohne Abo.
+
+ZigDash ist das MQTT-Dashboard für Zigbee2MQTT: Es erkennt deine Zigbee-Geräte automatisch, sodass sich dein Smart-Home-Dashboard von selbst aufbaut. Keine Cloud, keine Werbung, kein Konto: kostenlos und Open Source. Steuere Lampen, Rollläden, Schalter und Sensoren vom Handy oder einem Wandtablet aus und automatisiere auf deinem Hub, selbst wenn dein Handy aus ist.
+
+Voraussetzung: ein laufendes Zigbee2MQTT und ein MQTT-Broker in deinem Netz. Noch kein Zigbee2MQTT? Die App enthält ein Demo-Zuhause zum Ausprobieren.
+
+FERNSTEUERUNG
+• Fernsteuerung (Pro): Erreiche deine Geräte von überall über das verschlüsselte ZigDash-Relay. Einmal zahlen, kein Abo, keine Portweiterleitung und kein VPN nötig.
+
+AUTOMATISCHE ERKENNUNG FÜR ZIGBEE2MQTT
+• Scanne deine Zigbee2MQTT-Bridge und erstelle mit einem Tipp ein Panel für jedes Gerät, ohne Topics von Hand zu verdrahten.
+• JSON-Pfad-Extraktion in jedem Panel, damit ZigDash echte Zigbee2MQTT-Nachrichten sofort versteht.
+• Eigene Topics, QoS und Retain pro Panel, wenn du volle Kontrolle willst.
+
+MIT JEDEM BROKER VERBINDEN
+• Jeder MQTT-Broker: TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Broker-Erkennung scannt dein lokales Netzwerk automatisch.
+• Benutzername und Passwort im hardwaregesicherten Speicher, nie im Klartext.
+• Live-Status mit automatischem Reconnect (exponentielles Backoff).
+• Tailscale-Unterstützung: Fernzugriff über dein WireGuard-Mesh, ohne Portweiterleitung.
+• Mehrere Broker mit sofortigem Wechsel.
+• Ein vollwertiger MQTT-Client: Publish und Subscribe auf beliebige Topics.
+
+16 PANEL-TYPEN – ALLES STEUERN
+Schalter, Taste, Slider, Rollladen (Auf/Stopp/Zu mit Voreinstellungen), Multi-State, Combo, Radio, LED-Anzeige, Node-Status, Fortschritt, Texteingabe, Textprotokoll, Szene, Zeitplan, Auto-Aus-Regel und Zigbee2MQTT-Geräteerkennung. Von Lampen und Rollläden bis zu Sensoren und Szenen: ein Zigbee-Dashboard für jedes Gerät.
+
+AUTOMATISIERUNG – LÄUFT AUCH BEI AUSGESCHALTETEM HANDY
+• Zeitplan-Panels: tägliche Öffnen/Schließen-Timer, gespeichert als retained MQTT-Konfiguration.
+• Auto-Aus-Regeln: ein Gerät N Sekunden nach dem Einschalten wieder ausschalten, ideal für Lüfter, Pumpen und Zeitlicht.
+• Beides läuft auf deinem dauerhaft aktiven Hub (Node-RED auf SMLIGHT, Raspberry Pi oder jedem MQTT-fähigen Gerät). Node-RED-Flows liegen bei.
+
+AUSGEREIFT – HANDY UND TABLET
+• Material 3 mit hellem, dunklem und System-Design; Material You Dynamic Color ab Android 12.
+• Handy und Tablet, Hoch- und Querformat, ideal als Wand-Dashboard für die Hausautomation.
+• Verfügbar auf Deutsch, Englisch, Französisch, Spanisch, Niederländisch, Schwedisch, Norwegisch, Russisch, Polnisch, Portugiesisch und Hebräisch, mit automatischem RTL.
+• Responsives Panel-Raster (volle, halbe, drittel Breite), Dashboard-Sperre, Backup/Wiederherstellung als portables JSON, Szenen.
+
+100 % PRIVAT. KEINE CLOUD.
+• Keine Werbung. Kein Konto. Anonyme Nutzungsdaten nur mit deiner Zustimmung.
+• Deine Daten bleiben auf deinem Gerät und deinem MQTT-Broker, sonst nirgends.
+• Open Source (MIT). Der Code ist öffentlich und prüfbar.
+
+FÜR WEN IST DAS?
+Du betreibst Zigbee2MQTT mit eigenem Broker (Mosquitto auf einem Raspberry Pi, SMLIGHT SMHUB …), vielleicht neben Home Assistant, und willst schnelle Steuerung vom Handy oder Wandtablet, ohne die Zigbee2MQTT-Weboberfläche zu öffnen. Genug von Cloud-Zwang, Herstellerbindung und Datensammelei? Dann ist ZigDash für dich.
+
+WAS DU BRAUCHST
+• Ein Zigbee2MQTT-Setup mit MQTT-Broker in deinem lokalen Netzwerk.
+• Tailscale (optional) für Fernzugriff von unterwegs.
+• Node-RED (optional) für Automatisierung auf dem Hub.

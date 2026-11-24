@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.giladtamam.zigdash",
+      "sha256_cert_fingerprints": [
+        "81:6A:AC:31:B6:C1:E4:6D:2D:90:5B:49:A2:F0:B1:53:3E:D7:2C:73:88:95:67:09:1B:1C:3F:4C:46:74:F3:6C",
+        "4D:B0:C1:3E:AE:24:32:79:07:08:76:43:01:93:2C:A9:86:ED:F0:25:2E:FE:53:BC:5E:4C:B0:6F:F3:29:23:3A"
+      ]
+    }
+  }
+]

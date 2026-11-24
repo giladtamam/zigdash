@@ -1,0 +1,72 @@
+SHORT: Rychlý panel pro Zigbee2MQTT. Ovládejte domov odkudkoli, bez předplatného.
+
+ZigDash je MQTT nástěnka vytvořená pro Zigbee2MQTT: ovládej svůj chytrý Zigbee domov z telefonu. Sama najde tvoje zařízení, takže se nástěnka postaví sama. Bez cloudu, bez reklam, bez účtu: zdarma a open source.
+Ovládej světla, rolety, spínače a senzory z telefonu nebo z tabletu na zdi a automatizuj na svém hubu, i když je telefon vypnutý. Dostaneš upozornění, když se něco stane.
+
+Vyžaduje běžící Zigbee2MQTT a MQTT broker ve tvé síti. Ještě nemáš Zigbee2MQTT? Aplikace má demo domov na vyzkoušení.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+AUTOMATICKÉ HLEDÁNÍ PRO ZIGBEE2MQTT
+• Prohledej svůj Zigbee2MQTT bridge a jedním klepnutím vytvoř panel pro každé zařízení — bez ručního nastavování témat.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PŘIPOJENÍ K JAKÉMUKOLI BROKERU
+• Jakýkoli MQTT broker — TCP, SSL/TLS, WebSocket, WSS (Mosquitto, EMQX, HiveMQ, SMLIGHT).
+• Uživatelské jméno a heslo v hardwarově chráněném úložišti — nikdy jako prostý text.
+• Živý stav a automatické opětovné připojení.
+• Podpora Tailscale: vzdálený přístup přes tvou síť WireGuard, bez přesměrování portů.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+16 TYPŮ PANELŮ — OVLÁDEJ VŠECHNO
+Přepínač, Tlačítko, Posuvník, Roleta (otevřít/stop/zavřít s předvolbami), Více stavů, Rozbalovací seznam, Přepínače, LED indikátor, Stav uzlu, Průběh, Textové pole, Textový záznam, Scéna, Plán, Pravidlo automatického zavření a hledání zařízení Zigbee2MQTT. Od světel a rolet po senzory a scény — jedna Zigbee nástěnka pro všechna zařízení.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+ZKRATKY — BEZ OTEVÍRÁNÍ APLIKACE
+• Dlaždice Rychlého nastavení: zapni světlo nebo zásuvku jedním klepnutím, nebo nastav roletu posuvníkem, přímo z oznamovací lišty.
+• Ovládání zařízení v Androidu: každé zařízení z tvých nástěnek jako karta, s posuvníky pro jas a polohu rolety.
+• Widgety na ploše: jedno zařízení, scéna, nebo skupina až pěti zařízení s tlačítky scén.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+UPOZORNĚNÍ — I KDYŽ JE APLIKACE ZAVŘENÁ
+• Únik vody, kouř, dveře otevřené v noci nebo slabá baterie: Node-RED na tvém hubu hlídá, ZigDash ho nastaví jedním klepnutím a oznámení dorazí na telefon přes push službu Googlu, šifrované end-to-end. Bez účtu, bez další aplikace, bez vybíjení baterie.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+AUTOMATIZACE — BĚŽÍ, I KDYŽ JE TELEFON VYPNUTÝ
+• Panely plánu: denní časovače otevření/zavření uložené jako MQTT konfigurace s příznakem retain.
+• Pravidla automatického zavření: vypni zařízení N sekund po zapnutí — pro ventilátory, čerpadla a světla na čas.
+• Obojí běží na tvém stále zapnutém hubu (Node-RED na SMLIGHT, Raspberry Pi…).
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+VYLADĚNÉ — TELEFON I TABLET
+• Material 3 se světlým, tmavým a systémovým motivem; dynamické barvy Material You na Androidu 12+.
+• Telefon i tablet, na výšku i na šířku. Kiosk režim pro tablet na zdi: celá obrazovka, ztlumení, zámek PINem.
+• Dostupné v češtině, angličtině, francouzštině, němčině, španělštině, nizozemštině, švédštině, norštině, ruštině, polštině, portugalštině (Brazílie) a hebrejštině (עברית), s automatickým RTL.
+• Přizpůsobivá mřížka panelů, zámek nástěnky, záloha a obnovení jako přenosný JSON, scény.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+100% SOUKROMÉ. ŽÁDNÝ CLOUD.
+• Žádné reklamy. Žádný účet. Anonymní data o používání, která můžeš kdykoli vypnout.
+• Tvoje data jsou ve tvém zařízení a na tvém MQTT brokeru — nikde jinde.
+• Open source (MIT). Kód je veřejný a dá se zkontrolovat.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PRO KOHO TO JE?
+Provozuješ Zigbee2MQTT s vlastním brokerem (Mosquitto na Raspberry Pi, SMLIGHT SMHUB…) — třeba vedle Home Assistantu — a chceš rychle ovládat chytrou domácnost z telefonu nebo tabletu na zdi, bez otevírání webového rozhraní Zigbee2MQTT. Nebaví tě cloudové aplikace, vázanost na výrobce a sběr dat? ZigDash je pro tebe.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+CO POTŘEBUJEŠ
+• Zigbee2MQTT s MQTT brokerem ve tvé místní síti.
+• Tailscale (volitelně) pro vzdálený přístup mimo domov.
+• Node-RED (volitelně) pro automatizace na hubu.
+
+Vytvořil uživatel Zigbee2MQTT pro komunitu Zigbee2MQTT. Otázky a nápady: t.me/zigdash_app

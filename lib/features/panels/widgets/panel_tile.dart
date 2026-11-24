@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../data/database/database.dart';
 import '../../../data/database/tables/panels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../mqtt/mqtt_status.dart';
 import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../../../mqtt/json_path.dart';
@@ -137,9 +138,31 @@ PanelReliabilityPolicy panelReliabilityPolicy(PanelType type) => switch (type) {
   PanelType.reading => const PanelReliabilityPolicy.readOnlySubscription(),
 };
 
-String? panelReliabilityValueLabel(PanelConfig config, Object? value) {
+/// The value "Last known" names on a stale tile. A custom toggle says it
+/// as its tile does, "Off" in the app's language (3.8.7).
+String? panelReliabilityValueLabel(
+  PanelConfig config,
+  Object? value,
+  AppLocalizations l10n,
+) {
   if (value == null) return null;
   return switch (config) {
+    // "Last known: —" says nothing: no label for a raw JSON value.
+    ToggleConfig config => switch (toggleStateLine(
+        toggleState(
+          config,
+          PanelValueSnapshot(
+            value: value,
+            receivedAt: DateTime.now(),
+            connectionGeneration: 0,
+            freshness: PanelFreshness.stale,
+          ),
+        ),
+        l10n,
+      )) {
+        '—' => null,
+        final line => line,
+      },
     CoverConfig config => _coverReliabilityValueLabel(config, value),
     TextLogConfig() => _textLogReliabilityValueLabel(value),
     // The tile reads its own state line; the raw payload is JSON.
@@ -358,7 +381,8 @@ class PanelTile extends ConsumerWidget {
         child: PanelReliabilityFrame(
           stale: stale,
           controlsEnabled: controlsEnabled,
-          valueLabel: panelReliabilityValueLabel(config, snapshot?.value),
+          valueLabel: panelReliabilityValueLabel(
+              config, snapshot?.value, context.l10n),
           receivedAt: snapshot?.receivedAt,
           child: widget,
         ),

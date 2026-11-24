@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../dashboards/widgets/chat_early_card.dart'
+    show chatEarlyOfferedProvider, showChatEarlySheet;
 import '../../dashboards/widgets/poll_card.dart' show showPollSheet;
 import '../../support/support_facts.dart' show supportDetailsProvider;
 import '../../support/help_bubble.dart' show helpBubbleHiddenProvider;
@@ -24,6 +26,8 @@ import '../../../mqtt/providers/mqtt_manager_provider.dart';
 import '../providers/settings_controller.dart';
 import '../../pro/pro.dart';
 import '../../pro/pro_screen.dart';
+import '../../pro/pro_trial_card.dart' show proTrialDaysLeftText;
+import '../../zha_move/zha_move.dart';
 import 'language_screen.dart';
 
 /// App version + build number, e.g. "1.3.2 (10)".
@@ -226,6 +230,14 @@ class SettingsScreen extends ConsumerWidget {
                   Routes.getHelpFrom(HelpFrom.settings.name, home: current),
                 ),
               ),
+              // 3.8: Home Assistant's own Zigbee to Zigbee2MQTT.
+              ListTile(
+                key: const Key('settings-zha-move'),
+                leading: const Icon(Icons.swap_horiz),
+                title: Text(l10n.haConnectZhaMove),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => showZhaMoveSheet(context, ref, ZhaMoveFrom.help),
+              ),
               // 3.5.0: the help bubble on a home's dashboard; off after a
               // long-press › Hide, back on from here.
               SwitchListTile(
@@ -254,6 +266,14 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(l10n.settingsFeatureRequestSubtitle),
                 onTap: () => sendFeedback(context, ref, problem: false),
               ),
+              if (ref.watch(chatEarlyOfferedProvider))
+                ListTile(
+                  key: const Key('settings-chat-early'),
+                  leading: const Icon(Icons.chat_outlined),
+                  title: Text(l10n.chatEarlyTitle),
+                  subtitle: Text(l10n.settingsChatEarlySubtitle),
+                  onTap: () => showChatEarlySheet(context),
+                ),
               ListTile(
                 key: const Key('settings-poll'),
                 leading: const Icon(Icons.how_to_vote_outlined),
@@ -279,7 +299,8 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: Text(
                     ref.watch(proStatusProvider) == ProStatus.unlocked
                         ? l10n.proUnlocked
-                        : l10n.proAbout,
+                        // 3.6: the trial's days left, while it runs.
+                        : proTrialDaysLeftText(ref, l10n) ?? l10n.proAbout,
                   ),
                   onTap: () => openPro(context, from: ProFrom.settings),
                 ),

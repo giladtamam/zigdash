@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../features/discovery/models/z2m_device.dart';
 import '../features/scenes/models/scene.dart';
+import '../features/scenes/scene_capture.dart' show engineCanSend, jsonObjectOf;
 
 /// An Automation (CONTEXT.md) as the Engine stores it: one retained
 /// `zigdash/automations/rules/<id>` message (zigdash-3.0.md §3). Fields the
@@ -319,7 +320,8 @@ List<String> actionStatesFor(Z2mDevice device) {
 
 /// Resolves a Scene's `/set` topics into Engine commands by IEEE address, so
 /// a renamed device keeps working; a topic that matches no device is kept as
-/// a raw topic command.
+/// a raw topic command. Actions the Engine can't send (a raw payload, a
+/// topic outside the base: own tiles, 3.8.7) are left out, not sent as `{}`.
 List<EngineCommand> sceneCommands(List<SceneAction> actions, List<Z2mDevice> devices, String base) {
   final byTopic = {
     for (final d in devices)
@@ -327,18 +329,11 @@ List<EngineCommand> sceneCommands(List<SceneAction> actions, List<Z2mDevice> dev
   };
   return [
     for (final a in actions)
-      () {
-        Map<String, Object?> payload;
-        try {
-          payload = Map<String, Object?>.from(jsonDecode(a.payload) as Map);
-        } catch (_) {
-          payload = const {};
-        }
-        final ieee = byTopic[a.setTopic];
-        return ieee != null
-            ? EngineCommand(ieee: ieee, payload: payload)
-            : EngineCommand(topic: a.setTopic, payload: payload);
-      }(),
+      if (engineCanSend(a, base))
+        if (byTopic[a.setTopic] case final ieee?)
+          EngineCommand(ieee: ieee, payload: jsonObjectOf(a.payload)!)
+        else
+          EngineCommand(topic: a.setTopic, payload: jsonObjectOf(a.payload)!),
   ];
 }
 

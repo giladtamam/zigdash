@@ -7,11 +7,17 @@ class ProbeResult {
     required this.host,
     required this.port,
     this.needsAuth = false,
+    this.untrustedCert = false,
   });
 
   final String host;
   final int port;
   final bool needsAuth;
+
+  /// The broker's TLS certificate isn't one the phone trusts (3.8.5). The
+  /// scan accepts it only to see that a broker is there; the app itself
+  /// never does, so a login can't help.
+  final bool untrustedCert;
 
   String get key => '$host:$port';
 
@@ -23,7 +29,9 @@ class ProbeResult {
   int get hashCode => Object.hash(host, port);
 
   @override
-  String toString() => 'ProbeResult($host:$port, needsAuth=$needsAuth)';
+  String toString() =>
+      'ProbeResult($host:$port, needsAuth=$needsAuth'
+      '${untrustedCert ? ', untrustedCert' : ''})';
 }
 
 /// One probe's full outcome: the broker, if the port spoke MQTT, and whether

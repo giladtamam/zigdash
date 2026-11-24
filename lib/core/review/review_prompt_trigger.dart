@@ -7,9 +7,11 @@ import '../analytics/analytics_events.dart';
 import 'command_confirmations.dart';
 import 'review_prompt_controller.dart';
 
-/// Which confirmed command of the session may ask for a review (3.4.8):
-/// the third, not the first, so one lucky tap is not enough.
-const kReviewNthCommand = 3;
+/// Which confirmed command of the session may ask for a review. The third
+/// in 3.4.8, which almost never happened (4 asks in a week); the first since
+/// 3.6.1, as the policy's two days of working use already rule out a lucky
+/// tap.
+const kReviewNthCommand = 1;
 
 /// Wait after the confirmation before asking, so the tile's own
 /// confirmation is seen first.
@@ -56,7 +58,7 @@ class _ReviewPromptTriggerState extends ConsumerState<ReviewPromptTrigger> {
       ref.read(reviewPromptControllerProvider).recordCommandConfirmed();
       _confirmed++;
       if (_confirmed == kReviewNthCommand) {
-        _askLater(ReviewTrigger.command, nth: _confirmed);
+        _askLater(ReviewTrigger.command);
       }
     });
     // 2.8.1: live data on the dashboard counts too (sensor-only homes).
@@ -70,14 +72,12 @@ class _ReviewPromptTriggerState extends ConsumerState<ReviewPromptTrigger> {
     });
   }
 
-  void _askLater(ReviewTrigger trigger, {int? nth}) {
+  void _askLater(ReviewTrigger trigger) {
     late final Timer timer;
     timer = Timer(kReviewDelay, () {
       _pending.remove(timer);
       if (!mounted) return;
-      ref
-          .read(reviewPromptControllerProvider)
-          .maybeRequest(trigger: trigger, nth: nth);
+      ref.read(reviewPromptControllerProvider).maybeRequest(trigger: trigger);
     });
     _pending.add(timer);
   }

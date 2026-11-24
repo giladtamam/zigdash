@@ -156,7 +156,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA non ha un broker MQTT: parla direttamente con Home Assistant, quindi ZigDash non può collegarsi. Per usare ZigDash, passa a Zigbee2MQTT (disponibile come applicazione di Home Assistant o container Docker), che fornisce un broker MQTT.';
+      'ZHA non ha un broker MQTT: parla direttamente con Home Assistant, quindi ZigDash non può collegarsi. Per usare ZigDash, passa a Zigbee2MQTT (disponibile come applicazione di Home Assistant o container Docker), che funziona con un broker MQTT come Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -851,12 +851,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get panelCoverClose => 'Chiudi';
 
   @override
-  String get panelToggleNoState => '(nessuno stato)';
-
-  @override
-  String get panelToggleError => 'err';
-
-  @override
   String get panelStateOn => 'ON';
 
   @override
@@ -1196,7 +1190,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Nessun dispositivo controllabile trovato. Controlla che siano abbinati, poi tocca aggiorna.';
+      'Nessun dispositivo o riquadro controllabile trovato. Controlla che siano abbinati, poi tocca aggiorna.';
 
   @override
   String get sceneFormReadingState => 'Lettura dello stato attuale…';
@@ -1217,11 +1211,36 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Seleziona almeno un dispositivo da salvare.';
+      'Seleziona almeno un dispositivo o un riquadro.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Non è stato salvato nulla di impostabile dai dispositivi selezionati.';
+
+  @override
+  String get sceneFormTilesHeader => 'I tuoi riquadri';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Riquadri che hai creato tu. La scena invia quello che invia il riquadro.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Funziona solo da questo telefono a casa: non dalle Automazioni né da fuori.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count altre azioni vengono mantenute',
+      one: '1 altra azione viene mantenuta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Rimuovi';
 
   @override
   String get sceneDeleteTitle => 'Eliminare la scena?';
@@ -1247,7 +1266,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return '$count dispositivi';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count azioni',
+      one: '1 azione',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1375,6 +1400,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il broker non ha risposto al login in tempo. Home Assistant può impiegare qualche secondo per verificarlo, quindi riprova.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Il tuo telefono non si fida del certificato di crittografia di questo broker: è autofirmato, scaduto o fatto per un altro nome. ZigDash non può ancora usarlo. Sulla rete di casa usa invece la porta non cifrata 1883 del broker, oppure dai al broker un certificato di un\'autorità pubblica.';
+
+  @override
+  String get diagTlsFailed =>
+      'La connessione cifrata non è partita. Il broker potrebbe chiedere un certificato client, che ZigDash non supporta. Sulla rete di casa collegati invece senza crittografia: TCP invece di TLS, di solito sulla porta 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Il broker ha rifiutato nome utente o password. Controlla le credenziali.';
 
@@ -1389,10 +1422,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get diagTcpHaNoBroker =>
       'Questo è il tuo Home Assistant, ma non ha nessun broker MQTT in esecuzione. Installa e avvia l\'applicazione Mosquitto broker (Impostazioni › Applicazioni), poi riprova.';
-
-  @override
-  String get diagResolveLocalNameIos =>
-      'Il telefono non ha trovato questo nome. Controlla che sia scritto bene, oppure inserisci l\'indirizzo IP (Home Assistant lo mostra in Impostazioni › Sistema › Rete).';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1591,7 +1620,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'Aggiungi i componenti aggiuntivi Mosquitto broker e Zigbee2MQTT, poi accedi da ZigDash con il tuo utente Home Assistant.';
+      'Aggiungi le applicazioni Mosquitto broker e Zigbee2MQTT (Impostazioni › Applicazioni), poi accedi da ZigDash con il tuo utente Home Assistant.';
 
   @override
   String get noHubRadio =>
@@ -1675,7 +1704,43 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Questa casa si collega tramite la pagina Zigbee2MQTT. Inserisci il tuo broker MQTT (di solito la stessa macchina, porta 1883) per attivare automazioni, avvisi e cronologia. Dopo il salvataggio ZigDash si collega tramite il broker.';
+      'Questa casa si collega tramite la pagina Zigbee2MQTT. Inserisci il tuo broker MQTT (di solito la stessa macchina, porta 1883) per attivare automazioni, avvisi e cronologia. Quando il broker ha i tuoi dispositivi, ZigDash passa a esso.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Connesso, ma questo broker non ha nessuno dei tuoi dispositivi. Se hai appena attivato il broker, riavvia Zigbee2MQTT perché si colleghi a esso.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT usa $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Lettura delle impostazioni di Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Continuare con la pagina Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Questo broker ha risposto, ma non ha nessuno dei tuoi dispositivi, quindi le tue dashboard sarebbero vuote. Zigbee2MQTT forse usa un altro broker, o va riavviato dopo l\'attivazione del broker.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Il broker non ha risposto, quindi le tue dashboard sarebbero vuote.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Il broker ha rifiutato l\'accesso, quindi le tue dashboard sarebbero vuote.';
+
+  @override
+  String get connKeepPage => 'Tieni la pagina Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Salva comunque';
+
+  @override
+  String get connChecking => 'Verifica del broker…';
 
   @override
   String get setupManualEntry => 'Inserisci i dati a mano';
@@ -1720,10 +1785,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Le notifiche di ZigDash sono disattivate, quindi niente promemoria. Puoi attivarle nelle impostazioni di Android.';
-
-  @override
-  String get reminderNoPermissionIos =>
-      'Le notifiche di ZigDash sono disattivate, quindi niente promemoria. Puoi attivarle in Impostazioni › ZigDash › Notifiche.';
 
   @override
   String get reminderChannel => 'Promemoria configurazione';
@@ -1873,6 +1934,39 @@ class AppLocalizationsIt extends AppLocalizations {
       'Non conteneva un indirizzo. Nell\'app Home Assistant apri Impostazioni › App companion, tocca il tuo server e poi l\'icona di condivisione in alto.';
 
   @override
+  String get haLinkNote =>
+      'Questo è l\'indirizzo del tuo link. Accedi per collegarti.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Questo è l\'indirizzo del link che hai aperto prima di installare ZigDash. Accedi per collegarti.';
+
+  @override
+  String get haLinkNothing =>
+      'Quel link non conteneva un indirizzo di Home Assistant. Creane uno nuovo su zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Usa un computer';
+
+  @override
+  String get haComputerTitle => 'Usa un computer';
+
+  @override
+  String get haComputerBody =>
+      'Su un computer con Home Assistant aperto, vai a questa pagina e incolla lì l\'indirizzo di Home Assistant. Poi scansiona il codice con la fotocamera di questo telefono.';
+
+  @override
+  String get haComputerCopy => 'Copia link';
+
+  @override
+  String get setupLinkPending =>
+      'Il tuo link ha portato un indirizzo di Home Assistant. Tocca Home Assistant per usarlo.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Il tuo link non conteneva un indirizzo di Home Assistant. Creane uno nuovo su zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Il modo più rapido: nell\'app Home Assistant apri Impostazioni › App companion, tocca il tuo server, poi l\'icona di condivisione in alto, e scegli ZigDash. Da un browser, condividi la pagina con ZigDash.';
 
@@ -1903,6 +1997,58 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Questo Home Assistant non ha l\'integrazione MQTT. Serve anche a Zigbee2MQTT: in Home Assistant aggiungi l\'applicazione Mosquitto broker (Impostazioni › Applicazioni) e l\'integrazione MQTT, poi riprova.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dispositivi',
+      one: '1 dispositivo',
+    );
+    return 'Il tuo Zigbee funziona in ZHA, lo Zigbee integrato di Home Assistant ($_temp0). ZigDash funziona con Zigbee2MQTT, quindi non può mostrarli. Passare a Zigbee2MQTT significa associare di nuovo i dispositivi; la guida mostra due modi.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Passare da ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Questo Home Assistant non ha l\'integrazione MQTT né app (funziona come container), quindi Mosquitto e Zigbee2MQTT girano come container propri accanto a esso. Se girano già, collega ZigDash direttamente a Mosquitto. Oppure aggiungi l\'integrazione MQTT in Home Assistant e riprova.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Come collegarsi';
+
+  @override
+  String get zhaMoveBody =>
+      'ZigDash funziona con Zigbee2MQTT. Passare significa associare di nuovo i dispositivi. Home Assistant può continuare a usarli dopo che aggiungi la sua integrazione MQTT.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Secondo adattatore: stanza per stanza, ZHA continua a funzionare';
+
+  @override
+  String get zhaMoveWaySame => 'Stesso adattatore: gratis, tutto in una volta';
+
+  @override
+  String get zhaMoveReadSteps => 'Leggi i passaggi';
+
+  @override
+  String get zhaMoveImMoving => 'Sto passando';
+
+  @override
+  String get zhaMoveNotNow => 'Non ora';
+
+  @override
+  String get zhaMovingNoted =>
+      'Fatto. Quando Zigbee2MQTT è attivo, apri la configurazione: ZigDash lo trova e ti propone nomi e stanze da Home Assistant.';
+
+  @override
+  String get setupMovingTitle => 'Collegati al tuo nuovo Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Stai lasciando ZHA? Quando Zigbee2MQTT è attivo, ZigDash lo cerca nella tua rete.';
 
   @override
   String get haConnectSignInFailed =>
@@ -2175,6 +2321,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get setupErrLoginNoAnswerAction => 'Riprova';
 
   @override
+  String get setupErrTlsUntrustedTitle =>
+      'Il tuo telefono non si fida del certificato di questo broker';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Connessione cifrata non riuscita';
+
+  @override
+  String get setupErrTlsAction => 'Modifica impostazioni';
+
+  @override
   String get setupNoZ2mTitle =>
       'Il tuo broker funziona, ma Zigbee2MQTT non pubblica qui';
 
@@ -2278,10 +2434,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get setupVpnHint =>
       'C\'è una VPN attiva, e può nascondere la rete di casa alla scansione. Se sei a casa, disattiva la VPN e tocca Riprova. Oppure lasciala attiva e consenti l\'accesso alla rete locale (LAN) nelle impostazioni dell\'app VPN.';
-
-  @override
-  String get setupLocalNetworkIos =>
-      'ZigDash ha bisogno dell\'accesso alla rete locale per trovare il tuo hub. Se hai detto di no, consentilo in Impostazioni › Privacy e sicurezza › Rete locale.';
 
   @override
   String get setupNoBrokerZ2mTitle =>
@@ -2395,16 +2547,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String setupAddressNotResolvedHa(String host, String button) {
     return '$host non si trova da questo telefono; spesso Android non riesce a risolvere i nomi .local. Tocca $button qui sopra e usa l\'indirizzo con cui apri Home Assistant nel browser, oppure scrivi qui il suo indirizzo IP. Home Assistant lo mostra in Impostazioni › Sistema › Rete.';
-  }
-
-  @override
-  String setupAddressNotResolvedHaIos(String host, String button) {
-    return '$host non si trova da questo telefono. Tocca $button qui sopra e usa l\'indirizzo con cui apri Home Assistant nel browser, oppure scrivi qui il suo indirizzo IP. Home Assistant lo mostra in Impostazioni › Sistema › Rete.';
-  }
-
-  @override
-  String setupAddressNotResolvedIos(String host) {
-    return 'Impossibile risolvere $host. Controlla il nome o prova invece con l\'indirizzo IP. Home Assistant lo mostra in Impostazioni › Sistema › Rete.';
   }
 
   @override
@@ -3315,10 +3457,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'I nomi che finiscono in .local non funzionano su tutti i telefoni Android. Prova l\'indirizzo numerico dell\'hub, come 192.168.1.20.';
 
   @override
-  String get tipNumberAddressBodyIos =>
-      'Se il nome non funziona, prova l\'indirizzo numerico dell\'hub, come 192.168.1.20.';
-
-  @override
   String get tipPortProtocolTitle => 'Porta e protocollo';
 
   @override
@@ -3895,10 +4033,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nasconde anche la barra di stato e quella di navigazione di Android.';
 
   @override
-  String get wallFullscreenSubtitleIos =>
-      'Nasconde anche la barra di stato; l\'indicatore Home si attenua.';
-
-  @override
   String get wallDimAfter => 'Attenua dopo';
 
   @override
@@ -4046,10 +4180,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Un PIN dimenticato si può reimpostare solo cancellando i dati di ZigDash nelle impostazioni di Android, il che rimuove questa casa se non hai un backup. Esportane uno prima di impostare un PIN.';
 
   @override
-  String get kioskPinForgotBodyIos =>
-      'Un PIN dimenticato si può reimpostare solo eliminando e reinstallando ZigDash, il che rimuove questa casa se non hai un backup. Esportane uno prima di impostare un PIN.';
-
-  @override
   String get kioskExportBackup => 'Esporta backup';
 
   @override
@@ -4058,13 +4188,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get kioskOsPinSubtitle =>
       'Android blocca Home e le app recenti finché ZigDash non viene sbloccato. Un tablet senza blocco schermo si sblocca con un gesto, quindi questo non è il blocco vero e proprio.';
-
-  @override
-  String get kioskGuidedAccessTitle => 'Blocca su ZigDash con Accesso Guidato';
-
-  @override
-  String get kioskGuidedAccess =>
-      'iOS tiene ZigDash sullo schermo finché non termini l\'Accesso Guidato: attivalo in Impostazioni › Accessibilità › Accesso Guidato, poi premi tre volte il tasto laterale in ZigDash.';
 
   @override
   String get kioskOn => 'Kiosk attivo. Tieni premuto il titolo per uscire.';
@@ -4165,11 +4288,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Configurazione, dashboard, il controllo di ogni dispositivo, i widget, i riquadri delle impostazioni rapide, gli avvisi, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.';
-
-  @override
-  String get proFreeBodyIos =>
-      'Configurazione, dashboard, il controllo di ogni dispositivo, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.';
+      'Configurazione, dashboard, il controllo di ogni dispositivo, i widget, i riquadri delle impostazioni rapide, gli avvisi, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che oggi è gratuito diventerà a pagamento.';
 
   @override
   String get proBuy => 'Ottieni Pro';
@@ -4184,15 +4303,26 @@ class AppLocalizationsIt extends AppLocalizations {
       'Un solo pagamento, nessun abbonamento. L\'hai acquistato su un altro telefono con lo stesso account Google? Si sblocca da solo.';
 
   @override
-  String get proOnceIos =>
-      'Un solo pagamento, nessun abbonamento. L\'hai acquistato su un altro iPhone o iPad con lo stesso Account Apple? Si sblocca da solo, oppure tocca Ripristina acquisto.';
-
-  @override
   String get proRestore => 'Ripristina acquisto';
 
   @override
+  String get proRestored => 'Pro è sbloccato su questo telefono.';
+
+  @override
   String get proRestoreNone =>
+      'Google Play non ha acquisti di Pro per questo account Google. L\'hai acquistato con un altro account? Cambia account nel Play Store e riprova.';
+
+  @override
+  String get proRestoreFailed =>
+      'Impossibile raggiungere Google Play. Riprova tra un momento.';
+
+  @override
+  String get proRestoreNoneIos =>
       'Nessun acquisto di ZigDash Pro trovato per questo ID Apple.';
+
+  @override
+  String get proRestoreFailedIos =>
+      'Impossibile contattare l\'App Store. Riprova tra un momento.';
 
   @override
   String get historyNotRecorded =>
@@ -4355,6 +4485,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Home Assistant è nella tua rete. ZigDash può dare un nome ai tuoi riquadri e aggiungere una dashboard per ogni piano e stanza, come li hai impostati lì.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash può dare un nome ai riquadri e aggiungere una dashboard per piano e stanza, con i nomi e le stanze dei dispositivi in Home Assistant, compresi quelli di ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT non ha ancora dispositivi. Associa prima lì i dispositivi, poi apri Importa da Home Assistant nelle impostazioni di questa casa.';
+
+  @override
   String get haImportOfferLater => 'Non ora';
 
   @override
@@ -4434,27 +4572,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String engineTooOldBody(Object version) {
     return 'Il tuo Zigbee2MQTT è la versione $version. Le automazioni richiedono la 2.4 o successiva. Aggiorna Zigbee2MQTT sull\'hub, poi torna qui.';
   }
-
-  @override
-  String get engineIntroTitle =>
-      'Le automazioni girano sull\'hub, non sul telefono';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash mette ZigDash Engine dentro Zigbee2MQTT sul tuo hub. Osserva i dispositivi ed esegue le tue regole, così una luce si accende quando la porta si apre anche col telefono spento e senza internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Niente da installare a mano. ZigDash lo fa tramite la rete di casa.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Il tuo Zigbee2MQTT è la versione $version.';
-  }
-
-  @override
-  String get engineIntroRemove =>
-      'Puoi rimuoverlo quando vuoi da questa schermata.';
 
   @override
   String get engineInstall => 'Installa sull\'hub';
@@ -4682,6 +4799,19 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Questa scena non ha niente da inviare.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count azioni di questa scena funzionano solo da questo telefono a casa, non dalle Automazioni.',
+      one:
+          '1 azione di questa scena funziona solo da questo telefono a casa, non dalle Automazioni.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>
@@ -5663,4 +5793,616 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: cronologia più lunga, più automazioni e altro ancora.';
+
+  @override
+  String get chatEarlyTitle => 'Chatta con la tua casa';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Invia un messaggio come «chiudi la tapparella dell\'ufficio» o «la porta sul retro è aperta?» e la tua casa risponde. Ora è disponibile per chi ha ZigDash Pro. I primi $count iscritti ricevono un codice fondatore: gratis per 3 mesi, accesso remoto incluso.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Iscriviti su Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Iscriviti via email';
+
+  @override
+  String get chatEarlyNotForMe => 'Non fa per me';
+
+  @override
+  String get chatEarlyClose => 'Chiudi';
+
+  @override
+  String get chatEarlyEmailHint => 'La tua email';
+
+  @override
+  String get chatEarlyBadEmail => 'Non sembra un indirizzo email.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'La useremo solo per invitarti alla beta e dirti il prezzo.';
+
+  @override
+  String get chatEarlyPrivacy => 'Privacy';
+
+  @override
+  String get chatEarlySend => 'Invia';
+
+  @override
+  String get chatEarlyFailed =>
+      'Invio non riuscito. Prova con Telegram o più tardi.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Sei il n. $position della lista: tra i primi $count. Riceverai un codice fondatore: chat e accesso remoto, gratis per 3 mesi.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Sei il n. $position della lista. I primi $count posti sono presi. La chat è ora disponibile per chi ha ZigDash Pro.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Questa email è già nella lista.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Dopo i mesi gratuiti, 2,49 € al mese andrebbero bene?';
+
+  @override
+  String get chatEarlyYes => 'Sì';
+
+  @override
+  String get chatEarlyMaybe => 'Forse';
+
+  @override
+  String get chatEarlyNo => 'No';
+
+  @override
+  String get chatEarlyThanks => 'Grazie, annotato.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Accesso anticipato: iscriviti';
+
+  @override
+  String get historyOnTitle => 'Guarda la tua casa nei giorni';
+
+  @override
+  String get historyOnBody =>
+      'Attiva la cronologia per vedere temperature, consumi e porte nei giorni e nelle settimane, non solo ora. ZigDash Engine registra sul tuo hub, anche a telefono spento.';
+
+  @override
+  String get historyOnTurnOn => 'Attiva cronologia';
+
+  @override
+  String get historyOnLater => 'Non ora';
+
+  @override
+  String get historyOnWorking => 'Attivazione della cronologia…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine registra la cronologia sul tuo hub, quindi continua anche a telefono spento. Il tuo Zigbee2MQTT blocca le estensioni, come le nuove installazioni: ZigDash attiverebbe «Consenti JavaScript esterno» e lo riavvierebbe.';
+
+  @override
+  String get historyOnAllow => 'Consenti e riavvia';
+
+  @override
+  String get historyOnBrokerBody =>
+      'La cronologia passa dal tuo broker MQTT. ZigDash raggiunge questa casa tramite la pagina di Zigbee2MQTT, quindi aggiungi prima il broker.';
+
+  @override
+  String get historyOnAddBroker => 'Aggiungi il broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Il tuo hub non può eseguire ZigDash Engine. Questo telefono può registrare al suo posto finché ZigDash è aperto: ideale su un tablet a parete sempre acceso.';
+
+  @override
+  String get historyOnPhone => 'Registra su questo telefono';
+
+  @override
+  String get proTrialStartedTitle => 'Pro è attivo per 14 giorni';
+
+  @override
+  String get proTrialOfferTitle => 'Prova ZigDash Pro gratis per 14 giorni';
+
+  @override
+  String get proTrialWhat =>
+      'La cronologia di 7 e 30 giorni, gli extra per il tablet a parete e più di tre automazioni.';
+
+  @override
+  String get proTrialNoPayment => 'Nessun pagamento, niente si rinnova.';
+
+  @override
+  String get proTrialStart => 'Inizia la prova';
+
+  @override
+  String get proTrialEndingTitle => 'La tua prova di Pro finisce tra 2 giorni';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Tieni Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'la cronologia settimanale e mensile';
+
+  @override
+  String get proTrialUsedWall => 'gli extra per il tablet a parete';
+
+  @override
+  String get proTrialUsedAutomation => 'più di tre automazioni';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Hai usato $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Dopo, tutto ciò che hai configurato resta; le viste settimana e mese e le nuove automazioni oltre la terza richiedono Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Prova: $days giorni rimasti',
+      one: 'Prova: 1 giorno rimasto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'La prova è finita. Tutto ciò che hai configurato è ancora lì.';
+
+  @override
+  String get engineSlimCard =>
+      'Le automazioni girano sul tuo hub con ZigDash Engine. ZigDash lo installa lì quando salvi la prima.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'Crea le automazioni a casa: ZigDash installa allora il suo Engine sul tuo hub, tramite la rete di casa.';
+
+  @override
+  String get engineSheetSource => 'Vedi il codice sorgente su GitHub';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine esegue le tue automazioni';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine è un singolo file open source che ZigDash aggiunge alla cartella di Zigbee2MQTT sul tuo hub. Esegue lì le tue automazioni, anche col telefono spento. Puoi rimuoverlo quando vuoi dalla scheda Automazioni.';
+
+  @override
+  String get engineSheetInstallSave => 'Installa e salva';
+
+  @override
+  String get engineSheetSaveOnly => 'Salva senza eseguire';
+
+  @override
+  String get engineSheetSave => 'Salva';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT sul tuo hub non ha risposto in tempo, quindi ZigDash non può installare il suo Engine ora. Salva ora e installalo dalla scheda Automazioni quando l\'hub risponde.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'La tua automazione è salvata. Verrà eseguita quando ZigDash Engine sarà sul tuo hub.';
+
+  @override
+  String get engineWaitingTitle => 'Salvate prima, in attesa di ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Partirà dopo l\'installazione';
+
+  @override
+  String get engineWaitingPaused => 'Resta in pausa';
+
+  @override
+  String get autoNotRunTitle => 'Nessuna è ancora attiva';
+
+  @override
+  String get autoNotRunBody =>
+      'Non attiva: ZigDash Engine non è sul tuo hub. Fino ad allora le conserva il tuo broker MQTT, e un broker senza persistenza le perde al riavvio.';
+
+  @override
+  String get autoNotRunning => 'Non attiva';
+
+  @override
+  String get historyUsePhoneInstead => 'Usa invece questo telefono';
+
+  @override
+  String get chatTitle => 'Chat (beta)';
+
+  @override
+  String get chatRowReady => 'Parla con la tua casa da Telegram';
+
+  @override
+  String get chatRowNoPro => 'Parte di ZigDash Pro (non inclusa nella prova)';
+
+  @override
+  String get chatRowNoRemote => 'Attiva prima il controllo remoto';
+
+  @override
+  String get chatRowNoEngine => 'Serve ZigDash Engine sul tuo hub';
+
+  @override
+  String get chatIntroTitle => 'Parla con la tua casa da Telegram';
+
+  @override
+  String get chatIntroBody =>
+      'Invia al bot ZigDash Home su Telegram un messaggio come «la porta sul retro è aperta?» o «chiudi la tapparella dell\'ufficio», e la tua casa risponde. Legge ciò che riportano i tuoi dispositivi e la loro cronologia; con Lettura e controllo può anche comandare le luci, tapparelle, interruttori, prese e termostati che scegli.';
+
+  @override
+  String get chatIntroNever =>
+      'Non apre, chiude o modifica mai serrature, valvole o sirene, e non cambia mai automazioni o impostazioni: per questo ti dice di aprire ZigDash.';
+
+  @override
+  String get chatIntroBeta =>
+      'Gratis durante la beta: fino a 300 messaggi al mese per questa casa.';
+
+  @override
+  String get chatIntroWho =>
+      'Chi legge i messaggi: Telegram, che li trasporta; il nostro server nell\'UE, che conserva la conversazione per 24 ore; e Anthropic (Claude) negli USA, che scrive le risposte. Ciò che Chat legge sulla tua casa fa la stessa strada.';
+
+  @override
+  String get chatPolicy => 'Come Chat tratta i tuoi dati';
+
+  @override
+  String get chatLinkedTitle => 'Account collegati';
+
+  @override
+  String get chatLinkedNone => 'Nessun account Telegram collegato per ora.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'Impossibile caricare gli account collegati. Controlla la connessione a internet.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · ultimo uso $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · non ancora usato';
+  }
+
+  @override
+  String get chatRemove => 'Rimuovi';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'Rimuovere $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'Questo account Telegram non potrà più raggiungere la tua casa, e la sua conversazione viene eliminata.';
+
+  @override
+  String get chatRemovedLater =>
+      'Rimosso. Il tuo hub lo dimenticherà la prossima volta che ZigDash sarà aperto a casa.';
+
+  @override
+  String get chatAuditTitle => 'Cosa ha fatto Chat';
+
+  @override
+  String get chatAuditShow => 'Mostra';
+
+  @override
+  String get chatAuditEmpty => 'Ancora niente.';
+
+  @override
+  String get chatAuditFailed =>
+      'Il tuo hub non ha risposto. Riprova più tardi.';
+
+  @override
+  String chatAuditSent(String what) {
+    return 'impostato: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'non inviato';
+
+  @override
+  String get chatHereTitle => 'La chat con la tua casa è arrivata';
+
+  @override
+  String get chatHereBody =>
+      'Collega il tuo account Telegram e chiedi alla tua casa \"la porta sul retro è aperta?\" o falle chiudere una tapparella. Inclusa in Pro, gratis durante la beta.';
+
+  @override
+  String get chatHereSetUp => 'Configura';
+
+  @override
+  String get chatHereNotNow => 'Non ora';
+
+  @override
+  String get chatLinkNew => 'Collega un account Telegram';
+
+  @override
+  String get chatLinkAnother => 'Collega un altro account Telegram';
+
+  @override
+  String get chatScopeRead => 'Lettura';
+
+  @override
+  String get chatScopeReadHelp => 'Risponde alle domande. Non cambia nulla.';
+
+  @override
+  String get chatScopeControl => 'Lettura e controllo';
+
+  @override
+  String get chatScopeControlHelp =>
+      'Comanda anche i dispositivi che scegli qui sotto.';
+
+  @override
+  String get chatControlsTitle => 'Cosa può comandare Chat';
+
+  @override
+  String get chatControlsHelp =>
+      'Attivi all\'inizio: luci e tapparelle sulle tue dashboard. Disattivati all\'inizio: interruttori e prese (possono alimentare una stufa, una caldaia o una pompa), termostati, cancelli e porte del garage. Serrature, valvole e sirene non sono mai elencate.';
+
+  @override
+  String get chatControlsEmpty => 'Ancora nessun dispositivo da scegliere.';
+
+  @override
+  String get chatKindLight => 'Luce';
+
+  @override
+  String get chatKindCover => 'Tapparella';
+
+  @override
+  String get chatKindSwitch => 'Interruttore o presa';
+
+  @override
+  String get chatKindThermostat => 'Termostato';
+
+  @override
+  String get chatGateNote => 'cancello o porta, disattivato all\'inizio';
+
+  @override
+  String get chatAgeAndAccount =>
+      'Ogni persona collega il proprio account Telegram, con il proprio ambito. Le persone collegate devono avere almeno 16 anni. Chiunque usi un account Telegram collegato può fare ciò che il suo ambito consente. Anche Lettura mostra se c\'è qualcuno in casa e quali porte e finestre sono aperte.';
+
+  @override
+  String get chatEngineOld =>
+      'ZigDash Engine sul tuo hub si sta aggiornando alla versione con Chat. Riprova tra un minuto.';
+
+  @override
+  String get chatLinkButton => 'Collega Telegram';
+
+  @override
+  String get chatLinkAway =>
+      'Collega a casa: ZigDash lo configura sul tuo hub tramite la rete di casa.';
+
+  @override
+  String get chatCodeTitle => 'Completa in Telegram';
+
+  @override
+  String get chatCodeBody =>
+      'In Telegram, tocca Avvia nel bot ZigDash Home. Ti invia un codice di 4 cifre: inseriscilo qui entro 10 minuti.';
+
+  @override
+  String get chatCodeHint => 'Codice di 4 cifre';
+
+  @override
+  String get chatCodeConfirm => 'Conferma';
+
+  @override
+  String get chatOpenTelegram => 'Riapri Telegram';
+
+  @override
+  String get chatLinkedDone =>
+      'Collegato. Invia un messaggio al bot per provarlo.';
+
+  @override
+  String get chatFailUnreachable =>
+      'Impossibile raggiungere i server di ZigDash. Controlla la connessione a internet e riprova.';
+
+  @override
+  String get chatFailLogin =>
+      'Il relay non ha accettato l\'accesso remoto di questo telefono. Apri Controllo remoto, disattivalo e riattivalo.';
+
+  @override
+  String get chatFailPurchase =>
+      'Google Play non conferma un acquisto di ZigDash Pro per questa casa.';
+
+  @override
+  String get chatFailTooMany => 'Troppi tentativi. Riprova tra un\'ora.';
+
+  @override
+  String get chatFailExpired => 'Il codice è scaduto. Ricomincia.';
+
+  @override
+  String get chatFailWrongCode =>
+      'Non è il codice inviato dal bot. Controllalo e riprova.';
+
+  @override
+  String get chatFailRefused => 'Non ha funzionato. Riprova più tardi.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'Il bot non ha ancora ricevuto il codice. Apri Telegram, tocca Avvia nel bot ZigDash Home, poi inserisci il codice che ti invia.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'Non è il codice inviato dal bot. Tentativi rimasti: $count.';
+  }
+
+  @override
+  String get founderCodeAsk => 'Hai un codice fondatore?';
+
+  @override
+  String get founderCodeLabel => 'Codice fondatore';
+
+  @override
+  String get founderCodeUse => 'Usa il codice';
+
+  @override
+  String get founderCodeAtHome =>
+      'Inseriscilo a casa, con ZigDash Engine sull\'hub: ZigDash configura il controllo remoto tramite la rete di casa.';
+
+  @override
+  String get founderCodeWrong =>
+      'Questo non è un codice fondatore. Controllalo e riprova.';
+
+  @override
+  String get founderCodeUsed =>
+      'Questo codice è già stato usato. Ogni codice vale una volta.';
+
+  @override
+  String get founderCodeDeadline =>
+      'La data per inserire questo codice è passata. Chiedi più tempo da Ottieni aiuto.';
+
+  @override
+  String get founderCodeRevoked => 'Questo codice è stato ritirato.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Il tuo pass fondatore è attivo: controllo remoto e Chat per questa casa fino al $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Il tuo pass fondatore termina il $date. Con ZigDash Pro tieni controllo remoto e Chat, senza riconfigurare nulla.';
+  }
+
+  @override
+  String get founderGetPro => 'Ottieni Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Il tuo pass fondatore è terminato il $date. ZigDash Pro riporta controllo remoto e Chat, senza riconfigurare nulla.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Il tuo pass fondatore è terminato. ZigDash Pro riporta controllo remoto e Chat, senza riconfigurare nulla.';
+
+  @override
+  String get founderDeleted =>
+      'Il pass fondatore di questa casa è terminato e il suo controllo remoto è stato rimosso.';
+
+  @override
+  String get remoteRemoved =>
+      'Il controllo remoto di questa casa è stato rimosso dal relay.';
+
+  @override
+  String get founderSetUpWithPro => 'Configura con Pro';
+
+  @override
+  String get founderUseProTitle => 'Usare il tuo acquisto Pro per questa casa?';
+
+  @override
+  String get founderUseProBody =>
+      'Controllo remoto e Chat di questa casa passano al tuo acquisto Pro: stessi telefoni e collegamenti Chat, niente da riconfigurare. Un acquisto copre una casa.';
+
+  @override
+  String get founderUsePro => 'Usa Pro per questa casa';
+
+  @override
+  String get founderUpgraded => 'Questa casa ora usa il tuo acquisto Pro.';
+
+  @override
+  String get founderUpgradeTaken =>
+      'Questo acquisto appartiene già a un\'altra casa.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Impossibile passare questa casa al tuo acquisto Pro. Riprova più tardi.';
+
+  @override
+  String get remoteHubRefused => 'Il relay ha rifiutato l\'accesso dell\'hub';
+
+  @override
+  String get chatRowPassEnded =>
+      'Pass fondatore terminato: puoi ancora rimuovere i collegamenti';
+
+  @override
+  String get chatFailPassEnded =>
+      'Il pass fondatore di questa casa è terminato, quindi non si possono collegare nuovi account Telegram.';
+
+  @override
+  String get panelToggleNoState => '(nessuno stato)';
+
+  @override
+  String get panelToggleError => 'err';
+
+  @override
+  String get diagResolveLocalNameIos =>
+      'Il telefono non ha trovato questo nome. Controlla che sia scritto bene, oppure inserisci l\'indirizzo IP (Home Assistant lo mostra in Impostazioni › Sistema › Rete).';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Le notifiche di ZigDash sono disattivate, quindi niente promemoria. Puoi attivarle in Impostazioni › ZigDash › Notifiche.';
+
+  @override
+  String get setupLocalNetworkIos =>
+      'ZigDash ha bisogno dell\'accesso alla rete locale per trovare il tuo hub. Se hai detto di no, consentilo in Impostazioni › Privacy e sicurezza › Rete locale.';
+
+  @override
+  String setupAddressNotResolvedHaIos(String host, String button) {
+    return '$host non si trova da questo telefono. Tocca $button qui sopra e usa l\'indirizzo con cui apri Home Assistant nel browser, oppure scrivi qui il suo indirizzo IP. Home Assistant lo mostra in Impostazioni › Sistema › Rete.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return 'Impossibile risolvere $host. Controlla il nome o prova invece con l\'indirizzo IP. Home Assistant lo mostra in Impostazioni › Sistema › Rete.';
+  }
+
+  @override
+  String get tipNumberAddressBodyIos =>
+      'Se il nome non funziona, prova l\'indirizzo numerico dell\'hub, come 192.168.1.20.';
+
+  @override
+  String get wallFullscreenSubtitleIos =>
+      'Nasconde anche la barra di stato; l\'indicatore Home si attenua.';
+
+  @override
+  String get kioskPinForgotBodyIos =>
+      'Un PIN dimenticato si può reimpostare solo eliminando e reinstallando ZigDash, il che rimuove questa casa se non hai un backup. Esportane uno prima di impostare un PIN.';
+
+  @override
+  String get kioskGuidedAccessTitle => 'Blocca su ZigDash con Accesso Guidato';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS tiene ZigDash sullo schermo finché non termini l\'Accesso Guidato: attivalo in Impostazioni › Accessibilità › Accesso Guidato, poi premi tre volte il tasto laterale in ZigDash.';
+
+  @override
+  String get proFreeBodyIos =>
+      'Configurazione, dashboard, il controllo di ogni dispositivo, tre automazioni per casa e lo schermo a parete restano gratuiti. Niente di ciò che usi oggi verrà bloccato.';
+
+  @override
+  String get proOnceIos =>
+      'Un solo pagamento, nessun abbonamento. L\'hai acquistato su un altro iPhone o iPad con lo stesso Account Apple? Si sblocca da solo, oppure tocca Ripristina acquisto.';
+
+  @override
+  String get engineIntroTitle =>
+      'Le automazioni girano sull\'hub, non sul telefono';
+
+  @override
+  String get engineIntroBody =>
+      'ZigDash mette ZigDash Engine dentro Zigbee2MQTT sul tuo hub. Osserva i dispositivi ed esegue le tue regole, così una luce si accende quando la porta si apre anche col telefono spento e senza internet.';
+
+  @override
+  String get engineIntroNothingByHand =>
+      'Niente da installare a mano. ZigDash lo fa tramite la rete di casa.';
+
+  @override
+  String engineIntroVersion(Object version) {
+    return 'Il tuo Zigbee2MQTT è la versione $version.';
+  }
+
+  @override
+  String get engineIntroRemove =>
+      'Puoi rimuoverlo quando vuoi da questa schermata.';
 }

@@ -144,9 +144,24 @@ void main() {
         scenes: n,
         shortcuts: n,
       ).props;
-      expect([for (final n in [0, 1, 3, 4, 40]) props(n)['automations']], ['0', '1-3', '1-3', '4+', '4+']);
-      expect([for (final n in [0, 1, 12]) props(n)['scenes']], ['0', '1+', '1+']);
-      expect([for (final n in [0, 1, 12]) props(n)['shortcuts']], ['0', '1+', '1+']);
+      expect(
+        [
+          for (final n in [0, 1, 3, 4, 40]) props(n)['automations'],
+        ],
+        ['0', '1-3', '1-3', '4+', '4+'],
+      );
+      expect(
+        [
+          for (final n in [0, 1, 12]) props(n)['scenes'],
+        ],
+        ['0', '1+', '1+'],
+      );
+      expect(
+        [
+          for (final n in [0, 1, 12]) props(n)['shortcuts'],
+        ],
+        ['0', '1+', '1+'],
+      );
     });
 
     test('app_started: days since install, as a range', () {
@@ -391,5 +406,36 @@ void main() {
       );
       expect(bucket(11, const [0], ranges: const [(1, 10)], top: '11+'), '11+');
     });
+  });
+
+  // 3.8.6: saving a broker for a page Home.
+  test('page_broker carries the result, the answer and a device bucket', () {
+    expect(
+      const PageBrokerEvent(
+        PageBrokerResult.keptPage,
+        answered: PageBrokerAnswered.yes,
+        devices: 0,
+      ).props,
+      {'result': 'kept_page', 'answered': 'yes', 'devices': '0'},
+    );
+    expect(
+      const PageBrokerEvent(
+        PageBrokerResult.saved,
+        answered: PageBrokerAnswered.yes,
+        devices: 12,
+      ).props,
+      {'result': 'saved', 'answered': 'yes', 'devices': '6-20'},
+    );
+    expect(
+      const PageBrokerEvent(
+        PageBrokerResult.savedAnyway,
+        answered: PageBrokerAnswered.timeout,
+      ).props,
+      {'result': 'saved_anyway', 'answered': 'timeout'},
+    );
+    expect(
+      const PageBrokerEvent(PageBrokerResult.cancelled).name,
+      'page_broker',
+    );
   });
 }

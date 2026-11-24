@@ -58,6 +58,7 @@ class MqttManager {
     required this.password,
     String? clientIdOverride,
     MqttClientFactory? clientFactory,
+    BadCertWatcher? watchCert,
     Now? now,
     Future<bool> Function(String host, int port)? homeProbe,
     Duration homeProbeEvery = const Duration(seconds: 60),
@@ -66,6 +67,7 @@ class MqttManager {
        _clientIdOverride = clientIdOverride,
        _clientId = clientIdOverride ?? _shortClientId(config.id),
        _clientFactory = clientFactory ?? buildMqttClient,
+       _watchCert = watchCert ?? watchBadCert,
        _now = now ?? DateTime.now;
 
   // MQTT 3.1 caps client identifiers at 23 chars and some broker builds
@@ -129,6 +131,10 @@ class MqttManager {
   String _clientId;
   final String? _clientIdOverride;
   final MqttClientFactory _clientFactory;
+
+  /// Tells a broker certificate the phone doesn't trust apart from other
+  /// failures (3.8.5); the real one is [watchBadCert].
+  final BadCertWatcher _watchCert;
   final Now _now;
 
   mc.MqttClient? _client;
@@ -248,12 +254,15 @@ class MqttManager {
       ];
 
   /// Seeds saved values (loaded before [connect]). A later subscription to
-  /// an exact topic starts with its saved value.
-  void seedLastKnown(Iterable<MqttRxMessage> messages) {
+  /// an exact topic starts with its saved value. [asLive] (the demo, which
+  /// never connects) seeds them as this session's values, so bridge topics
+  /// such as the device list replay too (3.6.3).
+  void seedLastKnown(Iterable<MqttRxMessage> messages, {bool asLive = false}) {
     for (final m in messages) {
       _lastKnown[m.topic] = m;
+      if (asLive) _latest[m.topic] = m;
       final entry = _subs[m.topic];
-      if (entry != null && !entry.subject.hasValue && _replayable(m.topic)) entry.subject.add(m);
+      if (entry != null && !entry.subject.hasValue && (asLive || _replayable(m.topic))) entry.subject.add(m);
     }
   }
 
@@ -342,6 +351,10 @@ class MqttManager {
         return;
       }
       _client = client;
+      // Fresh for each candidate: a remote try after a local TLS failure
+      // starts clean (3.8.5).
+      var sawBadCert = false;
+      _watchCert(client, config, () => sawBadCert = true);
 
       try {
         // Hard wall on the whole connect. mqtt_client's connectTimeoutPeriod
@@ -369,7 +382,7 @@ class MqttManager {
           return;
         }
         _lastError = e.toString();
-        _attemptFailure ??= _failureOf(e, client);
+        _attemptFailure ??= _failureOf(e, client, sawBadCert: sawBadCert);
         client.disconnect();
         continue; // unreachable / refused — try the next candidate
       }
@@ -379,7 +392,11 @@ class MqttManager {
       }
       if (client.connectionStatus?.state != mc.MqttConnectionState.connected) {
         _lastError = 'Connect failed (no CONNACK)';
-        _attemptFailure ??= _failureOf(null, client);
+        _attemptFailure ??= _failureOf(
+          null,
+          client,
+          sawBadCert: sawBadCert,
+        );
         client.disconnect();
         continue;
       }
@@ -422,14 +439,22 @@ class MqttManager {
     _scheduleReconnect();
   }
 
-  /// A refused login is the broker's CONNACK code; anything else that got
-  /// past TCP without a CONNACK isn't an MQTT broker we can talk to.
-  static FailureKind _failureOf(Object? error, mc.MqttClient client) {
+  /// A refused login is the broker's CONNACK code; a certificate the phone
+  /// doesn't trust, or another TLS failure, is said as such (3.8.5);
+  /// anything else that got past TCP without a CONNACK isn't an MQTT broker
+  /// we can talk to.
+  static FailureKind _failureOf(
+    Object? error,
+    mc.MqttClient client, {
+    bool sawBadCert = false,
+  }) {
     final code = client.connectionStatus?.returnCode;
     if (code == mc.MqttConnectReturnCode.notAuthorized ||
         code == mc.MqttConnectReturnCode.badUsernameOrPassword) {
       return FailureKind.loginRejected;
     }
+    if (sawBadCert) return FailureKind.tlsUntrusted;
+    if (isTlsFailure(error)) return FailureKind.tlsFailed;
     if (error == null) return FailureKind.notMqtt;
     if (error is mc.NoConnectionException) {
       return failureKindFromMessage(error.toString());

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Přechod ze ZHA · ZigDash</title>
+<meta name="description" content="Jak přesunout síť Zigbee ze ZHA v Home Assistantu do Zigbee2MQTT: s druhým adaptérem místnost po místnosti, nebo se stejným adaptérem najednou, s nastavením pro každý adaptér a cestou zpět.">
+<link rel="canonical" href="https://zigdash.app/zha/cs/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zha/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zha/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zha/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zha/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zha/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zha/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zha/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zha/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zha/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zha/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zha/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zha/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zha/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zha/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Přechod ze ZHA · ZigDash">
+<meta property="og:description" content="Jak přesunout síť Zigbee ze ZHA v Home Assistantu do Zigbee2MQTT: s druhým adaptérem místnost po místnosti, nebo se stejným adaptérem najednou, s nastavením pro každý adaptér a cestou zpět.">
+<meta property="og:url" content="https://zigdash.app/zha/cs/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Zprovoznění</a>
+    <a href="../../hubs/">Huby</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Nápověda</a>
+    <a href="https://t.me/zigdash_app">Komunita</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Přechod ze ZHA na Zigbee2MQTT</h1>
+<p class="lead">ZHA je vlastní Zigbee v Home Assistantu. ZigDash pracuje se Zigbee2MQTT, takže nemůže zobrazit zařízení, která jsou v ZHA. Přechod znamená znovu spárovat zařízení se Zigbee2MQTT. Home Assistant je pak dál používá přes svou integraci MQTT.</p>
+
+<div class="toc"><strong>Na této stránce</strong>
+<ul>
+  <li><a href="#before">Než začneš</a></li>
+  <li><a href="#ways">Dva způsoby přechodu</a></li>
+  <li><a href="#adapter">Tvůj adaptér</a></li>
+  <li><a href="#apps">Home Assistant s aplikacemi</a></li>
+  <li><a href="#docker">Home Assistant v Dockeru (bez aplikací)</a></li>
+  <li><a href="#pair">Párování zařízení</a></li>
+  <li><a href="#after">Po přechodu</a></li>
+  <li><a href="#back">Návrat zpět</a></li>
+  <li><a href="#keep">Zachování sítě bez nového párování</a></li>
+</ul></div>
+
+<h2 id="before">Než začneš</h2>
+<ul>
+  <li><strong>Jaká instalace?</strong> Pokud nabídka Nastavení v Home Assistantu ukazuje <strong>Apps</strong> (ve starších verzích Add-ons), máš Home Assistant OS: viz <a href="#apps">s aplikacemi</a>. Pokud ne, Home Assistant běží v Dockeru (Container): viz <a href="#docker">Docker</a>.</li>
+  <li><strong>Jaký adaptér?</strong> Otevři Nastavení › Zařízení a služby › Zigbee Home Automation. V části Hubs je adaptér uvedený podle modelu, například <strong>SONOFF ZBDongle-E</strong>. Pak se podívej na <a href="#adapter">svůj adaptér</a>.</li>
+  <li><strong>Zálohuj ZHA.</strong> Na té stránce klepni na ⚙ vedle Zigbee Home Automation a pak na <strong>Download backup</strong>. Soubor si nech. Na stejné stránce ukazuje <strong>Network information</strong> kanál, typ rádia a sériový port.</li>
+  <li><strong>Co se změní v Home Assistantu.</strong> Zařízení se vrátí jako nová zařízení MQTT s novými ID entit. Automatizace, skripty a dashboardy, které je používají, musíš přesměrovat na nová zařízení a jejich historie začne znovu. Skupiny a vazby vytvořené v ZHA je potřeba vytvořit znovu v Zigbee2MQTT.</li>
+  <li><strong>Čas.</strong> Každé zařízení se resetuje a znovu spáruje, jedno po druhém. Poctivé odhady času zatím nemáme; na malou domácnost počítej s jedním večerem, na velkou s víc.</li>
+</ul>
+
+<h2 id="ways">Dva způsoby přechodu</h2>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>Druhý adaptér</th><th>Stejný adaptér</th></tr></thead>
+  <tbody>
+    <tr><th>Cena</th><td>Nový adaptér, asi 30–60 € (například Home Assistant Connect ZBT-2 nebo SMLIGHT SLZB-06M či SLZB-07)</td><td>Zdarma</td></tr>
+    <tr><th>Během přechodu</th><td>Všechno dál funguje: ZHA si nechává starý adaptér</td><td>Zigbee nefunguje, dokud každé zařízení znovu nespáruješ</td></tr>
+    <tr><th>Tempo</th><td>Místnost po místnosti, klidně i během několika dní</td><td>Všechno najednou</td></tr>
+    <tr><th>Návrat zpět</th><td>Snadný: odpoj nový adaptér, ZHA nikdy nepřestalo běžet</td><td>Obnov zálohu ZHA (viz <a href="#back">Návrat zpět</a>)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Druhý adaptér</h3>
+<ol>
+  <li>Nastav Zigbee2MQTT na novém adaptéru (<a href="#apps">s aplikacemi</a> nebo <a href="#docker">Docker</a>) s vlastní sítí. Tohle všechno zvol <strong>před prvním spuštěním Zigbee2MQTT</strong>, protože pozdější změna kanálu může znamenat nové párování:
+    <ul>
+      <li>síťový klíč a PAN ID nech na <code>GENERATE</code> (výchozí hodnota);</li>
+      <li>vyber jiný kanál, než má ZHA (ukáže ho ⚙ › Network information u ZHA); Home Assistant doporučuje 15, 20 nebo 25.</li>
+    </ul></li>
+  <li>Oba adaptéry drž od sebe, každý na USB prodlužovacím kabelu.</li>
+  <li>V Home Assistant OS ti Home Assistant po připojení nového adaptéru může nabídnout jeho nastavení pro ZHA nebo Thread. Ignoruj to: adaptér je pro Zigbee2MQTT.</li>
+  <li>Přesouvej jednu místnost po druhé: nejdřív <a href="#pair">spáruj</a> zařízení napájená ze sítě (žárovky, zásuvky, vypínače ve zdi: jsou to routery), pak bateriová zařízení.</li>
+  <li>Až přesuneš všechna zařízení, zakaž ZHA (postup níže) a starý adaptér si nech jako náhradní.</li>
+</ol>
+
+<h3>Stejný adaptér</h3>
+<ol>
+  <li>Stáhni zálohu ZHA (viz <a href="#before">Než začneš</a>) těsně předtím, než začneš.</li>
+  <li>Zakaž ZHA: Nastavení › Zařízení a služby › Zigbee Home Automation, ⋮ vedle Zigbee Home Automation › <strong>Disable</strong>. Ne Delete.</li>
+  <li>Nastav Zigbee2MQTT na stejném adaptéru (<a href="#apps">s aplikacemi</a> nebo <a href="#docker">Docker</a>), síťový klíč a PAN ID nech na <code>GENERATE</code>.</li>
+  <li>Vypni zařízení Zigbee napájená ze sítě vypínačem na zdi nebo jističem. Jinak budou dál hledat starou síť.</li>
+  <li>Zapínej je zpátky jedno po druhém a každé <a href="#pair">spáruj</a>, jakmile naběhne. Pak spáruj bateriová zařízení.</li>
+</ol>
+
+<h2 id="adapter">Tvůj adaptér</h2>
+<ul>
+  <li><strong>Silicon Labs</strong> (Home Assistant Connect ZBT-1 a ZBT-2, Home Assistant Yellow, Sonoff ZBDongle-E, SMLIGHT SLZB-06M a SLZB-07): <code>adapter: ember</code>. ZBT-2 potřebuje navíc <code>baudrate: 460800</code>; ZBDongle-E potřebuje <code>rtscts: false</code>; SLZB-06M potřebuje firmware 20240510 nebo novější.</li>
+  <li><strong>Texas Instruments</strong> (Sonoff ZBDongle-P, SMLIGHT SLZB-06 a SLZB-06P7): <code>adapter: zstack</code>.</li>
+  <li><strong>ConBee nebo RaspBee</strong>: <code>adapter: deconz</code>.</li>
+  <li><strong>CC2531 nebo ZiGate</strong>: na dobrou síť Zigbee2MQTT jsou příliš staré nebo už nejsou udržované. Zvol způsob s druhým adaptérem a pořiď nový adaptér.</li>
+  <li><strong>Síťový adaptér</strong> (SMLIGHT SLZB-06, SLZB-06M, SLZB-07, MR series): ZHA ho ukazuje jako <code>socket://IP:6638</code>; v Zigbee2MQTT je to <code>tcp://IP:6638</code> a Docker nepotřebuje řádek pro USB.</li>
+  <li><strong>Multiprotokol</strong> (ZBT-1 nebo Yellow, na kterých běží Zigbee a Thread současně; uvádí to stránka hardwaru v Home Assistantu): Zigbee2MQTT neumí používat multiprotokolový firmware. Při způsobu se stejným adaptérem vypni multiprotokol <strong>ještě na ZHA</strong>, postupem od samotného Home Assistantu (<a href="https://connectzbt1.home-assistant.io/procedures/disable-multiprotocol">ZBT-1</a>, <a href="https://yellow.home-assistant.io/guides/disable-multiprotocol">Yellow</a>). Zařízení Thread, která ho používala, přestanou fungovat, dokud je nepřevezme jiný Thread border router. Při způsobu s druhým adaptérem ho nech být a nový adaptér kup jen pro Zigbee.</li>
+</ul>
+<p>Podrobnosti najdeš na <a href="https://www.zigbee2mqtt.io/guide/adapters/">stránkách o adaptérech</a> Zigbee2MQTT.</p>
+
+<h2 id="apps">Home Assistant s aplikacemi (Home Assistant OS)</h2>
+<ol>
+  <li>V Nastavení › Apps nainstaluj a spusť <strong>Mosquitto broker</strong>. Home Assistant pak nabídne integraci MQTT v Nastavení › Zařízení a služby: přijmi ji.</li>
+  <li>Přidej repozitář Zigbee2MQTT (v obchodě s aplikacemi ⋮ › Repositories: <code>https://github.com/zigbee2mqtt/hassio-zigbee2mqtt</code>), pak nainstaluj <strong>Zigbee2MQTT</strong>.</li>
+  <li>Na jeho kartě Configuration nastav sériový port a adaptér podle části <a href="#adapter">Tvůj adaptér</a>, například:
+<pre><code>port: /dev/serial/by-id/usb-...
+adapter: ember</code></pre>
+    Při způsobu s druhým adaptérem nastav před prvním spuštěním i kanál (viz <a href="#ways">výše</a>).</li>
+  <li>Spusť Zigbee2MQTT a otevři jeho webovou stránku ze stránky aplikace. Pak přejdi k <a href="#pair">párování</a>.</li>
+</ol>
+
+<h2 id="docker">Home Assistant v Dockeru (bez aplikací)</h2>
+<p>Bez aplikací běží Mosquitto a Zigbee2MQTT jako samostatné kontejnery vedle Home Assistantu. V nové složce:</p>
+<p><strong>1. <code>compose.yaml</code></strong> (do <code>devices</code> zadej cestu k adaptéru; ukáže ji <code>ls /dev/serial/by-id/</code>):</p>
+<pre><code>services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+  zigbee2mqtt:
+    image: ghcr.io/koenkk/zigbee2mqtt
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    ports:
+      - 8080:8080
+    volumes:
+      - ./zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    environment:
+      - TZ=Europe/Berlin
+    devices:
+      - /dev/serial/by-id/usb-...:/dev/ttyACM0</code></pre>
+<p>Se síťovým adaptérem vynech <code>devices</code> a řádek s udev.</p>
+<p><strong>2. <code>mosquitto/config/mosquitto.conf</code></strong>:</p>
+<pre><code>listener 1883
+allow_anonymous false
+password_file /mosquitto/config/passwd
+persistence true
+persistence_location /mosquitto/data/</code></pre>
+<p>Vytvoř uživatele MQTT (heslo se zadává dvakrát; soubor musí patřit vlastnímu uživateli Mosquitta, jinak se Mosquitto nespustí):</p>
+<pre><code>docker run -it --rm -v "$PWD/mosquitto/config:/mosquitto/config" eclipse-mosquitto:2 \
+  sh -c "mosquitto_passwd -c /mosquitto/config/passwd zigbee &amp;&amp; chown mosquitto:mosquitto /mosquitto/config/passwd"</code></pre>
+<p><strong>3. <code>zigbee2mqtt/configuration.yaml</code></strong> (řádky pro adaptér podle části <a href="#adapter">Tvůj adaptér</a>):</p>
+<pre><code>homeassistant:
+  enabled: true
+frontend:
+  enabled: true
+  port: 8080
+mqtt:
+  server: mqtt://mosquitto:1883
+  user: zigbee
+  password: your-password
+serial:
+  port: /dev/ttyACM0          # a network adapter: tcp://IP:6638
+  adapter: ember
+advanced:
+  network_key: GENERATE
+  pan_id: GENERATE
+  ext_pan_id: GENERATE
+  channel: 20                 # second adapter: not ZHA's channel</code></pre>
+<p><strong>4.</strong> Při způsobu se stejným adaptérem je teď ZHA zakázané (viz <a href="#ways">výše</a>). Pokud kontejner samotného Home Assistantu mapuje adaptér, odstraň ten řádek z jeho compose souboru nebo z <code>docker run</code>: adaptér může používat jen jeden kontejner.</p>
+<p><strong>5.</strong> <code>docker compose up -d</code>, pak otevři <code>http://the-machine:8080</code>: webovou stránku Zigbee2MQTT.</p>
+<p><strong>6.</strong> V Home Assistantu: Nastavení › Zařízení a služby › Přidat integraci › <strong>MQTT</strong>. Broker: IP adresa počítače, port 1883, uživatel <code>zigbee</code> a heslo.</p>
+
+<h2 id="pair">Párování zařízení</h2>
+<ol>
+  <li>Na webové stránce Zigbee2MQTT klepni na <strong>Permit join</strong> (párování zůstane otevřené asi čtyři minuty). Chceš-li párovat přes router blízko zařízení, vyber ten router v nabídce permit join: hodí se to pro Aqara a jiná vybíravá zařízení.</li>
+  <li>Přepni zařízení do režimu párování podle návodu výrobce: u většiny senzorů dlouhým stiskem, u žárovek několikerým vypnutím a zapnutím, u některých vypínačů ve zdi sérií přepnutí.</li>
+  <li>Až se objeví, dej mu v Zigbee2MQTT jméno a místnost. Pak další.</li>
+</ol>
+<p>Nejdřív zařízení napájená ze sítě, potom bateriová, aby nová síť měla trasy.</p>
+
+<h2 id="after">Po přechodu</h2>
+<ul>
+  <li><strong>ZigDash:</strong> otevři ho a klepni na <strong>Najít moje zařízení</strong>. Najde Mosquitto ve tvé síti; přihlas se uživatelem MQTT. Nebo zvol Home Assistant a přihlas se: to teď funguje také, protože Home Assistant má integraci MQTT.</li>
+  <li><strong>Názvy a místnosti:</strong> Nastavení › Import z Home Assistantu v ZigDash přenese názvy a místnosti, které jsi novým zařízením dal v Home Assistantu.</li>
+  <li><strong>Home Assistant:</strong> přesměruj automatizace, skripty a dashboardy na nová zařízení. Až si budeš jistý, smaž integraci ZHA.</li>
+</ul>
+
+<h2 id="back">Návrat zpět</h2>
+<ul>
+  <li><strong>Druhý adaptér:</strong> zastav Zigbee2MQTT a odpoj nový adaptér. ZHA nikdy nepřestalo běžet. Zařízení, která už jsi přesunul, je potřeba znovu spárovat se ZHA.</li>
+  <li><strong>Stejný adaptér:</strong> zastav Zigbee2MQTT a pak na stránce ZHA klepni na <strong>Enable</strong>. ZHA hlásí "Network settings do not match most recent backup" (nastavení sítě neodpovídá poslední záloze), protože adaptér teď drží síť Zigbee2MQTT. Otevři Nastavení › <strong>Opravy</strong> › "Zigbee network settings have changed" (nastavení sítě Zigbee se změnilo) a zvol <strong>Restore backup (recommended)</strong>. Síť ZHA se vrátí tak, jak byla. Zařízení, která jsi spároval se Zigbee2MQTT, je potřeba znovu spárovat se ZHA. Pokud se žádná oprava neobjeví, použij ⚙ › Migrate adapter se zálohou, kterou jsi stáhl.</li>
+</ul>
+<div class="tip"><strong>Vyzkoušeno:</strong> 17. listopadu 2026 s Home Assistantem 2026.11 a adaptérem Sonoff ZBDongle-E se síť ZHA vrátila přesně (kanál, PAN ID i síťový klíč). Se spárovanými zařízeními jsme to zatím nezkoušeli, takže si soubor se zálohou nech.</div>
+
+<h2 id="keep">Zachování sítě bez nového párování</h2>
+<p>Existuje i třetí způsob: zkopírovat síť ZHA do Zigbee2MQTT, aby zařízení nebylo nutné znovu párovat. Zigbee2MQTT ho nepodporuje, chybná hodnota může síť smazat a dává smysl jen u velkých domácností (řekněme nad 60 zařízení). Pokud si o tom chceš přečíst: <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/16739">odpověď správce Zigbee2MQTT</a> a zkušenosti komunity v <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/24478">diskusi 24478</a> a <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/26716">diskusi 26716</a>.</p>
+
+<div class="tip"><strong>Dej nám vědět, jak to šlo.</strong> Tento návod je nový. Pokud byl nějaký krok špatně nebo chyběl, napiš na <a href="mailto:support@zigdash.app">support@zigdash.app</a> nebo do <a href="https://t.me/zigdash_app">komunity</a>.</div>
+
+<div class="next"><a class="btn" href="../../home-assistant/">ZigDash s Home Assistantem</a><a class="btn" href="../../help/">Něco nefunguje?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Zdrojový kód</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Zásady ochrany osobních údajů</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../../de/" hreflang="de" lang="de">Deutsch</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

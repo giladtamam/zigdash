@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Zigbee2MQTT from your Android phone · ZigDash</title>
+<meta name="description" content="Three ways to put your Zigbee2MQTT devices on an Android phone: through Home Assistant, through your MQTT broker, or through the Zigbee2MQTT page. Plus widgets, Quick Settings tiles and automations on the hub.">
+<link rel="canonical" href="https://zigdash.app/zigbee2mqtt-android/">
+<link rel="icon" href="../assets/icon.png">
+<meta property="og:title" content="Control Zigbee2MQTT from your Android phone · ZigDash">
+<meta property="og:description" content="Three ways to put your Zigbee2MQTT devices on an Android phone: through Home Assistant, through your MQTT broker, or through the Zigbee2MQTT page. Plus widgets, Quick Settings tiles and automations on the hub.">
+<meta property="og:url" content="https://zigdash.app/zigbee2mqtt-android/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../"><img src="../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../setup/">Setup</a>
+    <a href="../hubs/">Hubs</a>
+    <a href="../home-assistant/">Home Assistant</a>
+    <a href="../help/">Help</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Control Zigbee2MQTT from your Android phone</h1>
+<p class="lead">Zigbee2MQTT has a web page for pairing and settings, but it isn't made for switching a light from the sofa. Here is how to put your Zigbee2MQTT devices on your phone with ZigDash, whichever way Zigbee2MQTT runs at your place.</p>
+
+<h2>First: where does Zigbee2MQTT run?</h2>
+<ul>
+  <li><strong>Inside Home Assistant</strong> (the Zigbee2MQTT app, with the Mosquitto broker app): go through Home Assistant, below.</li>
+  <li><strong>On a hub of its own</strong>: an SMLIGHT SMHUB, a Raspberry Pi, Docker on a server. Go through your MQTT broker, below.</li>
+  <li><strong>ZHA</strong>, Home Assistant's built-in Zigbee: that isn't Zigbee2MQTT, and ZigDash can't show those devices.</li>
+</ul>
+
+<h2 id="ha">Way 1: through Home Assistant</h2>
+<ol>
+  <li>Install ZigDash and tap <strong>Find my setup</strong>, then <strong>Sign in with Home Assistant</strong>.</li>
+  <li>Give it your Home Assistant address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon, and pick ZigDash. Or copy it there and tap <strong>Paste</strong>.</li>
+  <li>Home Assistant's own login opens in your browser; ZigDash never sees your password. Your user needs to be an administrator.</li>
+</ol>
+<p>That's it: your devices appear as tiles, and the connection works wherever your Home Assistant address works. More detail in the <a href="../home-assistant/">Home Assistant guide</a>.</p>
+
+<h2 id="broker">Way 2: through your MQTT broker</h2>
+<ol>
+  <li>Put your phone on your home Wi-Fi and tap <strong>Find my setup</strong>. ZigDash looks for the broker on your network.</li>
+  <li>Not found? Type the hub's address, like <code>192.168.1.20</code>, and tap <strong>Check this address</strong>.</li>
+  <li>If the broker asks for a login, use the MQTT user from Zigbee2MQTT's settings. On an SMLIGHT hub, the setup shows where to make one.</li>
+</ol>
+<p>Hub-specific notes are in the <a href="../setup/">setup guide</a>; if you're choosing a hub, see <a href="../hubs/">Hubs we recommend</a>.</p>
+
+<h2 id="page">Way 3: through the Zigbee2MQTT page</h2>
+<p>If you can open Zigbee2MQTT's own web page but don't have the broker's details, ZigDash can connect through that page. The dashboard works the same. Automations, alerts and History need the broker, so ZigDash asks for it when you turn those on.</p>
+
+<h2>Once it's connected</h2>
+<ul>
+  <li><strong>The dashboard builds itself:</strong> a tile for every light, shutter, plug, switch, sensor and thermostat, in rooms you can rearrange.</li>
+  <li><strong>Without opening the app:</strong> home-screen widgets, Quick Settings tiles in the notification shade, and Android's device controls.</li>
+  <li><strong>Automations that run on the hub:</strong> ZigDash Engine puts your rules inside Zigbee2MQTT, so they keep working with your phone off. Three per home are free. Needs Zigbee2MQTT 2.4 or newer.</li>
+  <li><strong>Alerts and History:</strong> leaks, smoke and open doors reach every phone of the home; temperatures and power over days, recorded on the hub.</li>
+  <li><strong>A wall tablet:</strong> an old Android tablet makes a good wall display. <a href="../wall-tablet/">How to set one up</a></li>
+</ul>
+
+<div class="buttons" style="margin-top:20px"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dandroid" data-goatcounter-click="play-android">Get ZigDash on Google Play</a></div>
+<p class="note">Free, with an optional one-time Pro (History over days, unlimited automations, the wall tablet extras, remote control). No account, no ads. Open source.</p>
+<div class="next"><a class="btn" href="../setup/">Full setup guide</a><a class="btn" href="../help/">Something not working?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

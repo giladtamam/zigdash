@@ -16,6 +16,7 @@ import '../core/router/routes.dart';
 import '../data/database/daos/shortcut_dao.dart';
 import '../data/database/database.dart';
 import '../features/onboarding/setup/ha_handover.dart';
+import '../features/onboarding/setup/ha_link.dart' show haLinksProvider;
 import '../features/settings/providers/settings_controller.dart'
     show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
@@ -110,6 +111,10 @@ class _ShortcutAppBridgeState extends ConsumerState<ShortcutAppBridge> {
       } on MissingPluginException {
         // Not Android.
       }
+      // ha-link.md: a connect link opened before ZigDash was installed,
+      // through Google Play, on the first start only.
+      final linked = await ref.read(haLinksProvider).takeReferrer();
+      if (linked != null && mounted) ref.read(routerProvider).go(linked);
       // Alerts (alerts-2.3.md): a tap on a notification opens the device;
       // a push registration lands in the Home's config; the broker's copy
       // of each Home's config is followed while connected.

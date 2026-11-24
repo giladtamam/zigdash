@@ -78,6 +78,7 @@ final _plan = ImportPlan(
     ),
   ],
   zhaDevices: 0,
+  z2mDevices: 3,
 );
 
 HaImportController _in(HaImportState state, {bool signIn = false}) =>

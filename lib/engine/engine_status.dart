@@ -29,6 +29,7 @@ class EngineReport {
     required this.at,
     this.flows = const {},
     this.remoteConnected,
+    this.remoteError,
   });
 
   final String version;
@@ -44,6 +45,14 @@ class EngineReport {
   /// Whether the Engine is connected to the ZigDash relay (3.1); null when
   /// remote control isn't set up on the hub.
   final bool? remoteConnected;
+
+  /// Why the Engine isn't connected to the relay, when it says (3.7):
+  /// "refused" when the relay turned its login down (a founder's pass that
+  /// ended, a login replaced); null otherwise.
+  final String? remoteError;
+
+  /// The relay refused the hub's login.
+  bool get remoteRefused => remoteError == 'refused';
 
   /// The hub's clock when it reported.
   final DateTime? at;
@@ -62,6 +71,10 @@ class EngineReport {
         at: DateTime.tryParse('${j['at'] ?? ''}'),
         flows: {for (final e in ((j['flows'] as Map?) ?? const {}).entries) '${e.key}': '${e.value}'},
         remoteConnected: (j['remote'] as Map?)?['connected'] as bool?,
+        remoteError: switch ((j['remote'] as Map?)?['error']) {
+          final String e when e.isNotEmpty => e,
+          _ => null,
+        },
       );
     } catch (_) {
       return null;

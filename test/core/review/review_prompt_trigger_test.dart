@@ -33,7 +33,8 @@ class _FakeSink implements AnalyticsSink {
 }
 
 /// Prefs seeded so that one more session today satisfies the default policy
-/// on the command path. [sessions] 3 keeps the passive path (needs 7) shut.
+/// on the command path. No test sends a report with the default; the passive
+/// path needs 4 counted days.
 Map<String, Object> _eligiblePrefs({int sessions = 3}) => {
   ReviewPromptController.kSessions: sessions,
   ReviewPromptController.kFirstSessionDay: '2020-01-01',
@@ -45,7 +46,13 @@ const _almost = Duration(milliseconds: 1400);
 const _rest = Duration(milliseconds: 200);
 
 class _Harness {
-  _Harness(this.launcher, this.sink, this.status, this.confirmed, this.reported);
+  _Harness(
+    this.launcher,
+    this.sink,
+    this.status,
+    this.confirmed,
+    this.reported,
+  );
   final _FakeLauncher launcher;
   final _FakeSink sink;
   final StreamController<MqttStatus> status;
@@ -108,62 +115,32 @@ void main() {
   });
 
   testWidgets('every confirmed command counts the day and marks the install;'
-      ' only the third asks, after the delay', (tester) async {
+      ' the first asks, after the delay', (tester) async {
     final h = await _pump(tester, prefsValues: _eligiblePrefs());
     final prefs = await SharedPreferences.getInstance();
 
     await _command(tester, h);
     expect(prefs.getInt(ReviewPromptController.kSessions), 4);
     expect(prefs.getBool(ReviewPromptController.kCommandEver), isTrue);
-    await tester.pump(kReviewDelay);
-    expect(h.launcher.requests, 0, reason: 'first command');
-
-    await _command(tester, h);
-    await tester.pump(kReviewDelay);
-    expect(h.launcher.requests, 0, reason: 'second command');
-
-    await _command(tester, h);
     await tester.pump(_almost);
-    expect(h.launcher.requests, 0, reason: 'third, but the delay is not up');
+    expect(h.launcher.requests, 0, reason: 'the delay is not up');
     await tester.pump(_rest);
     await tester.pump();
-    expect(h.launcher.requests, 1, reason: 'third command, 1.5 s later');
+    expect(h.launcher.requests, 1, reason: 'first command, 1.5 s later');
     expect(h.sink.sent.single.$1, 'review_prompt');
     expect(h.sink.sent.single.$2, {
       'result': 'requested',
       'trigger': 'command',
-      'nth': '3',
     });
 
-    // More confirmed commands the same day must not re-ask.
+    // More confirmed commands in the same visit must not re-ask.
     await _command(tester, h);
     await _command(tester, h);
     await tester.pump(kReviewDelay);
+    await tester.pump();
     expect(h.launcher.requests, 1);
     expect(prefs.getInt(ReviewPromptController.kSessions), 4);
     await h.close();
-  });
-
-  testWidgets('the in-session count resets with the widget', (tester) async {
-    final h = await _pump(tester, prefsValues: _eligiblePrefs());
-    await _command(tester, h);
-    await _command(tester, h);
-    await tester.pump(kReviewDelay);
-
-    // The dashboard goes away and comes back: two more commands are the
-    // first and second of the new session, not the third and fourth.
-    await tester.pumpWidget(const SizedBox());
-    await h.close();
-    final h2 = await _pump(tester, prefsValues: _eligiblePrefs());
-    await _command(tester, h2);
-    await _command(tester, h2);
-    await tester.pump(kReviewDelay);
-    expect(h2.launcher.requests, 0);
-    await _command(tester, h2);
-    await tester.pump(kReviewDelay);
-    await tester.pump();
-    expect(h2.launcher.requests, 1);
-    await h2.close();
   });
 
   testWidgets('no ask when the dashboard is gone before the delay is up', (
@@ -195,7 +172,7 @@ void main() {
     await h.close();
   });
 
-  testWidgets('never within 10 minutes of setup', (tester) async {
+  testWidgets('never within 18 hours of setup', (tester) async {
     final h = await _pump(
       tester,
       prefsValues: {
@@ -241,9 +218,9 @@ void main() {
     });
 
     testWidgets('ask on an install that never confirmed a command, after '
-        'seven counted days and the delay', (tester) async {
-      // Six days before; today's report is the seventh.
-      final h = await _pump(tester, prefsValues: _eligiblePrefs(sessions: 6));
+        'four counted days and the delay', (tester) async {
+      // Three days before; today's report is the fourth.
+      final h = await _pump(tester, prefsValues: _eligiblePrefs(sessions: 3));
       h.reported.add(DateTime.now());
       await tester.pump();
       await tester.pump(_almost);
@@ -260,8 +237,8 @@ void main() {
       await h.close();
     });
 
-    testWidgets('do not ask before seven counted days', (tester) async {
-      final h = await _pump(tester, prefsValues: _eligiblePrefs(sessions: 5));
+    testWidgets('do not ask before four counted days', (tester) async {
+      final h = await _pump(tester, prefsValues: _eligiblePrefs(sessions: 2));
       h.reported.add(DateTime.now());
       await tester.pump();
       await tester.pump(kReviewDelay);

@@ -1,6 +1,6 @@
 # ZigDash — Privacy Policy
 
-**Effective date:** the day ZigDash 3.5.3 is published (replaces the policy published with ZigDash 3.5.2)
+**Effective date:** the day ZigDash 3.8.6 is published (replaces the policy published with ZigDash 3.8.5)
 
 ZigDash ("the app") is a client for controlling [Zigbee2MQTT](https://www.zigbee2mqtt.io/)
 devices through MQTT brokers that **you** configure. This policy explains what
@@ -8,15 +8,26 @@ the app does and does not do with your data.
 
 ## Summary
 
-ZigDash does **not** collect or share personal data. Your broker settings,
-passwords, devices, topics and their values stay on your device. There is no
-advertising and no user account.
+ZigDash does not collect personal data unless you choose to give it: an
+email in a support message, a place on the "Chat with your home"
+early-access list (from 3.5.4, see
+[Chat with your home](#chat-with-your-home-early-access)), or, from 3.7.0, a
+Telegram account you link to your home for ZigDash Chat (see
+[ZigDash Chat (beta)](#zigdash-chat-beta)). It never shares or
+sells personal data. Your broker settings, passwords, devices, topics and
+their values stay on your device. There is no advertising and no user
+account.
 
-The developer runs two servers: the ZigDash relay, used only if you turn
-on **Remote control** (part of ZigDash Pro), which carries your home's data
+The developer runs these servers: a small service on Cloudflare that
+passes support messages on and keeps the early-access list; the ZigDash
+relay, used only if you turn on **Remote control** (part of ZigDash Pro or
+a founder's pass), which carries your home's data
 encrypted so the developer cannot read it (see
-[Remote control](#remote-control-from-31)), and from 3.4.7 the usage-data
-server described next.
+[Remote control](#remote-control-from-31)); from 3.4.7 the usage-data
+server described next; and from 3.7.0 the ZigDash Chat service at
+chat.zigdash.app, used only for a Home where someone links a Telegram
+account to it, which does read what it answers about that home (see
+[ZigDash Chat (beta)](#zigdash-chat-beta)).
 
 Unless you **opt out**, ZigDash sends a short list of **anonymous usage
 events** (which setup steps fail, which features get used) to a server the
@@ -62,10 +73,34 @@ All data stays on your device:
   While it shows, your dashboards wait on your own home broker under a
   one-time code and are removed when the code hides. Nothing goes to the
   developer or crosses the internet. Show the code only to people you trust.
+- **Founder's pass** (from 3.7.0) — for a Home with remote control through a
+  founder's pass, what the relay last said about it (the day it ends,
+  whether it has ended or the Home was deleted, and when it was asked), kept
+  with the Home's remote login in secure storage and deleted with it. The
+  code itself is not kept. Until the relay accepts a code, the app also
+  keeps a random number it sends with it, so a retry after a lost answer
+  reaches the same Home.
 - **Finding Home Assistant** (from 3.1.8) — when you connect through Home
   Assistant without typing an address, ZigDash looks for Home Assistant on
   your local network (the name and addresses it announces there) to fill in
   the address. Nothing leaves your phone.
+- **Home Assistant without Zigbee2MQTT** (from 3.7.1) — when signing in to
+  Home Assistant finds no MQTT integration, or no admin rights (from 3.8.1,
+  at every sign-in during setup, since Home Assistant can have MQTT and
+  still keep its Zigbee in ZHA), ZigDash
+  reads whether your installation has apps and how many devices use ZHA,
+  Home Assistant's own Zigbee, to show the right advice. This stays on your
+  phone; when devices use ZHA, ZigDash keeps only the date it found them.
+  Usage data records only "apps or not" and the device count in broad
+  groups.
+- **Moving from ZHA** (from 3.8) — if you tap I'm moving, ZigDash keeps the
+  date on your phone for 60 days (or until a setup with devices finishes), so setup can
+  lead with your new Zigbee2MQTT and offer your names and rooms from Home
+  Assistant. It also keeps whether your last answer to "What runs your
+  Zigbee?" was ZHA, to offer Moving from ZHA on the demo home. The import
+  from Home Assistant then also reads the names and rooms you gave devices
+  in ZHA, from the same lists it already reads; nothing of it leaves your
+  phone.
 
 - **Alerts** — your alerts for each Home, the push keys and this phone's
   push address, kept in the app's own storage and, as described under
@@ -98,8 +133,9 @@ passes through it is encrypted (see [Remote control](#remote-control-from-31)).
 
 The app requests the **INTERNET** permission to connect to your broker and,
 unless you opt out, to send the anonymous usage events described below. On
-Android 17 it also asks for the **local network** permission, which Android
-requires for talking to a hub on your home network. On iPhone and iPad, iOS
+Android, that permission also lets it talk to a hub on your home network; from
+3.6.3 it no longer asks for Android 17's separate **local network**
+permission, which Android gives apps like ZigDash with it. On iPhone and iPad, iOS
 asks for **Local Network** access the first time ZigDash looks for your hub,
 for the same reason.
 
@@ -164,9 +200,10 @@ never from anything you typed or anything your broker sent.
 | Event | When | Values |
 |---|---|---|
 | `app_started` | Once each time the app starts | phone or tablet; theme (system, light, dark); Material You on or off; number of homes (0, 1, 2+); number of tiles (0, 1–10, 11–30, 31+); demo or not; from 2.9.7, how long ago ZigDash was installed on this phone, in ranges (first day, 1 day, 2–7 days, 8–30 days, more than 30 days, or unknown); from 3.4.1, what your homes have set up, as ranges and never as names: automations (0, 1–3, 4+; the number your hub's ZigDash Engine last reported to this phone), saved scenes (0, 1+), and home-screen widgets and Quick Settings tiles (0, 1+). The demo home is not counted |
-| `setup_step` | Each step of first-run setup | the step (started, scan found, scan empty, needs login, login rejected, failed, review, complete, manual, demo); the type of setup error, if any; number of devices found (0, 1–5, 6–20, 21+); from 2.5, your answer to where Zigbee2MQTT runs, if you gave one (Home Assistant, SMLIGHT hub, Raspberry Pi or Docker, not sure; from 3.1.3 also ZHA, Home Assistant's own Zigbee); and for an empty scan, the kind of hub it saw instead (Home Assistant, Zigbee2MQTT frontend, SMLIGHT hub, or none), how many addresses it tried (0, 1–253, 254–1020, 1021+), whether it widened to the surrounding network, and which private range your phone is in (192.168, 10, 172.16, other); from 2.6.2, also how many addresses answered at all (0, 1–5, 6–20, 21+), whether a VPN was on, and the kind of network (Wi-Fi, Ethernet, other); and for the address check (the address you type on the empty result), only its outcome: a broker found, a hub page found, nothing answered, the name could not be looked up, not a home address, or nothing typed; from 2.7.2, for Test & connect on the broker form, only whether it connected or which step failed (name lookup, connection, MQTT handshake, login), the number of devices found (0, 1–5, 6–20, 21+), and whether the app tidied what you typed (for example a pasted browser link); and when the scan saw Zigbee2MQTT's web page but no broker, only what asking that page found: a broker, a broker that listens only on its own machine, one that didn't answer, or no answer; from 2.9.3, how many addresses answered only to the scan's second, slower look (0, 1–5, 6–20, 21+), and for Test & connect, whether the failure was a .local name, Home Assistant without a broker, or a Home Assistant login; from 2.9.4, when your phone had no home network address, only why: mobile data, no network, or unknown; from 2.9.6, for Test & connect, also whether the failure was an SMLIGHT hub not accepting connections from other devices or a Zigbee2MQTT machine whose broker accepts only local connections; from 2.9.6 until 3.1.13, on an empty scan, which of its three choices you tapped (no hub yet, Home Assistant, hub on another network); from 2.9.7, that you tapped Remind me tomorrow, and that the app was opened from that reminder; and on the first screen, that you tapped Try the demo home or Which hub to get; from 2.10, for Connect through Home Assistant, only how each try ended (connected, no address, nothing answered, not Home Assistant, certificate not trusted, sign-in cancelled, refused or failed, token refused, not an administrator, no MQTT integration); never the address; from 2.10.2, at the device review, how many devices were ticked in advance (0, 1–5, 6–20, 21+), and that you left the review without creating a dashboard, with how many devices were listed and ticked at that moment; from 2.10.4, when asking Zigbee2MQTT's web page, also whether it named its broker by a name only that machine knows, or whether the page is protected by a token; for Test & connect, the class of the port you typed (1883, 8883, a web port, other) and whether the failure was a Zigbee2MQTT machine whose settings name the broker elsewhere; never the address; from 3.1.3, your answer to where Zigbee2MQTT runs also at the moment you pick it, and that you opened Connect through Home Assistant during setup, and from where: while scanning, the card on an empty result, the note under "I use Home Assistant", Home Assistant found without a broker, the login prompt, or the broker form (from 3.1.9 also the no-Wi-Fi screen); and when setup is finished, which way it finished: the scan, Home Assistant sign-in, or the broker form; never the address; from 3.1.5, that you opened the "Ask your AI" write-up on a setup screen and whether you then shared or copied it, with which screen (empty scan, setup failure, broker without Zigbee2MQTT, login, Home Assistant sign-in), and when setup is finished, whether you had shared or copied it first; never the write-up; from 3.1.6, when you press back on the device list, which you chose: create the dashboard, start over, or stay, with how many devices were listed and ticked; from 3.1.7, a setup can also finish by joining a Home shared from another phone; from 3.1.8, whether looking for Home Assistant on your network found one, several or none (or found it by its usual name), and that a sign-in used the address it found; never the address; from 3.1.12, for each Connect through Home Assistant try, only the kind of address it went to (nothing typed, a home address in your phone's own network, a home address in another network, a home address with your phone's network unknown, a .local or short name, a Nabu Casa address, another web address, a public IP address) and the class of its port (8123, 443, other); never the address; from 3.2, your answer to the first question (Zigbee2MQTT, Home Assistant with the Zigbee2MQTT add-on or with ZHA, an SMLIGHT hub) is counted like the answer to where Zigbee2MQTT runs, a setup can also finish through the Zigbee2MQTT web page, the Home Assistant sign-in can be opened from that first question, and two more kinds of setup error are told apart (Zigbee2MQTT's device list missing, Home Assistant without Zigbee2MQTT); Remind me tomorrow is gone; never the address; from 3.2.7, after the SMLIGHT answer, which SMLIGHT device you have (an SMHUB, or an SLZB adapter); from 3.2.8, on an empty scan that saw no hub, your answer to whether Zigbee2MQTT already runs (yes, not yet, not sure); from 3.3.2, also whether looking for Home Assistant found it by checking your phone's own network for Home Assistant's port; on an empty scan, which step of the step-by-step guide you reached (VPN, guest network, hub found, what you open to add a Zigbee device, Home Assistant sign-in, ZHA, whether Zigbee2MQTT runs, Zigbee2MQTT not set up yet, Zigbee2MQTT's page, the whole network, the address, help) and whether you took its action or tapped That didn't help; and at the login, that you opened No MQTT login? Make one, or tapped Try without a login; never the address; from 3.3.4, on Connect through Home Assistant, which you tapped for where you open Home Assistant (at home, Nabu Casa, DuckDNS, own domain or Cloudflare); never the address; from 3.4, on the "Nothing yet" screen (no hub runs Zigbee2MQTT yet), where it was opened from (the first screen or the setup guide) and what you tapped there: one of the three ways to a hub (an SMHUB, a Raspberry Pi, Home Assistant), the hubs page, the demo home, Remind me in a week, or I have one now; the taps on the first screen's Try the demo home and Which hub to get are gone with it; Remind me in a week is one notification on your phone a week later, like Remind me tomorrow was; from 3.4.1, when the broker asks for a login, only what looking for Zigbee2MQTT's web page found first (its page wanting a password, no page, or not looked) and what kind of web page answers on the broker's machine (Home Assistant, Zigbee2MQTT, SMLIGHT hub, or none); never the address; on the Home Assistant sign-in, how the address got into its field (typed, found by ZigDash, pasted with the Paste button, or shared from another app), and whether pasted or shared text held an address (yes or no). Never the address, and never the text. The Paste button reads your clipboard only when you tap it, and keeps only the address in it; text another app shares to ZigDash is used the same way; from 3.5.2, when looking for Home Assistant found nothing, that the card saying so was shown (with whether your phone was on Wi-Fi) and which of its buttons you tapped: open the Home Assistant app, look again, or ask the assistant. ZigDash checks on the phone whether the Home Assistant app is installed, to offer that button; that is never sent |
+| `setup_step` | Each step of first-run setup | the step (started, scan found, scan empty, needs login, login rejected, failed, review, complete, manual, demo); the type of setup error, if any; number of devices found (0, 1–5, 6–20, 21+); from 2.5, your answer to where Zigbee2MQTT runs, if you gave one (Home Assistant, SMLIGHT hub, Raspberry Pi or Docker, not sure; from 3.1.3 also ZHA, Home Assistant's own Zigbee); and for an empty scan, the kind of hub it saw instead (Home Assistant, Zigbee2MQTT frontend, SMLIGHT hub, or none), how many addresses it tried (0, 1–253, 254–1020, 1021+), whether it widened to the surrounding network, and which private range your phone is in (192.168, 10, 172.16, other); from 2.6.2, also how many addresses answered at all (0, 1–5, 6–20, 21+), whether a VPN was on, and the kind of network (Wi-Fi, Ethernet, other); and for the address check (the address you type on the empty result), only its outcome: a broker found, a hub page found, nothing answered, the name could not be looked up, not a home address, or nothing typed; from 2.7.2, for Test & connect on the broker form, only whether it connected or which step failed (name lookup, connection, MQTT handshake, login), the number of devices found (0, 1–5, 6–20, 21+), and whether the app tidied what you typed (for example a pasted browser link); and when the scan saw Zigbee2MQTT's web page but no broker, only what asking that page found: a broker, a broker that listens only on its own machine, one that didn't answer, or no answer; from 2.9.3, how many addresses answered only to the scan's second, slower look (0, 1–5, 6–20, 21+), and for Test & connect, whether the failure was a .local name, Home Assistant without a broker, or a Home Assistant login; from 2.9.4, when your phone had no home network address, only why: mobile data, no network, or unknown; from 2.9.6, for Test & connect, also whether the failure was an SMLIGHT hub not accepting connections from other devices or a Zigbee2MQTT machine whose broker accepts only local connections; from 2.9.6 until 3.1.13, on an empty scan, which of its three choices you tapped (no hub yet, Home Assistant, hub on another network); from 2.9.7, that you tapped Remind me tomorrow, and that the app was opened from that reminder; and on the first screen, that you tapped Try the demo home or Which hub to get; from 2.10, for Connect through Home Assistant, only how each try ended (connected, no address, nothing answered, not Home Assistant, certificate not trusted, sign-in cancelled, refused or failed, token refused, not an administrator, no MQTT integration); never the address; from 2.10.2, at the device review, how many devices were ticked in advance (0, 1–5, 6–20, 21+), and that you left the review without creating a dashboard, with how many devices were listed and ticked at that moment; from 2.10.4, when asking Zigbee2MQTT's web page, also whether it named its broker by a name only that machine knows, or whether the page is protected by a token; for Test & connect, the class of the port you typed (1883, 8883, a web port, other) and whether the failure was a Zigbee2MQTT machine whose settings name the broker elsewhere; never the address; from 3.1.3, your answer to where Zigbee2MQTT runs also at the moment you pick it, and that you opened Connect through Home Assistant during setup, and from where: while scanning, the card on an empty result, the note under "I use Home Assistant", Home Assistant found without a broker, the login prompt, or the broker form (from 3.1.9 also the no-Wi-Fi screen); and when setup is finished, which way it finished: the scan, Home Assistant sign-in, or the broker form; never the address; from 3.1.5, that you opened the "Ask your AI" write-up on a setup screen and whether you then shared or copied it, with which screen (empty scan, setup failure, broker without Zigbee2MQTT, login, Home Assistant sign-in), and when setup is finished, whether you had shared or copied it first; never the write-up; from 3.1.6, when you press back on the device list, which you chose: create the dashboard, start over, or stay, with how many devices were listed and ticked; from 3.1.7, a setup can also finish by joining a Home shared from another phone; from 3.1.8, whether looking for Home Assistant on your network found one, several or none (or found it by its usual name), and that a sign-in used the address it found; never the address; from 3.1.12, for each Connect through Home Assistant try, only the kind of address it went to (nothing typed, a home address in your phone's own network, a home address in another network, a home address with your phone's network unknown, a .local or short name, a Nabu Casa address, another web address, a public IP address) and the class of its port (8123, 443, other); never the address; from 3.2, your answer to the first question (Zigbee2MQTT, Home Assistant with the Zigbee2MQTT add-on or with ZHA, an SMLIGHT hub) is counted like the answer to where Zigbee2MQTT runs, a setup can also finish through the Zigbee2MQTT web page, the Home Assistant sign-in can be opened from that first question, and two more kinds of setup error are told apart (Zigbee2MQTT's device list missing, Home Assistant without Zigbee2MQTT); Remind me tomorrow is gone; never the address; from 3.2.7, after the SMLIGHT answer, which SMLIGHT device you have (an SMHUB, or an SLZB adapter); from 3.2.8, on an empty scan that saw no hub, your answer to whether Zigbee2MQTT already runs (yes, not yet, not sure); from 3.3.2, also whether looking for Home Assistant found it by checking your phone's own network for Home Assistant's port; on an empty scan, which step of the step-by-step guide you reached (VPN, guest network, hub found, what you open to add a Zigbee device, Home Assistant sign-in, ZHA, whether Zigbee2MQTT runs, Zigbee2MQTT not set up yet, Zigbee2MQTT's page, the whole network, the address, help) and whether you took its action or tapped That didn't help; and at the login, that you opened No MQTT login? Make one, or tapped Try without a login; never the address; from 3.3.4, on Connect through Home Assistant, which you tapped for where you open Home Assistant (at home, Nabu Casa, DuckDNS, own domain or Cloudflare); never the address; from 3.4, on the "Nothing yet" screen (no hub runs Zigbee2MQTT yet), where it was opened from (the first screen or the setup guide) and what you tapped there: one of the three ways to a hub (an SMHUB, a Raspberry Pi, Home Assistant), the hubs page, the demo home, Remind me in a week, or I have one now; the taps on the first screen's Try the demo home and Which hub to get are gone with it; Remind me in a week is one notification on your phone a week later, like Remind me tomorrow was; from 3.4.1, when the broker asks for a login, only what looking for Zigbee2MQTT's web page found first (its page wanting a password, no page, or not looked) and what kind of web page answers on the broker's machine (Home Assistant, Zigbee2MQTT, SMLIGHT hub, or none); never the address; on the Home Assistant sign-in, how the address got into its field (typed, found by ZigDash, pasted with the Paste button, or shared from another app), and whether pasted or shared text held an address (yes or no). Never the address, and never the text. The Paste button reads your clipboard only when you tap it, and keeps only the address in it; text another app shares to ZigDash is used the same way; from 3.5.2, when looking for Home Assistant found nothing, that the card saying so was shown (with whether your phone was on Wi-Fi) and which of its buttons you tapped: open the Home Assistant app, look again, or ask the assistant; from 3.6 also whether the Home Assistant app really opened, and whether you came back from it (or ZigDash started again within 30 minutes after it closed meanwhile). ZigDash checks on the phone whether the Home Assistant app is installed, to offer that button; that is never sent; from 3.7.1, when Connect through Home Assistant ends with no MQTT integration or not an administrator, whether your Home Assistant has apps (yes or no) and how many devices use ZHA (0, 1–10, 11–30, 31–60, 61+), and (in 3.7.1 only; from 3.8 it is counted under `zha_move`) that you then tapped Moving from ZHA; never a device name, address or identifier; from 3.8, when setup finishes, whether it followed I'm moving or a Home Assistant check that found ZHA devices within the last 60 days (moving, devices); from 3.8.1, the same for a setup that ends with Home Assistant without Zigbee2MQTT, and for a Connect through Home Assistant try that connected, whether your Home Assistant has apps and how many devices use ZHA (in the same groups); never a device name, address or identifier; from 3.8.3, that a ZigDash connect link brought a Home Assistant address (see ZigDash connect links): how it opened (the link, the browser button, or Google Play on first start), whether it held an address (yes or no) and where the link came from (zigdash.app or the ZigDash integration in Home Assistant); on the Home Assistant sign-in, that its address came from such a link; when setup is finished, where the link came from if the setup used its address unchanged; and on the card when looking for Home Assistant found nothing, that you tapped Use a computer; never the address; from 3.8.5, two more kinds of setup error are told apart, and Test & connect tells the same two apart: your phone doesn't trust the broker's encryption certificate, or the encrypted connection failed for another reason; when setup fails because the broker didn't answer the login, its certificate isn't trusted, the encrypted connection failed or nothing answered on its port, the class of the broker's port (1883, 8883, a web port, other); when the scan finds a broker, whether one it found uses encryption on port 8883 (yes, or its certificate isn't trusted); and Test connection on the connection form (adding or editing a home) is counted like Test & connect, with the same values and that it came from that form; and that you tapped Edit settings after one of the two encrypted-connection errors in setup; never the address |
+| `zha_move` | From 3.8: the Moving from ZHA sheet | what was done (opened, Read the steps, I'm moving, Not now) and where it was opened (the ZHA answer in setup, the demo home, the Home Assistant sign-in after no MQTT integration or not an administrator, Settings; from 3.8.1 also setup's Home Assistant without Zigbee2MQTT). Never a device name, address or identifier |
 | `feature_used` | The first use of a feature in a session | Devices tab, device page, Scenes, Edit mode, Wall display, tile added (with the kind of tile, such as "light" or "toggle"), history (from 2.7), controlling a device from the app (from 2.9.2, with only the kind of device, such as "light" or "cover"; never which device or what it was set to), or kiosk (with whether a PIN is set, whether Android screen pinning is on, and the dim delay as one of off, 1, 5 or 15 minutes; from 2.9 also what the idle screen shows (dimmed, clock, clock and readings, or black) and whether wake on motion, the night schedule and alarm takeover are on), or, from 3.1.2, a scene created or run from the app (never which scene or what it does) |
-| `ha_import` | From 2.8, the import from Home Assistant | the step (the offer after setup accepted or declined, a read that failed, the preview, the import done); for a failed read only why (no address, no token, nothing answered, not Home Assistant, token refused, certificate not trusted, read failed, home not connected); counts in buckets (0, 1–5, 6–20, 21+) of devices, rooms, renamed tiles; from 2.9.7, only whether you signed in on Home Assistant's login page or pasted a token, and how it ended (signed in, cancelled, refused by Home Assistant, failed); never the address or the token and added dashboards; and whether Home Assistant had only ZHA devices. Never the address, the token, or any device or room name |
+| `ha_import` | From 2.8, the import from Home Assistant | the step (the offer after setup accepted or declined, a read that failed, the preview, the import done); for a failed read only why (no address, no token, nothing answered, not Home Assistant, token refused, certificate not trusted, read failed, home not connected); counts in buckets (0, 1–5, 6–20, 21+) of devices, rooms, renamed tiles; from 2.9.7, only whether you signed in on Home Assistant's login page or pasted a token, and how it ended (signed in, cancelled, refused by Home Assistant, failed); never the address or the token and added dashboards; and whether Home Assistant had only ZHA devices; from 3.8, at the preview, how many devices took their name or room from their old ZHA entry (0, 1–5, 6–20, 21+). Never the address, the token, or any device or room name |
 | `help_opened` | Get help was opened | where from: no connection found, a setup error, manual connect, home can't be reached, device list missing, Settings, the demo, or (from 3.5.1) the help button on an empty scan |
 | `help_offered` | From 2.9.2: the "ask a person" card was shown after two failed checks on the broker form | where: the broker form |
 | `support_contact` | Support details were shared from Get help | where from (as above); email, copy or (from 3.5.1) the share sheet |
@@ -175,20 +212,25 @@ never from anything you typed or anything your broker sent.
 | `shortcut_added` | A Quick Settings tile was given a device, a home-screen widget was added, or ZigDash's Device Controls were first shown | tile, control, widget, scene widget or group widget; from 3.3.3, where it was added from (the offer below, a tile's menu, a device's page, a section, or outside the app) |
 | `shortcut_nudge` | From 3.3.3: ZigDash offered to put a device you switch often on your home screen or in Quick Settings, and what you chose (shown, home screen, Quick Settings, or not now). Never which device; how often each device was switched is counted only on your phone | the step |
 | `shortcut_used` | A tile, widget or Device Control was used (sent at most once per kind when the app next starts) | tile, control, widget, scene widget or group widget |
+| `chat_early` | From 3.5.4, Google Play build only: the "Chat with your home" card was shown (once per install), Join on Telegram or Join by email was tapped, an email sign-up was sent or failed, "Not for me" was tapped, or the price question was answered (never the email address or the Telegram chat) | which of these happened, and whether it was on the card or in Settings |
+| `chat_link` | From 3.7.0, Google Play build only: the ZigDash Chat screen was opened on a Home that can link, a Telegram account was linked or removed, or a step failed | which of these happened, and for a failure only why: away from home, ZigDash Engine too old, a server not reachable, the relay refused this phone's login, Google Play did not confirm the purchase, too many tries, the code ran out, a wrong code, or refused. Never a name, a code, the Telegram account or anything about the home |
 | `poll_answer` | "What should ZigDash do next?" was answered: until 3.1.13 on a one-time card; from 3.3.5 on a one-time card or in Settings, one event for each choice picked (Not now sends nothing; what you write after "Something else" goes only where you send it, by email or on GitHub) | until 3.1.13: notifications, history graphs, kiosk mode or Zigbee groups; from 3.3.5: pairing new devices, device settings and firmware updates, working with ZHA, control from an AI assistant, or something else; and from 3.3.5, where it was answered (the card or Settings) |
 | `why_zigdash` | From 3.1.10 until 3.1.13: the one-time "What made you try ZigDash?" card after the first setup was answered (Not now sends nothing; the card is gone from 3.2) | quicker than another app, easy for the family, a wall tablet, works without Home Assistant, or something else |
 | `remote` | From 3.1.11: remote control was turned on or off. From 3.4.4: the Remote control page was opened, or "See Pro" was tapped on it (each counted once per app start). Until 3.4.3: the one-time "Control your home from anywhere" card was shown, opened or put away | the step, and whether this phone has Pro. From 3.4.4, for an opened page: how it was reached (the button on the dashboard or Settings) and what it had to show (no Pro, not connected, no ZigDash Engine, away from home, ready, on, or a home it can't work for). Nothing about the home, its address or the relay |
 | `alerts_setup` | A step of setting alerts up | the step (flow installed, flow installed by hand, no Node-RED, phone registered, no Google services, test sent, test failed); the channel (push, ntfy, Pushover) |
 | `alert_added` | An alert was added | its kind: leak, smoke, door or window opened, or battery low |
 | `alarm_shown` | From 2.9: alarm takeover filled a wall display | only the kind: leak, smoke, gas or carbon monoxide. Never the device or where it is |
-| `history_setup` | From 2.7: setting up the history recorder on the hub ended | installed, updated, imported by hand (Node-RED asked for a login), no Node-RED found, or refused; from 2.9.1 also recording on this device instead |
-| `engine_setup` | From 3.0: a step of putting ZigDash Engine on the hub | offered, installed, consent shown, given or declined, Zigbee2MQTT too old, failed, removed, started again, seen paused or stopped; which screen it came from (automations, alerts or history); Zigbee2MQTT's version as major.minor only |
+| `history_setup` | From 2.7: setting up the history recorder on the hub ended | installed, updated, imported by hand (Node-RED asked for a login), no Node-RED found, or refused; from 2.9.1 also recording on this device instead; from 3.6 also where it was set up (a History sheet, the Turn on History card right after setup, or that card later); from 3.6.2, when it failed, why (away from home, no connection to the broker, the hub didn't say which Zigbee2MQTT it runs, or which add-ons it has, Zigbee2MQTT too old, add-ons blocked, refused, no answer, or other) |
+| `engine_setup` | From 3.0: a step of putting ZigDash Engine on the hub | offered, installed, consent shown, given or declined, Zigbee2MQTT too old, failed, removed, started again, seen paused or stopped, and from 3.6.2 an Install button tapped; which screen it came from (automations, alerts, history, from 3.6 the Turn on History card, and from 3.6.2 saving an automation); from 3.6.2, when it failed, why (the same reasons as `history_setup`); Zigbee2MQTT's version as major.minor only |
 | `hub_backup` | From 3.3: hub backup | the step: a backup of Zigbee2MQTT's data folder was taken (and whether automatically or by hand), Zigbee2MQTT on the hub could not make one or did not answer, a copy was saved, or a backup was restored (or the restore stopped). From 3.5.3 also how long taking it took (under 10 s, 10-30 s, 30-60 s, over 60 s), whether it was the first or second automatic try, and for one that got no answer whether the app had left the screen or the connection dropped meanwhile. Never the backup, its size, or anything in it |
-| `automation_saved` | From 3.0: an automation was saved | its shape only: the kind of trigger (a device's state, a button, a reading, a clock time or the sun), how many conditions, a scene or a device, whether it turns off again, new or edited, and how many the home has, in ranges. Never a device, a name or a time |
+| `automation_saved` | From 3.0: an automation was saved | its shape only: the kind of trigger (a device's state, a button, a reading, a clock time or the sun), how many conditions, a scene or a device, whether it turns off again, new or edited, and how many the home has, in ranges; from 3.6.2 also whether ZigDash Engine runs it or it waits for the Engine. Never a device, a name or a time |
 | `home_share` | From 3.1.7, sharing a Home with another phone | that a phone showed its share code, that another phone joined, and whether the dashboards arrived; never the Home, its address or its login |
-| `pro` | From 2.7, Google Play and App Store versions only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. Nothing about the payment, the price or the currency |
+| `pro` | From 2.7, Google Play and App Store versions only: a step of ZigDash Pro | a locked view was shown, the Pro screen was opened (from 2.9.6), Unlock was tapped, or Pro became unlocked. From 3.4.4: which view led to the Pro screen (remote control, Settings, history, automations, the wall tablet or, from 3.4.6, the sale card), and for a tap on the price whether a sale price was showing. From 3.6: whether the 14-day trial had not started, was running or had ended. Nothing about the payment, the price or the currency |
+| `history_on` | From 3.6: the Turn on History card | shown, tapped, put off, the consent shown or declined, this phone chosen to record, or the broker asked for; and whether it was right after setup or later |
+| `page_broker` | From 3.8.6: saving your MQTT broker for a home that connects through the Zigbee2MQTT page | whether it was saved, you kept the page, saved anyway or cancelled; whether the broker answered, refused the login, or the check gave up after 15 seconds; how many devices it had (0, 1–5, 6–20, 21+) |
+| `pro_trial` | From 3.6, Google Play version only: the 14-day Pro trial | started (from where: right after setup, the History card, a History sheet or the offer; the Home's kind of connection; the week ZigDash was installed), the offer declined, a Pro feature used during it (the week or month History, the wall tablet extras, more than three automations; once each), the ending card shown, ended, or Pro bought during it or within a week after. Never a device, a reading or a time of day |
 | `sale_card` | From 3.4.6, Google Play version only: the card on the Devices tab that announces a sale on ZigDash Pro | the step only: shown, opened or closed |
-| `review_prompt` | From 2.6.5: the app asked Google Play (or, on iPhone and iPad, the App Store) to show its "rate this app" dialog (after a device you control has answered on two different days) | whether the dialog was requested, or could not be because the Play review flow is not available on the device. Nothing about whether you rated, or what |
+| `review_prompt` | From 2.6.5: the app asked Google Play (or, on iPhone and iPad, the App Store) to show its "rate this app" dialog, at most once in 90 days and only from the second day of use. From 3.6.1 at one of three moments: a device you control answered, a home with sensors only after four days of use, or closing History after a week or month chart | whether the dialog was requested, or could not be because the review flow is not available on the device, and which of the three moments it was. Nothing about whether you rated, or what |
 
 **Never sent:** broker addresses, ports, usernames or passwords; the address you type into setup; MQTT topics or
 messages; device names or addresses; home or dashboard names; device states or
@@ -202,16 +244,153 @@ events on request. To stop sending, turn the switch off.
 From 3.5.1, Get help has a Send button. Only when you tap it, what you typed,
 the email you may have given and the Support details are sent to a small
 service the developer runs on Cloudflare, which passes the message straight
-on to the developer's Telegram account and keeps nothing; it does not log the
-message. Telegram (Telegram FZ-LLC) therefore stores the message as part of
-that chat, under [its privacy policy](https://telegram.org/privacy). If Send
-fails, nothing is sent; the app offers Android's share sheet instead, and
-where the message goes is then your choice.
+on to the developer's Telegram account; it does not log the message. Telegram
+(Telegram FZ-LLC) stores the message as part of that chat, under
+[its privacy policy](https://telegram.org/privacy). If Send fails, nothing is
+sent; the app offers Android's share sheet instead, and where the message goes
+is then your choice.
+
+If you gave an email, the developer may answer from Telegram. The answer is
+emailed to that address through [Resend](https://resend.com/legal/privacy-policy)
+(Plus Five Five, Inc., USA; sent from its EU region in Ireland, under the
+EU-US Data Privacy Framework and standard contractual clauses), which keeps a
+sending log for 30 days. While the answer is being written, the service keeps
+a draft (your address, the answer and your message) for at most one hour, and
+it counts how many answers are sent each month, with nothing about who. A copy
+of the answer goes to the developer's support inbox.
 
 Whatever way you contact support, your email and the Support details you
-chose to include are used only to help you, are never shared, and are
-deleted within 6 months after the issue is closed; a Telegram message is
-deleted from the chat once answered.
+chose to include are used only to help you, are not shared with anyone beyond
+the services named here, and are deleted within 6 months after the issue is
+closed. The Telegram copy (your message, the answer and a note that it was
+sent) is deleted when the conversation is over: by the service while it is
+under 48 hours old, otherwise by hand, and in any case within 6 months.
+
+## Chat with your home: early access
+
+From 3.5.4 the Google Play build asks whether you'd like to control your home
+by sending chat messages (ZigDash Chat, out from 3.7.0 for Pro owners; the
+first 20 on the list get a founder's pass). Nothing is sent unless you join
+the list:
+
+- **Join on Telegram** opens the ZigDash Home bot (@ZigDashHomeBot) in
+  Telegram. If you start it, the developer's service on Cloudflare keeps the
+  chat's id, the language your Telegram app reports, the date, your place on
+  the list, whether you joined from the card with usage data on, and your
+  answer to the price question. Telegram (Telegram FZ-LLC) also holds the
+  chat, under [its privacy policy](https://telegram.org/privacy).
+- **Join by email** sends the email address you type, the app's language, a
+  random id the app makes for this sign-up, and whether you joined from the
+  card with usage data on. The same service keeps them with the date, your
+  place on the list and your answer to the price question.
+
+**The invitation** (from 3.7.0). If you are one of the first 20 on the list,
+the developer sends you a founder's code once: by Telegram through the bot,
+or, if you joined by email, by email through
+[Resend](https://resend.com/legal/privacy-policy) (as for support answers
+below), which keeps a copy of sent emails under its terms. The code is not
+stored in your entry; the entry records the date you were invited and is
+deleted under the rule below. Questions about the invitation go through Get
+help in the app, or by replying to the email, and are handled like
+[support messages](#support-messages).
+
+**Why:** only to invite you to the beta of "Chat with your home" and to tell
+you its price. The developer is told that someone joined (place, Telegram or
+email, language), never your address. Nothing is shared or sold, and nothing
+about your home is sent.
+
+**How long:** each entry is deleted after 180 days, or earlier once you have
+answered the beta invitation, or when you ask. If the feature is not built,
+the whole list is deleted and everyone on it gets one message saying so.
+
+**Deleting it yourself:** send /stop to the bot, or email the address under
+[Contact](#contact).
+
+## ZigDash Chat (beta)
+
+From 3.7.0, in the Google Play build, owners of ZigDash Pro or a founder's
+pass can link a Telegram account to a Home and talk to it from Telegram ("is
+the back door open?", "close the office shutter"). It is a free beta: up to 300 messages a
+month for each Home. Nothing about it runs until someone links an account in
+**Settings › Home › Chat**. The App Store version is not in this beta.
+
+Unlike remote control, ZigDash Chat is **not end-to-end encrypted**: to
+answer, the Chat service and Anthropic read the question and what your home
+says about the devices it asks about. Link it only if that is fine for you.
+
+- **What it can do.** Read: answer questions about your devices, their
+  states and their recorded history. Read and control: also switch the
+  lights, covers, switches, plugs and thermostats chosen on the Chat screen.
+  It never opens, closes or changes locks, valves or sirens, whatever the
+  setting, and never changes automations, alerts or settings.
+- **Linking.** At home, the app creates a Chat client for that one Telegram
+  account on your hub, over your home network: a random token (the hub keeps
+  only its SHA-256 hash), a key made on your phone for this link only (not
+  the Home's remote key), the scope and the list of devices it may switch.
+  ZigDash Engine takes them into its data folder and clears the copy on your
+  broker. The relay checks this phone's remote login and checks the purchase
+  or the pass again (for Pro, it asks Google Play whether the purchase is
+  valid and belongs to this Home; for a founder's pass, whether it is still
+  running), and signs a ticket valid for 10 minutes. The app sends the
+  ticket, the token, the key and the scope to the Chat service, which gives
+  back a code; Telegram opens with it, and the bot sends a 4-digit code that
+  you type into the app to finish. A link that is never finished is deleted.
+- **What the Chat service reads and keeps.** The service runs at
+  chat.zigdash.app on a server the developer rents from netcup in Vienna,
+  Austria (EU), under netcup's data processing agreement. For each linked
+  account it keeps the Home's relay ID, the client ID, the Telegram chat ID
+  and the name Telegram shows for it, the scope, the token and key
+  (encrypted with a key kept separately from them), when it was linked and
+  when it was last used, and how many messages the Home sent this month. It
+  reads your messages and what ZigDash Engine on your hub returns for them
+  (device and group names, states, readings and history, and which devices
+  Chat may switch), only for the linked Home. The conversation (the last 10
+  turns) is kept for 24 hours, then deleted; a list of your devices and rooms
+  is kept in memory only, never written to disk. The service's logs hold
+  counters only (messages, tool calls, costs), never message text or names.
+- **Through the relay.** The service reaches your hub through the ZigDash
+  relay, sealed with the link's own key (AES-256-GCM) under topic ids that
+  reveal nothing, so the relay itself still sees only sealed data. Requests
+  carry a time and a random id, and your hub refuses old or repeated ones.
+- **Telegram.** Messages travel through Telegram (Telegram FZ-LLC). Bot chats
+  are not end-to-end encrypted: Telegram's servers can read them, and
+  Telegram keeps them under [its own privacy policy](https://telegram.org/privacy)
+  whatever we delete.
+- **Anthropic.** To write each answer, the service sends your message, the
+  recent conversation and what your hub returned to Anthropic's Claude API
+  (Anthropic, PBC, in the United States), which processes them for us. The
+  transfer to the US relies on the Standard Contractual Clauses in
+  Anthropic's data processing terms. Anthropic deletes API inputs and
+  outputs within 30 days by default (longer only if they are flagged for
+  breaking its Usage Policy, up to 2 years, or where the law requires) and
+  does not train on them; see
+  [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+- **On your hub.** ZigDash Engine keeps a list of the last 200 Chat actions,
+  refusals and rejected requests (time, client, what, which device, result)
+  on your own broker, so the Chat screen can show **What Chat did**.
+- **Family members.** Each person links their own Telegram account, with its
+  own scope. Linked people must be 16 or older. Anyone who can use a linked
+  Telegram account can do what its scope allows, and even Read shows whether
+  anyone is home and which doors and windows are open.
+- **Removing a link.** Remove it in **Settings › Home › Chat** (at home or
+  away), or send /unlink to the bot from the linked chat. The service deletes
+  that account's binding, token, key and conversation at once; your hub
+  deletes its client then if the phone is at home, or else the next time
+  the Chat screen is opened at home. To ask
+  for a copy of what the service holds about your Telegram account, or for
+  its deletion, email the address under [Contact](#contact) with your
+  Telegram chat ID or the Home ID.
+- **After a founder's pass ends.** The Home's links can still be listed and
+  removed in the app, but no new one made, and the Chat service answers a
+  linked chat only with a note that the pass ended (its record of that note
+  is kept until the pass is extended or the Home moves to Pro). If the Home
+  is deleted (see [Remote control](#remote-control-from-31)), its links are
+  deleted with it, and each linked chat gets one message saying so.
+- **Why we may process it:** to provide the feature you linked
+  (Art. 6(1)(b) GDPR): each person who links their own Telegram account
+  asks for the service for themselves, including family members the owner
+  lets link. The usage counters are kept to run the beta's limits and its
+  costs (Art. 6(1)(f) GDPR).
 
 ## The assistant on Get help and the help bubble (from 3.5.1)
 
@@ -274,7 +453,14 @@ own broker, with the last 20 runs. Nothing of it is sent to the developer or
 anyone else. On new Zigbee2MQTT installs, ZigDash asks before turning on
 Zigbee2MQTT's "Allow external JavaScript" setting and restarting it. Remove
 from hub deletes the file; your automations stay on your broker until you
-delete them.
+delete them. From 3.6.2 you can save an automation before ZigDash Engine is on
+your hub: it is kept on your broker the same way, not running.
+
+From 3.7.0 ZigDash Engine also contains the code for
+[ZigDash Chat](#zigdash-chat-beta). Because ZigDash keeps the Engine on your
+hub up to date by itself, every hub with ZigDash Engine gets this code, but it
+stays dormant: until a Telegram account is linked for that Home, it only
+listens on your own broker for a Chat setup and sends nothing anywhere.
 
 ## Optional automation panels
 
@@ -334,6 +520,20 @@ read and is not stored; you can delete it in Home Assistant afterwards.
 ZigDash never writes to Home Assistant, and nothing of it leaves your
 network: no copy is sent to the developer or anyone else.
 
+## ZigDash connect links (from 3.8.3)
+
+If you open a ZigDash connect link (from zigdash.app), ZigDash receives the
+Home Assistant address it holds and uses it only to fill in the sign-in. If
+ZigDash was installed from such a link, Google Play passes that address to
+ZigDash once, on first start. With usage data on, ZigDash counts that a link
+was opened, how it opened (link, browser button or Google Play), whether it
+held an address and where the link came from, never the address itself; and
+whether a setup finished with the address from a link.
+
+The address sits in the part of the link after `#`, which your browser never
+sends to zigdash.app; the page at zigdash.app/connect makes the link and its
+code in your browser and sends nothing anywhere.
+
 ## ZigDash Pro (from 2.7)
 
 ZigDash Pro is an optional one-time purchase in the Google Play version and,
@@ -345,11 +545,16 @@ keeps a one-way hash of the purchase, as described there. Versions
 from GitHub, IzzyOnDroid and F-Droid contain no billing code and have Pro
 unlocked.
 
+From 3.6 the Google Play version offers 14 days of Pro to try, once per
+install, when History first records (or, for a Home that already recorded,
+when you start it). No payment is taken and nothing renews. The trial's dates
+stay on your phone, in a file that is not included in Android backups.
+
 ## Remote control (from 3.1)
 
 Remote control is off until you turn it on for a Home (Settings › Home ›
 Remote control). It is part of ZigDash Pro in the Google Play and App Store
-versions. When
+versions, or of a founder's pass (below). When
 you turn it on:
 
 - **How it works.** ZigDash Engine on your hub keeps one connection open to
@@ -379,6 +584,21 @@ you turn it on:
   hashes, and the date each phone was added); and the latest sealed state of
   each device, of your automations and of ZigDash Engine, and whether the hub
   is online, so a phone sees them at once.
+- **A founder's pass** (from 3.7.0, Google Play version) gives one Home
+  remote control and Chat for 90 days from the day its code is entered.
+  The app sends the code in place of the purchase, at home, and the relay
+  keeps, instead of a purchase hash, a keyed hash of the code (never the
+  code itself), its dates (made, deadline to enter it, entered, end, and
+  withdrawn if it was), the Home it was used for, and for Chat the topics it
+  allowed each linked account. When the pass ends, the Home is switched off
+  on the relay: the hub's and phones' logins are disabled and Chat access is
+  removed. Unless it moves to a Pro purchase, the Home is deleted 90 days
+  later with its relay data (the sealed copies and online flag, the logins
+  and the Chat access), leaving only a note that the Home existed and was
+  deleted, kept for a year. The pass's own record (the hash and dates) is
+  deleted a year after the code was made, or a year after its Home was
+  deleted if that is later. Your hub keeps its relay login and key until
+  remote control is turned off on it.
 - **Your IP address** reaches the relay while your hub or phone is connected,
   as with any internet connection. It is not stored. The relay keeps no
   connection or access logs, only its own error messages, which are capped
@@ -394,17 +614,18 @@ you turn it on:
   purchase-token hash and the hub's login stay, so you can turn remote
   control on again with the same purchase. Email us to have them deleted
   too; we do so within 30 days.
-- **Why we may process it:** to provide the feature you bought (Art. 6(1)(b)
-  GDPR). It is shared with no one; only the Google Play purchase check goes
-  to Google, under Google's privacy policy.
+- **Why we may process it:** to provide the feature you bought or were
+  given with a founder's pass (Art. 6(1)(b) GDPR). It is shared with no
+  one; only the Google Play purchase check goes to Google, under Google's
+  privacy policy.
 - **Fair use.** Remote control is included with Pro while the relay runs, for
   one Home, up to five phones and normal household use. It may change or end
   with notice.
 
 ## Your rights
 
-For the data on the relay, you can ask for access, correction, deletion or
-a copy, or object, by email (below). Give the Home ID shown in the app, as
+For the data on the relay or the Chat service, you can ask for access,
+correction, deletion or a copy, or object, by email (below). Give the Home ID shown in the app, as
 the relay holds nothing else that identifies you. You can also complain to a
 data protection authority in the EU country where you live.
 
@@ -428,6 +649,6 @@ new effective date.
 
 ## Contact
 
-The controller for the relay is the developer, Gilad Tamamski, Israel.
+The controller for the relay and the Chat service is the developer, Gilad Tamamski, Israel.
 
 Questions about this policy: **giladtamam1@gmail.com**

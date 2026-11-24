@@ -9,7 +9,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../settings/providers/settings_controller.dart';
 import '../../core/analytics/analytics.dart';
 import '../kiosk/kiosk.dart';
-import '../pro/pro.dart';
+import '../pro/pro_trial.dart';
 import 'widgets/wall_alarm_screen.dart';
 import 'widgets/wall_idle_screen.dart';
 import '../../data/repositories/dashboard_repo.dart';
@@ -278,10 +278,18 @@ class _WallDisplayScopeState extends ConsumerState<WallDisplayScope> {
   /// The night schedule is on and it is night now (Pro).
   bool get _night {
     final night = ref.read(wallNightProvider(_settingsId));
-    return night.on &&
-        ref.read(proStatusProvider) == ProStatus.unlocked &&
+    final on =
+        night.on &&
+        ref.read(proAccessProvider) &&
         isNightAt(ref.read(wallNowProvider)(), night.from, night.to);
+    if (on) _usedInTrial();
+    return on;
   }
+
+  /// 3.6: a wall tablet extra took effect: counted once in the trial.
+  void _usedInTrial() => WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (mounted) ref.read(proTrialProvider.notifier).used(ProTrialUse.wall);
+  });
 
   /// Motion at night: awake, but only dimly (wall-tablet-2.9.md §5).
   void _wokenByMotion() {
@@ -322,9 +330,10 @@ class _WallDisplayScopeState extends ConsumerState<WallDisplayScope> {
   WallIdleShow get _idleShow {
     var show = ref.read(wallIdleShowProvider(_settingsId));
     // Readings are Pro (wall-tablet-2.9.md §7); without it, the clock.
-    if (show == WallIdleShow.readings &&
-        ref.read(proStatusProvider) != ProStatus.unlocked) {
+    if (show == WallIdleShow.readings && !ref.read(proAccessProvider)) {
       show = WallIdleShow.clock;
+    } else if (show == WallIdleShow.readings) {
+      _usedInTrial();
     }
     return _night ? WallIdleShow.black : show;
   }
@@ -361,7 +370,7 @@ class _WallDisplayScopeState extends ConsumerState<WallDisplayScope> {
     final night = ref.read(wallNightProvider(_settingsId));
     if (!_ambient ||
         !night.on ||
-        ref.read(proStatusProvider) != ProStatus.unlocked) {
+        !ref.read(proAccessProvider)) {
       return;
     }
     final now = ref.read(wallNowProvider)();
@@ -488,10 +497,11 @@ class _WallDisplayScopeState extends ConsumerState<WallDisplayScope> {
     final ambient =
         widget.active &&
         (ref.watch(wallDisplayProvider(id)) || ref.watch(kioskProvider).on);
-    if (!ambient || ref.watch(proStatusProvider) != ProStatus.unlocked) return;
+    if (!ambient || !ref.watch(proAccessProvider)) return;
     final motion = ref.watch(wallMotionSensorsProvider(id));
     final alarmsOn = ref.watch(wallAlarmProvider(id)).on;
     if (motion.isEmpty && !alarmsOn) return;
+    _usedInTrial();
     final connectionId = ref
         .watch(dashboardByIdProvider(id))
         .valueOrNull

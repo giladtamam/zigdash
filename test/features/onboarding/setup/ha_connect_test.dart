@@ -5,6 +5,7 @@ import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/features/ha_import/ha_auth.dart';
 import 'package:zigdash/features/onboarding/setup/ha_address_shape.dart';
 import 'package:zigdash/features/onboarding/setup/ha_connect.dart';
+import 'package:zigdash/mqtt/ha_mqtt_client.dart' show HaFacts;
 import 'package:zigdash/features/onboarding/setup/ha_discovery.dart';
 import 'package:zigdash/mqtt/ha_token.dart';
 
@@ -17,6 +18,8 @@ void main() {
   HaConnectController make({
     HaSignInResult? signIn,
     HaConnectProblem? problem,
+    HaFacts? facts,
+    void Function()? onZhaFound,
     String address = '',
     HaReach? reach,
     HaConfirm? confirm,
@@ -33,7 +36,10 @@ void main() {
       adopt: (a, s) async => adopted.add((a, s)),
       probe: (base, stored) async {
         probed.add((base, stored));
-        return slowProbe != null ? slowProbe() : problem;
+        return (
+          problem: slowProbe != null ? await slowProbe() : problem,
+          facts: facts,
+        );
       },
       signIn: signIn == null
           ? null
@@ -46,6 +52,7 @@ void main() {
       find: find,
       phoneIp: phoneIp == null ? null : () async => phoneIp,
       onEvent: (e) => events.add(e.props),
+      onZhaFound: onZhaFound,
     );
   }
 
@@ -144,6 +151,116 @@ void main() {
     },
   );
 
+  group('3.7.1: what the check read (zha-migration.md, Phase 0)', () {
+    test('after no MQTT: shown, counted in broad groups, ZHA noted', () async {
+      var found = 0;
+      final c = make(
+        problem: HaConnectProblem.noMqtt,
+        facts: const HaFacts(apps: false, zhaDevices: 23),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      final state = c.value as HaConnectAsk;
+      expect(state.facts?.zhaDevices, 23);
+      expect(state.facts?.apps, isFalse);
+      expect(found, 1);
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e['result'], 'no_mqtt');
+      expect(e['install'], 'no_apps');
+      expect(e['zha'], '11-30');
+    });
+
+    test('no ZHA devices: counted as 0, not noted', () async {
+      var found = 0;
+      final c = make(
+        problem: HaConnectProblem.notAdmin,
+        facts: const HaFacts(apps: true, zhaDevices: 0),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e['install'], 'apps');
+      expect(e['zha'], '0');
+      expect(found, 0);
+    });
+
+    test('a read that timed out sends nothing for it', () async {
+      final c = make(
+        problem: HaConnectProblem.noMqtt,
+        facts: const HaFacts(apps: true),
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e['install'], 'apps');
+      expect(e.containsKey('zha'), isFalse);
+    });
+
+    test('facts never ride on other outcomes', () async {
+      var found = 0;
+      final c = make(
+        problem: HaConnectProblem.unreachable,
+        facts: const HaFacts(apps: false, zhaDevices: 5),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      expect((c.value as HaConnectAsk).facts, isNull);
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e.containsKey('install'), isFalse);
+      expect(e.containsKey('zha'), isFalse);
+      expect(found, 0);
+    });
+
+    // 3.8.1: MQTT works in Home Assistant, the Zigbee is in ZHA.
+    test('connected: ZHA noted and counted, then adopted', () async {
+      var found = 0;
+      final c = make(
+        facts: const HaFacts(apps: true, zhaDevices: 4),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      expect(adopted, hasLength(1));
+      expect(found, 1);
+      final e = events.singleWhere((e) => e['step'] == 'ha_connect');
+      expect(e['result'], 'ok');
+      expect(e['install'], 'apps');
+      expect(e['zha'], '1-10');
+    });
+
+    test('connected with no ZHA devices: not noted', () async {
+      var found = 0;
+      final c = make(
+        facts: const HaFacts(apps: true, zhaDevices: 0),
+        onZhaFound: () => found++,
+      );
+      await c.connectWithToken('192.168.68.52', 'tok');
+      expect(adopted, hasLength(1));
+      expect(found, 0);
+    });
+
+    test('device groups and the zha_move step', () {
+      String zha(int n) =>
+          SetupStep(SetupStepKind.haConnect, zhaDevices: n).props['zha']!;
+      expect([0, 1, 10, 11, 30, 31, 60, 61, 200].map(zha), [
+        '0',
+        '1-10',
+        '1-10',
+        '11-30',
+        '11-30',
+        '31-60',
+        '31-60',
+        '61+',
+        '61+',
+      ]);
+      expect(
+        const SetupStep(
+          SetupStepKind.zhaMove,
+          choice: HaConnectOutcome.notAdmin,
+        ).props,
+        {'step': 'zha_move', 'choice': 'not_admin'},
+      );
+    });
+  });
+
   test('the setup_step event carries only the kind and the outcome', () {
     expect(
       const SetupStep(
@@ -225,11 +342,7 @@ void main() {
 
       test('port 80 answers but is not Home Assistant: nothing answers, '
           'the browser never opens', () async {
-        final c = make(
-          signIn: ok,
-          reach: only80,
-          confirm: (_) async => false,
-        );
+        final c = make(signIn: ok, reach: only80, confirm: (_) async => false);
         await c.signInAndConnect('192.168.1.1');
         expect(browsers, 0);
         expect((c.value as HaConnectAsk).problem, HaConnectProblem.unreachable);
@@ -487,7 +600,7 @@ void main() {
       expect(events.last['port'], '443');
       expect(c.value, isA<HaConnectDone>());
     });
-  
+
     test('a .local name swapped for the found one: counted as typed, '
         'no advice by kind', () async {
       final c = make(

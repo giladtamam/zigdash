@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>תריס חכם עם SONOFF MINI-ZBRBS ו-Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="מודול Zigbee מסוג SONOFF MINI-ZBRBS מאחורי מתג התריס, מחווט כך שהמתג הישן נשאר. חלקים, חיווט, שיוך עם Zigbee2MQTT, כיול ואריח תריס ב-ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="תריס חכם עם SONOFF MINI-ZBRBS ו-Zigbee2MQTT">
+<meta property="og:description" content="מודול Zigbee קטן מאחורי מתג התריס: מתג הקיר ממשיך לעבוד, והתריס נפתח מ-ZigDash. חלקים, חיווט, שיוך וכיול.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/he/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">התקנה</a>
+    <a href="../../hubs/">רכזות</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">עזרה</a>
+    <a href="https://t.me/zigdash_app">קהילה</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>איך הפכתי את התריס שלי לחכם עם SONOFF MINI-ZBRBS</h1>
+<p class="byline">גלעד תמם, המפתח של ZigDash · 21 בנובמבר 2026</p>
+<p class="byline">גם ב: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">לתריס במשרד שלי יש מנוע חשמלי ומתג רגיל של למעלה/למטה על הקיר. הכנסתי SONOFF MINI-ZBRBS, מודול Zigbee קטן לתריסים, לקופסה בקיר שמאחורי המתג הזה. מתג הקיר עובד בדיוק כמו קודם, ועכשיו התריס גם נפתח ונסגר מאריח ב-ZigDash, בבית ומכל מקום.</p>
+
+<div class="toc"><strong>בעמוד הזה</strong>
+<ul>
+  <li><a href="#how">איך זה עובד</a></li>
+  <li><a href="#need">מה צריך</a></li>
+  <li><a href="#wire">1. חיווט המודול</a></li>
+  <li><a href="#pair">2. שיוך עם ZigDash</a></li>
+  <li><a href="#mode">3. להגיד למודול איזה מתג יש לכם</a></li>
+  <li><a href="#calibrate">4. כיול</a></li>
+  <li><a href="#tile">5. אריח תריס ב-ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">איך זה עובד</h2>
+<p>למנוע תריס יש שני חוטי מתח: אחד מעלה אותו, השני מוריד אותו. מתג הקיר שולח פאזה לאחד מהם. ה-MINI-ZBRBS יושב באמצע: שני החוטים של המנוע מתחברים ליציאות שלו (<strong>Lout1</strong> ו-<strong>Lout2</strong>), והמתג הישן מתחבר לכניסות שלו (<strong>S1</strong> ו-<strong>S2</strong>). כשלוחצים על המתג, המודול מפעיל את המנוע. כש-ZigDash מבקש דרך Zigbee, הוא מפעיל את המנוע גם כן.</p>
+<p>המודול גם יודע איפה התריס נמצא, כך שאפשר לשלוח אותו ל-50% ולא רק עד למעלה או עד למטה. ומכיוון שהוא מחובר לחשמל, הוא משמש כנתב Zigbee שמחזק את הרשת שלכם.</p>
+
+<h2 id="need">מה צריך</h2>
+<ul>
+  <li><strong>SONOFF MINI-ZBRBS</strong> (מתג Zigbee לתריס גלילה). Zigbee2MQTT תומך בו כדגם <code>MINI-ZBRBS</code>.</li>
+  <li><strong>מנוע תריס עם מפסקי גבול משלו</strong>: המנוע הצינורי הרגיל עם ארבעה חוטים (אפס, למעלה, למטה, הארקה) שעוצר לבד למעלה ולמטה. SONOFF מדרגת את המודול למנועים של עד <strong>1&nbsp;A</strong>, והוא עוצר את המנוע בעצמו אחרי 2 דקות בכיוון אחד.</li>
+  <li><strong>חוט אפס בקופסת המתג.</strong> המודול צריך אפס כדי להזין את עצמו.</li>
+  <li><strong>מקום בקופסה</strong> מאחורי המתג. SONOFF ממליצה על קופסה בעומק 60&nbsp;mm לפחות.</li>
+  <li><strong>מחברי מנוף</strong> (אני השתמשתי ב-WAGO 221) וכמה חתיכות חוט קצרות.</li>
+  <li><strong>רכזת Zigbee2MQTT</strong> בבית. אם עוד אין לכם, ראו <a href="../../hubs/">רכזות</a>.</li>
+  <li><strong>ZigDash</strong> בטלפון (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). שליטה בתריס מהבית היא בחינם. שליטה בו מכל מקום משתמשת בשליטה מרחוק של ZigDash Pro: רכישה חד-פעמית, בלי מנוי.</li>
+</ul>
+
+<div class="tip"><strong>נתקו את החשמל במפסק בלוח לפני שפותחים את המתג.</strong> בקופסה יש 230V. אם אתם לא מרגישים בנוח לעבוד עם מתח רשת, תנו לחשמלאי לעשות את החיווט. SONOFF ממליצה על מפסק זרם של 1&nbsp;A (MCB או RCBO) לפני המודול.</div>
+
+<h2 id="wire">1. חיווט המודול</h2>
+<p>למודול יש שישה מהדקים, מודפסים עליו: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (למעלה) ו-<strong>S2</strong> (למטה). אין לו מהדק הארקה. כך חיווטתי את שלי:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>מהדק</th><th>מתחבר אל</th><th>בקופסה שלי</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>אפס</td><td>חוטי האפס הכחולים, מחוברים ב-WAGO 221, ומשם חוט קצר אל N (ראו את ההערה למטה על הצבע שלו)</td></tr>
+    <tr><th>L</th><td>פאזה</td><td>הפאזה שמזינה את הקופסה</td></tr>
+    <tr><th>Lout1</th><td>מנוע: למעלה (ב-SONOFF קוראים לזה forward)</td><td>החוט השחור של המנוע</td></tr>
+    <tr><th>Lout2</th><td>מנוע: למטה (reverse)</td><td>החוט החום של המנוע</td></tr>
+    <tr><th>S1</th><td>יציאת "למעלה" של המתג</td><td>אחת מהיציאות של המתג הישן</td></tr>
+    <tr><th>S2</th><td>יציאת "למטה" של המתג</td><td>היציאה השנייה של המתג הישן</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>המתג הישן נשאר.</strong> המהדק המשותף שלו מקבל פאזה, כמו קודם. שתי היציאות שלו כבר לא הולכות למנוע: הן מתחברות ל-S1 ו-S2, ואומרות למודול לאיזה כיוון להפעיל. <strong>S1 ו-S2 הן כניסות של מתח רשת</strong>, לא מתח נמוך: הזינו את המהדק המשותף של המתג מאותה פאזה, על אותו מפסק, כמו L.</p>
+<p><strong>הארקה:</strong> השאירו את חוט ההארקה הצהוב-ירוק של המנוע מחובר להארקה של הקופסה, כמו שהיה. הוא לא מתחבר למודול.</p>
+<p><strong>למעלה ולמטה:</strong> צבעי החוטים שונים בכל בית. לפני שמנתקים את המתג, רשמו איזה חוט של המנוע קיבל מתח מיציאת "למעלה" שלו, וסמנו אותו: הוא זה שמתחבר ל-Lout1. אם הפכתם ביניהם, שלב 4 מסביר איך לתקן.</p>
+<div class="tip"><strong>השתמשו בחוט כחול (או אפור) לגשר של האפס.</strong> היה לי ביד רק אדום, ולכן בתמונות שלי החוט הקצר מה-WAGO אל N הוא אדום, עם שרוול (פרול) כחול בצד של המודול. אדום בדרך כלל מסמן פאזה, ומי שיפתח את הקופסה הזו בפעם הבאה לא אמור לנחש. אם אתם משתמשים בצבע אחר, סמנו אותו בסרט כחול בשני הקצוות.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="שני חוטי אפס כחולים וחוט אדום מחוברים במחבר מנוף כתום מסוג WAGO 221; החוט האדום הולך למהדק N של מודול SONOFF" loading="lazy" width="675" height="900"><figcaption>אפס: חוטי האפס הכחולים של הקופסה ב-WAGO 221, ומשם חוט אדום קצר אל ה-N של המודול.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="הגב של מתג התריס הישן עם שלושה חוטים אדומים במהדקים שלו" loading="lazy" width="810" height="690"><figcaption>מתג התריס הישן, שנשאר: הפאזה נכנסת למהדק המשותף שלו, ויציאות "למעלה" ו"למטה" שלו מתחברות עכשיו ל-S1 ו-S2. איזה מהדק הוא המשותף משתנה ממתג למתג; בדקו את שלכם לפני שמנתקים אותו.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="קופסת הקיר הפתוחה עם המתג בחוץ וה-SONOFF MINI-ZBRBS מחווט: שני חוטים אדומים מהמתג אל S1 ו-S2, החוטים החום והשחור של המנוע אל Lout2 ו-Lout1, פאזה אל L ואפס אל N" loading="lazy" width="640" height="1124"><figcaption>הכול מחווט, לפני שזה חוזר לקיר. משמאל לימין על המודול: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>בדקו שכל מהדק בורג מהודק חזק. בינתיים השאירו את המודול מחוץ לקופסה, כשהמהדקים פונים הרחק מכם: בשלב הבא תשייכו אותו.</p>
+
+<h2 id="pair">2. שיוך עם ZigDash</h2>
+<p>לשיוך צריך שהמודול יהיה מחובר לחשמל ושילחצו על הכפתור שלו, אז זה הרגע היחיד שבו עובדים ליד קופסה תחת מתח. לחצו רק על הכפתור, עם כלי מפלסטיק (הצד האחורי של עט), ואל תיגעו בשום דבר אחר. הניחו את המודול על משהו שלא מוליך חשמל, בלי שייגע במסגרת המתכת של המתג.</p>
+<ol>
+  <li>ב-ZigDash, פתחו את <strong>מכשירים</strong> והקישו על <strong>התחלת שיוך</strong>.</li>
+  <li>הרימו את המפסק. לחצו לחיצה ארוכה על הכפתור של המודול כ-<strong>5 שניות</strong>, עד שנורית ה-LED הכחולה מהבהבת לאט. הוא נשאר במצב שיוך עד 3 דקות.</li>
+  <li>ZigDash מציג את המכשיר החדש. תנו לו שם שתזהו, למשל <strong>תריס משרד</strong>.</li>
+  <li>הורידו את המפסק. קפלו את החוטים פנימה, הכניסו את המודול מאחורי המתג, סגרו את הקופסה והרימו שוב את המפסק. כל השאר נעשה מהטלפון ומדף האינטרנט של Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. להגיד למודול איזה מתג יש לכם</h2>
+<p>המודול צריך לדעת איך מתג הקיר שלכם מתנהג:</p>
+<ul>
+  <li><strong>מתג נדנדה שנשאר</strong> במצב למעלה, כבוי או למטה (כמו שלי): מצב <code>edge</code>.</li>
+  <li><strong>לחצן קפיצי</strong> שחוזר למקומו כשעוזבים אותו: מצב <code>pulse</code>.</li>
+</ul>
+<p>הדרך הכי קלה היא דף האינטרנט של Zigbee2MQTT: פתחו את המכשיר, עברו ללשונית <strong>Exposes</strong> שלו והגדירו את <code>external_trigger_mode</code> ל-<code>edge</code> או ל-<code>pulse</code>. (גם הכפתור של המודול יכול לעשות את זה: לחיצה משולשת מהירה עוברת לסוג המתג הבא וה-LED מהבהב שלוש פעמים; ייתכן שתצטרכו לחזור על זה. זה אומר לפתוח שוב את הקופסה, אז אני השתמשתי ב-Zigbee2MQTT.)</p>
+<p>אחר כך העבירו את מתג הקיר ללמעלה, לכבוי וללמטה: התריס אמור לזוז ולעצור כמו תמיד. אם לא, המצב לא נכון; הגדירו את השני.</p>
+
+<h2 id="calibrate">4. כיול</h2>
+<p>המודול לומד כמה זמן לוקח לתריס לעלות עד הסוף ולרדת עד הסוף. בלי זה הוא יכול לפתוח ולסגור, אבל לא להגיע למיקום כמו 50%.</p>
+<ol>
+  <li>בדף האינטרנט של Zigbee2MQTT, בלשונית <strong>Exposes</strong> של המכשיר, הגדירו את <code>motor_travel_calibration_action</code> ל-<code>start_automatic</code>.</li>
+  <li>תנו לזה לרוץ: התריס נוסע עד הסוף לכיוון אחד, ואז לכיוון השני. אל תיגעו במתג בזמן הזה. כשזה מסתיים, <code>motor_travel_calibration_status</code> מציג <code>Calibrated</code>.</li>
+</ol>
+<p>(על המודול עצמו, לחיצה על הכפתור יותר מ-10 שניות, עד שה-LED "נושם", מתחילה את אותו כיול.) אם הכיול האוטומטי לא מסתיים (למשל עם מנוע חלש), גם SONOFF וגם Zigbee2MQTT מתארים כיול ידני: אתם מסמנים בעצמכם פתוח לגמרי וסגור לגמרי.</p>
+<p><strong>למעלה ולמטה הפוכים?</strong> הורידו את המפסק, החליפו בין החוטים ב-<strong>Lout1</strong> וב-<strong>Lout2</strong>, ואז כיילו שוב. האפשרות <code>invert_cover</code> של Zigbee2MQTT רק הופכת את המיקום שהוא מדווח; היא לא משנה לאיזה כיוון המנוע מסתובב.</p>
+
+<h2 id="tile">5. אריח תריס ב-ZigDash</h2>
+<ol>
+  <li>בלוח הבקרה, הקישו על <strong>הוספה מהתקן</strong> ובחרו את התריס.</li>
+  <li>באריח יש כפתורי <strong>פתיחה</strong>, <strong>עצירה</strong> ו<strong>סגירה</strong>, ושורה של מיקומים מוגדרים מראש (0, 25, 50, 100 כברירת מחדל). אפשר להפעיל מחוון מיקום בהגדרות האריח.</li>
+  <li><strong>מכל מקום:</strong> עם ZigDash Pro, הפעילו שליטה מרחוק ואותו אריח עובד גם מחוץ לבית, בלי לפתוח פורט בנתב ובלי תשלום חודשי.</li>
+</ol>
+<p>מתג הקיר והאפליקציה עובדים זה לצד זה: המתג עדיין שם בשביל מי שאין לו את האפליקציה, והאריח ממשיך לעבוד בין אם התריס הוזז לאחרונה ביד ובין אם מהטלפון.</p>
+
+<div class="tip">SONOFF הוא סימן מסחרי של בעליו. ZigDash לא קשורה ל-SONOFF או ל-ITEAD. פעלו לפי המדריך שמגיע עם המודול שלכם ולפי תקנות החשמל המקומיות.</div>
+
+<div class="tip"><strong>עשיתם את זה גם?</strong> ספרו לי איך הלך, או מה היה שונה בקופסה שלכם: <a href="mailto:support@zigdash.app">support@zigdash.app</a> או <a href="https://t.me/zigdash_app">בקהילה</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">להורדת ZigDash</a><a class="btn" href="../../hubs/">בחירת רכזת</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">קוד מקור</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">מדיניות פרטיות</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

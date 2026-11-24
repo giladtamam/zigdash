@@ -16,6 +16,14 @@ enum FailureKind {
   noDevices,
   noLocalNetwork,
   saveFailed,
+
+  /// The broker's TLS certificate isn't trusted by the phone: self-signed,
+  /// expired, or made for another name (3.8.5).
+  tlsUntrusted,
+
+  /// The TLS handshake failed for another reason, such as a broker that
+  /// wants a client certificate (3.8.5).
+  tlsFailed,
   unknown,
 }
 
@@ -29,6 +37,16 @@ FailureKind failureKindFromError(Object error) {
         : FailureKind.refused;
   }
   return FailureKind.unknown;
+}
+
+/// Whether a connect error is a failed TLS handshake (3.8.5): the
+/// HandshakeException mqtt_client passes on as it is, or, should it wrap
+/// one, its own exception saying so. Only the kind is kept.
+bool isTlsFailure(Object? error) {
+  if (error is TlsException) return true;
+  if (error is! Exception) return false;
+  final m = error.toString().toLowerCase();
+  return m.contains('handshake exception') || m.contains('tls exception');
 }
 
 /// The kind of a connect error from its message, for errors a client
@@ -63,5 +81,7 @@ String failureKindLabel(FailureKind kind) => switch (kind) {
       FailureKind.noDevices => 'no devices received',
       FailureKind.noLocalNetwork => 'no local network',
       FailureKind.saveFailed => "couldn't save",
+      FailureKind.tlsUntrusted => 'certificate not trusted',
+      FailureKind.tlsFailed => 'encrypted connection failed',
       FailureKind.unknown => 'unknown',
     };

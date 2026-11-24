@@ -1,0 +1,1 @@
+Encrypted brokers (TLS): when your phone doesn't trust a broker's certificate, ZigDash now says so instead of reporting no answer, and offers to use the broker's unencrypted port 1883 at home. Secure WebSocket (WSS) connections now connect.

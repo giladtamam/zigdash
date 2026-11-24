@@ -8,6 +8,7 @@ import '../features/discovery/models/z2m_device.dart';
 import '../features/discovery/providers/discovery_provider.dart';
 import '../features/scenes/all_shutters.dart';
 import '../features/scenes/models/scene.dart';
+import '../features/scenes/scene_capture.dart' show engineCanSend;
 import '../features/scenes/scenes_providers.dart';
 import '../features/settings/providers/settings_controller.dart' show sharedPreferencesProvider;
 import '../l10n/app_localizations.dart';
@@ -15,6 +16,10 @@ import '../core/analytics/analytics.dart';
 import 'automation.dart';
 import 'automation_text.dart';
 import 'automations_repo.dart';
+import 'engine_providers.dart' show engineKnownInstalled;
+import 'engine_setup.dart' show checkEngine;
+import 'engine_sheet.dart';
+import 'engine_status.dart' show HubEnginePhase;
 import 'town_picker.dart';
 
 /// Creates or edits one Automation: When / Only if / Then
@@ -62,9 +67,14 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
   bool _saving = false;
   String? _error;
 
+  /// 3.6.2: the Home's rules stay at hand for the Engine sheet's "waiting
+  /// from before" list, whatever screen is under this one.
+  late final WaitingRulesWatch _rules;
+
   @override
   void initState() {
     super.initState();
+    _rules = WaitingRulesWatch(ref, widget.connectionId);
     final e = widget.existing;
     _name = TextEditingController(text: e?.name ?? '');
     _enabled = e?.enabled ?? true;
@@ -100,12 +110,17 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
 
   @override
   void dispose() {
+    _rules.close();
     _name.dispose();
     _tValue.dispose();
     super.dispose();
   }
 
   String get _base => ref.read(homeBaseTopicProvider(widget.connectionId)) ?? 'zigbee2mqtt';
+
+  /// Away with the hub silent, but this phone saw the Engine there: the
+  /// rule goes up through the relay as before.
+  bool get _knownInstalled => engineKnownInstalled(ref.read(sharedPreferencesProvider), widget.connectionId);
 
   List<Z2mDevice> _devices() => [
         ...?ref
@@ -182,10 +197,39 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
       _saving = true;
       _error = null;
     });
-    final ok = await ref.read(automationsRepoProvider).save(widget.connectionId, rule);
+    // 3.6.2: on a hub without the Engine, saving is where ZigDash puts it
+    // there (or keeps the rule, not running).
+    final check = await checkEngine(ref, widget.connectionId);
+    if (!mounted) return;
+    final view = check.view;
+    // Away with no Engine seen here: made at home (the tab says so too).
+    if (engineAwayWithoutEngine(view, knownInstalled: _knownInstalled)) {
+      return setState(() {
+        _saving = false;
+        _error = l10n.engineAwayMakeAtHome;
+      });
+    }
+    final bool ok;
+    var running = true;
+    if (view == null || !view.installed && !(view.phase == HubEnginePhase.unreachable && _knownInstalled)) {
+      final waiting = await _rules.rules();
+      if (!mounted) return;
+      final result = await showEngineSaveSheet(context, ref, widget.connectionId, rule, check, waiting);
+      if (!mounted) return;
+      if (result == null) return setState(() => _saving = false);
+      ok = result.saved;
+      running = result.running;
+    } else {
+      ok = await ref.read(automationsRepoProvider).save(widget.connectionId, rule);
+    }
     if (!mounted) return;
     if (ok) {
-      final count = ref.read(automationsProvider(widget.connectionId)).valueOrNull?.length ?? 0;
+      // The rule may already be back from the broker (an install takes a
+      // while): count it once.
+      final count = {
+        ...?ref.read(automationsProvider(widget.connectionId)).valueOrNull?.map((r) => r.id),
+        rule.id,
+      }.length;
       ref.read(analyticsProvider).track(AutomationSaved(
         trigger: switch (rule.trigger) {
           DeviceTrigger t when t.above != null || t.below != null => 'device_reading',
@@ -197,7 +241,8 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
         action: rule.action.kind.name,
         offAfter: rule.action.offAfter > 0,
         isNew: widget.existing == null,
-        homeCount: widget.existing == null ? count + 1 : count,
+        homeCount: count,
+        running: running,
       ));
       Navigator.of(context).pop();
     } else {
@@ -497,6 +542,15 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
         ),
       );
 
+  /// How many of the picked saved scene's actions the Engine can't send.
+  int _homeOnlyCount(List<Scene> scenes) {
+    final scene = scenes.where((s) => s.id == _sceneId).firstOrNull;
+    if (scene == null || allShuttersCommand(scene.id) != null) return 0;
+    return SceneAction.decodeList(scene.actions)
+        .where((a) => !engineCanSend(a, _base))
+        .length;
+  }
+
   List<Widget> _actionFields(AppLocalizations l10n, List<Z2mDevice> devices, List<Scene> scenes) {
     final targets = [for (final d in devices) if (actionStatesFor(d).isNotEmpty) d];
     final target = _byIeee(targets, _aIeee);
@@ -519,8 +573,21 @@ class _AutomationEditorScreenState extends ConsumerState<AutomationEditorScreen>
           decoration: InputDecoration(labelText: l10n.autoScene),
           items: [for (final s in scenes) DropdownMenuItem(value: s.id, child: Text(s.name))],
           onChanged: (v) => setState(() => _sceneId = v),
-        )
-      else ...[
+        ),
+      // Own-tile actions the Engine can't send (3.8.7): said under the
+      // picker; a scene of only those is refused on save.
+      if (_homeOnlyCount(scenes) case final skipped
+          when _actionKind == ActionKind.scene && skipped > 0)
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(
+            l10n.autoSceneTilesSkipped(skipped),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+        ),
+      if (_actionKind != ActionKind.scene) ...[
         if (targets.isEmpty)
           Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(l10n.autoNoTargets)),
         DropdownButtonFormField<String>(

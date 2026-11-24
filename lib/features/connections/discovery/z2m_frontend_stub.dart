@@ -8,5 +8,6 @@ Future<String?> fetchZ2mDeviceList(
 Future<Map<String, dynamic>?> fetchZ2mMqttConfig(
   String host,
   int port, {
+  String? token,
   Duration timeout = const Duration(seconds: 5),
 }) async => null;

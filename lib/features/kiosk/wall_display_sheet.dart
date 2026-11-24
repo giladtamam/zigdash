@@ -10,6 +10,7 @@ import '../../data/repositories/panel_repo.dart';
 import '../dashboards/wall_display.dart';
 import '../dashboards/wall_readings.dart';
 import '../pro/pro.dart';
+import '../pro/pro_trial.dart';
 import '../pro/pro_screen.dart';
 import '../history/app_history_recorder.dart';
 import '../dashboards/wall_sensors.dart';
@@ -61,8 +62,9 @@ class WallDisplaySheet extends ConsumerWidget {
     final idleShow = ref.watch(wallIdleShowProvider(id));
     // Pro rows (wall-tablet-2.9.md §7): hidden where Pro can't be had,
     // shown locked with one note where it can be bought.
-    final pro = ref.watch(proStatusProvider);
-    final proOpen = pro == ProStatus.unlocked;
+    // 3.6: open while the 14-day trial runs (pro_trial.dart).
+    final proVisible = ref.watch(proVisibleProvider);
+    final proOpen = ref.watch(proAccessProvider);
     final kiosk = ref.watch(kioskProvider);
     final locked = kiosk.dashboardId == id;
     return DraggableScrollableSheet(
@@ -71,7 +73,14 @@ class WallDisplaySheet extends ConsumerWidget {
       maxChildSize: 0.95,
       builder: (_, controller) => ListView(
         controller: controller,
-        padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
+        // 3.6.3: clear of the system bars below, such as One UI's tablet
+        // taskbar, which a bottom sheet doesn't pad for.
+        padding: EdgeInsets.fromLTRB(
+          0,
+          16,
+          0,
+          24 + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           ListTile(
             title: Text(l10n.wallSheetTitle, style: theme.textTheme.titleLarge),
@@ -133,7 +142,7 @@ class WallDisplaySheet extends ConsumerWidget {
                       for (final (show, label) in [
                         (WallIdleShow.dim, l10n.wallIdleShowDim),
                         (WallIdleShow.clock, l10n.wallIdleShowClock),
-                        if (pro != ProStatus.unavailable)
+                        if (proVisible)
                           (
                             WallIdleShow.readings,
                             proOpen
@@ -163,7 +172,7 @@ class WallDisplaySheet extends ConsumerWidget {
               ],
             ),
           ),
-          if (pro != ProStatus.unavailable) ...[
+          if (proVisible) ...[
             _MotionSection(
               connectionId: connectionId,
               dashboardId: id,
@@ -172,7 +181,7 @@ class WallDisplaySheet extends ConsumerWidget {
             _NightSection(dashboardId: id, open: proOpen),
             _AlarmsSection(dashboardId: id, open: proOpen),
           ],
-          if (pro == ProStatus.locked) const _ProNote(),
+          if (ref.watch(proLockedProvider)) const _ProNote(),
           // History without Node-RED (2.9.1): a wall tablet that stays open
           // is the natural recorder.
           SwitchListTile(
@@ -288,7 +297,7 @@ class WallDisplaySheet extends ConsumerWidget {
             // What will show: readings without Pro is the clock.
             idleShow:
                 (ref.read(wallIdleShowProvider(id)) == WallIdleShow.readings &&
-                            ref.read(proStatusProvider) != ProStatus.unlocked
+                            !ref.read(proAccessProvider)
                         ? WallIdleShow.clock
                         : ref.read(wallIdleShowProvider(id)))
                     .name,

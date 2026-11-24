@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umstieg von ZHA · ZigDash</title>
+<meta name="description" content="So ziehst du ein Zigbee-Netz aus ZHA in Home Assistant zu Zigbee2MQTT um: mit einem zweiten Adapter Raum für Raum oder mit demselben Adapter auf einmal, mit den Einstellungen für jeden Adapter und dem Weg zurück.">
+<link rel="canonical" href="https://zigdash.app/zha/de/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zha/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zha/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zha/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zha/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zha/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zha/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zha/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zha/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zha/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zha/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zha/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zha/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zha/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zha/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Umstieg von ZHA · ZigDash">
+<meta property="og:description" content="So ziehst du ein Zigbee-Netz aus ZHA in Home Assistant zu Zigbee2MQTT um: mit einem zweiten Adapter Raum für Raum oder mit demselben Adapter auf einmal, mit den Einstellungen für jeden Adapter und dem Weg zurück.">
+<meta property="og:url" content="https://zigdash.app/zha/de/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Einrichtung</a>
+    <a href="../../hubs/">Hubs</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hilfe</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Umstieg von ZHA auf Zigbee2MQTT</h1>
+<p class="lead">ZHA ist das eigene Zigbee von Home Assistant. ZigDash arbeitet mit Zigbee2MQTT und kann deshalb keine Geräte anzeigen, die in ZHA sind. Umsteigen heißt: Du koppelst deine Geräte neu mit Zigbee2MQTT. Home Assistant nutzt sie danach weiter, über seine MQTT-Integration.</p>
+
+<div class="toc"><strong>Auf dieser Seite</strong>
+<ul>
+  <li><a href="#before">Bevor du anfängst</a></li>
+  <li><a href="#ways">Zwei Wege zum Umstieg</a></li>
+  <li><a href="#adapter">Dein Adapter</a></li>
+  <li><a href="#apps">Home Assistant mit Apps</a></li>
+  <li><a href="#docker">Home Assistant in Docker (ohne Apps)</a></li>
+  <li><a href="#pair">Geräte koppeln</a></li>
+  <li><a href="#after">Nach dem Umstieg</a></li>
+  <li><a href="#back">Der Weg zurück</a></li>
+  <li><a href="#keep">Das Netz behalten, ohne neu zu koppeln</a></li>
+</ul></div>
+
+<h2 id="before">Bevor du anfängst</h2>
+<ul>
+  <li><strong>Welche Installation?</strong> Wenn das Menü Einstellungen in Home Assistant <strong>Apps</strong> zeigt (bei älteren Versionen Add-ons), hast du Home Assistant OS: siehe <a href="#apps">mit Apps</a>. Wenn nicht, läuft Home Assistant in Docker (Container): siehe <a href="#docker">Docker</a>.</li>
+  <li><strong>Welcher Adapter?</strong> Öffne Einstellungen › Geräte &amp; Dienste › Zigbee Home Automation. Unter Hubs steht der Adapter mit seinem Modell, zum Beispiel <strong>SONOFF ZBDongle-E</strong>. Schau dann unter <a href="#adapter">Dein Adapter</a> nach.</li>
+  <li><strong>ZHA sichern.</strong> Tippe auf dieser Seite auf das ⚙ neben Zigbee Home Automation, dann auf <strong>Download backup</strong>. Bewahre die Datei auf. Unter <strong>Network information</strong> auf derselben Seite siehst du Kanal, Funktyp und seriellen Port.</li>
+  <li><strong>Was sich in Home Assistant ändert.</strong> Deine Geräte kommen als neue MQTT-Geräte mit neuen Entitäts-IDs zurück. Automationen, Skripte und Dashboards, die sie nutzen, musst du auf die neuen umstellen, und ihr Verlauf beginnt neu. Gruppen und Bindungen aus ZHA werden in Zigbee2MQTT neu angelegt.</li>
+  <li><strong>Zeit.</strong> Jedes Gerät wird zurückgesetzt und neu gekoppelt, eins nach dem anderen. Ehrliche Zeitangaben haben wir noch nicht; plane für ein kleines Zuhause einen Abend ein und für ein großes mehr.</li>
+</ul>
+
+<h2 id="ways">Zwei Wege zum Umstieg</h2>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>Zweiter Adapter</th><th>Derselbe Adapter</th></tr></thead>
+  <tbody>
+    <tr><th>Kosten</th><td>Ein neuer Adapter, etwa 30–60 € (zum Beispiel ein Home Assistant Connect ZBT-2 oder ein SMLIGHT SLZB-06M oder SLZB-07)</td><td>Kostenlos</td></tr>
+    <tr><th>Während des Umstiegs</th><td>Alles läuft weiter: ZHA behält den alten Adapter</td><td>Zigbee ist aus, bis jedes Gerät neu gekoppelt ist</td></tr>
+    <tr><th>Tempo</th><td>Raum für Raum, gern auch über mehrere Tage</td><td>Alles auf einmal</td></tr>
+    <tr><th>Der Weg zurück</th><td>Einfach: neuen Adapter abziehen, ZHA lief die ganze Zeit weiter</td><td>ZHA-Backup wiederherstellen (siehe <a href="#back">Der Weg zurück</a>)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Zweiter Adapter</h3>
+<ol>
+  <li>Richte Zigbee2MQTT auf dem neuen Adapter ein (<a href="#apps">mit Apps</a> oder <a href="#docker">Docker</a>), mit einem eigenen Netz. Lege all das <strong>vor dem ersten Start von Zigbee2MQTT</strong> fest, denn wenn du den Kanal später änderst, musst du eventuell neu koppeln:
+    <ul>
+      <li>lass Netzwerkschlüssel und PAN ID auf <code>GENERATE</code> (die Voreinstellung);</li>
+      <li>wähle einen anderen Kanal als ZHA (bei ZHA unter ⚙ › Network information zu sehen); Home Assistant empfiehlt 15, 20 oder 25.</li>
+    </ul></li>
+  <li>Halte die beiden Adapter auseinander, jeden an einem USB-Verlängerungskabel.</li>
+  <li>Unter Home Assistant OS bietet Home Assistant beim Einstecken des neuen Adapters vielleicht an, ihn für ZHA oder Thread einzurichten. Ignoriere das: Der Adapter ist für Zigbee2MQTT.</li>
+  <li>Zieh einen Raum nach dem anderen um: <a href="#pair">Kopple</a> zuerst seine Geräte mit Netzstrom (Lampen, Steckdosen, Unterputzschalter: Das sind Router), dann seine Batteriegeräte.</li>
+  <li>Wenn alle Geräte umgezogen sind, deaktiviere ZHA (siehe unten) und behalte den alten Adapter als Ersatz.</li>
+</ol>
+
+<h3>Derselbe Adapter</h3>
+<ol>
+  <li>Lade das ZHA-Backup herunter (siehe <a href="#before">Bevor du anfängst</a>), direkt bevor du loslegst.</li>
+  <li>Deaktiviere ZHA: Einstellungen › Geräte &amp; Dienste › Zigbee Home Automation, das ⋮ neben Zigbee Home Automation › <strong>Deaktivieren</strong>. Nicht Löschen.</li>
+  <li>Richte Zigbee2MQTT auf demselben Adapter ein (<a href="#apps">mit Apps</a> oder <a href="#docker">Docker</a>) und lass Netzwerkschlüssel und PAN ID auf <code>GENERATE</code>.</li>
+  <li>Schalte deine Zigbee-Geräte mit Netzstrom aus, am Wandschalter oder an der Sicherung. Sonst suchen sie weiter nach dem alten Netz.</li>
+  <li>Schalte sie einzeln wieder ein und <a href="#pair">kopple</a> jedes, sobald es an ist. Danach koppelst du die Batteriegeräte.</li>
+</ol>
+
+<h2 id="adapter">Dein Adapter</h2>
+<ul>
+  <li><strong>Silicon Labs</strong> (Home Assistant Connect ZBT-1 und ZBT-2, Home Assistant Yellow, Sonoff ZBDongle-E, SMLIGHT SLZB-06M und SLZB-07): <code>adapter: ember</code>. Der ZBT-2 braucht außerdem <code>baudrate: 460800</code>; der ZBDongle-E braucht <code>rtscts: false</code>; der SLZB-06M braucht Firmware 20240510 oder neuer.</li>
+  <li><strong>Texas Instruments</strong> (Sonoff ZBDongle-P, SMLIGHT SLZB-06 und SLZB-06P7): <code>adapter: zstack</code>.</li>
+  <li><strong>ConBee oder RaspBee</strong>: <code>adapter: deconz</code>.</li>
+  <li><strong>CC2531 oder ZiGate</strong>: zu alt oder nicht mehr gepflegt für ein gutes Zigbee2MQTT-Netz. Nimm den Weg mit zweitem Adapter und einen neuen Adapter.</li>
+  <li><strong>Ein Netzwerkadapter</strong> (SMLIGHT SLZB-06, SLZB-06M, SLZB-07, MR series): ZHA zeigt ihn als <code>socket://IP:6638</code>; in Zigbee2MQTT ist es <code>tcp://IP:6638</code>, und Docker braucht keine USB-Zeile.</li>
+  <li><strong>Multiprotokoll</strong> (ZBT-1 oder Yellow, auf denen Zigbee und Thread zusammen laufen; das steht auf der Hardware-Seite in Home Assistant): Zigbee2MQTT kann keine Multiprotokoll-Firmware nutzen. Für den Weg mit demselben Adapter schaltest du Multiprotokoll <strong>noch unter ZHA</strong> aus, mit der Anleitung von Home Assistant (<a href="https://connectzbt1.home-assistant.io/procedures/disable-multiprotocol">ZBT-1</a>, <a href="https://yellow.home-assistant.io/guides/disable-multiprotocol">Yellow</a>). Thread-Geräte, die darüber liefen, funktionieren nicht mehr, bis ein anderer Thread-Border-Router sie übernimmt. Für den Weg mit zweitem Adapter lässt du es, wie es ist, und kaufst den neuen Adapter als reinen Zigbee-Adapter.</li>
+</ul>
+<p>Mehr Details stehen auf den <a href="https://www.zigbee2mqtt.io/guide/adapters/">Adapter-Seiten</a> von Zigbee2MQTT.</p>
+
+<h2 id="apps">Home Assistant mit Apps (Home Assistant OS)</h2>
+<ol>
+  <li>Installiere und starte unter Einstellungen › Apps den <strong>Mosquitto broker</strong>. Home Assistant bietet dann unter Einstellungen › Geräte &amp; Dienste die MQTT-Integration an: Bestätige sie.</li>
+  <li>Füge das Zigbee2MQTT-Repository hinzu (im App-Store ⋮ › Repositories: <code>https://github.com/zigbee2mqtt/hassio-zigbee2mqtt</code>) und installiere dann <strong>Zigbee2MQTT</strong>.</li>
+  <li>Stelle im Tab Konfiguration den seriellen Port und den Adapter laut <a href="#adapter">Dein Adapter</a> ein, zum Beispiel:
+<pre><code>port: /dev/serial/by-id/usb-...
+adapter: ember</code></pre>
+    Für den Weg mit zweitem Adapter stellst du vor dem ersten Start außerdem den Kanal ein (siehe <a href="#ways">oben</a>).</li>
+  <li>Starte Zigbee2MQTT und öffne seine Weboberfläche über die Seite der App. Dann geht es ans <a href="#pair">Koppeln</a>.</li>
+</ol>
+
+<h2 id="docker">Home Assistant in Docker (ohne Apps)</h2>
+<p>Ohne Apps laufen Mosquitto und Zigbee2MQTT als eigene Container neben Home Assistant. In einem neuen Ordner:</p>
+<p><strong>1. <code>compose.yaml</code></strong> (trag den Pfad deines Adapters unter <code>devices</code> ein; <code>ls /dev/serial/by-id/</code> zeigt ihn):</p>
+<pre><code>services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+  zigbee2mqtt:
+    image: ghcr.io/koenkk/zigbee2mqtt
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    ports:
+      - 8080:8080
+    volumes:
+      - ./zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    environment:
+      - TZ=Europe/Berlin
+    devices:
+      - /dev/serial/by-id/usb-...:/dev/ttyACM0</code></pre>
+<p>Mit einem Netzwerkadapter lässt du <code>devices</code> und die udev-Zeile weg.</p>
+<p><strong>2. <code>mosquitto/config/mosquitto.conf</code></strong>:</p>
+<pre><code>listener 1883
+allow_anonymous false
+password_file /mosquitto/config/passwd
+persistence true
+persistence_location /mosquitto/data/</code></pre>
+<p>Leg den MQTT-Benutzer an (der Befehl fragt zweimal nach einem Passwort; die Datei muss dem eigenen Benutzer von Mosquitto gehören, sonst startet Mosquitto nicht):</p>
+<pre><code>docker run -it --rm -v "$PWD/mosquitto/config:/mosquitto/config" eclipse-mosquitto:2 \
+  sh -c "mosquitto_passwd -c /mosquitto/config/passwd zigbee &amp;&amp; chown mosquitto:mosquitto /mosquitto/config/passwd"</code></pre>
+<p><strong>3. <code>zigbee2mqtt/configuration.yaml</code></strong> (die Adapter-Zeilen aus <a href="#adapter">Dein Adapter</a>):</p>
+<pre><code>homeassistant:
+  enabled: true
+frontend:
+  enabled: true
+  port: 8080
+mqtt:
+  server: mqtt://mosquitto:1883
+  user: zigbee
+  password: your-password
+serial:
+  port: /dev/ttyACM0          # a network adapter: tcp://IP:6638
+  adapter: ember
+advanced:
+  network_key: GENERATE
+  pan_id: GENERATE
+  ext_pan_id: GENERATE
+  channel: 20                 # second adapter: not ZHA's channel</code></pre>
+<p><strong>4.</strong> Beim Weg mit demselben Adapter ist ZHA jetzt deaktiviert (siehe <a href="#ways">oben</a>). Wenn der Container von Home Assistant selbst den Adapter einbindet, entferne diese Zeile aus seiner Compose-Datei oder aus <code>docker run</code>: Nur ein Container kann den Adapter nutzen.</p>
+<p><strong>5.</strong> <code>docker compose up -d</code> ausführen, dann <code>http://the-machine:8080</code> öffnen: die Weboberfläche von Zigbee2MQTT.</p>
+<p><strong>6.</strong> In Home Assistant: Einstellungen › Geräte &amp; Dienste › Integration hinzufügen › <strong>MQTT</strong>. Broker: die IP-Adresse des Rechners, Port 1883, Benutzer <code>zigbee</code> und das Passwort.</p>
+
+<h2 id="pair">Geräte koppeln</h2>
+<ol>
+  <li>Tippe in der Weboberfläche von Zigbee2MQTT auf <strong>Permit join</strong> (etwa vier Minuten offen). Um über einen Router in der Nähe des Geräts zu koppeln, wähl diesen Router im Permit-join-Menü: praktisch für Aqara und andere wählerische Geräte.</li>
+  <li>Setz das Gerät in den Kopplungsmodus zurück, so wie der Hersteller es beschreibt: bei den meisten Sensoren lange drücken, bei Lampen ein paar Mal aus- und einschalten, bei manchen Unterputzschaltern mehrmals hintereinander schalten.</li>
+  <li>Wenn es auftaucht, gib ihm in Zigbee2MQTT seinen Namen und Raum. Dann das nächste.</li>
+</ol>
+<p>Erst Geräte mit Netzstrom, danach Batteriegeräte, damit das neue Netz Routen hat.</p>
+
+<h2 id="after">Nach dem Umstieg</h2>
+<ul>
+  <li><strong>ZigDash:</strong> Öffne die App und tippe auf <strong>Mein Setup finden</strong>. Sie findet Mosquitto in deinem Netzwerk; melde dich mit dem MQTT-Benutzer an. Oder wähle Home Assistant und melde dich dort an: Das klappt jetzt auch, weil Home Assistant die MQTT-Integration hat.</li>
+  <li><strong>Namen und Räume:</strong> In ZigDash holt Einstellungen › Aus Home Assistant importieren die Namen und Räume, die du den neuen Geräten in Home Assistant gegeben hast.</li>
+  <li><strong>Home Assistant:</strong> Stell Automationen, Skripte und Dashboards auf die neuen Geräte um. Wenn du sicher bist, lösch die ZHA-Integration.</li>
+</ul>
+
+<h2 id="back">Der Weg zurück</h2>
+<ul>
+  <li><strong>Zweiter Adapter:</strong> Stoppe Zigbee2MQTT und zieh den neuen Adapter ab. ZHA lief die ganze Zeit weiter. Geräte, die du schon umgezogen hast, musst du wieder mit ZHA koppeln.</li>
+  <li><strong>Derselbe Adapter:</strong> Stoppe Zigbee2MQTT und tippe dann auf der ZHA-Seite auf <strong>Aktivieren</strong>. ZHA meldet "Network settings do not match most recent backup" (Netzwerkeinstellungen passen nicht zum letzten Backup), weil der Adapter jetzt das Netz von Zigbee2MQTT enthält. Öffne Einstellungen › <strong>Reparaturen</strong> › "Zigbee network settings have changed" (Zigbee-Netzwerkeinstellungen wurden geändert) und wähle <strong>Restore backup (recommended)</strong>. Das Netz von ZHA ist dann wieder so wie vorher. Geräte, die du mit Zigbee2MQTT gekoppelt hattest, musst du wieder mit ZHA koppeln. Wenn keine Reparatur erscheint, nimm ⚙ › Migrate adapter mit dem Backup, das du heruntergeladen hast.</li>
+</ul>
+<div class="tip"><strong>Getestet:</strong> Am 17. November 2026 kam mit Home Assistant 2026.11 und einem Sonoff ZBDongle-E das Netz von ZHA exakt zurück (Kanal, PAN ID und Netzwerkschlüssel). Mit gekoppelten Geräten haben wir das noch nicht geprüft, also bewahre die Backup-Datei auf.</div>
+
+<h2 id="keep">Das Netz behalten, ohne neu zu koppeln</h2>
+<p>Es gibt einen dritten Weg: das Netz von ZHA in Zigbee2MQTT kopieren, damit die Geräte nicht neu gekoppelt werden müssen. Zigbee2MQTT unterstützt das nicht, ein falscher Wert kann das Netz löschen, und es lohnt sich nur für große Installationen (sagen wir, über 60 Geräte). Wenn du darüber lesen willst: <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/16739">die Antwort des Zigbee2MQTT-Maintainers</a> und Erfahrungsberichte aus der Community in <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/24478">Diskussion 24478</a> und <a href="https://github.com/Koenkk/zigbee2mqtt/discussions/26716">Diskussion 26716</a>.</p>
+
+<div class="tip"><strong>Erzähl uns, wie es lief.</strong> Diese Anleitung ist neu. Wenn ein Schritt falsch war oder gefehlt hat, schreib an <a href="mailto:support@zigdash.app">support@zigdash.app</a> oder in <a href="https://t.me/zigdash_app">die Community</a>.</div>
+
+<div class="next"><a class="btn" href="../../home-assistant/">ZigDash mit Home Assistant</a><a class="btn" href="../../help/">Funktioniert etwas nicht?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Quellcode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Datenschutzerklärung</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../../de/" hreflang="de" lang="de">Deutsch</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

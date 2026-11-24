@@ -1,0 +1,35 @@
+date,term,country,position,results
+2026-11-15,"zigbee2mqtt",US,1,30
+2026-11-15,"zigbee2mqtt",DE,1,30
+2026-11-15,"zigbee2mqtt dashboard",US,1,30
+2026-11-15,"zigbee2mqtt dashboard",DE,1,30
+2026-11-15,"zigbee dashboard",US,1,30
+2026-11-15,"zigbee dashboard",DE,1,30
+2026-11-15,"zigbee app",US,10,30
+2026-11-15,"zigbee app",DE,9,30
+2026-11-15,"zigbee",US,8,30
+2026-11-15,"zigbee",DE,7,30
+2026-11-15,"zigbee2mqtt app",US,1,11
+2026-11-15,"zigbee2mqtt app",DE,1,30
+2026-11-15,"zigbee2mqtt android",US,2,30
+2026-11-15,"zigbee2mqtt android",DE,2,30
+2026-11-15,"zigbee2mqtt home assistant",US,2,30
+2026-11-15,"zigbee2mqtt home assistant",DE,3,30
+2026-11-15,"zigbee control",US,9,30
+2026-11-15,"zigbee control",DE,28,30
+2026-11-15,"zigbee wall tablet",US,3,30
+2026-11-15,"zigbee wall tablet",DE,-,30
+2026-11-15,"smlight",US,-,29
+2026-11-15,"smlight",DE,-,30
+2026-11-15,"sonoff zigbee",US,-,30
+2026-11-15,"sonoff zigbee",DE,-,30
+2026-11-15,"zigbee wandtablet",US,9,25
+2026-11-15,"zigbee wandtablet",DE,-,30
+2026-11-15,"zigbee2mqtt fernzugriff",US,2,30
+2026-11-15,"zigbee2mqtt fernzugriff",DE,10,30
+2026-11-15,"smart home wandtablet",US,-,13
+2026-11-15,"smart home wandtablet",DE,-,14
+2026-11-15,"mqtt dashboard",US,-,30
+2026-11-15,"mqtt dashboard",DE,-,30
+2026-11-15,"home assistant dashboard",US,-,15
+2026-11-15,"home assistant dashboard",DE,-,20

@@ -80,7 +80,7 @@ final mqttManagerProvider = FutureProvider.family<MqttManager, String>((
   // blocks connecting.
   // The demo never connects: its tiles show canned values as current.
   if (isDemoConnection(conn.host)) {
-    manager.seedLastKnown(demoValues(DateTime.now()));
+    manager.seedLastKnown(demoValues(DateTime.now()), asLive: true);
   }
   final store = ref.read(lastKnownStoreProvider);
   try {

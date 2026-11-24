@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home Assistant and Zigbee2MQTT wall tablet · ZigDash</title>
+<meta name="description" content="Turn an old Android tablet into a wall display for Zigbee2MQTT, with or without Home Assistant: a dashboard that stays on, a clock when no one touches it, a kiosk lock, and alarms that take over the screen.">
+<link rel="canonical" href="https://zigdash.app/wall-tablet/">
+<link rel="icon" href="../assets/icon.png">
+<meta property="og:title" content="Home Assistant and Zigbee2MQTT wall tablet · ZigDash">
+<meta property="og:description" content="Turn an old Android tablet into a wall display for Zigbee2MQTT, with or without Home Assistant: a dashboard that stays on, a clock when no one touches it, a kiosk lock, and alarms that take over the screen.">
+<meta property="og:url" content="https://zigdash.app/wall-tablet/">
+<meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../"><img src="../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../setup/">Setup</a>
+    <a href="../hubs/">Hubs</a>
+    <a href="../home-assistant/">Home Assistant</a>
+    <a href="../help/">Help</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>A wall tablet for Zigbee2MQTT and Home Assistant</h1>
+<p class="lead">An Android tablet on the wall, by the door or in the kitchen, showing your lights, shutters and sensors. ZigDash has a wall display mode for exactly that. Most of it is free.</p>
+
+<h2>What you need</h2>
+<ul>
+  <li>An Android tablet. An older one is fine: ZigDash is light.</li>
+  <li>A way to keep it charged: a long USB cable along the wall, or a slim angled cable behind a mount.</li>
+  <li>ZigDash connected to your Zigbee2MQTT, the same way as on your phone. See <a href="../zigbee2mqtt-android/">Zigbee2MQTT on Android</a>, or <a href="../home-assistant/">ZigDash with Home Assistant</a>.</li>
+</ul>
+
+<h2 id="home-assistant">Using Home Assistant?</h2>
+<p>If Zigbee2MQTT runs as an app in your Home Assistant, the tablet signs in with Home Assistant once and shows your Zigbee devices with their Home Assistant names and rooms. Your automations stay in Home Assistant.</p>
+<ul>
+  <li><strong>What it shows:</strong> the devices in Zigbee2MQTT. ZigDash builds the dashboard from them, so there is no YAML or card setup.</li>
+  <li><strong>What it doesn't:</strong> devices in ZHA, cameras, or anything that isn't Zigbee. If you want those on the wall, a Home Assistant dashboard in a kiosk browser is the better tool.</li>
+</ul>
+
+<h2>Set it up</h2>
+<ol>
+  <li>On the tablet, open the dashboard you want on the wall, then the ⋮ menu › <strong>Wall display</strong>.</li>
+  <li>Turn on <strong>Keep the screen on and hide the bars</strong>, and <strong>Fullscreen</strong> if you want Android's bars gone too.</li>
+  <li>Under <strong>When no one touches it</strong>, pick what shows after a while: dimmed, a clock, or black.</li>
+  <li>Turn on <strong>Kiosk lock</strong> so only this home's dashboards stay reachable, and set a PIN if children or guests use it. Export a backup first: a forgotten PIN can only be reset by clearing ZigDash's data.</li>
+</ol>
+
+<h2>With ZigDash Pro</h2>
+<p>Pro is a one-time purchase, with a 14-day free trial on Google Play. On the wall tablet it adds:</p>
+<ul>
+  <li><strong>Readings on the clock:</strong> temperatures and other sensor values on the idle screen.</li>
+  <li><strong>Wake on motion:</strong> a motion, presence or door sensor wakes the screen when someone comes by.</li>
+  <li><strong>Night:</strong> black between the hours you choose; motion wakes it only dimly.</li>
+  <li><strong>Alarms take over the screen:</strong> a leak, smoke, gas or carbon monoxide fills the screen until someone taps OK, with a sound if you want. Alerts to phones are free and work anywhere.</li>
+</ul>
+
+<div class="tip">The tablet only shows what happens while ZigDash is open on it. Automations and alerts don't depend on it: they run on your hub.</div>
+
+<div class="buttons" style="margin-top:20px"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dwalltablet" data-goatcounter-click="play-walltablet">Get ZigDash on Google Play</a></div>
+<div class="next"><a class="btn" href="../setup/">Setup guide</a><a class="btn" href="../help/">Something not working?</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

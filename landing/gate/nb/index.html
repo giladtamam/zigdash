@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slik byttet jeg ut PalGate-abonnementet med et Zigbee-relé til $10 · ZigDash</title>
+<meta name="description" content="Porten min åpnet seg via en PalGate Spider-50 til ₪300 i året. Jeg byttet den ut med et Zigbee-relé med potensialfri kontakt til $10 én gang, og nå åpner jeg porten fra ZigDash, hjemme og hvor som helst. Deler, kobling og paring.">
+<link rel="canonical" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Slik byttet jeg ut PalGate-abonnementet med et Zigbee-relé til $10">
+<meta property="og:description" content="₪300 i året for en portåpner, eller $10 én gang. Deler, kobling og paring, med ZigDash-appen.">
+<meta property="og:url" content="https://zigdash.app/gate/nb/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Oppsett</a>
+    <a href="../../hubs/">Huber</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hjelp</a>
+    <a href="https://t.me/zigdash_app">Fellesskap</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Slik byttet jeg ut PalGate-abonnementet med et Zigbee-relé til $10</h1>
+<p class="byline">Gilad Tamam, utvikleren av ZigDash · 18. november 2026</p>
+<p class="byline">Også på: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Innkjørselsporten min åpnet seg fra telefonen via en PalGate Spider-50: en 4G-boks med eget SIM-kort og et abonnement på ₪300 i året. Jeg tok den ut og satte inn et Zigbee-relé som kostet $10 (omtrent ₪37), én gang. Nå åpner jeg porten fra en flis i ZigDash, hjemme og hvor som helst.</p>
+
+<p class="cost"><strong>₪300 hvert år</strong> for abonnementet, eller <strong>omtrent ₪37 én gang</strong> for reléet. Reléet hadde tjent seg inn på omtrent seks uker.</p>
+
+<div class="toc"><strong>På denne siden</strong>
+<ul>
+  <li><a href="#how">Slik åpner en telefon en port</a></li>
+  <li><a href="#need">Dette trenger du</a></li>
+  <li><a href="#pair">1. Par reléet med ZigDash</a></li>
+  <li><a href="#spider">2. Ta ut Spider</a></li>
+  <li><a href="#wire">3. Koble reléet</a></li>
+  <li><a href="#tile">4. En Port-flis i ZigDash</a></li>
+  <li><a href="#trade">Hva du gir opp</a></li>
+</ul></div>
+
+<h2 id="how">Slik åpner en telefon en port</h2>
+<p>En portstyring har en <strong>åpne</strong>-inngang (eller start): to klemmer som åpner porten når de kobles sammen, akkurat som knappen på en portfjernkontroll. Spider er et relé med SIM-kort. Når PalGate-appen eller en telefonoppringing ber om det, kobler den de to klemmene sammen et øyeblikk.</p>
+<p>Et Zigbee-relé gjør den samme jobben. Den eneste forskjellen er hvem som ber det om å lukke: din egen Zigbee-hub hjemme, i stedet for en mobiltjeneste du betaler for hvert år.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="PalGate Spider-50-boksen i en hånd, ved siden av portstyringen" loading="lazy" width="675" height="900"><figcaption>PalGate Spider-50 som jeg tok ut.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="Kretskortet til portstyringen med klemmerekken og ledningene" loading="lazy" width="675" height="900"><figcaption>Portstyringen. To av disse ledningene er åpne-inngangen.</figcaption></figure>
+</div>
+
+<h2 id="need">Dette trenger du</h2>
+<ul>
+  <li><strong>Et Zigbee-relé med potensialfri kontakt.</strong> Mitt er et "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" fra AliExpress, omtrent $10. Det selges i WiFi- og Zigbee-versjon: velg <strong>Zigbee</strong> (kortet har en ZT3L-modul). Det selges også for ulike forsyningsspenninger; jeg tok versjonen for <strong>AC 85–250V</strong>.</li>
+  <li><strong>Potensialfri kontakt er det viktige.</strong> En potensialfri (tørr) kontakt er en enkel bryter uten egen spenning: den kobler bare COM til NO, akkurat som knappen på en fjernkontroll. Et relé som sender spenning ut på klemmene sine (den typen som er laget for å slå av og på en lampe) kan skade inngangen på portstyringen. Se etter "dry contact" og klemmer merket <strong>COM</strong>, <strong>NO</strong> og <strong>NC</strong>.</li>
+  <li><strong>En Zigbee2MQTT-hub hjemme</strong> som når frem til porten. Jeg hadde allerede en (en SMLIGHT SMHUB) til resten av huset. Hvis du ikke har en, se <a href="../../hubs/">Huber</a>.</li>
+  <li><strong>ZigDash</strong> på telefonen (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Å åpne porten hjemme er gratis. For å åpne den fra hvor som helst bruker du fjernstyringen i ZigDash Pro: et engangskjøp, uten abonnement.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="Kretskortet til Zigbee-reléet: strømklemmer til venstre, ZT3L-Zigbee-modulen i midten, reléet og COM/NO/NC-klemmene til høyre" loading="lazy" width="675" height="900"><figcaption>Zigbee-reléet ute av kabinettet: strøm inn til venstre, ZT3L-Zigbee-modulen, paringsknappen og reléets potensialfrie klemmer til høyre.</figcaption></figure>
+
+<h2 id="pair">1. Par reléet med ZigDash</h2>
+<p>Par det hjemme først, på bordet, før det monteres i portboksen.</p>
+<ol>
+  <li>Koble strøm til reléet.</li>
+  <li>Åpne <strong>Enheter</strong> i ZigDash og trykk på <strong>Start paring</strong>.</li>
+  <li>Trykk og hold inne <strong>knappen</strong> på reléet til LED-lampen blinker. Da går det i paringsmodus.</li>
+  <li>ZigDash viser <strong>Klar</strong> med den nye enheten. Gi den nytt navn: <strong>Port</strong>.</li>
+</ol>
+<p>Slå den av og på noen ganger og lytt etter klikket fra reléet.</p>
+
+<h2 id="spider">2. Ta ut Spider</h2>
+<div class="tip"><strong>Slå av strømmen til porten i sikringsskapet først.</strong> Det er 230V i portboksen. Hvis du ikke er komfortabel med å jobbe med nettspenning, la en elektriker gjøre trinn 2 og 3. Ikke rør portens sikkerhetssensorer (fotoceller) eller endebrytere.</div>
+<ol>
+  <li>Finn de to ledningene som går fra reléutgangen på Spider (<strong>COM1</strong> og <strong>N.O.1</strong>) til åpne-inngangen på portstyringen. Merk dem.</li>
+  <li>Skru løs klemmeblokken på Spider, og koble fra strømmen til Spider.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Den grønne klemmeblokken på Spider med brune, blå og svarte ledninger" loading="lazy" width="675" height="900"><figcaption>Klemmeblokken på Spider, frakoblet. Det brune og blå paret går til åpne-inngangen på porten.</figcaption></figure>
+
+<h2 id="wire">3. Koble reléet</h2>
+<ol>
+  <li><strong>Utgang:</strong> de to ledningene fra åpne-inngangen går til <strong>COM</strong> og <strong>NO</strong> på reléet. La NC stå tom. På en potensialfri kontakt spiller rekkefølgen ingen rolle.</li>
+  <li><strong>Strøm:</strong> versjonen for AC 85–250V tar nettspenning direkte, som en telefonlader: to ledninger, fase og nøytral, fra portens 230V-forsyning.</li>
+  <li>Lukk kabinettet på reléet, plasser det der det holder seg tørt, og slå på sikringen igjen.</li>
+</ol>
+<div class="tip"><strong>Signal:</strong> porten er som regel det punktet som ligger lengst unna huben. Åpne enhetssiden til reléet i ZigDash og sjekk signalet. Hvis det er svakt, utvider en strømtilkoblet Zigbee-enhet mellom huset og porten (for eksempel en smartplugg) nettverket.</div>
+
+<h2 id="tile">4. En Port-flis i ZigDash</h2>
+<ol>
+  <li>Trykk på <strong>Legg til fra en enhet</strong> på dashbordet og velg <strong>Port</strong>.</li>
+  <li>Trykk på flisen: reléet lukkes og porten begynner å bevege seg, akkurat som med fjernkontrollen.</li>
+  <li>Åpne-inngangen på porten forventer et knappetrykk, så en kontakt som forblir lukket kan regnes som et langt trykk. Sjekk hva porten din gjør, og slå av flisen igjen om nødvendig.</li>
+  <li><strong>Hvor som helst fra:</strong> med ZigDash Pro slår du på fjernstyring, og den samme flisen virker borte fra hjemmet, uten portvideresending i ruteren og uten månedsavgift. Den dekker opptil fem telefoner; <strong>Del med en annen telefon</strong> legger til familiens telefoner med én QR-kode.</li>
+</ol>
+
+<h2 id="trade">Hva du gir opp</h2>
+<p>For å være rettferdig mot Spider: den gjør ting et Zigbee-relé ikke gjør:</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee-relé + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Kostnad</th><td>₪300 i året (mitt abonnement)</td><td>Omtrent ₪37 én gang; fjernstyring er et engangskjøp av ZigDash Pro</td></tr>
+    <tr><th>Tilkobling</th><td>Eget 4G-SIM: virker når huset ikke har internett</td><td>Zigbee-huben din hjemme; borte fra hjemmet trengs internett hjemme</td></tr>
+    <tr><th>Hvem kan åpne</th><td>Brukere og gjester som administreres i PalGate-appen, og åpning via telefonoppringing</td><td>Telefoner du deler hjemmet med (opptil fem eksternt)</td></tr>
+    <tr><th>Sky</th><td>PalGates tjeneste</td><td>Ingen hjemme; eksternt går det via ZigDash-reléserveren, ende-til-ende-kryptert</td></tr>
+  </tbody>
+</table>
+</div>
+<p>For et privat hus der familien åpner én port, gjør reléet alt jeg trengte. For en bygning med mange beboere og besøkende er en administrert tjeneste som PalGate fortsatt fornuftig.</p>
+
+<div class="tip">PalGate er et varemerke som tilhører eieren. ZigDash er ikke tilknyttet PalGate eller PAL Electronics Systems. Prisene er det jeg betalte i november 2026.</div>
+
+<div class="tip"><strong>Har du gjort dette også?</strong> Fortell meg hvordan det gikk, eller hva som var annerledes med porten din: <a href="mailto:support@zigdash.app">support@zigdash.app</a> eller <a href="https://t.me/zigdash_app">fellesskapet</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Last ned ZigDash</a><a class="btn" href="../../hubs/">Velg en hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Kildekode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Personvernerklæring</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

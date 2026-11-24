@@ -1,3 +1,5 @@
+import '../analytics/analytics_events.dart' show HaAddressFrom;
+
 class Routes {
   Routes._();
 
@@ -27,13 +29,28 @@ class Routes {
       ? haConnect
       : Uri(path: haConnect, queryParameters: {'host': host}).toString();
 
+  /// Back from the Home Assistant app after ZigDash was closed meanwhile
+  /// (3.6): the address screen, with Paste pointed out.
+  static final haConnectBackFromApp = Uri(
+    path: haConnect,
+    queryParameters: {'paste': '1'},
+  ).toString();
+
   /// The Home Assistant sign-in opened by text shared to ZigDash from
   /// another app (ha-share-paste.md), with the address it held, or with
   /// none when it held no address.
-  static String haConnectShared(String? host) => Uri(
+  static String haConnectShared(String? host) =>
+      haConnectFrom(host, HaAddressFrom.shared);
+
+  /// The Home Assistant sign-in with an address handed to ZigDash: shared
+  /// from another app, or brought by a ZigDash connect link (ha-link.md).
+  static String haConnectFrom(String? host, HaAddressFrom from) => Uri(
     path: haConnect,
-    queryParameters: {'host': ?host, 'from': 'shared'},
+    queryParameters: {'host': ?host, 'from': from.name},
   ).toString();
+
+  /// A ZigDash connect link, `https://zigdash.app/c#ha=…` (ha-link.md).
+  static const haLink = '/c';
 
   /// Connecting through Home Assistant from the no-Wi-Fi screen (3.1.9):
   /// no network to look on, so the address (a remote one) is typed.
@@ -66,6 +83,9 @@ class Routes {
   /// Share this home with another phone at home (3.1.7).
   static String homeShare(String connectionId) =>
       '/settings/home/$connectionId/share';
+  /// ZigDash Chat (3.7.0, chat-linking.md §3).
+  static String homeChat(String connectionId) =>
+      '/settings/home/$connectionId/chat';
   static String homeNfcTags(String connectionId) =>
       '/settings/home/$connectionId/nfc-tags';
   static String homeAlerts(String connectionId) =>

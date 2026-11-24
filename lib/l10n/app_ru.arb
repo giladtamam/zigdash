@@ -19,7 +19,11 @@
   "languageHebrew": "עברית",
   "connectionsTitle": "Дома",
   "connLoadFailed": "Не удалось загрузить: {error}",
-  "@connLoadFailed": { "placeholders": { "error": {} } },
+  "@connLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "connAddBroker": "Добавить брокер",
   "connEmpty": "Подключений пока нет.\nНажмите «Добавить брокер», чтобы подключить ZigDash к вашему MQTT-серверу.",
   "connNew": "Новое подключение",
@@ -37,9 +41,19 @@
   "connRescan": "Искать снова",
   "connBrokerNeedsLogin": "Нужен вход",
   "connFindBrokersScanning": "Сканирование {subnet}…",
-  "@connFindBrokersScanning": { "placeholders": { "subnet": {} } },
+  "@connFindBrokersScanning": {
+    "placeholders": {
+      "subnet": {}
+    }
+  },
   "connFindBrokersFound": "Найдено брокеров: {count} — нажмите, чтобы выбрать",
-  "@connFindBrokersFound": { "placeholders": { "count": { "type": "int" } } },
+  "@connFindBrokersFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "connFindBrokersNone": "В вашей сети Wi-Fi брокеры не найдены.",
   "connFindBrokersNoIp": "Не удалось определить ваш адрес в Wi-Fi. Убедитесь, что Wi-Fi включён, и повторите попытку.",
   "connHelpTitle": "Как найти IP брокера",
@@ -48,7 +62,7 @@
   "connHelpSmhubTitle": "SMLIGHT SMHUB",
   "connHelpSmhubBody": "IP брокера — это IP-адрес хаба. Откройте веб-страницу хаба (smhub.local): на Dashboard блок Network показывает его рядом с IPv4. Приложение роутера тоже показывает хаб как SMHUB. Порт 1883, по умолчанию без логина и пароля.",
   "connHelpZhaTitle": "Home Assistant ZHA",
-  "connHelpZhaBody": "У ZHA нет MQTT-брокера — он работает напрямую с Home Assistant, поэтому ZigDash не может к нему подключиться. Чтобы пользоваться ZigDash, перейдите на Zigbee2MQTT (доступен как приложение Home Assistant или Docker-контейнер), в котором есть MQTT-брокер.",
+  "connHelpZhaBody": "У ZHA нет MQTT-брокера — он работает напрямую с Home Assistant, поэтому ZigDash не может к нему подключиться. Чтобы пользоваться ZigDash, перейдите на Zigbee2MQTT (доступен как приложение Home Assistant или Docker-контейнер), который работает с MQTT-брокером, например Mosquitto.",
   "connHelpSameNetwork": "Телефон и брокер должны быть в одной сети Wi-Fi (не в гостевой и не в изолированной VLAN).",
   "connRemoteHost": "Удалённый хост (Tailscale)",
   "connRemoteHostHint": "Используется, если локальный хост недоступен. Лучше указать Tailscale-IP хаба, например 100.x.y.z",
@@ -68,23 +82,28 @@
   "cancel": "Отмена",
   "connDeleteTitle": "Удалить подключение?",
   "connDeleteContent": "Будут удалены «{name}», его дашборды и панели, а также сохранённый пароль.",
-  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "@connDeleteContent": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "statusDisconnected": "Отключено",
   "statusConnecting": "Подключение",
   "statusConnected": "Подключено",
   "statusReconnecting": "Переподключение",
   "statusError": "Ошибка",
   "statusConnectedRemote": "Подключено · Удалённо",
-
   "dashPlaceholder": "Откройте брокер на вкладке «Брокеры», чтобы просматривать его дашборды и управлять ими.",
-
   "dashAddDashboard": "Добавить дашборд",
   "dashEditDashboard": "Изменить дашборд",
   "dashAddPanel": "Добавить панель",
   "dashEmpty": "Дашбордов пока нет.\nНажмите «Добавить дашборд», чтобы создать его для этого брокера.",
   "dashLoadFailed": "Ошибка: {error}",
-  "@dashLoadFailed": { "placeholders": { "error": {} } },
-
+  "@dashLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "panelPickerTitle": "Добавить панель",
   "panelPickerSectionControl": "Управление",
   "panelPickerSectionState": "Состояние",
@@ -118,7 +137,6 @@
   "panelPickerProgressSubtitle": "Числовая шкала для батареи, качества связи и т. п.",
   "panelPickerTextLogTitle": "Текстовый журнал",
   "panelPickerTextLogSubtitle": "Прокручиваемая история сообщений топика",
-
   "dashExportMenu": "Экспорт дашбордов",
   "dashImportMenu": "Импорт дашбордов",
   "dashExportTitle": "Экспорт дашбордов",
@@ -129,10 +147,19 @@
   "dashImportHint": "Вставьте сюда экспортированный JSON",
   "dashImportButton": "Импортировать",
   "dashImportSuccess": "{count,plural, one{Импортирован {count} дашборд} few{Импортировано {count} дашборда} many{Импортировано {count} дашбордов} other{Импортировано {count} дашборда}}",
-  "@dashImportSuccess": { "placeholders": { "count": { "type": "int" } } },
+  "@dashImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "dashImportFailed": "Ошибка импорта: {error}",
-  "@dashImportFailed": { "placeholders": { "error": {} } },
-
+  "@dashImportFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashFormNew": "Новый дашборд",
   "dashFormEdit": "Изменить дашборд",
   "dashFormName": "Название",
@@ -148,12 +175,18 @@
   "dashDeleteTitle": "Удалить этот дашборд?",
   "dashDeleteContent": "Все его панели тоже будут удалены.",
   "dashDeleteConfirm": "Удалить",
-
   "panelFormNew": "Новая панель: {type}",
-  "@panelFormNew": { "placeholders": { "type": {} } },
+  "@panelFormNew": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelFormEdit": "Изменить: {type}",
-  "@panelFormEdit": { "placeholders": { "type": {} } },
-
+  "@panelFormEdit": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelTypeButton": "Кнопка",
   "panelTypeToggle": "Переключатель",
   "panelTypeSlider": "Ползунок",
@@ -170,10 +203,13 @@
   "panelTypeAutoClose": "Автозакрытие",
   "panelTypeDevice": "Устройство",
   "panelTypeReading": "Показание",
-
   "panelFormName": "Название",
   "panelFormDashboardPrefix": "Префикс дашборда: {prefix}/ (если не переопределён ниже)",
-  "@panelFormDashboardPrefix": { "placeholders": { "prefix": {} } },
+  "@panelFormDashboardPrefix": {
+    "placeholders": {
+      "prefix": {}
+    }
+  },
   "panelFormTopicPrefixOverride": "Свой префикс топика (необязательно)",
   "panelFormTopicPrefixOverrideHint": "zigbee2mqtt/shutter",
   "panelFormTopicPrefixOverrideHelper": "Другое устройство на этом дашборде. Пусто = префикс дашборда.",
@@ -193,14 +229,12 @@
   "panelFormQos1": "1 — хотя бы один раз",
   "panelFormQos2": "2 — ровно один раз",
   "panelFormRetain": "Retain",
-
   "panelToggleOnPayload": "Payload «вкл»",
   "panelToggleOffPayload": "Payload «выкл»",
   "panelToggleJsonPath": "Путь JSON (необязательно)",
   "panelToggleJsonPathHint": "state",
   "panelToggleOnMatch": "Значение «вкл»",
   "panelToggleOnMatchHelper": "Значение по пути JSON, означающее «вкл» (например, \"ON\")",
-
   "panelSliderMin": "Мин.",
   "panelSliderMax": "Макс.",
   "panelSliderStep": "Шаг",
@@ -208,9 +242,7 @@
   "panelSliderTemplateHelper": "Слово value — подстановка: оно заменяется значением ползунка",
   "panelSliderJsonPath": "Путь JSON (необязательно)",
   "panelSliderJsonPathHint": "brightness",
-
   "panelButtonPayload": "Payload",
-
   "panelLedJsonPath": "Путь JSON (необязательно)",
   "panelLedJsonPathHint": "contact",
   "panelLedJsonPathHelper": "например, \"contact\", \"occupancy\", \"water_leak\"",
@@ -220,12 +252,10 @@
   "panelLedOnLabelHint": "ВКЛ",
   "panelLedOffLabel": "Подпись «выкл» (необязательно)",
   "panelLedOffLabelHint": "ВЫКЛ",
-
   "panelNodeOnlinePayload": "Payload «онлайн»",
   "panelNodeOnlinePayloadHelper": "Значение, означающее «онлайн» (по умолчанию в Z2M: \"online\")",
   "panelNodeJsonPath": "Путь JSON (необязательно)",
   "panelNodeJsonPathHelper": "Оставьте пустым для значения Z2M по умолчанию (строка \"online\"/\"offline\")",
-
   "panelProgressMin": "Мин.",
   "panelProgressMax": "Макс.",
   "panelProgressUnit": "Единица",
@@ -233,7 +263,6 @@
   "panelProgressJsonPath": "Путь JSON (необязательно)",
   "panelProgressJsonPathHint": "battery",
   "panelProgressJsonPathHelper": "например, \"battery\", \"linkquality\"",
-
   "panelOptionsJsonPath": "Путь JSON (необязательно)",
   "panelOptionsJsonPathHint": "state",
   "panelOptionsJsonPathHelper": "Поле полученного payload с текущим значением",
@@ -242,24 +271,20 @@
   "panelOptionsPayload": "Payload",
   "panelOptionsMatch": "Совпадение (текущее значение)",
   "panelOptionsAdd": "Добавить вариант",
-
   "panelCoverDescription": "Кнопки «Открыть / Стоп / Закрыть» и ряд предустановок положения. Использует стандартные payload штор Z2M (state и position).",
   "panelCoverPresets": "Предустановки положения",
   "panelCoverPresetsHint": "0, 25, 50, 100",
   "panelCoverPresetsHelper": "Проценты через запятую (0–100). Пусто = без ряда предустановок.",
   "panelCoverShowSlider": "Показывать ползунок положения",
-
   "panelTextInputHint": "Подсказка (необязательно)",
   "panelTextInputHintHint": "Введите значение…",
   "panelTextInputTemplate": "Шаблон",
   "panelTextInputTemplateHelper": "Слово value — подстановка: оно заменяется введённым текстом. По умолчанию публикуется сам текст.",
   "panelTextInputClearAfterSend": "Очищать после отправки",
-
   "panelTextLogMaxLines": "Макс. строк",
   "panelTextLogMaxLinesHelper": "Сколько последних сообщений хранить",
   "panelTextLogJsonPath": "Путь JSON (необязательно)",
   "panelTextLogJsonPathHelper": "Записывать только это поле, а не весь payload",
-
   "panelScheduleDescription": "Выполняется на SMHUB через Node-RED — срабатывает, даже когда телефон выключен. Топик публикации выше — адрес команд для штор.",
   "panelScheduleOpenTime": "Время открытия",
   "panelScheduleCloseTime": "Время закрытия",
@@ -267,7 +292,6 @@
   "panelScheduleClosePayload": "Payload закрытия",
   "panelScheduleEnabled": "Включено",
   "panelScheduleSavedOffline": "Сохранено — нет подключения; расписание синхронизируется, когда появится связь.",
-
   "panelAutoCloseDescription": "Выполняется на SMHUB через Node-RED — срабатывает, даже когда телефон выключен. Топик публикации выше — адрес команд устройства (например, двери).",
   "panelAutoCloseTriggerPath": "Путь JSON триггера",
   "panelAutoCloseTriggerPathHelper": "Поле JSON состояния устройства для отслеживания (по умолчанию: state)",
@@ -278,49 +302,57 @@
   "panelAutoCloseDelaySecondsHelper": "1-3600. Сколько ждать после включения устройства перед публикацией payload закрытия.",
   "panelAutoCloseEnabled": "Включено",
   "panelAutoCloseSavedOffline": "Сохранено — нет подключения; правило синхронизируется, когда появится связь.",
-
   "panelTileEdit": "Изменить панель",
   "panelTileDuplicate": "Дублировать панель",
   "panelTileMoveUp": "Переместить вверх",
   "panelTileMoveDown": "Переместить вниз",
   "panelTileDelete": "Удалить панель",
-
   "panelCoverOpen": "Открыть",
   "panelCoverStop": "Стоп",
   "panelCoverClose": "Закрыть",
-
-  "panelToggleNoState": "(нет состояния)",
-  "panelToggleError": "ошибка",
-
   "panelStateOn": "ВКЛ",
   "panelStateOff": "ВЫКЛ",
-
   "panelNodeStatusOnline": "онлайн",
   "panelNodeStatusOffline": "офлайн",
   "panelNodeStatusUnknown": "неизвестно",
   "panelNodeStatusError": "ошибка",
-
   "panelMultiStateNoOptions": "Варианты не настроены",
-
   "panelTextInputDefaultHint": "Введите значение…",
-
   "panelTextLogWaiting": "Ожидание сообщений…",
-
   "panelScheduleOpensAt": "Открытие в {time}",
-  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "@panelScheduleOpensAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleClosesAt": "Закрытие в {time}",
-  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "@panelScheduleClosesAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleOfflineWarning": "Планировщик офлайн — не сработает",
   "panelScheduleDisabled": "Отключено",
   "panelScheduleNext": "Далее: {action} в {at}",
-  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "@panelScheduleNext": {
+    "placeholders": {
+      "action": {},
+      "at": {}
+    }
+  },
   "panelScheduleActionOpen": "открытие",
   "panelScheduleActionClose": "закрытие",
   "panelAutoCloseIdle": "Ожидание",
   "panelAutoCloseDisabled": "Отключено",
   "panelAutoCloseOffline": "Автоматизация офлайн — правило не сработает",
   "panelAutoCloseClosingIn": "Закрытие через {seconds} с",
-  "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@panelAutoCloseClosingIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "panelAutoCloseClosingNow": "Закрывается…",
   "panelGridEmpty": "Плиток пока нет.\nНажмите «Добавить плитку», чтобы разместить здесь устройства.",
   "panelsOffline": "Офлайн — показаны последние значения",
@@ -330,7 +362,6 @@
   "connectionFailed": "Не удалось подключиться",
   "connectionAutomaticRetry": "Попытки подключения продолжатся автоматически",
   "connectionReconnectNow": "Подключиться сейчас",
-
   "settingsAbout": "О приложении",
   "settingsHelp": "Помощь и руководство",
   "settingsVersion": "Версия",
@@ -350,7 +381,6 @@
   "reportProblemEmailPrompt": "Что произошло и чего вы ожидали?",
   "settingsBuyCoffee": "Угостить кофе",
   "settingsBuyCoffeeSubtitle": "Бесплатно и с открытым кодом — чаевые помогают развитию.",
-
   "a11yBackupMenu": "Резервная копия",
   "a11ySelectColor": "Выбрать цвет",
   "a11ySelectIcon": "Выбрать значок",
@@ -359,9 +389,7 @@
   "a11yMoreOptions": "Другие параметры",
   "a11yRefresh": "Обновить",
   "a11yDeleteConnection": "Удалить подключение",
-
   "controlNotConnected": "Нет подключения — изменение не отправлено",
-
   "discoverFromDevice": "Добавить из устройства…",
   "discoverFromDeviceSubtitle": "Автоопределение устройства Zigbee2MQTT",
   "discoverTitle": "Добавить из устройства",
@@ -385,19 +413,27 @@
     }
   },
   "previewNoValue": "(нет значения по этому пути)",
-
   "connErrorTitle": "Ошибка подключения",
   "connErrorUnknown": "Подробности ошибки недоступны.",
   "connTestButton": "Проверить подключение",
   "connTestOk": "Подключение успешно",
   "connTestFailed": "Не удалось подключиться: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } },
-
+  "@connTestFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "devicesTitle": "Устройства",
   "devicesAddButton": "Добавить устройство",
   "devicesPairingTitle": "Сопряжение — нажмите кнопку на устройстве",
   "devicesPairingHint": "Поиск новых устройств… {seconds} с",
-  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "@devicesPairingHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "devicesPairingStop": "Стоп",
   "devicesNone": "Устройства не найдены.",
   "devicesListMissing": "Zigbee2MQTT не прислал список устройств. Так бывает после перезапуска MQTT-брокера.",
@@ -408,38 +444,71 @@
   "devicesOnline": "Онлайн",
   "devicesOffline": "Офлайн",
   "devicesPaired": "Готово: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } },
+  "@devicesPaired": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "devicesPairedHint": "Устройство добавлено в сеть. Чтобы разместить его на дашборде, используйте «Добавить из устройства» на этом дашборде.",
   "scenesTitle": "Сцены",
   "scenesNone": "Сцен пока нет. Настройте устройства как нужно и сохраните их состояние как сцену.",
   "scenesNewButton": "Новая сцена",
   "scenesActivated": "Сцена «{name}» включена",
-  "@scenesActivated": { "placeholders": { "name": {} } },
+  "@scenesActivated": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "scenesActivateOffline": "Нет подключения — сцену не включить",
   "sceneFormNewTitle": "Новая сцена",
   "sceneFormEditTitle": "Изменить сцену",
   "sceneFormNameLabel": "Название сцены",
   "sceneFormDevicesHeader": "Устройства для сцены",
   "sceneFormCaptureHint": "Для каждого выбранного устройства сохраняется текущее изменяемое состояние (вкл/выкл, яркость, цвет, положение…). Значения только для чтения игнорируются.",
-  "sceneFormNoDevices": "Управляемые устройства не найдены. Убедитесь, что они сопряжены, и нажмите «Обновить».",
+  "sceneFormNoDevices": "Управляемые устройства и плитки не найдены. Убедитесь, что устройства сопряжены, и нажмите «Обновить».",
   "sceneFormReadingState": "Чтение текущего состояния…",
   "sceneCtrlPower": "Питание",
   "sceneCtrlBrightness": "Яркость",
   "sceneCtrlPosition": "Положение",
   "sceneFormSelectedCount": "Выбрано: {count}",
-  "@sceneFormSelectedCount": { "placeholders": { "count": { "type": "int" } } },
-  "sceneFormNoDevicesSelected": "Выберите хотя бы одно устройство.",
+  "@sceneFormSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sceneFormNoDevicesSelected": "Выберите хотя бы одно устройство или плитку.",
   "sceneFormNothingCaptured": "У выбранных устройств не нашлось изменяемых состояний.",
+  "sceneFormTilesHeader": "Ваши плитки",
+  "sceneFormTilesHint": "Плитки, которые вы создали сами. Сцена отправляет то же, что отправляет плитка.",
+  "sceneTileHomeOnly": "Работает только с этого телефона дома: не из автоматизаций и не издалека.",
+  "sceneFormKeptActions": "{count, plural, one{Сохраняется ещё {count} действие} few{Сохраняются ещё {count} действия} many{Сохраняются ещё {count} действий} other{Сохраняются ещё {count} действия}}",
+  "sceneFormRemoveKept": "Удалить",
   "sceneDeleteTitle": "Удалить сцену?",
   "sceneDeleteMessage": "Сцена «{name}» будет удалена. Устройства сохранят текущее состояние.",
-  "@sceneDeleteMessage": { "placeholders": { "name": {} } },
+  "@sceneDeleteMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "sceneEditAction": "Изменить",
   "sceneDeleteAction": "Удалить",
   "sceneAddToDashboard": "Добавить на дашборд",
   "sceneAddedToDashboard": "Добавлено на «{name}»",
-  "@sceneAddedToDashboard": { "placeholders": { "name": {} } },
-  "sceneActionsCount": "{count, plural, one{{count} устройство} few{{count} устройства} many{{count} устройств} other{{count} устройства}}",
-  "@sceneActionsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneAddedToDashboard": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "sceneActionsCount": "{count, plural, one{{count} действие} few{{count} действия} many{{count} действий} other{{count} действия}}",
+  "@sceneActionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "scenesAllShutters": "Все рольставни",
   "sceneCloseAllShutters": "Закрыть все рольставни",
   "sceneOpenAllShutters": "Открыть все рольставни",
@@ -476,17 +545,24 @@
   "diagTcpTimeout": "Истекло время подключения к брокеру. Возможно, он выключен или недоступен.",
   "diagConnackFail": "Брокер не завершил рукопожатие MQTT. Убедитесь, что это MQTT-брокер (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "Брокер не ответил на вход вовремя. Home Assistant может проверять его несколько секунд, попробуйте ещё раз.",
+  "diagTlsUntrusted": "Телефон не доверяет сертификату шифрования этого брокера: он самоподписанный, просроченный или выпущен для другого имени. ZigDash пока не может его использовать. В домашней сети используйте вместо него нешифрованный порт брокера 1883 или выдайте брокеру сертификат от публичного удостоверяющего центра.",
+  "diagTlsFailed": "Шифрованное соединение не установилось. Возможно, брокер требует клиентский сертификат, а ZigDash его не поддерживает. В домашней сети подключитесь без шифрования: TCP вместо TLS, обычно на порту 1883.",
   "diagAuthRejected": "Брокер отклонил имя пользователя или пароль. Проверьте учётные данные.",
   "diagAuthRefused": "Брокер отказал в подключении. Проверьте настройки подключения.",
   "diagResolveLocalName": "Телефон не нашёл это имя. Android часто не распознаёт имена, оканчивающиеся на .local, поэтому введите IP-адрес (Home Assistant показывает его в Настройки › Система › Сеть).",
   "diagTcpHaNoBroker": "Это ваш Home Assistant, но на нём не запущен MQTT-брокер. Установите и запустите приложение Mosquitto broker (Настройки › Приложения), затем попробуйте снова.",
-  "diagResolveLocalNameIos": "Телефон не нашёл это имя. Проверьте, правильно ли оно написано, или введите IP-адрес (Home Assistant показывает его в Настройки › Система › Сеть).",
   "diagTcpSmlightClosed": "Это ваш хаб SMLIGHT, но его MQTT-брокер не принимает подключения с других устройств. На веб-странице хаба откройте Settings › MQTT, включите Allow External, сохраните и попробуйте снова.",
   "diagTcpZ2mBrokerElsewhere": "По этому адресу работает Zigbee2MQTT, но к брокеру он обращается по другому имени (см. Zigbee2MQTT › Settings › MQTT › Server). Если это другая машина, введите её адрес, обычно с портом 1883. Если это контейнер на этой машине, опубликуйте его порт (ports: \"1883:1883\") и разрешите ему слушать сеть, затем попробуйте снова.",
   "diagTcpZ2mNoBroker": "По этому адресу работает Zigbee2MQTT, но его MQTT-брокер не принимает подключения с других устройств. Mosquitto слушает только на своей машине, пока вы не добавите в mosquitto.conf строки «listener 1883» и «allow_anonymous true» (или не настроите пароль). Перезапустите Mosquitto и попробуйте снова.",
   "diagAuthRejectedHa": "Брокер Home Assistant отклонил вход. Используйте имя и пароль пользователя Home Assistant (Настройки › Люди › Пользователи); лучше всего отдельного пользователя только для MQTT.",
   "foundDevices": "Найдено устройств: {count}",
-  "@foundDevices": { "placeholders": {"count": {"type": "int"}} },
+  "@foundDevices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "foundDevicesHint": "Ваши Zigbee-устройства видны. Продолжите, чтобы собрать дашборд.",
   "noDevicesTitle": "Подключено — устройств пока нет",
   "noDevicesHint": "ZigDash видит ваш брокер, но пока не нашёл Zigbee-устройств. Начните сопряжение, чтобы добавить их.",
@@ -497,7 +573,11 @@
   "guidedStuckTitle": "Застряли? Спросите человека",
   "guidedStuckBody": "Две попытки без подключения. Напишите, какой у вас хаб и что вы ввели, и мы поможем его найти.",
   "ladderTriedHint": "Проверено адресов: {count}",
-  "@ladderTriedHint": { "placeholders": {"count": {}} },
+  "@ladderTriedHint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "guidedSaveFailed": "Не удалось сохранить подключение. Повторите попытку.",
   "setupWelcomeTitle": "Добро пожаловать в ZigDash",
   "setupWelcomeHeadline": "Ваш дом на Zigbee — в телефоне",
@@ -538,7 +618,7 @@
   "noHubPi": "Raspberry Pi или любой компьютер с Linux",
   "noHubPiBody": "Установите Zigbee2MQTT и брокер Mosquitto сами. Около часа, по руководству Zigbee2MQTT.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Добавьте дополнения Mosquitto broker и Zigbee2MQTT, затем войдите из ZigDash со своим логином Home Assistant.",
+  "noHubHaBody": "Добавьте приложения Mosquitto broker и Zigbee2MQTT (Настройки › Приложения), затем войдите из ZigDash со своим логином Home Assistant.",
   "noHubRadio": "Pi или Home Assistant также нужен Zigbee-адаптер, например SLZB-06 или донгл Sonoff. В SMHUB он встроен.",
   "noHubDemoNote": "А пока посмотрите, как работает ZigDash, на примере дома.",
   "noHubRemind": "Напомнить через неделю",
@@ -562,7 +642,17 @@
   "engineNeedsBrokerTitle": "Автоматизациям нужен ваш MQTT-брокер",
   "engineNeedsBrokerBody": "Этот дом подключается через страницу Zigbee2MQTT, и этого хватает для панелей. Автоматизации, оповещения и история работают в ZigDash Engine на хабе, который общается через MQTT-брокер. Введите его данные один раз, и дальше ZigDash будет подключаться через брокер.",
   "engineNeedsBrokerButton": "Ввести данные брокера",
-  "connFromPageNote": "Этот дом подключается через страницу Zigbee2MQTT. Введите ваш MQTT-брокер (обычно та же машина, порт 1883), чтобы включить автоматизации, оповещения и историю. После сохранения ZigDash подключается через брокер.",
+  "connFromPageNote": "Этот дом подключается через страницу Zigbee2MQTT. Введите ваш MQTT-брокер (обычно та же машина, порт 1883), чтобы включить автоматизации, оповещения и историю. Когда на брокере будут ваши устройства, ZigDash переключится на него.",
+  "connBrokerNoDevices": "Подключено, но на этом брокере нет ни одного вашего устройства. Если вы только что включили брокер, перезапустите Zigbee2MQTT, чтобы он к нему подключился.",
+  "connZ2mUses": "Zigbee2MQTT использует {server}",
+  "connReadingZ2m": "Чтение настроек Zigbee2MQTT…",
+  "connKeepPageTitle": "Продолжить через страницу Zigbee2MQTT?",
+  "connKeepPageBodyEmpty": "Этот брокер ответил, но на нём нет ни одного вашего устройства, поэтому ваши дашборды были бы пустыми. Возможно, Zigbee2MQTT использует другой брокер или его нужно перезапустить после включения брокера.",
+  "connKeepPageBodyNoAnswer": "Брокер не ответил, поэтому ваши дашборды были бы пустыми.",
+  "connKeepPageBodyRefused": "Брокер отклонил вход, поэтому ваши дашборды были бы пустыми.",
+  "connKeepPage": "Оставить страницу Zigbee2MQTT",
+  "connSaveAnyway": "Всё равно сохранить",
+  "connChecking": "Проверка брокера…",
   "setupManualEntry": "Ввести вручную",
   "setupScanningTitle": "Поиск подключения…",
   "setupScanningHint": "Это устройство должно быть в одной локальной сети с хостом Zigbee2MQTT.",
@@ -576,7 +666,6 @@
   "reminderButton": "Напомнить завтра",
   "reminderSet": "Мы напомним вам завтра, на этом телефоне.",
   "reminderNoPermission": "Уведомления ZigDash выключены, поэтому напоминания не будет. Их можно включить в настройках Android.",
-  "reminderNoPermissionIos": "Уведомления ZigDash выключены, поэтому напоминания не будет. Их можно включить в Настройки › ZigDash › Уведомления.",
   "reminderChannel": "Напоминание о настройке",
   "reminderTitle": "Завершите настройку ZigDash",
   "reminderBody": "Вы дома, в своей сети Wi-Fi? Нажмите, чтобы попробовать снова: это займёт около минуты.",
@@ -619,6 +708,15 @@
   "haPasteNothing": "В скопированном нет адреса.",
   "haSharedNote": "Это адрес, которым вы поделились. Войдите, чтобы подключиться.",
   "haShareNothing": "Там не было адреса. В приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху.",
+  "haLinkNote": "Это адрес из вашей ссылки. Войдите, чтобы подключиться.",
+  "haLinkReferrerNote": "Это адрес из ссылки, которую вы открыли до установки ZigDash. Войдите, чтобы подключиться.",
+  "haLinkNothing": "В этой ссылке не было адреса Home Assistant. Создайте новую на zigdash.app/connect.",
+  "haNoneComputer": "Через компьютер",
+  "haComputerTitle": "Через компьютер",
+  "haComputerBody": "На компьютере, где открыт Home Assistant, откройте эту страницу и вставьте туда адрес Home Assistant. Затем отсканируйте код камерой этого телефона.",
+  "haComputerCopy": "Скопировать ссылку",
+  "setupLinkPending": "Ваша ссылка принесла адрес Home Assistant. Нажмите Home Assistant, чтобы его использовать.",
+  "setupLinkPendingNothing": "В вашей ссылке не было адреса Home Assistant. Создайте новую на zigdash.app/connect.",
   "haHandoverShare": "Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и выберите ZigDash. Из браузера поделитесь страницей с ZigDash.",
   "haHandoverCopy": "Быстрее всего: в приложении Home Assistant откройте Настройки › Приложение-компаньон, нажмите на свой сервер, затем на значок «Поделиться» вверху и «Копировать ссылку». Вернитесь и нажмите «Вставить».",
   "haConnectOtherNetwork": "Этот адрес в другой сети, чем телефон, который находится в {network}. Используйте адрес, который открывает ваше приложение Home Assistant, часто удалённый, или подключите телефон к сети, где работает Home Assistant.",
@@ -627,6 +725,19 @@
   "setupNoWifiHa": "Используете Home Assistant? Войти",
   "haConnectNotAdmin": "Ваш пользователь Home Assistant не администратор. ZigDash нужен администратор для MQTT в Home Assistant. Войдите как администратор или вставьте токен, созданный администратором.",
   "haConnectNoMqtt": "В этом Home Assistant нет интеграции MQTT. Zigbee2MQTT она тоже нужна: в Home Assistant добавьте приложение Mosquitto broker (Настройки › Приложения) и интеграцию MQTT, затем попробуйте снова.",
+  "haConnectZhaFound": "Ваш Zigbee работает в ZHA, собственном Zigbee Home Assistant ({count, plural, =1{1 устройство} few{{count} устройства} many{{count} устройств} other{{count} устройства}}). ZigDash работает с Zigbee2MQTT, поэтому не может их показать. Переход на Zigbee2MQTT означает заново подключить устройства; в руководстве два способа.",
+  "haConnectZhaMove": "Переход с ZHA",
+  "haConnectNoMqttNoApps": "В этом Home Assistant нет интеграции MQTT и нет приложений (он работает в контейнере), поэтому Mosquitto и Zigbee2MQTT работают рядом в собственных контейнерах. Если они уже запущены, подключите ZigDash напрямую к Mosquitto. Или добавьте интеграцию MQTT в Home Assistant и попробуйте снова.",
+  "haConnectNoAppsGuide": "Как подключиться",
+  "zhaMoveBody": "ZigDash работает с Zigbee2MQTT. Переход означает заново подключить устройства. Home Assistant сможет и дальше ими пользоваться, когда вы добавите интеграцию MQTT.",
+  "zhaMoveWaySecond": "Второй адаптер: комната за комнатой, ZHA продолжает работать",
+  "zhaMoveWaySame": "Тот же адаптер: бесплатно, всё сразу",
+  "zhaMoveReadSteps": "Читать шаги",
+  "zhaMoveImMoving": "Я переезжаю",
+  "zhaMoveNotNow": "Не сейчас",
+  "zhaMovingNoted": "Отмечено. Когда Zigbee2MQTT заработает, откройте настройку: ZigDash найдёт его и предложит названия и комнаты из Home Assistant.",
+  "setupMovingTitle": "Подключиться к новому Zigbee2MQTT",
+  "setupMovingBody": "Уходите с ZHA? Когда Zigbee2MQTT заработает, ZigDash поищет его в вашей сети.",
   "haConnectSignInFailed": "Вход не завершился. Попробуйте снова или используйте долгосрочный токен.",
   "setupHaShortcut": "Zigbee2MQTT работает в Home Assistant? Пропустите брокер и его логин: войдите с учётной записью администратора Home Assistant. Работает из любой сети.",
   "haConnectButton": "Подключиться через Home Assistant",
@@ -702,6 +813,9 @@
   "setupErrLoginNoAnswerTitle": "Брокер не ответил на вход",
   "setupErrLoginNoAnswerBody": "Брокер найден, но не ответил вовремя на логин и пароль. Приложение Mosquitto broker в Home Assistant проверяет входы через Home Assistant, а на Raspberry Pi это может занять несколько секунд. Попробуйте снова и проверьте, что этот пользователь есть в Home Assistant. На хабе SMLIGHT вместо этого включите Allow Anonymous в Settings › MQTT, и логин не понадобится.",
   "setupErrLoginNoAnswerAction": "Повторить",
+  "setupErrTlsUntrustedTitle": "Телефон не доверяет сертификату этого брокера",
+  "setupErrTlsFailedTitle": "Шифрованное соединение не удалось",
+  "setupErrTlsAction": "Изменить настройки",
   "setupNoZ2mTitle": "Брокер работает, но Zigbee2MQTT здесь ничего не публикует",
   "setupNoZ2mBody": "Мы слушали {base}/bridge и ничего не получили.",
   "setupBaseTopicQuestion": "Используете другой базовый топик?",
@@ -718,30 +832,74 @@
   "setupZhaNote": "ZigDash показывает устройства из Zigbee2MQTT, поэтому не видит устройства в ZHA, встроенном Zigbee Home Assistant. Попробуйте демо-дом, чтобы увидеть, как работает ZigDash.",
   "setupPlatformNotSure": "Не знаю",
   "setupScanProgress": "Проверено {checked} из {total} адресов",
-  "@setupScanProgress": {"placeholders": {"checked": {"type": "int"}, "total": {"type": "int"}}},
+  "@setupScanProgress": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "setupScanHintHa": "Ищем Home Assistant и его MQTT-брокер…",
   "setupScanHintSmlight": "Ищем ваш SMHUB…",
   "setupScanHintPi": "Ищем MQTT-брокер в вашей сети…",
   "setupHubSeenHa": "Найден Home Assistant по адресу {host}",
-  "@setupHubSeenHa": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenHa": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenZ2m": "Найден Zigbee2MQTT по адресу {host}",
-  "@setupHubSeenZ2m": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenZ2m": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenSmlight": "Найден ваш хаб SMLIGHT по адресу {host}",
-  "@setupHubSeenSmlight": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenSmlight": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenHint": "Всё ещё ищем его MQTT-брокер…",
   "setupNoBrokerHaTitle": "Home Assistant найден, но MQTT-брокера нет",
   "setupNoBrokerHaBody": "Home Assistant находится по адресу {host}, но на MQTT-порту 1883 никто не отвечает. В Home Assistant откройте Настройки › Приложения, установите и запустите приложение Mosquitto broker, затем попробуйте снова.",
-  "@setupNoBrokerHaBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerHaBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerHaZha": "Используете встроенный Zigbee в Home Assistant (ZHA) вместо Zigbee2MQTT? ZigDash работает только с Zigbee2MQTT, поэтому не видит устройства ZHA. Демо покажет, что вы получите.",
   "setupNoBrokerHaDocker": "В Настройках вашего Home Assistant нет раздела Приложения? Значит, он работает в Docker (Home Assistant Container), где приложений нет: Mosquitto работает в отдельном контейнере. Введите ниже адрес компьютера, на котором он запущен.",
   "setupVpnHint": "Включён VPN, и он может скрыть домашнюю сеть от поиска. Если вы дома, выключите VPN и нажмите «Повторить». Или оставьте его включённым и разрешите доступ к локальной сети (LAN) в настройках VPN-приложения.",
-  "setupLocalNetworkIos": "ZigDash нужен доступ к локальной сети, чтобы найти хаб. Если вы отказали, разрешите его в Настройки › Конфиденциальность и безопасность › Локальная сеть.",
   "setupNoBrokerZ2mTitle": "Zigbee2MQTT найден, но его брокер недоступен",
   "setupNoBrokerZ2mBody": "Zigbee2MQTT находится по адресу {host}, но его MQTT-брокер не принимает подключения с вашего телефона. Mosquitto 2 слушает только на самом хабе, пока в его конфигурации нет 'listener 1883' и 'allow_anonymous true' (или логина). Перезапустите его и попробуйте снова.",
-  "@setupNoBrokerZ2mBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerZ2mBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerSmlightTitle": "Хаб SMLIGHT найден, но MQTT выключен",
   "setupNoBrokerSmlightBody": "Ваш хаб находится по адресу {host}, но его MQTT-брокер недоступен. В веб-интерфейсе хаба откройте Settings › MQTT, включите Allow External и проверьте, что Zigbee2MQTT запущен. Затем попробуйте снова.",
-  "@setupNoBrokerSmlightBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerSmlightBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupZ2mAsking": "Спрашиваем Zigbee2MQTT, где его брокер…",
   "setupZ2mLocalOnlyTitle": "Ваш брокер принимает подключения только со своей машины",
   "setupZ2mLocalOnlyBody": "Zigbee2MQTT использует {server}, и с вашего телефона там никто не отвечает. Mosquitto 2 так работает по умолчанию. Добавьте эти две строки в mosquitto.conf, перезапустите Mosquitto и попробуйте снова:",
@@ -751,7 +909,13 @@
   "setupZ2mTokenRequired": "Веб-страница Zigbee2MQTT защищена токеном, поэтому приложение не смогло узнать, где её брокер. Введите адрес брокера из настроек Zigbee2MQTT › MQTT.",
   "setupZ2mUnreachable": "Zigbee2MQTT использует брокер по адресу {server}, но он не ответил вашему телефону. Проверьте, что брокер запущен и телефон в той же сети.",
   "setupConnectTo": "Подключиться к {host}",
-  "@setupConnectTo": {"placeholders": {"host": {"type": "String"}}},
+  "@setupConnectTo": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNotFoundHa": "Home Assistant в этой сети не найден. Проверьте, что телефон в той же сети Wi-Fi, что и Home Assistant (не гостевой), и попробуйте снова. Если знаете адрес, введите его ниже.",
   "setupNotFoundSmlight": "Хаб SMLIGHT в этой сети не найден. Проверьте, что хаб включён и телефон в той же сети Wi-Fi, и попробуйте снова. Если знаете адрес, введите его ниже.",
   "setupNotFoundPi": "MQTT-брокер в этой сети не найден. Проверьте, что Mosquitto запущен и слушает сеть (порт 1883), а телефон подключён к той же сети Wi-Fi. Затем попробуйте снова.",
@@ -765,9 +929,7 @@
   "setupAddressCheck": "Проверить этот адрес",
   "setupAddressNothing": "По адресу {host} никто не ответил. Проверьте адрес и что телефон в той же сети Wi-Fi.",
   "setupAddressNotResolved": "Не удалось разрешить {host}. Имена на .local часто не работают в Android; попробуйте IP-адрес. Home Assistant показывает его в Настройки › Система › Сеть.",
-  "setupAddressNotResolvedIos": "Не удалось разрешить {host}. Проверьте имя или попробуйте IP-адрес. Home Assistant показывает его в Настройки › Система › Сеть.",
   "setupAddressNotResolvedHa": "{host} не находится с этого телефона: Android часто не умеет разрешать имена .local. Нажмите «{button}» выше и укажите адрес, по которому открываете Home Assistant в браузере, или введите здесь его IP-адрес. Home Assistant показывает его в Настройки › Система › Сеть.",
-  "setupAddressNotResolvedHaIos": "{host} не находится с этого телефона. Нажмите «{button}» выше и укажите адрес, по которому открываете Home Assistant в браузере, или введите здесь его IP-адрес. Home Assistant показывает его в Настройки › Система › Сеть.",
   "setupAddressNotLocal": "{host} не в вашей домашней сети. Используйте адрес, который работает в вашем Wi-Fi, а не удалённую ссылку вроде Nabu Casa или DuckDNS.",
   "setupAddressInvalid": "Сначала введите адрес.",
   "setupChoicesTitle": "Что из этого про вас?",
@@ -780,7 +942,16 @@
   "setupChoiceOtherSub": "Гостевой Wi-Fi или второй роутер",
   "setupChoiceOtherNote": "Телефон должен видеть ваш хаб. Гостевой Wi-Fi или второй роутер со своим Wi-Fi разделяют их. Подключитесь к Wi-Fi, в котором находится хаб, и нажмите Повторить. Или введите ниже IP-адрес хаба, или попробуйте одно из этих обычных имён:",
   "guidedHostYourPhone": "Ваш телефон — {ip}, значит адрес хаба обычно начинается с {prefix}.",
-  "@guidedHostYourPhone": {"placeholders": {"ip": {"type": "String"}, "prefix": {"type": "String"}}},
+  "@guidedHostYourPhone": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      },
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
   "guidedHostHa": "Используете Home Assistant? Хост — это адрес, по которому вы открываете Home Assistant, порт 1883.",
   "demoBannerText": "Вы в демо-режиме",
   "demoBannerAction": "Подключить свой дом",
@@ -977,7 +1148,13 @@
   "assistantTitle": "Помощник ZigDash",
   "assistantNotice": "Этот ответ даёт ИИ-сервис, который видит ваши сведения для поддержки. Ему никогда не нужны ваши пароли или адреса.",
   "assistantOpeningScan": "Сканирование по {network} проверило {hosts} адресов и нашло брокеров: {brokers}.",
-  "@assistantOpeningScan": { "placeholders": { "network": {}, "hosts": {}, "brokers": {} } },
+  "@assistantOpeningScan": {
+    "placeholders": {
+      "network": {},
+      "hosts": {},
+      "brokers": {}
+    }
+  },
   "assistantOpeningRunningYes": "Вы сказали, что Zigbee2MQTT работает. Давайте его найдём.",
   "assistantOpeningRunningNotSure": "Вы не были уверены, работает ли Zigbee2MQTT. Давайте выясним.",
   "assistantOpeningGeneric": "Расскажите, что вы пытались сделать, и я помогу подключиться.",
@@ -993,9 +1170,24 @@
   "assistantHelpedNo": "Нет",
   "assistantTalkToPerson": "Поговорить с человеком",
   "assistantHomeOpening": "{home} подключён, {count, plural, =0{устройства не отвечают} one{отвечает {count} устройство} few{отвечают {count} устройства} many{отвечают {count} устройств} other{отвечают {count} устройства}}. Чем помочь?",
-  "@assistantHomeOpening": { "placeholders": { "home": {"type": "String"}, "count": {"type": "int"} } },
+  "@assistantHomeOpening": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "assistantHomeOpeningOffline": "ZigDash сейчас не может связаться с {home}. Чем помочь?",
-  "@assistantHomeOpeningOffline": { "placeholders": { "home": {"type": "String"} } },
+  "@assistantHomeOpeningOffline": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      }
+    }
+  },
   "assistantChipDevice": "Устройство перестало отвечать",
   "assistantChipTile": "Добавить плитку",
   "assistantChipAutomations": "Автоматизации",
@@ -1042,7 +1234,6 @@
   "tipRestartZ2mBody": "Если устройства сопряжены, но не появляются, перезапустите Zigbee2MQTT, чтобы он опубликовал список устройств.",
   "tipNumberAddressTitle": "Используйте цифровой адрес",
   "tipNumberAddressBody": "Имена, оканчивающиеся на .local, работают не на всех Android-телефонах. Попробуйте цифровой адрес хаба, например 192.168.1.20.",
-  "tipNumberAddressBodyIos": "Если имя не работает, попробуйте цифровой адрес хаба, например 192.168.1.20.",
   "tipPortProtocolTitle": "Порт и протокол",
   "tipPortProtocolBody": "Обычно это TCP на порту 1883. Выбирайте TLS или WebSocket, только если брокер для этого настроен.",
   "tipManualLoginTitle": "Вход",
@@ -1208,7 +1399,6 @@
   "wallKeepOnSubtitle": "Они возвращаются при касании и снова скрываются через 10 секунд.",
   "wallFullscreen": "Во весь экран",
   "wallFullscreenSubtitle": "Скрывает и строку состояния, и панель навигации Android.",
-  "wallFullscreenSubtitleIos": "Скрывает и строку состояния; индикатор «Домой» тускнеет.",
   "wallDimAfter": "Затемнять через",
   "wallDimOff": "Выкл.",
   "wallIdleTitle": "Когда никто не касается",
@@ -1239,7 +1429,11 @@
   "wallNightFrom": "С",
   "wallNightTo": "до",
   "wallDimMinutes": "{minutes} мин",
-  "@wallDimMinutes": { "placeholders": { "minutes": {} } },
+  "@wallDimMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
   "kioskLock": "Режим киоска",
   "kioskLockSubtitle": "Доступны только панели этого дома и их элементы управления. Удерживайте заголовок, чтобы выйти.",
   "kioskPin": "PIN-код",
@@ -1255,12 +1449,9 @@
   "kioskPinWrong": "Неверный PIN-код.",
   "kioskPinForgot": "Забыли PIN-код?",
   "kioskPinForgotBody": "Забытый PIN-код можно сбросить только очисткой данных ZigDash в настройках Android, а это удалит этот дом, если нет резервной копии. Экспортируйте её, прежде чем задавать PIN-код.",
-  "kioskPinForgotBodyIos": "Забытый PIN-код можно сбросить только удалением и повторной установкой ZigDash, а это удалит этот дом, если нет резервной копии. Экспортируйте её, прежде чем задавать PIN-код.",
   "kioskExportBackup": "Экспорт резервной копии",
   "kioskOsPin": "Также закрепить ZigDash в Android",
   "kioskOsPinSubtitle": "Android блокирует кнопку «Домой» и недавние приложения, пока ZigDash не откреплён. Планшет без экрана блокировки открепляется жестом, так что это не замок.",
-  "kioskGuidedAccessTitle": "Закрепить ZigDash через Гид-доступ",
-  "kioskGuidedAccess": "iOS держит ZigDash на экране, пока вы не завершите Гид-доступ: включите его в Настройки › Универсальный доступ › Гид-доступ, затем трижды нажмите боковую кнопку в ZigDash.",
   "kioskOn": "Киоск включён. Удерживайте заголовок, чтобы выйти.",
   "kioskLeaveTitle": "Выйти из киоска?",
   "kioskLeave": "Выйти",
@@ -1289,14 +1480,16 @@
   "proGetWall": "Настенный планшет: показания на часах, пробуждение по движению, ночной режим и будильники",
   "proGetFuture": "Все будущие функции Pro без доплаты",
   "proFreeTitle": "Бесплатно навсегда",
-  "proFreeBody": "Настройка, панели, управление любым устройством, виджеты, плитки быстрых настроек, оповещения, три автоматизации на дом и сам настенный планшет остаются бесплатными. Ничто из того, чем вы пользуетесь сегодня, не будет заблокировано.",
-  "proFreeBodyIos": "Настройка, панели, управление любым устройством, три автоматизации на дом и сам настенный планшет остаются бесплатными. Ничто из того, чем вы пользуетесь сегодня, не будет заблокировано.",
+  "proFreeBody": "Настройка, панели, управление любым устройством, виджеты, плитки быстрых настроек, оповещения, три автоматизации на дом и сам настенный планшет остаются бесплатными. Ничто из того, что сегодня бесплатно, не станет платным.",
   "proBuy": "Получить Pro",
   "proBuyPrice": "Получить Pro · {price}",
   "proOnce": "Один платёж, без подписки. Купили на другом телефоне с тем же аккаунтом Google? Pro откроется автоматически.",
-  "proOnceIos": "Один платёж, без подписки. Купили на другом iPhone или iPad с тем же Аккаунтом Apple? Pro откроется автоматически, или нажмите «Восстановить покупку».",
   "proRestore": "Восстановить покупку",
-  "proRestoreNone": "Для этого Apple ID покупка ZigDash Pro не найдена.",
+  "proRestored": "Pro разблокирован на этом телефоне.",
+  "proRestoreNone": "В Google Play нет покупки Pro для этого аккаунта Google. Покупали с другого аккаунта? Смените аккаунт в Play Маркете и попробуйте снова.",
+  "proRestoreFailed": "Не удалось связаться с Google Play. Попробуйте ещё раз через минуту.",
+  "proRestoreNoneIos": "Для этого Apple ID покупка ZigDash Pro не найдена.",
+  "proRestoreFailedIos": "Не удалось связаться с App Store. Попробуйте ещё раз чуть позже.",
   "historyNotRecorded": "Записываются только числа, показанные на панели. Добавьте это значение плиткой, чтобы начать его историю.",
   "historyRecordHere": "Записывать на этом устройстве",
   "historyRecordHereHint": "Не получается использовать ZigDash Engine на хабе? ZigDash может записывать на телефоне или планшете, который остаётся открытым, например на настенном. Все телефоны этого дома видят историю.",
@@ -1338,6 +1531,8 @@
   "haImportOpen": "Открыть дашборды",
   "haImportOfferTitle": "Перенести имена и комнаты из Home Assistant?",
   "haImportOfferBody": "Home Assistant есть в вашей сети. ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату, как вы настроили их там.",
+  "haImportOfferBodyZha": "ZigDash может назвать плитки и добавить дашборд на каждый этаж и комнату по названиям и комнатам ваших устройств в Home Assistant, включая устройства из ZHA.",
+  "haImportNoZ2mDevices": "В Zigbee2MQTT пока нет устройств. Сначала подключите устройства в нём, затем откройте «Импорт из Home Assistant» в настройках этого дома.",
   "haImportOfferLater": "Не сейчас",
   "haImportOfferGo": "Импортировать",
   "haImportSignIn": "Войти через Home Assistant",
@@ -1361,11 +1556,6 @@
   "engineInstalling": "Установка на хаб…",
   "engineTooOldTitle": "Zigbee2MQTT нужно обновить",
   "engineTooOldBody": "Ваш Zigbee2MQTT версии {version}. Для автоматизаций нужна 2.4 или новее. Обновите Zigbee2MQTT на хабе и вернитесь сюда.",
-  "engineIntroTitle": "Автоматизации работают на хабе, а не на телефоне",
-  "engineIntroBody": "ZigDash добавляет ZigDash Engine в Zigbee2MQTT на вашем хабе. Он следит за устройствами и выполняет ваши правила, так что свет включится при открытии двери, даже если телефон выключен и нет интернета.",
-  "engineIntroNothingByHand": "Ничего не нужно ставить вручную. ZigDash сделает это через домашнюю сеть.",
-  "engineIntroVersion": "Ваш Zigbee2MQTT версии {version}.",
-  "engineIntroRemove": "Удалить его можно в любой момент на этом экране.",
   "engineInstall": "Установить на хаб",
   "engineDeclinedTitle": "На этом хабе нет автоматизаций",
   "engineDeclinedBody": "Zigbee2MQTT на вашем хабе не разрешает расширения, поэтому никто не выполнит ваши правила, пока телефона нет рядом. Сцены, оповещения и панель работают как раньше.",
@@ -1428,6 +1618,7 @@
   "autoErrTown": "Укажите город для восхода и заката.",
   "autoErrPickAction": "Выберите, что должно произойти.",
   "autoErrEmptyScene": "В этой сцене нечего отправлять.",
+  "autoSceneTilesSkipped": "{count, plural, one{{count} действие этой сцены работает только с этого телефона дома, не из автоматизаций.} few{{count} действия этой сцены работают только с этого телефона дома, не из автоматизаций.} many{{count} действий этой сцены работают только с этого телефона дома, не из автоматизаций.} other{{count} действия этой сцены работают только с этого телефона дома, не из автоматизаций.}}",
   "autoErrNotConnected": "ZigDash не подключён к этому дому. Попробуйте снова дома.",
   "autoNewTitle": "Новая автоматизация",
   "autoEditTitle": "Изменить автоматизацию",
@@ -1704,5 +1895,175 @@
   "proSaleNoEnd": "Скидка {percent} %",
   "proSaleEnded": "Скидка закончилась. Сейчас цена такая.",
   "saleCardRemote": "ZigDash Pro: управляйте домом откуда угодно и не только.",
-  "saleCardHomeAssistant": "ZigDash Pro: более длинная история, больше автоматизаций и не только."
+  "saleCardHomeAssistant": "ZigDash Pro: более длинная история, больше автоматизаций и не только.",
+  "chatEarlyTitle": "Чат с вашим домом",
+  "chatEarlyBody": "Напишите, например, «закрой штору в кабинете» или «задняя дверь открыта?», и дом ответит. Уже доступно владельцам ZigDash Pro. Первые {count} записавшихся получат код основателя: бесплатно на 3 месяца, вместе с удалённым доступом.",
+  "chatEarlyTelegram": "Записаться в Telegram",
+  "chatEarlyEmail": "Записаться по почте",
+  "chatEarlyNotForMe": "Не для меня",
+  "chatEarlyClose": "Закрыть",
+  "chatEarlyEmailHint": "Ваша почта",
+  "chatEarlyBadEmail": "Это не похоже на адрес почты.",
+  "chatEarlyEmailUse": "Мы используем её только чтобы пригласить вас в бету и сообщить цену.",
+  "chatEarlyPrivacy": "Конфиденциальность",
+  "chatEarlySend": "Отправить",
+  "chatEarlyFailed": "Не удалось отправить. Попробуйте Telegram или позже.",
+  "chatEarlyInFirst": "Вы № {position} в списке: среди первых {count}. Вы получите код основателя: чат и удалённый доступ, бесплатно на 3 месяца.",
+  "chatEarlyAfterFirst": "Вы № {position} в списке. Первые {count} мест заняты. Чат уже доступен владельцам ZigDash Pro.",
+  "chatEarlyListed": "Эта почта уже в списке.",
+  "chatEarlyPrice": "После бесплатных месяцев 2,49 € в месяц — нормально?",
+  "chatEarlyYes": "Да",
+  "chatEarlyMaybe": "Возможно",
+  "chatEarlyNo": "Нет",
+  "chatEarlyThanks": "Спасибо, учтём.",
+  "settingsChatEarlySubtitle": "Ранний доступ: записаться",
+  "historyOnTitle": "Смотрите дом за несколько дней",
+  "historyOnBody": "Включите историю, чтобы видеть температуру, потребление и двери за дни и недели, а не только сейчас. ZigDash Engine записывает на хабе, даже когда телефон выключен.",
+  "historyOnTurnOn": "Включить историю",
+  "historyOnLater": "Не сейчас",
+  "historyOnWorking": "Включаем историю…",
+  "historyOnConsentBody": "ZigDash Engine записывает историю на хабе, поэтому она идёт и при выключенном телефоне. Ваш Zigbee2MQTT блокирует дополнения, как все новые установки: ZigDash включит «Разрешить внешний JavaScript» и перезапустит его.",
+  "historyOnAllow": "Разрешить и перезапустить",
+  "historyOnBrokerBody": "История записывается через ваш MQTT-брокер. ZigDash подключён к этому дому через страницу Zigbee2MQTT, поэтому сначала добавьте брокер.",
+  "historyOnAddBroker": "Добавить брокер",
+  "historyOnPhoneBody": "Ваш хаб не может запустить ZigDash Engine. Вместо него может записывать этот телефон, пока ZigDash открыт: лучше всего настенный планшет, который всегда включён.",
+  "historyOnPhone": "Записывать на этом телефоне",
+  "proTrialStartedTitle": "Pro включён на 14 дней",
+  "proTrialOfferTitle": "Попробуйте ZigDash Pro бесплатно 14 дней",
+  "proTrialWhat": "История за 7 и 30 дней, функции настенного планшета и больше трёх автоматизаций.",
+  "proTrialNoPayment": "Без оплаты, ничего не продлевается.",
+  "proTrialStart": "Начать пробный период",
+  "proTrialEndingTitle": "Пробный период Pro закончится через 2 дня",
+  "proTrialKeep": "Оставить Pro · {price}",
+  "proTrialUsedHistory": "историю за неделю и месяц",
+  "proTrialUsedWall": "функции настенного планшета",
+  "proTrialUsedAutomation": "больше трёх автоматизаций",
+  "proTrialYouUsed": "Вы пользовались: {features}.",
+  "proTrialAfterEnd": "После него всё настроенное останется; виды за неделю и месяц и новые автоматизации сверх трёх требуют Pro.",
+  "proTrialDaysLeft": "{days, plural, =1{Пробный период: остался 1 день} few{Пробный период: осталось {days} дня} other{Пробный период: осталось {days} дней}}",
+  "proTrialEnded": "Пробный период закончился. Всё, что вы настроили, на месте.",
+  "engineSlimCard": "Автоматизации работают на вашем хабе с ZigDash Engine. ZigDash установит его туда, когда вы сохраните первую.",
+  "engineAwayMakeAtHome": "Создавайте автоматизации дома: тогда ZigDash установит свой Engine на ваш хаб через домашнюю сеть.",
+  "engineSheetSource": "Исходный код на GitHub",
+  "engineSheetTitle": "ZigDash Engine выполняет ваши автоматизации",
+  "engineSheetBody": "ZigDash Engine — это один файл с открытым кодом, который ZigDash добавляет в папку Zigbee2MQTT на вашем хабе. Он выполняет там ваши автоматизации, даже когда телефон выключен. Удалить его можно в любой момент на вкладке «Автоматизации».",
+  "engineSheetInstallSave": "Установить и сохранить",
+  "engineSheetSaveOnly": "Сохранить без запуска",
+  "engineSheetSave": "Сохранить",
+  "engineSheetNoAnswer": "Zigbee2MQTT на вашем хабе не ответил вовремя, поэтому ZigDash не может сейчас установить свой Engine. Сохраните сейчас и установите его на вкладке «Автоматизации», когда хаб ответит.",
+  "engineSheetSavedNotRunning": "Автоматизация сохранена. Она заработает, когда ZigDash Engine будет на вашем хабе.",
+  "engineWaitingTitle": "Сохранены раньше, ждут ZigDash Engine",
+  "engineWaitingRun": "Заработает после установки",
+  "engineWaitingPaused": "Останется на паузе",
+  "autoNotRunTitle": "Ни одна из них пока не работает",
+  "autoNotRunBody": "Не работает: ZigDash Engine нет на вашем хабе. До тех пор их хранит ваш MQTT-брокер, а брокер без сохранения (persistence) теряет их при перезапуске.",
+  "autoNotRunning": "Не работает",
+  "historyUsePhoneInstead": "Использовать этот телефон",
+  "chatTitle": "Chat (бета)",
+  "chatRowReady": "Общайтесь с домом через Telegram",
+  "chatRowNoPro": "Часть ZigDash Pro (не входит в пробный период)",
+  "chatRowNoRemote": "Сначала включите удалённое управление",
+  "chatRowNoEngine": "Нужен ZigDash Engine на вашем хабе",
+  "chatIntroTitle": "Общайтесь с домом через Telegram",
+  "chatIntroBody": "Напишите боту ZigDash Home в Telegram, например, «задняя дверь открыта?» или «закрой штору в кабинете», и дом ответит. Он читает, что сообщают ваши устройства, и их историю; с режимом «Чтение и управление» он также может переключать выбранные вами светильники, шторы, выключатели, розетки и термостаты.",
+  "chatIntroNever": "Он никогда не открывает, не закрывает и не меняет замки, клапаны и сирены и никогда не меняет автоматизации и настройки: для этого он предложит открыть ZigDash.",
+  "chatIntroBeta": "Бесплатно во время беты: до 300 сообщений в месяц для этого дома.",
+  "chatIntroWho": "Кто читает сообщения: Telegram, который их передаёт; наш сервер в ЕС, который хранит разговор 24 часа; и Anthropic (Claude) в США, который пишет ответы. То, что Chat узнаёт о вашем доме, идёт тем же путём.",
+  "chatPolicy": "Как Chat обращается с вашими данными",
+  "chatLinkedTitle": "Привязанные аккаунты",
+  "chatLinkedNone": "Ни один аккаунт Telegram пока не привязан.",
+  "chatLinkedLoadFailed": "Не удалось загрузить привязанные аккаунты. Проверьте подключение к интернету.",
+  "chatLinkedLine": "{scope} · последний раз {when}",
+  "chatLinkedNeverUsed": "{scope} · ещё не использовался",
+  "chatRemove": "Удалить",
+  "chatRemoveTitle": "Удалить {name}?",
+  "chatRemoveBody": "Этот аккаунт Telegram больше не сможет обращаться к вашему дому, а его разговор будет удалён.",
+  "chatRemovedLater": "Удалено. Ваш хаб забудет его, когда ZigDash в следующий раз будет открыт дома.",
+  "chatAuditTitle": "Что сделал Chat",
+  "chatAuditShow": "Показать",
+  "chatAuditEmpty": "Пока ничего.",
+  "chatAuditFailed": "Ваш хаб не ответил. Попробуйте позже.",
+  "chatAuditSent": "установлено: {what}",
+  "chatAuditNotSent": "не отправлено",
+  "chatHereTitle": "Чат с домом уже здесь",
+  "chatHereBody": "Привяжите аккаунт Telegram и спросите дом «открыта ли задняя дверь?» или попросите закрыть штору. Входит в Pro, бесплатно во время беты.",
+  "chatHereSetUp": "Настроить",
+  "chatHereNotNow": "Не сейчас",
+  "chatLinkNew": "Привязать аккаунт Telegram",
+  "chatLinkAnother": "Привязать ещё один аккаунт Telegram",
+  "chatScopeRead": "Чтение",
+  "chatScopeReadHelp": "Отвечает на вопросы. Ничего не меняет.",
+  "chatScopeControl": "Чтение и управление",
+  "chatScopeControlHelp": "Также переключает устройства, выбранные ниже.",
+  "chatControlsTitle": "Что Chat может переключать",
+  "chatControlsHelp": "Сначала включены: светильники и шторы с ваших панелей. Сначала выключены: выключатели и розетки (от них может работать обогреватель, бойлер или насос), термостаты, ворота и гаражные двери. Замки, клапаны и сирены никогда не показываются.",
+  "chatControlsEmpty": "Пока нет устройств для выбора.",
+  "chatKindLight": "Светильник",
+  "chatKindCover": "Штора",
+  "chatKindSwitch": "Выключатель или розетка",
+  "chatKindThermostat": "Термостат",
+  "chatGateNote": "ворота или дверь, сначала выключено",
+  "chatAgeAndAccount": "Каждый привязывает свой аккаунт Telegram, со своим уровнем доступа. Привязанным людям должно быть не меньше 16 лет. Любой, кто пользуется привязанным аккаунтом Telegram, может делать то, что разрешает его уровень доступа. Даже «Чтение» показывает, есть ли кто-то дома и какие двери и окна открыты.",
+  "chatEngineOld": "ZigDash Engine на вашем хабе обновляется до версии с Chat. Попробуйте снова через минуту.",
+  "chatLinkButton": "Привязать Telegram",
+  "chatLinkAway": "Привязывайте дома: ZigDash настраивает это на хабе через вашу домашнюю сеть.",
+  "chatCodeTitle": "Завершите в Telegram",
+  "chatCodeBody": "В Telegram нажмите «Запустить» у бота ZigDash Home. Он пришлёт 4-значный код: введите его здесь в течение 10 минут.",
+  "chatCodeHint": "4-значный код",
+  "chatCodeConfirm": "Подтвердить",
+  "chatOpenTelegram": "Снова открыть Telegram",
+  "chatLinkedDone": "Привязано. Напишите боту, чтобы попробовать.",
+  "chatFailUnreachable": "Не удалось связаться с серверами ZigDash. Проверьте подключение к интернету и попробуйте снова.",
+  "chatFailLogin": "Relay не принял удалённый вход этого телефона. Откройте «Удалённое управление», выключите и снова включите его.",
+  "chatFailPurchase": "Google Play не подтверждает покупку ZigDash Pro для этого дома.",
+  "chatFailTooMany": "Слишком много попыток. Попробуйте снова через час.",
+  "chatFailExpired": "Срок действия кода истёк. Начните заново.",
+  "chatFailWrongCode": "Это не тот код, который прислал бот. Проверьте его и попробуйте снова.",
+  "chatFailRefused": "Не получилось. Попробуйте позже.",
+  "chatFailNotClaimed": "Бот ещё не получил код. Откройте Telegram, нажмите «Запустить» у бота ZigDash Home, затем введите код, который он пришлёт.",
+  "chatFailWrongCodeLeft": "Это не тот код, который прислал бот. Осталось попыток: {count}.",
+  "founderCodeAsk": "Есть код основателя?",
+  "founderCodeLabel": "Код основателя",
+  "founderCodeUse": "Применить код",
+  "founderCodeAtHome": "Введите его дома, когда на хабе есть ZigDash Engine: ZigDash настроит удалённое управление через домашнюю сеть.",
+  "founderCodeWrong": "Это не код основателя. Проверьте его и попробуйте снова.",
+  "founderCodeUsed": "Этот код уже использован. Каждый код действует один раз.",
+  "founderCodeDeadline": "Срок для ввода этого кода истёк. Попросите больше времени через «Получить помощь».",
+  "founderCodeRevoked": "Этот код отозван.",
+  "founderCodeDone": "Пропуск основателя активен: удалённое управление и Chat для этого дома до {date}.",
+  "founderEndsOn": "Пропуск основателя заканчивается {date}. С ZigDash Pro удалённое управление и Chat останутся, ничего не нужно настраивать заново.",
+  "founderGetPro": "Получить Pro",
+  "founderEnded": "Пропуск основателя закончился {date}. ZigDash Pro вернёт удалённое управление и Chat, ничего не нужно настраивать заново.",
+  "founderEndedNoDate": "Пропуск основателя закончился. ZigDash Pro вернёт удалённое управление и Chat, ничего не нужно настраивать заново.",
+  "founderDeleted": "Пропуск основателя для этого дома закончился, и его удалённое управление удалено.",
+  "remoteRemoved": "Удалённое управление этого дома удалено с ретранслятора.",
+  "founderSetUpWithPro": "Настроить с Pro",
+  "founderUseProTitle": "Использовать покупку Pro для этого дома?",
+  "founderUseProBody": "Удалённое управление и Chat этого дома перейдут на вашу покупку Pro: те же телефоны и привязки Chat, ничего не нужно настраивать заново. Одна покупка — один дом.",
+  "founderUsePro": "Использовать Pro для этого дома",
+  "founderUpgraded": "Этот дом теперь работает по вашей покупке Pro.",
+  "founderUpgradeTaken": "Эта покупка уже принадлежит другому дому.",
+  "founderUpgradeFailed": "Не удалось перевести дом на покупку Pro. Попробуйте позже.",
+  "remoteHubRefused": "Ретранслятор отклонил вход хаба",
+  "chatRowPassEnded": "Пропуск основателя закончился: привязки ещё можно удалить",
+  "chatFailPassEnded": "Пропуск основателя для этого дома закончился, поэтому новый аккаунт Telegram привязать нельзя.",
+  "panelToggleNoState": "(нет состояния)",
+  "panelToggleError": "ошибка",
+  "diagResolveLocalNameIos": "Телефон не нашёл это имя. Проверьте, правильно ли оно написано, или введите IP-адрес (Home Assistant показывает его в Настройки › Система › Сеть).",
+  "reminderNoPermissionIos": "Уведомления ZigDash выключены, поэтому напоминания не будет. Их можно включить в Настройки › ZigDash › Уведомления.",
+  "setupLocalNetworkIos": "ZigDash нужен доступ к локальной сети, чтобы найти хаб. Если вы отказали, разрешите его в Настройки › Конфиденциальность и безопасность › Локальная сеть.",
+  "setupAddressNotResolvedIos": "Не удалось разрешить {host}. Проверьте имя или попробуйте IP-адрес. Home Assistant показывает его в Настройки › Система › Сеть.",
+  "setupAddressNotResolvedHaIos": "{host} не находится с этого телефона. Нажмите «{button}» выше и укажите адрес, по которому открываете Home Assistant в браузере, или введите здесь его IP-адрес. Home Assistant показывает его в Настройки › Система › Сеть.",
+  "tipNumberAddressBodyIos": "Если имя не работает, попробуйте цифровой адрес хаба, например 192.168.1.20.",
+  "wallFullscreenSubtitleIos": "Скрывает и строку состояния; индикатор «Домой» тускнеет.",
+  "kioskPinForgotBodyIos": "Забытый PIN-код можно сбросить только удалением и повторной установкой ZigDash, а это удалит этот дом, если нет резервной копии. Экспортируйте её, прежде чем задавать PIN-код.",
+  "kioskGuidedAccessTitle": "Закрепить ZigDash через Гид-доступ",
+  "kioskGuidedAccess": "iOS держит ZigDash на экране, пока вы не завершите Гид-доступ: включите его в Настройки › Универсальный доступ › Гид-доступ, затем трижды нажмите боковую кнопку в ZigDash.",
+  "proFreeBodyIos": "Настройка, панели, управление любым устройством, три автоматизации на дом и сам настенный планшет остаются бесплатными. Ничто из того, чем вы пользуетесь сегодня, не будет заблокировано.",
+  "proOnceIos": "Один платёж, без подписки. Купили на другом iPhone или iPad с тем же Аккаунтом Apple? Pro откроется автоматически, или нажмите «Восстановить покупку».",
+  "engineIntroTitle": "Автоматизации работают на хабе, а не на телефоне",
+  "engineIntroBody": "ZigDash добавляет ZigDash Engine в Zigbee2MQTT на вашем хабе. Он следит за устройствами и выполняет ваши правила, так что свет включится при открытии двери, даже если телефон выключен и нет интернета.",
+  "engineIntroNothingByHand": "Ничего не нужно ставить вручную. ZigDash сделает это через домашнюю сеть.",
+  "engineIntroVersion": "Ваш Zigbee2MQTT версии {version}.",
+  "engineIntroRemove": "Удалить его можно в любой момент на этом экране."
 }

@@ -55,12 +55,28 @@ mc.MqttClient buildPlatformClient(
     // (3.3.1, login_no_answer).
     maxConnectionAttempts: 1,
   );
-  client.secure = isSecureProtocol(config.protocol);
+  // Only raw TLS sets `secure`: for wss the wss:// URL brings TLS itself,
+  // and mqtt_client runs its `secure` block after the WebSocket one, which
+  // turned WebSocket off and opened a raw TLS socket to "wss://host": direct
+  // WSS never connected (3.8.5).
+  client.secure = config.protocol == MqttProtocol.tcpSsl;
   if (ws) {
     client.useWebSocket = true;
     client.websocketProtocols = ['mqtt'];
   }
   return client;
+}
+
+/// See [watchBadCert] in client_factory.dart. Typed `(Object? _)`:
+/// mqtt_client casts the callback to `bool Function(Object)` before using
+/// it, so an `(X509Certificate)` closure would throw on every secure
+/// connect. Always false: nothing new is trusted.
+void watchBadCert(mc.MqttClient client, BrokerConfig config, void Function() onBad) {
+  if (client is! MqttServerClient || !isSecureProtocol(config.protocol)) return;
+  client.onBadCertificate = (Object? _) {
+    onBad();
+    return false;
+  };
 }
 
 /// mqtt_client's WebSocket connection only accepts a ws:// or wss:// URL and

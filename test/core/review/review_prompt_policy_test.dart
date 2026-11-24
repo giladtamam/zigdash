@@ -42,46 +42,30 @@ void main() {
     );
   });
 
-  test(
-    'needs minAge (two days) since the first session even with enough sessions',
-    () {
-      expect(
-        policy.shouldPrompt(
-          sessions: 2,
-          firstSessionDay: day0,
-          lastPromptDay: null,
-          today: _plus(day0, 1),
-        ),
-        isFalse,
-      );
-      expect(
-        policy.shouldPrompt(
-          sessions: 2,
-          firstSessionDay: day0,
-          lastPromptDay: null,
-          today: _plus(day0, 2),
-        ),
-        isTrue,
-      );
-    },
-  );
+  test('needs minAge (one day) since the first session', () {
+    expect(
+      policy.shouldPrompt(
+        sessions: 2,
+        firstSessionDay: day0,
+        lastPromptDay: null,
+        today: day0,
+      ),
+      isFalse,
+    );
+    expect(
+      policy.shouldPrompt(
+        sessions: 2,
+        firstSessionDay: day0,
+        lastPromptDay: null,
+        today: _plus(day0, 1),
+      ),
+      isTrue,
+    );
+  });
 
-  // 3.1.9 in the wild: set up at 22:35, a light switched at 01:00. Two
-  // calendar days, two sessions, and the prompt came 2.5 hours after install.
-  test(
-    'does not ask the night after setup (sessions either side of midnight)',
-    () {
-      expect(
-        policy.shouldPrompt(
-          sessions: 2,
-          firstSessionDay: DateTime(2026, 10, 24),
-          lastPromptDay: null,
-          today: DateTime(2026, 10, 25),
-        ),
-        isFalse,
-      );
-    },
-  );
+  // The 3.1.9 night-after-setup case (22:35, then 01:00) passes the policy
+  // from 3.8.4; the controller's 18-hour setup window holds it (see
+  // review_prompt_controller_test.dart).
 
   test('counts calendar days across a daylight-saving change', () {
     // Europe springs forward on Mar 29, 2026: Mar 28 to Mar 30 is 47 hours

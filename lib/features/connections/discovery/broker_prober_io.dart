@@ -20,10 +20,15 @@ class SocketMqttProber implements HostProber {
   const SocketMqttProber({
     this.tcpTimeout = const Duration(milliseconds: 500),
     this.mqttTimeoutMs = 2500,
+    this.tlsPort = 8883,
   });
 
   final Duration tcpTimeout;
   final int mqttTimeoutMs;
+
+  /// The port probed over TLS: MQTT's 8883 (a parameter so tests can serve
+  /// TLS on a free port).
+  final int tlsPort;
 
   @override
   Future<ProbeResult?> probe(String host, int port) async =>
@@ -56,11 +61,19 @@ class SocketMqttProber implements HostProber {
     // 2) MQTT confirm.
     final client = MqttServerClient.withPort(host, '', port)
       ..logging(on: false)
-      ..secure = port == 8883
+      ..secure = port == tlsPort
       ..keepAlivePeriod = 5
       ..connectTimeoutPeriod = mqttTimeoutMs
       ..autoReconnect = false;
-    if (client.secure) client.onBadCertificate = (Object? _) => true;
+    // Any certificate, to see whether a broker is there; whether the phone
+    // would trust it is recorded (3.8.5), since the app itself won't.
+    var untrusted = false;
+    if (client.secure) {
+      client.onBadCertificate = (Object? _) {
+        untrusted = true;
+        return true;
+      };
+    }
     final id =
         'zigdash-scan-${DateTime.now().microsecondsSinceEpoch & 0xffffff}';
     client.connectionMessage = mc.MqttConnectMessage()
@@ -89,6 +102,7 @@ class SocketMqttProber implements HostProber {
       needsAuth: mqttConnackToAuth(
         code ?? mc.MqttConnectReturnCode.connectionAccepted,
       ),
+      untrustedCert: untrusted,
     );
   }
 }

@@ -1,1 +1,1 @@
-Dashboard Zigbee2MQTT. Senza Home Assistant: un piccolo hub e il tuo telefono.
+Dashboard Zigbee2MQTT veloce. Controlla casa da ovunque, senza abbonamento.

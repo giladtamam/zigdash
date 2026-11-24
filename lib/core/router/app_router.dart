@@ -6,6 +6,7 @@ import '../../data/database/tables/panels.dart';
 import '../../alerts/alert_editor_screen.dart';
 import '../../alerts/alerts_screen.dart';
 import '../../engine/automations_screen.dart';
+import '../../features/chat/chat_screen.dart';
 import '../../features/nfc/nfc_tags_screen.dart';
 import '../../features/share_home/join_home_screen.dart';
 import '../../features/share_home/share_home_screen.dart';
@@ -16,6 +17,7 @@ import '../../features/hub_backup/hub_backup_screen.dart';
 import '../../features/connections/screens/connection_form_screen.dart';
 import '../../features/guided_connect/guided_connect_screen.dart';
 import '../../features/onboarding/setup/ha_connect_screen.dart';
+import '../../features/onboarding/setup/ha_link.dart';
 import '../../features/onboarding/setup/no_hub_screen.dart';
 import '../../features/onboarding/setup/setup_screen.dart';
 import '../../features/dashboards/screens/dashboard_form_screen.dart';
@@ -35,7 +37,7 @@ import '../../features/support/assistant_panel.dart' show AssistantHandoff;
 import '../../features/support/get_help_screen.dart';
 import '../../shortcuts/shortcut_tile_picker.dart';
 import '../analytics/analytics_events.dart'
-    show HelpFrom, NoHubFrom, RemoteFrom;
+    show HaAddressFrom, HelpFrom, NoHubFrom, RemoteFrom;
 import '../../features/settings/screens/home_settings_screen.dart';
 import '../../features/settings/screens/language_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
@@ -96,6 +98,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) =>
             JoinHomeScreen(code: state.uri.queryParameters['c']),
       ),
+      // A ZigDash connect link (ha-link.md), opened by the camera app or
+      // the browser: taken in once, then on to the sign-in or setup.
+      GoRoute(
+        path: Routes.haLink,
+        redirect: (_, state) => ref.read(haLinksProvider).route(state.uri),
+      ),
       GoRoute(
         path: '/pair-phone',
         builder: (_, state) =>
@@ -133,9 +141,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (_, state) => _slideUp(
               HaConnectScreen(
                 initialHost: state.uri.queryParameters['host'],
-                shared: state.uri.queryParameters['from'] == 'shared',
+                arrivedFrom: const {
+                  'shared': HaAddressFrom.shared,
+                  'link': HaAddressFrom.link,
+                  'referrer': HaAddressFrom.referrer,
+                }[state.uri.queryParameters['from']],
                 again: state.uri.queryParameters['again'],
                 offWifi: state.uri.queryParameters['wifi'] == 'off',
+                highlightPaste: state.uri.queryParameters['paste'] == '1',
               ),
             ),
           ),
@@ -360,6 +373,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: 'ha-import',
                 builder: (_, state) =>
                     HaImportScreen(connectionId: state.pathParameters['id']!),
+              ),
+              GoRoute(
+                path: 'chat',
+                builder: (_, state) =>
+                    ChatScreen(connectionId: state.pathParameters['id']!),
               ),
               GoRoute(
                 path: 'nfc-tags',

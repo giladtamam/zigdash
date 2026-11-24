@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tapparella smart con un SONOFF MINI-ZBRBS e Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Un modulo Zigbee SONOFF MINI-ZBRBS dietro l'interruttore della tapparella, cablato tenendo il vecchio interruttore. Materiale, cablaggio, abbinamento con Zigbee2MQTT, calibrazione e un riquadro tapparella in ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Tapparella smart con un SONOFF MINI-ZBRBS e Zigbee2MQTT">
+<meta property="og:description" content="Un piccolo modulo Zigbee dietro l'interruttore della tapparella: l'interruttore a muro funziona ancora, e la tapparella si apre da ZigDash. Materiale, cablaggio, abbinamento e calibrazione.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/it/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Configurazione</a>
+    <a href="../../hubs/">Hub</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Aiuto</a>
+    <a href="https://t.me/zigdash_app">Comunità</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Come ho reso smart la mia tapparella con un SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, lo sviluppatore di ZigDash · 21 novembre 2026</p>
+<p class="byline">Anche in: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">La tapparella del mio ufficio ha un motore elettrico e un normale interruttore su/giù a muro. Ho messo un SONOFF MINI-ZBRBS, un piccolo modulo Zigbee per tapparelle, nella scatola a incasso dietro quell'interruttore. L'interruttore a muro funziona esattamente come prima, e ora la tapparella si apre e si chiude anche da un riquadro in ZigDash, a casa e da ovunque.</p>
+
+<div class="toc"><strong>In questa pagina</strong>
+<ul>
+  <li><a href="#how">Come funziona</a></li>
+  <li><a href="#need">Cosa ti serve</a></li>
+  <li><a href="#wire">1. Cablare il modulo</a></li>
+  <li><a href="#pair">2. Abbinarlo a ZigDash</a></li>
+  <li><a href="#mode">3. Dirgli che tipo di interruttore hai</a></li>
+  <li><a href="#calibrate">4. Calibrare</a></li>
+  <li><a href="#tile">5. Un riquadro tapparella in ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Come funziona</h2>
+<p>Il motore di una tapparella ha due fili di alimentazione: uno la fa salire, l'altro scendere. L'interruttore a muro manda la fase a uno dei due. Il MINI-ZBRBS si mette in mezzo: i due fili del motore vanno alle sue uscite (<strong>Lout1</strong> e <strong>Lout2</strong>), e il vecchio interruttore va ai suoi ingressi (<strong>S1</strong> e <strong>S2</strong>). Quando premi l'interruttore, il modulo aziona il motore. Quando ZigDash lo chiede via Zigbee, aziona il motore anche lui.</p>
+<p>Il modulo sa anche dove si trova la tapparella, quindi puoi mandarla al 50% invece che solo tutta su o tutta giù. E dato che è alimentato da rete, funziona come router Zigbee e rende la tua rete più forte.</p>
+
+<h2 id="need">Cosa ti serve</h2>
+<ul>
+  <li><strong>Un SONOFF MINI-ZBRBS</strong> (interruttore Zigbee per tapparelle). Zigbee2MQTT lo supporta come modello <code>MINI-ZBRBS</code>.</li>
+  <li><strong>Un motore per tapparelle con i suoi finecorsa</strong>: il solito motore tubolare a quattro fili (neutro, su, giù, terra) che si ferma da solo in alto e in basso. SONOFF dichiara il modulo per motori fino a <strong>1&nbsp;A</strong>, e il modulo ferma il motore da solo dopo 2 minuti nella stessa direzione.</li>
+  <li><strong>Un filo di neutro nella scatola dell'interruttore.</strong> Il modulo ha bisogno del neutro per alimentarsi.</li>
+  <li><strong>Spazio nella scatola</strong> dietro l'interruttore. SONOFF consiglia una scatola profonda almeno 60&nbsp;mm.</li>
+  <li><strong>Morsetti a leva</strong> (io ho usato un WAGO 221) e qualche spezzone di filo.</li>
+  <li><strong>Un hub Zigbee2MQTT</strong> a casa. Se non ne hai ancora uno, vedi <a href="../../hubs/">Hub</a>.</li>
+  <li><strong>ZigDash</strong> sul telefono (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Comandare la tapparella da casa è gratis. Comandarla da ovunque usa il controllo remoto di ZigDash Pro: un acquisto una tantum, senza abbonamento.</li>
+</ul>
+
+<div class="tip"><strong>Togli la corrente dall'interruttore automatico prima di aprire l'interruttore a muro.</strong> Nella scatola ci sono 230V. Se non ti senti a tuo agio a lavorare sulla rete elettrica, fai fare il cablaggio a un elettricista. SONOFF consiglia un interruttore automatico da 1&nbsp;A (MCB o RCBO) a monte del modulo.</div>
+
+<h2 id="wire">1. Cablare il modulo</h2>
+<p>Il modulo ha sei morsetti, stampati sopra: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (su) e <strong>S2</strong> (giù). Non ha un morsetto di terra. Ecco come ho cablato il mio:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Morsetto</th><th>Va a</th><th>Nella mia scatola</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Neutro</td><td>I fili blu di neutro, uniti in un WAGO 221, con un filo corto da lì a N (vedi la nota sotto sul suo colore)</td></tr>
+    <tr><th>L</th><td>Fase</td><td>La fase che alimenta la scatola</td></tr>
+    <tr><th>Lout1</th><td>Motore: su (SONOFF lo chiama «forward»)</td><td>Il filo nero del motore</td></tr>
+    <tr><th>Lout2</th><td>Motore: giù («reverse»)</td><td>Il filo marrone del motore</td></tr>
+    <tr><th>S1</th><td>L'uscita su dell'interruttore</td><td>Una delle uscite del vecchio interruttore</td></tr>
+    <tr><th>S2</th><td>L'uscita giù dell'interruttore</td><td>L'altra uscita del vecchio interruttore</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Il vecchio interruttore resta.</strong> Il suo morsetto comune riceve la fase, come prima. Le sue due uscite non vanno più al motore: vanno a S1 e S2, e dicono al modulo in che direzione muovere. <strong>S1 e S2 sono ingressi a tensione di rete</strong>, non a bassa tensione: alimenta il comune dell'interruttore dalla stessa fase, sullo stesso interruttore automatico, di L.</p>
+<p><strong>Terra:</strong> lascia la terra giallo-verde del motore collegata alla terra della scatola, com'era. Non va al modulo.</p>
+<p><strong>Su e giù:</strong> i colori dei fili sono diversi in ogni casa. Prima di scollegare l'interruttore, annota quale filo del motore era alimentato dalla sua uscita su, e segnalo: quello va a Lout1. Se li inverti, il passo 4 spiega come rimediare.</p>
+<div class="tip"><strong>Usa un filo blu (o grigio) per il ponticello del neutro.</strong> Avevo a portata di mano solo del rosso, quindi nelle mie foto il filo corto dal WAGO a N è rosso, con un puntalino blu dal lato del modulo. Il rosso di solito indica la fase, e chi aprirà questa scatola la prossima volta non dovrebbe dover indovinare. Se usi un altro colore, segnalo con nastro blu a entrambe le estremità.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Due fili blu di neutro e un filo rosso uniti in un morsetto a leva WAGO 221 arancione; il filo rosso va al morsetto N del modulo SONOFF" loading="lazy" width="675" height="900"><figcaption>Neutro: i neutri blu della scatola in un WAGO 221, e un filo rosso corto da lì all'N del modulo.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="Il retro del vecchio interruttore della tapparella con tre fili rossi nei suoi morsetti" loading="lazy" width="810" height="690"><figcaption>Il vecchio interruttore della tapparella, mantenuto: la fase entra nel suo comune, e le sue uscite su e giù ora vanno a S1 e S2. Quale morsetto sia il comune cambia da interruttore a interruttore; controlla il tuo prima di scollegarlo.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="La scatola a muro aperta con l'interruttore estratto e il SONOFF MINI-ZBRBS cablato: due fili rossi dall'interruttore a S1 e S2, i fili marrone e nero del motore a Lout2 e Lout1, la fase a L e il neutro a N" loading="lazy" width="640" height="1124"><figcaption>Tutto cablato, prima di rimetterlo nel muro. Da sinistra sul modulo: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Controlla che ogni morsetto a vite sia ben stretto. Per ora lascia il modulo fuori dalla scatola, con i morsetti rivolti dalla parte opposta alla tua: lo abbinerai nel passo successivo.</p>
+
+<h2 id="pair">2. Abbinarlo a ZigDash</h2>
+<p>Per l'abbinamento il modulo deve essere alimentato e bisogna premere il suo pulsante, quindi è l'unico momento in cui lavori vicino a una scatola sotto tensione. Premi solo il pulsante, con un attrezzo di plastica (il retro di una penna), e non toccare nient'altro. Appoggia il modulo su qualcosa che non conduce, senza che tocchi il telaio metallico dell'interruttore.</p>
+<ol>
+  <li>In ZigDash, apri <strong>Dispositivi</strong> e tocca <strong>Avvia abbinamento</strong>.</li>
+  <li>Riattiva l'interruttore automatico. Tieni premuto il pulsante del modulo per circa <strong>5 secondi</strong>, finché il suo LED blu lampeggia lentamente. Resta in modalità abbinamento fino a 3 minuti.</li>
+  <li>ZigDash mostra il nuovo dispositivo. Dagli un nome che riconoscerai, come <strong>Tapparella ufficio</strong>.</li>
+  <li>Spegni l'interruttore automatico. Ripiega i fili, metti il modulo dietro l'interruttore, chiudi la scatola e riattiva l'interruttore automatico. Tutto il resto si fa dal telefono e dalla pagina web di Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. Dirgli che tipo di interruttore hai</h2>
+<p>Il modulo deve sapere come si comporta il tuo interruttore a muro:</p>
+<ul>
+  <li><strong>Un interruttore a bilanciere che resta</strong> su, spento o giù (come il mio): modalità <code>edge</code>.</li>
+  <li><strong>Un pulsante</strong> che torna indietro quando lo lasci: modalità <code>pulse</code>.</li>
+</ul>
+<p>Il modo più semplice è la pagina web di Zigbee2MQTT: apri il dispositivo, vai alla sua scheda <strong>Exposes</strong> e imposta <code>external_trigger_mode</code> su <code>edge</code> o <code>pulse</code>. (Può farlo anche il pulsante del modulo: una tripla pressione rapida passa al tipo di interruttore successivo e il LED lampeggia tre volte; potrebbe essere necessario ripeterla. Questo vuol dire riaprire la scatola, quindi io ho usato Zigbee2MQTT.)</p>
+<p>Poi porta l'interruttore a muro su, spento e giù: la tapparella dovrebbe muoversi e fermarsi come ha sempre fatto. Se non lo fa, la modalità è sbagliata; imposta l'altra.</p>
+
+<h2 id="calibrate">4. Calibrare</h2>
+<p>Il modulo impara quanto tempo impiega la tapparella a salire e scendere del tutto. Senza questo, può aprire e chiudere, ma non può andare a una posizione come il 50%.</p>
+<ol>
+  <li>Nella pagina web di Zigbee2MQTT, nella scheda <strong>Exposes</strong> del dispositivo, imposta <code>motor_travel_calibration_action</code> su <code>start_automatic</code>.</li>
+  <li>Lascialo andare: la tapparella va fino in fondo in una direzione, poi nell'altra. Non toccare l'interruttore mentre lo fa. Quando ha finito, <code>motor_travel_calibration_status</code> mostra <code>Calibrated</code>.</li>
+</ol>
+<p>(Sul modulo stesso, tenere premuto il pulsante per più di 10 secondi, finché il LED «respira», avvia la stessa calibrazione.) Se la calibrazione automatica non finisce (con un motore debole, per esempio), sia SONOFF sia Zigbee2MQTT descrivono una calibrazione manuale: segni tu le posizioni tutta aperta e tutta chiusa.</p>
+<p><strong>Su e giù invertiti?</strong> Spegni l'interruttore automatico, scambia i fili su <strong>Lout1</strong> e <strong>Lout2</strong>, poi calibra di nuovo. L'opzione <code>invert_cover</code> di Zigbee2MQTT inverte solo la posizione che riporta; non cambia il verso in cui gira il motore.</p>
+
+<h2 id="tile">5. Un riquadro tapparella in ZigDash</h2>
+<ol>
+  <li>Sulla tua dashboard, tocca <strong>Aggiungi da un dispositivo</strong> e scegli la tapparella.</li>
+  <li>Il riquadro ha i pulsanti <strong>Apri</strong>, <strong>Stop</strong> e <strong>Chiudi</strong>, e una fila di posizioni preimpostate (0, 25, 50, 100 di default). Puoi attivare un cursore di posizione nelle impostazioni del riquadro.</li>
+  <li><strong>Da ovunque:</strong> con ZigDash Pro, attiva il controllo remoto e lo stesso riquadro funziona anche fuori casa, senza aprire porte sul router e senza canone mensile.</li>
+</ol>
+<p>L'interruttore a muro e l'app funzionano fianco a fianco: l'interruttore c'è ancora per chi non ha l'app, e il riquadro continua a funzionare sia che la tapparella sia stata mossa l'ultima volta a mano sia dal telefono.</p>
+
+<div class="tip">SONOFF è un marchio del suo proprietario. ZigDash non è affiliato a SONOFF né a ITEAD. Segui il manuale fornito con il tuo modulo e le norme elettriche locali.</div>
+
+<div class="tip"><strong>L'hai fatto anche tu?</strong> Raccontami com'è andata, o cosa c'era di diverso nella tua scatola: <a href="mailto:support@zigdash.app">support@zigdash.app</a> o <a href="https://t.me/zigdash_app">la comunità</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">Scarica ZigDash</a><a class="btn" href="../../hubs/">Scegli un hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Codice sorgente</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Informativa sulla privacy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

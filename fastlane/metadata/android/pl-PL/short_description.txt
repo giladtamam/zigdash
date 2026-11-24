@@ -1,1 +1,1 @@
-Panel dla Zigbee2MQTT. Bez Home Assistant: mały hub i Twój telefon.
+Szybki panel Zigbee2MQTT. Steruj domem z dowolnego miejsca, bez abonamentu.

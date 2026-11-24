@@ -7,6 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mqtt_client/mqtt_client.dart' as mc;
+import 'package:zigdash/features/ha_import/ha_import_offer.dart';
+import 'package:zigdash/features/zha_move/zha_move.dart';
 import 'package:zigdash/core/router/routes.dart';
 import 'package:zigdash/core/storage/secure_storage.dart';
 import 'package:zigdash/data/database/daos/connection_dao.dart';
@@ -20,7 +22,8 @@ import 'package:zigdash/features/discovery/models/z2m_device.dart';
 import 'package:zigdash/features/discovery/providers/discovery_provider.dart';
 import 'package:zigdash/features/guided_connect/guided_connect_screen.dart';
 import 'package:zigdash/features/onboarding/first_run.dart';
-import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart' show Z2mFetchResult;
+import 'package:zigdash/features/onboarding/setup/setup_coordinator.dart'
+    show Z2mFetchResult;
 import 'package:zigdash/l10n/app_localizations.dart';
 import 'package:zigdash/mqtt/broker_config.dart';
 import 'package:zigdash/mqtt/mqtt_manager.dart';
@@ -256,7 +259,10 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.textContaining('Using Home Assistant? The host'), findsOneWidget);
+    expect(
+      find.textContaining('Using Home Assistant? The host'),
+      findsOneWidget,
+    );
     expect(find.text('Still stuck? Get help'), findsOneWidget);
 
     await tester.tap(find.text('Test & connect'));
@@ -513,10 +519,76 @@ void main() {
     );
   });
 
+  // 3.8: a Container user moving from ZHA connects here, straight to
+  // Mosquitto. With devices, the import is offered and the move ends; with
+  // none paired yet (room by room), the move goes on.
+  testWidgets('3.8: moving from ZHA, with devices: import offered, move ends', (
+    tester,
+  ) async {
+    _tall(tester);
+    await _prefs.setInt(zhaMovingAtKey, DateTime.now().millisecondsSinceEpoch);
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    await tester.pumpWidget(
+      _wrap(
+        db: db,
+        diagnostics: _FakeDiagnostics([_successReport()]),
+        extraOverrides: {'devices': _devicesOverride},
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Test & connect'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue to dashboard'));
+    await tester.pumpAndSettle();
+    expect(_prefs.getString(HaImportOffer.key), isNotNull);
+    expect(_prefs.getBool(HaImportOffer.zhaKey), isTrue);
+    expect(_prefs.getInt(zhaMovingAtKey), isNull);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets('3.8: moving from ZHA, nothing paired yet: the move goes on', (
+    tester,
+  ) async {
+    _tall(tester);
+    await _prefs.setInt(zhaMovingAtKey, DateTime.now().millisecondsSinceEpoch);
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final stubManager = _StubManager();
+    await tester.pumpWidget(
+      _wrap(
+        db: db,
+        diagnostics: _FakeDiagnostics([_successReport(count: 0)]),
+        extraOverrides: {
+          'mgr': mqttManagerProvider.overrideWith(
+            (ref, id) async => stubManager,
+          ),
+          'status': connectionStatusProvider.overrideWith(
+            (ref, id) => Stream.value(MqttStatus.connected),
+          ),
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Test & connect'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue to dashboard'));
+    await tester.pumpAndSettle();
+    // Offered all the same (devices will arrive in this home); the move
+    // is not over.
+    expect(_prefs.getString(HaImportOffer.key), isNotNull);
+    expect(_prefs.getBool(HaImportOffer.zhaKey), isTrue);
+    expect(_prefs.getInt(zhaMovingAtKey), isNotNull);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
   // 3.2.1: an empty broker is checked for Zigbee2MQTT before a home is saved.
   Future<AppDatabase> runEmpty(
     WidgetTester tester, {
-    required Future<Z2mFetchResult> Function(BrokerConfig, String, String) check,
+    required Future<Z2mFetchResult> Function(BrokerConfig, String, String)
+    check,
     Future<List<Z2mDevice>?> Function(String)? page,
   }) async {
     _tall(tester);
@@ -528,7 +600,8 @@ void main() {
         diagnostics: _FakeDiagnostics([_successReport(count: 0)]),
         extraOverrides: {
           'check': guidedZ2mCheckProvider.overrideWithValue(check),
-          if (page != null) 'page': guidedPageDevicesProvider.overrideWithValue(page),
+          if (page != null)
+            'page': guidedPageDevicesProvider.overrideWithValue(page),
           'devices': _devicesOverride,
         },
       ),
@@ -544,7 +617,8 @@ void main() {
   ) async {
     final db = await runEmpty(
       tester,
-      check: (_, __, ___) async => const Z2mFetchResult(detected: false, devices: []),
+      check: (_, __, ___) async =>
+          const Z2mFetchResult(detected: false, devices: []),
     );
     expect(find.byKey(const Key('guided-empty-broker')), findsOneWidget);
     expect(find.text('No Zigbee2MQTT here'), findsOneWidget);
@@ -563,7 +637,11 @@ void main() {
         bases.add(base);
         return base == 'z2m'
             ? const Z2mFetchResult(detected: true, devices: [])
-            : const Z2mFetchResult(detected: false, devices: [], otherBases: ['z2m']);
+            : const Z2mFetchResult(
+                detected: false,
+                devices: [],
+                otherBases: ['z2m'],
+              );
       },
     );
     expect(bases, ['zigbee2mqtt', 'z2m']);
@@ -577,10 +655,16 @@ void main() {
   ) async {
     final db = await runEmpty(
       tester,
-      check: (_, __, ___) async =>
-          const Z2mFetchResult(detected: true, devices: [], devicesMissing: true),
+      check: (_, __, ___) async => const Z2mFetchResult(
+        detected: true,
+        devices: [],
+        devicesMissing: true,
+      ),
     );
-    expect(find.text("Zigbee2MQTT didn't send its device list"), findsOneWidget);
+    expect(
+      find.text("Zigbee2MQTT didn't send its device list"),
+      findsOneWidget,
+    );
     expect(await db.select(db.connections).get(), isEmpty);
   });
 
@@ -589,11 +673,19 @@ void main() {
   ) async {
     final db = await runEmpty(
       tester,
-      check: (_, __, ___) async =>
-          const Z2mFetchResult(detected: true, devices: [], devicesMissing: true),
+      check: (_, __, ___) async => const Z2mFetchResult(
+        detected: true,
+        devices: [],
+        devicesMissing: true,
+      ),
       page: (_) async => parseBridgeDevices(
         jsonEncode([
-          {'friendly_name': 'lamp', 'ieee_address': '0x02', 'type': 'Router', 'supported': true},
+          {
+            'friendly_name': 'lamp',
+            'ieee_address': '0x02',
+            'type': 'Router',
+            'supported': true,
+          },
         ]),
       ),
     );

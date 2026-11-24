@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>With Home Assistant · ZigDash</title>
-<meta name="description" content="Use ZigDash with Home Assistant's Mosquitto and Zigbee2MQTT add-ons: make a user, connect, and import your names and rooms.">
+<meta name="description" content="Use ZigDash with Home Assistant: sign in once and ZigDash reaches Zigbee2MQTT through it, at home or away. Or connect to the Mosquitto broker app directly.">
 <link rel="canonical" href="https://zigdash.app/home-assistant/">
 <link rel="icon" href="../assets/icon.png">
 <meta property="og:title" content="With Home Assistant · ZigDash">
-<meta property="og:description" content="Use ZigDash with Home Assistant's Mosquitto and Zigbee2MQTT add-ons: make a user, connect, and import your names and rooms.">
+<meta property="og:description" content="Use ZigDash with Home Assistant: sign in once and ZigDash reaches Zigbee2MQTT through it, at home or away. Or connect to the Mosquitto broker app directly.">
 <meta property="og:url" content="https://zigdash.app/home-assistant/">
 <meta property="og:image" content="https://zigdash.app/assets/01-dashboard.jpg">
 <link rel="stylesheet" href="../assets/site.css">
@@ -27,14 +27,16 @@
 <main>
 <article class="doc">
 <h1>ZigDash with Home Assistant</h1>
-<p class="lead">ZigDash shows the devices that Zigbee2MQTT runs. On Home Assistant that means the Mosquitto broker add-on and the Zigbee2MQTT add-on. Your automations stay in Home Assistant and keep running.</p>
+<p class="lead">ZigDash shows the devices that Zigbee2MQTT runs. On Home Assistant that means the Mosquitto broker app and the Zigbee2MQTT app (Home Assistant called them add-ons until 2026). Your automations stay in Home Assistant and keep running.</p>
 
-<div class="tip"><strong>New in ZigDash 2.10:</strong> sign in to Home Assistant once and ZigDash connects through it, at home or away. No broker address, no MQTT user. See <a href="#through">Connect through Home Assistant</a>.</div>
+<div class="tip"><strong>The easy way:</strong> sign in to Home Assistant once and ZigDash connects through it, at home or away. No broker address, no MQTT user. See <a href="#through">Connect through Home Assistant</a>.</div>
 
-<div class="tip"><strong>Using ZHA?</strong> ZHA is Home Assistant's own Zigbee and doesn't use MQTT, so ZigDash can't show those devices. ZigDash is for Zigbee2MQTT.</div>
+<div class="tip"><strong>New to Home Assistant?</strong> See <a href="../start-home-assistant-zigbee/">Starting Home Assistant with Zigbee</a>: the hardware, and the steps from an empty Home Assistant to ZigDash.</div>
 
-<h2>1. Check the two add-ons</h2>
-<p>In Home Assistant, open Settings › Add-ons and check that both are installed and <strong>started</strong>:</p>
+<div class="tip"><strong>Using ZHA?</strong> ZHA is Home Assistant's own Zigbee and doesn't use MQTT, so ZigDash can't show those devices. ZigDash is for Zigbee2MQTT. See <a href="../zha/">Moving from ZHA</a>.</div>
+
+<h2>1. Check the two apps</h2>
+<p>In Home Assistant, open Settings › Apps (Settings › Add-ons on older versions) and check that both are installed and <strong>started</strong>:</p>
 <ul>
   <li><strong>Mosquitto broker</strong>: the MQTT broker.</li>
   <li><strong>Zigbee2MQTT</strong>: with your devices paired. Its configuration should point at the Mosquitto broker (the default on Home Assistant).</li>
@@ -44,21 +46,21 @@
 <p>Your phone talks to Home Assistant, and Home Assistant talks to the broker. That works wherever you can open Home Assistant, your home Wi-Fi or your remote link included.</p>
 <ol>
   <li>In ZigDash, tap <strong>Find my setup</strong>. On the result, choose <strong>Home Assistant</strong>, then <strong>Connect through Home Assistant</strong>. (It's also under manual entry.)</li>
-  <li>Type the address you open Home Assistant with: <code>192.168.1.20:8123</code>, <code>homeassistant.local:8123</code>, or your remote address like <code>https://xyz.ui.nabu.casa</code>.</li>
+  <li>Give ZigDash the address you open Home Assistant with. Easiest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon, and pick ZigDash; or copy it there and tap <strong>Paste</strong> in ZigDash. You can also type it: <code>192.168.1.20:8123</code>, <code>homeassistant.local</code>, or a remote address like <code>https://xyz.ui.nabu.casa</code>. New installs of Home Assistant open on port 80, and ZigDash tries both. On a computer instead? <a href="../connect/">Make a code</a> with the address and scan it with your phone.</li>
   <li>Tap <strong>Sign in with Home Assistant</strong>. Home Assistant's own login page opens in your browser; ZigDash never sees your password. If that page refuses (Home Assistant without internet), paste a long-lived access token instead: in Home Assistant, your profile › Security › Create token.</li>
 </ol>
-<p>It needs two things: your Home Assistant user must be an <strong>administrator</strong> (Home Assistant only lets administrators use its MQTT), and Home Assistant must have the <strong>MQTT integration</strong> set up (it is, when the Mosquitto add-on is installed the usual way). ZigDash tells you if either is missing.</p>
+<p>It needs two things: your Home Assistant user must be an <strong>administrator</strong> (Home Assistant only lets administrators use its MQTT), and Home Assistant must have the <strong>MQTT integration</strong> set up (it is, when the Mosquitto broker app is installed the usual way). ZigDash tells you if either is missing.</p>
 <p>ZigDash keeps the sign-in on your phone, in the same secure storage as passwords, and uses it only for MQTT. To end it, delete the home in ZigDash, or remove ZigDash under your profile › Security in Home Assistant.</p>
 
 <h2>3. Or connect to the broker directly</h2>
-<p>The way ZigDash worked before 2.10: your phone connects to the Mosquitto add-on itself. It needs your phone on the same network as Home Assistant, and an MQTT login.</p>
+<p>The older way: your phone connects to the Mosquitto broker app itself. It needs your phone on the same network as Home Assistant, and an MQTT login.</p>
 <h3>Make a user for ZigDash</h3>
-<p>The Mosquitto add-on accepts Home Assistant users. Most people make one just for MQTT:</p>
+<p>The Mosquitto broker app accepts Home Assistant users. Most people make one just for MQTT:</p>
 <ol>
   <li>Settings › People › Users › <strong>Add user</strong>. (Turn on Advanced mode in your profile if you don't see Users.)</li>
   <li>Give it a name like <code>zigdash</code> and a password. It doesn't need to be an administrator.</li>
 </ol>
-<p>You can also use your own Home Assistant login, or a login set in the Mosquitto add-on's options.</p>
+<p>You can also use your own Home Assistant login, or a login set in the Mosquitto broker app's options.</p>
 
 <h3>Connect</h3>
 <ol>
@@ -67,7 +69,7 @@
   <li>When it asks for a login, enter the user you made.</li>
 </ol>
 <div class="tip"><code>homeassistant.local</code> doesn't work on every Android phone. Use the number address: Home Assistant shows it under Settings › System › Network. For this direct way, a remote link such as Nabu Casa or DuckDNS doesn't work; if that's all you have, connect through Home Assistant instead.</div>
-<p>The Mosquitto add-on checks each login with Home Assistant, which can take a few seconds on a Raspberry Pi. If ZigDash says the broker didn't answer the login, try again.</p>
+<p>The Mosquitto broker app checks each login with Home Assistant, which can take a few seconds on a Raspberry Pi. If ZigDash says the broker didn't answer the login, try again.</p>
 
 <h2>4. Optional: bring your names and rooms</h2>
 <p>In ZigDash, Settings › <strong>Import from Home Assistant</strong> reads the names and rooms you gave your devices in Home Assistant, and can make a dashboard for each room. It reads them once and keeps nothing else from Home Assistant.</p>
@@ -76,7 +78,7 @@
 </article>
 </main>
 <footer>
-  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></p>
 </footer>
 <script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>

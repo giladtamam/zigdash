@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comment j'ai remplacé mon abonnement PalGate par un relais Zigbee à $10 · ZigDash</title>
+<meta name="description" content="Mon portail s'ouvrait via un PalGate Spider-50 à ₪300 par an. Je l'ai remplacé par un relais Zigbee à contact sec payé $10 une seule fois, et j'ouvre maintenant le portail depuis ZigDash, à la maison et de n'importe où. Matériel, câblage et appairage.">
+<link rel="canonical" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/gate/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/gate/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/gate/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/gate/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/gate/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/gate/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/gate/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/gate/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/gate/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/gate/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Comment j'ai remplacé mon abonnement PalGate par un relais Zigbee à $10">
+<meta property="og:description" content="₪300 par an pour un ouvre-portail, ou $10 une seule fois. Matériel, câblage et appairage, avec l'application ZigDash.">
+<meta property="og:url" content="https://zigdash.app/gate/fr/">
+<meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Installation</a>
+    <a href="../../hubs/">Passerelles</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Aide</a>
+    <a href="https://t.me/zigdash_app">Communauté</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Comment j'ai remplacé mon abonnement PalGate par un relais Zigbee à $10</h1>
+<p class="byline">Gilad Tamam, le développeur de ZigDash · 18 novembre 2026</p>
+<p class="byline">Aussi en : <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Le portail de mon allée s'ouvrait depuis le téléphone via un PalGate Spider-50 : un boîtier 4G avec sa propre carte SIM, et un abonnement de ₪300 par an. Je l'ai retiré et j'ai mis à la place un relais Zigbee qui a coûté $10 (environ ₪37), une seule fois. Maintenant j'ouvre le portail depuis une tuile dans ZigDash, à la maison et de n'importe où.</p>
+
+<p class="cost"><strong>₪300 chaque année</strong> pour l'abonnement, ou <strong>environ ₪37 une seule fois</strong> pour le relais. Le relais s'est rentabilisé en six semaines environ.</p>
+
+<div class="toc"><strong>Sur cette page</strong>
+<ul>
+  <li><a href="#how">Comment un téléphone ouvre un portail</a></li>
+  <li><a href="#need">Ce qu'il vous faut</a></li>
+  <li><a href="#pair">1. Appairer le relais avec ZigDash</a></li>
+  <li><a href="#spider">2. Retirer le Spider</a></li>
+  <li><a href="#wire">3. Câbler le relais</a></li>
+  <li><a href="#tile">4. Une tuile Portail dans ZigDash</a></li>
+  <li><a href="#trade">Ce à quoi vous renoncez</a></li>
+</ul></div>
+
+<h2 id="how">Comment un téléphone ouvre un portail</h2>
+<p>Une carte de commande de portail a une entrée d'<strong>ouverture</strong> (ou de démarrage) : deux bornes qui ouvrent le portail quand on les relie entre elles, exactement comme le bouton d'une télécommande de portail. Le Spider est un relais avec une carte SIM. Quand l'application PalGate ou un appel téléphonique le lui demande, il relie ces deux bornes un court instant.</p>
+<p>Un relais Zigbee fait le même travail. La seule différence, c'est qui lui dit de se fermer : votre propre passerelle Zigbee à la maison, au lieu d'un service mobile que vous payez chaque année.</p>
+
+<div class="photos">
+  <figure><img src="../../assets/gate/spider.jpg" alt="Le boîtier PalGate Spider-50 dans une main, à côté de la carte de commande du portail" loading="lazy" width="675" height="900"><figcaption>Le PalGate Spider-50 que j'ai retiré.</figcaption></figure>
+  <figure><img src="../../assets/gate/controller.jpg" alt="La carte de commande du portail avec son bornier et ses fils" loading="lazy" width="675" height="900"><figcaption>La carte de commande du portail. Deux de ces fils forment son entrée d'ouverture.</figcaption></figure>
+</div>
+
+<h2 id="need">Ce qu'il vous faut</h2>
+<ul>
+  <li><strong>Un relais Zigbee à contact sec.</strong> Le mien est un "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" acheté sur AliExpress, environ $10. Il est vendu en version WiFi et en version Zigbee : choisissez <strong>Zigbee</strong> (la carte porte un module ZT3L). Il est aussi vendu pour différentes tensions d'alimentation ; j'ai pris la version <strong>AC 85–250V</strong>.</li>
+  <li><strong>Le contact sec, c'est le point important.</strong> Un contact sec est un simple interrupteur sans tension propre : il relie seulement COM à NO, exactement comme le bouton d'une télécommande. Un relais qui envoie de la tension sur ses bornes (le genre fait pour allumer une lampe) peut endommager l'entrée de la carte de commande du portail. Cherchez "dry contact" et des bornes marquées <strong>COM</strong>, <strong>NO</strong> et <strong>NC</strong>.</li>
+  <li><strong>Une passerelle Zigbee2MQTT à la maison</strong> qui atteint le portail. J'en avais déjà une (une SMLIGHT SMHUB) pour le reste de la maison. Sinon, consultez <a href="../../hubs/">Passerelles</a>.</li>
+  <li><strong>ZigDash</strong> sur votre téléphone (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Ouvrir le portail à la maison est gratuit. L'ouvrir de n'importe où passe par le contrôle à distance de ZigDash Pro : un achat unique, sans abonnement.</li>
+</ul>
+
+<figure><img src="../../assets/gate/zigbee-relay.jpg" alt="La carte du relais Zigbee : bornes d'alimentation à gauche, le module Zigbee ZT3L au milieu, le relais et ses bornes COM/NO/NC à droite" loading="lazy" width="675" height="900"><figcaption>Le relais Zigbee sorti de son boîtier : l'alimentation à gauche, le module Zigbee ZT3L, le bouton d'appairage, et les bornes à contact sec du relais à droite.</figcaption></figure>
+
+<h2 id="pair">1. Appairer le relais avec ZigDash</h2>
+<p>Appairez-le d'abord à la maison, sur la table, avant qu'il n'aille dans le coffret du portail.</p>
+<ol>
+  <li>Alimentez le relais.</li>
+  <li>Dans ZigDash, ouvrez <strong>Appareils</strong> et touchez <strong>Lancer l'appairage</strong>.</li>
+  <li>Maintenez le <strong>bouton</strong> du relais enfoncé jusqu'à ce que sa LED clignote. Il passe alors en mode appairage.</li>
+  <li>ZigDash affiche <strong>Prêt</strong> avec le nouvel appareil. Renommez-le <strong>Portail</strong>.</li>
+</ol>
+<p>Allumez-le et éteignez-le plusieurs fois et écoutez le clic du relais.</p>
+
+<h2 id="spider">2. Retirer le Spider</h2>
+<div class="tip"><strong>Coupez d'abord l'alimentation du portail au disjoncteur.</strong> Le coffret du portail contient du 230V. Si vous n'êtes pas à l'aise avec le secteur, faites faire les étapes 2 et 3 par un électricien. Ne touchez pas aux capteurs de sécurité du portail (cellules photoélectriques) ni aux fins de course.</div>
+<ol>
+  <li>Repérez les deux fils qui vont de la sortie relais du Spider (<strong>COM1</strong> et <strong>N.O.1</strong>) à l'entrée d'ouverture de la carte de commande du portail. Marquez-les.</li>
+  <li>Dévissez le bornier du Spider et débranchez l'alimentation du Spider.</li>
+</ol>
+<figure><img src="../../assets/gate/spider-wires.jpg" alt="Le bornier vert du Spider avec les fils marron, bleu et noir" loading="lazy" width="675" height="900"><figcaption>Le bornier du Spider, débranché. La paire marron et bleu va à l'entrée d'ouverture du portail.</figcaption></figure>
+
+<h2 id="wire">3. Câbler le relais</h2>
+<ol>
+  <li><strong>Sortie :</strong> les deux fils de l'entrée d'ouverture vont sur les bornes <strong>COM</strong> et <strong>NO</strong> du relais. Laissez NC libre. Sur un contact sec, l'ordre n'a pas d'importance.</li>
+  <li><strong>Alimentation :</strong> la version AC 85–250V se branche directement sur le secteur, comme un chargeur de téléphone : deux fils, phase et neutre, depuis l'alimentation 230V du portail.</li>
+  <li>Refermez le boîtier du relais, placez-le à l'abri de l'humidité, et réenclenchez le disjoncteur.</li>
+</ol>
+<div class="tip"><strong>Signal :</strong> le portail est souvent le point le plus éloigné de la passerelle. Dans ZigDash, ouvrez la page de l'appareil du relais et vérifiez le signal. S'il est faible, un appareil Zigbee alimenté sur secteur entre la maison et le portail (une prise connectée, par exemple) étend le réseau.</div>
+
+<h2 id="tile">4. Une tuile Portail dans ZigDash</h2>
+<ol>
+  <li>Sur votre tableau de bord, touchez <strong>Ajouter depuis un appareil</strong> et choisissez <strong>Portail</strong>.</li>
+  <li>Touchez la tuile : le relais se ferme et le portail se met en mouvement, comme avec la télécommande.</li>
+  <li>L'entrée d'ouverture du portail attend un appui sur un bouton, donc un contact qui reste fermé peut compter comme un appui long. Vérifiez ce que fait votre portail, et éteignez à nouveau la tuile si besoin.</li>
+  <li><strong>De n'importe où :</strong> avec ZigDash Pro, activez le contrôle à distance et la même tuile fonctionne loin de la maison, sans port ouvert sur votre box et sans abonnement mensuel. Il fonctionne sur cinq téléphones au maximum ; <strong>Partager avec un autre téléphone</strong> ajoute les téléphones de la famille avec un seul QR code.</li>
+</ol>
+
+<h2 id="trade">Ce à quoi vous renoncez</h2>
+<p>Pour être juste envers le Spider, il fait des choses qu'un relais Zigbee ne fait pas :</p>
+<div class="compare">
+<table class="even">
+  <thead><tr><th></th><th>PalGate Spider</th><th>Relais Zigbee + ZigDash</th></tr></thead>
+  <tbody>
+    <tr><th>Coût</th><td>₪300 par an (mon forfait)</td><td>Environ ₪37 une seule fois ; le contrôle à distance est un achat unique de ZigDash Pro</td></tr>
+    <tr><th>Connexion</th><td>Sa propre SIM 4G : fonctionne même quand la maison n'a pas internet</td><td>Votre passerelle Zigbee à la maison ; hors de la maison, il faut l'internet de la maison</td></tr>
+    <tr><th>Qui peut ouvrir</th><td>Utilisateurs et invités gérés dans l'application PalGate, et ouverture par appel téléphonique</td><td>Les téléphones avec lesquels vous partagez la maison (jusqu'à cinq à distance)</td></tr>
+    <tr><th>Cloud</th><td>Le service de PalGate</td><td>Aucun à la maison ; à distance, tout passe par le serveur relais de ZigDash, chiffré de bout en bout</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Pour une maison individuelle où la famille ouvre un seul portail, le relais fait tout ce dont j'avais besoin. Pour un immeuble avec beaucoup de résidents et de visiteurs, un service géré comme PalGate reste pertinent.</p>
+
+<div class="tip">PalGate est une marque de son propriétaire. ZigDash n'est pas affilié à PalGate ni à PAL Electronics Systems. Les prix sont ceux que j'ai payés en novembre 2026.</div>
+
+<div class="tip"><strong>Vous l'avez fait aussi ?</strong> Dites-moi comment ça s'est passé, ou ce qui était différent sur votre portail : <a href="mailto:support@zigdash.app">support@zigdash.app</a> ou <a href="https://t.me/zigdash_app">la communauté</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Obtenir ZigDash</a><a class="btn" href="../../hubs/">Choisir une passerelle</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Code source</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Politique de confidentialité</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

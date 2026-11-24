@@ -25,7 +25,11 @@
   "languageFrench": "Français",
   "connectionsTitle": "Huizen",
   "connLoadFailed": "Laden mislukt: {error}",
-  "@connLoadFailed": { "placeholders": { "error": {} } },
+  "@connLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "connAddBroker": "Broker toevoegen",
   "connEmpty": "Nog geen verbindingen.\nTik op „Broker toevoegen” om ZigDash op je MQTT-server te richten.",
   "connNew": "Nieuwe verbinding",
@@ -43,9 +47,19 @@
   "connRescan": "Opnieuw scannen",
   "connBrokerNeedsLogin": "Inloggen vereist",
   "connFindBrokersScanning": "Scannen van {subnet}…",
-  "@connFindBrokersScanning": { "placeholders": { "subnet": {} } },
+  "@connFindBrokersScanning": {
+    "placeholders": {
+      "subnet": {}
+    }
+  },
   "connFindBrokersFound": "{count} broker(s) gevonden — tik om te gebruiken",
-  "@connFindBrokersFound": { "placeholders": { "count": { "type": "int" } } },
+  "@connFindBrokersFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "connFindBrokersNone": "Geen brokers gevonden op je wifi.",
   "connFindBrokersNoIp": "Je wifi-adres kon niet worden gelezen. Zorg dat wifi aanstaat en probeer het opnieuw.",
   "connHelpTitle": "Het IP-adres van je broker vinden",
@@ -54,7 +68,7 @@
   "connHelpSmhubTitle": "SMLIGHT SMHUB",
   "connHelpSmhubBody": "Het broker-IP is het IP-adres van de hub. Open de webpagina van de hub (smhub.local): op het Dashboard staat het in het vak Network naast IPv4. De app van je router toont de hub ook als SMHUB. De poort is 1883, standaard zonder gebruikersnaam/wachtwoord.",
   "connHelpZhaTitle": "Home Assistant ZHA",
-  "connHelpZhaBody": "ZHA heeft geen MQTT-broker — het praat rechtstreeks met Home Assistant, dus ZigDash kan er niet mee verbinden. Wil je ZigDash gebruiken, stap dan over op Zigbee2MQTT (beschikbaar als Home Assistant-app of Docker-container), dat een MQTT-broker meebrengt.",
+  "connHelpZhaBody": "ZHA heeft geen MQTT-broker — het praat rechtstreeks met Home Assistant, dus ZigDash kan er niet mee verbinden. Wil je ZigDash gebruiken, stap dan over op Zigbee2MQTT (beschikbaar als Home Assistant-app of Docker-container), dat werkt met een MQTT-broker zoals Mosquitto.",
   "connHelpSameNetwork": "Je telefoon en de broker moeten op hetzelfde wifi-netwerk zitten (geen gast- of geïsoleerd VLAN).",
   "connRemoteHost": "Externe host (Tailscale)",
   "connRemoteHostHint": "Wordt gebruikt wanneer de lokale host niet bereikbaar is. Gebruik bij voorkeur het Tailscale-IP van de hub, bijv. 100.x.y.z",
@@ -74,23 +88,28 @@
   "cancel": "Annuleren",
   "connDeleteTitle": "Verbinding verwijderen?",
   "connDeleteContent": "Verwijdert „{name}”, de dashboards/panelen en het opgeslagen wachtwoord.",
-  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "@connDeleteContent": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "statusDisconnected": "Verbroken",
   "statusConnecting": "Verbinden…",
   "statusConnected": "Verbonden",
   "statusReconnecting": "Opnieuw verbinden…",
   "statusError": "Fout",
   "statusConnectedRemote": "Verbonden · Extern",
-
   "dashPlaceholder": "Open een broker via het tabblad Brokers om de dashboards te bekijken en beheren.",
-
   "dashAddDashboard": "Dashboard toevoegen",
   "dashEditDashboard": "Dashboard bewerken",
   "dashAddPanel": "Paneel toevoegen",
   "dashEmpty": "Nog geen dashboards.\nTik op „Dashboard toevoegen” om er een voor deze broker te maken.",
   "dashLoadFailed": "Fout: {error}",
-  "@dashLoadFailed": { "placeholders": { "error": {} } },
-
+  "@dashLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "panelPickerTitle": "Paneel toevoegen",
   "panelPickerSectionControl": "Bediening",
   "panelPickerSectionState": "Status",
@@ -124,7 +143,6 @@
   "panelPickerProgressSubtitle": "Numerieke balk voor batterij, verbindingskwaliteit, enz.",
   "panelPickerTextLogTitle": "Tekstlogboek",
   "panelPickerTextLogSubtitle": "Doorlopende berichtgeschiedenis op een topic",
-
   "dashExportMenu": "Dashboards exporteren",
   "dashImportMenu": "Dashboards importeren",
   "dashExportTitle": "Dashboards exporteren",
@@ -135,10 +153,19 @@
   "dashImportHint": "Plak hier geëxporteerde JSON",
   "dashImportButton": "Importeren",
   "dashImportSuccess": "{count,plural, =1{1 dashboard geïmporteerd} other{{count} dashboards geïmporteerd}}",
-  "@dashImportSuccess": { "placeholders": { "count": { "type": "int" } } },
+  "@dashImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "dashImportFailed": "Importeren mislukt: {error}",
-  "@dashImportFailed": { "placeholders": { "error": {} } },
-
+  "@dashImportFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashFormNew": "Nieuw dashboard",
   "dashFormEdit": "Dashboard bewerken",
   "dashFormName": "Naam",
@@ -154,12 +181,18 @@
   "dashDeleteTitle": "Dit dashboard verwijderen?",
   "dashDeleteContent": "Alle panelen eronder worden ook verwijderd.",
   "dashDeleteConfirm": "Verwijderen",
-
   "panelFormNew": "Nieuw {type}",
-  "@panelFormNew": { "placeholders": { "type": {} } },
+  "@panelFormNew": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelFormEdit": "{type} bewerken",
-  "@panelFormEdit": { "placeholders": { "type": {} } },
-
+  "@panelFormEdit": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelTypeButton": "Knop",
   "panelTypeToggle": "Schakelaar",
   "panelTypeSlider": "Schuifregelaar",
@@ -176,10 +209,13 @@
   "panelTypeAutoClose": "Auto-sluiten",
   "panelTypeDevice": "Apparaat",
   "panelTypeReading": "Meetwaarde",
-
   "panelFormName": "Naam",
   "panelFormDashboardPrefix": "Dashboard-voorvoegsel: {prefix}/ (gebruikt tenzij hieronder overschreven)",
-  "@panelFormDashboardPrefix": { "placeholders": { "prefix": {} } },
+  "@panelFormDashboardPrefix": {
+    "placeholders": {
+      "prefix": {}
+    }
+  },
   "panelFormTopicPrefixOverride": "Topic-voorvoegsel overschrijven (optioneel)",
   "panelFormTopicPrefixOverrideHint": "zigbee2mqtt/rolluik",
   "panelFormTopicPrefixOverrideHelper": "Een ander apparaat op dit dashboard gebruiken. Leeg = dashboard-voorvoegsel gebruiken.",
@@ -199,14 +235,12 @@
   "panelFormQos1": "1 — minstens één keer",
   "panelFormQos2": "2 — precies één keer",
   "panelFormRetain": "Retain",
-
   "panelToggleOnPayload": "Aan-payload",
   "panelToggleOffPayload": "Uit-payload",
   "panelToggleJsonPath": "JSON-pad (optioneel)",
   "panelToggleJsonPathHint": "state",
   "panelToggleOnMatch": "Aan-matching",
   "panelToggleOnMatchHelper": "Waarde op het JSON-pad die „aan” betekent (bijv. „ON”)",
-
   "panelSliderMin": "Min",
   "panelSliderMax": "Max",
   "panelSliderStep": "Stap",
@@ -214,9 +248,7 @@
   "panelSliderTemplateHelper": "Gebruik het woord value als placeholder — het wordt vervangen door de schuifwaarde",
   "panelSliderJsonPath": "JSON-pad (optioneel)",
   "panelSliderJsonPathHint": "brightness",
-
   "panelButtonPayload": "Payload",
-
   "panelLedJsonPath": "JSON-pad (optioneel)",
   "panelLedJsonPathHint": "contact",
   "panelLedJsonPathHelper": "bijv. „contact”, „occupancy”, „water_leak”",
@@ -226,12 +258,10 @@
   "panelLedOnLabelHint": "ON",
   "panelLedOffLabel": "Uit-label (optioneel)",
   "panelLedOffLabelHint": "OFF",
-
   "panelNodeOnlinePayload": "Online-payload",
   "panelNodeOnlinePayloadHelper": "Waarde die „online” betekent (Z2M-standaard: „online”)",
   "panelNodeJsonPath": "JSON-pad (optioneel)",
   "panelNodeJsonPathHelper": "Leeg laten voor de Z2M-standaard (ruwe „online”/„offline”-string)",
-
   "panelProgressMin": "Min",
   "panelProgressMax": "Max",
   "panelProgressUnit": "Eenheid",
@@ -239,7 +269,6 @@
   "panelProgressJsonPath": "JSON-pad (optioneel)",
   "panelProgressJsonPathHint": "battery",
   "panelProgressJsonPathHelper": "bijv. „battery”, „linkquality”",
-
   "panelOptionsJsonPath": "JSON-pad (optioneel)",
   "panelOptionsJsonPathHint": "state",
   "panelOptionsJsonPathHelper": "Veld in de ontvangen payload dat de huidige waarde bevat",
@@ -248,24 +277,20 @@
   "panelOptionsPayload": "Payload",
   "panelOptionsMatch": "Matching (huidige waarde)",
   "panelOptionsAdd": "Optie toevoegen",
-
   "panelCoverDescription": "OPEN-/STOP-/DICHT-knoppen plus een rij positievoorinstellingen. Gebruikt de standaard Z2M-rolluik-payloads (state en position).",
   "panelCoverPresets": "Positievoorinstellingen",
   "panelCoverPresetsHint": "0, 25, 50, 100",
   "panelCoverPresetsHelper": "Kommascheiding, percentages (0–100). Leeg = geen voorinstellingenrij.",
   "panelCoverShowSlider": "Positieregelaar tonen",
-
   "panelTextInputHint": "Hint (optioneel)",
   "panelTextInputHintHint": "Typ een waarde…",
   "panelTextInputTemplate": "Sjabloon",
   "panelTextInputTemplateHelper": "Gebruik het woord value als placeholder — het wordt vervangen door de getypte tekst. Standaard wordt de ruwe tekst gepubliceerd.",
   "panelTextInputClearAfterSend": "Leegmaken na verzenden",
-
   "panelTextLogMaxLines": "Max. regels",
   "panelTextLogMaxLinesHelper": "Hoeveel recente berichten worden bewaard",
   "panelTextLogJsonPath": "JSON-pad (optioneel)",
   "panelTextLogJsonPathHelper": "Alleen dit veld loggen in plaats van de hele payload",
-
   "panelScheduleDescription": "Draait op de SMHUB via Node-RED — ook als deze telefoon uitstaat. Het publicatie-topic hierboven is het doel voor rolluikcommando's.",
   "panelScheduleOpenTime": "Opentijd",
   "panelScheduleCloseTime": "Sluitijd",
@@ -273,7 +298,6 @@
   "panelScheduleClosePayload": "Sluit-payload",
   "panelScheduleEnabled": "Ingeschakeld",
   "panelScheduleSavedOffline": "Opgeslagen — niet verbonden; het schema wordt gesynchroniseerd zodra online.",
-
   "panelAutoCloseDescription": "Draait op de SMHUB via Node-RED — ook als deze telefoon uitstaat. Het publicatie-topic hierboven is het commando-doel van het apparaat (bijv. deur).",
   "panelAutoCloseTriggerPath": "Trigger-JSON-pad",
   "panelAutoCloseTriggerPathHelper": "Veld in de status-JSON van het apparaat om te volgen (standaard: state)",
@@ -284,49 +308,57 @@
   "panelAutoCloseDelaySecondsHelper": "1–3600. Tijd wachten nadat het apparaat aangaat voordat de sluit-payload wordt gepubliceerd.",
   "panelAutoCloseEnabled": "Ingeschakeld",
   "panelAutoCloseSavedOffline": "Opgeslagen — niet verbonden; de regel wordt gesynchroniseerd zodra online.",
-
   "panelTileEdit": "Paneel bewerken",
   "panelTileDuplicate": "Paneel dupliceren",
   "panelTileMoveUp": "Naar boven",
   "panelTileMoveDown": "Naar beneden",
   "panelTileDelete": "Paneel verwijderen",
-
   "panelCoverOpen": "Openen",
   "panelCoverStop": "Stoppen",
   "panelCoverClose": "Sluiten",
-
-  "panelToggleNoState": "(geen status)",
-  "panelToggleError": "fout",
-
   "panelStateOn": "ON",
   "panelStateOff": "OFF",
-
   "panelNodeStatusOnline": "online",
   "panelNodeStatusOffline": "offline",
   "panelNodeStatusUnknown": "onbekend",
   "panelNodeStatusError": "fout",
-
   "panelMultiStateNoOptions": "Geen opties geconfigureerd",
-
   "panelTextInputDefaultHint": "Typ een waarde…",
-
   "panelTextLogWaiting": "Wachten op berichten…",
-
   "panelScheduleOpensAt": "Opent {time}",
-  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "@panelScheduleOpensAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleClosesAt": "Sluit {time}",
-  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "@panelScheduleClosesAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleOfflineWarning": "Scheduler offline — draait niet",
   "panelScheduleDisabled": "Uitgeschakeld",
   "panelScheduleNext": "Volgende: {action} om {at}",
-  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "@panelScheduleNext": {
+    "placeholders": {
+      "action": {},
+      "at": {}
+    }
+  },
   "panelScheduleActionOpen": "openen",
   "panelScheduleActionClose": "sluiten",
   "panelAutoCloseIdle": "Inactief",
   "panelAutoCloseDisabled": "Uitgeschakeld",
   "panelAutoCloseOffline": "Automatisering offline — regel draait niet",
   "panelAutoCloseClosingIn": "Sluit over {seconds}s",
-  "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@panelAutoCloseClosingIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "panelAutoCloseClosingNow": "Sluiten…",
   "panelGridEmpty": "Nog geen tegels.\nTik op Tegel toevoegen om je apparaten hier te zetten.",
   "panelsOffline": "Offline — laatste waarden worden getoond",
@@ -336,7 +368,6 @@
   "connectionFailed": "Verbinding mislukt",
   "connectionAutomaticRetry": "Automatisch opnieuw proberen gaat door",
   "connectionReconnectNow": "Nu opnieuw verbinden",
-
   "settingsAbout": "Over",
   "settingsHelp": "Help & Handleiding",
   "settingsVersion": "Versie",
@@ -356,7 +387,6 @@
   "reportProblemEmailPrompt": "Wat gebeurde er, en wat verwachtte je?",
   "settingsBuyCoffee": "Trakteer me op een koffie",
   "settingsBuyCoffeeSubtitle": "Gratis & open source — fooien houden de koffie stromen.",
-
   "a11yBackupMenu": "Back-up & herstel",
   "a11ySelectColor": "Kleur selecteren",
   "a11ySelectIcon": "Pictogram selecteren",
@@ -365,9 +395,7 @@
   "a11yMoreOptions": "Meer opties",
   "a11yRefresh": "Vernieuwen",
   "a11yDeleteConnection": "Verbinding verwijderen",
-
   "controlNotConnected": "Niet verbonden — wijziging niet verzonden",
-
   "discoverFromDevice": "Toevoegen vanaf een apparaat…",
   "discoverFromDeviceSubtitle": "Een Zigbee2MQTT-apparaat automatisch detecteren",
   "discoverTitle": "Toevoegen vanaf apparaat",
@@ -391,19 +419,27 @@
     }
   },
   "previewNoValue": "(geen waarde op dit pad)",
-
   "connErrorTitle": "Verbindingsfout",
   "connErrorUnknown": "Geen foutdetails beschikbaar.",
   "connTestButton": "Verbinding testen",
   "connTestOk": "Verbinding geslaagd",
   "connTestFailed": "Verbinding mislukt: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } },
-
+  "@connTestFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "devicesTitle": "Apparaten",
   "devicesAddButton": "Apparaat toevoegen",
   "devicesPairingTitle": "Koppelen — druk op de knop van het apparaat",
   "devicesPairingHint": "Zoeken naar nieuwe apparaten… {seconds}s",
-  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "@devicesPairingHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "devicesPairingStop": "Stoppen",
   "devicesNone": "Geen apparaten gevonden.",
   "devicesListMissing": "Zigbee2MQTT heeft zijn apparatenlijst niet verstuurd. Dat kan gebeuren nadat de MQTT-broker opnieuw is gestart.",
@@ -414,38 +450,71 @@
   "devicesOnline": "Online",
   "devicesOffline": "Offline",
   "devicesPaired": "Klaar: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } },
+  "@devicesPaired": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "devicesPairedHint": "Toegevoegd aan je netwerk. Om het op een dashboard te zetten, gebruik je op dat dashboard „Toevoegen vanaf een apparaat”.",
   "scenesTitle": "Scènes",
   "scenesNone": "Nog geen scènes. Zet je apparaten naar wens en leg ze daarna vast als scène.",
   "scenesNewButton": "Nieuwe scène",
   "scenesActivated": "{name} geactiveerd",
-  "@scenesActivated": { "placeholders": { "name": {} } },
+  "@scenesActivated": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "scenesActivateOffline": "Niet verbonden — de scène kan niet worden geactiveerd",
   "sceneFormNewTitle": "Nieuwe scène",
   "sceneFormEditTitle": "Scène bewerken",
   "sceneFormNameLabel": "Scènenaam",
   "sceneFormDevicesHeader": "Apparaten om vast te leggen",
   "sceneFormCaptureHint": "De huidige instelbare status van elk geselecteerd apparaat (aan/uit, helderheid, kleur, positie…) wordt opgeslagen. Alleen-lezen waarden worden genegeerd.",
-  "sceneFormNoDevices": "Geen bestuurbare apparaten gevonden. Controleer of ze zijn gekoppeld en tik daarna op vernieuwen.",
+  "sceneFormNoDevices": "Geen bestuurbare apparaten of tegels gevonden. Controleer of ze zijn gekoppeld en tik daarna op vernieuwen.",
   "sceneFormReadingState": "Huidige status lezen…",
   "sceneCtrlPower": "Stroom",
   "sceneCtrlBrightness": "Helderheid",
   "sceneCtrlPosition": "Positie",
   "sceneFormSelectedCount": "{count} geselecteerd",
-  "@sceneFormSelectedCount": { "placeholders": { "count": { "type": "int" } } },
-  "sceneFormNoDevicesSelected": "Selecteer minstens één apparaat om vast te leggen.",
+  "@sceneFormSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sceneFormNoDevicesSelected": "Selecteer minstens één apparaat of tegel.",
   "sceneFormNothingCaptured": "Er kon niets instelbaars worden vastgelegd van de geselecteerde apparaten.",
+  "sceneFormTilesHeader": "Jouw tegels",
+  "sceneFormTilesHint": "Tegels die je zelf hebt gemaakt. De scène stuurt wat de tegel stuurt.",
+  "sceneTileHomeOnly": "Werkt alleen vanaf deze telefoon thuis: niet vanuit Automatiseringen of op afstand.",
+  "sceneFormKeptActions": "{count, plural, =1{1 andere actie blijft behouden} other{{count} andere acties blijven behouden}}",
+  "sceneFormRemoveKept": "Verwijderen",
   "sceneDeleteTitle": "Scène verwijderen?",
   "sceneDeleteMessage": "„{name}” wordt verwijderd. Apparaten behouden hun huidige status.",
-  "@sceneDeleteMessage": { "placeholders": { "name": {} } },
+  "@sceneDeleteMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "sceneEditAction": "Bewerken",
   "sceneDeleteAction": "Verwijderen",
   "sceneAddToDashboard": "Aan dashboard toevoegen",
   "sceneAddedToDashboard": "Toegevoegd aan {name}",
-  "@sceneAddedToDashboard": { "placeholders": { "name": {} } },
-  "sceneActionsCount": "{count} apparaten",
-  "@sceneActionsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneAddedToDashboard": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "sceneActionsCount": "{count, plural, =1{1 actie} other{{count} acties}}",
+  "@sceneActionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "scenesAllShutters": "Alle rolluiken",
   "sceneCloseAllShutters": "Alle rolluiken sluiten",
   "sceneOpenAllShutters": "Alle rolluiken openen",
@@ -459,11 +528,6 @@
   "panelPickerSceneSubtitle": "Eén tik activeert een opgeslagen scène",
   "panelSceneChoose": "Scène",
   "panelSceneMissing": "Scène niet gevonden — kies opnieuw",
-  "languageGerman": "Deutsch",
-  "languageDutch": "Nederlands",
-  "languageSwedish": "Svenska",
-  "languageNorwegian": "Norsk",
-  "languageSpanish": "Español",
   "guidedConnectTitle": "Broker instellen",
   "guidedConnectIntro": "We testen elke stap van de verbinding en tonen uw Zigbee-apparaten.",
   "guidedBaseTopic": "Basis-topic",
@@ -481,17 +545,24 @@
   "diagTcpTimeout": "Verbinding met de broker verliep te lang. Deze is mogelijk offline of niet bereikbaar.",
   "diagConnackFail": "De broker heeft de MQTT-handshake niet voltooid. Zorg dat het een MQTT-broker is (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "De broker antwoordde niet op tijd op de aanmelding. Home Assistant kan een paar seconden nodig hebben om die te controleren, probeer het opnieuw.",
+  "diagTlsUntrusted": "Je telefoon vertrouwt het versleutelingscertificaat van deze broker niet: het is zelfondertekend, verlopen of gemaakt voor een andere naam. ZigDash kan het nog niet gebruiken. Gebruik op je thuisnetwerk in plaats daarvan de onversleutelde poort 1883 van de broker, of geef de broker een certificaat van een publieke certificaatautoriteit.",
+  "diagTlsFailed": "De versleutelde verbinding kwam niet tot stand. De broker wil misschien een clientcertificaat, en dat ondersteunt ZigDash niet. Maak op je thuisnetwerk in plaats daarvan verbinding zonder versleuteling: TCP in plaats van TLS, meestal op poort 1883.",
   "diagAuthRejected": "De broker heeft gebruikersnaam of wachtwoord geweigerd. Controleer uw gegevens.",
   "diagAuthRefused": "De broker heeft de verbinding geweigerd. Controleer de verbindingsinstellingen.",
   "diagResolveLocalName": "Je telefoon kon deze naam niet vinden. Android kan namen die op .local eindigen vaak niet opzoeken; vul in plaats daarvan het IP-adres in (Home Assistant toont het onder Instellingen › Systeem › Netwerk).",
   "diagTcpHaNoBroker": "Dit is je Home Assistant, maar er draait geen MQTT-broker op. Installeer en start de app Mosquitto broker (Instellingen › Apps) en probeer het opnieuw.",
-  "diagResolveLocalNameIos": "Je telefoon kon deze naam niet vinden. Controleer of hij goed gespeld is, of vul in plaats daarvan het IP-adres in (Home Assistant toont het onder Instellingen › Systeem › Netwerk).",
   "diagTcpSmlightClosed": "Dit is je SMLIGHT-hub, maar de MQTT-broker erop accepteert geen verbindingen van andere apparaten. Open op de webpagina van de hub Settings › MQTT, zet Allow External aan, sla op en probeer het opnieuw.",
   "diagTcpZ2mBrokerElsewhere": "Op dit adres draait Zigbee2MQTT, maar het bereikt zijn broker onder een andere naam (zie Zigbee2MQTT › Settings › MQTT › Server). Is dat een andere machine, typ dan haar adres, meestal met poort 1883. Is het een container op deze machine, publiceer dan zijn poort (ports: \"1883:1883\") en laat hem op het netwerk luisteren; probeer het daarna opnieuw.",
   "diagTcpZ2mNoBroker": "Op dit adres draait Zigbee2MQTT, maar de MQTT-broker accepteert geen verbindingen van andere apparaten. Mosquitto luistert alleen op zijn eigen machine tot je de regels \"listener 1883\" en \"allow_anonymous true\" aan mosquitto.conf toevoegt (of een wachtwoord instelt). Herstart Mosquitto en probeer het opnieuw.",
   "diagAuthRejectedHa": "De broker van Home Assistant weigerde deze aanmelding. Gebruik de naam en het wachtwoord van een Home Assistant-gebruiker (Instellingen › Personen › Gebruikers); het liefst een aparte gebruiker alleen voor MQTT.",
   "foundDevices": "{count, plural, =1{1 apparaat gevonden} other{{count} apparaten gevonden}}",
-  "@foundDevices": { "placeholders": {"count": {"type": "int"}} },
+  "@foundDevices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "foundDevicesHint": "Uw Zigbee-apparaten zijn zichtbaar. Ga verder met uw dashboard.",
   "noDevicesTitle": "Verbonden – nog geen apparaten gevonden",
   "noDevicesHint": "ZigDash ziet de broker, maar heeft nog geen Zigbee-apparaten gevonden. U kunt het koppelen starten.",
@@ -502,7 +573,11 @@
   "guidedStuckTitle": "Vast? Vraag het een mens",
   "guidedStuckBody": "Twee pogingen zonder verbinding. Vertel ons welke hub je hebt en wat je hebt ingevuld, dan helpen we je hem te vinden.",
   "ladderTriedHint": "{count} adressen geprobeerd",
-  "@ladderTriedHint": { "placeholders": {"count": {}} },
+  "@ladderTriedHint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "guidedSaveFailed": "De verbinding kon niet worden opgeslagen. Probeer het opnieuw.",
   "setupWelcomeTitle": "Welkom bij ZigDash",
   "setupWelcomeHeadline": "Je Zigbee-huis, op je telefoon",
@@ -543,7 +618,7 @@
   "noHubPi": "Een Raspberry Pi of een andere Linux-machine",
   "noHubPiBody": "Installeer Zigbee2MQTT en de Mosquitto-broker zelf. Ongeveer een uur, met de handleiding van Zigbee2MQTT.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Voeg de add-ons Mosquitto broker en Zigbee2MQTT toe en meld je daarna vanuit ZigDash aan met je Home Assistant-login.",
+  "noHubHaBody": "Voeg de apps Mosquitto broker en Zigbee2MQTT toe (Instellingen › Apps) en meld je daarna vanuit ZigDash aan met je Home Assistant-login.",
   "noHubRadio": "Een Pi of Home Assistant heeft ook een Zigbee-adapter nodig, zoals een SLZB-06 of een Sonoff-dongle. De SMHUB heeft er een ingebouwd.",
   "noHubDemoNote": "Bekijk intussen hoe ZigDash werkt, met een voorbeeldhuis.",
   "noHubRemind": "Herinner me over een week",
@@ -567,7 +642,17 @@
   "engineNeedsBrokerTitle": "Automatiseringen hebben je MQTT-broker nodig",
   "engineNeedsBrokerBody": "Dit huis verbindt via de Zigbee2MQTT-pagina, genoeg voor je dashboards. Automatiseringen, meldingen en geschiedenis draaien in de ZigDash Engine op je hub, die via je MQTT-broker praat. Voer de gegevens één keer in, daarna verbindt ZigDash via de broker.",
   "engineNeedsBrokerButton": "Brokergegevens invoeren",
-  "connFromPageNote": "Dit huis verbindt via de Zigbee2MQTT-pagina. Voer je MQTT-broker in (meestal hetzelfde apparaat, poort 1883) om automatiseringen, meldingen en geschiedenis aan te zetten. Na opslaan verbindt ZigDash via de broker.",
+  "connFromPageNote": "Dit huis verbindt via de Zigbee2MQTT-pagina. Voer je MQTT-broker in (meestal hetzelfde apparaat, poort 1883) om automatiseringen, meldingen en geschiedenis aan te zetten. Zodra de broker je apparaten heeft, schakelt ZigDash ernaar over.",
+  "connBrokerNoDevices": "Verbonden, maar deze broker heeft geen van je apparaten. Heb je de broker net aangezet, herstart Zigbee2MQTT dan zodat het ermee verbindt.",
+  "connZ2mUses": "Zigbee2MQTT gebruikt {server}",
+  "connReadingZ2m": "Instellingen van Zigbee2MQTT lezen…",
+  "connKeepPageTitle": "De Zigbee2MQTT-pagina blijven gebruiken?",
+  "connKeepPageBodyEmpty": "Deze broker antwoordde, maar heeft geen van je apparaten, dus je dashboards zouden leeg zijn. Zigbee2MQTT gebruikt misschien een andere broker, of moet herstart worden nadat de broker aanging.",
+  "connKeepPageBodyNoAnswer": "De broker antwoordde niet, dus je dashboards zouden leeg zijn.",
+  "connKeepPageBodyRefused": "De broker weigerde de login, dus je dashboards zouden leeg zijn.",
+  "connKeepPage": "Zigbee2MQTT-pagina houden",
+  "connSaveAnyway": "Toch opslaan",
+  "connChecking": "Broker controleren…",
   "setupManualEntry": "Gegevens handmatig invoeren",
   "setupScanningTitle": "Verbinding zoeken…",
   "setupScanningHint": "Houd dit apparaat op hetzelfde lokale netwerk als je Zigbee2MQTT-host.",
@@ -581,7 +666,6 @@
   "reminderButton": "Herinner me morgen",
   "reminderSet": "We herinneren je morgen, op deze telefoon.",
   "reminderNoPermission": "Meldingen staan uit voor ZigDash, dus er komt geen herinnering. Je kunt ze aanzetten in de Android-instellingen.",
-  "reminderNoPermissionIos": "Meldingen staan uit voor ZigDash, dus er komt geen herinnering. Je kunt ze aanzetten in Instellingen › ZigDash › Meldingen.",
   "reminderChannel": "Herinnering voor instellen",
   "reminderTitle": "Rond het instellen van ZigDash af",
   "reminderBody": "Thuis op je wifi? Tik om het opnieuw te proberen: het duurt ongeveer een minuut.",
@@ -624,6 +708,15 @@
   "haPasteNothing": "Geen adres in wat je hebt gekopieerd.",
   "haSharedNote": "Dit is het adres dat je hebt gedeeld. Log in om te verbinden.",
   "haShareNothing": "Daar stond geen adres in. Open in de Home Assistant-app Instellingen › Companion-app, tik op je server en dan bovenaan op het deelpictogram.",
+  "haLinkNote": "Dit is het adres uit je link. Log in om te verbinden.",
+  "haLinkReferrerNote": "Dit is het adres uit de link die je opende voordat je ZigDash installeerde. Log in om te verbinden.",
+  "haLinkNothing": "Die link bevatte geen Home Assistant-adres. Maak een nieuwe op zigdash.app/connect.",
+  "haNoneComputer": "Een computer gebruiken",
+  "haComputerTitle": "Een computer gebruiken",
+  "haComputerBody": "Ga op een computer waarop Home Assistant open is naar deze pagina en plak daar het adres van Home Assistant. Scan daarna de code met de camera van deze telefoon.",
+  "haComputerCopy": "Link kopiëren",
+  "setupLinkPending": "Je link bracht een Home Assistant-adres mee. Tik op Home Assistant om het te gebruiken.",
+  "setupLinkPendingNothing": "Je link bevatte geen Home Assistant-adres. Maak een nieuwe op zigdash.app/connect.",
   "haHandoverShare": "Het snelst: open in de Home Assistant-app Instellingen › Companion-app, tik op je server, dan bovenaan op het deelpictogram, en kies ZigDash. Deel vanuit een browser de pagina met ZigDash.",
   "haHandoverCopy": "Het snelst: open in de Home Assistant-app Instellingen › Companion-app, tik op je server, dan bovenaan op het deelpictogram en op Link kopiëren. Kom terug en tik op Plakken.",
   "haConnectOtherNetwork": "Dat adres zit op een ander netwerk dan deze telefoon, die op {network} zit. Gebruik het adres dat je Home Assistant-app opent, vaak een extern adres, of verbind de telefoon met het netwerk van Home Assistant.",
@@ -632,6 +725,19 @@
   "setupNoWifiHa": "Gebruik je Home Assistant? Inloggen",
   "haConnectNotAdmin": "Je Home Assistant-gebruiker is geen beheerder. ZigDash heeft er een nodig voor de MQTT van Home Assistant. Meld je aan als beheerder, of plak een token dat een beheerder heeft aangemaakt.",
   "haConnectNoMqtt": "Deze Home Assistant heeft geen MQTT-integratie. Zigbee2MQTT heeft er ook een nodig: voeg in Home Assistant de app Mosquitto broker (Instellingen › Apps) en de MQTT-integratie toe en probeer het opnieuw.",
+  "haConnectZhaFound": "Je Zigbee draait in ZHA, de eigen Zigbee van Home Assistant ({count, plural, =1{1 apparaat} other{{count} apparaten}}). ZigDash werkt met Zigbee2MQTT en kan ze dus niet tonen. Overstappen naar Zigbee2MQTT betekent je apparaten opnieuw koppelen; de handleiding toont twee manieren.",
+  "haConnectZhaMove": "Overstappen van ZHA",
+  "haConnectNoMqttNoApps": "Deze Home Assistant heeft geen MQTT-integratie en geen apps (hij draait als container), dus Mosquitto en Zigbee2MQTT draaien als eigen containers ernaast. Draaien ze al, verbind ZigDash dan direct met Mosquitto. Of voeg in Home Assistant de MQTT-integratie toe en probeer het opnieuw.",
+  "haConnectNoAppsGuide": "Zo verbind je",
+  "zhaMoveBody": "ZigDash werkt met Zigbee2MQTT. Overstappen betekent je apparaten opnieuw koppelen. Home Assistant kan ze blijven gebruiken zodra je de MQTT-integratie toevoegt.",
+  "zhaMoveWaySecond": "Tweede adapter: kamer voor kamer, ZHA blijft draaien",
+  "zhaMoveWaySame": "Zelfde adapter: gratis, alles in één keer",
+  "zhaMoveReadSteps": "Lees de stappen",
+  "zhaMoveImMoving": "Ik stap over",
+  "zhaMoveNotNow": "Niet nu",
+  "zhaMovingNoted": "Genoteerd. Als Zigbee2MQTT draait, open dan de installatie: ZigDash vindt het en biedt je namen en kamers uit Home Assistant aan.",
+  "setupMovingTitle": "Verbind met je nieuwe Zigbee2MQTT",
+  "setupMovingBody": "Overstappen van ZHA? Zodra Zigbee2MQTT draait, zoekt ZigDash het op je netwerk.",
   "haConnectSignInFailed": "De aanmelding is niet voltooid. Probeer het opnieuw, of gebruik een langdurig token.",
   "setupHaShortcut": "Draait Zigbee2MQTT in Home Assistant? Sla de broker en zijn login over: meld je aan met je Home Assistant-beheerdersaccount. Dat werkt vanaf elk netwerk.",
   "haConnectButton": "Verbinden via Home Assistant",
@@ -707,6 +813,9 @@
   "setupErrLoginNoAnswerTitle": "De broker antwoordde niet op de aanmelding",
   "setupErrLoginNoAnswerBody": "Je broker is gevonden, maar hij antwoordde niet op tijd op de gebruikersnaam en het wachtwoord. De app Mosquitto broker van Home Assistant controleert logins bij Home Assistant, wat op een Raspberry Pi een paar seconden kan duren. Probeer het opnieuw en controleer dat deze gebruiker bestaat in Home Assistant. Op een SMLIGHT-hub zet je in plaats daarvan Allow Anonymous aan onder Settings › MQTT, dan is geen login nodig.",
   "setupErrLoginNoAnswerAction": "Opnieuw proberen",
+  "setupErrTlsUntrustedTitle": "Je telefoon vertrouwt het certificaat van deze broker niet",
+  "setupErrTlsFailedTitle": "Versleutelde verbinding mislukt",
+  "setupErrTlsAction": "Instellingen bewerken",
   "setupNoZ2mTitle": "Je broker werkt, maar Zigbee2MQTT publiceert hier niet",
   "setupNoZ2mBody": "We luisterden op {base}/bridge en hoorden niets.",
   "setupBaseTopicQuestion": "Een ander basistopic?",
@@ -723,30 +832,74 @@
   "setupZhaNote": "ZigDash toont apparaten uit Zigbee2MQTT en ziet dus geen apparaten in ZHA, de eigen Zigbee van Home Assistant. Probeer het demohuis om te zien hoe ZigDash werkt.",
   "setupPlatformNotSure": "Weet ik niet",
   "setupScanProgress": "{checked} van {total} adressen gecontroleerd",
-  "@setupScanProgress": {"placeholders": {"checked": {"type": "int"}, "total": {"type": "int"}}},
+  "@setupScanProgress": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "setupScanHintHa": "Zoeken naar Home Assistant en zijn MQTT-broker…",
   "setupScanHintSmlight": "Je SMHUB zoeken…",
   "setupScanHintPi": "Zoeken naar een MQTT-broker in je netwerk…",
   "setupHubSeenHa": "Home Assistant gevonden op {host}",
-  "@setupHubSeenHa": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenHa": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenZ2m": "Zigbee2MQTT gevonden op {host}",
-  "@setupHubSeenZ2m": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenZ2m": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenSmlight": "Je SMLIGHT-hub gevonden op {host}",
-  "@setupHubSeenSmlight": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenSmlight": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenHint": "Nog op zoek naar zijn MQTT-broker…",
   "setupNoBrokerHaTitle": "Home Assistant gevonden, maar geen MQTT-broker",
   "setupNoBrokerHaBody": "Home Assistant staat op {host}, maar niets antwoordt op MQTT-poort 1883. Open in Home Assistant Instellingen › Apps, installeer en start de app Mosquitto broker en probeer het opnieuw.",
-  "@setupNoBrokerHaBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerHaBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerHaZha": "Gebruik je de ingebouwde Zigbee van Home Assistant (ZHA) in plaats van Zigbee2MQTT? ZigDash werkt alleen met Zigbee2MQTT en ziet ZHA-apparaten dus niet. De demo laat zien wat je zou krijgen.",
   "setupNoBrokerHaDocker": "Geen Apps in de Instellingen van je Home Assistant? Dan draait het in Docker (Home Assistant Container), dat geen apps heeft: Mosquitto draait in een eigen container. Vul hieronder het adres in van de machine waarop die draait.",
   "setupVpnHint": "Er staat een VPN aan, en die kan je thuisnetwerk voor de scan verbergen. Ben je thuis, zet de VPN dan uit en tik op Opnieuw proberen. Of laat hem aan en sta in de instellingen van de VPN-app toegang tot het lokale netwerk (LAN) toe.",
-  "setupLocalNetworkIos": "ZigDash heeft toegang tot het lokale netwerk nodig om je hub te vinden. Heb je nee gezegd, sta het dan toe in Instellingen › Privacy en beveiliging › Lokaal netwerk.",
   "setupNoBrokerZ2mTitle": "Zigbee2MQTT gevonden, maar zijn broker is niet bereikbaar",
   "setupNoBrokerZ2mBody": "Zigbee2MQTT staat op {host}, maar zijn MQTT-broker accepteert geen verbindingen van je telefoon. Mosquitto 2 luistert alleen op de hub zelf totdat de configuratie 'listener 1883' en 'allow_anonymous true' (of een login) bevat. Herstart hem en probeer het opnieuw.",
-  "@setupNoBrokerZ2mBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerZ2mBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerSmlightTitle": "SMLIGHT-hub gevonden, maar MQTT staat uit",
   "setupNoBrokerSmlightBody": "Je hub staat op {host}, maar zijn MQTT-broker is niet bereikbaar. Open in de webinterface van de hub Settings › MQTT, zet Allow External aan en controleer of Zigbee2MQTT draait. Probeer het daarna opnieuw.",
-  "@setupNoBrokerSmlightBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerSmlightBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupZ2mAsking": "Zigbee2MQTT vragen waar zijn broker is…",
   "setupZ2mLocalOnlyTitle": "Je broker accepteert alleen verbindingen van zijn eigen machine",
   "setupZ2mLocalOnlyBody": "Zigbee2MQTT gebruikt {server}, en vanaf je telefoon antwoordt daar niets. Mosquitto 2 doet dit standaard. Voeg deze twee regels toe aan mosquitto.conf, herstart Mosquitto en probeer het opnieuw:",
@@ -756,7 +909,13 @@
   "setupZ2mTokenRequired": "De webpagina van Zigbee2MQTT is beveiligd met een token, dus de app kon niet lezen waar zijn broker is. Typ het broker-adres uit Zigbee2MQTT › Settings › MQTT.",
   "setupZ2mUnreachable": "Zigbee2MQTT gebruikt de broker op {server}, maar die antwoordde je telefoon niet. Controleer of de broker draait en je telefoon op hetzelfde netwerk zit.",
   "setupConnectTo": "Verbinden met {host}",
-  "@setupConnectTo": {"placeholders": {"host": {"type": "String"}}},
+  "@setupConnectTo": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNotFoundHa": "Geen Home Assistant gevonden op dit netwerk. Controleer of je telefoon op dezelfde wifi zit als Home Assistant (geen gastnetwerk) en probeer het opnieuw. Ken je het adres, vul het dan hieronder in.",
   "setupNotFoundSmlight": "Geen SMLIGHT-hub gevonden op dit netwerk. Controleer of de hub aanstaat en je telefoon op dezelfde wifi zit, en probeer het opnieuw. Ken je het adres, vul het dan hieronder in.",
   "setupNotFoundPi": "Geen MQTT-broker gevonden in dit netwerk. Controleer of Mosquitto draait en op het netwerk luistert (poort 1883) en of je telefoon op dezelfde wifi zit. Probeer het daarna opnieuw.",
@@ -770,9 +929,7 @@
   "setupAddressCheck": "Dit adres controleren",
   "setupAddressNothing": "Niets antwoordde op {host}. Controleer het adres, en of je telefoon op dezelfde wifi zit.",
   "setupAddressNotResolved": "{host} kon niet worden opgezocht. Namen die eindigen op .local werken op Android vaak niet; probeer het IP-adres. Home Assistant toont het onder Instellingen › Systeem › Netwerk.",
-  "setupAddressNotResolvedIos": "{host} kon niet worden opgezocht. Controleer de naam, of probeer het IP-adres. Home Assistant toont het onder Instellingen › Systeem › Netwerk.",
   "setupAddressNotResolvedHa": "{host} is vanaf deze telefoon niet te vinden; Android kan .local-namen vaak niet opzoeken. Tik hierboven op {button} en gebruik het adres waarmee je Home Assistant in de browser opent, of typ hier het IP-adres. Home Assistant toont het onder Instellingen › Systeem › Netwerk.",
-  "setupAddressNotResolvedHaIos": "{host} is vanaf deze telefoon niet te vinden. Tik hierboven op {button} en gebruik het adres waarmee je Home Assistant in de browser opent, of typ hier het IP-adres. Home Assistant toont het onder Instellingen › Systeem › Netwerk.",
   "setupAddressNotLocal": "{host} zit niet op je thuisnetwerk. Gebruik het adres dat op je wifi werkt, geen externe link zoals Nabu Casa of DuckDNS.",
   "setupAddressInvalid": "Vul eerst een adres in.",
   "setupChoicesTitle": "Welke past bij jou?",
@@ -785,7 +942,16 @@
   "setupChoiceOtherSub": "Een gastnetwerk of een tweede router",
   "setupChoiceOtherNote": "Je telefoon moet je hub kunnen bereiken. Een gastnetwerk, of een tweede router met eigen wifi, houdt ze gescheiden. Verbind met de wifi waarop je hub zit en tik op Opnieuw proberen. Of vul hieronder het IP-adres van de hub in, of probeer een van deze gebruikelijke namen:",
   "guidedHostYourPhone": "Je telefoon is {ip}, dus de hub begint meestal met {prefix}.",
-  "@guidedHostYourPhone": {"placeholders": {"ip": {"type": "String"}, "prefix": {"type": "String"}}},
+  "@guidedHostYourPhone": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      },
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
   "guidedHostHa": "Gebruik je Home Assistant? De host is het adres waarmee je Home Assistant opent, poort 1883.",
   "demoBannerText": "Je zit in demomodus",
   "demoBannerAction": "Verbind je huis",
@@ -982,7 +1148,13 @@
   "assistantTitle": "ZigDash-assistent",
   "assistantNotice": "Dit antwoord komt van een AI-dienst die je supportgegevens ziet. Hij heeft nooit je wachtwoorden of adressen nodig.",
   "assistantOpeningScan": "Je scan via {network} probeerde {hosts} adressen en vond {brokers} brokers.",
-  "@assistantOpeningScan": { "placeholders": { "network": {}, "hosts": {}, "brokers": {} } },
+  "@assistantOpeningScan": {
+    "placeholders": {
+      "network": {},
+      "hosts": {},
+      "brokers": {}
+    }
+  },
   "assistantOpeningRunningYes": "Je zei dat Zigbee2MQTT draait. Laten we het vinden.",
   "assistantOpeningRunningNotSure": "Je wist niet zeker of Zigbee2MQTT draait. Laten we dat uitzoeken.",
   "assistantOpeningGeneric": "Vertel wat je probeerde te doen, dan help ik je verbinden.",
@@ -998,9 +1170,24 @@
   "assistantHelpedNo": "Nee",
   "assistantTalkToPerson": "Praat met een persoon",
   "assistantHomeOpening": "{home} is verbonden en {count, plural, =0{geen apparaat meldt zich} =1{1 apparaat meldt zich} other{{count} apparaten melden zich}}. Waarmee kan ik helpen?",
-  "@assistantHomeOpening": { "placeholders": { "home": {"type": "String"}, "count": {"type": "int"} } },
+  "@assistantHomeOpening": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "assistantHomeOpeningOffline": "ZigDash bereikt {home} nu niet. Waarmee kan ik helpen?",
-  "@assistantHomeOpeningOffline": { "placeholders": { "home": {"type": "String"} } },
+  "@assistantHomeOpeningOffline": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      }
+    }
+  },
   "assistantChipDevice": "Een apparaat reageert niet meer",
   "assistantChipTile": "Een tegel toevoegen",
   "assistantChipAutomations": "Automatiseringen",
@@ -1047,7 +1234,6 @@
   "tipRestartZ2mBody": "Zijn er apparaten gekoppeld maar komt er geen binnen, start Zigbee2MQTT dan opnieuw zodat het zijn apparatenlijst publiceert.",
   "tipNumberAddressTitle": "Gebruik het cijferadres",
   "tipNumberAddressBody": "Namen die eindigen op .local werken niet op elke Android-telefoon. Probeer het cijferadres van de hub, zoals 192.168.1.20.",
-  "tipNumberAddressBodyIos": "Werkt de naam niet, probeer dan het cijferadres van de hub, zoals 192.168.1.20.",
   "tipPortProtocolTitle": "Poort en protocol",
   "tipPortProtocolBody": "TCP op 1883 is gebruikelijk. Kies TLS of WebSocket alleen als je broker daarvoor is ingesteld.",
   "tipManualLoginTitle": "Login",
@@ -1213,7 +1399,6 @@
   "wallKeepOnSubtitle": "Ze komen terug bij een aanraking en verdwijnen na 10 seconden weer.",
   "wallFullscreen": "Volledig scherm",
   "wallFullscreenSubtitle": "Verbergt ook de status- en navigatiebalk van Android.",
-  "wallFullscreenSubtitleIos": "Verbergt ook de statusbalk; de thuisindicator wordt gedimd.",
   "wallDimAfter": "Dimmen na",
   "wallDimOff": "Uit",
   "wallIdleTitle": "Als niemand het aanraakt",
@@ -1244,7 +1429,11 @@
   "wallNightFrom": "Van",
   "wallNightTo": "tot",
   "wallDimMinutes": "{minutes} min",
-  "@wallDimMinutes": { "placeholders": { "minutes": {} } },
+  "@wallDimMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
   "kioskLock": "Kioskvergrendeling",
   "kioskLockSubtitle": "Alleen de dashboards van dit huis en hun bediening blijven bereikbaar. Houd de titel ingedrukt om te stoppen.",
   "kioskPin": "Pincode",
@@ -1260,12 +1449,9 @@
   "kioskPinWrong": "Verkeerde pincode.",
   "kioskPinForgot": "Pincode vergeten?",
   "kioskPinForgotBody": "Een vergeten pincode kun je alleen herstellen door de gegevens van ZigDash te wissen in de Android-instellingen, wat dit huis verwijdert tenzij je een back-up hebt. Exporteer er een voordat je een pincode instelt.",
-  "kioskPinForgotBodyIos": "Een vergeten pincode kun je alleen herstellen door ZigDash te verwijderen en opnieuw te installeren, wat dit huis verwijdert tenzij je een back-up hebt. Exporteer er een voordat je een pincode instelt.",
   "kioskExportBackup": "Back-up exporteren",
   "kioskOsPin": "ZigDash ook vastzetten in Android",
   "kioskOsPinSubtitle": "Android blokkeert Home en recente apps tot ZigDash wordt losgemaakt. Een tablet zonder vergrendelscherm maakt het los met een gebaar, dus dit is niet de vergrendeling.",
-  "kioskGuidedAccessTitle": "Vastzetten op ZigDash met Begeleide toegang",
-  "kioskGuidedAccess": "iOS houdt ZigDash in beeld tot je Begeleide toegang beëindigt: zet het aan in Instellingen › Toegankelijkheid › Begeleide toegang en klik dan in ZigDash drie keer op de zijknop.",
   "kioskOn": "Kiosk aan. Houd de titel ingedrukt om te stoppen.",
   "kioskLeaveTitle": "Kiosk verlaten?",
   "kioskLeave": "Verlaten",
@@ -1294,14 +1480,16 @@
   "proGetWall": "Wandtablet: metingen op de klok, wakker worden bij beweging, een nachtschema en alarmen",
   "proGetFuture": "Elke Pro-functie die later komt, zonder extra kosten",
   "proFreeTitle": "Altijd gratis",
-  "proFreeBody": "Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.",
-  "proFreeBodyIos": "Instellen, dashboards, de bediening van elk apparaat, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.",
+  "proFreeBody": "Instellen, dashboards, de bediening van elk apparaat, widgets, snelle-instellingentegels, meldingen, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat vandaag gratis is, wordt betaald.",
   "proBuy": "Pro nemen",
   "proBuyPrice": "Pro nemen · {price}",
   "proOnce": "Eén betaling, geen abonnement. Gekocht op een andere telefoon met hetzelfde Google-account? Het wordt automatisch ontgrendeld.",
-  "proOnceIos": "Eén betaling, geen abonnement. Gekocht op een andere iPhone of iPad met hetzelfde Apple Account? Het wordt automatisch ontgrendeld, of tik op Aankoop herstellen.",
   "proRestore": "Aankoop herstellen",
-  "proRestoreNone": "Geen aankoop van ZigDash Pro gevonden voor deze Apple ID.",
+  "proRestored": "Pro is ontgrendeld op deze telefoon.",
+  "proRestoreNone": "Google Play heeft geen Pro-aankoop voor dit Google-account. Met een ander account gekocht? Wissel van account in de Play Store en probeer het opnieuw.",
+  "proRestoreFailed": "Google Play was niet bereikbaar. Probeer het zo opnieuw.",
+  "proRestoreNoneIos": "Geen aankoop van ZigDash Pro gevonden voor deze Apple ID.",
+  "proRestoreFailedIos": "De App Store was niet bereikbaar. Probeer het zo opnieuw.",
   "historyNotRecorded": "Alleen getallen die op een dashboard staan worden opgenomen. Voeg deze toe als tegel om de geschiedenis te starten.",
   "historyRecordHere": "Opnemen op dit apparaat",
   "historyRecordHereHint": "Kan ZigDash Engine niet op je hub? ZigDash kan vastleggen op een telefoon of tablet die open blijft, zoals een wandtablet. Elke telefoon van dit huis ziet de geschiedenis.",
@@ -1343,6 +1531,8 @@
   "haImportOpen": "Dashboards openen",
   "haImportOfferTitle": "Namen en ruimtes uit Home Assistant overnemen?",
   "haImportOfferBody": "Home Assistant staat op je netwerk. ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, zoals je ze daar hebt ingesteld.",
+  "haImportOfferBodyZha": "ZigDash kan je tegels een naam geven en een dashboard per verdieping en ruimte toevoegen, met de namen en ruimtes van je apparaten in Home Assistant, ook die uit ZHA.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT heeft nog geen apparaten. Koppel je apparaten daar eerst en open dan Importeren uit Home Assistant in de instellingen van dit huis.",
   "haImportOfferLater": "Niet nu",
   "haImportOfferGo": "Importeren",
   "haImportSignIn": "Inloggen met Home Assistant",
@@ -1366,11 +1556,6 @@
   "engineInstalling": "Installeren op de hub…",
   "engineTooOldTitle": "Zigbee2MQTT moet worden bijgewerkt",
   "engineTooOldBody": "Je Zigbee2MQTT is versie {version}. Automatiseringen hebben 2.4 of nieuwer nodig. Werk Zigbee2MQTT op de hub bij en kom dan hier terug.",
-  "engineIntroTitle": "Automatiseringen draaien op je hub, niet op je telefoon",
-  "engineIntroBody": "ZigDash zet ZigDash Engine in Zigbee2MQTT op je hub. Het let op je apparaten en voert je regels uit, zodat een lamp aangaat als de deur opengaat, ook met je telefoon uit en zonder internet.",
-  "engineIntroNothingByHand": "Niets met de hand te installeren. ZigDash doet het via je thuisnetwerk.",
-  "engineIntroVersion": "Je Zigbee2MQTT is versie {version}.",
-  "engineIntroRemove": "Je kunt hem altijd vanaf dit scherm verwijderen.",
   "engineInstall": "Installeren op de hub",
   "engineDeclinedTitle": "Geen automatiseringen op deze hub",
   "engineDeclinedBody": "Zigbee2MQTT op je hub staat geen uitbreidingen toe, dus niets kan je regels uitvoeren als je telefoon weg is. Scènes, meldingen en het dashboard werken als voorheen.",
@@ -1433,6 +1618,7 @@
   "autoErrTown": "Stel je plaats in voor zonsopkomst en zonsondergang.",
   "autoErrPickAction": "Kies wat er moet gebeuren.",
   "autoErrEmptyScene": "Die scène heeft niets te versturen.",
+  "autoSceneTilesSkipped": "{count, plural, =1{1 actie van deze scène werkt alleen vanaf deze telefoon thuis, niet vanuit Automatiseringen.} other{{count} acties van deze scène werken alleen vanaf deze telefoon thuis, niet vanuit Automatiseringen.}}",
   "autoErrNotConnected": "ZigDash is niet verbonden met dit huis. Probeer het thuis opnieuw.",
   "autoNewTitle": "Nieuwe automatisering",
   "autoEditTitle": "Automatisering bewerken",
@@ -1709,5 +1895,175 @@
   "proSaleNoEnd": "Actie: {percent}% korting",
   "proSaleEnded": "De actie is afgelopen. Dit is nu de prijs.",
   "saleCardRemote": "ZigDash Pro: bedien je huis overal vandaan, en meer.",
-  "saleCardHomeAssistant": "ZigDash Pro: langere geschiedenis, meer automatiseringen en meer."
+  "saleCardHomeAssistant": "ZigDash Pro: langere geschiedenis, meer automatiseringen en meer.",
+  "chatEarlyTitle": "Chat met je huis",
+  "chatEarlyBody": "Stuur een bericht als \"doe het rolluik in het kantoor dicht\" of \"staat de achterdeur open?\" en je huis antwoordt. Nu beschikbaar voor wie ZigDash Pro heeft. De eerste {count} aanmelders krijgen een oprichterscode: 3 maanden gratis, inclusief toegang op afstand.",
+  "chatEarlyTelegram": "Aanmelden via Telegram",
+  "chatEarlyEmail": "Aanmelden per e-mail",
+  "chatEarlyNotForMe": "Niets voor mij",
+  "chatEarlyClose": "Sluiten",
+  "chatEarlyEmailHint": "Je e-mail",
+  "chatEarlyBadEmail": "Dat lijkt geen e-mailadres.",
+  "chatEarlyEmailUse": "We gebruiken dit alleen om je uit te nodigen voor de bèta en je de prijs te laten weten.",
+  "chatEarlyPrivacy": "Privacy",
+  "chatEarlySend": "Versturen",
+  "chatEarlyFailed": "Versturen mislukt. Probeer Telegram, of later.",
+  "chatEarlyInFirst": "Je bent nr. {position} op de lijst: een van de eerste {count}. Je krijgt een oprichterscode: chat en toegang op afstand, 3 maanden gratis.",
+  "chatEarlyAfterFirst": "Je bent nr. {position} op de lijst. De eerste {count} plaatsen zijn bezet. Chat is nu beschikbaar voor wie ZigDash Pro heeft.",
+  "chatEarlyListed": "Dit e-mailadres staat al op de lijst.",
+  "chatEarlyPrice": "Zou € 2,49 per maand na de gratis maanden oké zijn?",
+  "chatEarlyYes": "Ja",
+  "chatEarlyMaybe": "Misschien",
+  "chatEarlyNo": "Nee",
+  "chatEarlyThanks": "Bedankt, genoteerd.",
+  "settingsChatEarlySubtitle": "Vroege toegang: meld je aan",
+  "historyOnTitle": "Zie je huis over dagen",
+  "historyOnBody": "Zet geschiedenis aan om temperaturen, verbruik en deuren over dagen en weken te zien, niet alleen nu. ZigDash Engine neemt op je hub op, ook als je telefoon uit staat.",
+  "historyOnTurnOn": "Geschiedenis aanzetten",
+  "historyOnLater": "Niet nu",
+  "historyOnWorking": "Geschiedenis wordt aangezet…",
+  "historyOnConsentBody": "ZigDash Engine neemt de geschiedenis op je hub op, dus het gaat door als je telefoon uit staat. Je Zigbee2MQTT blokkeert uitbreidingen, zoals nieuwe installaties: ZigDash zou \"Externe JavaScript toestaan\" aanzetten en het herstarten.",
+  "historyOnAllow": "Toestaan en herstarten",
+  "historyOnBrokerBody": "Geschiedenis loopt via je MQTT-broker. ZigDash bereikt dit huis via de pagina van Zigbee2MQTT, voeg dus eerst de broker toe.",
+  "historyOnAddBroker": "Broker toevoegen",
+  "historyOnPhoneBody": "Je hub kan ZigDash Engine niet draaien. Deze telefoon kan in plaats daarvan opnemen zolang ZigDash open is: het best op een wandtablet dat aan blijft.",
+  "historyOnPhone": "Op deze telefoon opnemen",
+  "proTrialStartedTitle": "Pro staat 14 dagen aan",
+  "proTrialOfferTitle": "Probeer ZigDash Pro 14 dagen gratis",
+  "proTrialWhat": "Geschiedenis van 7 en 30 dagen, de extra's voor de wandtablet en meer dan drie automatiseringen.",
+  "proTrialNoPayment": "Geen betaling, niets verlengt zich.",
+  "proTrialStart": "Proef starten",
+  "proTrialEndingTitle": "Je Pro-proef eindigt over 2 dagen",
+  "proTrialKeep": "Pro houden · {price}",
+  "proTrialUsedHistory": "de week- en maandgeschiedenis",
+  "proTrialUsedWall": "de wandtablet-extra's",
+  "proTrialUsedAutomation": "meer dan drie automatiseringen",
+  "proTrialYouUsed": "Je gebruikte {features}.",
+  "proTrialAfterEnd": "Daarna blijft alles wat je instelde; de week- en maandweergave en nieuwe automatiseringen na de derde vragen Pro.",
+  "proTrialDaysLeft": "{days, plural, =1{Proef: nog 1 dag} other{Proef: nog {days} dagen}}",
+  "proTrialEnded": "Je proef is voorbij. Alles wat je instelde, is er nog.",
+  "engineSlimCard": "Automatiseringen draaien op je hub met ZigDash Engine. ZigDash zet het daar zodra je je eerste opslaat.",
+  "engineAwayMakeAtHome": "Maak automatiseringen thuis: ZigDash zet zijn Engine dan via je thuisnetwerk op je hub.",
+  "engineSheetSource": "Bekijk de broncode op GitHub",
+  "engineSheetTitle": "ZigDash Engine voert je automatiseringen uit",
+  "engineSheetBody": "ZigDash Engine is één opensourcebestand dat ZigDash in de map van Zigbee2MQTT op je hub zet. Het voert daar je automatiseringen uit, ook met je telefoon uit. Verwijder het wanneer je wilt via het tabblad Automatiseringen.",
+  "engineSheetInstallSave": "Installeren en opslaan",
+  "engineSheetSaveOnly": "Opslaan zonder uitvoeren",
+  "engineSheetSave": "Opslaan",
+  "engineSheetNoAnswer": "Zigbee2MQTT op je hub antwoordde niet op tijd, dus ZigDash kan zijn Engine nu niet installeren. Sla nu op en installeer hem via het tabblad Automatiseringen zodra je hub antwoordt.",
+  "engineSheetSavedNotRunning": "Je automatisering is opgeslagen. Hij draait zodra ZigDash Engine op je hub staat.",
+  "engineWaitingTitle": "Eerder opgeslagen, wachten op ZigDash Engine",
+  "engineWaitingRun": "Draait na installatie",
+  "engineWaitingPaused": "Blijft gepauzeerd",
+  "autoNotRunTitle": "Geen hiervan draait nog",
+  "autoNotRunBody": "Draait niet: ZigDash Engine staat niet op je hub. Tot die tijd bewaart je MQTT-broker ze, en een broker zonder persistence verliest ze bij een herstart.",
+  "autoNotRunning": "Draait niet",
+  "historyUsePhoneInstead": "Deze telefoon gebruiken",
+  "chatTitle": "Chat (bèta)",
+  "chatRowReady": "Praat met je huis via Telegram",
+  "chatRowNoPro": "Onderdeel van ZigDash Pro (niet in de proefperiode)",
+  "chatRowNoRemote": "Zet eerst bediening op afstand aan",
+  "chatRowNoEngine": "Heeft ZigDash Engine op je hub nodig",
+  "chatIntroTitle": "Praat met je huis via Telegram",
+  "chatIntroBody": "Stuur de ZigDash Home-bot op Telegram een bericht als \"staat de achterdeur open?\" of \"doe het rolluik in het kantoor dicht\", en je huis antwoordt. Hij leest wat je apparaten melden en hun geschiedenis; met Lezen en bedienen kan hij ook de lampen, rolluiken, schakelaars, stekkers en thermostaten schakelen die je kiest.",
+  "chatIntroNever": "Hij opent, sluit of wijzigt nooit sloten, kranen of sirenes, en wijzigt nooit automatiseringen of instellingen: daarvoor zegt hij je ZigDash te openen.",
+  "chatIntroBeta": "Gratis tijdens de bèta: tot 300 berichten per maand voor dit huis.",
+  "chatIntroWho": "Wie de berichten leest: Telegram, dat ze doorgeeft; onze server in de EU, die het gesprek 24 uur bewaart; en Anthropic (Claude) in de VS, dat de antwoorden schrijft. Wat Chat over je huis leest, gaat dezelfde weg.",
+  "chatPolicy": "Hoe Chat met je gegevens omgaat",
+  "chatLinkedTitle": "Gekoppelde accounts",
+  "chatLinkedNone": "Nog geen Telegram-account gekoppeld.",
+  "chatLinkedLoadFailed": "De gekoppelde accounts konden niet worden geladen. Controleer de internetverbinding.",
+  "chatLinkedLine": "{scope} · laatst gebruikt {when}",
+  "chatLinkedNeverUsed": "{scope} · nog niet gebruikt",
+  "chatRemove": "Verwijderen",
+  "chatRemoveTitle": "{name} verwijderen?",
+  "chatRemoveBody": "Dit Telegram-account kan je huis dan niet meer bereiken, en het gesprek wordt verwijderd.",
+  "chatRemovedLater": "Verwijderd. Je hub vergeet het zodra ZigDash de volgende keer thuis open is.",
+  "chatAuditTitle": "Wat Chat deed",
+  "chatAuditShow": "Tonen",
+  "chatAuditEmpty": "Nog niets.",
+  "chatAuditFailed": "Je hub antwoordde niet. Probeer het later opnieuw.",
+  "chatAuditSent": "ingesteld: {what}",
+  "chatAuditNotSent": "niet verzonden",
+  "chatHereTitle": "Chatten met je huis is er",
+  "chatHereBody": "Koppel je Telegram-account en vraag je huis \"staat de achterdeur open?\" of laat het een rolluik sluiten. Onderdeel van Pro, gratis tijdens de bèta.",
+  "chatHereSetUp": "Instellen",
+  "chatHereNotNow": "Niet nu",
+  "chatLinkNew": "Een Telegram-account koppelen",
+  "chatLinkAnother": "Nog een Telegram-account koppelen",
+  "chatScopeRead": "Lezen",
+  "chatScopeReadHelp": "Beantwoordt vragen. Verandert niets.",
+  "chatScopeControl": "Lezen en bedienen",
+  "chatScopeControlHelp": "Schakelt ook de apparaten die je hieronder kiest.",
+  "chatControlsTitle": "Wat Chat mag schakelen",
+  "chatControlsHelp": "Eerst aan: lampen en rolluiken op je dashboards. Eerst uit: schakelaars en stekkers (die kunnen een kachel, boiler of pomp voeden), thermostaten, poorten en garagedeuren. Sloten, kranen en sirenes staan er nooit bij.",
+  "chatControlsEmpty": "Nog geen apparaten om uit te kiezen.",
+  "chatKindLight": "Lamp",
+  "chatKindCover": "Rolluik",
+  "chatKindSwitch": "Schakelaar of stekker",
+  "chatKindThermostat": "Thermostaat",
+  "chatGateNote": "poort of deur, eerst uit",
+  "chatAgeAndAccount": "Iedereen koppelt een eigen Telegram-account, met een eigen bereik. Gekoppelde personen moeten 16 jaar of ouder zijn. Wie een gekoppeld Telegram-account gebruikt, kan doen wat het bereik toestaat. Zelfs Lezen laat zien of er iemand thuis is en welke deuren en ramen open staan.",
+  "chatEngineOld": "ZigDash Engine op je hub wordt bijgewerkt naar de versie met Chat. Probeer het over een minuut opnieuw.",
+  "chatLinkButton": "Telegram koppelen",
+  "chatLinkAway": "Koppel thuis: ZigDash stelt dit via je thuisnetwerk in op je hub.",
+  "chatCodeTitle": "Rond af in Telegram",
+  "chatCodeBody": "Tik in Telegram op Starten bij de ZigDash Home-bot. Hij stuurt je een code van 4 cijfers: typ die hier binnen 10 minuten.",
+  "chatCodeHint": "Code van 4 cijfers",
+  "chatCodeConfirm": "Bevestigen",
+  "chatOpenTelegram": "Telegram opnieuw openen",
+  "chatLinkedDone": "Gekoppeld. Stuur de bot een bericht om het te proberen.",
+  "chatFailUnreachable": "De servers van ZigDash waren niet bereikbaar. Controleer de internetverbinding en probeer het opnieuw.",
+  "chatFailLogin": "De relay accepteerde de externe login van deze telefoon niet. Open Bediening op afstand en zet het uit en weer aan.",
+  "chatFailPurchase": "Google Play bevestigt geen aankoop van ZigDash Pro voor dit huis.",
+  "chatFailTooMany": "Te veel pogingen. Probeer het over een uur opnieuw.",
+  "chatFailExpired": "De code is verlopen. Begin opnieuw.",
+  "chatFailWrongCode": "Dat is niet de code van de bot. Controleer hem en probeer het opnieuw.",
+  "chatFailRefused": "Dat lukte niet. Probeer het later opnieuw.",
+  "chatFailNotClaimed": "De bot heeft de code nog niet gekregen. Open Telegram, tik op Starten bij de ZigDash Home-bot en typ dan de code die hij stuurt.",
+  "chatFailWrongCodeLeft": "Dat is niet de code van de bot. Pogingen over: {count}.",
+  "founderCodeAsk": "Heb je een oprichterscode?",
+  "founderCodeLabel": "Oprichterscode",
+  "founderCodeUse": "Code gebruiken",
+  "founderCodeAtHome": "Voer hem thuis in, met ZigDash Engine op je hub: ZigDash zet bediening op afstand op via je thuisnetwerk.",
+  "founderCodeWrong": "Dat is geen oprichterscode. Controleer hem en probeer opnieuw.",
+  "founderCodeUsed": "Die code is al gebruikt. Elke code werkt één keer.",
+  "founderCodeDeadline": "De datum om die code in te voeren is voorbij. Vraag meer tijd via Hulp krijgen.",
+  "founderCodeRevoked": "Die code is ingetrokken.",
+  "founderCodeDone": "Je oprichterspas is actief: bediening op afstand en Chat voor dit huis tot {date}.",
+  "founderEndsOn": "Je oprichterspas loopt af op {date}. Met ZigDash Pro houd je bediening op afstand en Chat, zonder iets opnieuw in te stellen.",
+  "founderGetPro": "Pro nemen",
+  "founderEnded": "Je oprichterspas is afgelopen op {date}. ZigDash Pro brengt bediening op afstand en Chat terug, zonder iets opnieuw in te stellen.",
+  "founderEndedNoDate": "Je oprichterspas is afgelopen. ZigDash Pro brengt bediening op afstand en Chat terug, zonder iets opnieuw in te stellen.",
+  "founderDeleted": "De oprichterspas van dit huis is afgelopen en de bediening op afstand is verwijderd.",
+  "remoteRemoved": "De bediening op afstand van dit huis is van de relay verwijderd.",
+  "founderSetUpWithPro": "Instellen met Pro",
+  "founderUseProTitle": "Je Pro-aankoop voor dit huis gebruiken?",
+  "founderUseProBody": "Bediening op afstand en Chat van dit huis gaan over op je Pro-aankoop: dezelfde telefoons en Chat-koppelingen, niets opnieuw in te stellen. Eén aankoop dekt één huis.",
+  "founderUsePro": "Pro voor dit huis gebruiken",
+  "founderUpgraded": "Dit huis draait nu op je Pro-aankoop.",
+  "founderUpgradeTaken": "Die aankoop hoort al bij een ander huis.",
+  "founderUpgradeFailed": "Kon dit huis niet overzetten naar je Pro-aankoop. Probeer het later opnieuw.",
+  "remoteHubRefused": "De relay weigerde de login van de hub",
+  "chatRowPassEnded": "Oprichterspas afgelopen: koppelingen kun je nog verwijderen",
+  "chatFailPassEnded": "De oprichterspas van dit huis is afgelopen, dus er kan geen nieuw Telegram-account worden gekoppeld.",
+  "panelToggleNoState": "(geen status)",
+  "panelToggleError": "fout",
+  "diagResolveLocalNameIos": "Je telefoon kon deze naam niet vinden. Controleer of hij goed gespeld is, of vul in plaats daarvan het IP-adres in (Home Assistant toont het onder Instellingen › Systeem › Netwerk).",
+  "reminderNoPermissionIos": "Meldingen staan uit voor ZigDash, dus er komt geen herinnering. Je kunt ze aanzetten in Instellingen › ZigDash › Meldingen.",
+  "setupLocalNetworkIos": "ZigDash heeft toegang tot het lokale netwerk nodig om je hub te vinden. Heb je nee gezegd, sta het dan toe in Instellingen › Privacy en beveiliging › Lokaal netwerk.",
+  "setupAddressNotResolvedIos": "{host} kon niet worden opgezocht. Controleer de naam, of probeer het IP-adres. Home Assistant toont het onder Instellingen › Systeem › Netwerk.",
+  "setupAddressNotResolvedHaIos": "{host} is vanaf deze telefoon niet te vinden. Tik hierboven op {button} en gebruik het adres waarmee je Home Assistant in de browser opent, of typ hier het IP-adres. Home Assistant toont het onder Instellingen › Systeem › Netwerk.",
+  "tipNumberAddressBodyIos": "Werkt de naam niet, probeer dan het cijferadres van de hub, zoals 192.168.1.20.",
+  "wallFullscreenSubtitleIos": "Verbergt ook de statusbalk; de thuisindicator wordt gedimd.",
+  "kioskPinForgotBodyIos": "Een vergeten pincode kun je alleen herstellen door ZigDash te verwijderen en opnieuw te installeren, wat dit huis verwijdert tenzij je een back-up hebt. Exporteer er een voordat je een pincode instelt.",
+  "kioskGuidedAccessTitle": "Vastzetten op ZigDash met Begeleide toegang",
+  "kioskGuidedAccess": "iOS houdt ZigDash in beeld tot je Begeleide toegang beëindigt: zet het aan in Instellingen › Toegankelijkheid › Begeleide toegang en klik dan in ZigDash drie keer op de zijknop.",
+  "proFreeBodyIos": "Instellen, dashboards, de bediening van elk apparaat, drie automatiseringen per huis en de wandtablet zelf blijven gratis. Niets wat je vandaag gebruikt, gaat op slot.",
+  "proOnceIos": "Eén betaling, geen abonnement. Gekocht op een andere iPhone of iPad met hetzelfde Apple Account? Het wordt automatisch ontgrendeld, of tik op Aankoop herstellen.",
+  "engineIntroTitle": "Automatiseringen draaien op je hub, niet op je telefoon",
+  "engineIntroBody": "ZigDash zet ZigDash Engine in Zigbee2MQTT op je hub. Het let op je apparaten en voert je regels uit, zodat een lamp aangaat als de deur opengaat, ook met je telefoon uit en zonder internet.",
+  "engineIntroNothingByHand": "Niets met de hand te installeren. ZigDash doet het via je thuisnetwerk.",
+  "engineIntroVersion": "Je Zigbee2MQTT is versie {version}.",
+  "engineIntroRemove": "Je kunt hem altijd vanaf dit scherm verwijderen."
 }

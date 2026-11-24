@@ -1,1 +1,1 @@
-Tableau de bord Zigbee2MQTT. Sans Home Assistant : un petit hub et votre mobile.
+Tableau de bord Zigbee2MQTT rapide. Pilotez votre maison de partout, sans abo.

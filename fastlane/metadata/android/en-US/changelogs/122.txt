@@ -1,0 +1,3 @@
+Moving from Home Assistant's own Zigbee (ZHA)? A short Moving from ZHA sheet explains the two ways, opens the step-by-step guide in your language, and "I'm moving" makes setup lead with your new Zigbee2MQTT.
+
+Afterwards, Import from Home Assistant brings the names and rooms you gave your devices in ZHA.

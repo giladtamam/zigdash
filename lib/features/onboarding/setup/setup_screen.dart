@@ -23,6 +23,7 @@ import '../../settings/providers/settings_controller.dart'
 import '../../support/assistant_panel.dart' show assistantHelpedRecently;
 import '../../support/get_help_screen.dart'
     show GetHelpLink, GetHelpWarmButton;
+import '../../zha_move/zha_move.dart';
 import 'setup_completed_at.dart';
 import '../first_run.dart';
 import 'recommendation_policy.dart';
@@ -32,6 +33,8 @@ import 'setup_error_guidance.dart';
 import 'ai_help.dart';
 import 'setup_analytics.dart';
 import 'setup_providers.dart';
+import 'ha_connect_screen.dart' show takeHaAppColdReturn;
+import 'ha_link.dart';
 import 'setup_waiting.dart';
 import 'setup_reminder.dart';
 
@@ -90,7 +93,22 @@ class SetupScreen extends ConsumerWidget {
         helpSeen: s is SetupComplete
             ? assistantHelpedRecently(ref.read(sharedPreferencesProvider))
             : null,
+        fromZha:
+            s is SetupComplete ||
+                (s is SetupFailed && s.kind == SetupErrorKind.haNoZigbee2Mqtt)
+            ? fromZhaOrNull(() => ref.read(sharedPreferencesProvider))
+            : null,
+        // ha-link.md: the link's address, unchanged, made this home.
+        linkSrc: s is SetupComplete
+            ? takeHaLinkSrc(
+                ref.read(sharedPreferencesProvider),
+                viaHa: s.via == SetupVia.homeAssistant,
+              )
+            : null,
       );
+      if (s is SetupComplete) {
+        ref.read(pendingHaLinkProvider.notifier).set(null);
+      }
       if (step != null) ref.read(analyticsProvider).track(step);
       // 3.3.2: the guide on an empty result starts over with setup.
       if (s is SetupIdle || s is SetupComplete) {
@@ -101,6 +119,8 @@ class SetupScreen extends ConsumerWidget {
         markSetupCompleted(() => ref.read(sharedPreferencesProvider));
         // 3.1.5: the next setup starts without "Ask your AI" behind it.
         ref.read(aiHelpUsedProvider.notifier).state = false;
+        // 3.8: a move from ZHA ends with a working home.
+        ref.read(zhaMovingProvider.notifier).end();
         ref.read(setupReminderProvider).cancel();
         context.go(Routes.homeDashboards(s.result.connectionId));
       }
@@ -151,6 +171,13 @@ class SetupScreen extends ConsumerWidget {
             .track(SetupStep(SetupStepKind.platformChosen, platform: platform));
       }
       coordinator.setPlatform(platform);
+      // 3.8: the demo home offers Moving from ZHA after a ZHA answer.
+      if (platform != null) {
+        noteZhaAnswer(
+          () => ref.read(sharedPreferencesProvider),
+          platform == SetupPlatform.zha,
+        );
+      }
     }
 
     // Which way into the Home Assistant sign-in people take (3.1.3).
@@ -261,6 +288,40 @@ class SetupScreen extends ConsumerWidget {
               state: state,
               onRetry: coordinator.retry,
               onManual: manual,
+              // 3.8.5: an encrypted broker the phone can't use; the form
+              // opens on the same address with the unencrypted port.
+              onEditTls:
+                  state.kind == SetupErrorKind.tlsUntrusted ||
+                      state.kind == SetupErrorKind.tlsFailed
+                  ? () {
+                      ref
+                          .read(analyticsProvider)
+                          .track(
+                            const SetupStep(
+                              SetupStepKind.manual,
+                              manualFrom: ManualFrom.tlsEdit,
+                            ),
+                          );
+                      final host = state.candidate?.host;
+                      context.push(
+                        host == null
+                            ? Routes.guidedConnect
+                            : Routes.guidedConnectTo(host, 1883),
+                      );
+                    }
+                  : null,
+              // 3.8.1: signed in, MQTT works, and the Zigbee is in ZHA.
+              onZhaMove: state.kind == SetupErrorKind.haNoZigbee2Mqtt &&
+                      fromZhaOrNull(
+                            () => ref.read(sharedPreferencesProvider),
+                          ) !=
+                          null
+                  ? () => showZhaMoveSheet(
+                      context,
+                      ref,
+                      ZhaMoveFrom.noZigbee2Mqtt,
+                    )
+                  : null,
             ),
             SetupReview() => _Review(
               state: state,
@@ -320,6 +381,12 @@ String _guidanceText(AppLocalizations l10n, String key) => switch (key) {
   'setupErrLoginNoAnswerTitle' => l10n.setupErrLoginNoAnswerTitle,
   'setupErrLoginNoAnswerBody' => l10n.setupErrLoginNoAnswerBody,
   'setupErrLoginNoAnswerAction' => l10n.setupErrLoginNoAnswerAction,
+  // 3.8.5: a certificate the phone doesn't trust, or another TLS failure.
+  'setupErrTlsUntrustedTitle' => l10n.setupErrTlsUntrustedTitle,
+  'setupErrTlsFailedTitle' => l10n.setupErrTlsFailedTitle,
+  'diagTlsUntrusted' => l10n.diagTlsUntrusted,
+  'diagTlsFailed' => l10n.diagTlsFailed,
+  'setupErrTlsAction' => l10n.setupErrTlsAction,
   // Missing until 2.8.2: the unknown screen read "Try again" three times.
   'setupErrUnknownTitle' => l10n.setupErrUnknownTitle,
   'setupErrUnknownBody' => l10n.setupErrUnknownBody,
@@ -367,6 +434,21 @@ class _WelcomeState extends ConsumerState<_Welcome> {
   @override
   void initState() {
     super.initState();
+    // 3.6: ZigDash was closed while the person was in the Home Assistant
+    // app copying the address: back to that screen, Paste pointed out.
+    if (_coldReturnFromHaApp()) {
+      ref
+          .read(analyticsProvider)
+          .track(
+            const SetupStep(
+              SetupStepKind.haNone,
+              choice: HaNoneChoice.returnedCold,
+            ),
+          );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.push(Routes.haConnectBackFromApp);
+      });
+    }
     // Counted only here: the reminder opens the app on this screen.
     ref.read(setupReminderProvider).openedFromReminder().then((yes) {
       if (yes && mounted) {
@@ -377,6 +459,16 @@ class _WelcomeState extends ConsumerState<_Welcome> {
     });
   }
 
+  /// Best effort: screens shown without preferences (golden tests) never
+  /// count as coming back.
+  bool _coldReturnFromHaApp() {
+    try {
+      return takeHaAppColdReturn(ref.read(sharedPreferencesProvider));
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool get _asking =>
       ref.watch(analyticsAvailableProvider) &&
       ref.watch(analyticsConsentProvider) == AnalyticsConsent.unasked;
@@ -385,7 +477,20 @@ class _WelcomeState extends ConsumerState<_Welcome> {
     if (_asking) {
       await ref.read(analyticsConsentProvider.notifier).set(_share);
     }
+    // ha-link.md: a link's event waited for the answer just given.
+    await ref.read(pendingHaLinkProvider.notifier).countHeld();
     next();
+  }
+
+  /// Home Assistant, with an address a link brought (ha-link.md): the
+  /// link only comes from pages that already say Zigbee2MQTT is needed,
+  /// so both "which way" sheets are skipped.
+  void _fromLink(PendingHaLink link) {
+    widget.onPlatform(SetupPlatform.homeAssistant);
+    ref.read(pendingHaLinkProvider.notifier).set(null);
+    context.push(
+      Routes.haConnectFrom(link.address, addressFromOf(link.opened)),
+    );
   }
 
   /// 3.2: Home Assistant runs Zigbee one of two ways; only one works here.
@@ -433,6 +538,14 @@ class _WelcomeState extends ConsumerState<_Welcome> {
         content: Text(l10n.setupZhaNote),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
+          TextButton(
+            key: const Key('setup-zha-move'),
+            onPressed: () {
+              Navigator.pop(context);
+              showZhaMoveSheet(this.context, ref, ZhaMoveFrom.answer);
+            },
+            child: Text(l10n.haConnectZhaMove),
+          ),
           FilledButton(
             onPressed: () {
               Navigator.pop(context);
@@ -534,6 +647,7 @@ class _WelcomeState extends ConsumerState<_Welcome> {
       widget.onFind();
     });
     void onManual() => _then(widget.onManual);
+    final pending = ref.watch(pendingHaLinkProvider);
     void onNothing() => _then(widget.onNothing);
     Widget answer(IconData icon, String title, String subtitle, VoidCallback onTap, {Key? key}) => Card.outlined(
       key: key,
@@ -556,13 +670,64 @@ class _WelcomeState extends ConsumerState<_Welcome> {
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 20),
+        // 3.8: after "I'm moving", the new Zigbee2MQTT comes first.
+        if (ref.watch(zhaMovingProvider))
+          Card.filled(
+            key: const Key('setup-zha-moving'),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.setupMovingTitle, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(l10n.setupMovingBody),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    onPressed: () => _then(widget.onFind),
+                    icon: const Icon(Icons.wifi_find),
+                    label: Text(l10n.setupFindMySetup),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        // ha-link.md: a link opened before the first home waits here.
+        if (pending != null)
+          Card.filled(
+            key: const Key('setup-link-pending'),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.link, color: theme.colorScheme.primary),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      pending.address == null
+                          ? l10n.setupLinkPendingNothing
+                          : l10n.setupLinkPending,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         // 3.2: one question first. Two thirds of setups never answered it
         // under a running scan, and half of them had something to connect.
         Text(l10n.setupAsk, style: theme.textTheme.titleMedium),
         const SizedBox(height: 12),
         answer(Icons.memory, l10n.setupAskZ2m, l10n.setupAskZ2mSub, () => find(SetupPlatform.piOrDocker),
             key: const Key('ask-z2m')),
-        answer(Icons.home_outlined, l10n.setupAskHa, l10n.setupAskHaSub, () => _then(_homeAssistant),
+        answer(
+            Icons.home_outlined,
+            l10n.setupAskHa,
+            l10n.setupAskHaSub,
+            () => pending?.address != null
+                ? _then(() => _fromLink(pending!))
+                : _then(_homeAssistant),
             key: const Key('ask-ha')),
         answer(Icons.router_outlined, l10n.setupAskSmlight, l10n.setupAskSmlightSub, () => _then(_smlight),
             key: const Key('ask-smlight')),
@@ -792,10 +957,27 @@ class _PlatformChips extends StatelessWidget {
                 children: [
                   Text(l10n.setupZhaNote),
                   const SizedBox(height: 12),
-                  FilledButton.tonalIcon(
-                    onPressed: onDemo,
-                    icon: const Icon(Icons.play_circle_outline),
-                    label: Text(l10n.onboardingDemo),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      FilledButton.tonalIcon(
+                        onPressed: onDemo,
+                        icon: const Icon(Icons.play_circle_outline),
+                        label: Text(l10n.onboardingDemo),
+                      ),
+                      Consumer(
+                        builder: (context, ref, _) => OutlinedButton(
+                          key: const Key('setup-zha-note-move'),
+                          onPressed: () => showZhaMoveSheet(
+                            context,
+                            ref,
+                            ZhaMoveFrom.answer,
+                          ),
+                          child: Text(l10n.haConnectZhaMove),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -1512,10 +1694,20 @@ class _Failure extends StatelessWidget {
     required this.state,
     required this.onRetry,
     required this.onManual,
+    this.onZhaMove,
+    this.onEditTls,
   });
   final SetupFailed state;
   final VoidCallback onRetry;
   final VoidCallback onManual;
+
+  /// The broker form on the same address with port 1883 (empty when no
+  /// address is known), for the two TLS failures (3.8.5): it leads, and
+  /// Retry follows.
+  final VoidCallback? onEditTls;
+
+  /// Moving from ZHA, when Home Assistant's check found ZHA devices.
+  final VoidCallback? onZhaMove;
 
   @override
   Widget build(BuildContext context) {
@@ -1542,11 +1734,34 @@ class _Failure extends StatelessWidget {
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 24),
-        FilledButton.icon(
-          onPressed: onRetry,
-          icon: const Icon(Icons.refresh),
-          label: Text(_guidanceText(l10n, guidance.actionKey)),
-        ),
+        if (onEditTls case final onEdit?) ...[
+          FilledButton.icon(
+            key: const Key('setup-failed-edit-tls'),
+            onPressed: onEdit,
+            icon: const Icon(Icons.edit_outlined),
+            label: Text(_guidanceText(l10n, guidance.actionKey)),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.retry),
+          ),
+        ] else
+          FilledButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(_guidanceText(l10n, guidance.actionKey)),
+          ),
+        if (onZhaMove != null) ...[
+          const SizedBox(height: 12),
+          FilledButton.tonalIcon(
+            key: const Key('setup-failed-zha-move'),
+            onPressed: onZhaMove,
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: Text(l10n.haConnectZhaMove),
+          ),
+        ],
         if (state.kind != SetupErrorKind.saveFailed) ...[
           const SizedBox(height: 16),
           AiHelpCard(

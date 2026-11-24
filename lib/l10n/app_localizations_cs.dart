@@ -156,7 +156,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connHelpZhaBody =>
-      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nepřipojí. Chceš-li používat ZigDash, přejdi na Zigbee2MQTT (k dispozici jako aplikace Home Assistantu nebo kontejner Docker), který MQTT broker poskytuje.';
+      'ZHA nemá MQTT broker — komunikuje přímo s Home Assistantem, takže se k němu ZigDash nepřipojí. Chceš-li používat ZigDash, přejdi na Zigbee2MQTT (k dispozici jako aplikace Home Assistantu nebo kontejner Docker), který běží s MQTT brokerem, například Mosquitto.';
 
   @override
   String get connHelpSameNetwork =>
@@ -850,12 +850,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String get panelCoverClose => 'Zavřít';
 
   @override
-  String get panelToggleNoState => '(bez stavu)';
-
-  @override
-  String get panelToggleError => 'chyba';
-
-  @override
   String get panelStateOn => 'ZAP';
 
   @override
@@ -1190,7 +1184,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sceneFormNoDevices =>
-      'Nenalezena žádná ovladatelná zařízení. Zkontroluj, že jsou spárovaná, a klepni na obnovit.';
+      'Nenalezena žádná ovladatelná zařízení ani dlaždice. Zkontroluj, že jsou spárovaná, a klepni na obnovit.';
 
   @override
   String get sceneFormReadingState => 'Načítám aktuální stav…';
@@ -1211,11 +1205,37 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get sceneFormNoDevicesSelected =>
-      'Vyber aspoň jedno zařízení k uložení.';
+      'Vyber aspoň jedno zařízení nebo dlaždici.';
 
   @override
   String get sceneFormNothingCaptured =>
       'Z vybraných zařízení se nepodařilo uložit nic nastavitelného.';
+
+  @override
+  String get sceneFormTilesHeader => 'Tvoje dlaždice';
+
+  @override
+  String get sceneFormTilesHint =>
+      'Dlaždice, které sis vytvořil sám. Scéna pošle to, co posílá dlaždice.';
+
+  @override
+  String get sceneTileHomeOnly =>
+      'Funguje jen z tohoto telefonu doma: ne z automatizací a ne zvenku.';
+
+  @override
+  String sceneFormKeptActions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dalších akcí zůstane',
+      few: '$count další akce zůstanou',
+      one: '1 další akce zůstane',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sceneFormRemoveKept => 'Odstranit';
 
   @override
   String get sceneDeleteTitle => 'Smazat scénu?';
@@ -1241,7 +1261,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String sceneActionsCount(int count) {
-    return 'Zařízení: $count';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count akcí',
+      few: '$count akce',
+      one: '1 akce',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -1371,6 +1398,14 @@ class AppLocalizationsCs extends AppLocalizations {
       'Broker neodpověděl na přihlášení včas. Home Assistantu může ověření trvat pár sekund, tak to zkus znovu.';
 
   @override
+  String get diagTlsUntrusted =>
+      'Tvůj telefon nedůvěřuje šifrovacímu certifikátu tohoto brokeru: je podepsaný sám sebou, vypršel nebo je vystavený na jiné jméno. ZigDash ho zatím neumí použít. V domácí síti místo toho použij nešifrovaný port brokeru 1883, nebo brokeru dej certifikát od veřejné certifikační autority.';
+
+  @override
+  String get diagTlsFailed =>
+      'Šifrované spojení se nenavázalo. Broker možná chce klientský certifikát, který ZigDash nepodporuje. V domácí síti se místo toho připoj bez šifrování: TCP místo TLS, obvykle na portu 1883.';
+
+  @override
   String get diagAuthRejected =>
       'Broker odmítl uživatelské jméno nebo heslo. Zkontroluj přihlašovací údaje.';
 
@@ -1385,10 +1420,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get diagTcpHaNoBroker =>
       'Tohle je tvůj Home Assistant, ale neběží na něm žádný MQTT broker. Nainstaluj a spusť aplikaci Mosquitto broker (Nastavení › Aplikace) a zkus to znovu.';
-
-  @override
-  String get diagResolveLocalNameIos =>
-      'Telefon tento název nenašel. Zkontroluj, jestli je správně napsaný, nebo místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
 
   @override
   String get diagTcpSmlightClosed =>
@@ -1588,7 +1619,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get noHubHaBody =>
-      'Přidejte doplňky Mosquitto broker a Zigbee2MQTT a pak se ze ZigDash přihlaste svým účtem Home Assistant.';
+      'Přidejte aplikace Mosquitto broker a Zigbee2MQTT (Nastavení › Aplikace) a pak se ze ZigDash přihlaste svým účtem Home Assistant.';
 
   @override
   String get noHubRadio =>
@@ -1671,7 +1702,43 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get connFromPageNote =>
-      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Po uložení se ZigDash připojuje přes broker.';
+      'Tento domov se připojuje přes stránku Zigbee2MQTT. Zadejte svůj MQTT broker (obvykle stejný stroj, port 1883), abyste zapnuli automatizace, upozornění a historii. Jakmile bude mít broker vaše zařízení, ZigDash na něj přepne.';
+
+  @override
+  String get connBrokerNoDevices =>
+      'Připojeno, ale tento broker nemá žádné z vašich zařízení. Pokud jste broker právě zapnuli, restartujte Zigbee2MQTT, aby se k němu připojil.';
+
+  @override
+  String connZ2mUses(String server) {
+    return 'Zigbee2MQTT používá $server';
+  }
+
+  @override
+  String get connReadingZ2m => 'Načítání nastavení Zigbee2MQTT…';
+
+  @override
+  String get connKeepPageTitle => 'Dál používat stránku Zigbee2MQTT?';
+
+  @override
+  String get connKeepPageBodyEmpty =>
+      'Tento broker odpověděl, ale nemá žádné z vašich zařízení, takže by vaše nástěnky byly prázdné. Zigbee2MQTT možná používá jiný broker, nebo potřebuje restart po zapnutí brokeru.';
+
+  @override
+  String get connKeepPageBodyNoAnswer =>
+      'Broker neodpověděl, takže by vaše nástěnky byly prázdné.';
+
+  @override
+  String get connKeepPageBodyRefused =>
+      'Broker odmítl přihlášení, takže by vaše nástěnky byly prázdné.';
+
+  @override
+  String get connKeepPage => 'Ponechat stránku Zigbee2MQTT';
+
+  @override
+  String get connSaveAnyway => 'Přesto uložit';
+
+  @override
+  String get connChecking => 'Kontrola brokeru…';
 
   @override
   String get setupManualEntry => 'Zadat údaje ručně';
@@ -1716,10 +1783,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get reminderNoPermission =>
       'Oznámení ZigDash jsou vypnutá, takže připomenutí nebude. Můžeš je zapnout v nastavení Androidu.';
-
-  @override
-  String get reminderNoPermissionIos =>
-      'Oznámení ZigDash jsou vypnutá, takže připomenutí nebude. Můžeš je zapnout v Nastavení › ZigDash › Oznámení.';
 
   @override
   String get reminderChannel => 'Připomenutí nastavení';
@@ -1867,6 +1930,39 @@ class AppLocalizationsCs extends AppLocalizations {
       'V tom nebyla adresa. V aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server a pak nahoře na ikonu sdílení.';
 
   @override
+  String get haLinkNote =>
+      'Toto je adresa z vašeho odkazu. Přihlaste se a připojte.';
+
+  @override
+  String get haLinkReferrerNote =>
+      'Toto je adresa z odkazu, který jste otevřeli před instalací ZigDash. Přihlaste se a připojte.';
+
+  @override
+  String get haLinkNothing =>
+      'Tento odkaz neobsahoval adresu Home Assistant. Vytvořte nový na zigdash.app/connect.';
+
+  @override
+  String get haNoneComputer => 'Použít počítač';
+
+  @override
+  String get haComputerTitle => 'Použít počítač';
+
+  @override
+  String get haComputerBody =>
+      'Na počítači s otevřeným Home Assistant přejděte na tuto stránku a vložte tam adresu Home Assistant. Pak naskenujte kód fotoaparátem tohoto telefonu.';
+
+  @override
+  String get haComputerCopy => 'Kopírovat odkaz';
+
+  @override
+  String get setupLinkPending =>
+      'Váš odkaz přinesl adresu Home Assistant. Klepněte na Home Assistant a použijte ji.';
+
+  @override
+  String get setupLinkPendingNothing =>
+      'Váš odkaz neobsahoval adresu Home Assistant. Vytvořte nový na zigdash.app/connect.';
+
+  @override
   String get haHandoverShare =>
       'Nejrychleji: v aplikaci Home Assistant otevřete Nastavení › Doprovodná aplikace, klepněte na svůj server, pak nahoře na ikonu sdílení a vyberte ZigDash. Z prohlížeče sdílejte stránku do ZigDash.';
 
@@ -1897,6 +1993,59 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get haConnectNoMqtt =>
       'Tento Home Assistant nemá integraci MQTT. Zigbee2MQTT ji potřebuje také: v Home Assistantu přidej aplikaci Mosquitto broker (Nastavení › Aplikace) a integraci MQTT, pak to zkus znovu.';
+
+  @override
+  String haConnectZhaFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zařízení',
+      few: '$count zařízení',
+      one: '1 zařízení',
+    );
+    return 'Tvoje Zigbee běží v ZHA, vlastním Zigbee Home Assistantu ($_temp0). ZigDash pracuje se Zigbee2MQTT, takže je nemůže zobrazit. Přechod na Zigbee2MQTT znamená znovu spárovat zařízení; průvodce ukazuje dva způsoby.';
+  }
+
+  @override
+  String get haConnectZhaMove => 'Přechod ze ZHA';
+
+  @override
+  String get haConnectNoMqttNoApps =>
+      'Tento Home Assistant nemá integraci MQTT ani aplikace (běží jako kontejner), takže Mosquitto a Zigbee2MQTT běží vedle něj jako vlastní kontejnery. Pokud už běží, připoj ZigDash přímo k Mosquittu. Nebo v Home Assistantu přidej integraci MQTT a zkus to znovu.';
+
+  @override
+  String get haConnectNoAppsGuide => 'Jak se připojit';
+
+  @override
+  String get zhaMoveBody =>
+      'ZigDash pracuje se Zigbee2MQTT. Přechod znamená znovu spárovat zařízení. Home Assistant je může dál používat, jakmile přidáš jeho integraci MQTT.';
+
+  @override
+  String get zhaMoveWaySecond =>
+      'Druhý adaptér: místnost po místnosti, ZHA běží dál';
+
+  @override
+  String get zhaMoveWaySame => 'Stejný adaptér: zdarma, vše najednou';
+
+  @override
+  String get zhaMoveReadSteps => 'Přečíst kroky';
+
+  @override
+  String get zhaMoveImMoving => 'Přecházím';
+
+  @override
+  String get zhaMoveNotNow => 'Teď ne';
+
+  @override
+  String get zhaMovingNoted =>
+      'Poznamenáno. Až Zigbee2MQTT poběží, otevři nastavení: ZigDash ho najde a nabídne ti názvy a místnosti z Home Assistantu.';
+
+  @override
+  String get setupMovingTitle => 'Připojit nové Zigbee2MQTT';
+
+  @override
+  String get setupMovingBody =>
+      'Přecházíš ze ZHA? Jakmile Zigbee2MQTT poběží, ZigDash ho hledá ve tvé síti.';
 
   @override
   String get haConnectSignInFailed =>
@@ -2167,6 +2316,16 @@ class AppLocalizationsCs extends AppLocalizations {
   String get setupErrLoginNoAnswerAction => 'Zkusit znovu';
 
   @override
+  String get setupErrTlsUntrustedTitle =>
+      'Tvůj telefon nedůvěřuje certifikátu tohoto brokeru';
+
+  @override
+  String get setupErrTlsFailedTitle => 'Šifrované spojení selhalo';
+
+  @override
+  String get setupErrTlsAction => 'Upravit nastavení';
+
+  @override
   String get setupNoZ2mTitle =>
       'Tvůj broker funguje, ale Zigbee2MQTT sem nepublikuje';
 
@@ -2268,10 +2427,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get setupVpnHint =>
       'Máš zapnutou VPN a ta může domácí síť před hledáním skrýt. Pokud jsi doma, vypni VPN a klepni na Zkusit znovu. Nebo ji nech zapnutou a v nastavení aplikace VPN povol přístup k místní síti (LAN).';
-
-  @override
-  String get setupLocalNetworkIos =>
-      'ZigDash potřebuje přístup k místní síti, aby našel tvůj hub. Pokud byl přístup odmítnut, povol ho v Nastavení › Soukromí a zabezpečení › Místní síť.';
 
   @override
   String get setupNoBrokerZ2mTitle =>
@@ -2384,16 +2539,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String setupAddressNotResolvedHa(String host, String button) {
     return '$host z tohoto telefonu nelze najít; Android často neumí vyhledat názvy .local. Klepni výše na $button a použij adresu, kterou Home Assistant otevíráš v prohlížeči, nebo sem napiš jeho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
-  }
-
-  @override
-  String setupAddressNotResolvedHaIos(String host, String button) {
-    return '$host z tohoto telefonu nelze najít. Klepni výše na $button a použij adresu, kterou Home Assistant otevíráš v prohlížeči, nebo sem napiš jeho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
-  }
-
-  @override
-  String setupAddressNotResolvedIos(String host) {
-    return '$host se nepodařilo vyhledat. Zkontroluj název, nebo zkus místo toho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
   }
 
   @override
@@ -3300,10 +3445,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Názvy končící na .local nefungují na každém telefonu s Androidem. Zkus číselnou adresu hubu, třeba 192.168.1.20.';
 
   @override
-  String get tipNumberAddressBodyIos =>
-      'Pokud název nefunguje, zkus číselnou adresu hubu, třeba 192.168.1.20.';
-
-  @override
   String get tipPortProtocolTitle => 'Port a protokol';
 
   @override
@@ -3876,10 +4017,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Skryje i stavový a navigační panel Androidu.';
 
   @override
-  String get wallFullscreenSubtitleIos =>
-      'Skryje i stavový řádek; indikátor plochy ztlumí.';
-
-  @override
   String get wallDimAfter => 'Ztlumit po';
 
   @override
@@ -4027,10 +4164,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Zapomenutý PIN jde resetovat jen vymazáním dat ZigDash v nastavení Androidu, což odstraní tento domov, pokud nemáš zálohu. Než PIN nastavíš, zálohu si vyexportuj.';
 
   @override
-  String get kioskPinForgotBodyIos =>
-      'Zapomenutý PIN jde resetovat jen smazáním a novou instalací ZigDash, což odstraní tento domov, pokud nemáš zálohu. Než PIN nastavíš, zálohu si vyexportuj.';
-
-  @override
   String get kioskExportBackup => 'Exportovat zálohu';
 
   @override
@@ -4039,14 +4172,6 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get kioskOsPinSubtitle =>
       'Android zablokuje Domů a nedávné aplikace, dokud ZigDash neodepneš. Tablet bez zámku obrazovky se odepne gestem, takže tohle zámek není.';
-
-  @override
-  String get kioskGuidedAccessTitle =>
-      'Zamknout na ZigDash přes Řízený přístup';
-
-  @override
-  String get kioskGuidedAccess =>
-      'iOS nechá ZigDash na obrazovce, dokud Řízený přístup neukončíš: zapni ho v Nastavení › Zpřístupnění › Řízený přístup a pak v ZigDash třikrát stiskni boční tlačítko.';
 
   @override
   String get kioskOn => 'Kiosk zapnutý. Pro odchod dlouze podrž název.';
@@ -4147,11 +4272,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get proFreeBody =>
-      'Nastavení, nástěnky, ovládání všech zařízení, widgety, dlaždice Rychlého nastavení, upozornění, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.';
-
-  @override
-  String get proFreeBodyIos =>
-      'Nastavení, nástěnky, ovládání všech zařízení, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.';
+      'Nastavení, nástěnky, ovládání všech zařízení, widgety, dlaždice Rychlého nastavení, upozornění, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co je dnes zdarma, nebude placené.';
 
   @override
   String get proBuy => 'Získat Pro';
@@ -4166,15 +4287,26 @@ class AppLocalizationsCs extends AppLocalizations {
       'Jedna platba, žádné předplatné. Koupil jsi to na jiném telefonu se stejným účtem Google? Odemkne se automaticky.';
 
   @override
-  String get proOnceIos =>
-      'Jedna platba, žádné předplatné. Koupil jsi to na jiném iPhonu nebo iPadu se stejným Apple účtem? Odemkne se automaticky, nebo klepni na Obnovit nákup.';
-
-  @override
   String get proRestore => 'Obnovit nákup';
 
   @override
+  String get proRestored => 'Pro je na tomto telefonu odemčené.';
+
+  @override
   String get proRestoreNone =>
+      'Google Play nemá pro tento účet Google žádný nákup Pro. Koupili jste ho na jiném účtu? Přepněte účet v Obchodě Play a zkuste to znovu.';
+
+  @override
+  String get proRestoreFailed =>
+      'Nepodařilo se spojit s Google Play. Zkuste to za chvíli znovu.';
+
+  @override
+  String get proRestoreNoneIos =>
       'Pro toto Apple ID se nenašel žádný nákup ZigDash Pro.';
+
+  @override
+  String get proRestoreFailedIos =>
+      'App Store se nepodařilo kontaktovat. Zkuste to za chvíli znovu.';
 
   @override
   String get historyNotRecorded =>
@@ -4337,6 +4469,14 @@ class AppLocalizationsCs extends AppLocalizations {
       'Home Assistant je ve tvé síti. ZigDash může pojmenovat tvoje dlaždice a přidat nástěnku pro každé podlaží a místnost tak, jak je tam máš nastavené.';
 
   @override
+  String get haImportOfferBodyZha =>
+      'ZigDash může pojmenovat tvoje dlaždice a přidat nástěnku pro každé podlaží a místnost podle názvů a místností zařízení v Home Assistantu, včetně těch ze ZHA.';
+
+  @override
+  String get haImportNoZ2mDevices =>
+      'Zigbee2MQTT zatím nemá žádná zařízení. Nejdřív v něm spáruj zařízení, potom otevři Import z Home Assistantu v nastavení této domácnosti.';
+
+  @override
   String get haImportOfferLater => 'Teď ne';
 
   @override
@@ -4415,25 +4555,6 @@ class AppLocalizationsCs extends AppLocalizations {
   String engineTooOldBody(Object version) {
     return 'Váš Zigbee2MQTT má verzi $version. Automatizace vyžadují 2.4 nebo novější. Aktualizujte Zigbee2MQTT na hubu a vraťte se sem.';
   }
-
-  @override
-  String get engineIntroTitle => 'Automatizace běží na hubu, ne v telefonu';
-
-  @override
-  String get engineIntroBody =>
-      'ZigDash vloží ZigDash Engine do Zigbee2MQTT na vašem hubu. Sleduje vaše zařízení a spouští pravidla, takže se světlo rozsvítí při otevření dveří, i když je telefon vypnutý a nejde internet.';
-
-  @override
-  String get engineIntroNothingByHand =>
-      'Nic se neinstaluje ručně. ZigDash to udělá přes domácí síť.';
-
-  @override
-  String engineIntroVersion(Object version) {
-    return 'Váš Zigbee2MQTT má verzi $version.';
-  }
-
-  @override
-  String get engineIntroRemove => 'Kdykoli ho můžete odebrat z této obrazovky.';
 
   @override
   String get engineInstall => 'Nainstalovat na hub';
@@ -4662,6 +4783,21 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get autoErrEmptyScene => 'Tato scéna nemá co odeslat.';
+
+  @override
+  String autoSceneTilesSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count akcí této scény funguje jen z tohoto telefonu doma, ne z automatizací.',
+      few:
+          '$count akce této scény fungují jen z tohoto telefonu doma, ne z automatizací.',
+      one:
+          '1 akce této scény funguje jen z tohoto telefonu doma, ne z automatizací.',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get autoErrNotConnected =>
@@ -5633,4 +5769,614 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get saleCardHomeAssistant =>
       'ZigDash Pro: delší historie, více automatizací a ještě víc.';
+
+  @override
+  String get chatEarlyTitle => 'Chatujte se svým domovem';
+
+  @override
+  String chatEarlyBody(int count) {
+    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Už je k dispozici pro majitele ZigDash Pro. Prvních $count přihlášených dostane zakladatelský kód: 3 měsíce zdarma, včetně vzdáleného přístupu.';
+  }
+
+  @override
+  String get chatEarlyTelegram => 'Přihlásit přes Telegram';
+
+  @override
+  String get chatEarlyEmail => 'Přihlásit e-mailem';
+
+  @override
+  String get chatEarlyNotForMe => 'Není pro mě';
+
+  @override
+  String get chatEarlyClose => 'Zavřít';
+
+  @override
+  String get chatEarlyEmailHint => 'Váš e-mail';
+
+  @override
+  String get chatEarlyBadEmail => 'To nevypadá jako e-mailová adresa.';
+
+  @override
+  String get chatEarlyEmailUse =>
+      'Použijeme ho jen k pozvání do bety a sdělení ceny.';
+
+  @override
+  String get chatEarlyPrivacy => 'Ochrana soukromí';
+
+  @override
+  String get chatEarlySend => 'Odeslat';
+
+  @override
+  String get chatEarlyFailed =>
+      'Odeslání se nezdařilo. Zkuste Telegram nebo později.';
+
+  @override
+  String chatEarlyInFirst(int position, int count) {
+    return 'Jste č. $position na seznamu: mezi prvními $count. Dostanete zakladatelský kód: chat a vzdálený přístup, 3 měsíce zdarma.';
+  }
+
+  @override
+  String chatEarlyAfterFirst(int position, int count) {
+    return 'Jste č. $position na seznamu. Prvních $count míst je obsazeno. Chat je už k dispozici pro majitele ZigDash Pro.';
+  }
+
+  @override
+  String get chatEarlyListed => 'Tento e-mail už na seznamu je.';
+
+  @override
+  String get chatEarlyPrice =>
+      'Bylo by po bezplatných měsících v pořádku 2,49 € měsíčně?';
+
+  @override
+  String get chatEarlyYes => 'Ano';
+
+  @override
+  String get chatEarlyMaybe => 'Možná';
+
+  @override
+  String get chatEarlyNo => 'Ne';
+
+  @override
+  String get chatEarlyThanks => 'Díky, zaznamenáno.';
+
+  @override
+  String get settingsChatEarlySubtitle => 'Předběžný přístup: přihlásit se';
+
+  @override
+  String get historyOnTitle => 'Sledujte domov v průběhu dní';
+
+  @override
+  String get historyOnBody =>
+      'Zapněte historii a uvidíte teploty, spotřebu a dveře za dny a týdny, nejen teď. ZigDash Engine nahrává na vašem hubu, i když je telefon vypnutý.';
+
+  @override
+  String get historyOnTurnOn => 'Zapnout historii';
+
+  @override
+  String get historyOnLater => 'Teď ne';
+
+  @override
+  String get historyOnWorking => 'Zapínám historii…';
+
+  @override
+  String get historyOnConsentBody =>
+      'ZigDash Engine nahrává historii na hubu, takže běží, i když je telefon vypnutý. Váš Zigbee2MQTT blokuje doplňky, jako nové instalace: ZigDash by zapnul „Povolit externí JavaScript“ a restartoval ho.';
+
+  @override
+  String get historyOnAllow => 'Povolit a restartovat';
+
+  @override
+  String get historyOnBrokerBody =>
+      'Historie jde přes váš MQTT broker. ZigDash se k tomuto domovu připojuje přes stránku Zigbee2MQTT, takže nejdřív přidejte broker.';
+
+  @override
+  String get historyOnAddBroker => 'Přidat broker';
+
+  @override
+  String get historyOnPhoneBody =>
+      'Váš hub nemůže spustit ZigDash Engine. Místo něj může nahrávat tento telefon, dokud je ZigDash otevřený: nejlépe nástěnný tablet, který je stále zapnutý.';
+
+  @override
+  String get historyOnPhone => 'Nahrávat na tomto telefonu';
+
+  @override
+  String get proTrialStartedTitle => 'Pro je zapnuté na 14 dní';
+
+  @override
+  String get proTrialOfferTitle => 'Vyzkoušejte ZigDash Pro 14 dní zdarma';
+
+  @override
+  String get proTrialWhat =>
+      'Historie za 7 a 30 dní, doplňky pro nástěnný tablet a víc než tři automatizace.';
+
+  @override
+  String get proTrialNoPayment => 'Žádná platba, nic se neobnovuje.';
+
+  @override
+  String get proTrialStart => 'Začít zkušební dobu';
+
+  @override
+  String get proTrialEndingTitle => 'Zkušební doba Pro končí za 2 dny';
+
+  @override
+  String proTrialKeep(String price) {
+    return 'Ponechat Pro · $price';
+  }
+
+  @override
+  String get proTrialUsedHistory => 'týdenní a měsíční historii';
+
+  @override
+  String get proTrialUsedWall => 'doplňky pro nástěnný tablet';
+
+  @override
+  String get proTrialUsedAutomation => 'víc než tři automatizace';
+
+  @override
+  String proTrialYouUsed(String features) {
+    return 'Používali jste: $features.';
+  }
+
+  @override
+  String get proTrialAfterEnd =>
+      'Potom vše, co jste nastavili, zůstane; týdenní a měsíční pohled a nové automatizace nad tři potřebují Pro.';
+
+  @override
+  String proTrialDaysLeft(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Zkušební doba: zbývá $days dní',
+      few: 'Zkušební doba: zbývají $days dny',
+      one: 'Zkušební doba: zbývá 1 den',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get proTrialEnded =>
+      'Zkušební doba skončila. Vše, co jste nastavili, tam pořád je.';
+
+  @override
+  String get engineSlimCard =>
+      'Automatizace běží na vašem hubu díky ZigDash Engine. ZigDash ho tam nainstaluje, až uložíte první automatizaci.';
+
+  @override
+  String get engineAwayMakeAtHome =>
+      'Automatizace vytvářejte doma: ZigDash pak nainstaluje svůj Engine na váš hub přes domácí síť.';
+
+  @override
+  String get engineSheetSource => 'Zdrojový kód na GitHubu';
+
+  @override
+  String get engineSheetTitle => 'ZigDash Engine spouští vaše automatizace';
+
+  @override
+  String get engineSheetBody =>
+      'ZigDash Engine je jeden open-source soubor, který ZigDash přidá do složky Zigbee2MQTT na vašem hubu. Spouští tam vaše automatizace, i když je telefon vypnutý. Kdykoli ho odeberete na kartě Automatizace.';
+
+  @override
+  String get engineSheetInstallSave => 'Nainstalovat a uložit';
+
+  @override
+  String get engineSheetSaveOnly => 'Uložit bez spuštění';
+
+  @override
+  String get engineSheetSave => 'Uložit';
+
+  @override
+  String get engineSheetNoAnswer =>
+      'Zigbee2MQTT na vašem hubu neodpověděl včas, takže ZigDash teď nemůže nainstalovat svůj Engine. Uložte teď a nainstalujte ho na kartě Automatizace, až hub odpoví.';
+
+  @override
+  String get engineSheetSavedNotRunning =>
+      'Automatizace je uložená. Poběží, jakmile bude ZigDash Engine na vašem hubu.';
+
+  @override
+  String get engineWaitingTitle => 'Uložené dříve, čekají na ZigDash Engine';
+
+  @override
+  String get engineWaitingRun => 'Po instalaci poběží';
+
+  @override
+  String get engineWaitingPaused => 'Zůstane pozastavená';
+
+  @override
+  String get autoNotRunTitle => 'Žádná z nich zatím neběží';
+
+  @override
+  String get autoNotRunBody =>
+      'Neběží: ZigDash Engine není na vašem hubu. Do té doby je uchovává váš MQTT broker a broker bez persistence je při restartu ztratí.';
+
+  @override
+  String get autoNotRunning => 'Neběží';
+
+  @override
+  String get historyUsePhoneInstead => 'Použít raději tento telefon';
+
+  @override
+  String get chatTitle => 'Chat (beta)';
+
+  @override
+  String get chatRowReady => 'Mluvte se svým domovem přes Telegram';
+
+  @override
+  String get chatRowNoPro => 'Součást ZigDash Pro (není ve zkušební verzi)';
+
+  @override
+  String get chatRowNoRemote => 'Nejdřív zapněte dálkové ovládání';
+
+  @override
+  String get chatRowNoEngine => 'Potřebuje ZigDash Engine na vašem hubu';
+
+  @override
+  String get chatIntroTitle => 'Mluvte se svým domovem přes Telegram';
+
+  @override
+  String get chatIntroBody =>
+      'Pošlete botovi ZigDash Home v Telegramu zprávu jako „jsou zadní dveře otevřené?“ nebo „zavři roletu v pracovně“ a domov odpoví. Čte, co hlásí vaše zařízení, i jejich historii; s volbou Číst a ovládat umí také přepínat světla, rolety, spínače, zásuvky a termostaty, které vyberete.';
+
+  @override
+  String get chatIntroNever =>
+      'Nikdy neotevírá, nezavírá ani nemění zámky, ventily či sirény a nikdy nemění automatizace ani nastavení: kvůli nim vás pošle do ZigDash.';
+
+  @override
+  String get chatIntroBeta =>
+      'Zdarma během bety: až 300 zpráv měsíčně pro tento domov.';
+
+  @override
+  String get chatIntroWho =>
+      'Kdo zprávy čte: Telegram, který je přenáší; náš server v EU, který konverzaci uchovává 24 hodin; a Anthropic (Claude) v USA, který píše odpovědi. To, co Chat čte o vašem domově, jde stejnou cestou.';
+
+  @override
+  String get chatPolicy => 'Jak Chat zachází s vašimi daty';
+
+  @override
+  String get chatLinkedTitle => 'Propojené účty';
+
+  @override
+  String get chatLinkedNone => 'Zatím není propojený žádný účet Telegram.';
+
+  @override
+  String get chatLinkedLoadFailed =>
+      'Propojené účty se nepodařilo načíst. Zkontrolujte připojení k internetu.';
+
+  @override
+  String chatLinkedLine(String scope, String when) {
+    return '$scope · naposledy použito $when';
+  }
+
+  @override
+  String chatLinkedNeverUsed(String scope) {
+    return '$scope · zatím nepoužito';
+  }
+
+  @override
+  String get chatRemove => 'Odebrat';
+
+  @override
+  String chatRemoveTitle(String name) {
+    return 'Odebrat $name?';
+  }
+
+  @override
+  String get chatRemoveBody =>
+      'Tento účet Telegram už se k vašemu domovu nedostane a jeho konverzace se smaže.';
+
+  @override
+  String get chatRemovedLater =>
+      'Odebráno. Váš hub ho zapomene, až bude ZigDash příště otevřený doma.';
+
+  @override
+  String get chatAuditTitle => 'Co Chat udělal';
+
+  @override
+  String get chatAuditShow => 'Zobrazit';
+
+  @override
+  String get chatAuditEmpty => 'Zatím nic.';
+
+  @override
+  String get chatAuditFailed => 'Váš hub neodpověděl. Zkuste to později.';
+
+  @override
+  String chatAuditSent(String what) {
+    return 'nastaveno: $what';
+  }
+
+  @override
+  String get chatAuditNotSent => 'neodesláno';
+
+  @override
+  String get chatHereTitle => 'Chat s vaší domácností je tady';
+
+  @override
+  String get chatHereBody =>
+      'Propojte svůj účet Telegram a zeptejte se domu „jsou zadní dveře otevřené?“ nebo ho požádejte, ať zavře roletu. Součást Pro, během bety zdarma.';
+
+  @override
+  String get chatHereSetUp => 'Nastavit';
+
+  @override
+  String get chatHereNotNow => 'Teď ne';
+
+  @override
+  String get chatLinkNew => 'Propojit účet Telegram';
+
+  @override
+  String get chatLinkAnother => 'Propojit další účet Telegram';
+
+  @override
+  String get chatScopeRead => 'Číst';
+
+  @override
+  String get chatScopeReadHelp => 'Odpovídá na otázky. Nic nemění.';
+
+  @override
+  String get chatScopeControl => 'Číst a ovládat';
+
+  @override
+  String get chatScopeControlHelp => 'Přepíná i zařízení, která vyberete níže.';
+
+  @override
+  String get chatControlsTitle => 'Co smí Chat přepínat';
+
+  @override
+  String get chatControlsHelp =>
+      'Na začátku zapnuto: světla a rolety na vašich nástěnkách. Na začátku vypnuto: spínače a zásuvky (mohou napájet topení, bojler nebo čerpadlo), termostaty, brány a garážová vrata. Zámky, ventily a sirény se nikdy nezobrazují.';
+
+  @override
+  String get chatControlsEmpty => 'Zatím nejsou žádná zařízení na výběr.';
+
+  @override
+  String get chatKindLight => 'Světlo';
+
+  @override
+  String get chatKindCover => 'Roleta';
+
+  @override
+  String get chatKindSwitch => 'Spínač nebo zásuvka';
+
+  @override
+  String get chatKindThermostat => 'Termostat';
+
+  @override
+  String get chatGateNote => 'brána nebo dveře, na začátku vypnuto';
+
+  @override
+  String get chatAgeAndAccount =>
+      'Každý propojuje svůj vlastní účet Telegram s vlastním rozsahem. Propojené osoby musí mít 16 let nebo víc. Kdokoli používá propojený účet Telegram, může dělat, co jeho rozsah dovoluje. I Číst ukazuje, jestli je někdo doma a které dveře a okna jsou otevřené.';
+
+  @override
+  String get chatEngineOld =>
+      'ZigDash Engine na vašem hubu se aktualizuje na verzi s Chatem. Zkuste to znovu za minutu.';
+
+  @override
+  String get chatLinkButton => 'Propojit Telegram';
+
+  @override
+  String get chatLinkAway =>
+      'Propojte doma: ZigDash to nastaví na vašem hubu přes domácí síť.';
+
+  @override
+  String get chatCodeTitle => 'Dokončete v Telegramu';
+
+  @override
+  String get chatCodeBody =>
+      'V Telegramu klepněte u bota ZigDash Home na Spustit. Pošle vám 4místný kód: zadejte ho sem do 10 minut.';
+
+  @override
+  String get chatCodeHint => '4místný kód';
+
+  @override
+  String get chatCodeConfirm => 'Potvrdit';
+
+  @override
+  String get chatOpenTelegram => 'Znovu otevřít Telegram';
+
+  @override
+  String get chatLinkedDone =>
+      'Propojeno. Pošlete botovi zprávu a vyzkoušejte to.';
+
+  @override
+  String get chatFailUnreachable =>
+      'Servery ZigDash nejsou dostupné. Zkontrolujte připojení k internetu a zkuste to znovu.';
+
+  @override
+  String get chatFailLogin =>
+      'Relay nepřijal vzdálené přihlášení tohoto telefonu. Otevřete Dálkové ovládání, vypněte ho a znovu zapněte.';
+
+  @override
+  String get chatFailPurchase =>
+      'Google Play nepotvrzuje nákup ZigDash Pro pro tento domov.';
+
+  @override
+  String get chatFailTooMany =>
+      'Příliš mnoho pokusů. Zkuste to znovu za hodinu.';
+
+  @override
+  String get chatFailExpired => 'Platnost kódu vypršela. Začněte znovu.';
+
+  @override
+  String get chatFailWrongCode =>
+      'To není kód, který poslal bot. Zkontrolujte ho a zkuste to znovu.';
+
+  @override
+  String get chatFailRefused => 'Nepovedlo se. Zkuste to později.';
+
+  @override
+  String get chatFailNotClaimed =>
+      'Bot kód ještě nedostal. Otevřete Telegram, u bota ZigDash Home klepněte na Spustit a pak zadejte kód, který pošle.';
+
+  @override
+  String chatFailWrongCodeLeft(int count) {
+    return 'To není kód, který poslal bot. Zbývající pokusy: $count.';
+  }
+
+  @override
+  String get founderCodeAsk => 'Máte zakladatelský kód?';
+
+  @override
+  String get founderCodeLabel => 'Zakladatelský kód';
+
+  @override
+  String get founderCodeUse => 'Použít kód';
+
+  @override
+  String get founderCodeAtHome =>
+      'Zadejte ho doma, s ZigDash Engine na hubu: ZigDash nastaví dálkové ovládání přes domácí síť.';
+
+  @override
+  String get founderCodeWrong =>
+      'To není zakladatelský kód. Zkontrolujte ho a zkuste to znovu.';
+
+  @override
+  String get founderCodeUsed =>
+      'Tento kód už byl použit. Každý kód platí jednou.';
+
+  @override
+  String get founderCodeDeadline =>
+      'Lhůta pro zadání tohoto kódu uplynula. O další čas požádejte přes Získat pomoc.';
+
+  @override
+  String get founderCodeRevoked => 'Tento kód byl zrušen.';
+
+  @override
+  String founderCodeDone(String date) {
+    return 'Zakladatelská propustka je aktivní: dálkové ovládání a Chat pro tento domov do $date.';
+  }
+
+  @override
+  String founderEndsOn(String date) {
+    return 'Zakladatelská propustka končí $date. Se ZigDash Pro dálkové ovládání a Chat zůstanou, bez nového nastavování.';
+  }
+
+  @override
+  String get founderGetPro => 'Získat Pro';
+
+  @override
+  String founderEnded(String date) {
+    return 'Zakladatelská propustka skončila $date. ZigDash Pro vrátí dálkové ovládání a Chat, bez nového nastavování.';
+  }
+
+  @override
+  String get founderEndedNoDate =>
+      'Zakladatelská propustka skončila. ZigDash Pro vrátí dálkové ovládání a Chat, bez nového nastavování.';
+
+  @override
+  String get founderDeleted =>
+      'Zakladatelská propustka tohoto domova skončila a jeho dálkové ovládání bylo odstraněno.';
+
+  @override
+  String get remoteRemoved =>
+      'Dálkové ovládání tohoto domova bylo z relé odstraněno.';
+
+  @override
+  String get founderSetUpWithPro => 'Nastavit s Pro';
+
+  @override
+  String get founderUseProTitle => 'Použít nákup Pro pro tento domov?';
+
+  @override
+  String get founderUseProBody =>
+      'Dálkové ovládání a Chat tohoto domova přejdou na váš nákup Pro: stejné telefony i propojení Chatu, nic se znovu nenastavuje. Jeden nákup platí pro jeden domov.';
+
+  @override
+  String get founderUsePro => 'Použít Pro pro tento domov';
+
+  @override
+  String get founderUpgraded => 'Tento domov teď běží na vašem nákupu Pro.';
+
+  @override
+  String get founderUpgradeTaken => 'Tento nákup už patří jinému domovu.';
+
+  @override
+  String get founderUpgradeFailed =>
+      'Domov se nepodařilo převést na nákup Pro. Zkuste to později.';
+
+  @override
+  String get remoteHubRefused => 'Relé odmítlo přihlášení hubu';
+
+  @override
+  String get chatRowPassEnded =>
+      'Zakladatelská propustka skončila: propojení lze stále odebrat';
+
+  @override
+  String get chatFailPassEnded =>
+      'Zakladatelská propustka tohoto domova skončila, nový účet Telegram proto nelze propojit.';
+
+  @override
+  String get panelToggleNoState => '(bez stavu)';
+
+  @override
+  String get panelToggleError => 'chyba';
+
+  @override
+  String get diagResolveLocalNameIos =>
+      'Telefon tento název nenašel. Zkontroluj, jestli je správně napsaný, nebo místo toho zadej IP adresu (Home Assistant ji ukazuje v Nastavení › Systém › Síť).';
+
+  @override
+  String get reminderNoPermissionIos =>
+      'Oznámení ZigDash jsou vypnutá, takže připomenutí nebude. Můžeš je zapnout v Nastavení › ZigDash › Oznámení.';
+
+  @override
+  String get setupLocalNetworkIos =>
+      'ZigDash potřebuje přístup k místní síti, aby našel tvůj hub. Pokud byl přístup odmítnut, povol ho v Nastavení › Soukromí a zabezpečení › Místní síť.';
+
+  @override
+  String setupAddressNotResolvedHaIos(String host, String button) {
+    return '$host z tohoto telefonu nelze najít. Klepni výše na $button a použij adresu, kterou Home Assistant otevíráš v prohlížeči, nebo sem napiš jeho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
+  }
+
+  @override
+  String setupAddressNotResolvedIos(String host) {
+    return '$host se nepodařilo vyhledat. Zkontroluj název, nebo zkus místo toho IP adresu. Home Assistant ji ukazuje v Nastavení › Systém › Síť.';
+  }
+
+  @override
+  String get tipNumberAddressBodyIos =>
+      'Pokud název nefunguje, zkus číselnou adresu hubu, třeba 192.168.1.20.';
+
+  @override
+  String get wallFullscreenSubtitleIos =>
+      'Skryje i stavový řádek; indikátor plochy ztlumí.';
+
+  @override
+  String get kioskPinForgotBodyIos =>
+      'Zapomenutý PIN jde resetovat jen smazáním a novou instalací ZigDash, což odstraní tento domov, pokud nemáš zálohu. Než PIN nastavíš, zálohu si vyexportuj.';
+
+  @override
+  String get kioskGuidedAccessTitle =>
+      'Zamknout na ZigDash přes Řízený přístup';
+
+  @override
+  String get kioskGuidedAccess =>
+      'iOS nechá ZigDash na obrazovce, dokud Řízený přístup neukončíš: zapni ho v Nastavení › Zpřístupnění › Řízený přístup a pak v ZigDash třikrát stiskni boční tlačítko.';
+
+  @override
+  String get proFreeBodyIos =>
+      'Nastavení, nástěnky, ovládání všech zařízení, tři automatizace na domácnost i samotný tablet na zdi zůstávají zdarma. Nic, co dnes používáš, se nezamkne.';
+
+  @override
+  String get proOnceIos =>
+      'Jedna platba, žádné předplatné. Koupil jsi to na jiném iPhonu nebo iPadu se stejným Apple účtem? Odemkne se automaticky, nebo klepni na Obnovit nákup.';
+
+  @override
+  String get engineIntroTitle => 'Automatizace běží na hubu, ne v telefonu';
+
+  @override
+  String get engineIntroBody =>
+      'ZigDash vloží ZigDash Engine do Zigbee2MQTT na vašem hubu. Sleduje vaše zařízení a spouští pravidla, takže se světlo rozsvítí při otevření dveří, i když je telefon vypnutý a nejde internet.';
+
+  @override
+  String get engineIntroNothingByHand =>
+      'Nic se neinstaluje ručně. ZigDash to udělá přes domácí síť.';
+
+  @override
+  String engineIntroVersion(Object version) {
+    return 'Váš Zigbee2MQTT má verzi $version.';
+  }
+
+  @override
+  String get engineIntroRemove => 'Kdykoli ho můžete odebrat z této obrazovky.';
 }

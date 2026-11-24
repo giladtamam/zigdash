@@ -244,7 +244,7 @@ void main(List<String> args) {
     ..writeln();
   render(out, homeSections, strings, dyn, used, suffixes: homeBodySuffixes);
 
-  final knowledge = out.toString().trimRight() + '\n';
+  final knowledge = '${out.toString().trimRight()}\n';
   final homeChars = knowledge.length - homeStart;
   final leftover = RegExp(r'\{[^}\s]*\}').allMatches(knowledge).map((m) => m.group(0)).toSet();
   if (leftover.isNotEmpty) {

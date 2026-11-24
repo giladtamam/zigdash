@@ -1,0 +1,3 @@
+Import from Home Assistant now finds your Home Assistant at the address you signed in with. Before, a home set up through Home Assistant could not start the import.
+
+When Home Assistant has MQTT but your Zigbee runs in ZHA, setup now says so and offers Moving from ZHA.

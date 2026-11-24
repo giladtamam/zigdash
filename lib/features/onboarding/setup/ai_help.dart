@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/analytics/analytics.dart';
 import '../../../core/l10n/l10n_ext.dart';
+import '../../../mqtt/ha_mqtt_client.dart' show HaFacts;
 import '../../../shortcuts/shortcut_service.dart' show appChannel;
 import '../../connections/discovery/hub_probe.dart';
 import '../../support/support_details.dart';
@@ -38,6 +39,7 @@ class AiHelpFacts {
     this.loginRejected = false,
     this.baseTopic,
     this.haProblem,
+    this.haFacts,
   });
 
   final AiHelpFrom from;
@@ -52,6 +54,9 @@ class AiHelpFacts {
   final bool loginRejected;
   final String? baseTopic;
   final HaConnectProblem? haProblem;
+
+  /// What the Home Assistant check read (3.7.1): apps or not, ZHA devices.
+  final HaFacts? haFacts;
 }
 
 const _languages = {
@@ -174,6 +179,14 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     SetupErrorKind.loginNoAnswer =>
       "ZigDash found my broker, but it didn't answer the username and "
           'password in time.',
+    SetupErrorKind.tlsUntrusted =>
+      'ZigDash found my MQTT broker on an encrypted (TLS) port, but my phone '
+          "doesn't trust the broker's certificate: it is self-signed, expired, "
+          "or made for another name. ZigDash can't use such a certificate yet.",
+    SetupErrorKind.tlsFailed =>
+      'ZigDash tried an encrypted (TLS) connection to my MQTT broker, but '
+          'the TLS handshake failed. The broker may want a client '
+          "certificate, which ZigDash doesn't support.",
     SetupErrorKind.noDevices =>
       'ZigDash reached Zigbee2MQTT, but it published no devices during the '
           'check.',
@@ -201,9 +214,11 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     HaConnectProblem.certificate =>
       "My phone doesn't trust my Home Assistant's certificate.",
     HaConnectProblem.notAdmin =>
-      "ZigDash says my Home Assistant user isn't an administrator.",
+      "ZigDash says my Home Assistant user isn't an administrator."
+          '${_haFactsLine(f.haFacts)}',
     HaConnectProblem.noMqtt =>
-      'ZigDash says my Home Assistant has no MQTT integration.',
+      'ZigDash says my Home Assistant has no MQTT integration.'
+          '${_haFactsLine(f.haFacts)}',
     HaConnectProblem.signInRefused || HaConnectProblem.signInFailed =>
       "Signing in with Home Assistant didn't complete.",
     HaConnectProblem.badToken ||
@@ -211,6 +226,22 @@ String _stuck(AiHelpFacts f) => switch (f.from) {
     null => "I can't get connected through Home Assistant.",
   },
 };
+
+/// What the check read, for the write-up (3.8): ZHA comes first, since
+/// neither an admin sign-in nor Mosquitto reaches ZHA devices.
+String _haFactsLine(HaFacts? facts) {
+  final zha = facts?.zhaDevices ?? 0;
+  if (zha > 0) {
+    return ' It also found that my Zigbee runs in ZHA, Home Assistant\'s own '
+        'Zigbee ($zha devices), not in Zigbee2MQTT. ZigDash only works with '
+        'Zigbee2MQTT, so I would have to move my devices to it.';
+  }
+  if (facts?.apps == false) {
+    return ' My Home Assistant has no apps (it runs in Docker or as Core), '
+        'so Mosquitto and Zigbee2MQTT would run as their own containers.';
+  }
+  return '';
+}
 
 /// The "Ask your AI" card on a screen where setup is stuck (3.1.5).
 class AiHelpCard extends ConsumerWidget {

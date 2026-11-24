@@ -95,6 +95,28 @@ class _AddTileScreenState extends ConsumerState<AddTileScreen> {
         ),
       ),
     ];
+    // Reading and Custom MQTT tile first: below a long device list nobody
+    // finds them (a 54-device home missed the Custom tile, 3.7.0).
+    children.addAll([
+      ListTile(
+        key: const Key('add-tile-reading'),
+        leading: const Icon(Icons.speed),
+        title: Text(l10n.addTileReading),
+        subtitle: Text(l10n.addTileReadingSubtitle),
+        onTap: () => context.pushReplacement(
+          '/connections/${widget.connectionId}/dashboards/'
+          '${widget.dashboardId}/panels/new?type=reading',
+        ),
+      ),
+      ListTile(
+        key: const Key('add-tile-custom'),
+        leading: const Icon(Icons.settings_ethernet),
+        title: Text(l10n.addTileCustom),
+        subtitle: Text(l10n.addTileCustomSubtitle),
+        onTap: () => widget.onCustomTile(context),
+      ),
+      const Divider(height: 16),
+    ]);
     void section(String title) => children.add(
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
@@ -128,25 +150,7 @@ class _AddTileScreenState extends ConsumerState<AddTileScreen> {
       children.addAll(devices.map(_row));
     }
 
-    children.addAll([
-      const Divider(height: 32),
-      ListTile(
-        leading: const Icon(Icons.speed),
-        title: Text(l10n.addTileReading),
-        subtitle: Text(l10n.addTileReadingSubtitle),
-        onTap: () => context.pushReplacement(
-          '/connections/${widget.connectionId}/dashboards/'
-          '${widget.dashboardId}/panels/new?type=reading',
-        ),
-      ),
-      ListTile(
-        leading: const Icon(Icons.settings_ethernet),
-        title: Text(l10n.addTileCustom),
-        subtitle: Text(l10n.addTileCustomSubtitle),
-        onTap: () => widget.onCustomTile(context),
-      ),
-      const SizedBox(height: 24),
-    ]);
+    children.add(const SizedBox(height: 24));
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.dashAddTile)),

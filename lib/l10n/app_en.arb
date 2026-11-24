@@ -19,7 +19,11 @@
   "languageHebrew": "עברית",
   "connectionsTitle": "Homes",
   "connLoadFailed": "Failed to load: {error}",
-  "@connLoadFailed": { "placeholders": { "error": {} } },
+  "@connLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "connAddBroker": "Add broker",
   "connEmpty": "No connections yet.\nTap \"Add broker\" to point ZigDash at your MQTT server.",
   "connNew": "New connection",
@@ -37,9 +41,19 @@
   "connRescan": "Rescan",
   "connBrokerNeedsLogin": "Needs login",
   "connFindBrokersScanning": "Scanning {subnet}…",
-  "@connFindBrokersScanning": { "placeholders": { "subnet": {} } },
+  "@connFindBrokersScanning": {
+    "placeholders": {
+      "subnet": {}
+    }
+  },
   "connFindBrokersFound": "{count} broker(s) found — tap to use",
-  "@connFindBrokersFound": { "placeholders": { "count": { "type": "int" } } },
+  "@connFindBrokersFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "connFindBrokersNone": "No brokers found on your Wi-Fi.",
   "connFindBrokersNoIp": "Couldn't read your Wi-Fi address. Make sure Wi-Fi is on and try again.",
   "connHelpTitle": "Finding your broker IP",
@@ -48,7 +62,7 @@
   "connHelpSmhubTitle": "SMLIGHT SMHUB",
   "connHelpSmhubBody": "The broker IP is the hub's IP address. Open the hub's web page (smhub.local): on the Dashboard, the Network box shows it next to IPv4. Your router's app also lists the hub as SMHUB. Port is 1883, with no username/password by default.",
   "connHelpZhaTitle": "Home Assistant ZHA",
-  "connHelpZhaBody": "ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can't connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which provides an MQTT broker.",
+  "connHelpZhaBody": "ZHA has no MQTT broker — it talks to Home Assistant directly, so ZigDash can't connect to it. To use ZigDash, switch to Zigbee2MQTT (available as a Home Assistant app or a Docker container), which runs with an MQTT broker such as Mosquitto.",
   "connHelpSameNetwork": "Your phone and the broker must be on the same Wi-Fi network (not a guest or isolated VLAN).",
   "connRemoteHost": "Remote host (Tailscale)",
   "connRemoteHostHint": "Used when the local host can't be reached. Prefer the hub's Tailscale IP, e.g. 100.x.y.z",
@@ -68,23 +82,28 @@
   "cancel": "Cancel",
   "connDeleteTitle": "Delete connection?",
   "connDeleteContent": "Removes \"{name}\", its dashboards/panels, and its saved password.",
-  "@connDeleteContent": { "placeholders": { "name": {} } },
+  "@connDeleteContent": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "statusDisconnected": "Disconnected",
   "statusConnecting": "Connecting",
   "statusConnected": "Connected",
   "statusReconnecting": "Reconnecting",
   "statusError": "Error",
   "statusConnectedRemote": "Connected · Remote",
-
   "dashPlaceholder": "Open a broker from the Brokers tab to see and manage its dashboards.",
-
   "dashAddDashboard": "Add dashboard",
   "dashEditDashboard": "Edit dashboard",
   "dashAddPanel": "Add panel",
   "dashEmpty": "No dashboards yet.\nTap \"Add dashboard\" to create one for this broker.",
   "dashLoadFailed": "Failed: {error}",
-  "@dashLoadFailed": { "placeholders": { "error": {} } },
-
+  "@dashLoadFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "panelPickerTitle": "Add a panel",
   "panelPickerSectionControl": "Control",
   "panelPickerSectionState": "State",
@@ -118,7 +137,6 @@
   "panelPickerProgressSubtitle": "Numeric bar for battery, link quality, etc.",
   "panelPickerTextLogTitle": "Text Log",
   "panelPickerTextLogSubtitle": "Scrolling history of messages on a topic",
-
   "dashExportMenu": "Export dashboards",
   "dashImportMenu": "Import dashboards",
   "dashExportTitle": "Export dashboards",
@@ -129,10 +147,19 @@
   "dashImportHint": "Paste exported JSON here",
   "dashImportButton": "Import",
   "dashImportSuccess": "{count,plural, =1{Imported 1 dashboard} other{Imported {count} dashboards}}",
-  "@dashImportSuccess": { "placeholders": { "count": { "type": "int" } } },
+  "@dashImportSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "dashImportFailed": "Import failed: {error}",
-  "@dashImportFailed": { "placeholders": { "error": {} } },
-
+  "@dashImportFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashFormNew": "New dashboard",
   "dashFormEdit": "Edit dashboard",
   "dashFormName": "Name",
@@ -148,12 +175,18 @@
   "dashDeleteTitle": "Delete this dashboard?",
   "dashDeleteContent": "All panels under it will also be removed.",
   "dashDeleteConfirm": "Delete",
-
   "panelFormNew": "New {type}",
-  "@panelFormNew": { "placeholders": { "type": {} } },
+  "@panelFormNew": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelFormEdit": "Edit {type}",
-  "@panelFormEdit": { "placeholders": { "type": {} } },
-
+  "@panelFormEdit": {
+    "placeholders": {
+      "type": {}
+    }
+  },
   "panelTypeButton": "Button",
   "panelTypeToggle": "Toggle",
   "panelTypeSlider": "Slider",
@@ -170,10 +203,13 @@
   "panelTypeAutoClose": "Auto-close",
   "panelTypeDevice": "Device",
   "panelTypeReading": "Reading",
-
   "panelFormName": "Name",
   "panelFormDashboardPrefix": "Dashboard prefix: {prefix}/ (used unless overridden below)",
-  "@panelFormDashboardPrefix": { "placeholders": { "prefix": {} } },
+  "@panelFormDashboardPrefix": {
+    "placeholders": {
+      "prefix": {}
+    }
+  },
   "panelFormTopicPrefixOverride": "Topic prefix override (optional)",
   "panelFormTopicPrefixOverrideHint": "zigbee2mqtt/shutter",
   "panelFormTopicPrefixOverrideHelper": "Use a different device on this dashboard. Blank = use dashboard prefix.",
@@ -193,14 +229,12 @@
   "panelFormQos1": "1 — at least once",
   "panelFormQos2": "2 — exactly once",
   "panelFormRetain": "Retain",
-
   "panelToggleOnPayload": "On payload",
   "panelToggleOffPayload": "Off payload",
   "panelToggleJsonPath": "JSON path (optional)",
   "panelToggleJsonPathHint": "state",
   "panelToggleOnMatch": "On match",
   "panelToggleOnMatchHelper": "Value at JSON path that means \"on\" (e.g. \"ON\")",
-
   "panelSliderMin": "Min",
   "panelSliderMax": "Max",
   "panelSliderStep": "Step",
@@ -208,9 +242,7 @@
   "panelSliderTemplateHelper": "Use the word value as a placeholder — it is replaced with the slider value",
   "panelSliderJsonPath": "JSON path (optional)",
   "panelSliderJsonPathHint": "brightness",
-
   "panelButtonPayload": "Payload",
-
   "panelLedJsonPath": "JSON path (optional)",
   "panelLedJsonPathHint": "contact",
   "panelLedJsonPathHelper": "e.g. \"contact\", \"occupancy\", \"water_leak\"",
@@ -220,12 +252,10 @@
   "panelLedOnLabelHint": "ON",
   "panelLedOffLabel": "Off label (optional)",
   "panelLedOffLabelHint": "OFF",
-
   "panelNodeOnlinePayload": "Online payload",
   "panelNodeOnlinePayloadHelper": "Value that means \"online\" (Z2M default: \"online\")",
   "panelNodeJsonPath": "JSON path (optional)",
   "panelNodeJsonPathHelper": "Leave blank for Z2M default (raw \"online\"/\"offline\" string)",
-
   "panelProgressMin": "Min",
   "panelProgressMax": "Max",
   "panelProgressUnit": "Unit",
@@ -233,7 +263,6 @@
   "panelProgressJsonPath": "JSON path (optional)",
   "panelProgressJsonPathHint": "battery",
   "panelProgressJsonPathHelper": "e.g. \"battery\", \"linkquality\"",
-
   "panelOptionsJsonPath": "JSON path (optional)",
   "panelOptionsJsonPathHint": "state",
   "panelOptionsJsonPathHelper": "Field in the received payload that holds the current value",
@@ -242,24 +271,20 @@
   "panelOptionsPayload": "Payload",
   "panelOptionsMatch": "Match (current value)",
   "panelOptionsAdd": "Add option",
-
   "panelCoverDescription": "OPEN / STOP / CLOSE buttons plus a row of position presets. Uses the standard Z2M cover payloads (state and position).",
   "panelCoverPresets": "Position presets",
   "panelCoverPresetsHint": "0, 25, 50, 100",
   "panelCoverPresetsHelper": "Comma-separated percentages (0–100). Blank = no preset row.",
   "panelCoverShowSlider": "Show position slider",
-
   "panelTextInputHint": "Hint (optional)",
   "panelTextInputHintHint": "Type a value…",
   "panelTextInputTemplate": "Template",
   "panelTextInputTemplateHelper": "Use the word value as a placeholder — it is replaced with the typed text. Default publishes the raw text.",
   "panelTextInputClearAfterSend": "Clear after send",
-
   "panelTextLogMaxLines": "Max lines",
   "panelTextLogMaxLinesHelper": "How many recent messages to keep",
   "panelTextLogJsonPath": "JSON path (optional)",
   "panelTextLogJsonPathHelper": "Log just this field instead of the whole payload",
-
   "panelScheduleDescription": "Runs on the SMHUB via Node-RED — fires even when this phone is off. The Publish topic above is the shutter command target.",
   "panelScheduleOpenTime": "Open time",
   "panelScheduleCloseTime": "Close time",
@@ -267,7 +292,6 @@
   "panelScheduleClosePayload": "Close payload",
   "panelScheduleEnabled": "Enabled",
   "panelScheduleSavedOffline": "Saved — not connected; schedule will sync when online.",
-
   "panelAutoCloseDescription": "Runs on the SMHUB via Node-RED — fires even when this phone is off. The Publish topic above is the device's command target (e.g. door).",
   "panelAutoCloseTriggerPath": "Trigger JSON path",
   "panelAutoCloseTriggerPathHelper": "Field in the device's state JSON to watch (default: state)",
@@ -278,49 +302,57 @@
   "panelAutoCloseDelaySecondsHelper": "1-3600. Time to wait after the device turns on before publishing the close payload.",
   "panelAutoCloseEnabled": "Enabled",
   "panelAutoCloseSavedOffline": "Saved — not connected; rule will sync when online.",
-
   "panelTileEdit": "Edit panel",
   "panelTileDuplicate": "Duplicate panel",
   "panelTileMoveUp": "Move up",
   "panelTileMoveDown": "Move down",
   "panelTileDelete": "Delete panel",
-
   "panelCoverOpen": "Open",
   "panelCoverStop": "Stop",
   "panelCoverClose": "Close",
-
-  "panelToggleNoState": "(no state)",
-  "panelToggleError": "err",
-
   "panelStateOn": "ON",
   "panelStateOff": "OFF",
-
   "panelNodeStatusOnline": "online",
   "panelNodeStatusOffline": "offline",
   "panelNodeStatusUnknown": "unknown",
   "panelNodeStatusError": "error",
-
   "panelMultiStateNoOptions": "No options configured",
-
   "panelTextInputDefaultHint": "Type a value…",
-
   "panelTextLogWaiting": "Waiting for messages…",
-
   "panelScheduleOpensAt": "Opens {time}",
-  "@panelScheduleOpensAt": { "placeholders": { "time": {} } },
+  "@panelScheduleOpensAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleClosesAt": "Closes {time}",
-  "@panelScheduleClosesAt": { "placeholders": { "time": {} } },
+  "@panelScheduleClosesAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "panelScheduleOfflineWarning": "Scheduler offline — won't run",
   "panelScheduleDisabled": "Disabled",
   "panelScheduleNext": "Next: {action} at {at}",
-  "@panelScheduleNext": { "placeholders": { "action": {}, "at": {} } },
+  "@panelScheduleNext": {
+    "placeholders": {
+      "action": {},
+      "at": {}
+    }
+  },
   "panelScheduleActionOpen": "open",
   "panelScheduleActionClose": "close",
   "panelAutoCloseIdle": "Idle",
   "panelAutoCloseDisabled": "Disabled",
   "panelAutoCloseOffline": "Automation offline — rule won't run",
   "panelAutoCloseClosingIn": "Closing in {seconds}s",
-  "@panelAutoCloseClosingIn": { "placeholders": { "seconds": { "type": "int" } } },
+  "@panelAutoCloseClosingIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "panelAutoCloseClosingNow": "Closing now…",
   "panelGridEmpty": "No tiles yet.\nTap Add tile to put your devices here.",
   "panelsOffline": "Offline — showing last values",
@@ -330,7 +362,6 @@
   "connectionFailed": "Connection failed",
   "connectionAutomaticRetry": "Automatic retry will continue",
   "connectionReconnectNow": "Reconnect now",
-
   "settingsAbout": "About",
   "settingsHelp": "Help & Guide",
   "settingsVersion": "Version",
@@ -350,7 +381,6 @@
   "reportProblemEmailPrompt": "What happened, and what did you expect?",
   "settingsBuyCoffee": "Buy me a coffee",
   "settingsBuyCoffeeSubtitle": "Free & open source — tips keep it brewing.",
-
   "a11yBackupMenu": "Backup & restore",
   "a11ySelectColor": "Select color",
   "a11ySelectIcon": "Select icon",
@@ -358,11 +388,11 @@
   "a11yPanelOptions": "Panel options",
   "a11yMoreOptions": "More options",
   "a11yRefresh": "Refresh",
-  "@a11yRefresh": {"description": "Screen-reader label for icon-only refresh buttons."},
+  "@a11yRefresh": {
+    "description": "Screen-reader label for icon-only refresh buttons."
+  },
   "a11yDeleteConnection": "Delete connection",
-
   "controlNotConnected": "Not connected — change not sent",
-
   "discoverFromDevice": "Add from a device…",
   "discoverFromDeviceSubtitle": "Auto-detect a Zigbee2MQTT device",
   "discoverTitle": "Add from device",
@@ -386,19 +416,27 @@
     }
   },
   "previewNoValue": "(no value at this path)",
-
   "connErrorTitle": "Connection error",
   "connErrorUnknown": "No error details available.",
   "connTestButton": "Test connection",
   "connTestOk": "Connection successful",
   "connTestFailed": "Connection failed: {error}",
-  "@connTestFailed": { "placeholders": { "error": {} } },
-
+  "@connTestFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "devicesTitle": "Devices",
   "devicesAddButton": "Add device",
   "devicesPairingTitle": "Pairing — press the device's button",
   "devicesPairingHint": "Searching for new devices… {seconds}s",
-  "@devicesPairingHint": { "placeholders": { "seconds": { "type": "int" } } },
+  "@devicesPairingHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
   "devicesPairingStop": "Stop",
   "devicesNone": "No devices found.",
   "devicesListMissing": "Zigbee2MQTT hasn't sent its device list. This can happen after the MQTT broker restarts.",
@@ -409,44 +447,90 @@
   "devicesOnline": "Online",
   "devicesOffline": "Offline",
   "devicesPaired": "Ready: {name}",
-  "@devicesPaired": { "placeholders": { "name": {} } },
+  "@devicesPaired": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "devicesPairedHint": "Added to your network. To put it on a dashboard, use 'Add from a device' on that dashboard.",
   "scenesTitle": "Scenes",
   "scenesNone": "No scenes yet. Set your devices the way you like, then capture them as a scene.",
   "scenesNewButton": "New scene",
   "scenesActivated": "Activated {name}",
-  "@scenesActivated": { "placeholders": { "name": {} } },
+  "@scenesActivated": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "scenesActivateOffline": "Not connected — can't activate the scene",
   "sceneFormNewTitle": "New scene",
   "sceneFormEditTitle": "Edit scene",
   "sceneFormNameLabel": "Scene name",
   "sceneFormDevicesHeader": "Devices to capture",
   "sceneFormCaptureHint": "Each selected device's current settable state (on/off, brightness, colour, position…) is saved. Read-only values are ignored.",
-  "sceneFormNoDevices": "No controllable devices found. Make sure they're paired, then tap refresh.",
+  "sceneFormNoDevices": "No controllable devices or tiles found. Make sure they're paired, then tap refresh.",
   "sceneFormReadingState": "Reading current state…",
   "sceneCtrlPower": "Power",
   "sceneCtrlBrightness": "Brightness",
   "sceneCtrlPosition": "Position",
   "sceneFormSelectedCount": "{count} selected",
-  "@sceneFormSelectedCount": { "placeholders": { "count": { "type": "int" } } },
-  "sceneFormNoDevicesSelected": "Select at least one device to capture.",
+  "@sceneFormSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sceneFormNoDevicesSelected": "Select at least one device or tile.",
   "sceneFormNothingCaptured": "Nothing settable was captured from the selected devices.",
+  "sceneFormTilesHeader": "Your tiles",
+  "sceneFormTilesHint": "Tiles you made yourself. The scene sends what the tile sends.",
+  "sceneTileHomeOnly": "Runs only from this phone at home: not from Automations or when you're away.",
+  "sceneFormKeptActions": "{count, plural, =1{1 other action is kept} other{{count} other actions are kept}}",
+  "@sceneFormKeptActions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sceneFormRemoveKept": "Remove",
   "sceneDeleteTitle": "Delete scene?",
   "sceneDeleteMessage": "\"{name}\" will be removed. Devices keep their current state.",
-  "@sceneDeleteMessage": { "placeholders": { "name": {} } },
+  "@sceneDeleteMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "sceneEditAction": "Edit",
   "sceneDeleteAction": "Delete",
   "sceneAddToDashboard": "Add to dashboard",
   "sceneAddedToDashboard": "Added to {name}",
-  "@sceneAddedToDashboard": { "placeholders": { "name": {} } },
-  "sceneActionsCount": "{count} devices",
-  "@sceneActionsCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneAddedToDashboard": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "sceneActionsCount": "{count, plural, =1{1 action} other{{count} actions}}",
+  "@sceneActionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "scenesAllShutters": "All shutters",
   "sceneCloseAllShutters": "Close all shutters",
   "sceneOpenAllShutters": "Open all shutters",
   "sceneStopAllShutters": "Stop all shutters",
   "sceneShuttersCount": "{count, plural, =1{1 shutter} other{{count} shutters}}",
-  "@sceneShuttersCount": { "placeholders": { "count": { "type": "int" } } },
+  "@sceneShuttersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "sceneWhichShutters": "Which shutters…",
   "sceneWhichShuttersHint": "Every shutter in this Home is included. Untick any that should stay out, like a garage door.",
   "scenesYours": "Your scenes",
@@ -478,21 +562,39 @@
   "diagTcpTimeout": "Connecting to the broker timed out. It may be offline or unreachable.",
   "diagConnackFail": "The broker didn't complete the MQTT handshake. Make sure this is an MQTT broker (Mosquitto, Zigbee2MQTT).",
   "diagLoginNoAnswer": "The broker didn't answer the login in time. Home Assistant can take a few seconds to check it, so try again.",
+  "diagTlsUntrusted": "This broker's encryption certificate isn't trusted by your phone: it is self-signed, expired, or made for another name. ZigDash can't use it yet. On your home network, use the broker's unencrypted port 1883 instead, or give the broker a certificate from a public authority.",
+  "@diagTlsUntrusted": {
+    "description": "Broker test and setup (3.8.5): the TLS handshake failed because the phone does not trust the broker's certificate (self-signed, expired, wrong name). 1883 is the usual unencrypted MQTT port."
+  },
+  "diagTlsFailed": "The encrypted connection didn't start. The broker may want a client certificate, which ZigDash doesn't support. On your home network, connect without encryption instead: TCP rather than TLS, usually on port 1883.",
+  "@diagTlsFailed": {
+    "description": "Broker test and setup (3.8.5): the TLS handshake failed for another reason, for example the broker wants a client certificate, or TLS was chosen for a broker that has none. TCP and TLS are the protocol names on the broker form; 1883 is the usual unencrypted MQTT port."
+  },
   "diagAuthRejected": "The broker rejected the username or password. Check your credentials.",
   "diagAuthRefused": "The broker refused the connection. Check the connection settings.",
   "diagResolveLocalName": "Your phone couldn't find this name. Android often can't look up names ending in .local, so enter the IP address instead (Home Assistant shows it under Settings › System › Network).",
-  "@diagResolveLocalName": {"description": "Broker test: the name ends in .local and could not be looked up (2.9.3). Settings › System › Network is Home Assistant's own menu path."},
+  "@diagResolveLocalName": {
+    "description": "Broker test: the name ends in .local and could not be looked up (2.9.3). Settings › System › Network is Home Assistant's own menu path."
+  },
   "diagTcpHaNoBroker": "This is your Home Assistant, but no MQTT broker is running on it. Install and start the Mosquitto broker app (Settings › Apps), then try again.",
-  "diagResolveLocalNameIos": "Your phone couldn't find this name. Check that it's spelled right, or enter the IP address instead (Home Assistant shows it under Settings › System › Network).",
-  "@diagResolveLocalNameIos": {"description": "iOS variant of diagResolveLocalName: iOS resolves .local, so no Android claim. Settings › System › Network is Home Assistant's own menu path."},
   "diagTcpSmlightClosed": "This is your SMLIGHT hub, but its MQTT broker doesn't accept connections from other devices. In the hub's web page, open Settings › MQTT, turn on Allow External, save, then try again.",
-  "@diagTcpSmlightClosed": {"description": "Broker test: port 1883 refused on an SMLIGHT hub (2.9.5). Settings › MQTT and Allow External are the hub's own English labels; keep them in English."},
+  "@diagTcpSmlightClosed": {
+    "description": "Broker test: port 1883 refused on an SMLIGHT hub (2.9.5). Settings › MQTT and Allow External are the hub's own English labels; keep them in English."
+  },
   "diagTcpZ2mBrokerElsewhere": "Zigbee2MQTT runs at this address, but it reaches its broker under another name (see Zigbee2MQTT's Settings › MQTT › Server). If that is another machine, type its address, usually with port 1883. If it is a container on this machine, publish its port (ports: \"1883:1883\") and let it listen to the network, then try again.",
   "diagTcpZ2mNoBroker": "Zigbee2MQTT runs at this address, but its MQTT broker doesn't accept connections from other devices. Mosquitto listens only on its own machine until you add the lines \"listener 1883\" and \"allow_anonymous true\" to mosquitto.conf (or set up a password). Restart Mosquitto, then try again.",
-  "@diagTcpZ2mNoBroker": {"description": "Broker test: port 1883 refused on a machine serving the Zigbee2MQTT web page (2.9.5). The quoted lines are mosquitto.conf syntax; keep them as is."},
+  "@diagTcpZ2mNoBroker": {
+    "description": "Broker test: port 1883 refused on a machine serving the Zigbee2MQTT web page (2.9.5). The quoted lines are mosquitto.conf syntax; keep them as is."
+  },
   "diagAuthRejectedHa": "Home Assistant's broker refused this login. Use the name and password of a Home Assistant user (Settings › People › Users); a separate user just for MQTT works best.",
   "foundDevices": "{count, plural, =1{Found 1 device} other{Found {count} devices}}",
-  "@foundDevices": { "placeholders": {"count": {"type": "int"}} },
+  "@foundDevices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "foundDevicesHint": "Your Zigbee devices are visible. Continue to build your dashboard.",
   "noDevicesTitle": "Connected — no devices found yet",
   "noDevicesHint": "ZigDash can see your broker, but hasn't found any Zigbee devices yet. You can start pairing to add them.",
@@ -503,7 +605,11 @@
   "guidedStuckTitle": "Stuck? Ask a person",
   "guidedStuckBody": "Two tries without a connection. Tell us which hub you have and what you typed, and we'll help you find it.",
   "ladderTriedHint": "Tried {count} addresses",
-  "@ladderTriedHint": { "placeholders": {"count": {}} },
+  "@ladderTriedHint": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "guidedSaveFailed": "Couldn't save the connection. Please try again.",
   "setupWelcomeTitle": "Welcome to ZigDash",
   "setupWelcomeHeadline": "Your Zigbee home, on your phone",
@@ -521,51 +627,86 @@
   "setupAskSmlight": "SMLIGHT",
   "setupAskSmlightSub": "An SMHUB, or an SLZB adapter",
   "setupAskSmlightWhich": "Which SMLIGHT device do you have?",
-  "@setupAskSmlightWhich": {"description": "Sheet title after tapping SMLIGHT on the welcome question (3.2.7)."},
+  "@setupAskSmlightWhich": {
+    "description": "Sheet title after tapping SMLIGHT on the welcome question (3.2.7)."
+  },
   "setupAskSmhub": "SMHUB",
-  "@setupAskSmhub": {"description": "SMLIGHT's SMHUB product name; keep as is."},
+  "@setupAskSmhub": {
+    "description": "SMLIGHT's SMHUB product name; keep as is."
+  },
   "setupAskSmhubSub": "Zigbee2MQTT runs on the hub itself",
-  "@setupAskSmhubSub": {"description": "Under SMHUB: it runs Zigbee2MQTT itself."},
+  "@setupAskSmhubSub": {
+    "description": "Under SMHUB: it runs Zigbee2MQTT itself."
+  },
   "setupAskSlzb": "An SLZB adapter",
-  "@setupAskSlzb": {"description": "SMLIGHT's SLZB coordinators (SLZB-06, SLZB-MR); keep SLZB."},
+  "@setupAskSlzb": {
+    "description": "SMLIGHT's SLZB coordinators (SLZB-06, SLZB-MR); keep SLZB."
+  },
   "setupAskSlzbSub": "SLZB-06, SLZB-MR and others: the Zigbee radio only",
-  "@setupAskSlzbSub": {"description": "Under the SLZB choice: a network Zigbee adapter, not a Zigbee2MQTT host."},
+  "@setupAskSlzbSub": {
+    "description": "Under the SLZB choice: a network Zigbee adapter, not a Zigbee2MQTT host."
+  },
   "setupSlzbWhere": "Your SLZB is the Zigbee radio. Zigbee2MQTT runs on another machine: which one?",
-  "@setupSlzbWhere": {"description": "Sheet title after picking SLZB: choose Home Assistant or Zigbee2MQTT on a Pi/server."},
+  "@setupSlzbWhere": {
+    "description": "Sheet title after picking SLZB: choose Home Assistant or Zigbee2MQTT on a Pi/server."
+  },
   "setupRunningAsk": "Is Zigbee2MQTT already running?",
-  "@setupRunningAsk": {"description": "Empty scan with no hub (3.2.8): asks whether Zigbee2MQTT is set up yet; three chips follow."},
+  "@setupRunningAsk": {
+    "description": "Empty scan with no hub (3.2.8): asks whether Zigbee2MQTT is set up yet; three chips follow."
+  },
   "setupRunningYes": "Yes, it runs",
   "setupRunningNotYet": "Not yet",
   "setupRunningNotSure": "Not sure",
   "setupRunningYesNote": "Then this phone can't reach it from here. Most often the phone is on a guest network or another Wi-Fi, or the broker only accepts connections from its own machine (Mosquitto 2 does until its config has \"listener 1883\"). Enter its address below to check it.",
   "setupRunningNotYetNote": "ZigDash connects to a Zigbee2MQTT that is already running. See what you need to start, and try the demo meanwhile.",
   "setupRunningNotSureNote": "Zigbee2MQTT has its own web page, where you pair your Zigbee devices. If you have opened it, it runs: tap \"{button}\" below. If you have never seen it, it isn't set up yet.",
-  "@setupRunningNotSureNote": {"description": "{button} is the setupZ2mPageEntry button label, shown just below.", "placeholders": {"button": {"type": "String"}}},
+  "@setupRunningNotSureNote": {
+    "description": "{button} is the setupZ2mPageEntry button label, shown just below.",
+    "placeholders": {
+      "button": {
+        "type": "String"
+      }
+    }
+  },
   "setupRunningWhatToGet": "What you need",
   "setupAskNothing": "Nothing yet",
-  "@setupAskNothing": {"description": "The fourth answer on the first screen (3.4): no hub, no Zigbee2MQTT yet."},
+  "@setupAskNothing": {
+    "description": "The fourth answer on the first screen (3.4): no hub, no Zigbee2MQTT yet."
+  },
   "setupAskNothingSub": "No hub or Zigbee2MQTT yet, or still choosing",
   "noHubTitle": "Nothing yet",
-  "@noHubTitle": {"description": "App bar of the screen for people without a hub (3.4)."},
+  "@noHubTitle": {
+    "description": "App bar of the screen for people without a hub (3.4)."
+  },
   "noHubHeadline": "Get a hub that runs Zigbee2MQTT",
   "noHubIntro": "ZigDash needs one small box at home running Zigbee2MQTT, the free software that talks to Zigbee devices. Pick one of the three ways below, pair your devices on its page, and ZigDash builds the dashboard. No cloud, no account.",
   "noHubSmhub": "SMLIGHT SMHUB: the easy start",
-  "@noHubSmhub": {"description": "First way to a hub: SMLIGHT's SMHUB, ready-made. Keep the product names."},
+  "@noHubSmhub": {
+    "description": "First way to a hub: SMLIGHT's SMHUB, ready-made. Keep the product names."
+  },
   "noHubSmhubBody": "A small box with Zigbee2MQTT and the broker built in. Plug it into your router and pair on its web page. Nothing to install.",
   "noHubPi": "A Raspberry Pi or any Linux box",
   "noHubPiBody": "Install Zigbee2MQTT and the Mosquitto broker yourself. About an hour, with Zigbee2MQTT's own guide.",
   "noHubHa": "Home Assistant",
-  "noHubHaBody": "Add the Mosquitto broker and Zigbee2MQTT add-ons, then sign in from ZigDash with your Home Assistant login.",
+  "noHubHaBody": "Add the Mosquitto broker and Zigbee2MQTT apps (Settings › Apps), then sign in from ZigDash with your Home Assistant login.",
   "noHubRadio": "A Pi or Home Assistant also needs a Zigbee adapter, such as an SLZB-06 or a Sonoff dongle. The SMHUB has one built in.",
-  "@noHubRadio": {"description": "Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names."},
+  "@noHubRadio": {
+    "description": "Note under the three ways: a USB or network Zigbee adapter is needed unless the hub has one. Keep the product names."
+  },
   "noHubDemoNote": "See how ZigDash works meanwhile, with a pretend home.",
   "noHubRemind": "Remind me in a week",
-  "@noHubRemind": {"description": "Button on the no-hub screen: one notification a week later."},
+  "@noHubRemind": {
+    "description": "Button on the no-hub screen: one notification a week later."
+  },
   "noHubRemindSet": "We'll remind you in a week, on this phone.",
   "noHubHaveOne": "I have one now",
-  "@noHubHaveOne": {"description": "Back to the first screen to set the hub up."},
+  "@noHubHaveOne": {
+    "description": "Back to the first screen to set the hub up."
+  },
   "reminderHubTitle": "Got your hub?",
-  "@reminderHubTitle": {"description": "Notification title a week after Remind me in a week (3.4)."},
+  "@reminderHubTitle": {
+    "description": "Notification title a week after Remind me in a week (3.4)."
+  },
   "reminderHubBody": "ZigDash sets it up in about a minute. Open it at home, on your Wi-Fi.",
   "setupAskHaWhich": "How does your Home Assistant run Zigbee?",
   "setupAskHaZ2m": "The Zigbee2MQTT app",
@@ -579,13 +720,45 @@
   "z2mPageLabel": "Page address",
   "z2mPageConnect": "Connect",
   "z2mPageFoundName": "Found {host} at {ip}",
-  "@z2mPageFoundName": {"placeholders": {"host": {"type": "String"}, "ip": {"type": "String"}}},
+  "@z2mPageFoundName": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
   "z2mPageNoName": "Nothing answered for {host} on this network",
-  "@z2mPageNoName": {"placeholders": {"host": {"type": "String"}}},
+  "@z2mPageNoName": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "engineNeedsBrokerTitle": "Automations need your MQTT broker",
   "engineNeedsBrokerBody": "This home connects through the Zigbee2MQTT page, which is all your dashboards need. Automations, Alerts and history run in the ZigDash Engine on your hub, which talks through your MQTT broker. Add its details once, and ZigDash connects through the broker from then on.",
   "engineNeedsBrokerButton": "Add broker details",
-  "connFromPageNote": "This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. After saving, ZigDash connects through the broker.",
+  "connFromPageNote": "This home connects through the Zigbee2MQTT page. Enter your MQTT broker (usually the same machine, port 1883) to turn on Automations, Alerts and history. When the broker has your devices, ZigDash switches to it.",
+  "connBrokerNoDevices": "Connected, but this broker has none of your devices. If you just turned the broker on, restart Zigbee2MQTT so it connects to it.",
+  "connZ2mUses": "Zigbee2MQTT uses {server}",
+  "@connZ2mUses": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "connReadingZ2m": "Reading Zigbee2MQTT's settings…",
+  "connKeepPageTitle": "Keep using the Zigbee2MQTT page?",
+  "connKeepPageBodyEmpty": "This broker answered, but it has none of your devices, so your dashboards would be empty. Zigbee2MQTT may use another broker, or need a restart after the broker was turned on.",
+  "connKeepPageBodyNoAnswer": "The broker didn't answer, so your dashboards would be empty.",
+  "connKeepPageBodyRefused": "The broker refused the login, so your dashboards would be empty.",
+  "connKeepPage": "Keep the Zigbee2MQTT page",
+  "connSaveAnyway": "Save anyway",
+  "connChecking": "Checking the broker…",
   "setupManualEntry": "Enter details manually",
   "setupScanningTitle": "Looking for a connection…",
   "setupScanningHint": "Keep this device on the same local network as your Zigbee2MQTT host.",
@@ -599,7 +772,6 @@
   "reminderButton": "Remind me tomorrow",
   "reminderSet": "We'll remind you tomorrow, on this phone.",
   "reminderNoPermission": "Notifications are off for ZigDash, so there's no reminder. You can turn them on in Android's settings.",
-  "reminderNoPermissionIos": "Notifications are off for ZigDash, so there's no reminder. You can turn them on in Settings › ZigDash › Notifications.",
   "reminderChannel": "Setup reminder",
   "reminderTitle": "Finish setting up ZigDash",
   "reminderBody": "At home on your Wi-Fi? Tap to try again: it takes about a minute.",
@@ -639,24 +811,68 @@
   "haFindSeveral": "Found more than one Home Assistant. Tap the one to use:",
   "haFindNone": "This phone can't see Home Assistant on this Wi-Fi. Use the address your Home Assistant app opens: often a remote one, like https://abcd1234.ui.nabu.casa or https://myhome.duckdns.org.",
   "haPaste": "Paste",
-  "@haPaste": {"description": "Button beside the Home Assistant address field: pastes the address that was copied."},
+  "@haPaste": {
+    "description": "Button beside the Home Assistant address field: pastes the address that was copied."
+  },
   "haPasteNothing": "No address in what you copied.",
   "haSharedNote": "This is the address you shared. Sign in to connect.",
   "haShareNothing": "That didn't hold an address. In the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top.",
+  "haLinkNote": "This is the address from your link. Sign in to connect.",
+  "haLinkReferrerNote": "This is the address from the link you opened before installing ZigDash. Sign in to connect.",
+  "haLinkNothing": "That link didn't hold a Home Assistant address. Make a new one at zigdash.app/connect.",
+  "haNoneComputer": "Use a computer",
+  "haComputerTitle": "Use a computer",
+  "haComputerBody": "On a computer where Home Assistant is open, go to this page and paste Home Assistant's address there. Then scan the code with this phone's camera.",
+  "haComputerCopy": "Copy link",
+  "setupLinkPending": "Your link brought a Home Assistant address. Tap Home Assistant to use it.",
+  "setupLinkPendingNothing": "Your link didn't hold a Home Assistant address. Make a new one at zigdash.app/connect.",
   "haHandoverShare": "Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and pick ZigDash. From a browser, share the page to ZigDash.",
-  "@haHandoverShare": {"description": "The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do."},
+  "@haHandoverShare": {
+    "description": "The share icon is the button at the top right of the server's page in the Home Assistant app. Keep 'Companion app' as the existing strings do."
+  },
   "haHandoverCopy": "Fastest: in the Home Assistant app, open Settings › Companion app, tap your server, then the share icon at the top, and Copy link. Come back and tap Paste.",
-  "@haHandoverCopy": {"description": "As haHandoverShare; 'Copy link' is Android's own button on the share sheet, in the phone's language."},
+  "@haHandoverCopy": {
+    "description": "As haHandoverShare; 'Copy link' is Android's own button on the share sheet, in the phone's language."
+  },
   "haConnectOtherNetwork": "That address is on a different network from this phone, which is on {network}. Use the address your Home Assistant app opens, often a remote one, or connect the phone to the network Home Assistant is on.",
-  "@haConnectOtherNetwork": {"placeholders": {"network": {"type": "String"}}},
+  "@haConnectOtherNetwork": {
+    "placeholders": {
+      "network": {
+        "type": "String"
+      }
+    }
+  },
   "haConnectLocalNameUnreachable": "This phone couldn't find that name: Android often can't open .local names. Type Home Assistant's IP address (like 192.168.1.20:8123), or its remote address.",
   "haConnectRemoteUnreachable": "Nothing answered at that remote address. Open it in this phone's browser to check that it works, and copy it exactly as your Home Assistant app shows it.",
   "setupNoWifiHa": "Use Home Assistant? Sign in",
   "haConnectNotAdmin": "Your Home Assistant user isn't an administrator. ZigDash needs one for Home Assistant's MQTT. Sign in as an administrator, or paste a token an administrator created.",
   "haConnectNoMqtt": "This Home Assistant has no MQTT integration. Zigbee2MQTT needs one too: in Home Assistant, add the Mosquitto broker app (Settings › Apps) and the MQTT integration, then try again.",
+  "haConnectZhaFound": "Your Zigbee runs in ZHA, Home Assistant's own Zigbee ({count, plural, =1{1 device} other{{count} devices}}). ZigDash works with Zigbee2MQTT, so it can't show them. Moving to Zigbee2MQTT means pairing your devices again; the guide shows two ways.",
+  "@haConnectZhaFound": {
+    "description": "Setup's Home Assistant check found devices in ZHA (3.7.1, zha-migration.md).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "haConnectZhaMove": "Moving from ZHA",
+  "haConnectNoMqttNoApps": "This Home Assistant has no MQTT integration, and no apps (it runs as a container), so Mosquitto and Zigbee2MQTT run as their own containers next to it. If they already run, connect ZigDash to Mosquitto directly. Or add the MQTT integration in Home Assistant, then try again.",
+  "haConnectNoAppsGuide": "How to connect",
+  "zhaMoveBody": "ZigDash works with Zigbee2MQTT. Moving means pairing your devices again. Home Assistant can keep using them once you add its MQTT integration.",
+  "zhaMoveWaySecond": "Second adapter: room by room, ZHA keeps running",
+  "zhaMoveWaySame": "Same adapter: free, all at once",
+  "zhaMoveReadSteps": "Read the steps",
+  "zhaMoveImMoving": "I'm moving",
+  "zhaMoveNotNow": "Not now",
+  "zhaMovingNoted": "Noted. When Zigbee2MQTT runs, open setup: ZigDash finds it, then offers your names and rooms from Home Assistant.",
+  "setupMovingTitle": "Connect to your new Zigbee2MQTT",
+  "setupMovingBody": "Moving from ZHA? Once Zigbee2MQTT runs, ZigDash looks for it on your network.",
   "haConnectSignInFailed": "The sign-in didn't complete. Try again, or use a long-lived token.",
   "setupHaShortcut": "Zigbee2MQTT runs in Home Assistant? Skip the broker and its login: sign in with your Home Assistant admin account. It works from any network.",
-  "@setupHaShortcut": {"description": "Setup, when Zigbee2MQTT runs in Home Assistant: the Home Assistant sign-in instead of the broker (3.1.2)."},
+  "@setupHaShortcut": {
+    "description": "Setup, when Zigbee2MQTT runs in Home Assistant: the Home Assistant sign-in instead of the broker (3.1.2)."
+  },
   "haConnectButton": "Connect through Home Assistant",
   "haConnectManualLink": "Using Home Assistant? Connect through it instead",
   "haConnectEmptyNote": "Can't reach the broker from this phone? Home Assistant can carry the connection for you.",
@@ -666,11 +882,17 @@
   "haHomeRemote": "Remote Home Assistant address (optional)",
   "setupAuthTitle": "This broker needs a login",
   "setupAuthBody": "Enter the MQTT username and password for {host}.",
-  "@setupAuthBody": { "placeholders": {"host": {}} },
+  "@setupAuthBody": {
+    "placeholders": {
+      "host": {}
+    }
+  },
   "setupAuthRejectedBody": "The username or password was rejected. Check them and try again.",
   "setupAuthRejectedZ2m": "Zigbee2MQTT already logs in to this broker: its web page shows the username under Settings › MQTT. Use that user and its password.",
   "setupAuthWhich": "This is the MQTT login, not the password of your hub's web page.",
-  "@setupAuthWhich": {"description": "Setup, login step: where the MQTT login comes from (setup-help-2.5.md)."},
+  "@setupAuthWhich": {
+    "description": "Setup, login step: where the MQTT login comes from (setup-help-2.5.md)."
+  },
   "setupAuthHintHa": "Home Assistant: use a Home Assistant user. Most people create one just for MQTT under Settings › People › Users, and the Mosquitto broker app accepts it.",
   "setupAuthHintPi": "Raspberry Pi or Docker: the user and password from Mosquitto's password file, the same ones in Zigbee2MQTT's configuration.yaml under mqtt.",
   "setupAuthHintSmlight": "SMLIGHT: the login shown on the hub's web page under Settings › MQTT. Or turn on Allow Anonymous there and save: then no login is needed.",
@@ -681,9 +903,19 @@
   "setupLeaveTitle": "Create your dashboard?",
   "setupLeaveBody": "Your devices are found. Create the dashboard now, or start setup over and lose this list.",
   "setupStartOver": "Start over",
-  "@setupReviewSubtitle": { "placeholders": {"count": {"type": "int"}} },
+  "@setupReviewSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "setupCreateWithCount": "Create dashboard with {count}",
-  "@setupCreateWithCount": { "placeholders": {"count": {}} },
+  "@setupCreateWithCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "setupReviewNoneSelected": "Nothing is ticked yet. Tick the devices you want on the dashboard, or create it empty and add tiles later.",
   "setupCreateEmpty": "Create an empty dashboard",
   "setupGroupOther": "Other devices",
@@ -691,7 +923,11 @@
   "setupCreatingTitle": "Creating your dashboard…",
   "setupReadyTitle": "Your dashboard is ready",
   "setupReadyBody": "{count} controls created.",
-  "@setupReadyBody": { "placeholders": {"count": {}} },
+  "@setupReadyBody": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "setupOpenDashboard": "Open dashboard",
   "setupErrUnreachableTitle": "Can't reach this address",
   "setupErrUnreachableBody": "This device and the Zigbee2MQTT host can't reach each other. Check that both are on the same local network.",
@@ -735,9 +971,21 @@
   "setupErrLoginNoAnswerTitle": "The broker didn't answer the login",
   "setupErrLoginNoAnswerBody": "Your broker was found, but it didn't answer the username and password in time. Home Assistant's Mosquitto broker app checks logins with Home Assistant, which can take a few seconds on a Raspberry Pi. Try again, and check that this user exists in Home Assistant. On an SMLIGHT hub, turn on Allow Anonymous under Settings › MQTT instead, and no login is needed.",
   "setupErrLoginNoAnswerAction": "Try again",
+  "setupErrTlsUntrustedTitle": "Your phone doesn't trust this broker's certificate",
+  "setupErrTlsFailedTitle": "Encrypted connection failed",
+  "setupErrTlsAction": "Edit settings",
+  "@setupErrTlsAction": {
+    "description": "Setup failure button (3.8.5): opens the broker form with the address filled in and port 1883."
+  },
   "setupNoZ2mTitle": "Your broker works, but Zigbee2MQTT isn't publishing here",
   "setupNoZ2mBody": "We listened on {base}/bridge and heard nothing.",
-  "@setupNoZ2mBody": {"placeholders": {"base": {"type": "String"}}},
+  "@setupNoZ2mBody": {
+    "placeholders": {
+      "base": {
+        "type": "String"
+      }
+    }
+  },
   "setupBaseTopicQuestion": "Using a different base topic?",
   "setupGuidesTitle": "Set up Zigbee2MQTT",
   "setupTryDemoMeanwhile": "Try the demo meanwhile",
@@ -750,73 +998,181 @@
   "setupPlatformPi": "Raspberry Pi or Docker",
   "setupPlatformZha": "ZHA, no Zigbee2MQTT",
   "setupZhaNote": "ZigDash shows devices from Zigbee2MQTT, so it can't see devices in ZHA, Home Assistant's own Zigbee. You can try the demo home to see how ZigDash works.",
-  "@setupZhaNote": {"description": "Under the setup answer for Home Assistant's own Zigbee (ZHA), 3.1.3: ZigDash cannot see ZHA devices; a Try demo button follows."},
+  "@setupZhaNote": {
+    "description": "Under the setup answer for Home Assistant's own Zigbee (ZHA), 3.1.3: ZigDash cannot see ZHA devices; a Try demo button follows."
+  },
   "setupPlatformNotSure": "Not sure",
   "setupScanProgress": "Checked {checked} of {total} addresses",
-  "@setupScanProgress": {"placeholders": {"checked": {"type": "int"}, "total": {"type": "int"}}},
+  "@setupScanProgress": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "setupScanHintHa": "Looking for Home Assistant and its MQTT broker…",
   "setupScanHintSmlight": "Looking for your SMHUB…",
   "setupScanHintPi": "Looking for an MQTT broker on your network…",
   "setupHubSeenHa": "Found Home Assistant at {host}",
-  "@setupHubSeenHa": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenHa": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenZ2m": "Found Zigbee2MQTT at {host}",
-  "@setupHubSeenZ2m": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenZ2m": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenSmlight": "Found your SMLIGHT hub at {host}",
-  "@setupHubSeenSmlight": {"placeholders": {"host": {"type": "String"}}},
+  "@setupHubSeenSmlight": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupHubSeenHint": "Still looking for its MQTT broker…",
   "setupNoBrokerHaTitle": "Found Home Assistant, but no MQTT broker",
   "setupNoBrokerHaBody": "Home Assistant is at {host}, but nothing answers on MQTT port 1883. In Home Assistant, open Settings › Apps, install and start the Mosquitto broker app, then try again.",
-  "@setupNoBrokerHaBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerHaBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerHaZha": "Using Home Assistant's own Zigbee (ZHA) instead of Zigbee2MQTT? ZigDash works only with Zigbee2MQTT, so it can't see ZHA devices. The demo shows what you'd get.",
   "setupNoBrokerHaDocker": "No Apps in your Home Assistant's Settings? Then it runs in Docker (Home Assistant Container), which has no apps: Mosquitto runs in its own container. Enter the address of the machine that runs it below.",
-  "@setupNoBrokerHaDocker": {"description": "Setup, Home Assistant found without a broker (3.2.6): Home Assistant Container has no Apps, so Mosquitto runs in its own container. Use Home Assistant's own name for Settings › Apps in this language."},
+  "@setupNoBrokerHaDocker": {
+    "description": "Setup, Home Assistant found without a broker (3.2.6): Home Assistant Container has no Apps, so Mosquitto runs in its own container. Use Home Assistant's own name for Settings › Apps in this language."
+  },
   "setupVpnHint": "A VPN is on, and it can hide your home network from the scan. If you're at home, turn the VPN off and tap Try again. Or keep it on and allow local network (LAN) access in the VPN app's settings.",
-  "setupLocalNetworkIos": "ZigDash needs Local Network access to find your hub. If you said no, allow it in Settings › Privacy & Security › Local Network.",
   "setupNoBrokerZ2mTitle": "Found Zigbee2MQTT, but its broker can't be reached",
   "setupNoBrokerZ2mBody": "Zigbee2MQTT is at {host}, but its MQTT broker doesn't accept connections from your phone. Mosquitto 2 only listens on the hub itself until its config has 'listener 1883' and 'allow_anonymous true' (or a login). Restart it, then try again.",
-  "@setupNoBrokerZ2mBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerZ2mBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNoBrokerSmlightTitle": "Found your SMLIGHT hub, but MQTT is off",
   "setupNoBrokerSmlightBody": "Your hub is at {host}, but its MQTT broker can't be reached. In the hub's web UI, open Settings › MQTT, turn on Allow External and check that Zigbee2MQTT is running, then try again.",
-  "@setupNoBrokerSmlightBody": {"placeholders": {"host": {"type": "String"}}},
+  "@setupNoBrokerSmlightBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupZ2mAsking": "Asking Zigbee2MQTT where its broker is…",
   "setupZ2mLocalOnlyTitle": "Your broker only accepts connections from its own machine",
   "setupZ2mLocalOnlyBody": "Zigbee2MQTT uses {server}, and nothing answers there from your phone. Mosquitto 2 does this by default. Add these two lines to mosquitto.conf, restart Mosquitto, then try again:",
-  "@setupZ2mLocalOnlyBody": {"placeholders": {"server": {"type": "String"}}},
+  "@setupZ2mLocalOnlyBody": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
   "setupZ2mLocalOnlyNote": "Prefer a login over open access? Use a password_file instead of allow_anonymous.",
   "setupZ2mNameOnlyTitle": "Zigbee2MQTT reaches its broker by a name your phone can't use",
   "setupZ2mNameOnlyBody": "Zigbee2MQTT uses {server}. \"{name}\" is a name only Zigbee2MQTT's machine knows, a Docker service or a hostname. Type the broker machine's IP address with port {port} instead. If the broker runs in a container, its port must also be published on the machine (ports: \"{port}:{port}\").",
-  "@setupZ2mNameOnlyBody": {"placeholders": {"server": {"type": "String"}, "name": {"type": "String"}, "port": {"type": "int"}}},
+  "@setupZ2mNameOnlyBody": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "port": {
+        "type": "int"
+      }
+    }
+  },
   "setupZ2mTokenRequired": "Zigbee2MQTT's web page is protected by a token, so the app couldn't read where its broker is. Type the broker address from Zigbee2MQTT's Settings › MQTT.",
   "setupZ2mUnreachable": "Zigbee2MQTT uses the broker at {server}, but it didn't answer from your phone. Check that the broker is running and that your phone is on the same network.",
-  "@setupZ2mUnreachable": {"placeholders": {"server": {"type": "String"}}},
+  "@setupZ2mUnreachable": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
   "setupConnectTo": "Connect to {host}",
-  "@setupConnectTo": {"placeholders": {"host": {"type": "String"}}},
+  "@setupConnectTo": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupNotFoundHa": "No Home Assistant found on this network. Check that your phone is on the same Wi-Fi as Home Assistant (not a guest network), then try again. If you know its address, enter it below.",
   "setupNotFoundSmlight": "No SMLIGHT hub found on this network. Check that the hub is on and your phone is on the same Wi-Fi, then try again. If you know its address, enter it below.",
   "setupNotFoundPi": "No MQTT broker found on this network. Check that Mosquitto is running and listening on the network (port 1883), and that your phone is on the same Wi-Fi, then try again.",
   "setupAddressQuestionHa": "Where do you open Home Assistant?",
-  "@setupAddressQuestionHa": {"description": "Setup, empty result: the address check field (setup-help-2.5.md, 2.6.2)."},
+  "@setupAddressQuestionHa": {
+    "description": "Setup, empty result: the address check field (setup-help-2.5.md, 2.6.2)."
+  },
   "setupAddressQuestionSmlight": "What is your SMLIGHT hub's address?",
   "setupAddressWhereSmlight": "Open your hub's web page: smhub.local, or smhub.local:3000 on early hubs. On the Dashboard, the Network box shows the address next to IPv4. Type it here. If the page doesn't open, your router's app lists the hub as SMHUB, with its IP.",
-  "@setupAddressWhereSmlight": {"description": "Setup, SMLIGHT address step (3.2.6): where an SMHUB shows its IP. Dashboard, Network and IPv4 are the hub's own English labels; keep them in English."},
+  "@setupAddressWhereSmlight": {
+    "description": "Setup, SMLIGHT address step (3.2.6): where an SMHUB shows its IP. Dashboard, Network and IPv4 are the hub's own English labels; keep them in English."
+  },
   "setupAddressSlzbSmlight": "An SLZB-06, MR or UltimaX is only the Zigbee radio and has no broker. Type the address of the computer that runs Zigbee2MQTT and Mosquitto instead.",
-  "@setupAddressSlzbSmlight": {"description": "Setup, SMLIGHT address step (3.2.6): SLZB models run no broker (SLZB-OS manual)."},
+  "@setupAddressSlzbSmlight": {
+    "description": "Setup, SMLIGHT address step (3.2.6): SLZB models run no broker (SLZB-OS manual)."
+  },
   "setupAddressQuestionPi": "What is the address of the machine running Mosquitto?",
   "setupAddressQuestionAny": "What is the address of your hub, or of the machine running Zigbee2MQTT?",
   "setupAddressHint": "An address like 192.168.1.20, a name, or the link from your browser",
   "setupAddressCheck": "Check this address",
   "setupAddressNothing": "Nothing answered at {host}. Check the address, and that your phone is on the same Wi-Fi as it.",
-  "@setupAddressNothing": {"placeholders": {"host": {"type": "String"}}},
+  "@setupAddressNothing": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupAddressNotResolved": "{host} could not be looked up. Names ending in .local often fail on Android; try the IP address instead. Home Assistant shows it under Settings › System › Network.",
   "setupAddressNotResolvedHa": "{host} can't be found from this phone; Android often can't look up .local names. Tap {button} above and use the address you open Home Assistant with in your browser, or type its IP address here. Home Assistant shows it under Settings › System › Network.",
-  "setupAddressNotResolvedHaIos": "{host} can't be found from this phone. Tap {button} above and use the address you open Home Assistant with in your browser, or type its IP address here. Home Assistant shows it under Settings › System › Network.",
-  "@setupAddressNotResolvedHaIos": {"placeholders": {"host": {"type": "String"}, "button": {"type": "String"}}},
-  "@setupAddressNotResolvedHa": {"description": "A .local name that did not resolve, for someone who said they use Home Assistant (3.1.3). {button} is the Connect through Home Assistant button above.", "placeholders": {"host": {"type": "String"}, "button": {"type": "String"}}},
-  "@setupAddressNotResolved": {"placeholders": {"host": {"type": "String"}}},
-  "setupAddressNotResolvedIos": "{host} could not be looked up. Check the name, or try the IP address instead. Home Assistant shows it under Settings › System › Network.",
-  "@setupAddressNotResolvedIos": {"placeholders": {"host": {"type": "String"}}},
+  "@setupAddressNotResolvedHa": {
+    "description": "A .local name that did not resolve, for someone who said they use Home Assistant (3.1.3). {button} is the Connect through Home Assistant button above.",
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "button": {
+        "type": "String"
+      }
+    }
+  },
+  "@setupAddressNotResolved": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupAddressNotLocal": "{host} is not on your home network. Use the address that works on your Wi-Fi, not a remote link such as Nabu Casa or DuckDNS.",
-  "@setupAddressNotLocal": {"placeholders": {"host": {"type": "String"}}},
+  "@setupAddressNotLocal": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "setupAddressInvalid": "Enter an address first.",
   "setupChoicesTitle": "Which of these fits you?",
   "setupChoiceNoHub": "I don't have a hub yet",
@@ -828,7 +1184,16 @@
   "setupChoiceOtherSub": "A guest Wi-Fi or a second router",
   "setupChoiceOtherNote": "Your phone has to reach your hub. A guest Wi-Fi, or a second router with its own Wi-Fi, keeps them apart. Join the Wi-Fi your hub is on and tap Try again. Or enter the hub's IP address below, or try one of these usual names:",
   "guidedHostYourPhone": "Your phone is {ip}, so the hub usually starts with {prefix}.",
-  "@guidedHostYourPhone": {"placeholders": {"ip": {"type": "String"}, "prefix": {"type": "String"}}},
+  "@guidedHostYourPhone": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      },
+      "prefix": {
+        "type": "String"
+      }
+    }
+  },
   "guidedHostHa": "Using Home Assistant? The host is the address you open Home Assistant with, port 1883.",
   "demoBannerText": "You're in demo mode",
   "demoBannerAction": "Connect your home",
@@ -843,7 +1208,16 @@
   "deviceGasDetected": "Gas detected",
   "deviceWaiting": "Waiting for first report",
   "deviceEndpointsOnOff": "{on} on · {off} off",
-  "@deviceEndpointsOnOff": {"placeholders": {"on": {"type": "int"}, "off": {"type": "int"}}},
+  "@deviceEndpointsOnOff": {
+    "placeholders": {
+      "on": {
+        "type": "int"
+      },
+      "off": {
+        "type": "int"
+      }
+    }
+  },
   "deviceBrightness": "Brightness",
   "deviceWhite": "White",
   "deviceColor": "Color",
@@ -851,7 +1225,13 @@
   "devicePosition": "Position",
   "deviceControls": "Controls",
   "deviceBattery": "Battery {percent}%",
-  "@deviceBattery": {"placeholders": {"percent": {"type": "int"}}},
+  "@deviceBattery": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "deviceToggle": "Turn on or off",
   "deviceMore": "More",
   "sectionLights": "Lights",
@@ -860,7 +1240,13 @@
   "sectionOther": "Other",
   "homeFirstName": "My Home",
   "homeNumberedName": "Home {number}",
-  "@homeNumberedName": {"placeholders": {"number": {"type": "int"}}},
+  "@homeNumberedName": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "dashAddTile": "Add tile",
   "addTileSearch": "Search devices",
   "addTileNotOnDashboard": "Not on a dashboard",
@@ -885,7 +1271,13 @@
   "addTileAdd": "Add",
   "addTileName": "Name",
   "addTileNameHint": "e.g. {model}",
-  "@addTileNameHint": {"placeholders": {"model": {"type": "String"}}},
+  "@addTileNameHint": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
   "addTileSection": "Section",
   "addTileNoSection": "No section",
   "addTileSize": "Size",
@@ -924,15 +1316,33 @@
   "editMoveEarlier": "Move earlier",
   "editMoveLater": "Move later",
   "editUnassigned": "{count, plural, =1{1 device isn't on any dashboard} other{{count} devices aren't on any dashboard}}",
-  "@editUnassigned": {"placeholders": {"count": {"type": "int"}}},
+  "@editUnassigned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "editTileActions": "Tile options",
   "editSave": "Save",
   "editCancel": "Cancel",
   "ageJustNow": "Just now",
   "ageMinutes": "{n} min ago",
-  "@ageMinutes": {"placeholders": {"n": {"type": "int"}}},
+  "@ageMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "ageHours": "{n} h ago",
-  "@ageHours": {"placeholders": {"n": {"type": "int"}}},
+  "@ageHours": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "statusCantReach": "Can't reach your broker",
   "statusWhy": "Why?",
   "statusWhyTitle": "Your broker isn't answering",
@@ -942,9 +1352,21 @@
   "deviceDismiss": "Dismiss",
   "devicesFilterAll": "All",
   "devicesFilterAttention": "Needs attention · {count}",
-  "@devicesFilterAttention": {"placeholders": {"count": {"type": "int"}}},
+  "@devicesFilterAttention": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "devicesFilterUnassigned": "Not on a dashboard · {count}",
-  "@devicesFilterUnassigned": {"placeholders": {"count": {"type": "int"}}},
+  "@devicesFilterUnassigned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "devicesNoMatch": "No devices match",
   "deviceBatteryLow": "Battery low",
   "deviceLinkWeak": "Weak",
@@ -964,7 +1386,11 @@
   "deviceAddReadingTile": "Add as reading tile",
   "deviceAddReadingTo": "Add to which dashboard?",
   "deviceAddedTo": "Added to {dashboard}",
-  "@deviceAddedTo": {"placeholders": {"dashboard": {}}},
+  "@deviceAddedTo": {
+    "placeholders": {
+      "dashboard": {}
+    }
+  },
   "deviceLinkQuality": "Link quality",
   "deviceLinkGood": "Good",
   "devicePowerSource": "Power source",
@@ -987,7 +1413,11 @@
   "panelFormCommandTopic": "Command topic",
   "panelFormCommandTopicDerived": "Filled from the state topic until you change it.",
   "panelFormLinkedTo": "Linked to {device}",
-  "@panelFormLinkedTo": {"placeholders": {"device": {}}},
+  "@panelFormLinkedTo": {
+    "placeholders": {
+      "device": {}
+    }
+  },
   "panelFormOpenDevice": "Open device",
   "panelFormUnlink": "Unlink",
   "panelFormValueChoices": "Values from this device",
@@ -1036,7 +1466,13 @@
   "assistantTitle": "ZigDash assistant",
   "assistantNotice": "This answer comes from an AI service that sees your Support details. It never needs your passwords or addresses.",
   "assistantOpeningScan": "Your scan on {network} tried {hosts} addresses and found {brokers} brokers.",
-  "@assistantOpeningScan": { "placeholders": { "network": {}, "hosts": {}, "brokers": {} } },
+  "@assistantOpeningScan": {
+    "placeholders": {
+      "network": {},
+      "hosts": {},
+      "brokers": {}
+    }
+  },
   "assistantOpeningRunningYes": "You said Zigbee2MQTT is running. Let's find it.",
   "assistantOpeningRunningNotSure": "You weren't sure whether Zigbee2MQTT runs. Let's find out.",
   "assistantOpeningGeneric": "Tell me what you were trying to do, and I'll help you get connected.",
@@ -1052,9 +1488,24 @@
   "assistantHelpedNo": "No",
   "assistantTalkToPerson": "Talk to a person",
   "assistantHomeOpening": "{home} is connected and {count, plural, =0{no devices report} =1{1 device reports} other{{count} devices report}}. What do you need?",
-  "@assistantHomeOpening": {"placeholders": {"home": {"type": "String"}, "count": {"type": "int"}}},
+  "@assistantHomeOpening": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "assistantHomeOpeningOffline": "ZigDash can't reach {home} right now. What do you need?",
-  "@assistantHomeOpeningOffline": {"placeholders": {"home": {"type": "String"}}},
+  "@assistantHomeOpeningOffline": {
+    "placeholders": {
+      "home": {
+        "type": "String"
+      }
+    }
+  },
   "assistantChipDevice": "A device stopped responding",
   "assistantChipTile": "Add a tile",
   "assistantChipAutomations": "Automations",
@@ -1101,7 +1552,6 @@
   "tipRestartZ2mBody": "If devices are paired but none arrive, restart Zigbee2MQTT so it publishes its device list.",
   "tipNumberAddressTitle": "Use the number address",
   "tipNumberAddressBody": "Names ending in .local don't work on every Android phone. Try the hub's number address, like 192.168.1.20.",
-  "tipNumberAddressBodyIos": "If the name doesn't work, try the hub's number address, like 192.168.1.20.",
   "tipPortProtocolTitle": "Port and protocol",
   "tipPortProtocolBody": "TCP on 1883 is the usual. Pick TLS or WebSocket only if your broker is set up for it.",
   "tipManualLoginTitle": "Login",
@@ -1133,256 +1583,533 @@
   "tipFindSetupTitle": "Then",
   "tipFindSetupBody": "Leave the demo and tap Find my setup. ZigDash looks for your hub on its own.",
   "getHelpNoEmailApp": "No email app found. Copy the details and write to {email}.",
-  "@getHelpNoEmailApp": { "placeholders": {"email": {}} },
+  "@getHelpNoEmailApp": {
+    "placeholders": {
+      "email": {}
+    }
+  },
   "shortcutWorking": "working…",
   "shortcutCantReach": "Can't reach home",
   "shortcutNotConfirmed": "Not confirmed",
   "shortcutRemoved": "Removed",
   "shortcutSceneSent": "Sent",
-  "@shortcutSceneSent": {"description": "A scene shortcut's line once its commands went out (not every device answered yet)."},
+  "@shortcutSceneSent": {
+    "description": "A scene shortcut's line once its commands went out (not every device answered yet)."
+  },
   "shortcutSceneConfirmed": "Confirmed",
-  "@shortcutSceneConfirmed": {"description": "A scene shortcut's line once every device reported its new state."},
+  "@shortcutSceneConfirmed": {
+    "description": "A scene shortcut's line once every device reported its new state."
+  },
   "shortcutChooseDevice": "Choose a device",
   "shortcutChooseScene": "Choose a scene",
-  "@shortcutChooseScene": {"description": "Title of the scene widget's picker."},
+  "@shortcutChooseScene": {
+    "description": "Title of the scene widget's picker."
+  },
   "shortcutOpenAppFirstScene": "Open ZigDash and create a scene first.",
-  "@shortcutOpenAppFirstScene": {"description": "Scene widget picker, when there are no scenes yet."},
+  "@shortcutOpenAppFirstScene": {
+    "description": "Scene widget picker, when there are no scenes yet."
+  },
   "shortcutChooseGroup": "Choose a group",
-  "@shortcutChooseGroup": {"description": "Title of the group widget's picker."},
+  "@shortcutChooseGroup": {
+    "description": "Title of the group widget's picker."
+  },
   "shortcutPickDevices": "Pick devices…",
-  "@shortcutPickDevices": {"description": "Group widget picker: build a group by hand instead of from a dashboard section."},
+  "@shortcutPickDevices": {
+    "description": "Group widget picker: build a group by hand instead of from a dashboard section."
+  },
   "shortcutGroupName": "Group name",
-  "@shortcutGroupName": {"description": "Group widget picker: label of the name field for a hand-picked group."},
+  "@shortcutGroupName": {
+    "description": "Group widget picker: label of the name field for a hand-picked group."
+  },
   "shortcutGroupLimit": "Up to 5 devices and 3 scenes",
-  "@shortcutGroupLimit": {"description": "Group widget picker: how many devices and scenes a group can hold."},
+  "@shortcutGroupLimit": {
+    "description": "Group widget picker: how many devices and scenes a group can hold."
+  },
   "shortcutAddTile": "Add to Quick Settings",
   "shortcutAddShortcut": "Add shortcut",
-  "@shortcutAddShortcut": {"description": "Device page: button offering a home-screen widget or a Quick Settings tile for the device."},
+  "@shortcutAddShortcut": {
+    "description": "Device page: button offering a home-screen widget or a Quick Settings tile for the device."
+  },
   "shortcutAddToHome": "Add to home screen",
-  "@shortcutAddToHome": {"description": "Adds a widget for this device or scene to the phone's home screen."},
+  "@shortcutAddToHome": {
+    "description": "Adds a widget for this device or scene to the phone's home screen."
+  },
   "shortcutWidgetHowToTitle": "Add the widget",
-  "@shortcutWidgetHowToTitle": {"description": "Dialog title when the launcher can't add a widget for the app."},
+  "@shortcutWidgetHowToTitle": {
+    "description": "Dialog title when the launcher can't add a widget for the app."
+  },
   "shortcutWidgetHowTo": "Long-press an empty spot on your home screen, tap Widgets, find ZigDash and drag the widget you want.",
-  "@shortcutWidgetHowTo": {"description": "How to add a ZigDash widget by hand."},
+  "@shortcutWidgetHowTo": {
+    "description": "How to add a ZigDash widget by hand."
+  },
   "shortcutTileReady": "{name} is on Quick Settings tile ZigDash {slot}",
-  "@shortcutTileReady": {"placeholders": {"name": {}, "slot": {}}},
+  "@shortcutTileReady": {
+    "placeholders": {
+      "name": {},
+      "slot": {}
+    }
+  },
   "shortcutTileAlready": "{name} is already on tile ZigDash {slot}",
-  "@shortcutTileAlready": {"placeholders": {"name": {}, "slot": {}}},
+  "@shortcutTileAlready": {
+    "placeholders": {
+      "name": {},
+      "slot": {}
+    }
+  },
   "shortcutTileHowToTitle": "Add the tile",
   "shortcutTileHowTo": "Open Quick Settings (swipe down twice), tap the pencil to edit, and drag “ZigDash {slot}” into your tiles.",
-  "@shortcutTileHowTo": {"placeholders": {"slot": {}}},
+  "@shortcutTileHowTo": {
+    "placeholders": {
+      "slot": {}
+    }
+  },
   "shortcutPickTitle": "Choose a device for ZigDash {slot}",
-  "@shortcutPickTitle": {"placeholders": {"slot": {}}},
+  "@shortcutPickTitle": {
+    "placeholders": {
+      "slot": {}
+    }
+  },
   "shortcutPickEmpty": "No devices to switch yet. Put a light, plug or shutter on a dashboard first.",
   "shortcutSlotsFull": "All 4 ZigDash tiles are in use. Which one should show this device instead?",
   "shortcutSlotLabel": "ZigDash {slot}",
-  "@shortcutSlotLabel": {"placeholders": {"slot": {}}},
+  "@shortcutSlotLabel": {
+    "placeholders": {
+      "slot": {}
+    }
+  },
   "shortcutSlotEmpty": "Not used",
   "deviceRename": "Rename",
   "deviceRenameTitle": "Rename device",
   "deviceRenameHint": "A name for the room or the device, like Bedroom",
   "deviceRenamed": "Renamed to {name}",
-  "@deviceRenamed": {"placeholders": {"name": {}}},
+  "@deviceRenamed": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "deviceRenameFailed": "Couldn't rename: {reason}",
-  "@deviceRenameFailed": {"placeholders": {"reason": {}}},
+  "@deviceRenameFailed": {
+    "placeholders": {
+      "reason": {}
+    }
+  },
   "deviceRenameNoAnswer": "Zigbee2MQTT didn't answer",
   "shortcutOpenAppFirst": "Open ZigDash and put a device on a dashboard first.",
-  "@shortcutOpenAppFirst": {"description": "Home-screen widget picker, when no device is on a dashboard yet."},
+  "@shortcutOpenAppFirst": {
+    "description": "Home-screen widget picker, when no device is on a dashboard yet."
+  },
   "pollTitle": "What should ZigDash do next?",
-  "@pollTitle": {"description": "One-time dashboard card asking what to build next."},
+  "@pollTitle": {
+    "description": "One-time dashboard card asking what to build next."
+  },
   "pollBody": "Pick any you'd use. Your answers are sent with your anonymous usage data.",
-  "@pollBody": {"description": "Under the poll title, for people who share usage data. Several choices can be picked."},
+  "@pollBody": {
+    "description": "Under the poll title, for people who share usage data. Several choices can be picked."
+  },
   "pollNotNow": "Not now",
-  "@pollNotNow": {"description": "Hides the poll for good."},
+  "@pollNotNow": {
+    "description": "Hides the poll for good."
+  },
   "pollThanks": "Thanks! That helps decide what comes next.",
-  "@pollThanks": {"description": "Snackbar after answering the poll."},
+  "@pollThanks": {
+    "description": "Snackbar after answering the poll."
+  },
   "pollPair": "Pair new devices from ZigDash",
-  "@pollPair": {"description": "Poll choice: put new Zigbee devices in pairing mode and add them from the app."},
+  "@pollPair": {
+    "description": "Poll choice: put new Zigbee devices in pairing mode and add them from the app."
+  },
   "pollDeviceSettings": "Device settings and firmware updates",
-  "@pollDeviceSettings": {"description": "Poll choice: change a device's settings (calibration, reporting) and update its firmware."},
+  "@pollDeviceSettings": {
+    "description": "Poll choice: change a device's settings (calibration, reporting) and update its firmware."
+  },
   "pollZha": "Work with ZHA, without Zigbee2MQTT",
-  "@pollZha": {"description": "Poll choice: work with Home Assistant's own Zigbee (ZHA) instead of Zigbee2MQTT."},
+  "@pollZha": {
+    "description": "Poll choice: work with Home Assistant's own Zigbee (ZHA) instead of Zigbee2MQTT."
+  },
   "pollAiAssistant": "Control my home from my AI assistant",
-  "@pollAiAssistant": {"description": "Poll choice: control the home by asking an AI assistant such as Claude or ChatGPT."},
+  "@pollAiAssistant": {
+    "description": "Poll choice: control the home by asking an AI assistant such as Claude or ChatGPT."
+  },
   "pollOther": "Something else",
-  "@pollOther": {"description": "Poll choice; also opens Request a feature to say what."},
+  "@pollOther": {
+    "description": "Poll choice; also opens Request a feature to say what."
+  },
   "pollSend": "Send",
-  "@pollSend": {"description": "Button that sends the picked poll choices."},
+  "@pollSend": {
+    "description": "Button that sends the picked poll choices."
+  },
   "settingsPollSubtitle": "Vote for what comes next",
-  "@settingsPollSubtitle": {"description": "Settings row under 'What should ZigDash do next?', which opens the poll."},
+  "@settingsPollSubtitle": {
+    "description": "Settings row under 'What should ZigDash do next?', which opens the poll."
+  },
   "whyTitle": "What made you try ZigDash?",
-  "@whyTitle": {"description": "One-time dashboard card after the first setup, asking why the user tried the app."},
+  "@whyTitle": {
+    "description": "One-time dashboard card after the first setup, asking why the user tried the app."
+  },
   "whyBody": "One tap helps decide what to build. Your answer is sent with your anonymous usage data.",
-  "@whyBody": {"description": "Body of the why card."},
+  "@whyBody": {
+    "description": "Body of the why card."
+  },
   "whyFaster": "Quicker than my other app",
-  "@whyFaster": {"description": "Why-card choice."},
+  "@whyFaster": {
+    "description": "Why-card choice."
+  },
   "whyFamily": "Easy for the family",
-  "@whyFamily": {"description": "Why-card choice."},
+  "@whyFamily": {
+    "description": "Why-card choice."
+  },
   "whyWallTablet": "A wall tablet",
-  "@whyWallTablet": {"description": "Why-card choice."},
+  "@whyWallTablet": {
+    "description": "Why-card choice."
+  },
   "whyWithoutHa": "Works without Home Assistant",
-  "@whyWithoutHa": {"description": "Why-card choice: direct MQTT keeps working with no Home Assistant or while it is down."},
+  "@whyWithoutHa": {
+    "description": "Why-card choice: direct MQTT keeps working with no Home Assistant or while it is down."
+  },
   "whyOther": "Something else",
-  "@whyOther": {"description": "Why-card choice."},
+  "@whyOther": {
+    "description": "Why-card choice."
+  },
   "whyThanks": "Thanks for telling us!",
-  "@whyThanks": {"description": "Snackbar after answering the why card."},
+  "@whyThanks": {
+    "description": "Snackbar after answering the why card."
+  },
   "pollNoAnalytics": "Usage data is off, so nothing is sent from here. Tell us with Request a feature instead.",
-  "@pollNoAnalytics": {"description": "Poll card text for people who don't share usage data."},
+  "@pollNoAnalytics": {
+    "description": "Poll card text for people who don't share usage data."
+  },
   "alertLeak": "💧 Leak — {name}",
-  "@alertLeak": {"description": "Notification: a leak sensor got wet. {name} is the device's name.", "placeholders": {"name": {}}},
+  "@alertLeak": {
+    "description": "Notification: a leak sensor got wet. {name} is the device's name.",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "alertLeakCleared": "✅ {name} is dry again",
-  "@alertLeakCleared": {"description": "Notification: the leak sensor is dry again.", "placeholders": {"name": {}}},
+  "@alertLeakCleared": {
+    "description": "Notification: the leak sensor is dry again.",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "alertSmoke": "🔥 Smoke — {name}",
-  "@alertSmoke": {"description": "Notification: smoke detected.", "placeholders": {"name": {}}},
+  "@alertSmoke": {
+    "description": "Notification: smoke detected.",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "alertSmokeCleared": "✅ No more smoke at {name}",
-  "@alertSmokeCleared": {"description": "Notification: no more smoke.", "placeholders": {"name": {}}},
+  "@alertSmokeCleared": {
+    "description": "Notification: no more smoke.",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "alertOpened": "🚪 {name} opened",
-  "@alertOpened": {"description": "Notification: a door or window opened.", "placeholders": {"name": {}}},
+  "@alertOpened": {
+    "description": "Notification: a door or window opened.",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "alertBattery": "🔋 Battery low — {name}, {value}%",
-  "@alertBattery": {"description": "Notification: a battery is low; {value} is the percentage.", "placeholders": {"name": {}, "value": {}}},
+  "@alertBattery": {
+    "description": "Notification: a battery is low; {value} is the percentage.",
+    "placeholders": {
+      "name": {},
+      "value": {}
+    }
+  },
   "alertTest": "ZigDash test alert",
-  "@alertTest": {"description": "The test notification's text."},
+  "@alertTest": {
+    "description": "The test notification's text."
+  },
   "alertsChannel": "Alerts",
-  "@alertsChannel": {"description": "Android notification channel for leak and smoke (urgent)."},
+  "@alertsChannel": {
+    "description": "Android notification channel for leak and smoke (urgent)."
+  },
   "alertsChannelDescription": "Leaks and smoke",
-  "@alertsChannelDescription": {"description": "What the urgent channel carries."},
+  "@alertsChannelDescription": {
+    "description": "What the urgent channel carries."
+  },
   "noticesChannel": "Notices",
-  "@noticesChannel": {"description": "Android notification channel for doors and batteries."},
+  "@noticesChannel": {
+    "description": "Android notification channel for doors and batteries."
+  },
   "noticesChannelDescription": "Doors, windows and batteries",
-  "@noticesChannelDescription": {"description": "What the notices channel carries."},
+  "@noticesChannelDescription": {
+    "description": "What the notices channel carries."
+  },
   "alertsTitle": "Alerts",
-  "@alertsTitle": {"description": "Alerts screen."},
+  "@alertsTitle": {
+    "description": "Alerts screen."
+  },
   "alertsStatusOn": "Alerts are on",
-  "@alertsStatusOn": {"description": "Alerts screen."},
+  "@alertsStatusOn": {
+    "description": "Alerts screen."
+  },
   "alertsStatusPaused": "Alerts are paused: ZigDash Engine on your hub isn't reporting",
-  "@alertsStatusPaused": {"description": "Alerts screen."},
+  "@alertsStatusPaused": {
+    "description": "Alerts screen."
+  },
   "alertsStatusNotSetUp": "Not set up",
-  "@alertsStatusNotSetUp": {"description": "Alerts screen."},
+  "@alertsStatusNotSetUp": {
+    "description": "Alerts screen."
+  },
   "alertsStatusPhoneOff": "This phone isn't getting notifications",
-  "@alertsStatusPhoneOff": {"description": "Alerts screen."},
+  "@alertsStatusPhoneOff": {
+    "description": "Alerts screen."
+  },
   "alertsIntro": "Get a notification on this phone when a leak, smoke, an opened door or a low battery is reported, even with ZigDash closed. ZigDash Engine on your hub watches the devices; ZigDash sets it up.",
-  "@alertsIntro": {"description": "Alerts screen."},
+  "@alertsIntro": {
+    "description": "Alerts screen."
+  },
   "alertsSetUpHub": "Set up alerts on the hub",
-  "@alertsSetUpHub": {"description": "Alerts screen."},
+  "@alertsSetUpHub": {
+    "description": "Alerts screen."
+  },
   "alertsHubInstalled": "Alerts are set up on your hub",
-  "@alertsHubInstalled": {"description": "Alerts screen."},
+  "@alertsHubInstalled": {
+    "description": "Alerts screen."
+  },
   "alertsHubUpdated": "The alerts flow on the hub is up to date",
-  "@alertsHubUpdated": {"description": "Alerts screen."},
+  "@alertsHubUpdated": {
+    "description": "Alerts screen."
+  },
   "alertsHubNeedsLogin": "Node-RED asks for a login, so import the flow by hand:",
-  "@alertsHubNeedsLogin": {"description": "Alerts screen."},
+  "@alertsHubNeedsLogin": {
+    "description": "Alerts screen."
+  },
   "alertsHubManualSteps": "Open Node-RED on the hub, choose Import, paste the copied flow, pick your broker in the broker node, and Deploy.",
-  "@alertsHubManualSteps": {"description": "Alerts screen."},
+  "@alertsHubManualSteps": {
+    "description": "Alerts screen."
+  },
   "alertsCopyFlow": "Copy the flow",
-  "@alertsCopyFlow": {"description": "Alerts screen."},
+  "@alertsCopyFlow": {
+    "description": "Alerts screen."
+  },
   "alertsFlowCopied": "Flow copied",
-  "@alertsFlowCopied": {"description": "Alerts screen."},
+  "@alertsFlowCopied": {
+    "description": "Alerts screen."
+  },
   "alertsNoNodeRed": "Alerts need Node-RED on the hub, and nothing answers on port 1880 at {host}. On an SMLIGHT SMHUB, install it under Apps.",
-  "@alertsNoNodeRed": {"description": "Alerts screen.", "placeholders": {"host": {}}},
+  "@alertsNoNodeRed": {
+    "description": "Alerts screen.",
+    "placeholders": {
+      "host": {}
+    }
+  },
   "alertsHubFailed": "Zigbee2MQTT didn't accept ZigDash Engine",
-  "@alertsHubFailed": {"description": "Alerts screen."},
+  "@alertsHubFailed": {
+    "description": "Alerts screen."
+  },
   "alertsRecent": "Recent alerts",
-  "@alertsRecent": {"description": "Alerts screen."},
+  "@alertsRecent": {
+    "description": "Alerts screen."
+  },
   "alertsRecentNone": "Nothing yet",
-  "@alertsRecentNone": {"description": "Alerts screen."},
+  "@alertsRecentNone": {
+    "description": "Alerts screen."
+  },
   "alertsYourAlerts": "Your alerts",
-  "@alertsYourAlerts": {"description": "Alerts screen."},
+  "@alertsYourAlerts": {
+    "description": "Alerts screen."
+  },
   "alertsAdd": "Add alert",
-  "@alertsAdd": {"description": "Alerts screen."},
+  "@alertsAdd": {
+    "description": "Alerts screen."
+  },
   "alertsNotificationsOnThisPhone": "Notifications on this phone",
-  "@alertsNotificationsOnThisPhone": {"description": "Alerts screen."},
+  "@alertsNotificationsOnThisPhone": {
+    "description": "Alerts screen."
+  },
   "alertsNoGoogle": "This phone has no Google services, so ZigDash can't receive pushes here.",
-  "@alertsNoGoogle": {"description": "Alerts screen."},
+  "@alertsNoGoogle": {
+    "description": "Alerts screen."
+  },
   "alertsSendTest": "Send test notification",
-  "@alertsSendTest": {"description": "Alerts screen."},
+  "@alertsSendTest": {
+    "description": "Alerts screen."
+  },
   "alertsTestSent": "Test sent. It should arrive now.",
-  "@alertsTestSent": {"description": "Alerts screen."},
+  "@alertsTestSent": {
+    "description": "Alerts screen."
+  },
   "alertsTestFailed": "The hub couldn't send it ({status})",
-  "@alertsTestFailed": {"description": "Alerts screen.", "placeholders": {"status": {}}},
+  "@alertsTestFailed": {
+    "description": "Alerts screen.",
+    "placeholders": {
+      "status": {}
+    }
+  },
   "alertsTestTimedOut": "No answer from the hub. Is the alerts flow running?",
-  "@alertsTestTimedOut": {"description": "Alerts screen."},
+  "@alertsTestTimedOut": {
+    "description": "Alerts screen."
+  },
   "alertsNotConnected": "Not connected to the hub",
-  "@alertsNotConnected": {"description": "Alerts screen."},
+  "@alertsNotConnected": {
+    "description": "Alerts screen."
+  },
   "alertsTurnOff": "Turn alerts off",
-  "@alertsTurnOff": {"description": "Alerts screen."},
+  "@alertsTurnOff": {
+    "description": "Alerts screen."
+  },
   "alertsTurnOffBody": "Alerts stop for every phone of this Home.",
-  "@alertsTurnOffBody": {"description": "Alerts screen."},
+  "@alertsTurnOffBody": {
+    "description": "Alerts screen."
+  },
   "alertKindLeak": "Leak",
-  "@alertKindLeak": {"description": "Alerts screen."},
+  "@alertKindLeak": {
+    "description": "Alerts screen."
+  },
   "alertKindSmoke": "Smoke",
-  "@alertKindSmoke": {"description": "Alerts screen."},
+  "@alertKindSmoke": {
+    "description": "Alerts screen."
+  },
   "alertKindOpened": "Door or window opened",
-  "@alertKindOpened": {"description": "Alerts screen."},
+  "@alertKindOpened": {
+    "description": "Alerts screen."
+  },
   "alertKindBattery": "Battery low",
-  "@alertKindBattery": {"description": "Alerts screen."},
+  "@alertKindBattery": {
+    "description": "Alerts screen."
+  },
   "alertsEditTitle": "Alert",
-  "@alertsEditTitle": {"description": "Alerts screen."},
+  "@alertsEditTitle": {
+    "description": "Alerts screen."
+  },
   "alertsKind": "What",
-  "@alertsKind": {"description": "Alerts screen."},
+  "@alertsKind": {
+    "description": "Alerts screen."
+  },
   "alertsDevices": "Devices",
-  "@alertsDevices": {"description": "Alerts screen."},
+  "@alertsDevices": {
+    "description": "Alerts screen."
+  },
   "alertsNoDevicesForKind": "No device of this Home reports that.",
-  "@alertsNoDevicesForKind": {"description": "Alerts screen."},
+  "@alertsNoDevicesForKind": {
+    "description": "Alerts screen."
+  },
   "alertsHours": "Only between",
-  "@alertsHours": {"description": "Alerts screen."},
+  "@alertsHours": {
+    "description": "Alerts screen."
+  },
   "alertsHoursAny": "Any time",
-  "@alertsHoursAny": {"description": "Alerts screen."},
+  "@alertsHoursAny": {
+    "description": "Alerts screen."
+  },
   "alertsHoursFrom": "From",
-  "@alertsHoursFrom": {"description": "Alerts screen."},
+  "@alertsHoursFrom": {
+    "description": "Alerts screen."
+  },
   "alertsHoursTo": "To",
-  "@alertsHoursTo": {"description": "Alerts screen."},
+  "@alertsHoursTo": {
+    "description": "Alerts screen."
+  },
   "alertsThreshold": "Battery below",
-  "@alertsThreshold": {"description": "Alerts screen."},
+  "@alertsThreshold": {
+    "description": "Alerts screen."
+  },
   "alertsDelete": "Delete alert",
-  "@alertsDelete": {"description": "Alerts screen."},
+  "@alertsDelete": {
+    "description": "Alerts screen."
+  },
   "alertsNotifyMe": "Notify me…",
-  "@alertsNotifyMe": {"description": "Alerts screen."},
+  "@alertsNotifyMe": {
+    "description": "Alerts screen."
+  },
   "alertsWhatLeaves": "Alerts to ZigDash are encrypted end to end: Google's push service carries them but can't read them. Nothing else leaves your hub.",
-  "@alertsWhatLeaves": {"description": "Alerts screen."},
+  "@alertsWhatLeaves": {
+    "description": "Alerts screen."
+  },
   "alertsRestricted": "Android may stop ZigDash in the background, so notifications could be late or missed. Allow it to run in the background in Android's settings (on Samsung: Battery › Never sleeping apps).",
-  "@alertsRestricted": {"description": "Alerts screen."},
+  "@alertsRestricted": {
+    "description": "Alerts screen."
+  },
   "alertsOpenSettings": "Open Android settings",
-  "@alertsOpenSettings": {"description": "Alerts screen."},
+  "@alertsOpenSettings": {
+    "description": "Alerts screen."
+  },
   "alertsOff": "Off",
-  "@alertsOff": {"description": "Alerts screen."},
+  "@alertsOff": {
+    "description": "Alerts screen."
+  },
   "alertsSuggested": "Suggested alerts",
-  "@alertsSuggested": {"description": "Alerts screen, suggested alerts on first visit."},
+  "@alertsSuggested": {
+    "description": "Alerts screen, suggested alerts on first visit."
+  },
   "alertsSuggestedCount": "{count, plural, =1{1 device} other{{count} devices}}",
-  "@alertsSuggestedCount": {"description": "Alerts screen, suggested alerts on first visit.", "placeholders": {"count": {"type": "int"}}},
+  "@alertsSuggestedCount": {
+    "description": "Alerts screen, suggested alerts on first visit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "alertsTurnOn": "Turn on",
-  "@alertsTurnOn": {"description": "Alerts screen, suggested alerts on first visit."},
+  "@alertsTurnOn": {
+    "description": "Alerts screen, suggested alerts on first visit."
+  },
   "alertsShare": "Share alerts",
-  "@alertsShare": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsShare": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsShareBody": "Anyone with this link gets this Home's alerts in the ntfy app, with no ZigDash needed. The alert text goes through ntfy.sh unencrypted.",
-  "@alertsShareBody": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsShareBody": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsShareLink": "Link",
-  "@alertsShareLink": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsShareLink": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsShareNewLink": "New link",
-  "@alertsShareNewLink": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsShareNewLink": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsShareCopied": "Link copied",
-  "@alertsShareCopied": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsShareCopied": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsShareOff": "Stop sharing",
-  "@alertsShareOff": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsShareOff": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsGetWithNtfy": "Get notifications with ntfy",
-  "@alertsGetWithNtfy": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsGetWithNtfy": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsPushover": "Pushover",
-  "@alertsPushover": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsPushover": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsPushoverBody": "Smoke and leak alerts repeat until acknowledged. Needs a Pushover account ($4.99 once after a trial); its keys are kept on your broker.",
-  "@alertsPushoverBody": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsPushoverBody": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsPushoverUser": "User key",
-  "@alertsPushoverUser": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsPushoverUser": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsPushoverToken": "App token",
-  "@alertsPushoverToken": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsPushoverToken": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsHideNames": "Hide device names",
-  "@alertsHideNames": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsHideNames": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "alertsNtfyServer": "ntfy server",
-  "@alertsNtfyServer": {"description": "Alerts screen: sharing with the household (ntfy) and Pushover."},
+  "@alertsNtfyServer": {
+    "description": "Alerts screen: sharing with the household (ntfy) and Pushover."
+  },
   "wallSheetTitle": "Wall display",
   "wallSheetSubtitle": "For a tablet on the wall.",
   "wallKeepOn": "Keep the screen on and hide the bars",
   "wallKeepOnSubtitle": "They come back with a touch and hide again after 10 seconds.",
   "wallFullscreen": "Fullscreen",
   "wallFullscreenSubtitle": "Hides Android's status and navigation bars too.",
-  "wallFullscreenSubtitleIos": "Hides the status bar too; the Home indicator dims.",
   "wallDimAfter": "Dim after",
   "wallDimOff": "Off",
   "wallIdleTitle": "When no one touches it",
@@ -1396,7 +2123,13 @@
   "proBadge": "Pro",
   "wallIdleReadingsNone": "This dashboard has no readings yet. Add a reading or a sensor tile first.",
   "wallIdleReadingsPick": "Readings on the clock (up to {count})",
-  "@wallIdleReadingsPick": {"placeholders": {"count": {"type": "int"}}},
+  "@wallIdleReadingsPick": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "wallProNote": "Readings on the clock, wake on motion, the night schedule and alarms are part of ZigDash Pro, a one-time purchase.",
   "wallAlarmLeak": "Water leak",
   "wallAlarmSmoke": "Smoke",
@@ -1414,7 +2147,11 @@
   "wallNightFrom": "From",
   "wallNightTo": "to",
   "wallDimMinutes": "{minutes} min",
-  "@wallDimMinutes": { "placeholders": { "minutes": {} } },
+  "@wallDimMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
   "kioskLock": "Kiosk lock",
   "kioskLockSubtitle": "Only this Home's dashboards and their controls stay reachable. Long-press the title to leave.",
   "kioskPin": "PIN",
@@ -1430,12 +2167,9 @@
   "kioskPinWrong": "Wrong PIN.",
   "kioskPinForgot": "Forgot the PIN?",
   "kioskPinForgotBody": "A forgotten PIN can only be reset by clearing ZigDash's data in Android's settings, which removes this Home unless you have a backup. Export one before setting a PIN.",
-  "kioskPinForgotBodyIos": "A forgotten PIN can only be reset by deleting and reinstalling ZigDash, which removes this Home unless you have a backup. Export one before setting a PIN.",
   "kioskExportBackup": "Export backup",
   "kioskOsPin": "Also pin ZigDash on Android",
   "kioskOsPinSubtitle": "Android blocks Home and recent apps until ZigDash is unpinned. A tablet without a lock screen unpins with a gesture, so this is not the lock.",
-  "kioskGuidedAccessTitle": "Lock to ZigDash with Guided Access",
-  "kioskGuidedAccess": "iOS keeps ZigDash on screen until you end Guided Access: turn it on in Settings › Accessibility › Guided Access, then triple-click the side button in ZigDash.",
   "kioskOn": "Kiosk on. Long-press the title to leave.",
   "kioskLeaveTitle": "Leave kiosk?",
   "kioskLeave": "Leave",
@@ -1450,9 +2184,21 @@
   "historySetupAction": "Set up on the hub",
   "historyInstalled": "Recording. The first values appear within 15 minutes.",
   "historyNoNodeRed": "History needs Node-RED on the hub, and nothing answers on port 1880 at {host}. On an SMLIGHT SMHUB, install it under Apps.",
-  "@historyNoNodeRed": {"placeholders": {"host": {"type": "String"}}},
+  "@historyNoNodeRed": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "historyRecordingSince": "Recording since {date}",
-  "@historyRecordingSince": {"placeholders": {"date": {"type": "String"}}},
+  "@historyRecordingSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "historyEmpty": "No values yet. The recorder saves every 15 minutes.",
   "historyRecorderOffline": "The recorder on the hub isn't answering, so recent values may be missing.",
   "historyLocked": "Longer history is part of ZigDash Pro, a one-time purchase.",
@@ -1466,15 +2212,29 @@
   "proGetWall": "Wall tablet: readings on the clock, wake on motion, a night schedule and alarms",
   "proGetFuture": "Every Pro feature that comes later, at no extra cost",
   "proFreeTitle": "Free forever",
-  "proFreeBody": "Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.",
-  "proFreeBodyIos": "Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.",
+  "proFreeBody": "Setup, dashboards, every device control, widgets, Quick Settings tiles, alerts, three automations per home and the wall tablet itself stay free. Nothing that is free today becomes paid.",
   "proBuy": "Get Pro",
   "proBuyPrice": "Get Pro · {price}",
-  "@proBuyPrice": {"placeholders": {"price": {"type": "String"}}},
+  "@proBuyPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "proOnce": "One payment, no subscription. Bought on another phone with the same Google account? It unlocks automatically.",
-  "proOnceIos": "One payment, no subscription. Bought on another iPhone or iPad with the same Apple Account? It unlocks automatically, or tap Restore purchase.",
   "proRestore": "Restore purchase",
-  "proRestoreNone": "No ZigDash Pro purchase found for this Apple ID.",
+  "proRestored": "Pro is unlocked on this phone.",
+  "proRestoreNone": "Google Play has no Pro purchase for this Google account. Bought it with another account? Switch accounts in the Play Store, then try again.",
+  "proRestoreFailed": "Couldn't reach Google Play. Try again in a moment.",
+  "proRestoreNoneIos": "No ZigDash Pro purchase found for this Apple ID.",
+  "proRestoreFailedIos": "Couldn't reach the App Store. Try again in a moment.",
+  "@proRestoreNoneIos": {
+    "description": "Restore purchase on the App Store build: the Apple ID owns no Pro."
+  },
+  "@proRestoreFailedIos": {
+    "description": "Restore purchase on the App Store build: the App Store did not answer."
+  },
   "historyNotRecorded": "Only numbers shown on a dashboard are recorded. Add this one as a tile to start its history.",
   "historyRecordHere": "Record on this device",
   "historyRecordHereHint": "Can't use ZigDash Engine on your hub? ZigDash can record on a phone or tablet that stays open, like a wall tablet. Every phone of this Home sees the history.",
@@ -1482,7 +2242,13 @@
   "wallRecordHistory": "Record history on this device",
   "wallRecordHistorySubtitle": "Every 15 minutes while ZigDash is open, for every phone of this Home. Not needed when ZigDash Engine on your hub records.",
   "historyNeedsPassword": "One more step: your broker asks for a login. Open Node-RED at {host}:1880, double-click \"ZigDash history broker\", type the MQTT password on its Security tab, then Deploy. ZigDash never sends your password to the hub.",
-  "@historyNeedsPassword": {"placeholders": {"host": {"type": "String"}}},
+  "@historyNeedsPassword": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "historyNotConnected": "The recorder isn't reporting. Open Automations to check ZigDash Engine on your hub.",
   "historyPersistence": "History lives on your broker. If you run Mosquitto yourself, make sure its config has \"persistence true\", or history is lost when the broker restarts.",
   "haImportTitle": "Import from Home Assistant",
@@ -1505,7 +2271,13 @@
   "haImportNoDevices": "ZigDash can't see this home's devices right now. Connect to the home, then try again.",
   "haImportAutomations": "Your automations stay in Home Assistant and keep running.",
   "haImportFound": "{count, plural, =1{1 device found in Home Assistant} other{{count} devices found in Home Assistant}}",
-  "@haImportFound": {"placeholders": {"count": {"type": "int"}}},
+  "@haImportFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "haImportRenameNote": "Tiles still named after their device take the name from Home Assistant. Dashboards you built stay as they are.",
   "haImportMakeDashboards": "Also add dashboards from your floors and rooms",
   "haImportOtherRooms": "Other rooms",
@@ -1515,10 +2287,21 @@
   "haImportZhaOnly": "These devices run on ZHA, Home Assistant's own Zigbee, not on Zigbee2MQTT, so ZigDash can't show them.",
   "haImportNothing": "None of this home's Zigbee2MQTT devices are in Home Assistant.",
   "haImportDone": "Done. Tiles renamed: {renamed}. Dashboards added: {dashboards}.",
-  "@haImportDone": {"placeholders": {"renamed": {"type": "int"}, "dashboards": {"type": "int"}}},
+  "@haImportDone": {
+    "placeholders": {
+      "renamed": {
+        "type": "int"
+      },
+      "dashboards": {
+        "type": "int"
+      }
+    }
+  },
   "haImportOpen": "Open dashboards",
   "haImportOfferTitle": "Bring your names and rooms from Home Assistant?",
   "haImportOfferBody": "Home Assistant is on your network. ZigDash can name your tiles and add a dashboard per floor and room, the way you set them up there.",
+  "haImportOfferBodyZha": "ZigDash can name your tiles and add a dashboard per floor and room, from the names and rooms you gave your devices in Home Assistant, ZHA's included.",
+  "haImportNoZ2mDevices": "Zigbee2MQTT has no devices yet. Pair your devices there first, then open Import from Home Assistant in this home's settings.",
   "haImportOfferLater": "Not now",
   "haImportOfferGo": "Import",
   "haImportSignIn": "Sign in with Home Assistant",
@@ -1527,7 +2310,9 @@
   "haImportReadToken": "Read with token",
   "haImportSignInRefused": "Home Assistant didn't accept the sign-in. This happens when Home Assistant has no internet access. Use a long-lived token below instead.",
   "haImportSignInUnfinished": "Sign-in didn't finish. If the page didn't open, check the address: it's the one you open Home Assistant with in your browser, which may not be your broker's. Or use a long-lived token below.",
-  "@haImportSignInUnfinished": {"description": "Import from Home Assistant (3.2.9): the browser came back without signing in."},
+  "@haImportSignInUnfinished": {
+    "description": "Import from Home Assistant (3.2.9): the browser came back without signing in."
+  },
   "setupIsolatedHint": "Your phone can see almost nothing else on this Wi-Fi. It may be on a guest network, or the router may keep devices apart (often called client or AP isolation). Join your main Wi-Fi, or turn that off, then try again.",
   "setupAuthTrust": "Your login stays on this phone and goes only to your own broker. ZigDash has no server and no account, and every MQTT app logs in this way. Safest: a separate MQTT user just for ZigDash, which you can remove any time.",
   "setupAuthWhatKept": "What ZigDash keeps",
@@ -1543,13 +2328,11 @@
   "engineInstalling": "Installing on your hub…",
   "engineTooOldTitle": "Zigbee2MQTT needs an update",
   "engineTooOldBody": "Your Zigbee2MQTT is version {version}. Automations need 2.4 or newer. Update Zigbee2MQTT on your hub, then come back here.",
-  "@engineTooOldBody": {"placeholders": {"version": {}}},
-  "engineIntroTitle": "Automations run on your hub, not on your phone",
-  "engineIntroBody": "ZigDash puts ZigDash Engine inside Zigbee2MQTT on your hub. It watches your devices and runs your rules, so a light turns on when the door opens even with your phone off and the internet down.",
-  "engineIntroNothingByHand": "Nothing to install by hand. ZigDash does it over your home network.",
-  "engineIntroVersion": "Your Zigbee2MQTT is version {version}.",
-  "@engineIntroVersion": {"placeholders": {"version": {}}},
-  "engineIntroRemove": "You can remove it any time from this screen.",
+  "@engineTooOldBody": {
+    "placeholders": {
+      "version": {}
+    }
+  },
   "engineInstall": "Install on hub",
   "engineDeclinedTitle": "No automations on this hub",
   "engineDeclinedBody": "Zigbee2MQTT on your hub doesn't allow add-ons, so nothing can run your rules while your phone is away. Scenes, alerts and the dashboard work as before.",
@@ -1570,12 +2353,24 @@
   "engineReportProblem": "Report a problem",
   "engineRunningTitle": "Your hub is ready for automations",
   "engineRunningBody": "Rules loaded on the hub: {count}. Creating automations comes in the next step of this release.",
-  "@engineRunningBody": {"placeholders": {"count": {}}},
+  "@engineRunningBody": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "engineClockOff": "Your hub's clock is more than five minutes off. Time-based automations will run at the wrong time until it is fixed.",
   "engineRulesUnknown": "Rules ZigDash Engine on your hub can't run yet: {count}. Update it by reinstalling.",
-  "@engineRulesUnknown": {"placeholders": {"count": {}}},
+  "@engineRulesUnknown": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "engineInstallRefused": "Zigbee2MQTT refused ZigDash Engine: {error}",
-  "@engineInstallRefused": {"placeholders": {"error": {}}},
+  "@engineInstallRefused": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "engineInstallNoAnswer": "Zigbee2MQTT didn't answer. Check that the Home is connected and try again.",
   "engineConsentFailed": "Zigbee2MQTT didn't accept the change or didn't come back. Check your hub and try again.",
   "autoValMotion": "motion",
@@ -1593,40 +2388,107 @@
   "autoValClose": "close",
   "autoValStop": "stop",
   "autoWhenAbove": "When {device}: {property} above {value}",
-  "@autoWhenAbove": {"placeholders": {"device": {}, "property": {}, "value": {}}},
+  "@autoWhenAbove": {
+    "placeholders": {
+      "device": {},
+      "property": {},
+      "value": {}
+    }
+  },
   "autoWhenBelow": "When {device}: {property} below {value}",
-  "@autoWhenBelow": {"placeholders": {"device": {}, "property": {}, "value": {}}},
+  "@autoWhenBelow": {
+    "placeholders": {
+      "device": {},
+      "property": {},
+      "value": {}
+    }
+  },
   "autoWhenDevice": "When {device}: {what}",
-  "@autoWhenDevice": {"placeholders": {"device": {}, "what": {}}},
+  "@autoWhenDevice": {
+    "placeholders": {
+      "device": {},
+      "what": {}
+    }
+  },
   "autoAtTime": "At {time}",
-  "@autoAtTime": {"placeholders": {"time": {}}},
+  "@autoAtTime": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "autoSunrise": "sunrise",
   "autoSunset": "sunset",
   "autoAfterSun": "{minutes} min after {sun}",
-  "@autoAfterSun": {"placeholders": {"minutes": {}, "sun": {}}},
+  "@autoAfterSun": {
+    "placeholders": {
+      "minutes": {},
+      "sun": {}
+    }
+  },
   "autoBeforeSun": "{minutes} min before {sun}",
-  "@autoBeforeSun": {"placeholders": {"minutes": {}, "sun": {}}},
+  "@autoBeforeSun": {
+    "placeholders": {
+      "minutes": {},
+      "sun": {}
+    }
+  },
   "autoAtSun": "At {sun}",
-  "@autoAtSun": {"placeholders": {"sun": {}}},
+  "@autoAtSun": {
+    "placeholders": {
+      "sun": {}
+    }
+  },
   "autoEveryDay": "every day",
   "autoWeekdays": "weekdays",
   "autoWeekends": "weekends",
   "autoBetween": "between {from} and {to}",
-  "@autoBetween": {"placeholders": {"from": {}, "to": {}}},
+  "@autoBetween": {
+    "placeholders": {
+      "from": {},
+      "to": {}
+    }
+  },
   "autoDeviceIs": "{device} is {value}",
-  "@autoDeviceIs": {"placeholders": {"device": {}, "value": {}}},
+  "@autoDeviceIs": {
+    "placeholders": {
+      "device": {},
+      "value": {}
+    }
+  },
   "autoRunScene": "Run “{scene}”",
-  "@autoRunScene": {"placeholders": {"scene": {}}},
+  "@autoRunScene": {
+    "placeholders": {
+      "scene": {}
+    }
+  },
   "autoSetDevice": "{device}: {state}",
-  "@autoSetDevice": {"placeholders": {"device": {}, "state": {}}},
+  "@autoSetDevice": {
+    "placeholders": {
+      "device": {},
+      "state": {}
+    }
+  },
   "autoOffAfter": "{action}, off again after {minutes} min",
-  "@autoOffAfter": {"placeholders": {"action": {}, "minutes": {}}},
+  "@autoOffAfter": {
+    "placeholders": {
+      "action": {},
+      "minutes": {}
+    }
+  },
   "autoErrPickTrigger": "Pick a device and what it does.",
   "autoErrValue": "Type a number for the reading.",
   "autoErrDays": "Pick at least one day.",
   "autoErrTown": "Set your town for sunrise and sunset.",
   "autoErrPickAction": "Pick what should happen.",
   "autoErrEmptyScene": "That scene has nothing to send.",
+  "autoSceneTilesSkipped": "{count, plural, =1{1 of this scene's actions runs only from this phone at home, not from Automations.} other{{count} of this scene's actions run only from this phone at home, not from Automations.}}",
+  "@autoSceneTilesSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "autoErrNotConnected": "ZigDash isn't connected to this Home. Try again at home.",
   "autoNewTitle": "New automation",
   "autoEditTitle": "Edit automation",
@@ -1648,7 +2510,11 @@
   "autoShift": "Shift in minutes (minus is before)",
   "autoTownNone": "No town set",
   "autoTownIs": "Sun times for {town}",
-  "@autoTownIs": {"placeholders": {"town": {}}},
+  "@autoTownIs": {
+    "placeholders": {
+      "town": {}
+    }
+  },
   "autoTownSet": "Set town",
   "autoTownChange": "Change town",
   "autoDays": "Days",
@@ -1663,23 +2529,44 @@
   "autoTurnOffAgain": "Turn off again",
   "autoStaysAsSet": "Stays as set",
   "autoOffAfterMinutes": "{minutes} minutes after it ran",
-  "@autoOffAfterMinutes": {"placeholders": {"minutes": {}}},
+  "@autoOffAfterMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
   "autoTownSearch": "Town",
   "autoTownWhy": "Used only for sunrise and sunset. Stored on your hub, never your location.",
   "autoNewButton": "New automation",
   "autoEmptyBody": "Nothing runs yet. Tap New automation to make the first one.",
   "autoOnlyIfList": "only if {list}",
-  "@autoOnlyIfList": {"placeholders": {"list": {}}},
+  "@autoOnlyIfList": {
+    "placeholders": {
+      "list": {}
+    }
+  },
   "autoEdit": "Edit",
   "autoNeverRan": "never ran",
   "autoRanAt": "ran {time}",
-  "@autoRanAt": {"placeholders": {"time": {}}},
+  "@autoRanAt": {
+    "placeholders": {
+      "time": {}
+    }
+  },
   "autoFreeCount": "{count} of {max} free automations",
-  "@autoFreeCount": {"placeholders": {"count": {}, "max": {}}},
+  "@autoFreeCount": {
+    "placeholders": {
+      "count": {},
+      "max": {}
+    }
+  },
   "autoRecentRuns": "Recent runs",
   "autoDeleted": "(deleted)",
   "autoCeilingTitle": "{count} automations are free. Want more?",
-  "@autoCeilingTitle": {"placeholders": {"count": {}}},
+  "@autoCeilingTitle": {
+    "placeholders": {
+      "count": {}
+    }
+  },
   "autoCeilingBody": "ZigDash is free and open source, built by one person. Pro is a one-time purchase: unlimited automations, history for 7 and 30 days and the wall tablet extras. Your automations keep running whatever you choose.",
   "autoCeilingSeePro": "See Pro",
   "engineRemove": "Remove from hub",
@@ -1703,10 +2590,22 @@
   "joinHomeTitle": "Add a shared home",
   "joinHomeInvalid": "This code isn't a ZigDash home invitation, or it's damaged.",
   "joinHomeAlready": "{name} is already on this phone.",
-  "@joinHomeAlready": {"placeholders": {"name": {"type": "String"}}},
+  "@joinHomeAlready": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "joinHomeOpen": "Open it",
   "joinHomeAsk": "Add {name} to this phone?",
-  "@joinHomeAsk": {"placeholders": {"name": {"type": "String"}}},
+  "@joinHomeAsk": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "joinHomeBody": "ZigDash adds the home with the same connection and login, and takes the dashboards from the other phone. Keep this phone on your home Wi-Fi.",
   "joinHomeAdd": "Add home",
   "joinHomeNoDashboards": "Home added. The dashboards didn't arrive; your devices are on the Devices tab.",
@@ -1730,7 +2629,11 @@
   "remoteThisPhone": "This phone",
   "remoteOtherPhone": "Another phone",
   "remotePhoneAdded": "Added {date}",
-  "@remotePhoneAdded": {"placeholders": {"date": {}}},
+  "@remotePhoneAdded": {
+    "placeholders": {
+      "date": {}
+    }
+  },
   "remoteRemovePhone": "Remove",
   "remoteRemovePhoneConfirm": "Remove this phone? It can no longer reach this home from away.",
   "remoteAddPhone": "Add a phone",
@@ -1751,118 +2654,267 @@
   "remotePairNoHomes": "Set this home up on this phone first, at home. Then scan the code again.",
   "remotePairInvalid": "This code isn't a ZigDash remote control code, or it was cut off.",
   "remotePairDone": "Remote control is on for {home}",
-  "@remotePairDone": {"placeholders": {"home": {}}},
+  "@remotePairDone": {
+    "placeholders": {
+      "home": {}
+    }
+  },
   "remoteReconnectHub": "Reconnect the hub",
   "remoteTurnOffConfirm": "This phone leaves remote control and your hub disconnects from the relay. A key backup saved from this phone stops working; other phones keep their access until you remove them.",
   "remoteHomeId": "Home ID {id}",
-  "@remoteHomeId": {"placeholders": {"id": {}}},
+  "@remoteHomeId": {
+    "placeholders": {
+      "id": {}
+    }
+  },
   "alertsHintTitle": "Get notified on this phone",
-  "@alertsHintTitle": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "@alertsHintTitle": {
+    "description": "Automations tab: card pointing to Alerts (3.2.1)."
+  },
   "alertsHintBody": "A leak, smoke, an opened door or a low battery can send a notification to this phone, even with ZigDash closed.",
-  "@alertsHintBody": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "@alertsHintBody": {
+    "description": "Automations tab: card pointing to Alerts (3.2.1)."
+  },
   "alertsHintButton": "Set up Alerts",
-  "@alertsHintButton": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "@alertsHintButton": {
+    "description": "Automations tab: card pointing to Alerts (3.2.1)."
+  },
   "alertsHintNotNow": "Not now",
-  "@alertsHintNotNow": {"description": "Automations tab: card pointing to Alerts (3.2.1)."},
+  "@alertsHintNotNow": {
+    "description": "Automations tab: card pointing to Alerts (3.2.1)."
+  },
   "guidedNoZ2mBody": "An MQTT broker answers here, but Zigbee2MQTT isn't sending anything on it. Check that Zigbee2MQTT is started and uses this broker, and that the base topic matches its settings. If your Zigbee devices are in Home Assistant's ZHA, ZigDash can't see them: it works with Zigbee2MQTT.",
-  "@guidedNoZ2mBody": {"description": "Test & connect: a broker with no Zigbee2MQTT on it (3.2.1)."},
+  "@guidedNoZ2mBody": {
+    "description": "Test & connect: a broker with no Zigbee2MQTT on it (3.2.1)."
+  },
   "devicesOtherBaseBody": "Zigbee2MQTT is on this broker with the base topic “{found}”, but this Home looks for “{current}”.",
-  "@devicesOtherBaseBody": {"description": "Devices tab: Zigbee2MQTT found under another base topic (3.2.2).", "placeholders": {"found": {"type": "String"}, "current": {"type": "String"}}},
+  "@devicesOtherBaseBody": {
+    "description": "Devices tab: Zigbee2MQTT found under another base topic (3.2.2).",
+    "placeholders": {
+      "found": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
   "devicesUseBase": "Use “{found}”",
-  "@devicesUseBase": {"description": "Devices tab: button that switches the Home to the base topic found (3.2.2).", "placeholders": {"found": {"type": "String"}}},
+  "@devicesUseBase": {
+    "description": "Devices tab: button that switches the Home to the base topic found (3.2.2).",
+    "placeholders": {
+      "found": {
+        "type": "String"
+      }
+    }
+  },
   "devicesChangeConnection": "Change connection",
-  "@devicesChangeConnection": {"description": "Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2)."},
+  "@devicesChangeConnection": {
+    "description": "Devices tab: no Zigbee2MQTT on the broker, opens the connection settings (3.2.2)."
+  },
   "updateAvailableTitle": "A new version of ZigDash is ready",
-  "@updateAvailableTitle": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "@updateAvailableTitle": {
+    "description": "Dashboard: Play in-app update banner (3.2.3)."
+  },
   "updateAvailableBody": "It downloads while you keep using ZigDash.",
-  "@updateAvailableBody": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "@updateAvailableBody": {
+    "description": "Dashboard: Play in-app update banner (3.2.3)."
+  },
   "updateAvailableButton": "Update",
-  "@updateAvailableButton": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "@updateAvailableButton": {
+    "description": "Dashboard: Play in-app update banner (3.2.3)."
+  },
   "updateDownloading": "Downloading the update…",
-  "@updateDownloading": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "@updateDownloading": {
+    "description": "Dashboard: Play in-app update banner (3.2.3)."
+  },
   "updateReadyTitle": "Update downloaded",
-  "@updateReadyTitle": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "@updateReadyTitle": {
+    "description": "Dashboard: Play in-app update banner (3.2.3)."
+  },
   "updateReadyButton": "Restart to finish",
-  "@updateReadyButton": {"description": "Dashboard: Play in-app update banner (3.2.3)."},
+  "@updateReadyButton": {
+    "description": "Dashboard: Play in-app update banner (3.2.3)."
+  },
   "nfcWriteTag": "Write to NFC tag",
-  "@nfcWriteTag": {"description": "NFC tags (3.3)."},
+  "@nfcWriteTag": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcHoldTitle": "Hold a tag to your phone",
-  "@nfcHoldTitle": {"description": "NFC tags (3.3)."},
+  "@nfcHoldTitle": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcHoldBody": "Hold a blank NFC sticker to the back of your phone. Tapping it later runs {name}.",
-  "@nfcHoldBody": {"description": "NFC tags (3.3).", "placeholders": {"name": {"type": "String"}}},
+  "@nfcHoldBody": {
+    "description": "NFC tags (3.3).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "nfcWrittenTitle": "Tag ready",
-  "@nfcWrittenTitle": {"description": "NFC tags (3.3)."},
+  "@nfcWrittenTitle": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcWrittenBody": "Tap your phone on this tag to run {name}. It works with ZigDash closed.",
-  "@nfcWrittenBody": {"description": "NFC tags (3.3).", "placeholders": {"name": {"type": "String"}}},
+  "@nfcWrittenBody": {
+    "description": "NFC tags (3.3).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "nfcFailedTitle": "Couldn't write the tag",
-  "@nfcFailedTitle": {"description": "NFC tags (3.3)."},
+  "@nfcFailedTitle": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcReadonlyBody": "This tag is locked and can't be changed. Try another one.",
-  "@nfcReadonlyBody": {"description": "NFC tags (3.3)."},
+  "@nfcReadonlyBody": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcTooSmallBody": "This tag is too small. Use an NTAG213 sticker or larger.",
-  "@nfcTooSmallBody": {"description": "NFC tags (3.3)."},
+  "@nfcTooSmallBody": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcFailedBody": "Hold the tag still against the back of the phone and try again.",
-  "@nfcFailedBody": {"description": "NFC tags (3.3)."},
+  "@nfcFailedBody": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcOffTitle": "NFC is off",
-  "@nfcOffTitle": {"description": "NFC tags (3.3)."},
+  "@nfcOffTitle": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcOffBody": "Turn on NFC in Android's settings, then try again.",
-  "@nfcOffBody": {"description": "NFC tags (3.3)."},
+  "@nfcOffBody": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcNoneTitle": "No NFC on this phone",
-  "@nfcNoneTitle": {"description": "NFC tags (3.3)."},
+  "@nfcNoneTitle": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcNoneBody": "This phone can't read or write NFC tags.",
-  "@nfcNoneBody": {"description": "NFC tags (3.3)."},
+  "@nfcNoneBody": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcWriteAnother": "Write another tag",
-  "@nfcWriteAnother": {"description": "NFC tags (3.3)."},
+  "@nfcWriteAnother": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcUnsupportedBody": "This kind of tag can't be written by this phone (often MIFARE Classic). Use an NTAG213, 215 or 216 sticker.",
-  "@nfcUnsupportedBody": {"description": "NFC tags (3.3)."},
+  "@nfcUnsupportedBody": {
+    "description": "NFC tags (3.3)."
+  },
   "nfcTagsTitle": "NFC tags",
-  "@nfcTagsTitle": {"description": "NFC tags list (3.3)."},
+  "@nfcTagsTitle": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagsSubtitle": "Tags that run a scene or switch a device",
-  "@nfcTagsSubtitle": {"description": "NFC tags list (3.3)."},
+  "@nfcTagsSubtitle": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagsEmpty": "No tags yet. Long-press a scene, light, plug or shutter tile and choose Write to NFC tag.",
-  "@nfcTagsEmpty": {"description": "NFC tags list (3.3)."},
+  "@nfcTagsEmpty": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagRunsScene": "Runs the scene",
-  "@nfcTagRunsScene": {"description": "NFC tags list (3.3)."},
+  "@nfcTagRunsScene": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagSwitches": "Switches on and off",
-  "@nfcTagSwitches": {"description": "NFC tags list (3.3)."},
+  "@nfcTagSwitches": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagWritten": "written {when}",
-  "@nfcTagWritten": {"description": "NFC tags list (3.3).", "placeholders": {"when": {"type": "String"}}},
+  "@nfcTagWritten": {
+    "description": "NFC tags list (3.3).",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "nfcTagLastTap": "last tapped {when}",
-  "@nfcTagLastTap": {"description": "NFC tags list (3.3).", "placeholders": {"when": {"type": "String"}}},
+  "@nfcTagLastTap": {
+    "description": "NFC tags list (3.3).",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "nfcTagNeverTapped": "not tapped yet",
-  "@nfcTagNeverTapped": {"description": "NFC tags list (3.3)."},
+  "@nfcTagNeverTapped": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagOffLabel": "Off",
-  "@nfcTagOffLabel": {"description": "NFC tags list (3.3)."},
+  "@nfcTagOffLabel": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagRewrite": "Rewrite",
-  "@nfcTagRewrite": {"description": "NFC tags list (3.3)."},
+  "@nfcTagRewrite": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagForget": "Remove from list",
-  "@nfcTagForget": {"description": "NFC tags list (3.3)."},
+  "@nfcTagForget": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagOffToast": "This tag is turned off in ZigDash",
-  "@nfcTagOffToast": {"description": "NFC tags list (3.3)."},
+  "@nfcTagOffToast": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcTagsNote": "A tag you turn off does nothing on this phone. Tags written before this list aren't shown: rewrite them once.",
-  "@nfcTagsNote": {"description": "NFC tags list (3.3)."},
+  "@nfcTagsNote": {
+    "description": "NFC tags list (3.3)."
+  },
   "nfcPopupHeader": "ZigDash tag",
-  "@nfcPopupHeader": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupHeader": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupRunning": "Running…",
-  "@nfcPopupRunning": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupRunning": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupSwitching": "Switching…",
-  "@nfcPopupSwitching": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupSwitching": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupDone": "Done",
-  "@nfcPopupDone": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupDone": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupClosing": "Closes in 2 seconds",
-  "@nfcPopupClosing": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupClosing": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupUnreachable": "This phone can't reach the home right now. Check the Wi-Fi, or turn on remote control.",
-  "@nfcPopupUnreachable": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupUnreachable": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupOffBody": "Nothing was switched. Turn it back on in the Home's settings, under NFC tags.",
-  "@nfcPopupOffBody": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupOffBody": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "nfcPopupOpenApp": "Open ZigDash",
-  "@nfcPopupOpenApp": {"description": "NFC tag popup (3.3), shown by Android outside the app."},
+  "@nfcPopupOpenApp": {
+    "description": "NFC tag popup (3.3), shown by Android outside the app."
+  },
   "hubBackupTitle": "Hub backup",
-  "@hubBackupTitle": {"description": "Settings › Home (3.3): copies of Zigbee2MQTT's data folder kept on the phone (hub-backup.md)."},
+  "@hubBackupTitle": {
+    "description": "Settings › Home (3.3): copies of Zigbee2MQTT's data folder kept on the phone (hub-backup.md)."
+  },
   "hubBackupSettingsSubtitle": "A daily copy of Zigbee2MQTT's network and device names",
   "hubBackupIntro": "ZigDash keeps a copy of Zigbee2MQTT's settings, Zigbee network and device names from your hub, so a hub that was reset or wiped can get its network back. A new copy is taken each day you open ZigDash at home, and the last 7 are kept on this phone.",
   "hubBackupNone": "No backup yet",
   "hubBackupLast": "Last backup: {when}",
-  "@hubBackupLast": {"placeholders": {"when": {"type": "String"}}},
+  "@hubBackupLast": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "hubBackupNow": "Back up now",
   "hubBackupMade": "Backed up.",
   "hubBackupRefused": "Zigbee2MQTT on this hub can't make backups.",
@@ -1879,7 +2931,13 @@
   "hubBackupRestore": "Restore",
   "hubBackupRestoreTitle": "Restore this backup?",
   "hubBackupRestoreBody": "Zigbee2MQTT's settings, Zigbee network and device list go back to {when}. Zigbee2MQTT restarts, which takes about a minute. Devices paired after this backup will need pairing again.",
-  "@hubBackupRestoreBody": {"placeholders": {"when": {"type": "String"}}},
+  "@hubBackupRestoreBody": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "hubBackupRestoreExtensions": "To write the backup, ZigDash adds a small one-time extension to Zigbee2MQTT. If extensions are off, it turns them on first, which restarts Zigbee2MQTT once more.",
   "hubBackupRestoreStageAllow": "Allowing extensions and restarting Zigbee2MQTT…",
   "hubBackupRestoreStageSend": "Sending the backup to the hub…",
@@ -1890,7 +2948,16 @@
   "hubBackupRestoreNotBack": "The backup was written, but Zigbee2MQTT hasn't started again. Restart it on the hub, then check it here.",
   "guideIntro": "Let's find it together, one step at a time.",
   "guideStep": "Step {step} of {total}",
-  "@guideStep": {"placeholders": {"step": {"type": "int"}, "total": {"type": "int"}}},
+  "@guideStep": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "guideNotHelped": "That didn't help",
   "guideBack": "Back",
   "guideSkipToHelp": "Skip to help",
@@ -1930,7 +2997,12 @@
   "loginTryAnonymous": "Try without a login",
   "loginCopied": "Copied",
   "shortcutNudge": "Switch {name} without opening ZigDash",
-  "@shortcutNudge": {"description": "Banner after a device was switched from the app in a few sessions; offers a home-screen widget or a Quick Settings tile.", "placeholders": {"name": {}}},
+  "@shortcutNudge": {
+    "description": "Banner after a device was switched from the app in a few sessions; offers a home-screen widget or a Quick Settings tile.",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "shortcutNudgeLater": "Not now",
   "shortcutNudgeTile": "Quick Settings",
   "shortcutNudgeWidget": "Home screen",
@@ -1944,56 +3016,452 @@
   "haWhereDuckDnsHelp": "The name you chose on duckdns.org, with Home Assistant's port: myhome.duckdns.org:8123. It works from anywhere.",
   "haWhereOwnDomainHelp": "The address you open Home Assistant with away from home, like ha.example.com. With a Cloudflare tunnel, it's the hostname you set for Home Assistant in Cloudflare. It works from anywhere.",
   "remoteNowTitle": "How this phone reaches home",
-  "@remoteNowTitle": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteNowTitle": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteNowHome": "At home, straight to your broker at {address}",
-  "@remoteNowHome": {"placeholders": {"address": {"type": "String"}}},
+  "@remoteNowHome": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "remoteNowOwn": "Away, through your own address {address}",
-  "@remoteNowOwn": {"placeholders": {"address": {"type": "String"}}},
+  "@remoteNowOwn": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "remoteNowRelay": "Away, through ZigDash's relay",
-  "@remoteNowRelay": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteNowRelay": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteNowOffline": "Not connected to your home right now",
-  "@remoteNowOffline": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteNowOffline": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteWaysTitle": "Two ways to reach home from away",
-  "@remoteWaysTitle": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteWaysTitle": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteWayOwnTitle": "Your own address",
-  "@remoteWayOwnTitle": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteWayOwnTitle": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteWayOwnSet": "Free. Set to {address}.",
-  "@remoteWayOwnSet": {"placeholders": {"address": {"type": "String"}}},
+  "@remoteWayOwnSet": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "remoteWayOwnUnset": "Free. Tailscale, a VPN or a forwarded port: add its address to this home's connection.",
-  "@remoteWayOwnUnset": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteWayOwnUnset": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteWayRelayBody": "Through ZigDash's encrypted relay. No VPN, nothing to open on your router. Part of Pro.",
-  "@remoteWayRelayBody": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteWayRelayBody": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepsTitle": "What it takes",
-  "@remoteStepsTitle": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepsTitle": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepEngine": "ZigDash Engine on your hub (free)",
-  "@remoteStepEngine": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepEngine": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepEngineInstall": "Not installed yet. Install it under Automations.",
-  "@remoteStepEngineInstall": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepEngineInstall": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepEngineTooOld": "This hub's Zigbee2MQTT is too old for it. Update Zigbee2MQTT first.",
-  "@remoteStepEngineTooOld": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepEngineTooOld": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepEngineLater": "Checked when you're home",
-  "@remoteStepEngineLater": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepEngineLater": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepEngineSeen": "Installed when this phone last saw your hub",
-  "@remoteStepEngineSeen": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepEngineSeen": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepDone": "Done",
-  "@remoteStepDone": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepDone": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepProNeeded": "One payment, no monthly fee",
-  "@remoteStepProNeeded": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepProNeeded": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteStepOnLater": "Turn it on when you're home",
-  "@remoteStepOnLater": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteStepOnLater": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteSeePro": "See Pro · {price}",
-  "@remoteSeePro": {"placeholders": {"price": {"type": "String"}}},
+  "@remoteSeePro": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
   "remoteUnfitHa": "This home is reached through Home Assistant. Away from home it works when your Home Assistant address does.",
-  "@remoteUnfitHa": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteUnfitHa": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "remoteUnfitZ2m": "This home is reached through Zigbee2MQTT's own page. Remote control needs a home connected to its broker.",
-  "@remoteUnfitZ2m": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@remoteUnfitZ2m": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "proSale": "Sale: {percent}% off until {date}",
-  "@proSale": {"placeholders": {"percent": {"type": "int"}, "date": {"type": "String"}}},
+  "@proSale": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "proSaleNoEnd": "Sale: {percent}% off",
-  "@proSaleNoEnd": {"placeholders": {"percent": {"type": "int"}}},
+  "@proSaleNoEnd": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "proSaleEnded": "The sale has ended. This is the price now.",
-  "@proSaleEnded": {"description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."},
+  "@proSaleEnded": {
+    "description": "Remote control page and the Pro sale (3.4.4, docs/design/remote-tab.md)."
+  },
   "saleCardRemote": "ZigDash Pro: control your home from anywhere, and more.",
   "saleCardHomeAssistant": "ZigDash Pro: longer history, more automations, and more.",
-  "@saleCardRemote": {"description": "Sale card on the Devices tab (3.4.6, docs/design/devices-sale-card.md)."}
+  "@saleCardRemote": {
+    "description": "Sale card on the Devices tab (3.4.6, docs/design/devices-sale-card.md)."
+  },
+  "chatEarlyTitle": "Chat with your home",
+  "@chatEarlyTitle": {
+    "description": "Chat with your home early-access card and Settings row (3.5.4, docs/design/assistant-early-access.md)."
+  },
+  "chatEarlyBody": "Send a message like \"close the office shutter\" or \"is the back door open?\" and your home answers. It's out now for ZigDash Pro owners. The first {count} to join get a founder's code: free for 3 months, remote access included.",
+  "@chatEarlyBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatEarlyTelegram": "Join on Telegram",
+  "chatEarlyEmail": "Join by email",
+  "chatEarlyNotForMe": "Not for me",
+  "chatEarlyClose": "Close",
+  "chatEarlyEmailHint": "Your email",
+  "chatEarlyBadEmail": "That doesn't look like an email address.",
+  "chatEarlyEmailUse": "We'll only use this to invite you to the beta and tell you its price.",
+  "chatEarlyPrivacy": "Privacy policy",
+  "chatEarlySend": "Send",
+  "chatEarlyFailed": "Couldn't send. Try Telegram, or later.",
+  "chatEarlyInFirst": "You're #{position} on the list: one of the first {count}. You'll get a founder's code: Chat and remote access, free for 3 months.",
+  "@chatEarlyInFirst": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatEarlyAfterFirst": "You're #{position} on the list. The first {count} places are taken. Chat is out now for ZigDash Pro owners.",
+  "@chatEarlyAfterFirst": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatEarlyListed": "This email is already on the list.",
+  "chatEarlyPrice": "After the free months, would €2.49 a month be OK?",
+  "chatEarlyYes": "Yes",
+  "chatEarlyMaybe": "Maybe",
+  "chatEarlyNo": "No",
+  "chatEarlyThanks": "Thanks, noted.",
+  "settingsChatEarlySubtitle": "Early access: join the list",
+  "historyOnTitle": "See your home over days",
+  "@historyOnTitle": {
+    "description": "Turn on History card (3.6, docs/design/pro-trial-360.md §2)."
+  },
+  "historyOnBody": "Turn on History to see temperatures, power and doors over days and weeks, not just now. ZigDash Engine records on your hub, even when your phone is off.",
+  "historyOnTurnOn": "Turn on History",
+  "historyOnLater": "Not now",
+  "historyOnWorking": "Turning on History…",
+  "historyOnConsentBody": "ZigDash Engine records History on your hub, so it keeps going when your phone is off. Your Zigbee2MQTT blocks add-ons, as new installs do: ZigDash would turn on \"Allow external JavaScript\" and restart it.",
+  "historyOnAllow": "Allow and restart",
+  "historyOnBrokerBody": "History is recorded through your MQTT broker. ZigDash reaches this home through Zigbee2MQTT's page, so add the broker first.",
+  "historyOnAddBroker": "Add the broker",
+  "historyOnPhoneBody": "Your hub can't run ZigDash Engine. This phone can record instead, while ZigDash is open: best on a wall tablet that stays on.",
+  "historyOnPhone": "Record on this phone",
+  "proTrialStartedTitle": "Pro is on for 14 days",
+  "@proTrialStartedTitle": {
+    "description": "The 14-day Pro trial (3.6, docs/design/pro-trial-360.md §3)."
+  },
+  "proTrialOfferTitle": "Try ZigDash Pro free for 14 days",
+  "proTrialWhat": "History for 7 and 30 days, the wall tablet extras, and more than three automations.",
+  "proTrialNoPayment": "No payment, nothing renews.",
+  "proTrialStart": "Start the trial",
+  "proTrialEndingTitle": "Your Pro trial ends in 2 days",
+  "proTrialKeep": "Keep Pro · {price}",
+  "@proTrialKeep": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "proTrialUsedHistory": "the week and month History",
+  "proTrialUsedWall": "the wall tablet extras",
+  "proTrialUsedAutomation": "more than three automations",
+  "proTrialYouUsed": "You used {features}.",
+  "@proTrialYouUsed": {
+    "placeholders": {
+      "features": {
+        "type": "String"
+      }
+    }
+  },
+  "proTrialAfterEnd": "After it ends, everything you set up stays; the week and month views and new automations past three need Pro.",
+  "proTrialDaysLeft": "{days, plural, =1{Trial: 1 day left} other{Trial: {days} days left}}",
+  "@proTrialDaysLeft": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "proTrialEnded": "Your trial ended. Everything you set up is still there.",
+  "engineSlimCard": "Automations run on your hub with ZigDash Engine. ZigDash puts it there when you save your first one.",
+  "engineAwayMakeAtHome": "Make automations at home: ZigDash puts its Engine on your hub then, over your home network.",
+  "engineSheetSource": "See its source on GitHub",
+  "engineSheetTitle": "ZigDash Engine runs your automations",
+  "engineSheetBody": "ZigDash Engine is one open-source file that ZigDash adds to Zigbee2MQTT's folder on your hub. It runs your automations there, with your phone off. Remove it any time from the Automations tab.",
+  "engineSheetInstallSave": "Install and save",
+  "engineSheetSaveOnly": "Save without running",
+  "engineSheetSave": "Save",
+  "engineSheetNoAnswer": "Zigbee2MQTT on your hub didn't answer in time, so ZigDash can't install its Engine now. Save now, and install it from the Automations tab when your hub answers.",
+  "engineSheetSavedNotRunning": "Your automation is saved. It runs once ZigDash Engine is on your hub.",
+  "engineWaitingTitle": "Saved earlier, waiting for ZigDash Engine",
+  "engineWaitingRun": "Runs once installed",
+  "engineWaitingPaused": "Stays paused",
+  "autoNotRunTitle": "None of these run yet",
+  "autoNotRunBody": "Not running: ZigDash Engine isn't on your hub. Until it is, your MQTT broker keeps these, and a broker without persistence loses them when it restarts.",
+  "autoNotRunning": "Not running",
+  "historyUsePhoneInstead": "Use this phone instead",
+  "chatTitle": "Chat (beta)",
+  "@chatTitle": {
+    "description": "ZigDash Chat (3.7.0, docs/design/chat-linking.md §3): Home settings row and screen title."
+  },
+  "chatRowReady": "Talk to your home from Telegram",
+  "chatRowNoPro": "Part of ZigDash Pro (not included in the trial)",
+  "chatRowNoRemote": "Turn on remote control first",
+  "chatRowNoEngine": "Needs ZigDash Engine on your hub",
+  "chatIntroTitle": "Talk to your home from Telegram",
+  "chatIntroBody": "Send the ZigDash Home bot on Telegram a message like \"is the back door open?\" or \"close the office shutter\", and your home answers. It reads what your devices report and their history; with Read and control, it can also switch the lights, covers, switches, plugs and thermostats you choose.",
+  "chatIntroNever": "It never opens, closes or changes locks, valves or sirens, and never changes automations or settings: for those it tells you to open ZigDash.",
+  "chatIntroBeta": "Free during the beta: up to 300 messages a month for this Home.",
+  "chatIntroWho": "Who reads the messages: Telegram, which carries them; our server in the EU, which keeps the conversation for 24 hours; and Anthropic (Claude) in the US, which writes the answers. What Chat reads about your home goes the same way.",
+  "chatPolicy": "How Chat handles your data",
+  "chatLinkedTitle": "Linked accounts",
+  "chatLinkedNone": "No Telegram account linked yet.",
+  "chatLinkedLoadFailed": "Couldn't load the linked accounts. Check the internet connection.",
+  "chatLinkedLine": "{scope} · last used {when}",
+  "@chatLinkedLine": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "chatLinkedNeverUsed": "{scope} · not used yet",
+  "@chatLinkedNeverUsed": {
+    "placeholders": {
+      "scope": {
+        "type": "String"
+      }
+    }
+  },
+  "chatRemove": "Remove",
+  "chatRemoveTitle": "Remove {name}?",
+  "@chatRemoveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatRemoveBody": "This Telegram account can no longer reach your home, and its conversation is deleted.",
+  "chatRemovedLater": "Removed. Your hub forgets it the next time ZigDash is open at home.",
+  "chatAuditTitle": "What Chat did",
+  "chatAuditShow": "Show",
+  "chatAuditEmpty": "Nothing yet.",
+  "chatAuditFailed": "Your hub didn't answer. Try again later.",
+  "chatAuditSent": "set {what}",
+  "@chatAuditSent": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      }
+    }
+  },
+  "chatAuditNotSent": "couldn't send",
+  "chatHereTitle": "Chat with your home is here",
+  "chatHereBody": "Link your Telegram account, then ask your home \"is the back door open?\" or tell it to close a shutter. Part of Pro, free during the beta.",
+  "chatHereSetUp": "Set up",
+  "chatHereNotNow": "Not now",
+  "chatLinkNew": "Link a Telegram account",
+  "chatLinkAnother": "Link another Telegram account",
+  "chatScopeRead": "Read",
+  "chatScopeReadHelp": "Answers questions. Changes nothing.",
+  "chatScopeControl": "Read and control",
+  "chatScopeControlHelp": "Also switches the devices you choose below.",
+  "chatControlsTitle": "What Chat may switch",
+  "chatControlsHelp": "On to start: lights and covers on your dashboards. Off to start: switches and plugs (they can run a heater, a boiler or a pump), thermostats, gates and garage doors. Locks, valves and sirens are never listed.",
+  "chatControlsEmpty": "No devices to choose from yet.",
+  "chatKindLight": "Light",
+  "chatKindCover": "Cover",
+  "chatKindSwitch": "Switch or plug",
+  "chatKindThermostat": "Thermostat",
+  "chatGateNote": "gate or door, off to start",
+  "chatAgeAndAccount": "Each person links their own Telegram account, with its own scope. Linked people must be 16 or older. Anyone using a linked Telegram account can do what its scope allows. Even Read shows whether anyone is home and which doors and windows are open.",
+  "chatEngineOld": "ZigDash Engine on your hub is updating to the version with Chat. Try again in a minute.",
+  "chatLinkButton": "Link Telegram",
+  "chatLinkAway": "Link at home: ZigDash sets this up on your hub over your home network.",
+  "chatCodeTitle": "Finish in Telegram",
+  "chatCodeBody": "In Telegram, tap Start in the ZigDash Home bot. It sends you a 4-digit code: type it here within 10 minutes.",
+  "chatCodeHint": "4-digit code",
+  "chatCodeConfirm": "Confirm",
+  "chatOpenTelegram": "Open Telegram again",
+  "chatLinkedDone": "Linked. Send the bot a message to try it.",
+  "chatFailUnreachable": "Couldn't reach ZigDash's servers. Check the internet connection and try again.",
+  "chatFailLogin": "The relay didn't accept this phone's remote login. Open Remote control and turn it off and on again.",
+  "chatFailPurchase": "Google Play doesn't confirm a ZigDash Pro purchase for this Home.",
+  "chatFailTooMany": "Too many tries. Try again in an hour.",
+  "chatFailExpired": "The code ran out. Start again.",
+  "chatFailWrongCode": "That isn't the code the bot sent. Check it and try again.",
+  "chatFailRefused": "That didn't work. Try again later.",
+  "chatFailNotClaimed": "The bot hasn't got the code yet. Open Telegram, tap Start in the ZigDash Home bot, then type the code it sends.",
+  "chatFailWrongCodeLeft": "That isn't the code the bot sent. Tries left: {count}.",
+  "@chatFailWrongCodeLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "founderCodeAsk": "Have a founder's code?",
+  "@founderCodeAsk": {
+    "description": "Founder's pass (docs/design/founders-pass.md): Remote control page, Chat screen and Home settings."
+  },
+  "founderCodeLabel": "Founder's code",
+  "founderCodeUse": "Use the code",
+  "founderCodeAtHome": "Enter it at home, with ZigDash Engine on your hub: ZigDash sets remote control up over your home network.",
+  "founderCodeWrong": "That isn't a founder's code. Check it and try again.",
+  "founderCodeUsed": "That code was already used. Each code works once.",
+  "founderCodeDeadline": "The date to enter that code has passed. Ask for more time from Get help.",
+  "founderCodeRevoked": "That code was withdrawn.",
+  "founderCodeDone": "Your founder's pass is on: remote control and Chat for this Home until {date}.",
+  "@founderCodeDone": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "founderEndsOn": "Your founder's pass ends on {date}. ZigDash Pro keeps remote control and Chat, with nothing to set up again.",
+  "@founderEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "founderGetPro": "Get Pro",
+  "founderEnded": "Your founder's pass ended on {date}. ZigDash Pro brings remote control and Chat back, with nothing to set up again.",
+  "@founderEnded": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "founderEndedNoDate": "Your founder's pass ended. ZigDash Pro brings remote control and Chat back, with nothing to set up again.",
+  "founderDeleted": "This Home's founder's pass ended and its remote control was removed.",
+  "remoteRemoved": "This Home's remote control was removed from the relay.",
+  "founderSetUpWithPro": "Set up with Pro",
+  "founderUseProTitle": "Use your Pro purchase for this Home?",
+  "founderUseProBody": "Remote control and Chat for this Home move to your Pro purchase: the same phones and Chat links, nothing to set up again. A purchase covers one Home.",
+  "founderUsePro": "Use Pro for this Home",
+  "founderUpgraded": "This Home now runs on your Pro purchase.",
+  "founderUpgradeTaken": "That purchase already belongs to another Home.",
+  "founderUpgradeFailed": "Couldn't move this Home to your Pro purchase. Try again later.",
+  "remoteHubRefused": "The relay refused this hub's login",
+  "chatRowPassEnded": "Founder's pass ended: links can still be removed",
+  "chatFailPassEnded": "This Home's founder's pass ended, so no new Telegram account can be linked.",
+  "panelToggleNoState": "(no state)",
+  "panelToggleError": "err",
+  "diagResolveLocalNameIos": "Your phone couldn't find this name. Check that it's spelled right, or enter the IP address instead (Home Assistant shows it under Settings › System › Network).",
+  "@diagResolveLocalNameIos": {
+    "description": "iOS variant of diagResolveLocalName: iOS resolves .local, so no Android claim. Settings › System › Network is Home Assistant's own menu path."
+  },
+  "reminderNoPermissionIos": "Notifications are off for ZigDash, so there's no reminder. You can turn them on in Settings › ZigDash › Notifications.",
+  "setupLocalNetworkIos": "ZigDash needs Local Network access to find your hub. If you said no, allow it in Settings › Privacy & Security › Local Network.",
+  "setupAddressNotResolvedHaIos": "{host} can't be found from this phone. Tap {button} above and use the address you open Home Assistant with in your browser, or type its IP address here. Home Assistant shows it under Settings › System › Network.",
+  "@setupAddressNotResolvedHaIos": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "button": {
+        "type": "String"
+      }
+    }
+  },
+  "setupAddressNotResolvedIos": "{host} could not be looked up. Check the name, or try the IP address instead. Home Assistant shows it under Settings › System › Network.",
+  "@setupAddressNotResolvedIos": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "tipNumberAddressBodyIos": "If the name doesn't work, try the hub's number address, like 192.168.1.20.",
+  "wallFullscreenSubtitleIos": "Hides the status bar too; the Home indicator dims.",
+  "kioskPinForgotBodyIos": "A forgotten PIN can only be reset by deleting and reinstalling ZigDash, which removes this Home unless you have a backup. Export one before setting a PIN.",
+  "kioskGuidedAccessTitle": "Lock to ZigDash with Guided Access",
+  "kioskGuidedAccess": "iOS keeps ZigDash on screen until you end Guided Access: turn it on in Settings › Accessibility › Guided Access, then triple-click the side button in ZigDash.",
+  "proFreeBodyIos": "Setup, dashboards, every device control, three automations per home and the wall tablet itself stay free. Nothing you use today gets locked.",
+  "proOnceIos": "One payment, no subscription. Bought on another iPhone or iPad with the same Apple Account? It unlocks automatically, or tap Restore purchase.",
+  "engineIntroTitle": "Automations run on your hub, not on your phone",
+  "engineIntroBody": "ZigDash puts ZigDash Engine inside Zigbee2MQTT on your hub. It watches your devices and runs your rules, so a light turns on when the door opens even with your phone off and the internet down.",
+  "engineIntroNothingByHand": "Nothing to install by hand. ZigDash does it over your home network.",
+  "engineIntroVersion": "Your Zigbee2MQTT is version {version}.",
+  "@engineIntroVersion": {
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "engineIntroRemove": "You can remove it any time from this screen."
 }

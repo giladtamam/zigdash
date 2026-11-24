@@ -46,7 +46,7 @@
   <li><strong>An Android phone or tablet</strong> on the same Wi-Fi as that hub.</li>
 </ul>
 <p>No Zigbee2MQTT yet? Open ZigDash and try the demo home first.</p>
-<div class="buttons" style="justify-content:flex-start"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash" data-goatcounter-click="play-setup">Get ZigDash on Google Play</a></div>
+<div class="buttons" style="justify-content:flex-start"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dsetup" data-goatcounter-click="play-setup">Get ZigDash on Google Play</a> <a class="btn" href="https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829" data-goatcounter-click="appstore-setup">Download on the App Store</a></div>
 
 <figure class="video">
   <video controls preload="none" poster="../assets/setup-video.jpg" width="1920" height="1080">
@@ -84,7 +84,7 @@
 
 <h2 id="hubs">Notes for your hub</h2>
 <h3>Home Assistant</h3>
-<p>Needs the Mosquitto broker add-on and the Zigbee2MQTT add-on, both running. The easiest way is <strong>Connect through Home Assistant</strong> (ZigDash 2.10): sign in once, no broker address or MQTT user, and it works away from home too. Full steps in the <a href="../home-assistant/">Home Assistant guide</a>.</p>
+<p>Needs the Mosquitto broker app and the Zigbee2MQTT app, both running. The easiest way is <strong>Connect through Home Assistant</strong>: sign in once, no broker address or MQTT user, and it works away from home too. Full steps in the <a href="../home-assistant/">Home Assistant guide</a>.</p>
 <h3>Raspberry Pi, Linux or Docker</h3>
 <p>Mosquitto 2 only accepts connections from the machine it runs on until you tell it to listen on the network. Add this to <code>mosquitto.conf</code> and restart Mosquitto:</p>
 <pre><code>listener 1883
@@ -95,13 +95,18 @@ allow_anonymous false</code></pre>
 <p>Open the hub's web page, go to Settings › MQTT and turn on <strong>Allow External</strong>, so your phone can reach the broker. Check that Zigbee2MQTT shows as running.</p>
 
 <h2 id="away">Away from home</h2>
-<p>At home ZigDash talks to your hub directly. To use it away from home, install <a href="https://tailscale.com/">Tailscale</a> on the hub and the phone, then add the hub's Tailscale address (<code>100.x.y.z</code>) as the home's remote host. Nothing is opened to the internet and no port forwarding is needed.</p>
+<p>At home ZigDash talks to your hub directly. Away from home there are three ways:</p>
+<ul>
+  <li><strong>Through Home Assistant:</strong> a home connected by signing in to Home Assistant works wherever your Home Assistant address works, such as Nabu Casa or your own remote address.</li>
+  <li><strong>Remote control (Pro):</strong> ZigDash Engine on your hub keeps one encrypted connection to the ZigDash relay, and your phone reaches it from anywhere. One payment, no port forwarding, no VPN. Open it from the globe button on your dashboard.</li>
+  <li><strong>Tailscale (free):</strong> install <a href="https://tailscale.com/">Tailscale</a> on the hub and the phone, then add the hub's Tailscale address (<code>100.x.y.z</code>) as the home's remote host.</li>
+</ul>
 
 <div class="next"><a class="btn" href="../help/">Something not working?</a><a class="btn" href="https://t.me/zigdash_app">Ask the community</a></div>
 </article>
 </main>
 <footer>
-  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Source code</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacy policy</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a></p>
 </footer>
 <script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>

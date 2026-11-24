@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slim rolluik met een SONOFF MINI-ZBRBS en Zigbee2MQTT · ZigDash</title>
+<meta name="description" content="Een SONOFF MINI-ZBRBS Zigbee-module achter de rolluikschakelaar, aangesloten met behoud van de oude schakelaar. Onderdelen, bedrading, koppelen met Zigbee2MQTT, kalibreren en een rolluiktegel in ZigDash.">
+<link rel="canonical" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="en" href="https://zigdash.app/zigbee-shutter/">
+<link rel="alternate" hreflang="cs" href="https://zigdash.app/zigbee-shutter/cs/">
+<link rel="alternate" hreflang="de" href="https://zigdash.app/zigbee-shutter/de/">
+<link rel="alternate" hreflang="es" href="https://zigdash.app/zigbee-shutter/es/">
+<link rel="alternate" hreflang="fr" href="https://zigdash.app/zigbee-shutter/fr/">
+<link rel="alternate" hreflang="he" href="https://zigdash.app/zigbee-shutter/he/">
+<link rel="alternate" hreflang="it" href="https://zigdash.app/zigbee-shutter/it/">
+<link rel="alternate" hreflang="nb" href="https://zigdash.app/zigbee-shutter/nb/">
+<link rel="alternate" hreflang="nl" href="https://zigdash.app/zigbee-shutter/nl/">
+<link rel="alternate" hreflang="pl" href="https://zigdash.app/zigbee-shutter/pl/">
+<link rel="alternate" hreflang="pt" href="https://zigdash.app/zigbee-shutter/pt/">
+<link rel="alternate" hreflang="ru" href="https://zigdash.app/zigbee-shutter/ru/">
+<link rel="alternate" hreflang="sv" href="https://zigdash.app/zigbee-shutter/sv/">
+<link rel="alternate" hreflang="x-default" href="https://zigdash.app/zigbee-shutter/">
+<link rel="icon" href="../../assets/icon.png">
+<meta property="og:title" content="Slim rolluik met een SONOFF MINI-ZBRBS en Zigbee2MQTT">
+<meta property="og:description" content="Een kleine Zigbee-module achter de rolluikschakelaar: de wandschakelaar werkt nog gewoon, en het rolluik gaat open vanuit ZigDash. Onderdelen, bedrading, koppelen en kalibreren.">
+<meta property="og:url" content="https://zigdash.app/zigbee-shutter/nl/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://zigdash.app/assets/shutter/wiring.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="1124">
+<link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body>
+<header>
+  <a class="brand" href="../../"><img src="../../assets/icon.png" alt=""> ZigDash</a>
+  <nav>
+    <a href="../../setup/">Installatie</a>
+    <a href="../../hubs/">Hubs</a>
+    <a href="../../home-assistant/">Home Assistant</a>
+    <a href="../../help/">Hulp</a>
+    <a href="https://t.me/zigdash_app">Community</a>
+  </nav>
+</header>
+<main>
+<article class="doc">
+<h1>Zo maakte ik mijn rolluik slim met een SONOFF MINI-ZBRBS</h1>
+<p class="byline">Gilad Tamam, de ontwikkelaar van ZigDash · 21 november 2026</p>
+<p class="byline">Ook in het: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../es/" hreflang="es" lang="es">Español</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
+<p class="lead">Het rolluik in mijn kantoor heeft een elektrische motor en een gewone op/neer-schakelaar aan de muur. Ik heb een SONOFF MINI-ZBRBS, een kleine Zigbee-rolluikmodule, in de inbouwdoos achter die schakelaar gezet. De wandschakelaar werkt nog precies zoals vroeger, en nu gaat het rolluik ook open en dicht vanaf een tegel in ZigDash, thuis en overal vandaan.</p>
+
+<div class="toc"><strong>Op deze pagina</strong>
+<ul>
+  <li><a href="#how">Hoe het werkt</a></li>
+  <li><a href="#need">Wat je nodig hebt</a></li>
+  <li><a href="#wire">1. De module aansluiten</a></li>
+  <li><a href="#pair">2. Koppelen met ZigDash</a></li>
+  <li><a href="#mode">3. Vertel de module wat voor schakelaar je hebt</a></li>
+  <li><a href="#calibrate">4. Kalibreren</a></li>
+  <li><a href="#tile">5. Een rolluiktegel in ZigDash</a></li>
+</ul></div>
+
+<h2 id="how">Hoe het werkt</h2>
+<p>Een rolluikmotor heeft twee stroomdraden: de ene laat hem omhoog draaien, de andere omlaag. De wandschakelaar zet fase op een van de twee. De MINI-ZBRBS zit daartussen: de twee draden van de motor gaan naar zijn uitgangen (<strong>Lout1</strong> en <strong>Lout2</strong>), en de oude schakelaar gaat naar zijn ingangen (<strong>S1</strong> en <strong>S2</strong>). Druk je op de schakelaar, dan stuurt de module de motor aan. Vraagt ZigDash het via Zigbee, dan stuurt hij de motor ook aan.</p>
+<p>De module weet ook waar het rolluik staat, dus je kunt het naar 50% sturen in plaats van alleen helemaal omhoog of omlaag. En omdat hij op netstroom werkt, is hij ook een Zigbee-router die je netwerk sterker maakt.</p>
+
+<h2 id="need">Wat je nodig hebt</h2>
+<ul>
+  <li><strong>Een SONOFF MINI-ZBRBS</strong> (Zigbee-rolluikschakelaar). Zigbee2MQTT ondersteunt hem als model <code>MINI-ZBRBS</code>.</li>
+  <li><strong>Een rolluikmotor met eigen eindschakelaars</strong>: de gangbare buismotor met vier draden (nul, omhoog, omlaag, aarde) die boven en onder vanzelf stopt. SONOFF geeft de module op voor motoren tot <strong>1&nbsp;A</strong>, en hij stopt de motor vanzelf na 2 minuten in één richting.</li>
+  <li><strong>Een nuldraad in de schakelaardoos.</strong> De module heeft de nul nodig voor zijn eigen voeding.</li>
+  <li><strong>Ruimte in de doos</strong> achter de schakelaar. SONOFF raadt een doos van minstens 60&nbsp;mm diep aan.</li>
+  <li><strong>Hendelklemmen</strong> (ik gebruikte een WAGO 221) en een paar korte stukjes draad.</li>
+  <li><strong>Een Zigbee2MQTT-hub</strong> thuis. Heb je er nog geen, kijk dan bij <a href="../../hubs/">Hubs</a>.</li>
+  <li><strong>ZigDash</strong> op je telefoon (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter">Google Play</a>). Het rolluik thuis bedienen is gratis. Het overal vandaan bedienen gaat via de bediening op afstand van ZigDash Pro: een eenmalige aankoop, geen abonnement.</li>
+</ul>
+
+<div class="tip"><strong>Zet de stroom uit met de installatieautomaat voordat je de schakelaar openmaakt.</strong> In de doos zit 230V. Voel je je niet op je gemak bij werken aan netspanning, laat de bedrading dan door een elektricien doen. SONOFF raadt een installatieautomaat van 1&nbsp;A (MCB of RCBO) vóór de module aan.</div>
+
+<h2 id="wire">1. De module aansluiten</h2>
+<p>De module heeft zes aansluitklemmen, die erop gedrukt staan: <strong>N</strong>, <strong>L</strong>, <strong>Lout1</strong>, <strong>Lout2</strong>, <strong>S1</strong> (omhoog) en <strong>S2</strong> (omlaag). Een aardeklem heeft hij niet. Zo heb ik de mijne aangesloten:</p>
+<div class="compare">
+<table>
+  <thead><tr><th>Klem</th><th>Gaat naar</th><th>In mijn doos</th></tr></thead>
+  <tbody>
+    <tr><th>N</th><td>Nul</td><td>De blauwe nuldraden, samengebracht in een WAGO 221, met een kort draadje vandaar naar N (zie de opmerking hieronder over de kleur)</td></tr>
+    <tr><th>L</th><td>Fase</td><td>De fase-aanvoer van de doos</td></tr>
+    <tr><th>Lout1</th><td>Motor: omhoog (SONOFF noemt het vooruit)</td><td>De zwarte draad van de motor</td></tr>
+    <tr><th>Lout2</th><td>Motor: omlaag (achteruit)</td><td>De bruine draad van de motor</td></tr>
+    <tr><th>S1</th><td>De omhoog-uitgang van de schakelaar</td><td>Een van de uitgangen van de oude schakelaar</td></tr>
+    <tr><th>S2</th><td>De omlaag-uitgang van de schakelaar</td><td>De andere uitgang van de oude schakelaar</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>De oude schakelaar blijft.</strong> Zijn gemeenschappelijke klem krijgt fase, zoals voorheen. Zijn twee uitgangen gaan niet meer naar de motor: ze gaan naar S1 en S2 en vertellen de module welke kant hij op moet sturen. <strong>S1 en S2 zijn ingangen op netspanning</strong>, geen laagspanning: voed de gemeenschappelijke klem van de schakelaar vanaf dezelfde fase, via dezelfde installatieautomaat, als L.</p>
+<p><strong>Aarde:</strong> laat de geelgroene aardedraad van de motor verbonden met de aarde van de doos, zoals hij was. Die gaat niet naar de module.</p>
+<p><strong>Omhoog en omlaag:</strong> draadkleuren zijn in elk huis anders. Kijk voordat je de schakelaar loskoppelt welke motordraad door zijn omhoog-uitgang werd gevoed, en markeer die: die gaat naar Lout1. Zit het andersom, dan laat stap 4 zien hoe je dat oplost.</p>
+<div class="tip"><strong>Gebruik een blauwe (of grijze) draad voor de nulbrug.</strong> Ik had alleen rood bij de hand, dus op mijn foto's is het korte draadje van de WAGO naar N rood, met een blauwe adereindhuls aan de kant van de module. Rood betekent normaal fase, en wie deze doos hierna openmaakt, hoort niet te hoeven gokken. Gebruik je een andere kleur, markeer hem dan aan beide uiteinden met blauwe tape.</div>
+
+<div class="photos">
+  <figure><img src="../../assets/shutter/neutral.jpg" alt="Twee blauwe nuldraden en een rode draad samengebracht in een oranje WAGO 221-hendelklem; de rode draad gaat naar de N-klem van de SONOFF-module" loading="lazy" width="675" height="900"><figcaption>Nul: de blauwe nuldraden van de doos in een WAGO 221, en een kort rood draadje vandaar naar de N van de module.</figcaption></figure>
+  <figure><img src="../../assets/shutter/switch.jpg" alt="De achterkant van de oude rolluikschakelaar met drie rode draden in de klemmen" loading="lazy" width="810" height="690"><figcaption>De oude rolluikschakelaar, behouden: fase komt binnen op de gemeenschappelijke klem, en de omhoog- en omlaag-uitgangen gaan nu naar S1 en S2. Welke klem de gemeenschappelijke is, verschilt per schakelaar; controleer de jouwe voordat je hem loskoppelt.</figcaption></figure>
+</div>
+<figure><img src="../../assets/shutter/wiring.jpg" alt="De open inbouwdoos met de schakelaar eruit getrokken en de SONOFF MINI-ZBRBS aangesloten: twee rode draden van de schakelaar naar S1 en S2, de bruine en zwarte draad van de motor naar Lout2 en Lout1, fase naar L en nul naar N" loading="lazy" width="640" height="1124"><figcaption>Alles aangesloten, voordat het terug de muur in gaat. Van links op de module: S2, S1, Lout2, Lout1, L, N.</figcaption></figure>
+<p>Controleer of elke schroefklem goed vastzit. Laat de module voorlopig buiten de doos, met de klemmen van je af gericht: in de volgende stap ga je hem koppelen.</p>
+
+<h2 id="pair">2. Koppelen met ZigDash</h2>
+<p>Voor het koppelen moet de module onder spanning staan en moet je op zijn knop drukken, dus dit is het enige moment dat je bij een doos onder spanning werkt. Druk alleen op de knop, met iets van plastic (de achterkant van een pen), en raak verder niets aan. Leg de module op iets dat niet geleidt, zonder dat hij het metalen frame van de schakelaar raakt.</p>
+<ol>
+  <li>Open in ZigDash <strong>Apparaten</strong> en tik op <strong>Koppelen starten</strong>.</li>
+  <li>Zet de installatieautomaat aan. Houd de knop van de module ongeveer <strong>5 seconden</strong> ingedrukt, tot de blauwe led langzaam knippert. Hij blijft tot 3 minuten in koppelmodus.</li>
+  <li>ZigDash toont het nieuwe apparaat. Geef het een naam die je herkent, zoals <strong>Rolluik kantoor</strong>.</li>
+  <li>Zet de installatieautomaat uit. Vouw de draden naar binnen, zet de module achter de schakelaar, sluit de doos en zet de installatieautomaat weer aan. Al het andere doe je vanaf je telefoon en de webpagina van Zigbee2MQTT.</li>
+</ol>
+
+<h2 id="mode">3. Vertel de module wat voor schakelaar je hebt</h2>
+<p>De module moet weten hoe je wandschakelaar zich gedraagt:</p>
+<ul>
+  <li><strong>Een tuimelschakelaar die blijft staan</strong> in omhoog, uit of omlaag (zoals de mijne): modus <code>edge</code>.</li>
+  <li><strong>Een drukknop</strong> die terugveert als je loslaat: modus <code>pulse</code>.</li>
+</ul>
+<p>Het makkelijkst gaat dat via de webpagina van Zigbee2MQTT: open het apparaat, ga naar het tabblad <strong>Exposes</strong> en zet <code>external_trigger_mode</code> op <code>edge</code> of <code>pulse</code>. (Het kan ook met de knop van de module: drie keer snel drukken schakelt naar het volgende type schakelaar en de led knippert drie keer; misschien moet je het herhalen. Dan moet de doos weer open, dus ik heb Zigbee2MQTT gebruikt.)</p>
+<p>Zet de wandschakelaar daarna op omhoog, uit en omlaag: het rolluik moet bewegen en stoppen zoals altijd. Gebeurt dat niet, dan staat de verkeerde modus ingesteld; kies dan de andere.</p>
+
+<h2 id="calibrate">4. Kalibreren</h2>
+<p>De module leert hoe lang het rolluik erover doet om helemaal omhoog en omlaag te gaan. Zonder dat kan hij openen en sluiten, maar niet naar een stand als 50% gaan.</p>
+<ol>
+  <li>Zet op de webpagina van Zigbee2MQTT, op het tabblad <strong>Exposes</strong> van het apparaat, <code>motor_travel_calibration_action</code> op <code>start_automatic</code>.</li>
+  <li>Laat het lopen: het rolluik gaat helemaal de ene kant op en dan de andere. Raak de schakelaar intussen niet aan. Als het klaar is, toont <code>motor_travel_calibration_status</code> de waarde <code>Calibrated</code>.</li>
+</ol>
+<p>(Op de module zelf start je dezelfde kalibratie door de knop langer dan 10 seconden in te houden, tot de led langzaam op- en afgaat.) Wordt de automatische kalibratie niet afgerond (bijvoorbeeld bij een zwakke motor), dan beschrijven SONOFF en Zigbee2MQTT allebei een handmatige kalibratie: je geeft dan zelf aan wanneer het rolluik helemaal open en helemaal dicht is.</p>
+<p><strong>Omhoog en omlaag verwisseld?</strong> Zet de installatieautomaat uit, verwissel de draden op <strong>Lout1</strong> en <strong>Lout2</strong> en kalibreer opnieuw. De optie <code>invert_cover</code> van Zigbee2MQTT draait alleen de gemelde stand om; de draairichting van de motor verandert er niet door.</p>
+
+<h2 id="tile">5. Een rolluiktegel in ZigDash</h2>
+<ol>
+  <li>Tik op je dashboard op <strong>Toevoegen vanaf een apparaat</strong> en kies het rolluik.</li>
+  <li>De tegel heeft de knoppen <strong>Openen</strong>, <strong>Stoppen</strong> en <strong>Sluiten</strong>, en een rij vaste standen (standaard 0, 25, 50, 100). In de instellingen van de tegel kun je een positieregelaar aanzetten.</li>
+  <li><strong>Overal vandaan:</strong> met ZigDash Pro zet je bediening op afstand aan en werkt dezelfde tegel ook buitenshuis, zonder een poort open te zetten op je router en zonder maandelijkse kosten.</li>
+</ol>
+<p>De wandschakelaar en de app werken naast elkaar: de schakelaar is er nog voor iedereen die de app niet heeft, en de tegel blijft werken, of het rolluik nu het laatst met de hand of vanaf de telefoon is bewogen.</p>
+
+<div class="tip">SONOFF is een handelsmerk van de eigenaar. ZigDash is niet verbonden aan SONOFF of ITEAD. Volg de handleiding die bij je module zit en de elektrische voorschriften die bij jou gelden.</div>
+
+<div class="tip"><strong>Heb jij dit ook gedaan?</strong> Laat me weten hoe het ging, of wat er anders was in jouw doos: <a href="mailto:support@zigdash.app">support@zigdash.app</a> of <a href="https://t.me/zigdash_app">de community</a>.</div>
+
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dshutter" data-goatcounter-click="play-shutter">ZigDash downloaden</a><a class="btn" href="../../hubs/">Kies een hub</a></div>
+</article>
+</main>
+<footer>
+  <p>© 2026 ZigDash · <a href="https://github.com/giladtamam/zigdash">Broncode</a> · <a href="https://github.com/giladtamam/zigdash/blob/main/store/PRIVACY.md">Privacybeleid</a> · <a href="mailto:support@zigdash.app">support@zigdash.app</a></p>
+</footer>
+<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
