@@ -35,13 +35,16 @@
 </section>
 
 <section id="computer" hidden>
-  <p class="lead">Open this on your Android phone: scan the code with its camera.</p>
+  <p class="lead">Open this on your phone: scan the code with its camera.</p>
   <div class="qr" id="qr"></div>
   <p>ZigDash opens at its Home Assistant sign-in with the address filled in, or offers to install it first.</p>
 </section>
 
 <section id="iphone" hidden>
-  <p class="lead">ZigDash for iPhone is coming. For now, ZigDash runs on Android phones and tablets.</p>
+  <p class="lead">This link holds your Home Assistant's address. Install ZigDash, choose Home Assistant, then paste this address:</p>
+  <p><code id="addr"></code> <button class="btn" id="copy" type="button" data-goatcounter-click="c-copy">Copy address</button></p>
+  <a class="btn primary" href="https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829" data-goatcounter-click="c-appstore">Download on the App Store</a>
+  <p>The iPhone version is not in EU countries yet.</p>
 </section>
 
 <section id="empty" hidden>
@@ -64,7 +67,17 @@
   var ua = navigator.userAgent;
   var show = function (id) { document.getElementById(id).hidden = false; };
   if (!link.addresses.length) return show('empty');
-  if (/iPhone|iPad|iPod/.test(ua)) return show('iphone');
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) {
+    // No link into the iPhone app yet: show the address for its Paste button.
+    var addr = link.addresses[0];
+    document.getElementById('addr').textContent = addr;
+    document.getElementById('copy').onclick = function () {
+      if (navigator.clipboard) navigator.clipboard.writeText(addr).then(function () {
+        document.getElementById('copy').textContent = 'Copied';
+      });
+    };
+    return show('iphone');
+  }
   if (/Android/.test(ua)) {
     var params = ZigDashLink.toParams(link.addresses, link.src);
     // Google Play hands this to ZigDash once, on its first start: the home
