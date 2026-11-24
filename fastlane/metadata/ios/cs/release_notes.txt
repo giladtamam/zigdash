@@ -1,1 +1,6 @@
-ZigDash je teď na iPhonu a iPadu.
+• Zapněte historii hned po nastavení: teploty, spotřebu a dveře za několik dní, ukládané na hubu, i když je telefon vypnutý.
+• Přechod ze ZHA: nastavení pozná, že vaše Zigbee běží v ZHA, a ukáže, jak přejít na Zigbee2MQTT.
+• Šifrované brokery (TLS a WSS) se připojí a certifikát, kterému iPhone nedůvěřuje, je tak označen.
+• Nejdřív automatizace: při uložení nainstaluje ZigDash svůj Engine na váš hub.
+• Scény mohou obsahovat vaše vlastní dlaždice a vlastní spínače vypadají jako dlaždice zařízení.
+• Mnoho oprav nastavení s Home Assistantem a stránkou Zigbee2MQTT.

@@ -501,8 +501,11 @@ class _RemoteScreenState extends ConsumerState<RemoteScreen>
           ] else ...[
             if (home != null) _Ways(home: home),
             const SizedBox(height: 16),
-            if (state == RemoteState.notSold && !ref.watch(founderCodeOfferedProvider))
-              Text(l10n.remotePlayOnly, key: const Key('remote-play-only'))
+            if (state == RemoteState.notSold && !ref.watch(founderCodeOfferedProvider)) ...[
+              // The App Store build has no "Play version" to point to.
+              if (proFlavor != 'appstore')
+                Text(l10n.remotePlayOnly, key: const Key('remote-play-only')),
+            ]
             else if (state != RemoteState.notSold) ...[
               _Steps(
                 engine: step1,

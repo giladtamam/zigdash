@@ -1,1 +1,6 @@
-ZigDash is er nu voor iPhone en iPad.
+• Zet de geschiedenis direct na de installatie aan: temperaturen, stroom en deuren over dagen, opgeslagen op je hub, ook als je telefoon uit staat.
+• Overstappen van ZHA: de installatie merkt wanneer je Zigbee in ZHA draait en laat zien hoe je naar Zigbee2MQTT overstapt.
+• Versleutelde brokers (TLS en WSS) maken verbinding, en een certificaat dat je iPhone niet vertrouwt wordt ook zo genoemd.
+• Eerst een automatisering: bij het opslaan zet ZigDash zijn Engine op je hub.
+• Scènes kunnen je eigen tegels bevatten, en je eigen schakelaars zien eruit als apparaattegels.
+• Veel verbeteringen bij het instellen met Home Assistant en de Zigbee2MQTT-pagina.

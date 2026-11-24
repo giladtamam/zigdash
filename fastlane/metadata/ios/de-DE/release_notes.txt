@@ -1,1 +1,6 @@
-ZigDash gibt es jetzt für iPhone und iPad.
+• Schalte den Verlauf direkt nach der Einrichtung ein: Temperaturen, Strom und Türen über Tage, aufgezeichnet auf deinem Hub, auch wenn dein Handy aus ist.
+• Umzug von ZHA: Die Einrichtung erkennt, wenn dein Zigbee in ZHA läuft, und zeigt, wie du zu Zigbee2MQTT wechselst.
+• Verschlüsselte Broker (TLS und WSS) verbinden sich, und ein Zertifikat, dem dein iPhone nicht vertraut, wird als solches benannt.
+• Erst eine Automation: Beim Speichern installiert ZigDash seine Engine auf deinem Hub.
+• Szenen können deine eigenen Kacheln enthalten, und deine eigenen Schalter sehen aus wie Gerätekacheln.
+• Viele Korrekturen bei der Einrichtung mit Home Assistant und der Zigbee2MQTT-Seite.

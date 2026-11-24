@@ -221,9 +221,12 @@ class ProBilling extends Notifier<ProStatus> {
   Future<String?> _ask(String method, [Object? arguments]) async {
     String? answer;
     try {
-      answer = await _billing
-          .invokeMethod<String>(method, arguments)
-          .timeout(const Duration(seconds: 20));
+      final call = _billing.invokeMethod<String>(method, arguments);
+      // On the App Store build, buy and restore wait for Apple's own sheet
+      // (Face ID, an Apple ID sign-in), which can take longer than 20 s.
+      answer = proFlavor == 'appstore' && (method == 'buy' || method == 'restore')
+          ? await call
+          : await call.timeout(const Duration(seconds: 20));
     } on MissingPluginException {
       answer = 'unavailable';
     } on PlatformException {
