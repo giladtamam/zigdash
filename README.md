@@ -87,7 +87,7 @@ MQTT.
 ## Install
 
 - [Google Play](https://play.google.com/store/apps/details?id=com.giladtamam.zigdash): the way to get ZigDash, with automatic updates.
-- [App Store](https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829): iPhone and iPad (not in EU countries yet).
+- [App Store](https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829): iPhone and iPad.
 - Phones without Google Play: APKs on [GitHub Releases](https://github.com/giladtamam/zigdash/releases), published less often.
 - F-Droid / IzzyOnDroid / Obtainium: in progress.
 
