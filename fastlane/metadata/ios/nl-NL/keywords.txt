@@ -1,1 +1,1 @@
-zigbee,dashboard,mqtt,slim,huis,domotica,stekker,sensor,schakelaar,afstand,broker,mosquitto
+zigbee,dashboard,mqtt,slim,huis,domotica,stekker,sensor,schakelaar,afstand,broker,hub,lamp

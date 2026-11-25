@@ -1,1 +1,1 @@
-zigbee,dashboard,mqtt,smart,home,steckdose,schalter,fernsteuerung,broker,mosquitto,raspberry,pi
+zigbee,dashboard,mqtt,smart,home,steckdose,schalter,fernsteuerung,broker,hub,lampe,automation

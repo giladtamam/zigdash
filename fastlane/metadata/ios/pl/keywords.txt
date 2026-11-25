@@ -1,1 +1,1 @@
-zigbee,panel,mqtt,inteligentny,dom,gniazdko,czujnik,przełącznik,zdalne,broker,mosquitto
+zigbee,panel,mqtt,inteligentny,dom,gniazdko,czujnik,przełącznik,zdalne,broker,hub,lampa,automatyka

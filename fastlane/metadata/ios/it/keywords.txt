@@ -1,1 +1,1 @@
-zigbee,dashboard,mqtt,casa,smart,domotica,presa,sensore,interruttore,remoto,broker,mosquitto
+zigbee,dashboard,mqtt,casa,smart,domotica,presa,sensore,interruttore,remoto,broker,hub,lampada

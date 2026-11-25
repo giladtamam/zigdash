@@ -1,1 +1,1 @@
-Zigbee: Licht, Rollos, Sensor
+Zigbee-Licht, Rollos, Sensoren

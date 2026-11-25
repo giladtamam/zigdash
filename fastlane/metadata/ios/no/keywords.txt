@@ -1,1 +1,1 @@
-zigbee,dashbord,mqtt,smart,hjem,stikkontakt,sensor,bryter,fjernstyring,broker,mosquitto,raspberry,pi
+zigbee,dashbord,mqtt,smart,hjem,stikkontakt,sensor,bryter,fjernstyring,broker,hub,lampe,automasjon

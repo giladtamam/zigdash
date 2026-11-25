@@ -1,1 +1,1 @@
-zigbee,dashboard,mqtt,smart,hem,uttag,sensor,strömbrytare,fjärr,broker,mosquitto,raspberry,pi
+zigbee,dashboard,mqtt,smart,hem,uttag,sensor,strömbrytare,fjärr,broker,hubb,lampa,automation

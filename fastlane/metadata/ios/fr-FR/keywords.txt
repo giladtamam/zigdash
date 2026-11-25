@@ -1,1 +1,1 @@
-zigbee,tableau,bord,mqtt,maison,connectée,domotique,prise,capteur,interrupteur,télécommande
+zigbee,tableau,bord,mqtt,maison,connectée,domotique,prise,capteur,interrupteur,télécommande,hub

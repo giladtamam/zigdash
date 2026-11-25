@@ -1,1 +1,1 @@
-zigbee,painel,mqtt,casa,inteligente,automação,tomada,sensor,interruptor,remoto,broker
+zigbee,painel,mqtt,casa,inteligente,automação,tomada,sensor,interruptor,remoto,broker,hub,lâmpada

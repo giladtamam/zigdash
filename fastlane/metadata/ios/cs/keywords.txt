@@ -1,1 +1,1 @@
-zigbee,panel,mqtt,chytrá,domácnost,zásuvka,senzor,vypínač,dálkové,broker,mosquitto
+zigbee,panel,mqtt,chytrá,domácnost,zásuvka,senzor,vypínač,dálkové,broker,hub,lampa

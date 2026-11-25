@@ -1,1 +1,1 @@
-zigbee,panel,mqtt,casa,inteligente,domótica,enchufe,sensor,interruptor,remoto,broker,mosquitto
+zigbee,panel,mqtt,casa,inteligente,domótica,enchufe,sensor,interruptor,remoto,broker,hub,lámpara
