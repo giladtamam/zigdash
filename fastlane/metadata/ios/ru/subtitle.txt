@@ -1,1 +1,1 @@
-Zigbee-дом без Home Assistant
+Zigbee: свет, жалюзи, датчики

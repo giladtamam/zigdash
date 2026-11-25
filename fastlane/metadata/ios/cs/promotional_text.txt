@@ -1,1 +1,1 @@
-Malý hub se Zigbee2MQTT a ZigDash na tvém iPhonu: bez Home Assistantu, bez serveru, bez cloudu. Nástěnka se sestaví sama z tvých zařízení.
+Tvá zařízení Zigbee2MQTT na iPhonu: přihlas se přes Home Assistant nebo se připoj k MQTT brokeru a nástěnka se sestaví sama. Bez účtu, bez reklam.

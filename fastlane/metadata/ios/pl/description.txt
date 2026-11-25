@@ -1,4 +1,4 @@
-ZigDash to pulpit dla Zigbee2MQTT. Mały hub z Zigbee2MQTT i ZigDash na Twoim iPhonie lub iPadzie to cała konfiguracja: bez Home Assistanta, bez serwera do utrzymania, bez chmury. Masz już Home Assistanta? ZigDash działa też z nim.
+ZigDash to pulpit dla Zigbee2MQTT. Zaloguj się przez Home Assistanta albo połącz się bezpośrednio z brokerem MQTT na małym hubie: tak czy inaczej pulpit tworzy się sam z Twoich urządzeń. Bez serwera do utrzymania, bez konta.
 
 ZigDash znajduje Twój hub w sieci domowej i buduje pulpit z Twoich urządzeń, więc sterujesz światłami, roletami, gniazdkami i czujnikami minutę po instalacji. Bez konta, bez reklam.
 

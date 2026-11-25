@@ -1,4 +1,4 @@
-ZigDash är en instrumentpanel för Zigbee2MQTT. En liten hubb med Zigbee2MQTT och ZigDash på din iPhone eller iPad är allt som behövs: ingen Home Assistant, ingen server att underhålla, inget moln. Har du redan Home Assistant? ZigDash fungerar med det också.
+ZigDash är en instrumentpanel för Zigbee2MQTT. Logga in med Home Assistant eller anslut direkt till MQTT-brokern på en liten hubb: hur som helst bygger panelen sig själv från dina enheter. Ingen server att underhålla, inget konto.
 
 ZigDash hittar din hubb i hemnätverket och bygger instrumentpanelen från dina enheter, så att du styr lampor, persienner, uttag och sensorer en minut efter installationen. Inget konto, ingen reklam.
 

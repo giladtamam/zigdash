@@ -1,1 +1,1 @@
-Mały hub z Zigbee2MQTT i ZigDash na Twoim iPhonie: bez Home Assistanta, bez serwera, bez chmury. Pulpit tworzy się sam z Twoich urządzeń.
+Twoje urządzenia Zigbee2MQTT na iPhonie: zaloguj się przez Home Assistanta lub połącz z brokerem MQTT, a pulpit utworzy się sam. Bez konta, bez reklam.

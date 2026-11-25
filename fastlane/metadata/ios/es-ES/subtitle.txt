@@ -1,1 +1,1 @@
-Tu Zigbee sin Home Assistant
+Zigbee: luces, persianas

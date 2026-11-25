@@ -1,1 +1,1 @@
-בית Zigbee בלי Home Assistant
+Zigbee: תאורה, תריסים, חיישנים

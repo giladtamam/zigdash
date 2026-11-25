@@ -1,1 +1,1 @@
-Zigbee senza Home Assistant
+Zigbee: luci, tapparelle

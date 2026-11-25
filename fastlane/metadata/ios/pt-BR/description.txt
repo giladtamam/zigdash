@@ -1,4 +1,4 @@
-O ZigDash é um painel para o Zigbee2MQTT. Um pequeno hub com Zigbee2MQTT e o ZigDash no seu iPhone ou iPad são tudo o que você precisa: sem Home Assistant, sem servidor para manter, sem nuvem. Já tem Home Assistant? O ZigDash também funciona com ele.
+O ZigDash é um painel para o Zigbee2MQTT. Entre com o Home Assistant ou conecte direto ao broker MQTT de um pequeno hub: de qualquer forma, seu painel se monta sozinho a partir dos seus dispositivos. Sem servidor para manter, sem conta.
 
 O ZigDash encontra seu hub na rede de casa e monta seu painel a partir dos seus dispositivos, para você controlar luzes, persianas, tomadas e sensores um minuto depois de instalar. Sem conta, sem anúncios.
 

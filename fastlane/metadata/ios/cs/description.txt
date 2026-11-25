@@ -1,4 +1,4 @@
-ZigDash je nástěnka pro Zigbee2MQTT. Malý hub se Zigbee2MQTT a ZigDash na tvém iPhonu nebo iPadu – to je celé nastavení: bez Home Assistantu, bez serveru na údržbu, bez cloudu. Už máš Home Assistant? ZigDash funguje i s ním.
+ZigDash je nástěnka pro Zigbee2MQTT. Přihlas se přes Home Assistant, nebo se připoj přímo k MQTT brokeru na malém hubu: tak či tak se nástěnka sestaví sama z tvých zařízení. Žádný server na údržbu, žádný účet.
 
 ZigDash najde tvůj hub v domácí síti a sestaví nástěnku z tvých zařízení, takže světla, žaluzie, zásuvky a senzory ovládáš minutu po instalaci. Žádný účet, žádné reklamy.
 

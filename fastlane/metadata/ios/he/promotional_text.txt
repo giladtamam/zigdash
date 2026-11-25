@@ -1,1 +1,1 @@
-האב קטן עם Zigbee2MQTT ו-ZigDash ב-iPhone שלכם: בלי Home Assistant, בלי שרת, בלי ענן. הדשבורד נבנה לבד מהמכשירים שלכם.
+מכשירי ה-Zigbee2MQTT שלכם ב-iPhone: התחברו דרך Home Assistant או ל-broker ה-MQTT שלכם, והדשבורד נבנה לבד. בלי חשבון, בלי פרסומות.

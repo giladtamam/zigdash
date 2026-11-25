@@ -1,1 +1,1 @@
-Un piccolo hub con Zigbee2MQTT e ZigDash sul tuo iPhone: niente Home Assistant, niente server, niente cloud. La dashboard si crea da sola dai tuoi dispositivi.
+I tuoi dispositivi Zigbee2MQTT sull'iPhone: accedi con Home Assistant o collegati al tuo broker MQTT, e la dashboard si crea da sola. Niente account, niente pubblicità.

@@ -1,1 +1,1 @@
-Zigbee utan Home Assistant
+Zigbee: lampor, persienner

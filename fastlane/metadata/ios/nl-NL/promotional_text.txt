@@ -1,1 +1,1 @@
-Een kleine hub met Zigbee2MQTT en ZigDash op je iPhone: geen Home Assistant, geen server, geen cloud. Je dashboard bouwt zichzelf op uit je apparaten.
+Je Zigbee2MQTT-apparaten op je iPhone: log in met Home Assistant of verbind met je MQTT-broker, en het dashboard bouwt zichzelf. Geen account, geen reclame.

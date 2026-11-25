@@ -1,1 +1,1 @@
-A small hub running Zigbee2MQTT and ZigDash on your iPhone: no Home Assistant, no server, no cloud. Your dashboard builds itself from your devices.
+Your Zigbee2MQTT devices on your iPhone: sign in with Home Assistant or connect to your MQTT broker, and the dashboard builds itself. No account, no ads.

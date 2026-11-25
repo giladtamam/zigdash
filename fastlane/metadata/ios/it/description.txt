@@ -1,4 +1,4 @@
-ZigDash è una dashboard per Zigbee2MQTT. Un piccolo hub con Zigbee2MQTT e ZigDash sul tuo iPhone o iPad e non serve altro: niente Home Assistant, nessun server da gestire, niente cloud. Hai già Home Assistant? ZigDash funziona anche con quello.
+ZigDash è una dashboard per Zigbee2MQTT. Accedi con Home Assistant o collegati direttamente al broker MQTT di un piccolo hub: in entrambi i casi la dashboard si crea da sola dai tuoi dispositivi. Nessun server da gestire, nessun account.
 
 ZigDash trova il tuo hub sulla rete di casa e crea la dashboard dai tuoi dispositivi, così controlli luci, tapparelle, prese e sensori un minuto dopo l'installazione. Nessun account, nessuna pubblicità.
 

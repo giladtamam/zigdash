@@ -1,1 +1,1 @@
-zigbee,zigbee2mqtt,mqtt,smarta hem,hemautomation,dashboard,mosquitto,smlight,raspberry pi,z2m
+zigbee,dashboard,mqtt,smart,hem,uttag,sensor,strömbrytare,fjärr,broker,mosquitto,raspberry,pi

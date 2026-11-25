@@ -1,1 +1,1 @@
-Zigbee zonder Home Assistant
+Zigbee: lampen, rolluiken

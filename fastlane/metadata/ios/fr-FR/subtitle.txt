@@ -1,1 +1,1 @@
-Zigbee sans Home Assistant
+Zigbee : lumières, volets

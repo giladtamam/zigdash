@@ -1,1 +1,1 @@
-Zigbee ohne Home Assistant
+Zigbee: Licht, Rollos, Sensor
