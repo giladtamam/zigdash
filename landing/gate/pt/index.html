@@ -56,6 +56,7 @@
   <li><a href="#wire">3. Conectar os fios do relé</a></li>
   <li><a href="#tile">4. Um bloco Portão no ZigDash</a></li>
   <li><a href="#trade">Do que você abre mão</a></li>
+  <li><a href="#keep">Quando ficar com o Spider</a></li>
 </ul></div>
 
 <h2 id="how">Como um celular abre um portão</h2>
@@ -107,7 +108,7 @@
 <ol>
   <li>No seu painel, toque em <strong>Adicionar de um dispositivo</strong> e escolha <strong>Portão</strong>.</li>
   <li>Toque no bloco: o relé fecha e o portão começa a se mover, igual ao controle remoto.</li>
-  <li>A entrada de abrir do portão espera um aperto de botão, então um contato que fica fechado pode contar como um aperto longo. Veja o que o seu portão faz e desligue o bloco de novo se precisar.</li>
+  <li>A entrada de abertura do portão espera um toque curto, como o botão do controle; o Spider fecha o contato por 2 segundos por padrão. Muitos relés de contato seco têm um modo <strong>de pulso</strong> (inching) que desliga sozinho: se o Zigbee2MQTT mostrar esse modo para o seu relé, ajuste para uns 2 segundos e cada toque vira um aperto de botão. Se não, desligue o bloco de novo depois de um ou dois segundos. Um contato que fica fechado pode contar como um aperto longo, o que em alguns portões significa parar ou ficar aberto.</li>
   <li><strong>De qualquer lugar:</strong> com o ZigDash Pro, ative o controle remoto e o mesmo bloco funciona fora de casa, sem abrir porta no roteador e sem mensalidade. Vale para até cinco celulares; <strong>Compartilhar com outro telefone</strong> adiciona os celulares da família com um código QR.</li>
 </ol>
 
@@ -118,15 +119,25 @@
   <thead><tr><th></th><th>PalGate Spider</th><th>Relé Zigbee + ZigDash</th></tr></thead>
   <tbody>
     <tr><th>Custo</th><td>Cerca de ₪770 novo (preço de loja), mais um chip de dados</td><td>Cerca de ₪37 uma vez só; o controle remoto é uma compra única do ZigDash Pro</td></tr>
-    <tr><th>Conexão</th><td>Chip 4G próprio: funciona quando a casa está sem internet</td><td>Seu hub Zigbee em casa; fora de casa precisa da internet de casa</td></tr>
-    <tr><th>Quem pode abrir</th><td>Usuários e convidados gerenciados no app PalGate, e abertura por ligação telefônica</td><td>Os celulares com que você compartilha a casa (até cinco remotamente)</td></tr>
+    <tr><th>Conexão</th><td>Chip 4G próprio, mais Bluetooth para abrir perto do portão: funciona quando a casa está sem internet</td><td>Seu hub Zigbee em casa; fora de casa precisa da internet de casa</td></tr>
+    <tr><th>Formas de abrir</th><td>App, ligação, automaticamente ao chegar, Apple CarPlay e Android Auto, Siri, Google Assistente, Apple Watch</td><td>Um bloco, cenas e automações no ZigDash (e no Home Assistant, se você usa)</td></tr>
+    <tr><th>Quem pode abrir</th><td>Até 50 usuários no Spider-50, gerenciados no app PalGate, cada um com horário ou “só de perto”; eles também podem abrir com uma ligação</td><td>Os celulares com que você compartilha a casa (até cinco remotamente)</td></tr>
+    <tr><th>Aberto ou fechado</th><td>Uma entrada para sensor magnético, com notificações</td><td>Adicione um sensor de porta Zigbee (uns US$ 10) e veja no ZigDash</td></tr>
     <tr><th>Nuvem</th><td>O serviço da PalGate</td><td>Nenhuma em casa; o acesso remoto passa pelo servidor de retransmissão do ZigDash, com criptografia de ponta a ponta</td></tr>
   </tbody>
 </table>
 </div>
-<p>Para uma casa particular em que a família abre um único portão, o relé faz tudo o que eu precisava. Para um prédio com muitos moradores e visitantes, um serviço gerenciado como o PalGate ainda faz sentido.</p>
+<h3 id="keep">Quando ficar com o Spider</h3>
+<p>Para uma casa particular em que a família abre um único portão, o relé faz tudo o que eu precisava. O Spider ainda é a melhor escolha quando:</p>
+<ul>
+  <li><strong>Muita gente abre o portão:</strong> um prédio, vizinhos, a diarista, convidados. O Spider-50 aceita até 50 usuários com horários, e eles podem abrir com uma ligação.</li>
+  <li><strong>O portão fica longe da casa,</strong> fora do alcance da sua rede Zigbee mesmo com um dispositivo no meio. Para o 4G a distância não importa.</li>
+  <li><strong>O portão precisa abrir mesmo com o hub ou a internet de casa fora do ar.</strong> O Spider tem conexão própria, e Bluetooth perto do portão.</li>
+  <li><strong>Você quer que ele abra sozinho</strong> quando você chega de carro, pelo Apple CarPlay ou Android Auto.</li>
+</ul>
+<p><strong>Ou fique com os dois.</strong> Ligue o COM e o NO do relé na mesma entrada de abertura do Spider. Eles funcionam como dois botões do mesmo portão: os vizinhos continuam com o PalGate, e você tem o portão nas suas cenas do ZigDash.</p>
 
-<div class="tip">PalGate é uma marca do seu proprietário. O ZigDash não tem vínculo com a PalGate nem com a PAL Electronics Systems. O preço do PalGate é um preço de loja em Israel em novembro de 2026; o do relé é o que eu paguei.</div>
+<div class="tip">PalGate é uma marca do seu proprietário. O ZigDash não tem vínculo com a PalGate nem com a PAL Electronics Systems. O preço do PalGate é um preço de loja em Israel em novembro de 2026; o do relé é o que eu paguei. As funções do Spider vêm do <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">guia de instalação</a> da PAL (edição europeia 1.3).</div>
 
 <div class="tip"><strong>Você também fez isso?</strong> Conte como foi, ou o que era diferente no seu portão: <a href="mailto:support@zigdash.app">support@zigdash.app</a> ou <a href="https://t.me/zigdash_app">a comunidade</a>.</div>
 

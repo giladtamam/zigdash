@@ -56,6 +56,7 @@
   <li><a href="#wire">3. Wire the relay</a></li>
   <li><a href="#tile">4. A Gate tile in ZigDash</a></li>
   <li><a href="#trade">What you give up</a></li>
+  <li><a href="#keep">When to keep the Spider</a></li>
 </ul></div>
 
 <h2 id="how">How a phone opens a gate</h2>
@@ -107,7 +108,7 @@
 <ol>
   <li>On your dashboard, tap <strong>Add from a device</strong> and pick <strong>Gate</strong>.</li>
   <li>Tap the tile: the relay closes and the gate starts moving, just as with the remote.</li>
-  <li>The gate's open input expects a button press, so a contact that stays closed may count as a long press. Check what your gate does, and turn the tile off again if it needs it.</li>
+  <li>The gate's open input expects a short press, like a remote button; the Spider closes its contact for 2 seconds by default. Many dry-contact relays have an <strong>inching</strong> mode that switches off again by itself: if Zigbee2MQTT shows one for your relay, set it to about 2 seconds, and every tap is one press. If not, tap the tile off again after a second or two. A contact left closed can count as a long press, which on some gates means stop or stay open.</li>
   <li><strong>From anywhere:</strong> with ZigDash Pro, turn on remote control and the same tile works away from home, without a port opened on your router and with no monthly fee. It covers up to five phones; <strong>Share with another phone</strong> adds the family's phones with one QR code.</li>
 </ol>
 
@@ -118,15 +119,25 @@
   <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee relay + ZigDash</th></tr></thead>
   <tbody>
     <tr><th>Cost</th><td>About ₪770 new (shop price), plus a data SIM</td><td>About ₪37 once; remote control is a one-time ZigDash Pro purchase</td></tr>
-    <tr><th>Connection</th><td>Its own 4G SIM: works when the house has no internet</td><td>Your Zigbee hub at home; away from home it needs the home internet</td></tr>
-    <tr><th>Who can open</th><td>Users and guests managed in the PalGate app, and opening by phone call</td><td>Phones you share the home with (up to five remotely)</td></tr>
+    <tr><th>Connection</th><td>Its own 4G SIM, plus Bluetooth for opening near the gate: works when the house has no internet</td><td>Your Zigbee hub at home; away from home it needs the home internet</td></tr>
+    <tr><th>Ways to open</th><td>App, phone call, automatically as you arrive, Apple CarPlay and Android Auto, Siri, Google Assistant, Apple Watch</td><td>A tile, scenes and automations in ZigDash (and Home Assistant, if you run it)</td></tr>
+    <tr><th>Who can open</th><td>Up to 50 users on the Spider-50, managed in the PalGate app, each with a schedule or “nearby only”; they can also open with a phone call</td><td>Phones you share the home with (up to five remotely)</td></tr>
+    <tr><th>Open or closed</th><td>An input for a magnetic sensor, with notifications</td><td>Add a Zigbee door sensor (about $10) and see it in ZigDash</td></tr>
     <tr><th>Cloud</th><td>PalGate's service</td><td>None at home; remote goes through the ZigDash relay, end-to-end encrypted</td></tr>
   </tbody>
 </table>
 </div>
-<p>For a private house where the family opens one gate, the relay does everything I needed. For a building with many residents and visitors, a managed service like PalGate still makes sense.</p>
+<h3 id="keep">When to keep the Spider</h3>
+<p>For a private house where the family opens one gate, the relay does everything I needed. The Spider is still the better choice when:</p>
+<ul>
+  <li><strong>Many people open the gate:</strong> a building, neighbours, a cleaner, guests. The Spider-50 takes up to 50 users with schedules, and they can open it with a phone call.</li>
+  <li><strong>The gate is far from the house,</strong> beyond your Zigbee network even with a device in between. 4G doesn't care how far the gate is.</li>
+  <li><strong>The gate must open when your hub or home internet is down.</strong> The Spider has its own connection, and Bluetooth near the gate.</li>
+  <li><strong>You want it to open by itself</strong> as you drive up, through Apple CarPlay or Android Auto.</li>
+</ul>
+<p><strong>Or keep both.</strong> Connect the relay's COM and NO to the same open input as the Spider. They work like two buttons on the same gate: the neighbours keep their PalGate, and you get the gate in your ZigDash scenes.</p>
 
-<div class="tip">PalGate is a trademark of its owner. ZigDash isn't affiliated with PalGate or PAL Electronics Systems. The PalGate price is an Israeli shop price in November 2026; the relay price is what I paid.</div>
+<div class="tip">PalGate is a trademark of its owner. ZigDash isn't affiliated with PalGate or PAL Electronics Systems. The PalGate price is an Israeli shop price in November 2026; the relay price is what I paid. The Spider's features are from PAL's <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">installation guide</a> (Europe edition 1.3).</div>
 
 <div class="tip"><strong>Did you do this too?</strong> Tell me how it went, or what was different on your gate: <a href="mailto:support@zigdash.app">support@zigdash.app</a> or <a href="https://t.me/zigdash_app">the community</a>.</div>
 

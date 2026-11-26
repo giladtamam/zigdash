@@ -56,6 +56,7 @@
   <li><a href="#wire">3. Koppla in reläet</a></li>
   <li><a href="#tile">4. En Grind-ruta i ZigDash</a></li>
   <li><a href="#trade">Vad du ger upp</a></li>
+  <li><a href="#keep">När du ska behålla Spider</a></li>
 </ul></div>
 
 <h2 id="how">Så öppnar en telefon en grind</h2>
@@ -107,7 +108,7 @@
 <ol>
   <li>Tryck på <strong>Lägg till från en enhet</strong> på din dashboard och välj <strong>Grind</strong>.</li>
   <li>Tryck på rutan: reläet sluter och grinden börjar röra sig, precis som med fjärrkontrollen.</li>
-  <li>Grindens öppna-ingång förväntar sig ett knapptryck, så en kontakt som förblir sluten kan räknas som ett långt tryck. Kolla vad din grind gör, och slå av rutan igen om det behövs.</li>
+  <li>Grindens öppna-ingång väntar sig ett kort tryck, som en knapp på fjärrkontrollen; Spider sluter sin kontakt i 2 sekunder som standard. Många reläer med potentialfri kontakt har ett <strong>impulsläge</strong> (inching) som stänger av sig självt: om Zigbee2MQTT visar det för ditt relä, ställ in ungefär 2 sekunder, så blir varje tryck på rutan ett knapptryck. Om inte, slå av rutan igen efter en sekund eller två. En kontakt som förblir sluten kan räknas som ett långt tryck, vilket på vissa grindar betyder stopp eller att den står kvar öppen.</li>
   <li><strong>Var som helst ifrån:</strong> med ZigDash Pro slår du på fjärrstyrning och samma ruta fungerar även borta från hemmet, utan portvidarebefordran i routern och utan månadsavgift. Den täcker upp till fem telefoner; <strong>Dela med en annan telefon</strong> lägger till familjens telefoner med en QR-kod.</li>
 </ol>
 
@@ -118,15 +119,25 @@
   <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee-relä + ZigDash</th></tr></thead>
   <tbody>
     <tr><th>Kostnad</th><td>Ungefär ₪770 ny (butikspris), plus data-SIM</td><td>Ungefär ₪37 en gång; fjärrstyrning är ett engångsköp av ZigDash Pro</td></tr>
-    <tr><th>Anslutning</th><td>Eget 4G-SIM: fungerar när huset saknar internet</td><td>Din Zigbee-hubb hemma; borta från hemmet behövs internet hemma</td></tr>
-    <tr><th>Vem kan öppna</th><td>Användare och gäster som hanteras i PalGate-appen, och öppning via telefonsamtal</td><td>Telefoner som du delar hemmet med (upp till fem på distans)</td></tr>
+    <tr><th>Anslutning</th><td>Eget 4G-SIM, plus Bluetooth för att öppna nära grinden: fungerar när huset saknar internet</td><td>Din Zigbee-hubb hemma; borta från hemmet behövs internet hemma</td></tr>
+    <tr><th>Sätt att öppna</th><td>App, telefonsamtal, automatiskt när du kommer, Apple CarPlay och Android Auto, Siri, Google Assistant, Apple Watch</td><td>En ruta, scener och automationer i ZigDash (och Home Assistant, om du kör det)</td></tr>
+    <tr><th>Vem kan öppna</th><td>Upp till 50 användare på Spider-50, hanterade i PalGate-appen, var och en med schema eller ”bara i närheten”; de kan också öppna med ett samtal</td><td>Telefoner som du delar hemmet med (upp till fem på distans)</td></tr>
+    <tr><th>Öppen eller stängd</th><td>En ingång för en magnetsensor, med aviseringar</td><td>Lägg till en Zigbee-dörrsensor (ungefär 10 $) och se den i ZigDash</td></tr>
     <tr><th>Moln</th><td>PalGates tjänst</td><td>Inget hemma; på distans går det via ZigDash-reläservern, end-to-end-krypterat</td></tr>
   </tbody>
 </table>
 </div>
-<p>För en villa där familjen öppnar en grind gör reläet allt jag behövde. För en byggnad med många boende och besökare är en hanterad tjänst som PalGate fortfarande vettig.</p>
+<h3 id="keep">När du ska behålla Spider</h3>
+<p>För en villa där familjen öppnar en grind gör reläet allt jag behövde. Spider är fortfarande det bättre valet när:</p>
+<ul>
+  <li><strong>Många öppnar grinden:</strong> ett flerfamiljshus, grannar, städhjälp, gäster. Spider-50 tar upp till 50 användare med scheman, och de kan öppna med ett samtal.</li>
+  <li><strong>Grinden ligger långt från huset,</strong> utanför ditt Zigbee-nät även med en enhet emellan. För 4G spelar avståndet ingen roll.</li>
+  <li><strong>Grinden måste öppnas när hubben eller internet hemma ligger nere.</strong> Spider har en egen anslutning, och Bluetooth nära grinden.</li>
+  <li><strong>Du vill att den öppnar sig själv</strong> när du kör fram, via Apple CarPlay eller Android Auto.</li>
+</ul>
+<p><strong>Eller behåll båda.</strong> Koppla reläets COM och NO till samma öppna-ingång som Spider. De fungerar som två knappar för samma grind: grannarna behåller sin PalGate, och du får grinden i dina ZigDash-scener.</p>
 
-<div class="tip">PalGate är ett varumärke som tillhör sin ägare. ZigDash är inte knutet till PalGate eller PAL Electronics Systems. PalGate-priset är ett israeliskt butikspris i november 2026; relä-priset är vad jag betalade.</div>
+<div class="tip">PalGate är ett varumärke som tillhör sin ägare. ZigDash är inte knutet till PalGate eller PAL Electronics Systems. PalGate-priset är ett israeliskt butikspris i november 2026; relä-priset är vad jag betalade. Spiders funktioner kommer från PALs <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">installationsguide</a> (europeisk utgåva 1.3).</div>
 
 <div class="tip"><strong>Har du också gjort det här?</strong> Berätta hur det gick, eller vad som var annorlunda med din grind: <a href="mailto:support@zigdash.app">support@zigdash.app</a> eller <a href="https://t.me/zigdash_app">communityn</a>.</div>
 

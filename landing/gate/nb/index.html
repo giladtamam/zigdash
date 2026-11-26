@@ -56,6 +56,7 @@
   <li><a href="#wire">3. Koble reléet</a></li>
   <li><a href="#tile">4. En Port-flis i ZigDash</a></li>
   <li><a href="#trade">Hva du gir opp</a></li>
+  <li><a href="#keep">Når du bør beholde Spider</a></li>
 </ul></div>
 
 <h2 id="how">Slik åpner en telefon en port</h2>
@@ -107,7 +108,7 @@
 <ol>
   <li>Trykk på <strong>Legg til fra en enhet</strong> på dashbordet og velg <strong>Port</strong>.</li>
   <li>Trykk på flisen: reléet lukkes og porten begynner å bevege seg, akkurat som med fjernkontrollen.</li>
-  <li>Åpne-inngangen på porten forventer et knappetrykk, så en kontakt som forblir lukket kan regnes som et langt trykk. Sjekk hva porten din gjør, og slå av flisen igjen om nødvendig.</li>
+  <li>Portens åpne-inngang forventer et kort trykk, som en knapp på fjernkontrollen; Spider lukker kontakten i 2 sekunder som standard. Mange releer med potensialfri kontakt har en <strong>impulsmodus</strong> (inching) som slår seg av selv: hvis Zigbee2MQTT viser den for reléet ditt, sett den til omtrent 2 sekunder, så blir hvert trykk på flisen ett knappetrykk. Hvis ikke, slå av flisen igjen etter et sekund eller to. En kontakt som blir stående lukket kan telle som et langt trykk, som på noen porter betyr stopp eller bli stående åpen.</li>
   <li><strong>Hvor som helst fra:</strong> med ZigDash Pro slår du på fjernstyring, og den samme flisen virker borte fra hjemmet, uten portvideresending i ruteren og uten månedsavgift. Den dekker opptil fem telefoner; <strong>Del med en annen telefon</strong> legger til familiens telefoner med én QR-kode.</li>
 </ol>
 
@@ -118,15 +119,25 @@
   <thead><tr><th></th><th>PalGate Spider</th><th>Zigbee-relé + ZigDash</th></tr></thead>
   <tbody>
     <tr><th>Kostnad</th><td>Omtrent ₪770 ny (butikkpris), pluss data-SIM</td><td>Omtrent ₪37 én gang; fjernstyring er et engangskjøp av ZigDash Pro</td></tr>
-    <tr><th>Tilkobling</th><td>Eget 4G-SIM: virker når huset ikke har internett</td><td>Zigbee-huben din hjemme; borte fra hjemmet trengs internett hjemme</td></tr>
-    <tr><th>Hvem kan åpne</th><td>Brukere og gjester som administreres i PalGate-appen, og åpning via telefonoppringing</td><td>Telefoner du deler hjemmet med (opptil fem eksternt)</td></tr>
+    <tr><th>Tilkobling</th><td>Eget 4G-SIM, pluss Bluetooth for åpning nær porten: virker når huset ikke har internett</td><td>Zigbee-huben din hjemme; borte fra hjemmet trengs internett hjemme</td></tr>
+    <tr><th>Måter å åpne på</th><td>App, telefonoppringing, automatisk når du kommer, Apple CarPlay og Android Auto, Siri, Google Assistant, Apple Watch</td><td>En flis, scener og automatiseringer i ZigDash (og Home Assistant, hvis du bruker det)</td></tr>
+    <tr><th>Hvem kan åpne</th><td>Opptil 50 brukere på Spider-50, administrert i PalGate-appen, hver med tidsplan eller «bare i nærheten»; de kan også åpne ved å ringe</td><td>Telefoner du deler hjemmet med (opptil fem eksternt)</td></tr>
+    <tr><th>Åpen eller lukket</th><td>En inngang for en magnetsensor, med varsler</td><td>Legg til en Zigbee-dørsensor (omtrent 10 $) og se den i ZigDash</td></tr>
     <tr><th>Sky</th><td>PalGates tjeneste</td><td>Ingen hjemme; eksternt går det via ZigDash-reléserveren, ende-til-ende-kryptert</td></tr>
   </tbody>
 </table>
 </div>
-<p>For et privat hus der familien åpner én port, gjør reléet alt jeg trengte. For en bygning med mange beboere og besøkende er en administrert tjeneste som PalGate fortsatt fornuftig.</p>
+<h3 id="keep">Når du bør beholde Spider</h3>
+<p>For et privat hus der familien åpner én port, gjør reléet alt jeg trengte. Spider er fortsatt det beste valget når:</p>
+<ul>
+  <li><strong>Mange åpner porten:</strong> en bygård, naboer, vaskehjelp, gjester. Spider-50 tar opptil 50 brukere med tidsplaner, og de kan åpne ved å ringe.</li>
+  <li><strong>Porten ligger langt fra huset,</strong> utenfor Zigbee-nettet ditt selv med en enhet imellom. For 4G spiller avstanden ingen rolle.</li>
+  <li><strong>Porten må åpne når huben eller internett hjemme er nede.</strong> Spider har egen tilkobling, og Bluetooth nær porten.</li>
+  <li><strong>Du vil at den skal åpne seg selv</strong> når du kjører inn, via Apple CarPlay eller Android Auto.</li>
+</ul>
+<p><strong>Eller behold begge.</strong> Koble reléets COM og NO til den samme åpne-inngangen som Spider. De virker som to knapper på samme port: naboene beholder PalGate, og du får porten i ZigDash-scenene dine.</p>
 
-<div class="tip">PalGate er et varemerke som tilhører eieren. ZigDash er ikke tilknyttet PalGate eller PAL Electronics Systems. PalGate-prisen er en israelsk butikkpris i november 2026; reléprisen er det jeg betalte.</div>
+<div class="tip">PalGate er et varemerke som tilhører eieren. ZigDash er ikke tilknyttet PalGate eller PAL Electronics Systems. PalGate-prisen er en israelsk butikkpris i november 2026; reléprisen er det jeg betalte. Spiders funksjoner er hentet fra PALs <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">installasjonsveiledning</a> (europeisk utgave 1.3).</div>
 
 <div class="tip"><strong>Har du gjort dette også?</strong> Fortell meg hvordan det gikk, eller hva som var annerledes med porten din: <a href="mailto:support@zigdash.app">support@zigdash.app</a> eller <a href="https://t.me/zigdash_app">fellesskapet</a>.</div>
 

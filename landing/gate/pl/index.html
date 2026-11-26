@@ -56,6 +56,7 @@
   <li><a href="#wire">3. Podłącz przekaźnik</a></li>
   <li><a href="#tile">4. Kafelek Brama w ZigDash</a></li>
   <li><a href="#trade">Z czego rezygnujesz</a></li>
+  <li><a href="#keep">Kiedy zostać przy Spiderze</a></li>
 </ul></div>
 
 <h2 id="how">Jak telefon otwiera bramę</h2>
@@ -107,7 +108,7 @@
 <ol>
   <li>Na dashboardzie dotknij <strong>Dodaj z urządzenia</strong> i wybierz <strong>Brama</strong>.</li>
   <li>Dotknij kafelka: przekaźnik zwiera styk i brama zaczyna się ruszać, tak jak z pilotem.</li>
-  <li>Wejście otwierania bramy oczekuje naciśnięcia przycisku, więc styk, który pozostaje zwarty, może zostać uznany za długie naciśnięcie. Sprawdź, co robi twoja brama, i w razie potrzeby wyłącz kafelek z powrotem.</li>
+  <li>Wejście otwierania bramy oczekuje krótkiego naciśnięcia, jak przycisk pilota; Spider domyślnie zwiera styk na 2 sekundy. Wiele przekaźników z bezpotencjałowym stykiem ma <strong>tryb impulsowy</strong> (inching), który sam się wyłącza: jeśli Zigbee2MQTT pokazuje go dla twojego przekaźnika, ustaw około 2 sekund, a każde dotknięcie będzie jednym naciśnięciem. Jeśli nie, wyłącz kafelek po sekundzie czy dwóch. Styk, który zostaje zwarty, może liczyć się jako długie naciśnięcie, co w niektórych bramach oznacza stop albo pozostanie otwartą.</li>
   <li><strong>Z dowolnego miejsca:</strong> z ZigDash Pro włącz zdalne sterowanie, a ten sam kafelek działa poza domem, bez otwierania portu na routerze i bez miesięcznej opłaty. Obejmuje do pięciu telefonów; <strong>Udostępnij innemu telefonowi</strong> dodaje telefony rodziny jednym kodem QR.</li>
 </ol>
 
@@ -118,15 +119,25 @@
   <thead><tr><th></th><th>PalGate Spider</th><th>Przekaźnik Zigbee + ZigDash</th></tr></thead>
   <tbody>
     <tr><th>Koszt</th><td>Około ₪770 nowy (cena w sklepie), plus karta SIM z danymi</td><td>Około ₪37 jednorazowo; zdalne sterowanie to jednorazowy zakup ZigDash Pro</td></tr>
-    <tr><th>Połączenie</th><td>Własna karta SIM 4G: działa, gdy w domu nie ma internetu</td><td>Twój hub Zigbee w domu; poza domem potrzebny jest domowy internet</td></tr>
-    <tr><th>Kto może otworzyć</th><td>Użytkownicy i goście zarządzani w aplikacji PalGate oraz otwieranie połączeniem telefonicznym</td><td>Telefony, którym udostępniasz dom (zdalnie do pięciu)</td></tr>
+    <tr><th>Połączenie</th><td>Własna karta SIM 4G, do tego Bluetooth do otwierania przy bramie: działa, gdy w domu nie ma internetu</td><td>Twój hub Zigbee w domu; poza domem potrzebny jest domowy internet</td></tr>
+    <tr><th>Sposoby otwierania</th><td>Aplikacja, połączenie telefoniczne, automatycznie po przyjeździe, Apple CarPlay i Android Auto, Siri, Asystent Google, Apple Watch</td><td>Kafelek, sceny i automatyzacje w ZigDash (oraz Home Assistant, jeśli go używasz)</td></tr>
+    <tr><th>Kto może otworzyć</th><td>Do 50 użytkowników w Spider-50, zarządzanych w aplikacji PalGate, każdy z harmonogramem lub „tylko z bliska”; mogą też otwierać połączeniem telefonicznym</td><td>Telefony, którym udostępniasz dom (zdalnie do pięciu)</td></tr>
+    <tr><th>Otwarta czy zamknięta</th><td>Wejście na czujnik magnetyczny, z powiadomieniami</td><td>Dodaj czujnik drzwi Zigbee (około 10 $) i zobacz go w ZigDash</td></tr>
     <tr><th>Chmura</th><td>Usługa PalGate</td><td>Brak w domu; zdalnie przez serwer pośredniczący ZigDash, z szyfrowaniem end-to-end</td></tr>
   </tbody>
 </table>
 </div>
-<p>W domu jednorodzinnym, gdzie rodzina otwiera jedną bramę, przekaźnik robi wszystko, czego potrzebowałem. W budynku z wieloma mieszkańcami i gośćmi zarządzana usługa taka jak PalGate nadal ma sens.</p>
+<h3 id="keep">Kiedy zostać przy Spiderze</h3>
+<p>W domu jednorodzinnym, gdzie rodzina otwiera jedną bramę, przekaźnik robi wszystko, czego potrzebowałem. Spider nadal jest lepszym wyborem, gdy:</p>
+<ul>
+  <li><strong>bramę otwiera wiele osób:</strong> budynek, sąsiedzi, osoba sprzątająca, goście. Spider-50 obsługuje do 50 użytkowników z harmonogramami, a otworzyć mogą połączeniem telefonicznym.</li>
+  <li><strong>brama jest daleko od domu,</strong> poza zasięgiem twojej sieci Zigbee, nawet z urządzeniem po drodze. Dla 4G odległość nie ma znaczenia.</li>
+  <li><strong>brama musi się otworzyć, gdy hub albo domowy internet nie działa.</strong> Spider ma własne połączenie i Bluetooth przy bramie.</li>
+  <li><strong>chcesz, żeby otwierała się sama,</strong> gdy podjeżdżasz, przez Apple CarPlay lub Android Auto.</li>
+</ul>
+<p><strong>Albo zostaw oba.</strong> Podłącz COM i NO przekaźnika do tego samego wejścia otwierania co Spider. Działają jak dwa przyciski tej samej bramy: sąsiedzi zostają przy PalGate, a ty masz bramę w swoich scenach ZigDash.</p>
 
-<div class="tip">PalGate jest znakiem towarowym swojego właściciela. ZigDash nie jest powiązany z PalGate ani PAL Electronics Systems. Cena PalGate to cena w izraelskim sklepie w listopadzie 2026; cenę przekaźnika zapłaciłem sam.</div>
+<div class="tip">PalGate jest znakiem towarowym swojego właściciela. ZigDash nie jest powiązany z PalGate ani PAL Electronics Systems. Cena PalGate to cena w izraelskim sklepie w listopadzie 2026; cenę przekaźnika zapłaciłem sam. Funkcje Spidera pochodzą z <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">instrukcji instalacji</a> PAL (wydanie europejskie 1.3).</div>
 
 <div class="tip"><strong>Też to zrobiłeś?</strong> Napisz mi, jak poszło albo co było inaczej przy twojej bramie: <a href="mailto:support@zigdash.app">support@zigdash.app</a> lub <a href="https://t.me/zigdash_app">społeczność</a>.</div>
 
