@@ -63,6 +63,16 @@ void main() {
       expect(phase(hub: null), HubEnginePhase.checking);
       expect(phase(ext: null), HubEnginePhase.checking);
     });
+    // 3.8.8: external JS off means no `bridge/extensions` ever (Zigbee2MQTT
+    // doesn't load the extension that publishes it).
+    test('external JS off: consent without waiting for extensions', () {
+      const off = HubInfo(version: '2.14.3', externalJsAllowed: false);
+      expect(phase(hub: off, ext: null), HubEnginePhase.needsConsent);
+      expect(phase(hub: off), HubEnginePhase.needsConsent);
+      expect(phase(hub: const HubInfo(version: '2.2.0', externalJsAllowed: false), ext: null), HubEnginePhase.tooOld);
+      expect(phase(hub: off, ext: const ['zigdash-engine.js'], r: report(), heard: now), HubEnginePhase.running,
+          reason: 'an Engine already there still counts');
+    });
     test('too old below 2.4', () {
       expect(phase(hub: const HubInfo(version: '2.2.0', externalJsAllowed: true)), HubEnginePhase.tooOld);
     });
