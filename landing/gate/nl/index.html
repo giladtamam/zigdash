@@ -108,7 +108,7 @@
 <ol>
   <li>Tik op je dashboard op <strong>Toevoegen vanaf een apparaat</strong> en kies <strong>Poort</strong>.</li>
   <li>Tik op de tegel: het relais sluit en de poort begint te bewegen, net als met de afstandsbediening.</li>
-  <li>De openingang van de poort verwacht een korte druk, zoals een knop op de afstandsbediening; de Spider sluit zijn contact standaard 2 seconden. Veel relais met potentiaalvrij contact hebben een <strong>pulsmodus</strong> (inching) die vanzelf weer uitschakelt: als Zigbee2MQTT die voor je relais toont, zet hem op ongeveer 2 seconden, dan is elke tik één druk op de knop. Zo niet, zet de tegel na een seconde of twee weer uit. Een contact dat gesloten blijft kan tellen als een lange druk, wat bij sommige poorten stoppen of open blijven betekent.</li>
+  <li>De openingang van de poort verwacht een korte druk, zoals een knop op de afstandsbediening; de Spider sluit zijn contact standaard 2 seconden. Veel relais met potentiaalvrij contact hebben een <strong>pulsmodus</strong> (inching) die vanzelf weer uitschakelt: als Zigbee2MQTT die voor je relais toont, zet hem op ongeveer 2 seconden, dan is elke tik één druk op de knop. Zo niet, zet de tegel na een seconde of twee weer uit. Een contact dat gesloten blijft kan tellen als een lange druk, wat bij sommige poorten stoppen of open blijven betekent. Scènes en automatiseringen zetten het relais alleen aan, dus gebruik ze voor de poort pas als de pulsmodus aan staat.</li>
   <li><strong>Overal vandaan:</strong> met ZigDash Pro zet je de bediening op afstand aan en werkt dezelfde tegel ook buitenshuis, zonder port forwarding op je router en zonder maandelijkse kosten. Het werkt voor maximaal vijf telefoons; <strong>Delen met een andere telefoon</strong> voegt de telefoons van het gezin toe met één QR-code.</li>
 </ol>
 
@@ -120,9 +120,9 @@
   <tbody>
     <tr><th>Kosten</th><td>Ongeveer ₪770 nieuw (winkelprijs), plus een data-simkaart</td><td>Ongeveer ₪37 eenmalig; bediening op afstand is een eenmalige aankoop van ZigDash Pro</td></tr>
     <tr><th>Verbinding</th><td>Eigen 4G-simkaart, plus Bluetooth om dicht bij de poort te openen: werkt ook als het huis geen internet heeft</td><td>Je Zigbee-hub thuis; buitenshuis is het internet van thuis nodig</td></tr>
-    <tr><th>Manieren om te openen</th><td>App, telefoontje, automatisch bij aankomst, Apple CarPlay en Android Auto, Siri, Google Assistant, Apple Watch</td><td>Een tegel, scènes en automatiseringen in ZigDash (en Home Assistant, als je dat gebruikt)</td></tr>
-    <tr><th>Wie kan openen</th><td>Tot 50 gebruikers op de Spider-50, beheerd in de PalGate-app, elk met een schema of „alleen dichtbij”; ze kunnen ook openen met een telefoontje</td><td>Telefoons waarmee je het huis deelt (op afstand maximaal vijf)</td></tr>
-    <tr><th>Open of dicht</th><td>Een ingang voor een magneetsensor, met meldingen</td><td>Voeg een Zigbee-deursensor toe (ongeveer $ 10) en zie hem in ZigDash</td></tr>
+    <tr><th>Manieren om te openen</th><td>App, telefoontje, automatisch bij aankomst, Apple CarPlay en Android Auto, Siri, Google Assistent, Apple Watch</td><td>Een tegel in ZigDash; ook scènes en automatiseringen, zodra het relais vanzelf pulst (stap 4)</td></tr>
+    <tr><th>Wie kan openen</th><td>Tot 50 gebruikers op de Spider-50, beheerd in de PalGate-app, elk met een toegangsschema en een optionele beperking „alleen dichtbij”; ze kunnen ook openen met een telefoontje</td><td>Telefoons waarmee je het huis deelt (op afstand maximaal vijf)</td></tr>
+    <tr><th>Open of dicht</th><td>Een ingang voor een magneetsensor, met meldingen</td><td>Voeg een Zigbee-deursensor toe (ongeveer ₪37) en zie hem in ZigDash</td></tr>
     <tr><th>Cloud</th><td>De dienst van PalGate</td><td>Geen thuis; op afstand gaat het via de relayserver van ZigDash, end-to-end versleuteld</td></tr>
   </tbody>
 </table>
@@ -130,14 +130,14 @@
 <h3 id="keep">Wanneer je de Spider beter houdt</h3>
 <p>Voor een vrijstaand huis waar het gezin één poort opent, doet het relais alles wat ik nodig had. De Spider is nog steeds de betere keuze als:</p>
 <ul>
-  <li><strong>veel mensen de poort openen:</strong> een appartementsgebouw, buren, een schoonmaker, gasten. De Spider-50 neemt tot 50 gebruikers met schema's, en ze kunnen openen met een telefoontje.</li>
+  <li><strong>veel mensen de poort openen:</strong> een appartementsgebouw, buren, een schoonmaker, gasten. De Spider-50 ondersteunt tot 50 gebruikers met schema's, en ze kunnen openen met een telefoontje.</li>
   <li><strong>de poort ver van het huis is,</strong> buiten bereik van je Zigbee-netwerk, ook met een apparaat ertussen. Voor 4G maakt de afstand niet uit.</li>
-  <li><strong>de poort ook open moet als je hub of het internet thuis uitvalt.</strong> De Spider heeft een eigen verbinding, en Bluetooth bij de poort.</li>
+  <li><strong>de poort ook open moet als je hub uitvalt, of het internet thuis terwijl je weg bent.</strong> De Spider heeft een eigen verbinding, en Bluetooth bij de poort.</li>
   <li><strong>je wilt dat hij vanzelf opengaat</strong> als je aankomt, via Apple CarPlay of Android Auto.</li>
 </ul>
-<p><strong>Of houd ze allebei.</strong> Sluit COM en NO van het relais aan op dezelfde openingang als de Spider. Ze werken als twee knoppen voor dezelfde poort: de buren houden hun PalGate en jij hebt de poort in je ZigDash-scènes.</p>
+<p><strong>Of houd ze allebei.</strong> Sluit COM en NO van het relais aan op dezelfde openingang van de poortbesturing als de Spider. Ze werken als twee knoppen voor dezelfde poort: de buren houden hun PalGate en jij opent vanuit ZigDash. Zet eerst de pulsmodus aan (stap 4): een contact dat gesloten blijft, houdt de openingang vast, de poort kan open blijven en de druk van de Spider doet niets.</p>
 
-<div class="tip">PalGate is een handelsmerk van de eigenaar ervan. ZigDash is niet verbonden aan PalGate of PAL Electronics Systems. De PalGate-prijs is een Israëlische winkelprijs in november 2026; de relaisprijs is wat ik heb betaald. De functies van de Spider komen uit de <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">installatiehandleiding</a> van PAL (Europese editie 1.3).</div>
+<div class="tip">PalGate is een handelsmerk van de eigenaar ervan. ZigDash is niet verbonden aan PalGate of PAL Electronic Systems. De PalGate-prijs is een Israëlische winkelprijs in november 2026; de relaisprijs is wat ik heb betaald. De functies van de Spider komen uit de <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">installatiehandleiding</a> van PAL (Europese editie 1.3).</div>
 
 <div class="tip"><strong>Heb jij dit ook gedaan?</strong> Laat me weten hoe het ging, of wat er anders was aan jouw poort: <a href="mailto:support@zigdash.app">support@zigdash.app</a> of <a href="https://t.me/zigdash_app">de community</a>.</div>
 

@@ -108,7 +108,7 @@
 <ol>
   <li>Sur votre tableau de bord, touchez <strong>Ajouter depuis un appareil</strong> et choisissez <strong>Portail</strong>.</li>
   <li>Touchez la tuile : le relais se ferme et le portail se met en mouvement, comme avec la télécommande.</li>
-  <li>L'entrée d'ouverture du portail attend un appui court, comme un bouton de télécommande ; le Spider ferme son contact 2 secondes par défaut. Beaucoup de relais à contact sec ont un mode <strong>impulsion</strong> (inching) qui se coupe tout seul : si Zigbee2MQTT l'affiche pour votre relais, réglez-le sur environ 2 secondes, et chaque appui sur la tuile sera un appui sur le bouton. Sinon, éteignez la tuile après une ou deux secondes. Un contact qui reste fermé peut compter comme un appui long, ce qui sur certains portails veut dire arrêt ou rester ouvert.</li>
+  <li>L'entrée d'ouverture du portail attend un appui court, comme un bouton de télécommande ; le Spider ferme son contact 2 secondes par défaut. Beaucoup de relais à contact sec ont un mode <strong>impulsion</strong> (inching) qui se coupe tout seul : si Zigbee2MQTT l'affiche pour votre relais, réglez-le sur environ 2 secondes, et chaque appui sur la tuile sera un appui sur le bouton. Sinon, éteignez la tuile après une ou deux secondes. Un contact qui reste fermé peut compter comme un appui long, ce qui sur certains portails veut dire arrêt ou rester ouvert. Les scènes et automatisations ne font qu'allumer le relais : ne les utilisez pour le portail qu'avec le mode impulsion activé.</li>
   <li><strong>De n'importe où :</strong> avec ZigDash Pro, activez le contrôle à distance et la même tuile fonctionne loin de la maison, sans port ouvert sur votre box et sans abonnement mensuel. Il fonctionne sur cinq téléphones au maximum ; <strong>Partager avec un autre téléphone</strong> ajoute les téléphones de la famille avec un seul QR code.</li>
 </ol>
 
@@ -120,9 +120,9 @@
   <tbody>
     <tr><th>Coût</th><td>Environ ₪770 neuf (prix en magasin), plus une SIM data</td><td>Environ ₪37 une seule fois ; le contrôle à distance est un achat unique de ZigDash Pro</td></tr>
     <tr><th>Connexion</th><td>Sa propre SIM 4G, plus le Bluetooth pour ouvrir près du portail : fonctionne même quand la maison n'a pas internet</td><td>Votre passerelle Zigbee à la maison ; hors de la maison, il faut l'internet de la maison</td></tr>
-    <tr><th>Façons d'ouvrir</th><td>Application, appel, automatiquement en arrivant, Apple CarPlay et Android Auto, Siri, Google Assistant, Apple Watch</td><td>Une tuile, des scènes et des automatisations dans ZigDash (et Home Assistant, si vous l'utilisez)</td></tr>
-    <tr><th>Qui peut ouvrir</th><td>Jusqu'à 50 utilisateurs sur le Spider-50, gérés dans l'application PalGate, chacun avec un horaire ou « à proximité seulement » ; ils peuvent aussi ouvrir par un appel</td><td>Les téléphones avec lesquels vous partagez la maison (jusqu'à cinq à distance)</td></tr>
-    <tr><th>Ouvert ou fermé</th><td>Une entrée pour un capteur magnétique, avec notifications</td><td>Ajoutez un capteur d'ouverture Zigbee (environ 10 $) et voyez-le dans ZigDash</td></tr>
+    <tr><th>Façons d'ouvrir</th><td>Application, appel, automatiquement en arrivant, Apple CarPlay et Android Auto, Siri, Assistant Google, Apple Watch</td><td>Une tuile dans ZigDash ; scènes et automatisations aussi, une fois que le relais fait l'impulsion tout seul (étape 4)</td></tr>
+    <tr><th>Qui peut ouvrir</th><td>Jusqu'à 50 utilisateurs sur le Spider-50, gérés dans l'application PalGate, chacun avec un horaire d'accès et une limite « à proximité seulement » en option ; ils peuvent aussi ouvrir par un appel</td><td>Les téléphones avec lesquels vous partagez la maison (jusqu'à cinq à distance)</td></tr>
+    <tr><th>Ouvert ou fermé</th><td>Une entrée pour un capteur magnétique, avec notifications</td><td>Ajoutez un capteur d'ouverture Zigbee (environ ₪37) et voyez-le dans ZigDash</td></tr>
     <tr><th>Cloud</th><td>Le service de PalGate</td><td>Aucun à la maison ; à distance, tout passe par le serveur relais de ZigDash, chiffré de bout en bout</td></tr>
   </tbody>
 </table>
@@ -130,14 +130,14 @@
 <h3 id="keep">Quand garder le Spider</h3>
 <p>Pour une maison individuelle où la famille ouvre un seul portail, le relais fait tout ce dont j'avais besoin. Le Spider reste le meilleur choix quand :</p>
 <ul>
-  <li><strong>Beaucoup de personnes ouvrent le portail :</strong> un immeuble, des voisins, une aide ménagère, des invités. Le Spider-50 accepte jusqu'à 50 utilisateurs avec horaires, et ils peuvent ouvrir par un appel.</li>
-  <li><strong>Le portail est loin de la maison,</strong> hors de portée de votre réseau Zigbee, même avec un appareil entre les deux. La distance ne gêne pas la 4G.</li>
-  <li><strong>Le portail doit s'ouvrir même si votre passerelle ou l'internet de la maison est en panne.</strong> Le Spider a sa propre connexion, et le Bluetooth près du portail.</li>
-  <li><strong>Vous voulez qu'il s'ouvre tout seul</strong> en arrivant, avec Apple CarPlay ou Android Auto.</li>
+  <li><strong>beaucoup de personnes ouvrent le portail :</strong> un immeuble, des voisins, une aide ménagère, des invités. Le Spider-50 gère jusqu'à 50 utilisateurs avec horaires, et ils peuvent ouvrir par un appel ;</li>
+  <li><strong>le portail est loin de la maison,</strong> hors de portée de votre réseau Zigbee, même avec un appareil entre les deux : la distance ne gêne pas la 4G ;</li>
+  <li><strong>le portail doit s'ouvrir même si votre passerelle est en panne, ou l'internet de la maison quand vous êtes absent :</strong> le Spider a sa propre connexion, et le Bluetooth près du portail ;</li>
+  <li><strong>vous voulez qu'il s'ouvre tout seul</strong> en arrivant, avec Apple CarPlay ou Android Auto.</li>
 </ul>
-<p><strong>Ou gardez les deux.</strong> Branchez COM et NO du relais sur la même entrée d'ouverture que le Spider. Ils fonctionnent comme deux boutons pour le même portail : les voisins gardent leur PalGate, et vous avez le portail dans vos scènes ZigDash.</p>
+<p><strong>Ou gardez les deux.</strong> Branchez COM et NO du relais sur la même entrée d'ouverture de la carte du portail que le Spider. Ils fonctionnent comme deux boutons pour le même portail : les voisins gardent leur PalGate, et vous ouvrez depuis ZigDash. Activez d'abord le mode impulsion (étape 4) : un contact qui reste fermé maintient l'entrée d'ouverture, le portail peut rester ouvert et l'appui du Spider ne fait plus rien.</p>
 
-<div class="tip">PalGate est une marque de son propriétaire. ZigDash n'est pas affilié à PalGate ni à PAL Electronics Systems. Le prix de PalGate est un prix en magasin en Israël en novembre 2026 ; celui du relais est ce que j'ai payé. Les fonctions du Spider viennent du <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">guide d'installation</a> de PAL (édition Europe 1.3).</div>
+<div class="tip">PalGate est une marque de son propriétaire. ZigDash n'est pas affilié à PalGate ni à PAL Electronic Systems. Le prix de PalGate est un prix en magasin en Israël en novembre 2026 ; celui du relais est ce que j'ai payé. Les fonctions du Spider viennent du <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">guide d'installation</a> de PAL (édition Europe 1.3).</div>
 
 <div class="tip"><strong>Vous l'avez fait aussi ?</strong> Dites-moi comment ça s'est passé, ou ce qui était différent sur votre portail : <a href="mailto:support@zigdash.app">support@zigdash.app</a> ou <a href="https://t.me/zigdash_app">la communauté</a>.</div>
 

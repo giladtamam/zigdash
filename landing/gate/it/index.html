@@ -108,7 +108,7 @@
 <ol>
   <li>Sulla tua dashboard, tocca <strong>Aggiungi da un dispositivo</strong> e scegli <strong>Cancello</strong>.</li>
   <li>Tocca il riquadro: il relè si chiude e il cancello inizia a muoversi, proprio come con il telecomando.</li>
-  <li>L'ingresso di apertura del cancello si aspetta una pressione breve, come il tasto di un telecomando; lo Spider chiude il contatto per 2 secondi di default. Molti relè a contatto pulito hanno una modalità <strong>a impulso</strong> (inching) che si spegne da sola: se Zigbee2MQTT la mostra per il tuo relè, impostala su circa 2 secondi e ogni tocco sarà una pressione. Altrimenti, spegni di nuovo il riquadro dopo un secondo o due. Un contatto che resta chiuso può contare come pressione lunga, che su alcuni cancelli vuol dire stop o restare aperto.</li>
+  <li>L'ingresso di apertura del cancello si aspetta una pressione breve, come il tasto di un telecomando; lo Spider chiude il contatto per 2 secondi di default. Molti relè a contatto pulito hanno una modalità <strong>a impulso</strong> (inching) che si spegne da sola: se Zigbee2MQTT la mostra per il tuo relè, impostala su circa 2 secondi e ogni tocco sarà una pressione. Altrimenti, spegni di nuovo il riquadro dopo un secondo o due. Un contatto che resta chiuso può contare come pressione lunga, che su alcuni cancelli vuol dire stop o restare aperto. Scene e automazioni accendono soltanto il relè, quindi usale per il cancello solo con la modalità a impulso attiva.</li>
   <li><strong>Da ovunque:</strong> con ZigDash Pro, attiva il controllo remoto e lo stesso riquadro funziona anche fuori casa, senza aprire porte sul router e senza canone mensile. Copre fino a cinque telefoni; <strong>Condividi con un altro telefono</strong> aggiunge i telefoni della famiglia con un solo codice QR.</li>
 </ol>
 
@@ -120,9 +120,9 @@
   <tbody>
     <tr><th>Costo</th><td>Circa ₪770 nuovo (prezzo in negozio), più una SIM dati</td><td>Circa ₪37 una volta sola; il controllo remoto è un acquisto una tantum di ZigDash Pro</td></tr>
     <tr><th>Connessione</th><td>La sua SIM 4G, più il Bluetooth per aprire vicino al cancello: funziona anche quando la casa non ha internet</td><td>Il tuo hub Zigbee a casa; fuori casa serve l'internet di casa</td></tr>
-    <tr><th>Modi di aprire</th><td>App, telefonata, automaticamente all'arrivo, Apple CarPlay e Android Auto, Siri, Google Assistant, Apple Watch</td><td>Un riquadro, scene e automazioni in ZigDash (e Home Assistant, se lo usi)</td></tr>
-    <tr><th>Chi può aprire</th><td>Fino a 50 utenti sullo Spider-50, gestiti nell'app PalGate, ognuno con orari o «solo da vicino»; possono aprire anche con una telefonata</td><td>I telefoni con cui condividi la casa (fino a cinque da remoto)</td></tr>
-    <tr><th>Aperto o chiuso</th><td>Un ingresso per un sensore magnetico, con notifiche</td><td>Aggiungi un sensore porta Zigbee (circa 10 $) e lo vedi in ZigDash</td></tr>
+    <tr><th>Modi di aprire</th><td>App, telefonata, automaticamente all'arrivo, Apple CarPlay e Android Auto, Siri, Assistente Google, Apple Watch</td><td>Un riquadro in ZigDash; anche scene e automazioni, quando il relè fa l'impulso da solo (passo 4)</td></tr>
+    <tr><th>Chi può aprire</th><td>Fino a 50 utenti sullo Spider-50, gestiti nell'app PalGate, ognuno con orari di accesso e un limite opzionale «solo da vicino»; possono aprire anche con una telefonata</td><td>I telefoni con cui condividi la casa (fino a cinque da remoto)</td></tr>
+    <tr><th>Aperto o chiuso</th><td>Un ingresso per un sensore magnetico, con notifiche</td><td>Aggiungi un sensore porta Zigbee (circa ₪37) e lo vedi in ZigDash</td></tr>
     <tr><th>Cloud</th><td>Il servizio di PalGate</td><td>Nessuno a casa; da remoto passa per il server relay di ZigDash, con crittografia end-to-end</td></tr>
   </tbody>
 </table>
@@ -132,12 +132,12 @@
 <ul>
   <li><strong>Molte persone aprono il cancello:</strong> un condominio, vicini, chi fa le pulizie, ospiti. Lo Spider-50 gestisce fino a 50 utenti con orari, e possono aprire con una telefonata.</li>
   <li><strong>Il cancello è lontano dalla casa,</strong> fuori dalla portata della tua rete Zigbee anche con un dispositivo in mezzo. Al 4G la distanza non importa.</li>
-  <li><strong>Il cancello deve aprirsi anche quando l'hub o l'internet di casa non funzionano.</strong> Lo Spider ha una connessione propria, e il Bluetooth vicino al cancello.</li>
+  <li><strong>Il cancello deve aprirsi anche quando l'hub non funziona, o l'internet di casa mentre sei fuori.</strong> Lo Spider ha una connessione propria, e il Bluetooth vicino al cancello.</li>
   <li><strong>Vuoi che si apra da solo</strong> quando arrivi in auto, con Apple CarPlay o Android Auto.</li>
 </ul>
-<p><strong>Oppure tieni entrambi.</strong> Collega COM e NO del relè allo stesso ingresso di apertura dello Spider. Funzionano come due pulsanti dello stesso cancello: i vicini tengono il loro PalGate e tu hai il cancello nelle tue scene di ZigDash.</p>
+<p><strong>Oppure tieni entrambi.</strong> Collega COM e NO del relè allo stesso ingresso di apertura della centralina a cui è collegato lo Spider. Funzionano come due pulsanti dello stesso cancello: i vicini tengono il loro PalGate e tu apri da ZigDash. Prima attiva la modalità a impulso (passo 4): un contatto che resta chiuso tiene occupato l'ingresso di apertura, il cancello può restare aperto e la pressione dello Spider non fa nulla.</p>
 
-<div class="tip">PalGate è un marchio del suo proprietario. ZigDash non è affiliato a PalGate né a PAL Electronics Systems. Il prezzo di PalGate è un prezzo di negozio in Israele a novembre 2026; quello del relè è quanto ho pagato io. Le funzioni dello Spider sono tratte dalla <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">guida di installazione</a> di PAL (edizione europea 1.3).</div>
+<div class="tip">PalGate è un marchio del suo proprietario. ZigDash non è affiliato a PalGate né a PAL Electronic Systems. Il prezzo di PalGate è un prezzo di negozio in Israele a novembre 2026; quello del relè è quanto ho pagato io. Le funzioni dello Spider sono tratte dalla <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">guida di installazione</a> di PAL (edizione europea 1.3).</div>
 
 <div class="tip"><strong>L'hai fatto anche tu?</strong> Raccontami com'è andata, o cosa c'era di diverso nel tuo cancello: <a href="mailto:support@zigdash.app">support@zigdash.app</a> o <a href="https://t.me/zigdash_app">la comunità</a>.</div>
 

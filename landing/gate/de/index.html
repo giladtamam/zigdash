@@ -108,7 +108,7 @@
 <ol>
   <li>Tippe auf deinem Dashboard auf <strong>Von einem Gerät hinzufügen</strong> und wähle <strong>Tor</strong>.</li>
   <li>Tippe auf die Kachel: Das Relais schließt und das Tor setzt sich in Bewegung, genau wie mit der Fernbedienung.</li>
-  <li>Der Öffnen-Eingang des Tors erwartet einen kurzen Druck, wie eine Taste der Fernbedienung; der Spider schließt seinen Kontakt standardmäßig für 2 Sekunden. Viele potentialfreie Relais haben einen <strong>Tipp-/Impulsmodus</strong> (inching), der von selbst wieder ausschaltet: Wenn Zigbee2MQTT ihn für dein Relais anzeigt, stelle etwa 2 Sekunden ein, dann ist jedes Tippen ein Druck. Wenn nicht, schalte die Kachel nach ein, zwei Sekunden wieder aus. Ein Kontakt, der geschlossen bleibt, kann als langer Druck zählen, und das heißt bei manchen Toren Stopp oder Offenbleiben.</li>
+  <li>Der Öffnen-Eingang des Tors erwartet einen kurzen Druck, wie eine Taste der Fernbedienung; der Spider schließt seinen Kontakt standardmäßig für 2 Sekunden. Viele potentialfreie Relais haben einen <strong>Tipp-/Impulsmodus</strong> (inching), der von selbst wieder ausschaltet: Wenn Zigbee2MQTT ihn für dein Relais anzeigt, stelle etwa 2 Sekunden ein, dann ist jedes Tippen ein Druck. Wenn nicht, schalte die Kachel nach ein, zwei Sekunden wieder aus. Ein Kontakt, der geschlossen bleibt, kann als langer Druck zählen, und das heißt bei manchen Toren Stopp oder Offenbleiben. Szenen und Automationen schalten das Relais nur ein; nutze sie fürs Tor also erst mit eingeschaltetem Impulsmodus.</li>
   <li><strong>Von überall:</strong> Mit ZigDash Pro schaltest du die Fernsteuerung ein, und dieselbe Kachel funktioniert auch unterwegs, ohne offenen Port am Router und ohne monatliche Gebühr. Sie funktioniert auf bis zu fünf Handys; <strong>Mit einem anderen Handy teilen</strong> fügt die Handys der Familie mit einem QR-Code hinzu.</li>
 </ol>
 
@@ -120,9 +120,9 @@
   <tbody>
     <tr><th>Kosten</th><td>Etwa ₪770 neu (Ladenpreis), plus Daten-SIM</td><td>Etwa ₪37 einmalig; die Fernsteuerung ist ein einmaliger Kauf von ZigDash Pro</td></tr>
     <tr><th>Verbindung</th><td>Eigene 4G-SIM, dazu Bluetooth zum Öffnen in der Nähe des Tors: funktioniert auch, wenn das Haus kein Internet hat</td><td>Dein Zigbee-Hub zu Hause; unterwegs ist das Internet zu Hause nötig</td></tr>
-    <tr><th>Öffnen per</th><td>App, Anruf, automatisch beim Ankommen, Apple CarPlay und Android Auto, Siri, Google Assistant, Apple Watch</td><td>Kachel, Szenen und Automationen in ZigDash (und Home Assistant, falls du es nutzt)</td></tr>
-    <tr><th>Wer öffnen kann</th><td>Bis zu 50 Nutzer beim Spider-50, verwaltet in der PalGate-App, jeweils mit Zeitplan oder „nur in der Nähe“; sie können auch per Anruf öffnen</td><td>Handys, mit denen du das Zuhause teilst (bis zu fünf aus der Ferne)</td></tr>
-    <tr><th>Offen oder zu</th><td>Ein Eingang für einen Magnetkontakt, mit Benachrichtigungen</td><td>Ein Zigbee-Türsensor dazu (etwa 10 $), sichtbar in ZigDash</td></tr>
+    <tr><th>Öffnen per</th><td>App, Anruf, automatisch beim Ankommen, Apple CarPlay und Android Auto, Siri, Google Assistant, Apple Watch</td><td>Kachel in ZigDash; Szenen und Automationen auch, sobald das Relais von selbst pulst (Schritt 4)</td></tr>
+    <tr><th>Wer öffnen kann</th><td>Bis zu 50 Nutzer beim Spider-50, verwaltet in der PalGate-App, jeweils mit Zugangszeitplan und optional „nur in der Nähe“; sie können auch per Anruf öffnen</td><td>Handys, mit denen du das Zuhause teilst (bis zu fünf aus der Ferne)</td></tr>
+    <tr><th>Offen oder zu</th><td>Ein Eingang für einen Magnetkontakt, mit Benachrichtigungen</td><td>Ein Zigbee-Türsensor dazu (etwa ₪37), sichtbar in ZigDash</td></tr>
     <tr><th>Cloud</th><td>Der Dienst von PalGate</td><td>Zu Hause keine; aus der Ferne geht es über den Relay-Server von ZigDash, Ende-zu-Ende-verschlüsselt</td></tr>
   </tbody>
 </table>
@@ -130,14 +130,14 @@
 <h3 id="keep">Wann du den Spider behalten solltest</h3>
 <p>Für ein Einfamilienhaus, in dem die Familie ein Tor öffnet, kann das Relais alles, was ich brauchte. Der Spider ist weiterhin die bessere Wahl, wenn:</p>
 <ul>
-  <li><strong>viele Leute das Tor öffnen:</strong> ein Mehrfamilienhaus, Nachbarn, eine Putzhilfe, Gäste. Der Spider-50 nimmt bis zu 50 Nutzer mit Zeitplänen auf, und sie können per Anruf öffnen.</li>
+  <li><strong>viele Leute das Tor öffnen:</strong> ein Mehrfamilienhaus, Nachbarn, eine Putzhilfe, Gäste. Der Spider-50 unterstützt bis zu 50 Nutzer mit Zeitplänen, und sie können per Anruf öffnen.</li>
   <li><strong>das Tor weit vom Haus entfernt ist,</strong> außerhalb deines Zigbee-Netzes, auch mit einem Gerät dazwischen. Für 4G spielt die Entfernung keine Rolle.</li>
-  <li><strong>das Tor auch aufgehen muss, wenn dein Hub oder das Internet zu Hause ausfällt.</strong> Der Spider hat eine eigene Verbindung und Bluetooth in der Nähe des Tors.</li>
+  <li><strong>das Tor auch aufgehen muss, wenn dein Hub ausfällt oder, während du unterwegs bist, das Internet zu Hause.</strong> Der Spider hat eine eigene Verbindung und Bluetooth in der Nähe des Tors.</li>
   <li><strong>es von selbst aufgehen soll,</strong> wenn du ankommst, über Apple CarPlay oder Android Auto.</li>
 </ul>
-<p><strong>Oder behalte beide.</strong> Schließe COM und NO des Relais an denselben Öffnen-Eingang an wie den Spider. Sie wirken wie zwei Tasten am selben Tor: Die Nachbarn behalten ihr PalGate, und du hast das Tor in deinen ZigDash-Szenen.</p>
+<p><strong>Oder behalte beide.</strong> Schließe COM und NO des Relais an denselben Öffnen-Eingang der Torsteuerung an wie den Spider. Sie wirken wie zwei Tasten am selben Tor: Die Nachbarn behalten ihr PalGate, und du öffnest aus ZigDash. Schalte vorher den Impulsmodus ein (Schritt 4): Ein Kontakt, der geschlossen bleibt, hält den Öffnen-Eingang, das Tor kann offen bleiben, und der Druck des Spider bewirkt nichts.</p>
 
-<div class="tip">PalGate ist eine Marke ihres Inhabers. ZigDash ist nicht mit PalGate oder PAL Electronics Systems verbunden. Der PalGate-Preis ist ein israelischer Ladenpreis vom November 2026; den Relais-Preis habe ich selbst bezahlt. Die Funktionen des Spider stammen aus der <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">Installationsanleitung</a> von PAL (Europa-Ausgabe 1.3).</div>
+<div class="tip">PalGate ist eine Marke ihres Inhabers. ZigDash ist nicht mit PalGate oder PAL Electronic Systems verbunden. Der PalGate-Preis ist ein israelischer Ladenpreis vom November 2026; den Relais-Preis habe ich selbst bezahlt. Die Funktionen des Spider stammen aus der <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">Installationsanleitung</a> von PAL (Europa-Ausgabe 1.3).</div>
 
 <div class="tip"><strong>Hast du das auch gemacht?</strong> Erzähl mir, wie es gelaufen ist oder was an deinem Tor anders war: <a href="mailto:support@zigdash.app">support@zigdash.app</a> oder <a href="https://t.me/zigdash_app">die Community</a>.</div>
 

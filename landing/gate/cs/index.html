@@ -108,7 +108,7 @@
 <ol>
   <li>Na nástěnce klepni na <strong>Přidat ze zařízení</strong> a vyber <strong>Brána</strong>.</li>
   <li>Klepni na dlaždici: relé sepne a brána se rozjede, stejně jako s ovladačem.</li>
-  <li>Vstup pro otevření brány očekává krátké stisknutí, jako tlačítko ovladače; Spider standardně sepne kontakt na 2 sekundy. Mnoho relé s bezpotenciálovým kontaktem má <strong>pulzní režim</strong> (inching), který se sám zase vypne: pokud ho Zigbee2MQTT u tvého relé ukazuje, nastav asi 2 sekundy a každé klepnutí bude jedno stisknutí. Pokud ne, vypni dlaždici po sekundě či dvou znovu. Kontakt, který zůstane sepnutý, se může počítat jako dlouhé stisknutí, což u některých bran znamená zastavit nebo zůstat otevřená.</li>
+  <li>Vstup pro otevření brány očekává krátké stisknutí, jako tlačítko ovladače; Spider standardně sepne kontakt na 2 sekundy. Mnoho relé s bezpotenciálovým kontaktem má <strong>pulzní režim</strong> (inching), který se sám zase vypne: pokud ho Zigbee2MQTT u tvého relé ukazuje, nastav asi 2 sekundy a každé klepnutí bude jedno stisknutí. Pokud ne, vypni dlaždici po sekundě či dvou znovu. Kontakt, který zůstane sepnutý, se může počítat jako dlouhé stisknutí, což u některých bran znamená zastavení, nebo že brána zůstane otevřená. Scény a automatizace relé jen zapnou, takže je pro bránu používej až se zapnutým pulzním režimem.</li>
   <li><strong>Odkudkoli:</strong> se ZigDash Pro zapni dálkové ovládání a stejná dlaždice funguje i mimo domov, bez otevřeného portu na routeru a bez měsíčního poplatku. Pokrývá až pět telefonů; <strong>Sdílet s dalším telefonem</strong> přidá telefony rodiny jedním QR kódem.</li>
 </ol>
 
@@ -120,9 +120,9 @@
   <tbody>
     <tr><th>Cena</th><td>Asi ₪770 nový (cena v obchodě), plus datová SIM</td><td>Asi ₪37 jednou; dálkové ovládání je jednorázový nákup ZigDash Pro</td></tr>
     <tr><th>Připojení</th><td>Vlastní 4G SIM a k tomu Bluetooth pro otevírání u brány: funguje, i když dům nemá internet</td><td>Tvůj Zigbee hub doma; mimo domov potřebuje domácí internet</td></tr>
-    <tr><th>Způsoby otevření</th><td>Aplikace, telefonní hovor, automaticky při příjezdu, Apple CarPlay a Android Auto, Siri, Google Assistant, Apple Watch</td><td>Dlaždice, scény a automatizace v ZigDash (a Home Assistant, pokud ho používáš)</td></tr>
-    <tr><th>Kdo může otevírat</th><td>U Spider-50 až 50 uživatelů spravovaných v aplikaci PalGate, každý s rozvrhem nebo „jen zblízka“; otevírat mohou i telefonním hovorem</td><td>Telefony, se kterými sdílíš domácnost (vzdáleně až pět)</td></tr>
-    <tr><th>Otevřeno, nebo zavřeno</th><td>Vstup pro magnetický senzor, s upozorněními</td><td>Přidej Zigbee dveřní senzor (asi 10 $) a uvidíš ho v ZigDash</td></tr>
+    <tr><th>Způsoby otevření</th><td>Aplikace, telefonní hovor, automaticky při příjezdu, Apple CarPlay a Android Auto, Siri, Asistent Google, Apple Watch</td><td>Dlaždice v ZigDash; scény a automatizace také, jakmile relé pulzuje samo (krok 4)</td></tr>
+    <tr><th>Kdo může otevírat</th><td>U Spider-50 až 50 uživatelů spravovaných v aplikaci PalGate, každý s přístupovým rozvrhem a volitelným omezením „jen zblízka“; otevírat mohou i telefonním hovorem</td><td>Telefony, se kterými sdílíš domácnost (vzdáleně až pět)</td></tr>
+    <tr><th>Otevřeno, nebo zavřeno</th><td>Vstup pro magnetický senzor, s upozorněními</td><td>Přidej Zigbee dveřní senzor (asi ₪37) a uvidíš ho v ZigDash</td></tr>
     <tr><th>Cloud</th><td>Služba PalGate</td><td>Doma žádný; vzdálený přístup jde přes relay server ZigDash, šifrovaně end-to-end</td></tr>
   </tbody>
 </table>
@@ -130,14 +130,14 @@
 <h3 id="keep">Kdy si Spider nechat</h3>
 <p>Pro rodinný dům, kde rodina otevírá jednu bránu, dělá relé všechno, co jsem potřeboval. Spider je pořád lepší volba, když:</p>
 <ul>
-  <li><strong>bránu otevírá hodně lidí:</strong> bytový dům, sousedé, uklízečka, hosté. Spider-50 pojme až 50 uživatelů s rozvrhy a otevřít mohou i telefonním hovorem.</li>
+  <li><strong>bránu otevírá hodně lidí:</strong> bytový dům, sousedé, uklízečka, hosté. Spider-50 podporuje až 50 uživatelů s rozvrhy a otevřít mohou i telefonním hovorem.</li>
   <li><strong>brána je daleko od domu,</strong> mimo dosah tvé Zigbee sítě, i se zařízením mezi nimi. 4G vzdálenost nezajímá.</li>
-  <li><strong>brána se musí otevřít, i když nejde tvůj hub nebo domácí internet.</strong> Spider má vlastní připojení a u brány Bluetooth.</li>
+  <li><strong>brána se musí otevřít, i když nejde tvůj hub, nebo domácí internet, když nejsi doma.</strong> Spider má vlastní připojení a u brány Bluetooth.</li>
   <li><strong>chceš, aby se otevřela sama,</strong> když přijíždíš, přes Apple CarPlay nebo Android Auto.</li>
 </ul>
-<p><strong>Nebo si nech obojí.</strong> Připoj COM a NO relé na stejný vstup pro otevření jako Spider. Fungují jako dvě tlačítka na stejné bráně: sousedé si nechají PalGate a ty máš bránu ve svých scénách v ZigDash.</p>
+<p><strong>Nebo si nech obojí.</strong> Připoj COM a NO relé na stejný vstup pro otevření v řídicí jednotce brány jako Spider. Fungují jako dvě tlačítka na stejné bráně: sousedé si nechají PalGate a ty otevíráš ze ZigDash. Nejdřív zapni pulzní režim (krok 4): sepnutý kontakt drží vstup pro otevření, brána může zůstat otevřená a stisk Spideru nic neudělá.</p>
 
-<div class="tip">PalGate je ochranná známka svého vlastníka. ZigDash není s PalGate ani PAL Electronics Systems nijak spojen. Cena PalGate je cena v izraelském obchodě v listopadu 2026; cenu relé jsem zaplatil já. Funkce Spideru pocházejí z <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">instalační příručky</a> PAL (evropské vydání 1.3).</div>
+<div class="tip">PalGate je ochranná známka svého vlastníka. ZigDash není s PalGate ani PAL Electronic Systems nijak spojen. Cena PalGate je cena v izraelském obchodě v listopadu 2026; cenu relé jsem zaplatil já. Funkce Spideru pocházejí z <a href="https://www.pal-es.com/manuals/spider-installation-user-guide-europe.pdf">instalační příručky</a> PAL (evropské vydání 1.3).</div>
 
 <div class="tip"><strong>Dělal jsi to taky?</strong> Napiš mi, jak to dopadlo, nebo co bylo u tvé brány jinak: <a href="mailto:support@zigdash.app">support@zigdash.app</a> nebo <a href="https://t.me/zigdash_app">v komunitě</a>.</div>
 
