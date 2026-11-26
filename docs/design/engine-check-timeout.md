@@ -146,3 +146,7 @@ strings × 13 languages. "Try again" reuses `setupTryAgain`.
 Goes into the next Android release (with or before the scan plan on
 plan/388), version decided then; privacy check as above; read
 `check_timeout` by why 3 weeks after it is live.
+
+From 3.8.8, `history_setup` and `engine_setup` `why` values for a broker
+that never connected move from `no_info` to `no_connection`. Don't compare
+`why` counts across that version.

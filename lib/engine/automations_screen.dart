@@ -21,6 +21,7 @@ import 'engine_installer.dart';
 import 'engine_sheet.dart';
 import '../features/history/history_setup_flow.dart' show allowEngineAndRestart, installEngineOn;
 import '../features/pro/pro_trial.dart' show ProTrialUse, proAccessProvider, proTrialProvider;
+import '../mqtt/providers/mqtt_manager_provider.dart';
 import 'engine_providers.dart';
 import 'engine_setup.dart' show engineCheckWait, engineWhy;
 import 'engine_status.dart';
@@ -62,7 +63,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   /// before a reload): what decides [_why].
   EngineView? _lastFresh;
 
-  /// The 20 s ran out while installing or restarting: wait again after.
+  /// The 20 s ran out while installing or restarting: say so after.
   bool _checkAfterBusy = false;
 
   /// `check_timeout` once per visit per why.
@@ -103,24 +104,29 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       _checkAfterBusy = true;
       return;
     }
-    // A value from a manager that went away never decides why: null is no
-    // connection.
-    final why = engineWhy((view: null, last: _lastFresh));
-    setState(() {
-      _timedOut = true;
-      _why = why;
-    });
-    // Zigbee2MQTT's version from the same view as why.
+    setState(() => _timedOut = true);
+    _gaveUpWith(_lastFresh);
+  }
+
+  /// Says why the check gave up, from [last]: a value from a manager that
+  /// went away never decides it (null is no connection). Counted once per
+  /// visit per why, with Zigbee2MQTT's version from the same view.
+  void _gaveUpWith(EngineView? last) {
+    final why = engineWhy((view: null, last: last));
+    if (why != _why) setState(() => _why = why);
     if (_timeoutsSent.add(why)) {
-      ref.read(analyticsProvider).track(EngineEvent(EngineStep.checkTimeout, z2m: _lastFresh?.hub?.version, why: why));
+      ref.read(analyticsProvider).track(EngineEvent(EngineStep.checkTimeout, z2m: last?.hub?.version, why: why));
     }
   }
 
   /// Back from installing or restarting: a check that ran out meanwhile
-  /// waits once more.
+  /// says so now.
   void _idle() {
     setState(() => _busy = _Busy.none);
-    if (_checkAfterBusy) _startCheck();
+    if (_checkAfterBusy) {
+      _checkAfterBusy = false;
+      _checkRanOut();
+    }
   }
 
   /// Hears every change of the view: a reload (after any invalidate) or a
@@ -132,6 +138,8 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       _startCheck();
       return;
     }
+    // An error may carry the value from before: never fresh.
+    if (next.hasError) return;
     final v = next.valueOrNull;
     if (v == null) return;
     _lastFresh = v;
@@ -146,7 +154,21 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     if (!(prev?.isLoading ?? true) && was != null && was != HubEnginePhase.checking) {
       if (_timedOut) setState(() => _timedOut = false);
       _startCheck();
+    } else if (_timedOut) {
+      // Still checking after the message: the broker connected, or
+      // bridge/info came, so why moves on (no connection → no info → no
+      // extensions).
+      _gaveUpWith(v);
     }
+  }
+
+  /// Try again: the view looks again; with no connection, the broker is
+  /// also tried now instead of after its backoff (the manager is kept).
+  void _checkAgain() {
+    if (_why == EngineWhy.noConnection) {
+      ref.read(mqttManagerProvider(widget.connectionId)).valueOrNull?.reconnectNow();
+    }
+    ref.invalidate(engineViewProvider(widget.connectionId));
   }
 
   /// Each phase worth counting, once per visit to this screen.
@@ -389,7 +411,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   /// 3.8.8: the hub check ran out, by why. No host in the text: the
   /// manager may be trying the remote address.
   List<Widget> _checkGaveUp(BuildContext context, AppLocalizations l10n, EngineWhy why) {
-    final base = ref.read(homeBaseTopicProvider(widget.connectionId)) ?? 'zigbee2mqtt';
+    final base = ref.watch(homeBaseTopicProvider(widget.connectionId)) ?? 'zigbee2mqtt';
     final (title, body, broker) = switch (why) {
       EngineWhy.noConnection => (l10n.engineCheckNoBrokerTitle, l10n.engineCheckNoBrokerBody, true),
       EngineWhy.noInfo => (l10n.engineCheckNoZ2mTitle, l10n.engineCheckNoZ2mBody(base), true),
@@ -405,7 +427,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
         children: [
           FilledButton(
             key: const Key('engine-check-again'),
-            onPressed: () => ref.invalidate(engineViewProvider(widget.connectionId)),
+            onPressed: _checkAgain,
             child: Text(l10n.setupTryAgain),
           ),
           if (broker)

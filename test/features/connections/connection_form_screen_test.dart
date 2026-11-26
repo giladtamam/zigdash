@@ -450,8 +450,9 @@ void main() {
 
   // 3.8.8: a plain edit of a broker Home reconnects with what was saved
   // (engine-check-timeout.md), not only a page Home's move to the broker.
-  testWidgets('an edit save builds the manager again with the new host', (
-    tester,
+  Future<List<String>> editBrokerHome(
+    WidgetTester tester,
+    Future<void> Function() edit,
   ) async {
     final db = AppDatabase.test(NativeDatabase.memory());
     addTearDown(db.close);
@@ -521,10 +522,7 @@ void main() {
       () => Future<void>.delayed(const Duration(milliseconds: 300)),
     );
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'Local host'),
-      '192.168.1.70',
-    );
+    await edit();
     await tester.tap(find.text('Save'));
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 300)),
@@ -533,7 +531,29 @@ void main() {
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 300)),
     );
+    return hosts;
+  }
+
+  testWidgets('an edit save builds the manager again with the new host', (
+    tester,
+  ) async {
+    final hosts = await editBrokerHome(
+      tester,
+      () => tester.enterText(
+        find.widgetWithText(TextFormField, 'Local host'),
+        '192.168.1.70',
+      ),
+    );
     expect(hosts, ['192.168.1.64', '192.168.1.70']);
+  });
+
+  testWidgets('a rename keeps the live manager', (tester) async {
+    final hosts = await editBrokerHome(
+      tester,
+      () =>
+          tester.enterText(find.widgetWithText(TextFormField, 'Name'), 'Home'),
+    );
+    expect(hosts, ['192.168.1.64']);
   });
 
   // ---------------------------------------------------------------------

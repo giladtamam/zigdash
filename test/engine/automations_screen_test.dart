@@ -14,6 +14,10 @@ import 'package:zigdash/engine/engine_providers.dart';
 import 'package:zigdash/engine/engine_status.dart';
 import 'package:zigdash/features/devices/devices_providers.dart' show homeBaseTopicProvider;
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
+import 'package:zigdash/mqtt/broker_config.dart';
+import 'package:zigdash/mqtt/mqtt_manager.dart';
+import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
+import 'package:zigdash/data/database/tables/connections.dart' show MqttProtocol;
 import 'package:zigdash/l10n/app_localizations.dart';
 
 import 'engine_test.dart' show FakeLink;
@@ -71,12 +75,26 @@ class _SlowInstaller extends EngineInstaller {
   Future<(HubAnswer, String?)> install(String source) => answer;
 }
 
+/// Counts "connect now" (3.8.8 Try again on no connection).
+class _Manager extends MqttManager {
+  _Manager()
+      : super(
+          config: const BrokerConfig(id: _id, host: 'localhost', port: 1883, protocol: MqttProtocol.tcp),
+          password: '',
+        );
+  var reconnects = 0;
+  @override
+  void reconnectNow() => reconnects++;
+}
+
 /// 3.8.8: a live view the test drives. Each build of the view (the first
 /// one, then one per invalidate) gets its own controller in [builds].
 class _Live {
   final builds = <StreamController<EngineView>>[];
   final sink = _Sink();
   final link = FakeLink();
+  final manager = _Manager();
+  var managerBuilds = 0;
   late ProviderContainer container;
 
   StreamController<EngineView> get now => builds.last;
@@ -100,6 +118,10 @@ Future<_Live> _pumpLive(WidgetTester tester,
     sharedPreferencesProvider.overrideWithValue(p),
     analyticsProvider.overrideWithValue(Analytics(live.sink, enabled: true)),
     homeBaseTopicProvider.overrideWith((ref, _) => 'home/z2m'),
+    mqttManagerProvider.overrideWith((ref, _) async {
+      live.managerBuilds++;
+      return live.manager;
+    }),
     engineViewProvider.overrideWith((ref, _) {
       final c = StreamController<EngineView>();
       live.builds.add(c);
@@ -114,6 +136,8 @@ Future<_Live> _pumpLive(WidgetTester tester,
     alertsConfigProvider.overrideWith((ref, _) => Stream.value(null)),
   ]);
   addTearDown(live.container.dispose);
+  // The real view keeps the manager loaded.
+  live.container.listen(mqttManagerProvider(_id), (_, __) {});
   before?.call(live);
   await tester.pumpWidget(UncontrolledProviderScope(
     container: live.container,
@@ -347,7 +371,8 @@ void main() {
     });
 
     testWidgets('busy during the 20 s: the message after busy ends, if still checking', (tester) async {
-      // Zigbee2MQTT answers the install when the test says: busy until then.
+      // Zigbee2MQTT answers the install when the test says: busy until
+      // then. The 20 s run out meanwhile: the message right after.
       final answer = Completer<(HubAnswer, String?)>();
       final live = await _pumpLive(tester,
           first: const EngineView(phase: HubEnginePhase.paused, hub: _hub, connected: true),
@@ -364,12 +389,61 @@ void main() {
       answer.complete((HubAnswer.refused, 'busy'));
       await tester.pump();
       expect(find.text('Installing on your hub…'), findsNothing, reason: 'Zigbee2MQTT answered at 30 s');
-      expect(find.text('Checking your hub…'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 18));
-      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing);
-      await tester.pump(const Duration(seconds: 3));
-      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget, reason: 'the 20 s ran out meanwhile');
       expect(live.timeouts(), ['no_info']);
+    });
+    testWidgets('why moves on while the message shows: no connection, no info, no extensions', (tester) async {
+      final live = await _pumpLive(tester, first: _checking);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      live.now.add(_silent);
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('engine-check-noConnection')), findsNothing);
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+      live.now.add(_noExtensions);
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('engine-check-noExtensions')), findsOneWidget);
+      live.now.add(_noExtensions);
+      await tester.pump();
+      await tester.pump();
+      expect(live.timeouts(), ['no_connection', 'no_info', 'no_extensions']);
+      final last = live.sink.sent.lastWhere((e) => e.$2['step'] == 'check_timeout').$2;
+      expect(last['z2m'], '2.8');
+    });
+
+    testWidgets('Try again on no connection connects now; the manager is kept', (tester) async {
+      final live = await _pumpLive(tester, first: _checking);
+      await tester.pump(const Duration(seconds: 21));
+      expect(live.managerBuilds, 1);
+      await tester.tap(find.byKey(const Key('engine-check-again')));
+      await tester.pump();
+      expect(live.manager.reconnects, 1);
+      expect(live.managerBuilds, 1, reason: 'not invalidated');
+      expect(live.builds, hasLength(2));
+    });
+
+    testWidgets('Try again on no info only looks again', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      await tester.pump(const Duration(seconds: 21));
+      await tester.tap(find.byKey(const Key('engine-check-again')));
+      await tester.pump();
+      expect(live.manager.reconnects, 0);
+      expect(live.builds, hasLength(2));
+    });
+
+    testWidgets('an error carrying the old value is not fresh: no connection', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      live.invalidate();
+      await tester.pump();
+      live.now.addError(StateError('broker gone'));
+      await tester.pump();
+      expect(live.container.read(engineViewProvider(_id)).valueOrNull?.connected, isTrue,
+          reason: 'Riverpod keeps the old value with the error');
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      expect(live.timeouts(), ['no_connection']);
     });
   });
 }
