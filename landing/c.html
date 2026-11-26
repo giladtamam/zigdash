@@ -11,6 +11,8 @@
 <style>
   .handoff { max-width: 34rem; }
   .handoff .btn { display: block; text-align: center; margin: 0.6rem 0; }
+  .handoff .addr code { user-select: all; -webkit-user-select: all; }
+  .handoff .addr .btn { display: inline-block; margin: 0 0 0 0.5rem; }
   .qr { display: inline-block; background: #fff; padding: 12px; border-radius: 8px; }
   .qr svg { display: block; width: 220px; height: 220px; }
   [hidden] { display: none !important; }
@@ -35,13 +37,15 @@
 </section>
 
 <section id="computer" hidden>
-  <p class="lead">Open this on your Android phone: scan the code with its camera.</p>
+  <p class="lead">Open this on your phone: scan the code with its camera.</p>
   <div class="qr" id="qr"></div>
-  <p>ZigDash opens at its Home Assistant sign-in with the address filled in, or offers to install it first.</p>
+  <p>On Android, ZigDash opens at its Home Assistant sign-in with the address filled in, or offers to install it first. On an iPhone, this page shows the address to paste.</p>
 </section>
 
 <section id="iphone" hidden>
-  <p class="lead">ZigDash for iPhone is coming. For now, ZigDash runs on Android phones and tablets.</p>
+  <p class="lead">This link holds your Home Assistant's address. Copy it below, then install ZigDash and open it: choose Home Assistant, then The Zigbee2MQTT app, and tap Paste.</p>
+  <div id="addrs"></div>
+  <a class="btn primary" href="https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829" data-goatcounter-click="c-appstore">Download on the App Store</a>
 </section>
 
 <section id="empty" hidden>
@@ -64,7 +68,34 @@
   var ua = navigator.userAgent;
   var show = function (id) { document.getElementById(id).hidden = false; };
   if (!link.addresses.length) return show('empty');
-  if (/iPhone|iPad|iPod/.test(ua)) return show('iphone');
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) {
+    // No link into the iPhone app yet: show each address for its Paste button.
+    link.addresses.forEach(function (addr) {
+      var p = document.createElement('p');
+      p.className = 'addr';
+      var code = document.createElement('code');
+      code.textContent = addr;
+      var copy = document.createElement('button');
+      copy.className = 'btn';
+      copy.type = 'button';
+      copy.textContent = 'Copy';
+      copy.setAttribute('data-goatcounter-click', 'c-copy');
+      var failed = function () { copy.textContent = 'Hold the address to copy'; };
+      copy.onclick = function () {
+        if (!navigator.clipboard) return failed();
+        navigator.clipboard.writeText(addr).then(function () { copy.textContent = 'Copied'; }, failed);
+      };
+      p.appendChild(code);
+      p.appendChild(copy);
+      document.getElementById('addrs').appendChild(p);
+    });
+    if (link.addresses.length > 1) {
+      var note = document.createElement('p');
+      note.textContent = 'Paste the first address. If ZigDash can\'t reach it, try the next one.';
+      document.getElementById('addrs').appendChild(note);
+    }
+    return show('iphone');
+  }
   if (/Android/.test(ua)) {
     var params = ZigDashLink.toParams(link.addresses, link.src);
     // Google Play hands this to ZigDash once, on its first start: the home

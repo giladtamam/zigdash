@@ -1,0 +1,2 @@
+Automations no longer get stuck on "Checking your hub…": on a new Zigbee2MQTT with add-ons off, ZigDash now asks to allow them, and if the hub doesn't answer it says why after 20 seconds.
+Changing a Home's broker address or password now reconnects right away.

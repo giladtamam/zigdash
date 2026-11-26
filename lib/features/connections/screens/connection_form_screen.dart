@@ -13,6 +13,7 @@ import '../../../core/router/routes.dart';
 import '../../../core/l10n/l10n_ext.dart';
 import '../../../core/theme/signal_colors.dart';
 import '../../onboarding/first_run.dart';
+import '../../../data/database/database.dart' show Connection;
 import '../../../data/database/tables/connections.dart';
 import '../../../data/repositories/connection_repo.dart';
 import '../../../mqtt/broker_config.dart';
@@ -89,6 +90,9 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
   String? _pageToken;
   String? _pageHost;
 
+  /// 3.8.8: the Home as loaded, to tell a connection change from a rename.
+  Connection? _row;
+
   /// Where devices are counted (3.8.6, [formBaseTopic]).
   String? _storedBase;
   String? _dashboardPrefix;
@@ -143,6 +147,7 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
     } catch (_) {}
     if (!mounted) return;
     setState(() {
+      _row = c;
       _storedBase = c.z2mBaseTopic;
       _dashboardPrefix = prefix;
       _name.text = c.name;
@@ -455,9 +460,21 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
             (_dashboardPrefix?.trim() ?? '').isEmpty) {
           await repo.setBaseTopic(widget.connectionId!, base);
         }
-        if (_fromPage) {
-          // The Home now goes through the broker: reconnect it, and let the
-          // Engine screens look again.
+        // 3.8.8: an edit that changes how the Home connects reconnects with
+        // what was saved (a page Home now goes through the broker; a broker
+        // Home may have a new address, user or password), and the Engine
+        // screens look again. A rename keeps the live connection.
+        final row = _row;
+        final remoteHost = _remoteHost.text.trim().isEmpty ? null : _remoteHost.text.trim();
+        if (_fromPage ||
+            row == null ||
+            passwordToWrite != null ||
+            broker.host != row.host ||
+            port != row.port ||
+            broker.protocol != row.protocol ||
+            (broker.username ?? '') != (row.username ?? '') ||
+            keepAlive != row.keepAliveSeconds ||
+            remoteHost != row.remoteHost) {
           ref.invalidate(mqttManagerProvider(widget.connectionId!));
           ref.invalidate(engineViewProvider(widget.connectionId!));
         }

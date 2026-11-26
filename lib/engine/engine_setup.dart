@@ -115,6 +115,8 @@ EngineWhy engineWhy(EngineCheck check) {
     // No view at all: the broker connection never came up.
     if (last == null) return EngineWhy.noConnection;
     if (last.away) return EngineWhy.relay;
+    // 3.8.8: a broker that never connected is no connection, not no info.
+    if (!last.connected) return EngineWhy.noConnection;
     if (last.hub == null) return EngineWhy.noInfo;
     return last.heardExtensions ? EngineWhy.other : EngineWhy.noExtensions;
   }

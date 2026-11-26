@@ -20,9 +20,16 @@ import 'package:zigdash/features/onboarding/demo_service.dart' show demoHost;
 import 'package:zigdash/features/onboarding/setup/setup_completed_at.dart';
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
 import 'package:zigdash/l10n/app_localizations.dart';
+import 'package:zigdash/features/devices/devices_providers.dart'
+    show homeBaseTopicProvider;
+import 'package:zigdash/mqtt/mqtt_manager.dart';
+import 'package:zigdash/mqtt/mqtt_status.dart';
+import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
 
 import '../../engine/engine_on_save_test.dart' show RecordingManager;
 import '../../engine/engine_test.dart' show FakeLink;
+import '../../engine/engine_view_connected_test.dart'
+    show FakeHubManager, externalJsOff;
 
 class _Sink implements AnalyticsSink {
   final sent = <String>[];
@@ -96,6 +103,7 @@ Future<_Rig> _pump(
   Stream<List<Automation>> Function()? rulesLater,
   Stream<EngineView> Function()? views,
   Connection Function()? currentHome,
+  MqttManager? hubManager,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   final p = await SharedPreferences.getInstance();
@@ -127,9 +135,15 @@ Future<_Rig> _pump(
           (ref, _) =>
               online == null ? const Stream.empty() : Stream.value(online),
         ),
-        engineViewProvider.overrideWith(
-          (ref, _) => views?.call() ?? Stream.value(view),
-        ),
+        // 3.8.8: with [hubManager], the real view over that manager.
+        if (hubManager == null)
+          engineViewProvider.overrideWith(
+            (ref, _) => views?.call() ?? Stream.value(view),
+          )
+        else ...[
+          mqttManagerProvider.overrideWith((ref, _) async => hubManager),
+          homeBaseTopicProvider.overrideWith((ref, _) => 'zigbee2mqtt'),
+        ],
         engineInstallerProvider.overrideWith(
           (ref, _) async => EngineInstaller(link, base: 'zigbee2mqtt'),
         ),
@@ -253,6 +267,28 @@ void main() {
     expect(find.text(_title), findsNothing);
   });
 
+  // 3.8.8: the real view over a hub with external JS off: no
+  // bridge/extensions ever, so the consent comes without the 20 s check.
+  testWidgets('external JS off, real view: asks for add-ons at once', (
+    tester,
+  ) async {
+    final rig = await _pump(
+      tester,
+      hubManager: FakeHubManager(MqttStatus.connected, retained: externalJsOff),
+    );
+    await tester.tap(find.byKey(const Key('history-on-turn-on')));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.textContaining('Allow external JavaScript'), findsOneWidget);
+    expect(
+      rig.sink.sent,
+      contains('history_on {step: consent_shown, from: card}'),
+    );
+    expect(rig.sink.sent.where((e) => e.contains('failed')), isEmpty);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('hub too old: offers this phone, which then records', (
     tester,
   ) async {
@@ -337,7 +373,7 @@ void main() {
     ) async {
       final rig = await silent(
         tester,
-        const EngineView(phase: HubEnginePhase.checking),
+        const EngineView(phase: HubEnginePhase.checking, connected: true),
       );
       expect(
         rig.sink.sent,
@@ -348,7 +384,11 @@ void main() {
     testWidgets('info without extensions: why no_extensions', (tester) async {
       final rig = await silent(
         tester,
-        const EngineView(phase: HubEnginePhase.checking, hub: _hub),
+        const EngineView(
+          phase: HubEnginePhase.checking,
+          hub: _hub,
+          connected: true,
+        ),
       );
       expect(
         rig.sink.sent,

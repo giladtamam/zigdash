@@ -382,7 +382,7 @@ void main() {
             analyticsSinkProvider.overrideWithValue(_Sink(sent)),
             engineViewProvider.overrideWith(
               (ref, _) =>
-                  Stream.value(const EngineView(phase: HubEnginePhase.checking)),
+                  Stream.value(const EngineView(phase: HubEnginePhase.checking, connected: true)),
             ),
             automationsProvider.overrideWith(
               (ref, _) => Stream.value(const []),

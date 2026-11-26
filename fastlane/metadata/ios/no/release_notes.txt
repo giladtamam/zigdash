@@ -1,6 +1,2 @@
-• Slå på historikk rett etter oppsettet: temperaturer, strøm og dører over flere dager, lagret på huben selv når telefonen er av.
-• Bytte fra ZHA: oppsettet merker når Zigbee kjører i ZHA, og viser hvordan du bytter til Zigbee2MQTT.
-• Krypterte meglere (TLS og WSS) kobler til, og et sertifikat iPhone ikke stoler på, blir kalt det.
-• Lag en automatisering først: når du lagrer den, legger ZigDash sin Engine på huben.
-• Scener kan ta med flisene du har laget selv, og dine egne brytere ser ut som enhetsfliser.
-• Mange rettelser i oppsettet med Home Assistant og Zigbee2MQTT-siden.
+• Automatiseringer blir ikke lenger stående på «Sjekker huben…»: på en ny Zigbee2MQTT med tillegg slått av ber ZigDash deg tillate dem, og svarer ikke huben, sier den hvorfor etter 20 sekunder.
+• Endrer du megleradressen eller passordet for et hjem, kobler den til igjen med en gang.

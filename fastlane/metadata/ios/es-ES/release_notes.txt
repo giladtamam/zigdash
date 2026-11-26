@@ -1,6 +1,2 @@
-• Activa el historial justo después de la configuración: temperaturas, consumo y puertas durante días, guardados en tu hub aunque el teléfono esté apagado.
-• Pasar de ZHA: la configuración detecta cuándo tu Zigbee funciona en ZHA y muestra cómo pasar a Zigbee2MQTT.
-• Los brokers cifrados (TLS y WSS) se conectan, y un certificado en el que tu iPhone no confía se indica como tal.
-• Crea primero una automatización: al guardarla, ZigDash instala su Engine en tu hub.
-• Las escenas pueden incluir tus propios mosaicos, y tus interruptores propios se ven como los de los dispositivos.
-• Muchas correcciones en la configuración con Home Assistant y la página de Zigbee2MQTT.
+• Las automatizaciones ya no se quedan en «Comprobando el hub…»: en un Zigbee2MQTT nuevo con los complementos desactivados, ZigDash te pide permitirlos, y si el hub no responde, te dice por qué a los 20 segundos.
+• Al cambiar la dirección o la contraseña del broker de un hogar, se vuelve a conectar al instante.

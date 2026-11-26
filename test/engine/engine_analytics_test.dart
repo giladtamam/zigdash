@@ -19,6 +19,13 @@ void main() {
     expect(const HistorySetup(HistorySetupResult.installed).props, {'result': 'installed', 'from': 'sheet'});
   });
 
+  test('3.8.8: check_timeout with why', () {
+    expect(const EngineEvent(EngineStep.checkTimeout, z2m: '2.6.3', why: EngineWhy.noConnection).props,
+        {'step': 'check_timeout', 'from': 'automations', 'z2m': '2.6', 'why': 'no_connection'});
+    expect(const EngineEvent(EngineStep.checkTimeout, why: EngineWhy.noInfo).props,
+        {'step': 'check_timeout', 'from': 'automations', 'why': 'no_info'});
+  });
+
   test('automation_saved: shape only, counts in buckets', () {
     const e = AutomationSaved(
         trigger: 'sun', conditions: 3, action: 'scene', offAfter: true, isNew: true, homeCount: 4, running: false);

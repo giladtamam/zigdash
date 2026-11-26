@@ -448,6 +448,114 @@ void main() {
     expect(saved.transport, ConnectionTransport.homeAssistant);
   });
 
+  // 3.8.8: a plain edit of a broker Home reconnects with what was saved
+  // (engine-check-timeout.md), not only a page Home's move to the broker.
+  Future<List<String>> editBrokerHome(
+    WidgetTester tester,
+    Future<void> Function() edit,
+  ) async {
+    final db = AppDatabase.test(NativeDatabase.memory());
+    addTearDown(db.close);
+    final now = DateTime.now();
+    await tester.runAsync(
+      () => ConnectionDao(db).insertRow(
+        ConnectionsCompanion.insert(
+          id: 'b1',
+          name: 'Hub',
+          host: '192.168.1.64',
+          port: 1883,
+          protocol: MqttProtocol.tcp,
+          createdAt: now,
+          updatedAt: now,
+        ),
+      ),
+    );
+    final hosts = <String>[];
+    final router = GoRouter(
+      initialLocation: '/',
+      routes: [
+        GoRoute(path: '/', builder: (_, __) => const Text('list')),
+        GoRoute(
+          path: '/form',
+          builder: (_, __) => const ConnectionFormScreen(connectionId: 'b1'),
+        ),
+      ],
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: _overrides(
+          db,
+          extra: [
+            mqttManagerProvider.overrideWith((ref, id) async {
+              final conn = await ref.read(connectionRepoProvider).getById(id);
+              hosts.add(conn!.host);
+              return MqttManager(
+                config: BrokerConfig(
+                  id: id,
+                  host: conn.host,
+                  port: conn.port,
+                  protocol: conn.protocol,
+                ),
+                password: '',
+              );
+            }),
+          ],
+        ),
+        child: MaterialApp.router(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
+      ),
+    );
+    final container = ProviderScope.containerOf(
+      tester.element(find.text('list')),
+    );
+    container.listen(mqttManagerProvider('b1'), (_, __) {});
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    expect(hosts, ['192.168.1.64']);
+
+    router.push('/form');
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await tester.pumpAndSettle();
+    await edit();
+    await tester.tap(find.text('Save'));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    return hosts;
+  }
+
+  testWidgets('an edit save builds the manager again with the new host', (
+    tester,
+  ) async {
+    final hosts = await editBrokerHome(
+      tester,
+      () => tester.enterText(
+        find.widgetWithText(TextFormField, 'Local host'),
+        '192.168.1.70',
+      ),
+    );
+    expect(hosts, ['192.168.1.64', '192.168.1.70']);
+  });
+
+  testWidgets('a rename keeps the live manager', (tester) async {
+    final hosts = await editBrokerHome(
+      tester,
+      () =>
+          tester.enterText(find.widgetWithText(TextFormField, 'Name'), 'Home'),
+    );
+    expect(hosts, ['192.168.1.64']);
+  });
+
   // ---------------------------------------------------------------------
   // 3.8.6: a page Home's broker (broker-no-devices-386.md)
   // ---------------------------------------------------------------------

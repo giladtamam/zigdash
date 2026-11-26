@@ -6,15 +6,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zigdash/alerts/alerts_service.dart';
+import 'package:zigdash/core/analytics/analytics.dart';
 import 'package:zigdash/engine/automations_repo.dart';
 import 'package:zigdash/engine/automations_screen.dart';
 import 'package:zigdash/engine/engine_installer.dart';
 import 'package:zigdash/engine/engine_providers.dart';
 import 'package:zigdash/engine/engine_status.dart';
+import 'package:zigdash/features/devices/devices_providers.dart' show homeBaseTopicProvider;
 import 'package:zigdash/features/settings/providers/settings_controller.dart';
+import 'package:zigdash/mqtt/broker_config.dart';
+import 'package:zigdash/mqtt/mqtt_manager.dart';
+import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
+import 'package:zigdash/data/database/tables/connections.dart' show MqttProtocol;
 import 'package:zigdash/l10n/app_localizations.dart';
 
+import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/mqtt/mqtt_status.dart';
+
 import 'engine_test.dart' show FakeLink;
+import 'engine_view_connected_test.dart' show FakeHubManager, NoHomeRepo, externalJsOff;
 
 const _id = 'home-1';
 
@@ -50,6 +60,105 @@ Future<FakeLink> _pump(WidgetTester tester, EngineView view, {Map<String, Object
 }
 
 const _hub = HubInfo(version: '2.8.0', externalJsAllowed: true);
+
+class _Sink implements AnalyticsSink {
+  final sent = <(String, Map<String, String>)>[];
+  @override
+  Future<void> start() async {}
+  @override
+  Future<void> stop() async {}
+  @override
+  void send(String name, Map<String, String> props) => sent.add((name, props));
+}
+
+/// Answers an install with [answer], whenever the test completes it.
+class _SlowInstaller extends EngineInstaller {
+  _SlowInstaller(FakeLink super.link, this.answer) : super(base: 'zigbee2mqtt');
+  final Future<(HubAnswer, String?)> answer;
+  @override
+  Future<(HubAnswer, String?)> install(String source) => answer;
+}
+
+/// Counts "connect now" (3.8.8 Try again on no connection).
+class _Manager extends MqttManager {
+  _Manager()
+      : super(
+          config: const BrokerConfig(id: _id, host: 'localhost', port: 1883, protocol: MqttProtocol.tcp),
+          password: '',
+        );
+  var reconnects = 0;
+  @override
+  void reconnectNow() => reconnects++;
+}
+
+/// 3.8.8: a live view the test drives. Each build of the view (the first
+/// one, then one per invalidate) gets its own controller in [builds].
+class _Live {
+  final builds = <StreamController<EngineView>>[];
+  final sink = _Sink();
+  final link = FakeLink();
+  final manager = _Manager();
+  var managerBuilds = 0;
+  late ProviderContainer container;
+
+  StreamController<EngineView> get now => builds.last;
+
+  List<String> timeouts() => [
+        for (final (name, props) in sink.sent)
+          if (name == 'engine_setup' && props['step'] == 'check_timeout') props['why']!,
+      ];
+
+  void invalidate() => container.invalidate(engineViewProvider(_id));
+}
+
+/// Never settles: "Checking your hub…" spins. [before] runs on the
+/// container before the screen mounts.
+Future<_Live> _pumpLive(WidgetTester tester,
+    {EngineView? first, void Function(_Live)? before, EngineInstaller Function(FakeLink)? installer}) async {
+  SharedPreferences.setMockInitialValues({});
+  final p = await SharedPreferences.getInstance();
+  final live = _Live();
+  live.container = ProviderContainer(overrides: [
+    sharedPreferencesProvider.overrideWithValue(p),
+    analyticsProvider.overrideWithValue(Analytics(live.sink, enabled: true)),
+    homeBaseTopicProvider.overrideWith((ref, _) => 'home/z2m'),
+    mqttManagerProvider.overrideWith((ref, _) async {
+      live.managerBuilds++;
+      return live.manager;
+    }),
+    engineViewProvider.overrideWith((ref, _) {
+      final c = StreamController<EngineView>();
+      live.builds.add(c);
+      ref.onDispose(c.close);
+      return c.stream;
+    }),
+    engineInstallerProvider.overrideWith(
+        (ref, _) async => installer?.call(live.link) ?? EngineInstaller(live.link, base: 'zigbee2mqtt')),
+    engineSourceProvider.overrideWith((ref) async => "const ENGINE_VERSION = '3.0.0';"),
+    automationsProvider.overrideWith((ref, _) => Stream.value(const [])),
+    automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
+    alertsConfigProvider.overrideWith((ref, _) => Stream.value(null)),
+  ]);
+  addTearDown(live.container.dispose);
+  // The real view keeps the manager loaded.
+  live.container.listen(mqttManagerProvider(_id), (_, __) {});
+  before?.call(live);
+  await tester.pumpWidget(UncontrolledProviderScope(
+    container: live.container,
+    child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const AutomationsScreen(connectionId: _id),
+    ),
+  ));
+  if (first != null) live.now.add(first);
+  await tester.pump();
+  return live;
+}
+
+const _checking = EngineView(phase: HubEnginePhase.checking);
+const _silent = EngineView(phase: HubEnginePhase.checking, connected: true);
+const _noExtensions = EngineView(phase: HubEnginePhase.checking, hub: _hub, connected: true);
 
 void main() {
   // 3.6.2: make the automation first; the install moved to saving it
@@ -134,5 +243,250 @@ void main() {
   testWidgets('no Alerts hint before the Engine runs', (tester) async {
     await _pump(tester, const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub));
     expect(find.byKey(const Key('alerts-hint')), findsNothing);
+  });
+
+  // -----------------------------------------------------------------------
+  // 3.8.8: the hub check gives up after 20 s (engine-check-timeout.md)
+  // -----------------------------------------------------------------------
+
+  group('the hub check gives up after 20 s', () {
+    testWidgets('a broker that never connected: no connection, not before 20 s', (tester) async {
+      final live = await _pumpLive(tester, first: _checking);
+      expect(find.text('Checking your hub…'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 19));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsNothing);
+      expect(live.timeouts(), isEmpty);
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      expect(find.text("Can't reach your hub's broker"), findsOneWidget);
+      expect(find.text('Checking your hub…'), findsNothing);
+      expect(find.text('Try again'), findsOneWidget);
+      expect(find.text('Broker settings'), findsOneWidget);
+      expect(live.timeouts(), ['no_connection']);
+      final event = live.sink.sent.singleWhere((e) => e.$2['step'] == 'check_timeout');
+      expect(event.$2, {'step': 'check_timeout', 'from': 'automations', 'why': 'no_connection'});
+    });
+
+    testWidgets('connected, Zigbee2MQTT silent: no info, with the base topic', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.text("Zigbee2MQTT isn't answering"), findsOneWidget);
+      expect(find.textContaining('"home/z2m"'), findsOneWidget);
+      expect(find.text('Broker settings'), findsOneWidget);
+      expect(live.timeouts(), ['no_info']);
+    });
+
+    testWidgets('bridge/info without extensions: no extensions, Try again only', (tester) async {
+      final live = await _pumpLive(tester, first: _noExtensions);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.text("Zigbee2MQTT didn't finish answering"), findsOneWidget);
+      expect(find.text('Try again'), findsOneWidget);
+      expect(find.text('Broker settings'), findsNothing);
+      expect(live.timeouts(), ['no_extensions']);
+      expect(live.sink.sent.singleWhere((e) => e.$2['step'] == 'check_timeout').$2['z2m'], '2.8');
+    });
+
+    testWidgets('a bare spinner (no manager yet) gives up too: no connection', (tester) async {
+      final live = await _pumpLive(tester);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      expect(live.timeouts(), ['no_connection']);
+    });
+
+    testWidgets('the hub answers after the message: the offer, no message', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+      live.now.add(const EngineView(phase: HubEnginePhase.notInstalled, hub: _hub, connected: true));
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing);
+      expect(find.byKey(const Key('engine-slim-card')), findsOneWidget);
+    });
+
+    testWidgets('an invalidate after the message hides it and waits 20 s again', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+      live.invalidate();
+      await tester.pump();
+      final view = live.container.read(engineViewProvider(_id));
+      expect(view.isLoading && view.hasValue, isTrue, reason: 'Riverpod keeps the old value while reloading');
+      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing);
+      expect(find.text('Checking your hub…'), findsOneWidget);
+      live.now.add(_silent);
+      await tester.pump(const Duration(seconds: 19));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+    });
+
+    testWidgets('Try again hides the message and waits 20 s again', (tester) async {
+      final live = await _pumpLive(tester, first: _noExtensions);
+      await tester.pump(const Duration(seconds: 21));
+      await tester.tap(find.byKey(const Key('engine-check-again')));
+      await tester.pump();
+      expect(live.builds, hasLength(2));
+      expect(find.byKey(const Key('engine-check-noExtensions')), findsNothing);
+      live.now.add(_noExtensions);
+      await tester.pump(const Duration(seconds: 19));
+      expect(find.byKey(const Key('engine-check-noExtensions')), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byKey(const Key('engine-check-noExtensions')), findsOneWidget);
+    });
+
+    testWidgets('a reload that never emits: no connection, not the kept value', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      await tester.pump(const Duration(seconds: 5));
+      live.invalidate();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 19));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing);
+      expect(live.timeouts(), ['no_connection']);
+    });
+
+    testWidgets('a view already live and checking before the screen: no info after 20 s', (tester) async {
+      final live = await _pumpLive(tester, before: (live) {
+        live.container.listen(engineViewProvider(_id), (_, __) {});
+        live.now.add(_silent);
+      });
+      expect(live.builds, hasLength(1));
+      await tester.pump(const Duration(seconds: 19));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+    });
+
+    testWidgets('two Try agains with the same outcome: one check_timeout', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      for (var i = 0; i < 2; i++) {
+        await tester.pump(const Duration(seconds: 21));
+        expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+        await tester.tap(find.byKey(const Key('engine-check-again')));
+        await tester.pump();
+        live.now.add(_silent);
+      }
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+      expect(live.timeouts(), ['no_info']);
+    });
+
+    testWidgets('busy during the 20 s: the message after busy ends, if still checking', (tester) async {
+      // Zigbee2MQTT answers the install when the test says: busy until
+      // then. The 20 s run out meanwhile: the message right after.
+      final answer = Completer<(HubAnswer, String?)>();
+      final live = await _pumpLive(tester,
+          first: const EngineView(phase: HubEnginePhase.paused, hub: _hub, connected: true),
+          installer: (link) => _SlowInstaller(link, answer.future));
+      await tester.tap(find.text('Reinstall on hub'));
+      await tester.pump();
+      live.now.add(_silent);
+      await tester.pump();
+      expect(find.text('Installing on your hub…'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noInfo')), findsNothing, reason: 'busy at 20 s');
+      expect(live.timeouts(), isEmpty);
+      await tester.pump(const Duration(seconds: 9));
+      answer.complete((HubAnswer.refused, 'busy'));
+      await tester.pump();
+      expect(find.text('Installing on your hub…'), findsNothing, reason: 'Zigbee2MQTT answered at 30 s');
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget, reason: 'the 20 s ran out meanwhile');
+      expect(find.textContaining('busy'), findsOneWidget, reason: "the install's own error shows too");
+      expect(live.timeouts(), ['no_info']);
+    });
+    testWidgets('why moves on while the message shows: no connection, no info, no extensions', (tester) async {
+      final live = await _pumpLive(tester, first: _checking);
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      live.now.add(_silent);
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('engine-check-noConnection')), findsNothing);
+      expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget);
+      live.now.add(_noExtensions);
+      await tester.pump();
+      await tester.pump();
+      expect(find.byKey(const Key('engine-check-noExtensions')), findsOneWidget);
+      live.now.add(_noExtensions);
+      await tester.pump();
+      await tester.pump();
+      expect(live.timeouts(), ['no_connection', 'no_info', 'no_extensions']);
+      final last = live.sink.sent.lastWhere((e) => e.$2['step'] == 'check_timeout').$2;
+      expect(last['z2m'], '2.8');
+    });
+
+    testWidgets('Try again on no connection connects now; the manager is kept', (tester) async {
+      final live = await _pumpLive(tester, first: _checking);
+      await tester.pump(const Duration(seconds: 21));
+      expect(live.managerBuilds, 1);
+      await tester.tap(find.byKey(const Key('engine-check-again')));
+      await tester.pump();
+      expect(live.manager.reconnects, 1);
+      expect(live.managerBuilds, 1, reason: 'not invalidated');
+      expect(live.builds, hasLength(2));
+    });
+
+    testWidgets('Try again on no info only looks again', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      await tester.pump(const Duration(seconds: 21));
+      await tester.tap(find.byKey(const Key('engine-check-again')));
+      await tester.pump();
+      expect(live.manager.reconnects, 0);
+      expect(live.builds, hasLength(2));
+    });
+
+    testWidgets('an error carrying the old value is not fresh: no connection', (tester) async {
+      final live = await _pumpLive(tester, first: _silent);
+      live.invalidate();
+      await tester.pump();
+      live.now.addError(StateError('broker gone'));
+      await tester.pump();
+      expect(live.container.read(engineViewProvider(_id)).valueOrNull?.connected, isTrue,
+          reason: 'Riverpod keeps the old value with the error');
+      await tester.pump(const Duration(seconds: 21));
+      expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
+      expect(live.timeouts(), ['no_connection']);
+    });
+  });
+
+  // 3.8.8: the real view over a hub with external JS off (Zigbee2MQTT
+  // 2.11+ fresh installs): no bridge/extensions ever, so consent at once.
+  testWidgets('external JS off, real view: the consent screen with no 20 s wait', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    final sink = _Sink();
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(p),
+        analyticsProvider.overrideWithValue(Analytics(sink, enabled: true)),
+        connectionRepoProvider.overrideWithValue(NoHomeRepo()),
+        homeBaseTopicProvider.overrideWith((ref, _) => 'zigbee2mqtt'),
+        mqttManagerProvider.overrideWith(
+            (ref, _) async => FakeHubManager(MqttStatus.connected, retained: externalJsOff)),
+        engineInstallerProvider.overrideWith((ref, _) async => EngineInstaller(FakeLink(), base: 'zigbee2mqtt')),
+        engineSourceProvider.overrideWith((ref) async => "const ENGINE_VERSION = '3.0.0';"),
+        automationsProvider.overrideWith((ref, _) => Stream.value(const [])),
+        automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
+        alertsConfigProvider.overrideWith((ref, _) => Stream.value(null)),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const AutomationsScreen(connectionId: _id),
+      ),
+    ));
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('Zigbee2MQTT needs one setting changed'), findsOneWidget);
+    expect(find.byKey(const Key('engine-consent')), findsOneWidget);
+    expect(find.text('Checking your hub…'), findsNothing);
+    final steps = [for (final (name, props) in sink.sent) if (name == 'engine_setup') props['step']];
+    expect(steps, ['consent_shown']);
+    // Unmounted before the view's 15 s ticker matters.
+    await tester.pumpWidget(const SizedBox());
   });
 }

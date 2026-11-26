@@ -1,6 +1,2 @@
-• Turn on History right after setup: temperatures, power and doors over days, recorded on your hub even when your phone is off.
-• Moving from ZHA: setup notices when your Zigbee runs in ZHA and shows how to move to Zigbee2MQTT.
-• Encrypted brokers (TLS and WSS) connect, and a certificate your iPhone doesn't trust is named as such.
-• Make an automation first: when you save it, ZigDash puts its Engine on your hub to run it.
-• Scenes can include the tiles you built yourself, and your own switch tiles look like device tiles.
-• Many setup fixes for Home Assistant and the Zigbee2MQTT page.
+• Automations no longer get stuck on "Checking your hub…": on a new Zigbee2MQTT with add-ons off, ZigDash asks to allow them, and if the hub doesn't answer it says why after 20 seconds.
+• Changing a Home's broker address or password reconnects right away.

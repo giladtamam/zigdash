@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cómo sustituí mi suscripción de PalGate por un relé Zigbee de $10 · ZigDash</title>
-<meta name="description" content="Mi portón se abría con un PalGate Spider-50 por ₪300 al año. Lo cambié por un relé Zigbee de contacto seco de $10, un único pago, y ahora abro el portón desde ZigDash, en casa y desde cualquier lugar. Material, cableado y emparejamiento.">
+<title>Cómo sustituí mi PalGate por un relé Zigbee de $10 · ZigDash</title>
+<meta name="description" content="Mi portón se abría con un PalGate Spider-50, un controlador 4G que cuesta unos ₪770 más una SIM de datos. Lo cambié por un relé Zigbee de contacto seco de $10, un único pago, y ahora abro el portón desde ZigDash, en casa y desde cualquier lugar. Material, cableado y emparejamiento.">
 <link rel="canonical" href="https://zigdash.app/gate/es/">
 <link rel="alternate" hreflang="en" href="https://zigdash.app/gate/">
 <link rel="alternate" hreflang="cs" href="https://zigdash.app/gate/cs/">
@@ -21,8 +21,8 @@
 <link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/">
 <link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/">
 <link rel="icon" href="../../assets/icon.png">
-<meta property="og:title" content="Cómo sustituí mi suscripción de PalGate por un relé Zigbee de $10">
-<meta property="og:description" content="₪300 al año por un abridor de portón, o $10 una sola vez. Material, cableado y emparejamiento, con la app ZigDash.">
+<meta property="og:title" content="Cómo sustituí mi PalGate por un relé Zigbee de $10">
+<meta property="og:description" content="Unos ₪770 por un controlador de portón 4G y su SIM, o $10 una sola vez por un relé Zigbee. Material, cableado y emparejamiento, con la app ZigDash.">
 <meta property="og:url" content="https://zigdash.app/gate/es/">
 <meta property="og:image" content="https://zigdash.app/assets/gate/zigbee-relay.jpg">
 <link rel="stylesheet" href="../../assets/site.css">
@@ -40,12 +40,12 @@
 </header>
 <main>
 <article class="doc">
-<h1>Cómo sustituí mi suscripción de PalGate por un relé Zigbee de $10</h1>
+<h1>Cómo sustituí mi PalGate por un relé Zigbee de $10</h1>
 <p class="byline">Gilad Tamam, el desarrollador de ZigDash · 18 de noviembre de 2026</p>
 <p class="byline">También en: <a href="../" hreflang="en" lang="en">English</a> · <a href="../cs/" hreflang="cs" lang="cs">Čeština</a> · <a href="../de/" hreflang="de" lang="de">Deutsch</a> · <a href="../fr/" hreflang="fr" lang="fr">Français</a> · <a href="../he/" hreflang="he" lang="he">עברית</a> · <a href="../it/" hreflang="it" lang="it">Italiano</a> · <a href="../nb/" hreflang="nb" lang="nb">Norsk</a> · <a href="../nl/" hreflang="nl" lang="nl">Nederlands</a> · <a href="../pl/" hreflang="pl" lang="pl">Polski</a> · <a href="../pt/" hreflang="pt" lang="pt">Português</a> · <a href="../ru/" hreflang="ru" lang="ru">Русский</a> · <a href="../sv/" hreflang="sv" lang="sv">Svenska</a></p>
-<p class="lead">El portón de mi entrada se abría desde el móvil con un PalGate Spider-50: una caja 4G con su propia tarjeta SIM y una suscripción de ₪300 al año. La quité y puse un relé Zigbee que costó $10 (unos ₪37), una sola vez. Ahora abro el portón desde un mosaico en ZigDash, en casa y desde cualquier lugar.</p>
+<p class="lead">El portón de mi entrada se abría desde el móvil con un PalGate Spider-50: una caja 4G con su propia tarjeta SIM, que necesita un plan de datos. La quité y puse un relé Zigbee que costó $10 (unos ₪37), una sola vez. Ahora abro el portón desde un mosaico en ZigDash, en casa y desde cualquier lugar.</p>
 
-<p class="cost"><strong>₪300 cada año</strong> por la suscripción, o <strong>unos ₪37 una sola vez</strong> por el relé. El relé se pagó solo en unas seis semanas.</p>
+<p class="cost"><strong>Unos ₪770</strong> por un Spider-50 nuevo en tiendas de Israel, más una SIM de datos que hay que ir renovando, o <strong>unos ₪37 una sola vez</strong> por el relé, en el hub Zigbee que ya tienes.</p>
 
 <div class="toc"><strong>En esta página</strong>
 <ul>
@@ -60,7 +60,7 @@
 
 <h2 id="how">Cómo abre un móvil un portón</h2>
 <p>La centralita de un portón tiene una entrada de <strong>apertura</strong> (o de marcha): dos bornes que abren el portón cuando se conectan entre sí, igual que el botón de un mando a distancia del portón. El Spider es un relé con tarjeta SIM. Cuando la app de PalGate o una llamada se lo piden, conecta esos dos bornes durante un momento.</p>
-<p>Un relé Zigbee hace el mismo trabajo. La única diferencia es quién le dice que cierre: tu propio hub Zigbee en casa, en lugar de un servicio móvil que pagas cada año.</p>
+<p>Un relé Zigbee hace el mismo trabajo. La única diferencia es quién le dice que cierre: tu propio hub Zigbee en casa, en lugar de una SIM móvil que tienes que seguir pagando.</p>
 
 <div class="photos">
   <figure><img src="../../assets/gate/spider.jpg" alt="La caja PalGate Spider-50 en una mano, junto a la centralita del portón" loading="lazy" width="675" height="900"><figcaption>El PalGate Spider-50 que quité.</figcaption></figure>
@@ -72,7 +72,7 @@
   <li><strong>Un relé Zigbee de contacto seco.</strong> El mío es un "1 channel Zigbee/WiFi Tuya smart relay, dry contact NO/NC/COM" de AliExpress, de unos $10. Se vende en versión WiFi y en versión Zigbee: elige <strong>Zigbee</strong> (la placa lleva un módulo ZT3L). También se vende para distintas tensiones de alimentación; yo cogí la de <strong>AC 85–250V</strong>.</li>
   <li><strong>Lo importante es el contacto seco.</strong> Un contacto seco es un simple interruptor sin tensión propia: solo conecta COM con NO, exactamente como el botón de un mando. Un relé que saca tensión por sus bornes (el tipo pensado para encender una lámpara) puede dañar la entrada de la centralita del portón. Busca "dry contact" y bornes marcados <strong>COM</strong>, <strong>NO</strong> y <strong>NC</strong>.</li>
   <li><strong>Un hub Zigbee2MQTT en casa</strong> que llegue hasta el portón. Yo ya tenía uno (un SMLIGHT SMHUB) para el resto de la casa. Si no lo tienes, consulta <a href="../../hubs/">Hubs</a>.</li>
-  <li><strong>ZigDash</strong> en tu móvil (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a>). Abrir el portón en casa es gratis. Abrirlo desde cualquier lugar usa el control remoto de ZigDash Pro: una compra única, sin suscripción.</li>
+  <li><strong>ZigDash</strong> en tu móvil (<a href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate">Google Play</a> o <a href="https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829">App Store</a>). Abrir el portón en casa es gratis. Abrirlo desde cualquier lugar usa el control remoto de ZigDash Pro: una compra única, sin suscripción.</li>
 </ul>
 
 <figure><img src="../../assets/gate/zigbee-relay.jpg" alt="La placa del relé Zigbee: bornes de alimentación a la izquierda, el módulo Zigbee ZT3L en el centro, el relé y sus bornes COM/NO/NC a la derecha" loading="lazy" width="675" height="900"><figcaption>El relé Zigbee fuera de su caja: la alimentación a la izquierda, el módulo Zigbee ZT3L, el botón de emparejamiento y los bornes de contacto seco del relé a la derecha.</figcaption></figure>
@@ -117,7 +117,7 @@
 <table class="even">
   <thead><tr><th></th><th>PalGate Spider</th><th>Relé Zigbee + ZigDash</th></tr></thead>
   <tbody>
-    <tr><th>Coste</th><td>₪300 al año (mi plan)</td><td>Unos ₪37 una sola vez; el control remoto es una compra única de ZigDash Pro</td></tr>
+    <tr><th>Coste</th><td>Unos ₪770 nuevo (precio de tienda), más una SIM de datos</td><td>Unos ₪37 una sola vez; el control remoto es una compra única de ZigDash Pro</td></tr>
     <tr><th>Conexión</th><td>Su propia SIM 4G: funciona aunque la casa no tenga internet</td><td>Tu hub Zigbee en casa; fuera de casa necesita el internet de casa</td></tr>
     <tr><th>Quién puede abrir</th><td>Usuarios e invitados gestionados en la app de PalGate, y apertura con una llamada</td><td>Los móviles con los que compartes la casa (hasta cinco en remoto)</td></tr>
     <tr><th>Nube</th><td>El servicio de PalGate</td><td>Ninguna en casa; en remoto pasa por el servidor de retransmisión de ZigDash, con cifrado de extremo a extremo</td></tr>
@@ -126,11 +126,11 @@
 </div>
 <p>Para una casa particular donde la familia abre un portón, el relé hace todo lo que yo necesitaba. Para un edificio con muchos vecinos y visitantes, un servicio gestionado como PalGate sigue teniendo sentido.</p>
 
-<div class="tip">PalGate es una marca de su propietario. ZigDash no está afiliado a PalGate ni a PAL Electronics Systems. Los precios son los que pagué en noviembre de 2026.</div>
+<div class="tip">PalGate es una marca de su propietario. ZigDash no está afiliado a PalGate ni a PAL Electronics Systems. El precio de PalGate es un precio de tienda en Israel en noviembre de 2026; el del relé es lo que pagué.</div>
 
 <div class="tip"><strong>¿Tú también lo has hecho?</strong> Cuéntame cómo te fue, o qué era distinto en tu portón: <a href="mailto:support@zigdash.app">support@zigdash.app</a> o <a href="https://t.me/zigdash_app">la comunidad</a>.</div>
 
-<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Descargar ZigDash</a><a class="btn" href="../../hubs/">Elegir un hub</a></div>
+<div class="next"><a class="btn primary" href="https://play.google.com/store/apps/details?id=com.giladtamam.zigdash&amp;referrer=utm_source%3Dzigdash.app%26utm_medium%3Dsite%26utm_campaign%3Dgate" data-goatcounter-click="play-gate">Descargar ZigDash</a><a class="btn" href="https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829" data-goatcounter-click="appstore-gate-es">App Store</a><a class="btn" href="../../hubs/">Elegir un hub</a></div>
 </article>
 </main>
 <footer>

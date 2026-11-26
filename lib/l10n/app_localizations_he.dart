@@ -4489,6 +4489,37 @@ class AppLocalizationsHe extends AppLocalizations {
       'ZigDash לא מצליח להגיע כרגע לברוקר של הבית הזה. אוטומציות מגדירים בבית, עם חיבור.';
 
   @override
+  String get engineCheckNoBrokerTitle => 'אי אפשר להגיע לברוקר של הרכזת';
+
+  @override
+  String get engineCheckNoBrokerBody =>
+      'ZigDash לא מצליח להתחבר לברוקר. אתם מחוברים ל-Wi-Fi של הבית? מחוץ לבית, אוטומציות צריכות שליטה מרחוק.';
+
+  @override
+  String get engineCheckNoZ2mTitle => 'Zigbee2MQTT לא עונה';
+
+  @override
+  String engineCheckNoZ2mBody(String base) {
+    return 'ZigDash מחובר לברוקר, אבל לא שומע כלום מ-Zigbee2MQTT ב-\"$base\". בדקו ש-Zigbee2MQTT רץ ומשתמש בברוקר הזה, ואז הפעילו אותו מחדש.';
+  }
+
+  @override
+  String get engineCheckNoExtensionsTitle => 'Zigbee2MQTT לא סיים לענות';
+
+  @override
+  String get engineCheckNoExtensionsBody =>
+      'הפעילו מחדש את Zigbee2MQTT ונסו שוב. אם זה קורה שוב, עדכנו את Zigbee2MQTT.';
+
+  @override
+  String get engineCheckNoAnswerTitle => 'הרכזת לא ענתה';
+
+  @override
+  String get engineCheckNoAnswerBody => 'הפעילו מחדש את Zigbee2MQTT ונסו שוב.';
+
+  @override
+  String get engineCheckBrokerSettings => 'הגדרות ברוקר';
+
+  @override
   String get engineRestarting =>
       'מפעיל מחדש את Zigbee2MQTT… המכשירים יחזרו בעוד כ־30 שניות.';
 

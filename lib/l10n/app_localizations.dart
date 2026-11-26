@@ -7968,6 +7968,60 @@ abstract class AppLocalizations {
   /// **'ZigDash can\'t reach this Home\'s broker right now. Automations are set up while connected at home.'**
   String get engineNoConnection;
 
+  /// No description provided for @engineCheckNoBrokerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach your hub\'s broker'**
+  String get engineCheckNoBrokerTitle;
+
+  /// No description provided for @engineCheckNoBrokerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash can\'t connect to your broker. Are you on your home Wi-Fi? Away from home, Automations need Remote control.'**
+  String get engineCheckNoBrokerBody;
+
+  /// No description provided for @engineCheckNoZ2mTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT isn\'t answering'**
+  String get engineCheckNoZ2mTitle;
+
+  /// No description provided for @engineCheckNoZ2mBody.
+  ///
+  /// In en, this message translates to:
+  /// **'ZigDash is connected to your broker but hears nothing from Zigbee2MQTT on \"{base}\". Check that Zigbee2MQTT is running and uses this broker, then restart it.'**
+  String engineCheckNoZ2mBody(String base);
+
+  /// No description provided for @engineCheckNoExtensionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zigbee2MQTT didn\'t finish answering'**
+  String get engineCheckNoExtensionsTitle;
+
+  /// No description provided for @engineCheckNoExtensionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Zigbee2MQTT, then try again. If it happens again, update Zigbee2MQTT.'**
+  String get engineCheckNoExtensionsBody;
+
+  /// No description provided for @engineCheckNoAnswerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hub didn\'t answer'**
+  String get engineCheckNoAnswerTitle;
+
+  /// No description provided for @engineCheckNoAnswerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Zigbee2MQTT, then try again.'**
+  String get engineCheckNoAnswerBody;
+
+  /// No description provided for @engineCheckBrokerSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Broker settings'**
+  String get engineCheckBrokerSettings;
+
   /// No description provided for @engineRestarting.
   ///
   /// In en, this message translates to:

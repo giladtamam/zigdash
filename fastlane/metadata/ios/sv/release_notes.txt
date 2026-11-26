@@ -1,6 +1,2 @@
-• Slå på historik direkt efter installationen: temperaturer, ström och dörrar över flera dagar, sparade på hubben även när telefonen är avstängd.
-• Byta från ZHA: installationen märker när din Zigbee körs i ZHA och visar hur du byter till Zigbee2MQTT.
-• Krypterade mäklare (TLS och WSS) ansluter, och ett certifikat som din iPhone inte litar på kallas just det.
-• Gör en automation först: när du sparar den lägger ZigDash sin Engine på hubben.
-• Scener kan innehålla dina egna rutor, och dina egna brytare ser ut som enhetsrutor.
-• Många rättningar i installationen med Home Assistant och Zigbee2MQTT-sidan.
+• Automationer fastnar inte längre på ”Kontrollerar hubben…”: på en ny Zigbee2MQTT med tillägg avstängda ber ZigDash dig tillåta dem, och om hubben inte svarar säger den varför efter 20 sekunder.
+• När du ändrar mäklaradressen eller lösenordet för ett hem ansluter den igen direkt.

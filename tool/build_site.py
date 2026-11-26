@@ -4,6 +4,7 @@ Run from the repo root: python3 tool/build_site.py. The home page, landing/index
 import pathlib
 
 PLAY = "https://play.google.com/store/apps/details?id=com.giladtamam.zigdash"
+APP_STORE = "https://apps.apple.com/app/zigdash-for-zigbee2mqtt/id6829857829"
 # GoatCounter: page views and referrers, no cookies. Dashboard at zigdash.goatcounter.com.
 GOATCOUNTER = '<script data-goatcounter="https://zigdash.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>'
 
@@ -69,10 +70,10 @@ SETUP = f"""
 <ul>
   <li><strong>Zigbee2MQTT</strong>, running, with at least one device paired.</li>
   <li><strong>An MQTT broker</strong> that Zigbee2MQTT uses, usually Mosquitto. It can run on Home Assistant, a Raspberry Pi, a server or an SMLIGHT hub. No hub yet? See <a href="../hubs/">the hubs we recommend</a>.</li>
-  <li><strong>An Android phone or tablet</strong> on the same Wi-Fi as that hub.</li>
+  <li><strong>An Android phone or tablet, or an iPhone or iPad</strong>, on the same Wi-Fi as that hub.</li>
 </ul>
 <p>No Zigbee2MQTT yet? Open ZigDash and try the demo home first.</p>
-<div class="buttons" style="justify-content:flex-start"><a class="btn primary" href="{PLAY}" data-goatcounter-click="play-setup">Get ZigDash on Google Play</a></div>
+<div class="buttons" style="justify-content:flex-start"><a class="btn primary" href="{PLAY}" data-goatcounter-click="play-setup">Get ZigDash on Google Play</a> <a class="btn" href="{APP_STORE}" data-goatcounter-click="appstore-setup">Download on the App Store</a></div>
 
 <figure class="video">
   <video controls preload="none" poster="../assets/setup-video.jpg" width="1920" height="1080">

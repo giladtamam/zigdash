@@ -211,11 +211,14 @@ abstract final class EngineHealth {
       if (at != null && now.difference(at) > staleReport) return HubEnginePhase.paused;
       return HubEnginePhase.running;
     }
-    if (hub == null || extensions == null) return HubEnginePhase.checking;
+    if (hub == null) return HubEnginePhase.checking;
     if (!hub.versionSupported) return HubEnginePhase.tooOld;
-    if (!extensions.contains(engineExtensionName)) {
-      return hub.externalJsAllowed ? HubEnginePhase.notInstalled : HubEnginePhase.needsConsent;
-    }
+    // 3.8.8: with external JS off, Zigbee2MQTT never loads its extensions,
+    // so `bridge/extensions` never comes and the Engine never runs, whatever
+    // a retained, older extensions list says: the consent screen, not a wait.
+    if (!hub.externalJsAllowed) return HubEnginePhase.needsConsent;
+    if (extensions == null) return HubEnginePhase.checking;
+    if (!extensions.contains(engineExtensionName)) return HubEnginePhase.notInstalled;
     if (report == null || lastHeardAt == null) return HubEnginePhase.paused;
     if (report.stoppedSelf) return HubEnginePhase.stoppedSelf;
     if (now.difference(lastHeardAt) > pausedAfter) return HubEnginePhase.paused;

@@ -4535,6 +4535,38 @@ class AppLocalizationsRu extends AppLocalizations {
       'ZigDash сейчас не может связаться с брокером этого дома. Автоматизации настраиваются дома, при подключении.';
 
   @override
+  String get engineCheckNoBrokerTitle => 'Не удаётся связаться с брокером хаба';
+
+  @override
+  String get engineCheckNoBrokerBody =>
+      'ZigDash не может подключиться к вашему брокеру. Вы в домашнем Wi-Fi? Вне дома для автоматизаций нужно удалённое управление.';
+
+  @override
+  String get engineCheckNoZ2mTitle => 'Zigbee2MQTT не отвечает';
+
+  @override
+  String engineCheckNoZ2mBody(String base) {
+    return 'ZigDash подключён к вашему брокеру, но ничего не слышит от Zigbee2MQTT на «$base». Проверьте, что Zigbee2MQTT запущен и использует этот брокер, затем перезапустите его.';
+  }
+
+  @override
+  String get engineCheckNoExtensionsTitle => 'Zigbee2MQTT не закончил ответ';
+
+  @override
+  String get engineCheckNoExtensionsBody =>
+      'Перезапустите Zigbee2MQTT и попробуйте снова. Если это повторится, обновите Zigbee2MQTT.';
+
+  @override
+  String get engineCheckNoAnswerTitle => 'Хаб не ответил';
+
+  @override
+  String get engineCheckNoAnswerBody =>
+      'Перезапустите Zigbee2MQTT и попробуйте снова.';
+
+  @override
+  String get engineCheckBrokerSettings => 'Настройки брокера';
+
+  @override
   String get engineRestarting =>
       'Перезапуск Zigbee2MQTT… Устройства вернутся примерно через 30 секунд.';
 

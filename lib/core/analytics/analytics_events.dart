@@ -1448,6 +1448,10 @@ enum EngineStep {
 
   /// 3.6.2: an Install button was tapped (offered → tapped → installed).
   installTapped,
+
+  /// 3.8.8: the hub check on the Automations screen gave up after 20 s,
+  /// with why.
+  checkTimeout,
 }
 
 /// Which screen led to the Engine: Automations, Alerts or History; from
@@ -1484,7 +1488,7 @@ class EngineEvent extends AnalyticsEvent {
   final String? z2m;
   final EngineFrom from;
 
-  /// 3.6.2: why a `failed` failed.
+  /// 3.6.2: why a `failed` failed; 3.8.8: why a `check_timeout` gave up.
   final EngineWhy? why;
 
   @override
