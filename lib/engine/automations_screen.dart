@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,7 @@ import '../features/pro/pro_screen.dart';
 import '../core/analytics/analytics.dart';
 import '../alerts/alerts_hint_card.dart';
 import '../features/home/home_shell.dart' show HomeTitle, SettingsAction;
+import '../features/devices/devices_providers.dart' show homeBaseTopicProvider;
 import 'automation.dart';
 import 'automation_editor_screen.dart';
 import 'automation_text.dart';
@@ -19,6 +22,7 @@ import 'engine_sheet.dart';
 import '../features/history/history_setup_flow.dart' show allowEngineAndRestart, installEngineOn;
 import '../features/pro/pro_trial.dart' show ProTrialUse, proAccessProvider, proTrialProvider;
 import 'engine_providers.dart';
+import 'engine_setup.dart' show engineCheckWait, engineWhy;
 import 'engine_status.dart';
 
 /// The Automations screen (zigdash-3.0.md §1, §2). Phase 1: the Engine's
@@ -46,16 +50,103 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   /// 3.6.2: the rules for the switches before an install, from the start.
   late final WaitingRulesWatch _rules;
 
+  /// 3.8.8: the hub check gives up after [engineCheckWait], like
+  /// [ensureEngine], instead of "Checking your hub…" with no end.
+  Timer? _checkTimer;
+
+  /// The check gave up; [_why] says why, until fresh data past checking.
+  bool _timedOut = false;
+  EngineWhy? _why;
+
+  /// The last view from the live check (never one Riverpod kept from
+  /// before a reload): what decides [_why].
+  EngineView? _lastFresh;
+
+  /// The 20 s ran out while installing or restarting: wait again after.
+  bool _checkAfterBusy = false;
+
+  /// `check_timeout` once per visit per why.
+  final _timeoutsSent = <EngineWhy>{};
+
   @override
   void initState() {
     super.initState();
     _rules = WaitingRulesWatch(ref, widget.connectionId);
+    // The dashboard may already keep the view alive, and ref.listen doesn't
+    // hear the state it starts from.
+    final now = ref.read(engineViewProvider(widget.connectionId));
+    if (!now.isLoading && now.hasValue) _lastFresh = now.value;
+    if (_stillChecking(now)) _startCheck();
   }
 
   @override
   void dispose() {
+    _checkTimer?.cancel();
     _rules.close();
     super.dispose();
+  }
+
+  bool _stillChecking(AsyncValue<EngineView> v) =>
+      v.isLoading || v.valueOrNull?.phase == HubEnginePhase.checking;
+
+  /// A fresh hub check: a new 20 s.
+  void _startCheck() {
+    _checkTimer?.cancel();
+    _checkAfterBusy = false;
+    _checkTimer = Timer(engineCheckWait, _checkRanOut);
+  }
+
+  void _checkRanOut() {
+    _checkTimer = null;
+    if (!mounted || !_stillChecking(ref.read(engineViewProvider(widget.connectionId)))) return;
+    if (_busy != _Busy.none) {
+      _checkAfterBusy = true;
+      return;
+    }
+    // A value from a manager that went away never decides why: null is no
+    // connection.
+    final why = engineWhy((view: null, last: _lastFresh));
+    setState(() {
+      _timedOut = true;
+      _why = why;
+    });
+    // Zigbee2MQTT's version from the same view as why.
+    if (_timeoutsSent.add(why)) {
+      ref.read(analyticsProvider).track(EngineEvent(EngineStep.checkTimeout, z2m: _lastFresh?.hub?.version, why: why));
+    }
+  }
+
+  /// Back from installing or restarting: a check that ran out meanwhile
+  /// waits once more.
+  void _idle() {
+    setState(() => _busy = _Busy.none);
+    if (_checkAfterBusy) _startCheck();
+  }
+
+  /// Hears every change of the view: a reload (after any invalidate) or a
+  /// phase that turns checking starts the 20 s again.
+  void _viewChanged(AsyncValue<EngineView>? prev, AsyncValue<EngineView> next) {
+    if (next.isLoading) {
+      _lastFresh = null;
+      if (_timedOut) setState(() => _timedOut = false);
+      _startCheck();
+      return;
+    }
+    final v = next.valueOrNull;
+    if (v == null) return;
+    _lastFresh = v;
+    if (v.phase != HubEnginePhase.checking) {
+      _checkTimer?.cancel();
+      _checkTimer = null;
+      _checkAfterBusy = false;
+      if (_timedOut) setState(() => _timedOut = false);
+      return;
+    }
+    final was = prev?.valueOrNull?.phase;
+    if (!(prev?.isLoading ?? true) && was != null && was != HubEnginePhase.checking) {
+      if (_timedOut) setState(() => _timedOut = false);
+      _startCheck();
+    }
   }
 
   /// Each phase worth counting, once per visit to this screen.
@@ -99,7 +190,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
     } catch (_) {
       if (mounted) setState(() => _error = l10n.engineInstallNoAnswer);
     } finally {
-      if (mounted) setState(() => _busy = _Busy.none);
+      if (mounted) _idle();
     }
   }
 
@@ -114,18 +205,14 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           await allowEngineAndRestart(ref, widget.connectionId, from: EngineFrom.automations);
       if (!mounted) return;
       if (answer != HubAnswer.ok) {
-        setState(() {
-          _busy = _Busy.none;
-          _error = l10n.engineConsentFailed;
-        });
+        setState(() => _error = l10n.engineConsentFailed);
+        _idle();
         return;
       }
     } catch (_) {
       if (mounted) {
-        setState(() {
-          _busy = _Busy.none;
-          _error = l10n.engineConsentFailed;
-        });
+        setState(() => _error = l10n.engineConsentFailed);
+        _idle();
       }
       return;
     }
@@ -236,6 +323,7 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    ref.listen(engineViewProvider(widget.connectionId), _viewChanged);
     final view = ref.watch(engineViewProvider(widget.connectionId));
     final installed = view.valueOrNull?.installed ?? false;
     final v = view.valueOrNull;
@@ -267,7 +355,14 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
           const SettingsAction(),
         ],
       ),
-      body: view.when(
+      // 3.8.8: before view.when, so a value kept through a reload never
+      // hides it.
+      body: _timedOut
+          ? ListView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+              children: _checkGaveUp(context, l10n, _why ?? EngineWhy.other),
+            )
+          : view.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, __) => _Message(title: l10n.engineChecking, body: l10n.engineNoConnection),
         data: (v) => ListView(
@@ -289,6 +384,40 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
         ),
       ),
     );
+  }
+
+  /// 3.8.8: the hub check ran out, by why. No host in the text: the
+  /// manager may be trying the remote address.
+  List<Widget> _checkGaveUp(BuildContext context, AppLocalizations l10n, EngineWhy why) {
+    final base = ref.read(homeBaseTopicProvider(widget.connectionId)) ?? 'zigbee2mqtt';
+    final (title, body, broker) = switch (why) {
+      EngineWhy.noConnection => (l10n.engineCheckNoBrokerTitle, l10n.engineCheckNoBrokerBody, true),
+      EngineWhy.noInfo => (l10n.engineCheckNoZ2mTitle, l10n.engineCheckNoZ2mBody(base), true),
+      EngineWhy.noExtensions => (l10n.engineCheckNoExtensionsTitle, l10n.engineCheckNoExtensionsBody, false),
+      _ => (l10n.engineCheckNoAnswerTitle, l10n.engineCheckNoAnswerBody, false),
+    };
+    return [
+      _Message(key: Key('engine-check-${why.name}'), title: title, body: body),
+      const SizedBox(height: 16),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          FilledButton(
+            key: const Key('engine-check-again'),
+            onPressed: () => ref.invalidate(engineViewProvider(widget.connectionId)),
+            child: Text(l10n.setupTryAgain),
+          ),
+          if (broker)
+            OutlinedButton.icon(
+              key: const Key('engine-check-broker'),
+              onPressed: () => context.push('/connections/${widget.connectionId}/edit'),
+              icon: const Icon(Icons.settings_ethernet),
+              label: Text(l10n.engineCheckBrokerSettings),
+            ),
+        ],
+      ),
+    ];
   }
 
   List<Widget> _body(BuildContext context, AppLocalizations l10n, EngineView v) {

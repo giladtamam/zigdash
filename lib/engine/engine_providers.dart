@@ -11,6 +11,7 @@ import '../features/devices/devices_providers.dart' show homeBaseTopicProvider;
 import '../features/settings/providers/settings_controller.dart' show sharedPreferencesProvider;
 import '../mqtt/endpoint.dart';
 import '../mqtt/mqtt_manager.dart';
+import '../mqtt/mqtt_status.dart';
 import '../mqtt/providers/mqtt_manager_provider.dart';
 import 'engine_installer.dart';
 import 'engine_status.dart';
@@ -58,6 +59,7 @@ class EngineView {
     this.declined = false,
     this.away = false,
     this.heardExtensions = false,
+    this.connected = false,
   });
 
   /// Reached through the relay (3.1.7): installing, reinstalling and
@@ -77,6 +79,11 @@ class EngineView {
   /// `bridge/extensions` arrived (3.6.2): with [hub], tells a hub check
   /// that timed out apart (no info, or info but no extensions).
   final bool heardExtensions;
+
+  /// 3.8.8: the Home's broker connection is up. A hub check that timed out
+  /// without it never reached Zigbee2MQTT at all (no connection, not no
+  /// info).
+  final bool connected;
 
   bool get installed =>
       phase == HubEnginePhase.running ||
@@ -107,6 +114,7 @@ final engineViewProvider =
   DateTime? heardAt;
   var clockOff = false;
   var updateTried = false;
+  var connected = mgr.status == MqttStatus.connected;
   final startedAt = DateTime.now();
   bool viaRelay() => mgr.activeEndpoint == MqttEndpoint.relay;
 
@@ -132,6 +140,7 @@ final engineViewProvider =
       declined: engineDeclined(prefs, connectionId),
       away: away,
       heardExtensions: extensions != null,
+      connected: connected,
     );
   }
   void emit() {
@@ -164,12 +173,20 @@ final engineViewProvider =
       emit();
     }),
   ];
+  // 3.8.8: whether the broker is connected, emitted only when it flips (a
+  // retrying connection doesn't re-save the Engine's state each time).
+  final statusSub = mgr.status$.listen((s) {
+    if ((s == MqttStatus.connected) == connected) return;
+    connected = s == MqttStatus.connected;
+    emit();
+  });
   final ticker = Timer.periodic(const Duration(seconds: 15), (_) => emit());
   // Through the relay, the wait for the Engine ends on time, not on a tick.
   final gaveUpTimer = Timer(relayWait + const Duration(milliseconds: 100), emit);
   ref.onDispose(() {
     ticker.cancel();
     gaveUpTimer.cancel();
+    unawaited(statusSub.cancel());
     for (final s in subs) {
       unawaited(s.cancel());
     }

@@ -4527,6 +4527,38 @@ class AppLocalizationsNb extends AppLocalizations {
       'ZigDash når ikke brokeren i dette hjemmet akkurat nå. Automasjoner settes opp hjemme, med tilkobling.';
 
   @override
+  String get engineCheckNoBrokerTitle => 'Megleren til huben kan ikke nås';
+
+  @override
+  String get engineCheckNoBrokerBody =>
+      'ZigDash får ikke koblet til megleren din. Er du på wifi hjemme? Borte fra hjemmet trenger automasjoner fjernstyring.';
+
+  @override
+  String get engineCheckNoZ2mTitle => 'Zigbee2MQTT svarer ikke';
+
+  @override
+  String engineCheckNoZ2mBody(String base) {
+    return 'ZigDash er koblet til megleren din, men hører ingenting fra Zigbee2MQTT på «$base». Sjekk at Zigbee2MQTT kjører og bruker denne megleren, og start det så på nytt.';
+  }
+
+  @override
+  String get engineCheckNoExtensionsTitle => 'Zigbee2MQTT svarte ikke ferdig';
+
+  @override
+  String get engineCheckNoExtensionsBody =>
+      'Start Zigbee2MQTT på nytt, og prøv igjen. Skjer det igjen, oppdater Zigbee2MQTT.';
+
+  @override
+  String get engineCheckNoAnswerTitle => 'Huben svarte ikke';
+
+  @override
+  String get engineCheckNoAnswerBody =>
+      'Start Zigbee2MQTT på nytt, og prøv igjen.';
+
+  @override
+  String get engineCheckBrokerSettings => 'Megler-innstillinger';
+
+  @override
   String get engineRestarting =>
       'Starter Zigbee2MQTT på nytt… Enhetene er tilbake om omtrent 30 sekunder.';
 

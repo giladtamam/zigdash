@@ -4545,6 +4545,40 @@ class AppLocalizationsNl extends AppLocalizations {
       'ZigDash bereikt de broker van dit huis nu niet. Automatiseringen stel je thuis in, met verbinding.';
 
   @override
+  String get engineCheckNoBrokerTitle =>
+      'De broker van je hub is niet bereikbaar';
+
+  @override
+  String get engineCheckNoBrokerBody =>
+      'ZigDash kan geen verbinding maken met je broker. Zit je op je wifi thuis? Buitenshuis hebben automatiseringen bediening op afstand nodig.';
+
+  @override
+  String get engineCheckNoZ2mTitle => 'Zigbee2MQTT antwoordt niet';
+
+  @override
+  String engineCheckNoZ2mBody(String base) {
+    return 'ZigDash is verbonden met je broker, maar hoort niets van Zigbee2MQTT op \"$base\". Controleer of Zigbee2MQTT draait en deze broker gebruikt, en herstart het dan.';
+  }
+
+  @override
+  String get engineCheckNoExtensionsTitle =>
+      'Zigbee2MQTT antwoordde niet volledig';
+
+  @override
+  String get engineCheckNoExtensionsBody =>
+      'Herstart Zigbee2MQTT en probeer het opnieuw. Gebeurt het weer, werk Zigbee2MQTT dan bij.';
+
+  @override
+  String get engineCheckNoAnswerTitle => 'Je hub antwoordde niet';
+
+  @override
+  String get engineCheckNoAnswerBody =>
+      'Herstart Zigbee2MQTT en probeer het opnieuw.';
+
+  @override
+  String get engineCheckBrokerSettings => 'Brokerinstellingen';
+
+  @override
   String get engineRestarting =>
       'Zigbee2MQTT herstart… Je apparaten zijn over ongeveer 30 seconden terug.';
 

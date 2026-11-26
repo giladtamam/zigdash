@@ -455,12 +455,11 @@ class _ConnectionFormScreenState extends ConsumerState<ConnectionFormScreen> {
             (_dashboardPrefix?.trim() ?? '').isEmpty) {
           await repo.setBaseTopic(widget.connectionId!, base);
         }
-        if (_fromPage) {
-          // The Home now goes through the broker: reconnect it, and let the
-          // Engine screens look again.
-          ref.invalidate(mqttManagerProvider(widget.connectionId!));
-          ref.invalidate(engineViewProvider(widget.connectionId!));
-        }
+        // 3.8.8: every edit reconnects with what was saved (a page Home now
+        // goes through the broker; a broker Home may have a new address,
+        // user or password), and the Engine screens look again.
+        ref.invalidate(mqttManagerProvider(widget.connectionId!));
+        ref.invalidate(engineViewProvider(widget.connectionId!));
       } else {
         final id = await repo.create(
           name: _name.text.trim(),

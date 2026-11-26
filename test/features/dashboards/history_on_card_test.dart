@@ -337,7 +337,7 @@ void main() {
     ) async {
       final rig = await silent(
         tester,
-        const EngineView(phase: HubEnginePhase.checking),
+        const EngineView(phase: HubEnginePhase.checking, connected: true),
       );
       expect(
         rig.sink.sent,
@@ -348,7 +348,11 @@ void main() {
     testWidgets('info without extensions: why no_extensions', (tester) async {
       final rig = await silent(
         tester,
-        const EngineView(phase: HubEnginePhase.checking, hub: _hub),
+        const EngineView(
+          phase: HubEnginePhase.checking,
+          hub: _hub,
+          connected: true,
+        ),
       );
       expect(
         rig.sink.sent,

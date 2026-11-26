@@ -614,14 +614,23 @@ void main() {
     }
 
     testWidgets('a silent hub: no_info', (tester) async {
-      final c = await check(tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking)));
+      final c = await check(
+          tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking, connected: true)));
       expect(c.view, isNull);
       expect(engineWhy(c), EngineWhy.noInfo);
     });
 
     testWidgets('bridge/info but no bridge/extensions: no_extensions', (tester) async {
-      final c = await check(tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking, hub: _hub)));
+      final c = await check(
+          tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking, hub: _hub, connected: true)));
       expect(engineWhy(c), EngineWhy.noExtensions);
+    });
+
+    // 3.8.8: a broker that never connected (the friend's case).
+    testWidgets('a broker never connected: no_connection', (tester) async {
+      final c = await check(tester, () => Stream.value(const EngineView(phase: HubEnginePhase.checking)));
+      expect(c.view, isNull);
+      expect(engineWhy(c), EngineWhy.noConnection);
     });
 
     testWidgets('through the relay: unreachable after 15 s, inside the wait: relay', (tester) async {
@@ -658,6 +667,20 @@ void main() {
       expect(installWhy(HubAnswer.refused), EngineWhy.refused);
       expect(installWhy(HubAnswer.noAnswer), EngineWhy.noAnswer);
       expect(engineWhy((view: null, last: null)), EngineWhy.noConnection);
+    });
+
+    // 3.8.8: why a timed-out check gave up, from the last view seen.
+    test('timed out: why from the last view', () {
+      EngineWhy why(EngineView? last) => engineWhy((view: null, last: last));
+      const checking = HubEnginePhase.checking;
+      expect(why(null), EngineWhy.noConnection);
+      expect(why(const EngineView(phase: checking)), EngineWhy.noConnection);
+      expect(why(const EngineView(phase: checking, connected: true)), EngineWhy.noInfo);
+      expect(why(const EngineView(phase: checking, hub: _hub, connected: true)), EngineWhy.noExtensions);
+      expect(why(const EngineView(phase: checking, hub: _hub, connected: true, heardExtensions: true)),
+          EngineWhy.other);
+      expect(why(const EngineView(phase: checking, away: true)), EngineWhy.relay);
+      expect(why(const EngineView(phase: checking, away: true, connected: true)), EngineWhy.relay);
     });
 
     test('the source link names a release tag, never main', () {

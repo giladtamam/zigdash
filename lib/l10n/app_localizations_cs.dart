@@ -4534,6 +4534,38 @@ class AppLocalizationsCs extends AppLocalizations {
       'ZigDash teď nedosáhne na broker této domácnosti. Automatizace se nastavují doma, s připojením.';
 
   @override
+  String get engineCheckNoBrokerTitle => 'Broker vašeho hubu není dostupný';
+
+  @override
+  String get engineCheckNoBrokerBody =>
+      'ZigDash se nemůže připojit k vašemu brokeru. Jste na domácí Wi-Fi? Mimo domov potřebují automatizace dálkové ovládání.';
+
+  @override
+  String get engineCheckNoZ2mTitle => 'Zigbee2MQTT neodpovídá';
+
+  @override
+  String engineCheckNoZ2mBody(String base) {
+    return 'ZigDash je připojen k vašemu brokeru, ale od Zigbee2MQTT na „$base“ nic neslyší. Zkontrolujte, že Zigbee2MQTT běží a používá tento broker, a pak ho restartujte.';
+  }
+
+  @override
+  String get engineCheckNoExtensionsTitle => 'Zigbee2MQTT nedokončil odpověď';
+
+  @override
+  String get engineCheckNoExtensionsBody =>
+      'Restartujte Zigbee2MQTT a zkuste to znovu. Pokud se to stane znovu, aktualizujte Zigbee2MQTT.';
+
+  @override
+  String get engineCheckNoAnswerTitle => 'Váš hub neodpověděl';
+
+  @override
+  String get engineCheckNoAnswerBody =>
+      'Restartujte Zigbee2MQTT a zkuste to znovu.';
+
+  @override
+  String get engineCheckBrokerSettings => 'Nastavení brokeru';
+
+  @override
   String get engineRestarting =>
       'Restart Zigbee2MQTT… Zařízení budou zpět asi za 30 sekund.';
 
