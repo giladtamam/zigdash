@@ -150,3 +150,7 @@ plan/388), version decided then; privacy check as above; read
 From 3.8.8, `history_setup` and `engine_setup` `why` values for a broker
 that never connected move from `no_info` to `no_connection`. Don't compare
 `why` counts across that version.
+
+From 3.8.8, hubs with external JS off go to consent (`engine_setup`
+`consent_shown`, `history_setup` why `blocked`) instead of timing out as
+`no_extensions`. Don't compare those counts across that version either.

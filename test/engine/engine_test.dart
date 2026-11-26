@@ -70,8 +70,8 @@ void main() {
       expect(phase(hub: off, ext: null), HubEnginePhase.needsConsent);
       expect(phase(hub: off), HubEnginePhase.needsConsent);
       expect(phase(hub: const HubInfo(version: '2.2.0', externalJsAllowed: false), ext: null), HubEnginePhase.tooOld);
-      expect(phase(hub: off, ext: const ['zigdash-engine.js'], r: report(), heard: now), HubEnginePhase.running,
-          reason: 'an Engine already there still counts');
+      expect(phase(hub: off, ext: const ['zigdash-engine.js'], r: report(), heard: now), HubEnginePhase.needsConsent,
+          reason: 'a retained extensions list never runs the Engine with external JS off');
     });
     test('too old below 2.4', () {
       expect(phase(hub: const HubInfo(version: '2.2.0', externalJsAllowed: true)), HubEnginePhase.tooOld);

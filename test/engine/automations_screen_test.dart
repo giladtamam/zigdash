@@ -20,7 +20,11 @@ import 'package:zigdash/mqtt/providers/mqtt_manager_provider.dart';
 import 'package:zigdash/data/database/tables/connections.dart' show MqttProtocol;
 import 'package:zigdash/l10n/app_localizations.dart';
 
+import 'package:zigdash/data/repositories/connection_repo.dart';
+import 'package:zigdash/mqtt/mqtt_status.dart';
+
 import 'engine_test.dart' show FakeLink;
+import 'engine_view_connected_test.dart' show FakeHubManager, NoHomeRepo, externalJsOff;
 
 const _id = 'home-1';
 
@@ -446,5 +450,43 @@ void main() {
       expect(find.byKey(const Key('engine-check-noConnection')), findsOneWidget);
       expect(live.timeouts(), ['no_connection']);
     });
+  });
+
+  // 3.8.8: the real view over a hub with external JS off (Zigbee2MQTT
+  // 2.11+ fresh installs): no bridge/extensions ever, so consent at once.
+  testWidgets('external JS off, real view: the consent screen with no 20 s wait', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final p = await SharedPreferences.getInstance();
+    final sink = _Sink();
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(p),
+        analyticsProvider.overrideWithValue(Analytics(sink, enabled: true)),
+        connectionRepoProvider.overrideWithValue(NoHomeRepo()),
+        homeBaseTopicProvider.overrideWith((ref, _) => 'zigbee2mqtt'),
+        mqttManagerProvider.overrideWith(
+            (ref, _) async => FakeHubManager(MqttStatus.connected, retained: externalJsOff)),
+        engineInstallerProvider.overrideWith((ref, _) async => EngineInstaller(FakeLink(), base: 'zigbee2mqtt')),
+        engineSourceProvider.overrideWith((ref) async => "const ENGINE_VERSION = '3.0.0';"),
+        automationsProvider.overrideWith((ref, _) => Stream.value(const [])),
+        automationRunsProvider.overrideWith((ref, _) => Stream.value(const [])),
+        alertsConfigProvider.overrideWith((ref, _) => Stream.value(null)),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const AutomationsScreen(connectionId: _id),
+      ),
+    ));
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('Zigbee2MQTT needs one setting changed'), findsOneWidget);
+    expect(find.byKey(const Key('engine-consent')), findsOneWidget);
+    expect(find.text('Checking your hub…'), findsNothing);
+    final steps = [for (final (name, props) in sink.sent) if (name == 'engine_setup') props['step']];
+    expect(steps, ['consent_shown']);
+    // Unmounted before the view's 15 s ticker matters.
+    await tester.pumpWidget(const SizedBox());
   });
 }
