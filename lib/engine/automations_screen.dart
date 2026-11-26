@@ -382,7 +382,14 @@ class _AutomationsScreenState extends ConsumerState<AutomationsScreen> {
       body: _timedOut
           ? ListView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-              children: _checkGaveUp(context, l10n, _why ?? EngineWhy.other),
+              children: [
+                ..._checkGaveUp(context, l10n, _why ?? EngineWhy.other),
+                // An install or restart that failed meanwhile says why too.
+                if (_error != null) ...[
+                  const SizedBox(height: 12),
+                  Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                ],
+              ],
             )
           : view.when(
         loading: () => const Center(child: CircularProgressIndicator()),

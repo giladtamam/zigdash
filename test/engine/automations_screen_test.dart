@@ -390,6 +390,7 @@ void main() {
       await tester.pump();
       expect(find.text('Installing on your hub…'), findsNothing, reason: 'Zigbee2MQTT answered at 30 s');
       expect(find.byKey(const Key('engine-check-noInfo')), findsOneWidget, reason: 'the 20 s ran out meanwhile');
+      expect(find.textContaining('busy'), findsOneWidget, reason: "the install's own error shows too");
       expect(live.timeouts(), ['no_info']);
     });
     testWidgets('why moves on while the message shows: no connection, no info, no extensions', (tester) async {
