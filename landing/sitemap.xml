@@ -576,4 +576,8 @@
     <xhtml:link rel="alternate" hreflang="sv" href="https://zigdash.app/gate/sv/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zigdash.app/gate/"/>
   </url>
+  <url>
+    <loc>https://zigdash.app/gate-opener/</loc>
+    <lastmod>2026-11-27</lastmod>
+  </url>
 </urlset>
