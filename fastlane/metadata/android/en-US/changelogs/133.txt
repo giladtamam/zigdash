@@ -1,0 +1,1 @@
+Removed the "Chat with your home" early-access card and its Settings row. ZigDash Chat stays in Settings › Home › Chat for Pro and founder's pass owners.

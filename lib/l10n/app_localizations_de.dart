@@ -5831,79 +5831,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'ZigDash Pro: längerer Verlauf, mehr Automationen und mehr.';
 
   @override
-  String get chatEarlyTitle => 'Mit deinem Zuhause chatten';
-
-  @override
-  String chatEarlyBody(int count) {
-    return 'Schreib etwa „Schließ den Rollladen im Büro“ oder „Ist die Hintertür offen?“, und dein Zuhause antwortet. Jetzt verfügbar für Besitzer von ZigDash Pro. Die ersten $count, die sich eintragen, bekommen einen Gründer-Code: 3 Monate kostenlos, Fernzugriff inklusive.';
-  }
-
-  @override
-  String get chatEarlyTelegram => 'Über Telegram eintragen';
-
-  @override
-  String get chatEarlyEmail => 'Per E-Mail eintragen';
-
-  @override
-  String get chatEarlyNotForMe => 'Nichts für mich';
-
-  @override
-  String get chatEarlyClose => 'Schließen';
-
-  @override
-  String get chatEarlyEmailHint => 'Deine E-Mail';
-
-  @override
-  String get chatEarlyBadEmail =>
-      'Das sieht nicht nach einer E-Mail-Adresse aus.';
-
-  @override
-  String get chatEarlyEmailUse =>
-      'Wir nutzen sie nur, um dich zur Beta einzuladen und dir den Preis zu nennen.';
-
-  @override
-  String get chatEarlyPrivacy => 'Datenschutz';
-
-  @override
-  String get chatEarlySend => 'Senden';
-
-  @override
-  String get chatEarlyFailed =>
-      'Senden fehlgeschlagen. Versuch es über Telegram oder später.';
-
-  @override
-  String chatEarlyInFirst(int position, int count) {
-    return 'Du bist Nr. $position auf der Liste: einer der ersten $count. Du bekommst einen Gründer-Code: Chat und Fernzugriff, 3 Monate kostenlos.';
-  }
-
-  @override
-  String chatEarlyAfterFirst(int position, int count) {
-    return 'Du bist Nr. $position auf der Liste. Die ersten $count Plätze sind vergeben. Chat gibt es jetzt für Besitzer von ZigDash Pro.';
-  }
-
-  @override
-  String get chatEarlyListed => 'Diese E-Mail steht schon auf der Liste.';
-
-  @override
-  String get chatEarlyPrice =>
-      'Wären nach den kostenlosen Monaten 2,49 € im Monat okay?';
-
-  @override
-  String get chatEarlyYes => 'Ja';
-
-  @override
-  String get chatEarlyMaybe => 'Vielleicht';
-
-  @override
-  String get chatEarlyNo => 'Nein';
-
-  @override
-  String get chatEarlyThanks => 'Danke, notiert.';
-
-  @override
-  String get settingsChatEarlySubtitle => 'Früher Zugang: auf die Liste';
-
-  @override
   String get historyOnTitle => 'Dein Zuhause über Tage sehen';
 
   @override
@@ -6149,19 +6076,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get chatAuditNotSent => 'nicht gesendet';
-
-  @override
-  String get chatHereTitle => 'Chat mit deinem Zuhause ist da';
-
-  @override
-  String get chatHereBody =>
-      'Verknüpfe dein Telegram-Konto und frag dein Zuhause „Ist die Hintertür offen?“ oder lass es einen Rollladen schließen. Teil von Pro, während der Beta kostenlos.';
-
-  @override
-  String get chatHereSetUp => 'Einrichten';
-
-  @override
-  String get chatHereNotNow => 'Nicht jetzt';
 
   @override
   String get chatLinkNew => 'Ein Telegram-Konto verknüpfen';

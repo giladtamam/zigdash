@@ -5795,78 +5795,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'ZigDash Pro: delší historie, více automatizací a ještě víc.';
 
   @override
-  String get chatEarlyTitle => 'Chatujte se svým domovem';
-
-  @override
-  String chatEarlyBody(int count) {
-    return 'Pošlete zprávu jako „zavři roletu v pracovně“ nebo „jsou zadní dveře otevřené?“ a domov odpoví. Už je k dispozici pro majitele ZigDash Pro. Prvních $count přihlášených dostane zakladatelský kód: 3 měsíce zdarma, včetně vzdáleného přístupu.';
-  }
-
-  @override
-  String get chatEarlyTelegram => 'Přihlásit přes Telegram';
-
-  @override
-  String get chatEarlyEmail => 'Přihlásit e-mailem';
-
-  @override
-  String get chatEarlyNotForMe => 'Není pro mě';
-
-  @override
-  String get chatEarlyClose => 'Zavřít';
-
-  @override
-  String get chatEarlyEmailHint => 'Váš e-mail';
-
-  @override
-  String get chatEarlyBadEmail => 'To nevypadá jako e-mailová adresa.';
-
-  @override
-  String get chatEarlyEmailUse =>
-      'Použijeme ho jen k pozvání do bety a sdělení ceny.';
-
-  @override
-  String get chatEarlyPrivacy => 'Ochrana soukromí';
-
-  @override
-  String get chatEarlySend => 'Odeslat';
-
-  @override
-  String get chatEarlyFailed =>
-      'Odeslání se nezdařilo. Zkuste Telegram nebo později.';
-
-  @override
-  String chatEarlyInFirst(int position, int count) {
-    return 'Jste č. $position na seznamu: mezi prvními $count. Dostanete zakladatelský kód: chat a vzdálený přístup, 3 měsíce zdarma.';
-  }
-
-  @override
-  String chatEarlyAfterFirst(int position, int count) {
-    return 'Jste č. $position na seznamu. Prvních $count míst je obsazeno. Chat je už k dispozici pro majitele ZigDash Pro.';
-  }
-
-  @override
-  String get chatEarlyListed => 'Tento e-mail už na seznamu je.';
-
-  @override
-  String get chatEarlyPrice =>
-      'Bylo by po bezplatných měsících v pořádku 2,49 € měsíčně?';
-
-  @override
-  String get chatEarlyYes => 'Ano';
-
-  @override
-  String get chatEarlyMaybe => 'Možná';
-
-  @override
-  String get chatEarlyNo => 'Ne';
-
-  @override
-  String get chatEarlyThanks => 'Díky, zaznamenáno.';
-
-  @override
-  String get settingsChatEarlySubtitle => 'Předběžný přístup: přihlásit se';
-
-  @override
   String get historyOnTitle => 'Sledujte domov v průběhu dní';
 
   @override
@@ -6110,19 +6038,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get chatAuditNotSent => 'neodesláno';
-
-  @override
-  String get chatHereTitle => 'Chat s vaší domácností je tady';
-
-  @override
-  String get chatHereBody =>
-      'Propojte svůj účet Telegram a zeptejte se domu „jsou zadní dveře otevřené?“ nebo ho požádejte, ať zavře roletu. Součást Pro, během bety zdarma.';
-
-  @override
-  String get chatHereSetUp => 'Nastavit';
-
-  @override
-  String get chatHereNotNow => 'Teď ne';
 
   @override
   String get chatLinkNew => 'Propojit účet Telegram';

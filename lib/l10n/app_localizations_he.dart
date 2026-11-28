@@ -5724,77 +5724,6 @@ class AppLocalizationsHe extends AppLocalizations {
       'ZigDash Pro: היסטוריה ארוכה יותר, יותר אוטומציות, ועוד.';
 
   @override
-  String get chatEarlyTitle => 'צ\'אט עם הבית';
-
-  @override
-  String chatEarlyBody(int count) {
-    return 'שלחו הודעה כמו \"תסגור את התריס במשרד\" או \"הדלת האחורית פתוחה?\" והבית עונה. זה כבר זמין לבעלי ZigDash Pro. $count הראשונים שנרשמים יקבלו קוד מייסדים: בחינם ל-3 חודשים, כולל גישה מרחוק.';
-  }
-
-  @override
-  String get chatEarlyTelegram => 'הרשמה בטלגרם';
-
-  @override
-  String get chatEarlyEmail => 'הרשמה במייל';
-
-  @override
-  String get chatEarlyNotForMe => 'לא בשבילי';
-
-  @override
-  String get chatEarlyClose => 'סגירה';
-
-  @override
-  String get chatEarlyEmailHint => 'המייל שלך';
-
-  @override
-  String get chatEarlyBadEmail => 'זה לא נראה כמו כתובת מייל.';
-
-  @override
-  String get chatEarlyEmailUse =>
-      'נשתמש בו רק כדי להזמין אותך לבטא ולספר לך את המחיר.';
-
-  @override
-  String get chatEarlyPrivacy => 'מדיניות פרטיות';
-
-  @override
-  String get chatEarlySend => 'שליחה';
-
-  @override
-  String get chatEarlyFailed => 'השליחה נכשלה. נסו בטלגרם, או מאוחר יותר.';
-
-  @override
-  String chatEarlyInFirst(int position, int count) {
-    return 'את/ה מספר $position ברשימה: מתוך $count הראשונים. תקבלו קוד מייסדים: צ\'אט וגישה מרחוק, בחינם ל-3 חודשים.';
-  }
-
-  @override
-  String chatEarlyAfterFirst(int position, int count) {
-    return 'את/ה מספר $position ברשימה. $count המקומות הראשונים תפוסים. הצ\'אט כבר זמין לבעלי ZigDash Pro.';
-  }
-
-  @override
-  String get chatEarlyListed => 'המייל הזה כבר ברשימה.';
-
-  @override
-  String get chatEarlyPrice =>
-      'אחרי החודשים החינמיים, 2.49 אירו לחודש יהיה בסדר?';
-
-  @override
-  String get chatEarlyYes => 'כן';
-
-  @override
-  String get chatEarlyMaybe => 'אולי';
-
-  @override
-  String get chatEarlyNo => 'לא';
-
-  @override
-  String get chatEarlyThanks => 'תודה, נרשם.';
-
-  @override
-  String get settingsChatEarlySubtitle => 'גישה מוקדמת: הרשמה לרשימה';
-
-  @override
   String get historyOnTitle => 'לראות את הבית לאורך ימים';
 
   @override
@@ -6035,19 +5964,6 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get chatAuditNotSent => 'לא נשלח';
-
-  @override
-  String get chatHereTitle => 'צ\'אט עם הבית כבר כאן';
-
-  @override
-  String get chatHereBody =>
-      'קשרו את חשבון הטלגרם שלכם, ואז שאלו את הבית \"האם הדלת האחורית פתוחה?\" או בקשו ממנו לסגור תריס. חלק מ-Pro, בחינם בתקופת הבטא.';
-
-  @override
-  String get chatHereSetUp => 'להגדרה';
-
-  @override
-  String get chatHereNotNow => 'לא עכשיו';
 
   @override
   String get chatLinkNew => 'קישור חשבון טלגרם';

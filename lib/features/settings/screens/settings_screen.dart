@@ -6,8 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../dashboards/widgets/chat_early_card.dart'
-    show chatEarlyOfferedProvider, showChatEarlySheet;
 import '../../dashboards/widgets/poll_card.dart' show showPollSheet;
 import '../../support/support_facts.dart' show supportDetailsProvider;
 import '../../support/help_bubble.dart' show helpBubbleHiddenProvider;
@@ -247,14 +245,6 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: Text(l10n.settingsFeatureRequestSubtitle),
                 onTap: () => sendFeedback(context, ref, problem: false),
               ),
-              if (ref.watch(chatEarlyOfferedProvider))
-                ListTile(
-                  key: const Key('settings-chat-early'),
-                  leading: const Icon(Icons.chat_outlined),
-                  title: Text(l10n.chatEarlyTitle),
-                  subtitle: Text(l10n.settingsChatEarlySubtitle),
-                  onTap: () => showChatEarlySheet(context),
-                ),
               ListTile(
                 key: const Key('settings-poll'),
                 leading: const Icon(Icons.how_to_vote_outlined),
